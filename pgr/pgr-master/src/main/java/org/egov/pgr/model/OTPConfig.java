@@ -60,5 +60,4 @@ public class OTPConfig {
 	
 	private String tenantId;
 	private boolean otpConfigEnabled; 
-	private AuditDetails auditDetails; 
 }

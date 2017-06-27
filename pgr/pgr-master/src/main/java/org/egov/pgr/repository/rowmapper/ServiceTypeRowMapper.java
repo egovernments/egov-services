@@ -137,6 +137,8 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			serviceType.setServiceCode(rs.getString("code"));
 			serviceType.setTenantId(rs.getString("tenantid"));
 			serviceType.setDescription(rs.getString("description"));
+			serviceType.setCategory(rs.getInt("category"));
+			serviceType.setHasFinancialImpact(rs.getBoolean("hasfinancialimpact"));
 		} catch (Exception e) {
 			LOGGER.error("Encountered an Exception while creating Service Type Object using Result Set " + e);
 		}

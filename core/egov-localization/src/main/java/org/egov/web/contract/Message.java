@@ -30,12 +30,12 @@ public class Message {
     }
 
     @JsonIgnore
-    public MessageIdentity getMessageIdentity(String tenantId) {
+    public MessageIdentity getMessageIdentity(Tenant tenant) {
         return MessageIdentity.builder()
             .code(code)
             .module(module)
             .locale(locale)
-            .tenant(new Tenant(tenantId))
+            .tenant(tenant)
             .build();
     }
 }

@@ -35,12 +35,6 @@ export default class DateTable extends Component {
             columns,
            ordering: false
         });
-        // $("#main").DataTable({
-        //    dom: 'Bfrtip',
-        //    data: this.props.names,
-        //    columns,
-        //    ordering: false
-        // });
     }
     componentWillUnmount(){
        $('#main')

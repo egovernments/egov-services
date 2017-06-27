@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import ImagePreview from '../common/ImagePreview.js';
 import SimpleMap from '../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -15,9 +14,10 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import LoadingIndicator from '../common/LoadingIndicator';
 import Api from '../../api/api';
+import {translate} from '../common/common';
 
-var flag = 0;
 const styles = {
   headerStyle : {
     color: 'rgb(90, 62, 27)',
@@ -25,27 +25,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -55,6 +34,7 @@ class grievanceCreate extends Component {
   constructor(props) {
        super(props);
        this.state = {
+         loadingstatus: 'loading',
          type:'',
          receivingModes : [],
          receivingCenter:[],
@@ -79,9 +59,9 @@ class grievanceCreate extends Component {
   };
 
   handleClose = () => {
-    let {initForm} = this.props;
-    initForm(localStorage.getItem('type'));
     this.setState({open: false});
+    let {initForm, history} = this.props;
+    initForm(localStorage.getItem('type'));
   };
 
   handleView = () => {
@@ -115,17 +95,25 @@ class grievanceCreate extends Component {
      });
    }
 
-  componentWillMount()
+  componentDidMount()
   {
-    //ReceivingMode
+    this.setState({type:localStorage.getItem('type')});
+    let {initForm} = this.props;
+    initForm(localStorage.getItem('type'));
+
+    //let {toggleDailogAndSetText}=this.props;
+
     var currentThis = this;
-    Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
-    {
 
-      currentThis.setState({receivingModes : response.ReceivingModeType});
-    },function(err) {
+    //ReceivingMode
+    if(localStorage.getItem('type') == 'EMPLOYEE'){
+      Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
+      {
+        currentThis.setState({receivingModes : response.ReceivingModeType});
+      },function(err) {
 
-    });
+      });
+    }
 
     //Top ComplaintTypes
     Api.commonApiPost("/pgr/services/_search", {type: 'frequency', count: 5}).then(function(response)
@@ -142,26 +130,21 @@ class grievanceCreate extends Component {
     });
 
     //Grievance Category
-    Api.commonApiPost("/pgr/servicecategories/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/serviceGroup/_search").then(function(response)
     {
-      currentThis.setState({grievanceCategory : response.serviceTypeCategories});
+      currentThis.setState({grievanceCategory : response.ServiceGroups});
     },function(err) {
 
     });
 
-  }
+    this.setState({loadingstatus:'hide'});
 
-  componentDidMount()
-  {
-    this.setState({type:localStorage.getItem('type')});
-    let {initForm} = this.props;
-    initForm(localStorage.getItem('type'));
-
-    //let {toggleDailogAndSetText}=this.props;
   }
 
   search(e)
   {
+      e.preventDefault();
+      this.setState({loadingstatus:'loading'});
       let type = this.state.type;
       if(type == 'CITIZEN'){
         var userArray = [], userRequest={};
@@ -182,13 +165,13 @@ class grievanceCreate extends Component {
       }else{
         _this.createGrievance();
       }
-      e.preventDefault();
       let {showTable,changeButtonText}=this.props;
       //console.log(this.props.grievanceCreate);
 
   }
 
   createGrievance(userName='',userMobile='',userEmail=''){
+
     var data={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
     data['description']=this.props.grievanceCreate.description;
@@ -248,30 +231,36 @@ class grievanceCreate extends Component {
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});
-      var ack = 'Service Request is received and is under process. SRN (Service Request No.) is '+srn+'. Please use this for all your future references'
-      currentThis.setState({srn:'SRN (Service Request No.): '+srn});
+      var ack = translate('pgr.msg.servicerequest.underprocess')+'. '+translate('pgr.lbl.srn')+' is '+srn+'. '+translate('pgr.msg.future.reference')+'.';
+      currentThis.setState({srn:translate('pgr.lbl.srn')+' : '+srn});
       currentThis.setState({acknowledgement:ack});
 
-      if(!currentThis.props.files){
-        {currentThis.handleOpen()}
-      }
-      console.log('create succesfully done');
       if(currentThis.props.files){
-        for(let i=0;i<currentThis.props.files.length;i++){
-          //this.props.files.length[i]
-          let formData = new FormData();
-          formData.append("tenantId", "default");
-          formData.append("module", "PGR");
-          formData.append("tag", createresponse.serviceRequests[0].serviceRequestId);
-          formData.append("file", currentThis.props.files[i]);
-          Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-          {
-            {currentThis.handleOpen()}
-          },function(err) {
+        if(currentThis.props.files.length === 0){
+          console.log('create succesfully done. No file uploads');
+          currentThis.setState({loadingstatus:'hide'});
+          {currentThis.handleOpen()}
+        }else{
+          console.log('create succesfully done. still file upload pending');
+          for(let i=0;i<currentThis.props.files.length;i++){
+            //this.props.files.length[i]
+            let formData = new FormData();
+            formData.append("tenantId", localStorage.getItem('tenantId'));
+            formData.append("module", "PGR");
+            formData.append("tag", createresponse.serviceRequests[0].serviceRequestId);
+            formData.append("file", currentThis.props.files[i]);
+            Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+            {
+              if(i === (currentThis.props.files.length - 1)){
+                console.log('All files succesfully uploaded');
+                currentThis.setState({loadingstatus:'hide'});
+                {currentThis.handleOpen()}
+              }
+            },function(err) {
 
-          });
+            });
+          }
         }
-        console.log('file succesfully uploaded');
       }
     },function(err) {
 
@@ -280,11 +269,6 @@ class grievanceCreate extends Component {
 
   render() {
     const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
       <FlatButton
         label="Proceed to view"
         primary={true}
@@ -311,18 +295,19 @@ class grievanceCreate extends Component {
     let {search, createGrievance} = this;
     return (
       <div className="grievanceCreate">
+        <LoadingIndicator status={this.state.loadingstatus}/>
         <form autoComplete="off" onSubmit={(e) => {
           search(e)
         }}>
           {this.state.type == 'EMPLOYEE' || this.state.type == null ?
             <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.contact.information')}< /div>}/>
                 <CardText style={{padding:0}}>
                   <Grid>
                     <Row>
                       {this.state.type == 'EMPLOYEE' ?
                         <Col xs={12} md={3}>
-                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Receiving Mode"  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
+                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
                             var e = {
                               target: {
                                 value: value
@@ -330,9 +315,10 @@ class grievanceCreate extends Component {
                             };
                             this.loadReceivingCenter(e.target.value)
                             handleChange(e, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
-                            {this.state.receivingModes.map((receivingmode, index) => (
+                            {this.state.receivingModes !== undefined ?
+                            this.state.receivingModes.map((receivingmode, index) => (
                                 <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} />
-                            ))}
+                            )) : ''}
                           </SelectField>
                         </Col> : ''
                       }
@@ -341,19 +327,19 @@ class grievanceCreate extends Component {
                          : ''
                       }
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Name" value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
                         />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Mobile number" errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
                       </Col>
                     </Row>
                     <Row>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Email" errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText="Address" multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(e) => handleChange(e, "requesterAddress", false, '')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(e) => handleChange(e, "requesterAddress", false, '')} />
                       </Col>
                     </Row>
                   </Grid>
@@ -361,7 +347,7 @@ class grievanceCreate extends Component {
             </Card> : ''
           }
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Grievance Information < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.grievence.information')} < /div>}/>
               <CardText style={{padding:0}}>
                 <Grid>
                   <Row>
@@ -375,18 +361,19 @@ class grievanceCreate extends Component {
                       </div>
                     </Col>
                   </Row>
+                  {this.state.topComplaintTypes.length > 0 ?
                   <Row>
                     <Col xs={12} md={12} style={{textAlign:'center'}}>
                       <FlatButton
-                        backgroundColor="#a4c639"
-                        hoverColor="#8AA62F"
+                        primary= {true}
                         label="OR"
+                        disabled = {true}
                       />
                     </Col>
-                  </Row>
+                  </Row> : ''}
                   <Row>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText="Grievance Category" maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
+                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
                         var e = {
                           target: {
                             value: value
@@ -394,13 +381,14 @@ class grievanceCreate extends Component {
                         };
                         this.loadGrievanceType(e.target.value),
                         handleChange(e, "serviceCategory", true, "")}}>
-                      {this.state.grievanceCategory.map((grievanceCategory, index) => (
+                        {this.state.grievanceCategory !== undefined ?
+                        this.state.grievanceCategory.map((grievanceCategory, index) => (
                           <MenuItem value={grievanceCategory.id} key={index} primaryText={grievanceCategory.name} />
-                      ))}
+                        )) : ''}
                       </SelectField>
                     </Col>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText="Grievance Type" maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
+                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
                         var e = {
                           target: {
                             value: value
@@ -417,27 +405,27 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <Card style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > More Details < /div>}/>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.moredetails')} < /div>}/>
               <CardText style={{padding:0}}>
                 <Grid>
                   <Row>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText="Grievance Details" multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
+                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
                     </Col>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} floatingLabelText="Landmark" multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
+                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
                     </Col>
                     <Col xs={12} md={6}>
                       <AutoComplete
                         hintText="Type your location or select it from maps"
-                        floatingLabelText="Grievance Location"
+                        floatingLabelText={translate('pgr.lbl.grievance.location')+' *'}
                         filter={AutoComplete.noFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.boundarySourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={handleAutoCompleteKeyUp}
-                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""} value={grievanceCreate.addressId?grievanceCreate.addressId:""}
+                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""} value={grievanceCreate.addressId ? grievanceCreate.addressId : ""}
                         onNewRequest={(chosenRequest, index) => {
                         var e = {
                           target: {
@@ -451,7 +439,7 @@ class grievanceCreate extends Component {
                   </Row>
                   <Row>
                     <Col xs={12} md={3}>
-                      <RaisedButton label="Select Photo" containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
+                      <RaisedButton label={translate('core.lbl.select.photo')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
                           <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUpload(e)}/>
                       </RaisedButton>
                     </Col>
@@ -473,15 +461,15 @@ class grievanceCreate extends Component {
           </div>
         </form>
         <div>
-          <Dialog
-            title={this.state.srn}
-            actions={actions}
-            modal={true}
-            open={this.state.open}
-            onRequestClose={this.handleClose}
-          >
-          {this.state.acknowledgement}
-          </Dialog>
+        <Dialog
+          title={this.state.srn}
+          actions={actions}
+          modal={true}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+        {this.state.acknowledgement}
+        </Dialog>
         </div>
       </div>
     );
@@ -525,7 +513,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "ADD_MANDATORY", property: name, value: '', isRequired : true, pattern: ''});
     return (
       <Col xs={12} md={3}>
-        <SelectField floatingLabelText="Receiving Center" value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
+        <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
           var e = {
             target: {
               value: value
@@ -593,31 +581,6 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '0.0', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '0.0', isRequired : false, pattern: ''});
     }
-  },
-  handleChangeNextOne: (e, property, propertyOne, isRequired, pattern) => {
-    dispatch({
-      type: "HANDLE_CHANGE_NEXT_ONE",
-      property,
-      propertyOne,
-      value: e.target.value,
-      isRequired,
-      pattern
-    })
-  },
-  handleChangeNextTwo: (e, property, propertyOne, propertyTwo, isRequired, pattern) => {
-    dispatch({
-      type: "HANDLE_CHANGE_NEXT_ONE",
-      property,
-      propertyOne,
-      propertyTwo,
-      value: e.target.value,
-      isRequired,
-      pattern
-    })
-  },
-  showTable:(state)=>
-  {
-    dispatch({type:"SHOW_TABLE",state});
   },
   changeButtonText:(text)=>
   {

@@ -16,7 +16,7 @@ public class FloorBuilder {
         floorUpdateSQL.append("UPDATE egpt_floors")
         .append(" SET floorNo = ?, lastModifiedBy = ?,")
         .append(" lastModifiedTime = ?, propertydetails = ?")
-        .append(" WHERE id = " );
+        .append(" WHERE id = ?" );
 
         return floorUpdateSQL.toString();
     }

@@ -16,7 +16,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
 
-
 var flag = 0;
 const styles = {
   headerStyle : {
@@ -59,14 +58,17 @@ class CreateReceivingCenter extends Component {
       super(props);
       this.state = {
           id:'',
-          data:''
-      }
+          data:'',
+          open:false
+         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if(this.props.match.params.id) {
 
-            this.setState({id:this.props.match.params.id});
+            this.setState({
+              id:this.props.match.params.id,
+            });
             var body = {}
             let  current = this;
             let {setForm} = this.props;
@@ -84,18 +86,17 @@ class CreateReceivingCenter extends Component {
         }
     }
 
-    componentDidMount() {
 
-    }
 
     componentDidUpdate() {
-
 
     }
 
     submitForm = (e) => {
 
       e.preventDefault()
+
+      var current = this;
 
       var body = {
           "ReceivingCenterType":{
@@ -113,17 +114,28 @@ class CreateReceivingCenter extends Component {
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/receivingcenter/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
               console.log(response);
+              current.setState({
+                open: true
+              });
           }).catch((error)=>{
               console.log(error);
           })
       } else {
           Api.commonApiPost("/pgr-master/receivingcenter/_create",{},body).then(function(response){
               console.log(response);
+              current.setState({
+                open: true
+              })
+              current.props.resetObject('createReceivingCenter');
           }).catch((error)=>{
               console.log(error);
           })
       }
     }
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
 
     render() {
 
@@ -141,9 +153,10 @@ class CreateReceivingCenter extends Component {
         buttonText
       } = this.props;
 
+
       let {submitForm} = this;
 
-      console.log(isFormValid);
+      console.log(createReceivingCenter);
 
       return(
         <div className="createReceivingCenter">
@@ -186,11 +199,13 @@ class CreateReceivingCenter extends Component {
                                   />
                               </Col>
                               <Col xs={12} md={3} sm={6}>
+                              {console.log(createReceivingCenter.active)}
                                   <Checkbox
                                     label="Active"
                                     style={styles.checkbox}
-                                    defaultChecked ={createReceivingCenter.active}
-                                    onCheck = {(e, i, v) => {
+                                    checked = {createReceivingCenter.active || false}
+                                    onCheck = {(e, i, v) => { console.log(createReceivingCenter.active, i);
+
                                       var e = {
                                         target: {
                                           value:i
@@ -206,7 +221,7 @@ class CreateReceivingCenter extends Component {
                                   <Checkbox
                                     label="CRN"
                                     style={styles.checkbox}
-                                    defaultChecked ={createReceivingCenter.iscrnrequired}
+                                    checked ={createReceivingCenter.iscrnrequired}
                                     onCheck = {(e, i, v) => {
                                       var e = {
                                         target: {
@@ -238,6 +253,19 @@ class CreateReceivingCenter extends Component {
                 <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
           </form>
+          <Dialog
+               title="Data Added Successfully"
+               actions={<FlatButton
+   				        label="Close"
+   				        primary={true}
+   				        onTouchTap={this.handleClose}
+   				      />}
+               modal={false}
+               open={this.state.open}
+               onRequestClose={this.handleClose}
+             >
+              Data Added Successfully
+         </Dialog>
         </div>)
     }
 
@@ -281,6 +309,14 @@ const mapDispatchToProps = dispatch => ({
         }
       }
     });
+  },
+
+  resetObject: (object) => {
+    console.log(object);
+   dispatch({
+     type: "RESET_OBJECT",
+     object
+   })
   },
 
   handleChange: (e, property, isRequired, pattern) => {

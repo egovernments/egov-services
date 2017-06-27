@@ -65,7 +65,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -102,7 +102,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -134,7 +134,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -162,7 +162,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -187,7 +187,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "Testing complaint update");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "6");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -209,7 +209,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
@@ -218,7 +218,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -244,7 +244,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "Testing complaint update");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "6");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -265,7 +265,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("status", "PROCESSING"));
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
@@ -277,7 +277,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -303,7 +303,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "Testing complaint update");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "6");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -324,7 +324,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("status", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString())).thenReturn(ServiceRequest.builder()
@@ -335,7 +335,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -360,7 +360,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "Testing complaint update");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "6");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -382,7 +382,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "1"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
         responseValues.add(new AttributeEntry("complaintTypeCode", "BOG"));
         final ServiceRequest complaint = ServiceRequest.builder()
@@ -395,7 +395,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -405,7 +405,7 @@ public class WorkflowServiceTest {
         final HashMap<String, String> valuesMap = new HashMap<>();
         valuesMap.put("locationId", "2");
         valuesMap.put("status", "FORWARDED");
-        valuesMap.put("assignmentId", "6");
+        valuesMap.put("positionId", "6");
         valuesMap.put("stateId", "6");
         valuesMap.put("departmentId", "20");
         valuesMap.put("approvalComments", "test");
@@ -431,7 +431,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "Testing complaint update");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "6");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -452,7 +452,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("status", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
@@ -461,7 +461,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -486,7 +486,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "test");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "8");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -507,7 +507,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("status", "PROCESSING"));
 
         final ServiceRequest complaint = ServiceRequest.builder()
@@ -520,7 +520,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 
@@ -545,7 +545,7 @@ public class WorkflowServiceTest {
         commentEntry.put("name", "Testing complaint update");
         attributeValues.add(commentEntry);
         final HashMap<String, String> assigneeEntry = new HashMap<>();
-        assigneeEntry.put("key", VALUES_ASSIGNEE_ID);
+        assigneeEntry.put("key", VALUES_POSITION_ID);
         assigneeEntry.put("name", "6");
         attributeValues.add(assigneeEntry);
         final HashMap<String, String> registeredEntry = new HashMap<>();
@@ -566,7 +566,7 @@ public class WorkflowServiceTest {
         List<AttributeEntry> responseValues = new ArrayList<>();
         responseValues.add(new AttributeEntry("locationId", "2"));
         responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("assignmentId", "6"));
+        responseValues.add(new AttributeEntry("positionId", "6"));
         responseValues.add(new AttributeEntry("status", "PROCESSING"));
 
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
@@ -576,7 +576,7 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("assignmentId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
         assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
     }
 

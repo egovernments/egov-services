@@ -1,10 +1,14 @@
 package org.egov.persistence.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.domain.model.MessageIdentity;
 import org.egov.domain.model.Tenant;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -35,6 +39,18 @@ public class Message {
 
     @Column(name = "tenantid")
     private String tenantId;
+
+    @Column(name = "createdby")
+    private Long createdBy;
+
+    @Column(name = "createddate")
+    private Date createdDate;
+
+    @Column(name = "lastmodifiedby")
+    private Long lastModifiedBy;
+
+    @Column(name = "lastmodifieddate")
+    private Date lastModifiedDate;
 
     public Message(org.egov.domain.model.Message domainMessage) {
         this.tenantId = domainMessage.getTenant();

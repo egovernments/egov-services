@@ -44,19 +44,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
-import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
-import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.service.OTPConfigService;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.OTPConfig;
 import org.egov.pgr.web.contract.OTPConfigGetReq;
 import org.egov.pgr.web.contract.OTPConfigReq;
 import org.egov.pgr.web.contract.OTPConfigRes;
-import org.egov.pgr.web.contract.RequestInfoWrapper;
-import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
 import org.egov.pgr.web.errorhandlers.Error;
 import org.egov.pgr.web.errorhandlers.ErrorHandler;
 import org.egov.pgr.web.errorhandlers.ErrorResponse;
@@ -82,9 +77,6 @@ public class OTPConfigController {
 	private static final Logger logger = LoggerFactory.getLogger(OTPConfigController.class);
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-	
-	@Autowired
 	private ApplicationProperties applicationProperties;
 	
 	@Autowired
@@ -109,7 +101,7 @@ public class OTPConfigController {
 		otpConfigService.createOTPConfig(applicationProperties.getCreateOtpConfigTopicName(), applicationProperties.getCreateOtpConfigTopicKey(), otpConfig); 
 		final List<OTPConfig> OTPConfigs = new ArrayList<>();
 		OTPConfigs.add(otpConfigRequest.getOtpConfig());
-		return getSuccessResponse(OTPConfigs, otpConfigRequest.getRequestInfo());
+		return getSuccessResponse(OTPConfigs);
 	}
 	
 	@PostMapping(value = "/{tenantid}/_update")
@@ -129,34 +121,25 @@ public class OTPConfigController {
 		otpConfigService.updateOTPConfig(applicationProperties.getUpdateOtpConfigTopicName(), applicationProperties.getUpdateOtpConfigTopicKey(), otpConfig); 
 		final List<OTPConfig> OTPConfigs = new ArrayList<>();
 		OTPConfigs.add(otpConfigRequest.getOtpConfig());
-		return getSuccessResponse(OTPConfigs, otpConfigRequest.getRequestInfo());
+		return getSuccessResponse(OTPConfigs);
 	}
 	
 	@PostMapping("/_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final OTPConfigGetReq otpConfigGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+    public OTPConfigRes search(@ModelAttribute @Valid final OTPConfigGetReq otpConfigGetRequest,
+            final BindingResult modelAttributeBindingResult,
             final BindingResult requestBodyBindingResult) {
-        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
-        // validate input params
-        if (modelAttributeBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-
-        // validate input params
-        if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         // Call service
-        List<org.egov.pgr.web.contract.OTPConfig> otpConfigList = null;
+        List<org.egov.pgr.web.contract.OTPConfig> otpConfigList = new ArrayList<>();
         try {
         	otpConfigList = otpConfigService.getAllOtpConfig(otpConfigGetRequest.getTenantId());
         } catch (final Exception exception) {
             logger.error("Error while processing request " + otpConfigGetRequest, exception);
-            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+            return createResponse(otpConfigList);
         }
 
-        return getSuccessResponse(otpConfigList, requestInfo);
+        return createResponse(otpConfigList);
 
     }
 	
@@ -194,22 +177,22 @@ public class OTPConfigController {
 		return errRes;
 	}
 
-	private ResponseEntity<?> getSuccessResponse(final List<OTPConfig> otpConfigList, final RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(final List<OTPConfig> otpConfigList) {
 		final OTPConfigRes otpConfigRes = new OTPConfigRes();
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		otpConfigRes.setResponseInfo(responseInfo);
 		otpConfigRes.setOtgConfigs(otpConfigList);
 		return new ResponseEntity<>(otpConfigRes, HttpStatus.OK);
 	}
 	
+	private OTPConfigRes createResponse(final List<OTPConfig> otpConfigList) {
+		final OTPConfigRes otpConfigRes = new OTPConfigRes();
+		otpConfigRes.setOtgConfigs(otpConfigList);
+		return otpConfigRes;
+	}
+	
 	private org.egov.pgr.model.OTPConfig contractToModel(OTPConfigReq otpConfigRequest){
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(otpConfigRequest.getRequestInfo().getUserInfo().getId());
 		org.egov.pgr.model.OTPConfig otpConfig = new org.egov.pgr.model.OTPConfig();
 		otpConfig.setTenantId(otpConfigRequest.getOtpConfig().getTenantId());
 		otpConfig.setOtpConfigEnabled(otpConfigRequest.getOtpConfig().isOtpEnabledForAnonymousComplaint());
-		otpConfig.setAuditDetails(auditDetails);
 		return otpConfig;
 	}
 

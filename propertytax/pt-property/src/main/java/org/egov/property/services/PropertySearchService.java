@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.egov.models.Address;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
 import org.egov.models.Floor;
-import org.egov.models.OwnerInfo;
 import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
@@ -22,12 +20,10 @@ import org.egov.models.VacantLandDetail;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.model.PropertyUser;
 import org.egov.property.repository.PropertyRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -137,7 +133,7 @@ public class PropertySearchService {
 			Address address = propertyRepository.getAddressByProperty(propertyId);
 			property.setAddress(address);
 
-			List<OwnerInfo> ownerInfos = new ArrayList<>();
+			List<User> ownerInfos = new ArrayList<>();
 
 			List<PropertyUser> propertyUsers = propertyRepository.getPropertyUserByProperty(propertyId);
 			List<Integer> userIds = new ArrayList<>();
@@ -152,17 +148,7 @@ public class PropertySearchService {
 			// get owner info for property
 
 			for (User propertyUser : userOfProperty) {
-
-				Long userId = propertyUser.getId();
-
-				ModelMapper modelMapper = new ModelMapper();
-				OwnerInfo owernInfo = modelMapper.map(propertyUser, OwnerInfo.class);
-				PropertyUser proprtyUser = propertyRepository.getPropertyUserByUser(userId);
-				owernInfo.setIsPrimaryOwner(proprtyUser.getIsPrimaryOwner());
-				owernInfo.setIsSecondaryOwner(proprtyUser.getIsSecondaryOwner());
-				owernInfo.setOwnerShipPercentage(proprtyUser.getOwnerShipPercentage());
-				owernInfo.setOwnerType(proprtyUser.getOwnerType());
-				ownerInfos.add(owernInfo);
+				ownerInfos.add(propertyUser);
 			}
 
 			property.setOwners(ownerInfos);

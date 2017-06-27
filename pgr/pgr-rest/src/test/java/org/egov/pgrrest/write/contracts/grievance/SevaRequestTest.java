@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SevaRequestTest {
 
@@ -48,14 +49,9 @@ public class SevaRequestTest {
         assertEquals("1234567890", serviceRequestRecord.getRequesterMobileNumber());
         assertEquals("email@email.com", serviceRequestRecord.getRequesterEmail());
         assertEquals("complainant address", serviceRequestRecord.getRequesterAddress());
-        assertEquals("receiving mode", serviceRequestRecord.getReceivingMode());
-        assertEquals(Long.valueOf(5), serviceRequestRecord.getReceivingCenter());
         assertEquals("complaintTypeCode", serviceRequestRecord.getServiceRequestTypeCode());
-        assertEquals(Long.valueOf(6), serviceRequestRecord.getAssigneeId());
+        assertEquals(Long.valueOf(6), serviceRequestRecord.getPositionId());
         assertEquals("REGISTERED", serviceRequestRecord.getServiceRequestStatus());
-        assertEquals(Long.valueOf(7), serviceRequestRecord.getLocation());
-        assertEquals(Long.valueOf(8), serviceRequestRecord.getChildLocation());
-        assertEquals(Long.valueOf(9), serviceRequestRecord.getWorkflowStateId());
         assertEquals("ap.public", serviceRequestRecord.getTenantId());
         final List<AttributeEntry> actualAttributeEntries = serviceRequestRecord.getAttributeEntries();
         assertEquals(10, actualAttributeEntries.size());

@@ -1,9 +1,6 @@
 package org.egov.domain.service;
 
-import org.egov.domain.model.Message;
-import org.egov.domain.model.MessageIdentity;
-import org.egov.domain.model.MessageSearchCriteria;
-import org.egov.domain.model.Tenant;
+import org.egov.domain.model.*;
 import org.egov.persistence.repository.MessageCacheRepository;
 import org.egov.persistence.repository.MessageRepository;
 import org.springframework.stereotype.Service;
@@ -25,16 +22,18 @@ public class MessageService {
         this.messageCacheRepository = messageCacheRepository;
     }
 
-    public void create(List<Message> messages) {
-        messageRepository.save(messages);
+    public void create(Tenant tenant, List<Message> messages, AuthenticatedUser user) {
+        messageRepository.save(messages, user);
+        bustCacheEntriesForMessages(tenant, messages);
     }
 
-    public void update(List<Message> messages) {
+    public void updateMessagesForModule(Tenant tenant, List<Message> messages, AuthenticatedUser user) {
         if (CollectionUtils.isEmpty(messages)) {
             throw new IllegalArgumentException("update message list cannot be empty");
         }
         final Message message = messages.get(0);
-        messageRepository.update(message.getTenant(), message.getLocale(), message.getModule(), messages);
+        messageRepository.update(message.getTenant(), message.getLocale(), message.getModule(), messages, user);
+        bustCacheEntriesForMessages(tenant, messages);
     }
 
     public void bustCache() {
@@ -51,6 +50,31 @@ public class MessageService {
             .collect(Collectors.toList());
     }
 
+    public void delete(List<MessageIdentity> messageIdentities) {
+        final Map<Tenant, List<MessageIdentity>> tenantToMessageIdentitiesMap = messageIdentities.stream()
+            .collect(Collectors.groupingBy(MessageIdentity::getTenant));
+        tenantToMessageIdentitiesMap.keySet().forEach(tenant ->
+            deleteMessagesForGivenTenant(tenantToMessageIdentitiesMap, tenant));
+    }
+
+    private void bustCacheEntriesForMessages(Tenant tenant, List<Message> messages) {
+        final List<MessageIdentity> messageIdentities = messages.stream()
+            .map(Message::getMessageIdentity)
+            .collect(Collectors.toList());
+        bustCacheEntriesForMessageIdentities(tenant, messageIdentities);
+    }
+
+    private void bustCacheEntriesForMessageIdentities(Tenant tenant, List<MessageIdentity> messageIdentities) {
+        messageIdentities.stream()
+            .map(MessageIdentity::getLocale)
+            .distinct()
+            .forEach(locale -> bustCacheEntry(tenant, locale));
+    }
+
+    private void bustCacheEntry(Tenant tenant, String locale) {
+        messageCacheRepository.bustCacheEntry(locale, tenant);
+    }
+
     private List<Message> getMessages(MessageSearchCriteria searchCriteria) {
         final List<Message> cachedMessages = messageCacheRepository
             .getComputedMessages(searchCriteria.getLocale(), searchCriteria.getTenantId());
@@ -64,13 +88,6 @@ public class MessageService {
         return computedMessages;
     }
 
-    public void delete(List<MessageIdentity> messageIdentities) {
-        final Map<Tenant, List<MessageIdentity>> tenantToMessageIdentitiesMap = messageIdentities.stream()
-            .collect(Collectors.groupingBy(MessageIdentity::getTenant));
-        tenantToMessageIdentitiesMap.keySet().forEach(tenant ->
-            deleteMessagesForGivenTenant(tenantToMessageIdentitiesMap, tenant));
-    }
-
     private void deleteMessagesForGivenTenant(Map<Tenant, List<MessageIdentity>> tenantToMessageIdentitiesMap,
                                               Tenant tenant) {
         final List<MessageIdentity> messageIdentitiesForGivenTenant = tenantToMessageIdentitiesMap.get(tenant);
@@ -78,10 +95,12 @@ public class MessageService {
             .stream().collect(Collectors.groupingBy(MessageIdentity::getLocale));
         localeToMessageIdentitiesMap.keySet().forEach(locale ->
             deleteMessagesForGivenLocale(tenant, localeToMessageIdentitiesMap, locale));
+        bustCacheEntriesForMessageIdentities(tenant, messageIdentitiesForGivenTenant);
     }
 
-    private void deleteMessagesForGivenLocale(Tenant tenant, Map<String,
-        List<MessageIdentity>> localeToMessageIdentitiesMap, String locale) {
+    private void deleteMessagesForGivenLocale(Tenant tenant,
+                                              Map<String, List<MessageIdentity>> localeToMessageIdentitiesMap,
+                                              String locale) {
         final List<MessageIdentity> messageIdentitiesForGivenLocale = localeToMessageIdentitiesMap.get(locale);
         final Map<String, List<MessageIdentity>> moduleToMessageIdentitiesMap = messageIdentitiesForGivenLocale
             .stream().collect(Collectors.groupingBy(MessageIdentity::getModule));

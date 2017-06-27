@@ -1,7 +1,11 @@
 package org.egov.workflow.domain.service;
 
+import java.util.List;
+
 import org.egov.workflow.domain.model.EscalationHoursSearchCriteria;
+import org.egov.workflow.domain.model.EscalationTimeType;
 import org.egov.workflow.persistence.repository.EscalationRepository;
+import org.egov.workflow.web.contract.EscalationTimeTypeGetReq;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,4 +51,8 @@ public class EscalationService {
 		
 		return response;
 	}
+	public List<EscalationTimeType> getAllEscalationTimeTypes(final EscalationTimeTypeGetReq escalationGetRequest) {
+        return escalationRepository.getAllEscalationTimeTypes(escalationGetRequest);
+
+    }
 }

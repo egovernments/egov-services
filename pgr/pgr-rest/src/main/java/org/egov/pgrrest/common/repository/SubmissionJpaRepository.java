@@ -14,6 +14,6 @@ public interface SubmissionJpaRepository extends JpaRepository<Submission, Submi
     @Query("select s from Submission s where s.id.crn in :crns and s.id.tenantId = :tenantId")
     List<Submission> findCRNList(@Param("crns") List<String> crns, @Param("tenantId") String tenantId);
 
-    @Query("select s.assignee from Submission s where s.id.crn in :crn and s.id.tenantId = :tenantId")
-    Long findAssigneeByCrnAndTenantId(@Param("crn") String crn, @Param("tenantId") String tenantId);
+    @Query("select s.position from Submission s where s.id.crn in :crn and s.id.tenantId = :tenantId")
+    Long findPositionByCrnAndTenantId(@Param("crn") String crn, @Param("tenantId") String tenantId);
 }

@@ -7,13 +7,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
@@ -87,13 +85,13 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.createFloorType(any(FloorTypeRequest.class), any(String.class)))
-			.thenReturn(floorTypeResponse);
+					.thenReturn(floorTypeResponse);
 
 			mockMvc.perform(post("/property/floortypes/_create").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createFloor.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("createResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createResponse.json")));
 
 		} catch (Exception e) {
 
@@ -125,14 +123,13 @@ public class PropertyMasterControllerTest {
 		floorTypeResponse.setFloorTypes(floorTypes);
 
 		try {
-			when(masterService.updateFloorType(any(FloorTypeRequest.class), any(String.class), any(Integer.class)))
-			.thenReturn(floorTypeResponse);
+			when(masterService.updateFloorType(any(FloorTypeRequest.class))).thenReturn(floorTypeResponse);
 
-			mockMvc.perform(post("/property/floortypes/1/_update").param("tenantId", "1234")
+			mockMvc.perform(post("/property/floortypes/_update").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("updateFloorTypeReuqest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("updateFloorTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateFloorTypeResponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -166,13 +163,13 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.getFloorTypeMaster(any(RequestInfo.class), anyString(), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-			.thenReturn(floorTypeResponse);
+							.thenReturn(floorTypeResponse);
 
 			mockMvc.perform(post("/property/floortypes/_search").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchFloorTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("searchFloorTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchFloorTypeResponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -203,13 +200,13 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.createRoofype(any(RoofTypeRequest.class), any(String.class)))
-			.thenReturn(roofTypeResponse);
+					.thenReturn(roofTypeResponse);
 
 			mockMvc.perform(post("/property/rooftypes/_create").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createRoofTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("createRoofTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createRoofTypeResponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -240,14 +237,13 @@ public class PropertyMasterControllerTest {
 		roofTypeResponse.setRoofTypes(roofTypes);
 
 		try {
-			when(masterService.updateRoofType(any(RoofTypeRequest.class), any(String.class), any(Integer.class)))
-			.thenReturn(roofTypeResponse);
+			when(masterService.updateRoofType(any(RoofTypeRequest.class))).thenReturn(roofTypeResponse);
 
-			mockMvc.perform(post("/property/rooftypes/1/_update").param("tenantId", "1234")
+			mockMvc.perform(post("/property/rooftypes/_update").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("updateRoofTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("updateRoofTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateRoofTypeResponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -277,13 +273,13 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.getRoofypes(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-			.thenReturn(roofTypeResponse);
+							.thenReturn(roofTypeResponse);
 
 			mockMvc.perform(post("/property/rooftypes/_search").param("tenantId", "1234")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchRoofTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("searchRoofTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchRoofTypeResponse.json")));
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
 		}
@@ -313,13 +309,13 @@ public class PropertyMasterControllerTest {
 
 		try {
 			when(masterService.createWoodType(any(WoodTypeRequest.class), any(String.class)))
-			.thenReturn(woodTypeResponse);
+					.thenReturn(woodTypeResponse);
 
 			mockMvc.perform(post("/property/woodtypes/_create").param("tenantId", "1237")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createWoodTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("createWoodTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createWoodTypeResponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -350,14 +346,13 @@ public class PropertyMasterControllerTest {
 		woodTypeResponse.setWoodTypes(woodTypes);
 
 		try {
-			when(masterService.updateWoodType(any(WoodTypeRequest.class), any(String.class), any(Integer.class)))
-			.thenReturn(woodTypeResponse);
+			when(masterService.updateWoodType(any(WoodTypeRequest.class))).thenReturn(woodTypeResponse);
 
-			mockMvc.perform(post("/property/woodtypes/1/_update").param("tenantId", "1237")
+			mockMvc.perform(post("/property/woodtypes/_update").param("tenantId", "1237")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("updateWoodTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("updateWoodTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateWoodTypeResponse.json")));
 
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
@@ -388,13 +383,13 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.getWoodTypes(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-			.thenReturn(woodTypeResponse);
+							.thenReturn(woodTypeResponse);
 
 			mockMvc.perform(post("/property/woodtypes/_search").param("tenantId", "1237")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchWoodTypeRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("searchWoodTypeResponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchWoodTypeResponse.json")));
 		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
 		}
@@ -426,12 +421,12 @@ public class PropertyMasterControllerTest {
 		departmentResponse.setDepartments(departments);
 		try {
 			when(masterService.createDepartmentMaster(any(String.class), any(DepartmentRequest.class)))
-			.thenReturn(departmentResponse);
+					.thenReturn(departmentResponse);
 			mockMvc.perform(post("/property/departments/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("departmentcreaterequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("departmentcreateresponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("departmentcreateresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -463,14 +458,13 @@ public class PropertyMasterControllerTest {
 		departmentResponse.setResponseInfo(new ResponseInfo());
 		departmentResponse.setDepartments(departments);
 		try {
-			when(masterService.updateDepartmentMaster(any(String.class), any(Long.class), any(DepartmentRequest.class)))
-			.thenReturn(departmentResponse);
+			when(masterService.updateDepartmentMaster(any(DepartmentRequest.class))).thenReturn(departmentResponse);
 
-			mockMvc.perform(post("/property/departments/1/_update").param("tenantId", "default")
+			mockMvc.perform(post("/property/departments/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("departmentupdaterequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("departmentupdateresponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("departmentupdateresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -508,9 +502,9 @@ public class PropertyMasterControllerTest {
 
 			mockMvc.perform(post("/property/departments/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("departmentsearchrequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("departmentsearchresponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("departmentsearchresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -542,12 +536,12 @@ public class PropertyMasterControllerTest {
 		occuapancyResponse.setOccuapancyMasters(occuapancies);
 		try {
 			when(masterService.createOccuapancyMaster(any(String.class), any(OccuapancyMasterRequest.class)))
-			.thenReturn(occuapancyResponse);
+					.thenReturn(occuapancyResponse);
 			mockMvc.perform(post("/property/occuapancies/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("occupanciescreaterequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("occupanciescreateresponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("occupanciescreateresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -579,14 +573,14 @@ public class PropertyMasterControllerTest {
 		occuapancyResponse.setResponseInfo(new ResponseInfo());
 		occuapancyResponse.setOccuapancyMasters(occuapancies);
 		try {
-			when(masterService.updateOccuapancyMaster(any(String.class), any(Long.class),
-					any(OccuapancyMasterRequest.class))).thenReturn(occuapancyResponse);
+			when(masterService.updateOccuapancyMaster(any(OccuapancyMasterRequest.class)))
+					.thenReturn(occuapancyResponse);
 
-			mockMvc.perform(post("/property/occuapancies/1/_update").param("tenantId", "default")
+			mockMvc.perform(post("/property/occuapancies/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("occupanciesupdaterequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("occupanciesupdateresponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("occupanciesupdateresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -624,9 +618,9 @@ public class PropertyMasterControllerTest {
 
 			mockMvc.perform(post("/property/occuapancies/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("occupanciessearchrequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("occupanciessearchresponse.json")));
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("occupanciessearchresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -658,12 +652,12 @@ public class PropertyMasterControllerTest {
 		propertyTypeResponse.setPropertyTypes(propertyTypes);
 		try {
 			when(masterService.createPropertyTypeMaster(any(String.class), any(PropertyTypeRequest.class)))
-			.thenReturn(propertyTypeResponse);
+					.thenReturn(propertyTypeResponse);
 			mockMvc.perform(post("/property/propertytypes/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("propertytypescreaterequest.json"))).andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("propertytypescreateresponse.json")));
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("propertytypescreateresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -695,13 +689,13 @@ public class PropertyMasterControllerTest {
 		propertyTypeResponse.setResponseInfo(new ResponseInfo());
 		propertyTypeResponse.setPropertyTypes(propertyTypes);
 		try {
-			when(masterService.updatePropertyTypeMaster(any(String.class), any(Long.class),
-					any(PropertyTypeRequest.class))).thenReturn(propertyTypeResponse);
-			mockMvc.perform(post("/property/propertytypes/1/_update").param("tenantId", "default")
+			when(masterService.updatePropertyTypeMaster(any(PropertyTypeRequest.class)))
+					.thenReturn(propertyTypeResponse);
+			mockMvc.perform(post("/property/propertytypes/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("propertytypesupdaterequest.json"))).andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("propertytypesupdateresponse.json")));
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("propertytypesupdateresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -744,8 +738,8 @@ public class PropertyMasterControllerTest {
 			mockMvc.perform(post("/property/propertytypes/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("propertytypessearchrequest.json"))).andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("propertytypessearchresponse.json")));
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("propertytypessearchresponse.json")));
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
@@ -753,39 +747,33 @@ public class PropertyMasterControllerTest {
 
 		assertTrue(Boolean.TRUE);
 	}
-	
+
 	@Test
 	public void testCreateStructureClasses() throws Exception {
-		
+
 		List<StructureClass> structureClasses = new ArrayList<>();
 		StructureClass structureClass = new StructureClass();
 		structureClass.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		structureClass.setAuditDetails(auditDetails);
-		
+
 		StructureClassResponse structureClassResponse = new StructureClassResponse();
 		structureClasses.add(structureClass);
-		
+
 		structureClassResponse.setResponseInfo(new ResponseInfo());
 		structureClassResponse.setStructureClasses(structureClasses);
 
 		try {
-			
-			when(masterService
-				.craeateStructureClassMaster(
-					any(String.class), 
-					any(StructureClassRequest.class)))
-				.thenReturn(structureClassResponse);
 
+			when(masterService.craeateStructureClassMaster(any(String.class), any(StructureClassRequest.class)))
+					.thenReturn(structureClassResponse);
 
-			mockMvc.perform(post("/property/structureclasses/_create")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("structureCreateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("structureCreateResponse.json")));
+			mockMvc.perform(post("/property/structureclasses/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("structureCreateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("structureCreateResponse.json")));
 
 		} catch (Exception e) {
 
@@ -795,105 +783,84 @@ public class PropertyMasterControllerTest {
 		assertTrue(Boolean.TRUE);
 
 	}
-	
+
 	@Test
 	public void testUpdateStructureClasses() throws Exception {
-		
+
 		StructureClassResponse structureClassResponse = new StructureClassResponse();
 		List<StructureClass> structureClasses = new ArrayList<>();
 		StructureClass structureClass = new StructureClass();
 		structureClass.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		structureClass.setAuditDetails(auditDetails);
-		
+
 		structureClasses.add(structureClass);
-		
+
 		structureClassResponse.setResponseInfo(new ResponseInfo());
 		structureClassResponse.setStructureClasses(structureClasses);
-		
+
 		try {
-			
-			when(masterService
-			.updateStructureClassMaster(
-				any(String.class), 
-				any(Long.class), 
-				any(StructureClassRequest.class)))
-			.thenReturn(structureClassResponse);
-			mockMvc.perform(post("/property/structureclasses/1/_update")
-					.param("tenantId","default")
+
+			when(masterService.updateStructureClassMaster(any(StructureClassRequest.class)))
+					.thenReturn(structureClassResponse);
+			mockMvc.perform(post("/property/structureclasses/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("structureClassUpdateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("structureClassUpdateResponse.json")));
-			
-			
+					.content(getFileContents("structureClassUpdateRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("structureClassUpdateResponse.json")));
+
 		} catch (Exception e) {
-			
+
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-		
+
 		assertTrue(Boolean.TRUE);
 
 	}
-	
 
 	@Test
 	public void testSearchStructureClasses() throws Exception {
-		
+
 		StructureClassResponse structureClassResponse = new StructureClassResponse();
 		List<StructureClass> structureClasses = new ArrayList<>();
 		StructureClass structureClass = new StructureClass();
 		structureClass.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		structureClass.setAuditDetails(auditDetails);
-		
+
 		structureClasses.add(structureClass);
-		
+
 		structureClassResponse.setResponseInfo(new ResponseInfo());
 		structureClassResponse.setStructureClasses(structureClasses);
-		
+
 		try {
-			
-			when(masterService
-				.getStructureClassMaster(
-					any(RequestInfo.class), 
-					any(String.class), 
-					any(Integer[].class), 
-					any(String.class), 
-					any(String.class), 
-					any(String.class),
-					any(Boolean.class),
-					any(Integer.class),
-					any(Integer.class),
-					any(Integer.class)))
-				.thenReturn(structureClassResponse);
-			
-			mockMvc.perform(post("/property/structureclasses/_search")
-					.param("tenantId","default")
+
+			when(masterService.getStructureClassMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
+					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Integer.class),
+					any(Integer.class), any(Integer.class))).thenReturn(structureClassResponse);
+
+			mockMvc.perform(post("/property/structureclasses/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("structureclassSearchRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("structureclassSearchResponse.json")));
-			
+					.content(getFileContents("structureclassSearchRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("structureclassSearchResponse.json")));
+
 		} catch (Exception e) {
-			
+
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-		
+
 		assertTrue(Boolean.TRUE);
-		
+
 	}
-	
-	
+
 	@Test
 	public void testSearchUsageMaster() throws Exception {
-		
+
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 		List<UsageMaster> usageMasters = new ArrayList<>();
 		UsageMaster usageMaster = new UsageMaster();
@@ -902,46 +869,33 @@ public class PropertyMasterControllerTest {
 		usageMaster.setCode("1234");
 		usageMaster.setDescription("test search_description");
 		usageMaster.setNameLocal("12212");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		usageMaster.setAuditDetails(auditDetails);
-		
+
 		usageMasters.add(usageMaster);
-		
+
 		usageMasterResponse.setResponseInfo(new ResponseInfo());
 		usageMasterResponse.setUsageMasters(usageMasters);
-		
+
 		try {
-			
-			when(masterService
-				.getUsageMaster(
-					any(RequestInfo.class), 
-					any(String.class), 
-					any(Integer[].class), 
-					any(String.class), 
-					any(String.class), 
-					any(String.class),
-					any(Boolean.class),
-					any(Boolean.class),
-					any(Integer.class),
-					any(Integer.class),
-					any(Integer.class)))
-				.thenReturn(usageMasterResponse);
-			
-			mockMvc.perform(post("/property/usages/_search")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("usageMasterSearchRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("usageMasterSearchResponse.json")));
-			
+
+			when(masterService.getUsageMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
+					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Boolean.class),
+					any(Integer.class), any(Integer.class), any(Integer.class))).thenReturn(usageMasterResponse);
+
+			mockMvc.perform(post("/property/usages/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("usageMasterSearchRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("usageMasterSearchResponse.json")));
+
 		} catch (Exception e) {
-			
+
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-		
+
 		assertTrue(Boolean.TRUE);
 	}
 
@@ -962,21 +916,15 @@ public class PropertyMasterControllerTest {
 		usageMasterResponse.setUsageMasters(usageMasters);
 
 		try {
-			
-			when(masterService
-				.createUsageMaster(
-					any(String.class), 
-					any(UsageMasterRequest.class)))
-				.thenReturn(usageMasterResponse);
 
+			when(masterService.createUsageMaster(any(String.class), any(UsageMasterRequest.class)))
+					.thenReturn(usageMasterResponse);
 
-			mockMvc.perform(post("/property/usages/_create")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("usageMasterCreateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("usageMasterCreateResponse.json")));
+			mockMvc.perform(post("/property/usages/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("usageMasterCreateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("usageMasterCreateResponse.json")));
 
 		} catch (Exception e) {
 
@@ -985,133 +933,106 @@ public class PropertyMasterControllerTest {
 
 		assertTrue(Boolean.TRUE);
 	}
-	
-
 
 	@Test
 	public void testUpdateUsageMaster() throws Exception {
-		
+
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 		List<UsageMaster> usageMasters = new ArrayList<>();
 		UsageMaster usageMaster = new UsageMaster();
 		usageMaster.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		usageMaster.setAuditDetails(auditDetails);
-		
+
 		usageMasters.add(usageMaster);
-		
+
 		usageMasterResponse.setResponseInfo(new ResponseInfo());
 		usageMasterResponse.setUsageMasters(usageMasters);
-		
+
 		try {
-			when(masterService
-			.updateUsageMaster(
-				any(String.class), 
-				any(Long.class), 
-				any(UsageMasterRequest.class)))
-			.thenReturn(usageMasterResponse);
-			
-			
-			mockMvc.perform(post("/property/usages/19/_update")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("usageMaterUpdateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("usageMasterUpdateResponse.json")));
-			
-			
+			when(masterService.updateUsageMaster(any(UsageMasterRequest.class))).thenReturn(usageMasterResponse);
+
+			mockMvc.perform(post("/property/usages/_update").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("usageMaterUpdateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("usageMasterUpdateResponse.json")));
+
 		} catch (Exception e) {
-			
+
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-		
+
 		assertTrue(Boolean.TRUE);
 
 	}
-	
+
 	@Test
 	public void testSearchWallTypes() throws Exception {
-		
+
 		WallTypeResponse wallTypeResponse = new WallTypeResponse();
 		List<WallType> wallTypes = new ArrayList<>();
 		WallType wallType = new WallType();
 		wallType.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		wallType.setAuditDetails(auditDetails);
-		
+
 		wallTypes.add(wallType);
-		
+
 		wallTypeResponse.setResponseInfo(new ResponseInfo());
 		wallTypeResponse.setWallTypes(wallTypes);
-		
+
 		try {
-			
-			when(masterService
-				.getWallTypeMaster(
-					any(RequestInfo.class), 
-					any(String.class), 
-					any(Integer[].class), 
-					any(String.class), 
-					any(String.class), 
-					any(String.class),
-					any(Integer.class),
-					any(Integer.class)))
-				.thenReturn(wallTypeResponse);
-			
-			mockMvc.perform(post("/property/walltypes/_search")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("wallTypeSearchRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("wallTypeSearchResponse.json")));
-			
+
+			when(masterService.getWallTypeMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+							.thenReturn(wallTypeResponse);
+
+			mockMvc.perform(post("/property/walltypes/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("wallTypeSearchRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("wallTypeSearchResponse.json")));
+
 		} catch (Exception e) {
-			
+
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-		
+
 		assertTrue(Boolean.TRUE);
-		
+
 	}
-	
+
 	@Test
 	public void testCreateWallTypes() throws Exception {
-		
+
 		List<WallType> wallTypes = new ArrayList<>();
 		WallType wallType = new WallType();
 		wallType.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		wallType.setAuditDetails(auditDetails);
-		
+
 		WallTypeResponse wallTypeResponse = new WallTypeResponse();
 		wallTypes.add(wallType);
-		
+
 		wallTypeResponse.setResponseInfo(new ResponseInfo());
 		wallTypeResponse.setWallTypes(wallTypes);
 
 		try {
-			
-			when(masterService
-				.createWallTypeMaster(
-					any(String.class), 
-					any(WallTypeRequest.class)))
-				.thenReturn(wallTypeResponse);
 
+			when(masterService.createWallTypeMaster(any(String.class), any(WallTypeRequest.class)))
+					.thenReturn(wallTypeResponse);
 
-			mockMvc.perform(post("/property/walltypes/_create")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("wallTypeCreateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("wallTypeCreateResponse.json")));
+			mockMvc.perform(post("/property/walltypes/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("wallTypeCreateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("wallTypeCreateResponse.json")));
 
 		} catch (Exception e) {
 
@@ -1119,52 +1040,43 @@ public class PropertyMasterControllerTest {
 		}
 
 		assertTrue(Boolean.TRUE);
-		
+
 	}
-	
+
 	@Test
 	public void testUpdateWallTypes() throws Exception {
-		
+
 		WallTypeResponse wallTypeResponse = new WallTypeResponse();
 		List<WallType> wallTypes = new ArrayList<>();
 		WallType wallType = new WallType();
 		wallType.setTenantId("default");
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		wallType.setAuditDetails(auditDetails);
-		
+
 		wallTypes.add(wallType);
-		
+
 		wallTypeResponse.setResponseInfo(new ResponseInfo());
 		wallTypeResponse.setWallTypes(wallTypes);
-		
+
 		try {
-		
-			when(masterService
-			.updateWallTypeMaster(
-				any(String.class), 
-				any(Long.class), 
-				any(WallTypeRequest.class)))
-			.thenReturn(wallTypeResponse);
-			
-			
-			mockMvc.perform(post("/property/walltypes/1/_update")
-					.param("tenantId","default")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("wallTypeUpdateRequest.json")))
-			.andExpect(status().isOk())
-			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(getFileContents("wallTypeUpdateResponse.json")));
-			
-			
+
+			when(masterService.updateWallTypeMaster(any(WallTypeRequest.class))).thenReturn(wallTypeResponse);
+
+			mockMvc.perform(post("/property/walltypes/_update").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("wallTypeUpdateRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("wallTypeUpdateResponse.json")));
+
 		} catch (Exception e) {
-			
+
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}
-		
+
 		assertTrue(Boolean.TRUE);
-		
+
 	}
 
 	private String getFileContents(String fileName) throws IOException {

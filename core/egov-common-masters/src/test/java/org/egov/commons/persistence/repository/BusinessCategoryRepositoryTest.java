@@ -1,6 +1,6 @@
 package org.egov.commons.persistence.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -128,10 +128,7 @@ public class BusinessCategoryRepositoryTest {
 		return category;
 	}
 	
-	  private BusinessCategoryCriteria getBusinessCriteria() {
-			return BusinessCategoryCriteria.builder().ids(Arrays.asList(1L,2L,3L)).active(true).sortBy("code")
-					.sortOrder("desc").tenantId("default").build();
-		}
+
 	
 	private AuthenticatedUser getAuthenticatedUser() {
 		

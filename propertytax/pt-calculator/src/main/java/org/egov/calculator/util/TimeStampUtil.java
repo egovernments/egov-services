@@ -1,11 +1,24 @@
 package org.egov.calculator.util;
 
+/**
+ * 
+ * @author Pavan Kumar Kamma
+ * 
+ * This Class contains the utility method to generate timestamp 
+ */
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeStampUtil {
+	/**
+	 * this method will generate the timestamp
+	 * 
+	 * @param date
+	 * @return Timestamp
+	 * @exception RuntimeException
+	 */
 	public static Timestamp getTimeStamp(String date) {
 
 		DateFormat formatter = null;

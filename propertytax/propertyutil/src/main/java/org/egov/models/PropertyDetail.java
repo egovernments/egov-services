@@ -132,6 +132,9 @@ public class PropertyDetail {
 	@Size(min = 1, max = 64)
 	private String applicationNo = null;
 
+	@JsonProperty("taxCalculations")
+	private String taxCalculations = null;
+
 	@JsonProperty("workFlowDetails")
 	private WorkFlowDetails workFlowDetails = null;
 

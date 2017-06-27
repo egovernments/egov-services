@@ -40,6 +40,9 @@ public class UsageMaster {
 	@Size(min = 8, max = 256)
 	private String nameLocal = null;
 
+	@JsonProperty("parent")
+	private Long parent = null;
+
 	@JsonProperty("description")
 	@Size(min = 8, max = 512)
 	private String description = null;

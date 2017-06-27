@@ -13,7 +13,7 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher {
 
-    private static final String ASSIGNMENT_ID = "assignmentId";
+    private static final String POSITION_ID = "positionId";
     private DepartmentRepository departmentRepository;
     private EmployeeRepository employeeRepository;
 
@@ -40,7 +40,7 @@ public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher 
     }
 
     private String getPosition(ServiceRequest serviceRequest) {
-        return serviceRequest.getDynamicSingleValue(ASSIGNMENT_ID);
+        return serviceRequest.getDynamicSingleValue(POSITION_ID);
     }
 
     private void setEmployee(ServiceRequestDocument document, ServiceRequest serviceRequest, Long positionId) {

@@ -259,6 +259,36 @@ paths:
           schema:
             $ref: '#/definitions/ErrorRes'
             
+  /agreements/_eviction:
+    post:
+      description: “Eviction of Agreement” implies that the agreement is evicted at any time. This eviction is valid only for the asset category Shop.
+      parameters:
+        - name: eviction
+          in: body
+          description: Details of the existing agreement which needs to be evicted.
+          required: true
+          schema:
+            $ref: '#/definitions/AgreementRequest'
+      tags:
+        - Renewal
+      responses:
+        '201':
+          description: Agreement evicted successfully.
+          schema:
+            $ref: '#/definitions/AgreementResponse'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantId provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+            
   /agreements/_update/{agreementId}:
     post:
       description: Updates a given `Agreement` with newer details.

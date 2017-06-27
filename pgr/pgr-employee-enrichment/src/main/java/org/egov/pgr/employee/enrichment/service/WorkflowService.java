@@ -33,12 +33,12 @@ public class WorkflowService {
             ServiceRequest responseFromDB = complaintRestRepository.getComplaintByCrn(request.getTenantId(), request.getCrn());
             String locationId = responseFromDB.getDynamicSingleValue("locationId");
             String departmentId = responseFromDB.getDynamicSingleValue("departmentId");
-            String assigneeId = responseFromDB.getDynamicSingleValue("assignmentId");
+            String positionId = responseFromDB.getDynamicSingleValue("positionId");
             String status = responseFromDB.getDynamicSingleValue("status");
             boolean isUpdate = false;
             if (!responseFromDB.getComplaintTypeCode().equals(request.getValueForKey("complaintTypeCode"))
                 || !locationId.equals(request.getValueForKey("boundaryId"))
-                || !assigneeId.equals(request.getAssignee().toString())) {
+                || !positionId.equals(request.getPositionId().toString())) {
                 isUpdate = true;
             } else if (!departmentId.equals(request.getValueForKey("departmentId"))
                 || (!status.equals(request.getStatus())

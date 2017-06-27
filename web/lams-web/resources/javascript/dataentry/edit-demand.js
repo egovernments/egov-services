@@ -55,6 +55,9 @@ class EditDemand extends React.Component {
     });
     if (response["status"] === 201) {
         showError("Demand updated successfully");
+        setTimeout(function(){
+          window.open(location, '_self').close();
+        }, 5000);
         // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, _agrmntDet["assignee"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
     } else {
         showError(response["statusText"]);

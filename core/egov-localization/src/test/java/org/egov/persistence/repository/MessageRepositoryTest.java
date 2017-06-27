@@ -1,5 +1,6 @@
 package org.egov.persistence.repository;
 
+import org.egov.domain.model.AuthenticatedUser;
 import org.egov.domain.model.MessageIdentity;
 import org.egov.domain.model.Tenant;
 import org.egov.persistence.entity.Message;
@@ -31,8 +32,9 @@ public class MessageRepositoryTest {
     @Test
     public void test_should_save_messages() {
         List<org.egov.domain.model.Message> domainMessages = getDomainMessages();
+        final AuthenticatedUser user = new AuthenticatedUser(1L);
 
-        messageRepository.save(domainMessages);
+        messageRepository.save(domainMessages, user);
 
         verify(messageJpaRepository).save(anyListOf(Message.class));
     }

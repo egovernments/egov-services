@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BusinessCategoryController.class)
-//@SpringBootTest(classes=org.egov.commons.EgovCommonMastersApplication.class)
 public class BusinessCategoryControllerTest {
 
 	@MockBean

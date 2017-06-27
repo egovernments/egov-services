@@ -46,7 +46,7 @@ public class EscalationDateServiceTest {
         final String tenantId = "tenantId";
         when(sevaRequest.getTenantId()).thenReturn(tenantId);
         final long assigneeId = 2L;
-        when(sevaRequest.getAssignee()).thenReturn(assigneeId);
+        when(sevaRequest.getPositionId()).thenReturn(assigneeId);
         when(sevaRequest.getDesignation()).thenReturn(designationId);
         final String complaintTypeId = "complaintTypeId";
         final String complaintTypeCode = "complaintTypeCode";

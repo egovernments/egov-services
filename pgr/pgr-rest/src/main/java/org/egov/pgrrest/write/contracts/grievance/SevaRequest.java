@@ -2,7 +2,6 @@ package org.egov.pgrrest.write.contracts.grievance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.User;
 import org.egov.pgrrest.common.model.AttributeEntry;
 import org.egov.pgrrest.write.model.ServiceRequestRecord;
 
@@ -18,7 +17,6 @@ public class SevaRequest {
 
     private static final String SERVICE_REQUEST = "serviceRequest";
     private static final String REQUEST_INFO = "RequestInfo";
-    private static final String VALUES_CITIZENFEEDBACK = "citizenFeedback";
     private static final String ATTRIBUTE_ENTRY_KEY = "key";
     private static final String ATTRIBUTE_ENTRY_NAME = "name";
 
@@ -46,17 +44,11 @@ public class SevaRequest {
             .requesterEmail(this.getServiceRequest().getEmail())
             .requesterAddress(this.getServiceRequest().getDynamicSingleValue(VALUES_COMPLAINANT_ADDRESS))
             .loggedInRequesterUserId(getCitizenUserId())
-            .receivingMode(this.getServiceRequest().getDynamicSingleValue(VALUES_RECEIVING_MODE))
-            .receivingCenter(getReceivingCenter())
             .serviceRequestTypeCode(this.getServiceRequest().getComplaintTypeCode())
             .serviceRequestStatus(this.getServiceRequest().getDynamicSingleValue(VALUES_STATUS))
-            .assigneeId(getAssigneeId())
-            .location(getLocation())
-            .childLocation(getChildLocation())
+            .positionId(getPositionId())
             .escalationDate(this.getServiceRequest().getEscalationDate())
-            .workflowStateId(getStateId())
             .department(getDepartment())
-            .citizenFeedback(getCitizenFeedback())
             .tenantId(this.getServiceRequest().getTenantId())
             .attributeEntries(getAttributeEntries())
             .build();
@@ -81,10 +73,6 @@ public class SevaRequest {
         return getServiceRequest().getCrn();
     }
 
-    private String getCitizenFeedback() {
-        return this.getServiceRequest().getDynamicSingleValue(VALUES_CITIZENFEEDBACK);
-    }
-
     private Long getRequesterId() {
         return getRequestInfo().getUserInfo().getId();
     }
@@ -92,11 +80,6 @@ public class SevaRequest {
     private RequestInfo getRequestInfo() {
         return objectMapper.convertValue(sevaRequestMap.get(REQUEST_INFO), RequestInfo.class);
     }
-
-    private User getUserInfo() {
-        return getRequestInfo().getUserInfo();
-    }
-
 
     private double getLongitude() {
         return this.getServiceRequest().getLng() == null ? 0.0 : this.getServiceRequest().getLng();
@@ -115,24 +98,9 @@ public class SevaRequest {
         return Long.valueOf(this.getServiceRequest().getDynamicSingleValue(VALUES_DEPARTMENT));
     }
 
-    private Long getStateId() {
-        final String stateId = this.getServiceRequest().getDynamicSingleValue(VALUES_STATE_ID);
-        return isEmpty(stateId) ? null : Long.valueOf(stateId);
-    }
-
-    public Long getLocation() {
-        final String locationId = this.getServiceRequest().getDynamicSingleValue(LOCATION_ID);
-        return isEmpty(locationId) ? null : Long.valueOf(locationId);
-    }
-
-    private Long getChildLocation() {
-        final String childLocationId = this.getServiceRequest().getDynamicSingleValue(CHILD_LOCATION_ID);
-        return isEmpty(childLocationId) ? null : Long.valueOf(childLocationId);
-    }
-
-    private Long getAssigneeId() {
-        final String assigneeId = this.getServiceRequest().getDynamicSingleValue(VALUES_ASSIGNEE_ID);
-        return isEmpty(assigneeId) ? null : Long.valueOf(assigneeId);
+    private Long getPositionId() {
+        final String positionId = this.getServiceRequest().getDynamicSingleValue(VALUES_POSITION_ID);
+        return isEmpty(positionId) ? null : Long.valueOf(positionId);
     }
 
     private Long getCitizenUserId() {

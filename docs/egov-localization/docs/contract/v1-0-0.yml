@@ -47,13 +47,9 @@ paths:
             items:
               $ref: '#/definitions/MessagesResponse'
         '400':
-          description: tenantId,locale  or module is not present
+          description: tenantId and locale is not present
           schema:
             $ref: '#/definitions/Error'              
-        '404':
-          description: tenantId,locale  or module provided were not found
-          schema:
-            $ref: '#/definitions/Error'
   /v1/_create:
     post:
       summary: Create messages for different locale
@@ -79,7 +75,6 @@ paths:
           description: Invalid message request input
           schema:
             $ref: '#/definitions/Error'
-    
   /v1/_update:
     post:
       summary: update messages for different locale
@@ -91,23 +86,44 @@ paths:
           description: Message Object to update messages for different locale
           required: true
           schema:
-            $ref: '#/definitions/MessagesRequest'
+            $ref: '#/definitions/UpdateMessageRequest'
       tags:
         - Messages
       responses:
         200:
           description: MessagesResponse as object
           schema:
-            type: object
-            items:
-                $ref: '#/definitions/MessagesResponse'
+            $ref: '#/definitions/MessagesResponse'
         '400':
           description: Invalid message request input
           schema:
             $ref: '#/definitions/Error'
-    
+  /v1/_delete:
+    post:
+      summary: delete messages
+      description: |
+        delete messages
+      parameters:
+        - name: messageRequest
+          in: body
+          description: Message Object to update messages for different locale
+          required: true
+          schema:
+            $ref: '#/definitions/DeleteMessagesRequest'
+      tags:
+        - Messages
+      responses:
+        200:
+          description: MessagesResponse as object
+          schema:
+            $ref: '#/definitions/DeleteMessagesResponse'
+        '400':
+          description: Invalid delete message request
+          schema:
+            $ref: '#/definitions/Error'    
 
 definitions:
+  
   MessagesResponse:
     type: object
     properties:
@@ -119,12 +135,21 @@ definitions:
         type: object
         items : 
           $ref: '#/definitions/ResponseInfo'
+  
+  DeleteMessagesResponse:
+    type: object
+    properties:
+      successful:
+        type: boolean
+      responseInfo :
+        type: object
+        items : 
+          $ref: '#/definitions/ResponseInfo'
+  
+  
   Message:
     type: object
     properties:
-      id :
-        type : integer
-        description : message id
       code:
         type: string
         description: Code of message.
@@ -134,12 +159,17 @@ definitions:
       module :
         type : string
         description : module for message
+      locale :
+        type : string
+        description : locale for message
       createddate :
         type : string
         description : message created date with timestamp
       lastupdateddate :
         type : string
         description : message last update date
+     
+        
   MessagesRequest:
     type: object
     properties:
@@ -157,7 +187,54 @@ definitions:
       tenantId :
          type : string
          description : Unique tenant id.
-  
+         
+  UpdateMessageRequest:
+    type: object
+    properties:
+      requestInfo:
+        type: object
+        items:
+          $ref: '#/definitions/RequestInfo'
+      locale :
+        type: string
+        description: Locale of message.
+      tenant :
+        type: string
+        description: Tenant of message.
+      module :
+        type: string
+        description: Module of message..
+      messages: 
+         type: array
+         items:
+          $ref: '#/definitions/UpdateMessage'
+         
+         
+  UpdateMessage:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Code of message
+      message:
+        type: string
+        description: Message
+         
+  DeleteMessagesRequest:
+    type: object
+    properties:
+      requestInfo:
+        type: object
+        items:
+          $ref: '#/definitions/RequestInfo'
+      tenantId :
+        type: string
+        description: tenant id of message.
+      messages: 
+         type: array
+         items:
+          $ref: '#/definitions/Message'
+
       
   RequestInfo :
     type: object

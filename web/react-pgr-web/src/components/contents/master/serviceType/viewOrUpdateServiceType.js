@@ -55,11 +55,34 @@ const styles = {
 
 var _this;
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class viewOrUpdateServiceType extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        data:''
+        data:'',
+        categorySource:[]
       }
     }
 
@@ -77,12 +100,23 @@ class viewOrUpdateServiceType extends Component {
     componentDidMount() {
      let {initForm}=this.props;
      initForm();
+     _this = this;
+
+     Api.commonApiPost("/pgr-master/serviceGroup/_search").then(function(response) {
+         _this.setState({
+           categorySource: response.ServiceGroups
+         })
+     }, function(err) {
+       _this.setState({
+           categorySource: []
+         })
+     });
     }
 
 
 
     render() {
-
+      let {categorySource}=this.state;
       let {
         serviceTypeCreate,
         fieldErrors,
@@ -128,13 +162,13 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{i+1}</td>
                                               <td>{e.serviceName}</td>
                                               <td>{e.serviceCode}</td>
-                                              <td>{e.category}</td>
+                                              <td>{getNameById(categorySource,e.category)}</td>
                                               <td>{e.active?"True":"False"}</td>
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>
-                                              <td>{e.metadata?"True":"False"}</td>
-                                              {url == '/viewOrUpdateServiceType/view' && <td><Link to={`/viewServiceType/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/viewOrUpdateServiceType/edit' && <td><Link  to={`/viewServiceType/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              <td>{e.hasFinancialImpact?"True":"False"}</td>
+                                              {url == '/viewOrUpdateServiceType/view' && <td><Link to={`/viewServiceType/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
+                                              {url == '/viewOrUpdateServiceType/edit' && <td><Link  to={`/serviceGroupCreate/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}

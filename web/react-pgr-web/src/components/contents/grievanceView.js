@@ -1,17 +1,21 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import FontIcon from 'material-ui/FontIcon';
+import FileDownload from 'material-ui/svg-icons/action/get-app';
 import {Table,TableBody,TableRow,TableRowColumn} from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
+import {white} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import Api from '../../api/api';
 import {translate} from '../common/common';
 import Fields from '../common/Fields';
+import LoadingIndicator from '../common/LoadingIndicator';
+import  '../../styles/custom.css';
 var Rating = require('react-rating');
 
 const styles = {
@@ -25,27 +29,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
   }
 };
 
@@ -54,27 +37,39 @@ var currentThis;
 class grievanceView extends Component{
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      loadingstatus: 'loading',
+      open: false
+    };
   }
-  componentWillMount(){
+  handleOpen = () => {
+    this.setState({open: true});
+  };
 
-  }
+  handleClose = () => {
+    this.setState({
+      open: false,
+      loadingstatus:'loading'
+    });
+    this.loadSRN();
+  };
+
   componentDidMount(){
-
     currentThis = this;
+    this.loadSRN();
+  }
+
+  loadSRN = () =>{
+
     let {initForm, addMandatory} = this.props;
     initForm();
 
-    let service = [];
-    service = [ { "variable": true, "code": "PRIORITY", "dataType": "singlevaluelist", "required": true, "dataTypeDescription": null, "description": "pgr.priority", "url": null, "roles": [ "EMPLOYEE" ], "actions": [ "UPDATE" ], "attribValues": [ { "key": "PRIORITY-1", "name": "pgr.priority.one", "isActive": true }, { "key": "PRIORITY-2", "name": "pgr.priority.two", "isActive": true }, { "key": "PRIORITY-3", "name": "pgr.priority.three", "isActive": true } ] } ];
-    currentThis.setState({SD : service});
-    // Api.commonApiPost("/pgr/servicedefinition/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
-    // {
-    //   console.log(JSON.stringify(response.attributes));
-    // currentThis.setState({SD : response.attributes})
-    // },function(err) {
-    //
-    // });
+    Api.commonApiPost("/pgr/servicedefinition/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
+    {
+      currentThis.setState({SD : response.attributes})
+    },function(err) {
+
+    });
 
     Api.commonApiPost("/pgr/seva/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
@@ -127,13 +122,17 @@ class grievanceView extends Component{
     });
   }
   getReceivingCenter(){
-    Api.commonApiPost("/pgr/receivingcenter/_search", {id:this.state.receivingCenter}).then(function(response)
-    {
-      currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
-      currentThis.getLocation();
-    },function(err) {
+    if(this.state.receivingCenter){
+      Api.commonApiPost("/pgr/receivingcenter/_search", {id:this.state.receivingCenter}).then(function(response)
+      {
+        currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
+        currentThis.getLocation();
+      },function(err) {
 
-    });
+      });
+    }else {
+      currentThis.getLocation();
+    }
   }
   getLocation(){
     Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
@@ -145,22 +144,30 @@ class grievanceView extends Component{
     });
   }
   nextStatus = () => {
-    Api.commonApiPost("/workflow/v1/nextstatuses/_search", {currentStatusCode:this.state.status}).then(function(response)
-    {
-      currentThis.setState({nextStatus : response.statuses});
-      currentThis.allServices();
-    },function(err) {
+    if(localStorage.getItem('type')){
+      Api.commonApiPost("/workflow/v1/nextstatuses/_search", {currentStatusCode:this.state.status}).then(function(response)
+      {
+        currentThis.setState({nextStatus : response.statuses});
+        currentThis.allServices();
+      },function(err) {
 
-    });
+      });
+    }else {
+      currentThis.setState({loadingstatus:'hide'});
+    }
   }
   allServices = () => {
-    Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
-    {
-      currentThis.setState({complaintTypes : response.complaintTypes});
-      currentThis.getWard();
-    },function(err) {
+    if(localStorage.getItem('type') == 'EMPLOYEE'){
+      Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
+      {
+        currentThis.setState({complaintTypes : response.complaintTypes});
+        currentThis.getWard();
+      },function(err) {
 
-    });
+      });
+    }else{
+      currentThis.setState({loadingstatus:'hide'});
+    }
   }
   getWard = () => {
     Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName:'Ward',hierarchyTypeName:'Administration'}).then(function(response)
@@ -184,6 +191,7 @@ class grievanceView extends Component{
     Api.commonApiPost("/egov-common-masters/departments/_search").then(function(response)
     {
       currentThis.setState({department : response.Department});
+      currentThis.setState({loadingstatus:'hide'});
     },function(err) {
 
     });
@@ -230,9 +238,11 @@ class grievanceView extends Component{
               href={files.url}
               download
               label={"File " + (index+1)}
-              secondary={true}
-              style={styles.button}
-              icon={<FontIcon className="muidocs-icon-custom-github" />}
+              primary={true}
+              fullWidth = {true}
+              style={styles.marginStyle}
+              labelPosition="before"
+              icon={<FileDownload />}
             />
           </Col>
         );
@@ -241,10 +251,11 @@ class grievanceView extends Component{
   }
   search = (e) => {
     e.preventDefault();
+    this.setState({loadingstatus:'loading'});
     let update = [...currentThis.state.srn];
     let req_obj = {};
     req_obj['serviceRequest'] = update[0];
-    console.log(JSON.stringify(req_obj));
+    //console.log(JSON.stringify(req_obj));
 
     var dat = new Date().toLocaleDateString();
     var time = new Date().toLocaleTimeString();
@@ -275,14 +286,27 @@ class grievanceView extends Component{
         currentThis.chckkey('rating', req_obj);
     }
 
-    console.log(JSON.stringify(req_obj));
+    if(currentThis.props.files.length > 0){
+      for(let i=0; i<currentThis.props.files.length; i++){
+        let formData = new FormData();
+        formData.append("tenantId", localStorage.getItem('tenantId'));
+        formData.append("module", "PGR");
+        formData.append("file", currentThis.props.files[i]);
+        Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+        {
+          var obj = {
+    				key: 'employeeDocs_'+currentThis.props.files[i]['name'],
+    				name: response.files[0].fileStoreId
+    			}
+  			  req_obj.serviceRequest.attribValues.push(obj);
+          currentThis.updateSeva(req_obj);
+        },function(err) {
 
-    Api.commonApiPost("/pgr/seva/_update",{},req_obj).then(function(updateResponse)
-    {
-      console.log(JSON.stringify(updateResponse));
-    },function(err) {
-
-    });
+        });
+      }
+    }else{
+      currentThis.updateSeva(req_obj);
+    }
 
   }
   chckkey = (key, req_obj) =>{
@@ -305,6 +329,42 @@ class grievanceView extends Component{
   		req_obj.serviceRequest.attribValues.push(finobj);
   	}
   }
+  updateSeva = (req_obj) =>{
+    //console.log('Before Submit',JSON.stringify(req_obj));
+    Api.commonApiPost("/pgr/seva/_update",{},req_obj).then(function(updateResponse)
+    {
+      //console.log('After submit',JSON.stringify(updateResponse));
+      currentThis.setState({loadingstatus:'hide'});
+      {currentThis.handleOpen()}
+    },function(err) {
+
+    });
+  }
+  employeesDocs = () =>{
+    if(this.state.srn != undefined){
+      return this.state.srn.map((values, index) => {
+        return values.attribValues.map((attrib, aindex) =>{
+            if(attrib['key'].indexOf('employeeDocs') !== -1){
+              let key = (attrib['key'].split(/_(.+)/)[1]).length > 15 ? (attrib['key'].split(/_(.+)/)[1]).substr(0, 12)+'...' : attrib['key'].split(/_(.+)/)[1];
+              return (
+                <Col xs={6} md={3} key={aindex}>
+                  <RaisedButton
+                    href={'/filestore/v1/files/id?fileStoreId=' + attrib['name']+'&tenantId='+localStorage.getItem('tenantId')}
+                    download
+                    label={key}
+                    primary={true}
+                    fullWidth = {true}
+                    style={styles.marginStyle}
+                    labelPosition="before"
+                    icon={<FileDownload />}
+                  />
+                </Col>
+              )
+						}
+        })
+      });
+    }
+  }
   render(){
     let
     {
@@ -316,60 +376,71 @@ class grievanceView extends Component{
        } = this;
     let{
       handleChange,
+      handleWard,
       handleDesignation,
       handlePosition,
       grievanceView,
+      files,
       fieldErrors,
       isFormValid,
-      loadServiceDefinition
+      loadServiceDefinition,
+      handleUpload
     } = this.props;
     currentThis = this;
+    const actions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />
+    ];
     return(
       <div>
       <form autoComplete="off" onSubmit={(e) => { search(e) }}>
+      <LoadingIndicator status={this.state.loadingstatus}/>
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             SRN(Service Request No.): {this.state.serviceRequestId}
+             {translate('pgr.lbl.srn')} : {this.state.serviceRequestId}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Name
+                  {translate('core.lbl.add.name')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.firstName}
                 </Col>
                 <Col xs={6} md={3}>
-                  Mobile Number
+                  {translate('core.lbl.mobilenumber')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.phone}
-                </Col>
-              </Row>
-              <Row style={styles.addBorderBottom}>
-                <Col xs={6} md={3}>
-                  Email
-                </Col>
-                <Col xs={6} md={3}>
-                  {this.state.email}
-                </Col>
-                <Col xs={6} md={3}>
-                  Address
-                </Col>
-                <Col xs={6} md={3}>
-                  {this.state.requesterAddress}
+                  {this.state.phone ? this.state.phone : 'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Aadhaar No.
+                  {translate('core.lbl.email.compulsory')}
+                </Col>
+                <Col xs={6} md={3}>
+                  {this.state.email ? this.state.email : 'N/A'}
+                </Col>
+                <Col xs={6} md={3}>
+                  {translate('core.lbl.address')}
+                </Col>
+                <Col xs={6} md={3}>
+                  {this.state.requesterAddress ? this.state.requesterAddress : 'N/A'}
+                </Col>
+              </Row>
+              <Row style={styles.addBorderBottom}>
+                <Col xs={6} md={3}>
+                  {translate('core.lbl.enter.aadharcard.number')}
                 </Col>
                 <Col xs={6} md={3}>
                   N/A
                 </Col>
                 <Col xs={6} md={3}>
-                  Description
+                  {translate('core.lbl.description')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.description}
@@ -377,13 +448,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Grievance Type
+                  {translate('pgr.lbl.grievance.type')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.serviceName}
                 </Col>
                 <Col xs={6} md={3}>
-                  Department
+                  {translate('core.lbl.department')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.departmentName}
@@ -391,13 +462,13 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Registered Date
+                  {translate('pgr.lbl.registered.date')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.requestedDatetime}
                 </Col>
                 <Col xs={6} md={3}>
-                  Next Escalation Date
+                  {translate('pgr.lbl.nextescalation.date')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.expectedDatetime}
@@ -405,30 +476,30 @@ class grievanceView extends Component{
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Filed Via
+                  {translate('pgr.lbl.filedvia')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.receivingMode}
                 </Col>
                 <Col xs={6} md={3}>
-                  Receiving Center
+                  {translate('pgr.lbl.receivingcenter')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.receivingCenterName}
+                  {this.state.receivingCenterName ? this.state.receivingCenterName :'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
-                  Location
+                  {translate('core.lbl.location')}
                 </Col>
                 <Col xs={6} md={3}>
                   {this.state.childLocationName + " - " + this.state.locationName}
                 </Col>
                 <Col xs={6} md={3}>
-                  Landmark
+                  {translate('core.lbl.landmark')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.address}
+                  {this.state.address ? this.state.address : 'N/A'}
                 </Col>
               </Row>
               <Row style={{padding:'10px'}}>
@@ -442,8 +513,20 @@ class grievanceView extends Component{
       </Grid>
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
+        <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+         {translate('core.documents')}
+        < /div>}/>
+        <CardText style={{padding:'8px 16px 0'}}>
+          <Row>
+            {this.employeesDocs()}
+          </Row>
+        </CardText>
+        </Card>
+      </Grid>
+      <Grid style={{width:'100%'}}>
+        <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-           Workflow History
+           {translate('core.lbl.history')}
           < /div>}/>
           <CardText style={{padding:'8px 16px 0'}}>
             <Row style={styles.addBorderBottom}>
@@ -451,19 +534,19 @@ class grievanceView extends Component{
                 Date
               </Col>
               <Col xs={12} md={2}>
-                Updated By
+                {translate('pgr.lbl.updatedby')}
               </Col>
               <Col xs={12} md={2}>
-                Status
+                {translate('core.lbl.status')}
               </Col>
               <Col xs={12} md={2}>
-                Current Owner/Officer Responsible
+                {translate('pgr.lbl.currentowner')}
               </Col>
               <Col xs={12} md={2}>
-                Department
+                {translate('core.lbl.department')}
               </Col>
               <Col xs={12} md={2}>
-                Comments
+                {translate('core.lbl.comments')}
               </Col>
             </Row>
             {this.renderWorkflow()}
@@ -474,12 +557,12 @@ class grievanceView extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-           Actions
+           {translate('pgr.lbl.actions')}
           < /div>}/>
           <CardText style={{padding:'8px 16px 0'}}>
             <Row>
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Change Status" maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
                   handleChange(value, "status", false, "")
                 }}>
                   {this.state.nextStatus !== undefined ?
@@ -490,7 +573,7 @@ class grievanceView extends Component{
               </Col>
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Change Grievance Type" maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
                   handleChange(value, "serviceCode", false, "")}}>
                   {this.state.complaintTypes !== undefined ?
                   this.state.complaintTypes.map((ctype, index) => (
@@ -500,8 +583,8 @@ class grievanceView extends Component{
               </Col> : "" }
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Ward" maxHeight={200} value={grievanceView.locationId ? grievanceView.locationId : this.state.locationId}  onChange={(event, key, value) => {
-                  handleChange(value, "locationId", false, "")}}>
+                <SelectField fullWidth={true} floatingLabelText="Ward *" maxHeight={200} value={grievanceView.locationId ? grievanceView.locationId : this.state.locationId}  onChange={(event, key, value) => {
+                  handleWard(value, "locationId", false, "")}}>
                   {this.state.ward !== undefined ?
                   this.state.ward.map((ward, index) => (
                       <MenuItem value={ward.id} key={index} primaryText={ward.name} />
@@ -510,8 +593,8 @@ class grievanceView extends Component{
               </Col>: ""}
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Location" maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
-                  handleChange(value, "childLocationId", false, "")}}>
+                <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
+                  handleChange(value, "childLocationId", true, "")}}>
                   {this.state.locality !== undefined ?
                   this.state.locality.map((locality, index) => (
                       <MenuItem value={locality.id} key={index} primaryText={locality.name} />
@@ -559,31 +642,42 @@ class grievanceView extends Component{
             <Row>
               {loadServiceDefinition()}
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Priority Color" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
-                  handleChange(value, "priorityColor", true, ""); }}>
-                  <MenuItem value="red" primaryText="Red" />
-                  <MenuItem value="green" primaryText="Green" />
-                  <MenuItem value="yellow" primaryText="Yellow" />
+                <SelectField fullWidth={true} floatingLabelText="Priority Color *" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
+                  handleChange(value, "priorityColor", true, ""); }} errorText={fieldErrors.priorityColor ? fieldErrors.priorityColor : ""}>
+                  <MenuItem value="#F44336" primaryText="Red" />
+                  <MenuItem value="#4CAF50" primaryText="Green" />
+                  <MenuItem value="#FFEB3B" primaryText="Yellow" />
                 </SelectField>
               </Col>
             </Row> : ''}
-            { localStorage.getItem('type') == 'CITIZEN' ?
+            { localStorage.getItem('type') == 'CITIZEN' && (this.state.status == 'COMPLETED' || currentThis.state.status == 'REJECTED') ?
             <Row>
               <Col xs={12} md={3}>
-                <h4>Rating</h4>
-                <Rating initialRate={grievanceView.rating ? grievanceView.rating : this.state.rating } onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
+                <h4>Feedback</h4>
+                <Rating initialRate={grievanceView.rating} onClick={(rate, event) => { handleChange(rate,"rating", true,"")}}/>
               </Col>
             </Row> : ''}
             <Row>
               <Col xs={12} md={12}>
-                <TextField floatingLabelText="Comments" fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
-                  handleChange(newValue, "approvalComments", true, "") }} />
+                <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
+                  handleChange(newValue, "approvalComments", true, "") }} errorText={fieldErrors.approvalComments ? fieldErrors.approvalComments : ""}/>
               </Col>
             </Row>
+            { localStorage.getItem('type') == 'EMPLOYEE' ?
+            <Row>
+              <Col xs={12} md={3}>
+                <h4>{translate('core.documents')}</h4>
+              </Col>
+              <Col xs={12} md={3}>
+                <div className="input-group">
+                    <input type="file" className="form-control" ref="file" onChange={(e)=>handleUpload(e)}/>
+                    <span className="input-group-addon" onClick={() => this.refs.file.value = ''}><i className="glyphicon glyphicon-trash specific"></i></span>
+                </div>
+              </Col>
+            </Row> : ""}
             <Row>
               <div style={{textAlign: 'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
             </Row>
           </CardText>
@@ -591,7 +685,18 @@ class grievanceView extends Component{
       </Grid>
       : ''
       }
+      <div style={{textAlign: 'center'}}>
+        <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+      </div>
       </form>
+      <Dialog
+        actions={actions}
+        modal={true}
+        open={this.state.open}
+        onRequestClose={this.handleClose}
+      >
+        {translate('pgr.msg.success.grievanceupdated')}
+      </Dialog>
       </div>
     )
   }
@@ -599,7 +704,7 @@ class grievanceView extends Component{
 
 const mapStateToProps = state => {
   //console.log(state.form.form);
-  return ({grievanceView: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({grievanceView: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -624,6 +729,18 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange: (value, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  },
+  handleWard : (value, property, isRequired, pattern) => {
+    Api.commonApiPost("/egov-location/boundarys/childLocationsByBoundaryId",{boundaryId : value}).then(function(response)
+    {
+      currentThis.setState({locality : response.Boundary});
+      currentThis.setState({childLocationId : ''});
+      dispatch({type: "ADD_MANDATORY", property: "childLocationId", value: '', isRequired : true, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property: "childLocationId", value:'', isRequired:true, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+    },function(err) {
+
+    });
   },
   handleDesignation: (value, property, isRequired, pattern) => {
     if(property == 'departmentId' && value == 0)
@@ -683,7 +800,10 @@ const mapDispatchToProps = dispatch => ({
         })
       }
     }
-  }
+  },
+  handleUpload: (e) => {
+    dispatch({type: 'FILE_UPLOAD', files: e.target.files})
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(grievanceView);

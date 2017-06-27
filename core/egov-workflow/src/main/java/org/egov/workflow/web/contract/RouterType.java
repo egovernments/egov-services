@@ -67,6 +67,8 @@ public class RouterType {
 	
 	private List<ServiceType> services;
 	
+	private ServiceType service;
+	
 	private List<BoundaryIdType> boundary;
 	
 	@NotNull

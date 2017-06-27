@@ -141,7 +141,6 @@ public class GuidanceValueRepostory {
 	 *            String that need to be executed
 	 * @return {@link GuidanceValue} List of GuidanceValue
 	 */
-
 	@SuppressWarnings("rawtypes")
 	public List<GuidanceValue> getGuidanceValues(String query) {
 
@@ -173,6 +172,10 @@ public class GuidanceValueRepostory {
 		}
 
 		return guidanceValues;
+	}
+	
+	public String getString(Object object){
+	    return object == null ? "" : object.toString();
 	}
 
 }

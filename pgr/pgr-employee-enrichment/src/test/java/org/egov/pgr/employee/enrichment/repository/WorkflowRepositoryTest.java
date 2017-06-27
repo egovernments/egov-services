@@ -91,7 +91,7 @@ public class WorkflowRepositoryTest {
             .status("Registered")
             .action("create")
             .businessKey("Complaint")
-            .assignee(2L)
+            .positionId(2L)
             .senderName("Harry")
             .tenantId("ap.public")
             .values(valuesToSet)

@@ -199,7 +199,7 @@ public class PropertyMasterRepository {
 	 * @param occuapancyMaster
 	 * @param data
 	 */
-	public void updateOccuapancy(String tenantId, Long id, OccuapancyMaster occuapancyMaster, String data) {
+	public void updateOccuapancy(OccuapancyMaster occuapancyMaster, String data) {
 
 		Long modifiedTime = new Date().getTime();
 
@@ -216,7 +216,7 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, occuapancyMaster.getAuditDetails().getLastModifiedBy());
 				ps.setLong(5, modifiedTime);
-				ps.setLong(6, id);
+				ps.setLong(6, occuapancyMaster.getId());
 				return ps;
 			}
 		};
@@ -310,7 +310,7 @@ public class PropertyMasterRepository {
 	 * @param data
 	 */
 	@Transactional
-	public void updatePropertyType(String tenantId, Long id, PropertyType propertyType, String data) {
+	public void updatePropertyType(PropertyType propertyType, String data) {
 
 		Long modifiedTime = new Date().getTime();
 
@@ -327,7 +327,7 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, propertyType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(5, modifiedTime);
-				ps.setLong(6, id);
+				ps.setLong(6, propertyType.getId());
 				return ps;
 			}
 		};
@@ -422,7 +422,7 @@ public class PropertyMasterRepository {
 	 */
 
 	@Transactional
-	public void updateFloorType(FloorType floorType, String data, Integer id) {
+	public void updateFloorType(FloorType floorType, String data) {
 
 		long updatedTime = new Date().getTime();
 		String updateFloorTypeSql = FloorTypeBuilder.UPDATE_FLOOR_QUERY;
@@ -441,7 +441,7 @@ public class PropertyMasterRepository {
 				ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(6, floorType.getAuditDetails().getCreatedTime());
 				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setInt(8, id);
+				ps.setLong(8, floorType.getId());
 
 				return ps;
 			}
@@ -534,7 +534,7 @@ public class PropertyMasterRepository {
 	 */
 
 	@Transactional
-	public void updateRoofType(RoofType roofType, String data, Integer id) {
+	public void updateRoofType(RoofType roofType, String data) {
 
 		long updatedTime = new Date().getTime();
 		String updateRoofTypeSql = RoofTypeBuilder.UPDATE_ROOF_QUERY;
@@ -553,7 +553,7 @@ public class PropertyMasterRepository {
 				ps.setString(5, roofType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(6, roofType.getAuditDetails().getCreatedTime());
 				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setInt(8, id);
+				ps.setLong(8, roofType.getId());
 
 				return ps;
 			}
@@ -646,7 +646,7 @@ public class PropertyMasterRepository {
 	 */
 
 	@Transactional
-	public void updateWoodType(WoodType woodType, String data, Integer id) {
+	public void updateWoodType(WoodType woodType, String data) {
 
 		long updatedTime = new Date().getTime();
 		String updateWoodTypeSql = WoodTypeBuilder.UPDATE_WOOD_QUERY;
@@ -665,7 +665,7 @@ public class PropertyMasterRepository {
 				ps.setString(5, woodType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(6, woodType.getAuditDetails().getCreatedTime());
 				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setInt(8, id);
+				ps.setLong(8, woodType.getId());
 
 				return ps;
 			}
@@ -733,6 +733,7 @@ public class PropertyMasterRepository {
 
 		for (WallType wallType : wallTypes) {
 			WallType wallData = gson.fromJson(wallType.getData(), WallType.class);
+			wallType.setCode(wallData.getCode());
 			wallType.setAuditDetails(wallData.getAuditDetails());
 			wallType.setDescription(wallData.getDescription());
 			wallType.setName(wallData.getName());
@@ -769,6 +770,10 @@ public class PropertyMasterRepository {
 		for (UsageMaster usageType : usageTypes) {
 
 			UsageMaster usageData = gson.fromJson(usageType.getData(), UsageMaster.class);
+			usageType.setActive(usageData.getActive());
+			usageType.setIsResidential(usageData.getIsResidential());
+			usageType.setOrderNumber(usageData.getOrderNumber());
+
 			usageType.setAuditDetails(usageData.getAuditDetails());
 			usageType.setDescription(usageData.getDescription());
 			usageType.setName(usageData.getName());
@@ -812,7 +817,7 @@ public class PropertyMasterRepository {
 
 	}
 
-	public void updateStructureClsses(String tenantId, Long id, StructureClass structureClass, String data) {
+	public void updateStructureClsses(StructureClass structureClass, String data) {
 
 		Long updatedTime = new Date().getTime();
 
@@ -832,7 +837,7 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, structureClass.getAuditDetails().getLastModifiedBy());
 				ps.setLong(5, updatedTime);
-				ps.setLong(6, id);
+				ps.setLong(6, structureClass.getId());
 
 				return ps;
 			}
@@ -863,14 +868,15 @@ public class PropertyMasterRepository {
 
 				ps.setString(1, usageMaster.getTenantId());
 				ps.setString(2, usageMaster.getCode());
+				ps.setLong(3, usageMaster.getParent());
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
-				ps.setObject(3, jsonObject);
-				ps.setString(4, usageMaster.getAuditDetails().getCreatedBy());
-				ps.setString(5, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
+				ps.setObject(4, jsonObject);
+				ps.setString(5, usageMaster.getAuditDetails().getCreatedBy());
+				ps.setString(6, usageMaster.getAuditDetails().getLastModifiedBy());
 				ps.setLong(7, createdTime);
+				ps.setLong(8, createdTime);
 				return ps;
 			}
 		};
@@ -890,7 +896,7 @@ public class PropertyMasterRepository {
 	 * @param usageMaster
 	 * @param data
 	 */
-	public void updateUsageMaster(String tenantId, Long id, UsageMaster usageMaster, String data) {
+	public void updateUsageMaster(UsageMaster usageMaster, String data) {
 
 		Long updatedTime = new Date().getTime();
 
@@ -904,12 +910,13 @@ public class PropertyMasterRepository {
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
-				ps.setString(1, tenantId);
+				ps.setString(1, usageMaster.getTenantId());
 				ps.setString(2, usageMaster.getCode());
-				ps.setObject(3, jsonObject);
-				ps.setString(4, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
-				ps.setLong(6, id);
+				ps.setLong(3, usageMaster.getParent());
+				ps.setObject(4, jsonObject);
+				ps.setString(5, usageMaster.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, updatedTime);
+				ps.setLong(7, usageMaster.getId());
 				return ps;
 			}
 		};
@@ -967,7 +974,7 @@ public class PropertyMasterRepository {
 	 * @param data
 	 */
 
-	public void updateWallTypes(String tenantId, Long id, WallType wallType, String data) {
+	public void updateWallTypes(WallType wallType, String data) {
 
 		Long updatedTime = new Date().getTime();
 
@@ -987,7 +994,7 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, wallType.getAuditDetails().getLastModifiedBy());
 				ps.setLong(5, updatedTime);
-				ps.setLong(6, id);
+				ps.setLong(6, wallType.getId());
 				return ps;
 			}
 		};
@@ -1022,6 +1029,7 @@ public class PropertyMasterRepository {
 
 		for (StructureClass structureType : structureClasses) {
 			StructureClass structureData = gson.fromJson(structureType.getData(), StructureClass.class);
+			structureType.setCode(structureData.getCode());
 			structureType.setAuditDetails(structureData.getAuditDetails());
 			structureType.setDescription(structureData.getDescription());
 			structureType.setName(structureData.getName());

@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Tenant id is mandatory",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.TENANT_ID_MANDATORY",
+                "message": "Tenant id is mandatory",
+                "field": "serviceRequest.tenantId"
+            }
+        ]
+    }
+}

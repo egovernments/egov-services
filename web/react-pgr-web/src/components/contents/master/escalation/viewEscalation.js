@@ -64,9 +64,13 @@ class ViewEscalation extends Component {
       this.state = {
               positionSource:[],
               grievanceTypeSource:[],
-              dataSourceConfig : {
-                text: 'textKey',
-                value: 'valueKey',
+              positionDataSourceConfig : {
+                text: 'name',
+                value: 'id',
+              },
+              serviceDataSourceConfig: {
+                text: 'serviceName',
+                value: 'id',
               },
               isSearchClicked: false,
               resultList: [],
@@ -76,17 +80,6 @@ class ViewEscalation extends Component {
     componentWillMount() {
       let{initForm} = this.props;
       initForm()
-
-      this.setState({
-        grievanceTypeSource:[
-          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
-        ],
-        positionSource: [
-          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
-        ]
-      });
 
       $('#searchTable').DataTable({
            dom: 'lBfrtip',
@@ -99,6 +92,28 @@ class ViewEscalation extends Component {
     }
 
     componentDidMount() {
+      let self = this;
+      Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+        console.log(response);
+          self.setState({
+            positionSource: response.Position
+          })
+      }, function(err) {
+        self.setState({
+            positionSource: []
+          })
+      });
+
+      Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+          console.log(response);
+          self.setState({
+            grievanceTypeSource: response.complaintTypes
+          })
+      }, function(err) {
+        self.setState({
+            grievanceTypeSource: []
+          })
+      });
 
     }
 
@@ -117,12 +132,25 @@ class ViewEscalation extends Component {
     }
 
   submitForm = (e) => {
-      e.preventDefault()
-      flag = 1;
-      this.setState({
-        resultList: [],
-        isSearchClicked: true
+      e.preventDefault();
+
+      let current = this;
+
+      let query = {
+        id:this.props.viewEscalation.position
+      }
+
+      Api.commonApiPost("/pgr-master/escalation/_search",query,{}).then(function(response){
+          console.log(response);
+          flag = 1;
+          current.setState({
+            resultList: response.EscalationTimeType,
+            isSearchClicked: true
+          })
+      }).catch((error)=>{
+          console.log(error);
       })
+
   }
 
     render() {
@@ -161,9 +189,9 @@ class ViewEscalation extends Component {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
-   		              <th>Grievance Type</th>
-   		              <th>Boundary Type</th>
-   		              <th>Boundary</th>
+                    <th>Grievance Type</th>
+                    <th>From Position</th>
+                    <th>To Position</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -178,7 +206,7 @@ class ViewEscalation extends Component {
       return(<div className="viewEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Escalation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -192,13 +220,13 @@ class ViewEscalation extends Component {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
                                           dataSource={this.state.grievanceTypeSource}
-                                          dataSourceConfig={this.state.dataSourceConfig}
+                                          dataSourceConfig={this.state.serviceDataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "grievanceType")}}
                                           value={viewEscalation.grievanceType ? viewEscalation.grievanceType : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
                   	                        handleChange(e, "grievanceType", true, "");
@@ -213,13 +241,13 @@ class ViewEscalation extends Component {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
                                           dataSource={this.state.positionSource}
-                                          dataSourceConfig={this.state.dataSourceConfig}
+                                          dataSourceConfig={this.state.positionDataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
                                           value={viewEscalation.position ? viewEscalation.position : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
                   	                        handleChange(e, "position", true, "");

@@ -62,47 +62,22 @@ const styles = {
   }
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 class BulkEscalationGeneration extends Component {
     constructor(props) {
       super(props)
       this.state = {
-              fromPositionSource: [],
-              toPositionSource: [],
+              positionSource: [],
               dataSourceConfig : {
-                text: 'textKey',
-                value: 'valueKey',
+                text: 'name',
+                value: 'id',
               },
-              values: [],
+              grievanceType:[]
             };
     }
 
     componentWillMount() {
       let{initForm} = this.props;
       initForm()
-
-      this.setState({
-        fromPositionSource: [
-          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
-        ],
-        toPositionSource: [
-          {textKey: 'To Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'To Position Source', valueKey: 'someSecondValue'},
-        ]
-      })
 
       $('#searchTable').DataTable({
            dom: 'lBfrtip',
@@ -115,7 +90,27 @@ class BulkEscalationGeneration extends Component {
     }
 
     componentDidMount() {
+      let self = this;
+      Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+          self.setState({
+            positionSource: response.Position
+          })
+      }, function(err) {
+        self.setState({
+            positionSource: []
+          })
+      });
 
+
+        Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+            self.setState({
+              grievanceType: response.complaintTypes
+            })
+        }, function(err) {
+          self.setState({
+              grievanceType: []
+            })
+        });
     }
 
     componentWillUpdate() {
@@ -131,18 +126,6 @@ class BulkEscalationGeneration extends Component {
        .destroy(true);
     }
 
-    menuItems = (values) => {
-    return names.map((name) => (
-      <MenuItem
-        key={name}
-        insetChildren={true}
-        checked={values && values.indexOf(name) > -1}
-        value={name}
-        primaryText={name}
-      />
-    ));
-  }
-
   submitForm = (e) => {
       e.preventDefault()
       flag = 1;
@@ -153,8 +136,6 @@ class BulkEscalationGeneration extends Component {
   }
 
     render() {
-
-     const {values} = this.state;
 
       let {
         isFormValid,
@@ -167,6 +148,8 @@ class BulkEscalationGeneration extends Component {
       let {submitForm} = this;
 
       let {isSearchClicked, resultList} = this.state;
+
+      console.log(bulkEscalationGeneration);
 
       const renderBody = function() {
       	  if(resultList && resultList.length)
@@ -191,8 +174,8 @@ class BulkEscalationGeneration extends Component {
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
    		              <th>Grievance Type</th>
-   		              <th>Boundary Type</th>
-   		              <th>Boundary</th>
+   		              <th>From Position</th>
+   		              <th>To Position</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -221,14 +204,14 @@ class BulkEscalationGeneration extends Component {
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.fromPositionSource}
+                                          dataSource={this.state.positionSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "fromPosition")}}
                                           value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
                   	                        handleChange(e, "fromPosition", true, "");
@@ -247,12 +230,19 @@ class BulkEscalationGeneration extends Component {
                                                  value: values
                                                }
                                              };
-                                             this.setState({values})
                                              handleChange(e, "grievanceType", true, "");
                                             }}
                                          >
-                                            {this.menuItems(values)}
-                                         </SelectField>
+                                         {this.state.grievanceType.map((item, index) => (
+                                                   <MenuItem
+                                                     value={item.serviceCode}
+                                                     key={index}
+                                                     insetChildren={true}
+                                                     primaryText={item.serviceName}
+                                                     checked={bulkEscalationGeneration.grievanceType && bulkEscalationGeneration.grievanceType.indexOf(item.serviceCode) > -1}
+                                                   />
+                                          ))}
+                                          </SelectField>
                                   </Col>
                                   <Col xs={12} md={4}>
                                       <AutoComplete
@@ -261,14 +251,14 @@ class BulkEscalationGeneration extends Component {
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.toPositionSource}
+                                          dataSource={this.state.positionSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "toPosition")}}
                                           value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ""}
                                           onNewRequest={(chosenRequest, index) => {
                                             var e = {
                                               target: {
-                                                value: chosenRequest
+                                                value: chosenRequest.id
                                               }
                                             };
                                             handleChange(e, "toPosition", true, "");
@@ -333,7 +323,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,

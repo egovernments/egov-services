@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
-import CustomMenu from './CustomMenu';
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -113,10 +112,6 @@ class Header extends Component {
     return (
       <div className="Header">
         <AppBar title={< div > UAT Maharashtra Municipal Corporation < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementRight={< RightIcon />}/>
-
-        <Drawer containerClassName="side-bar" open={this.state.open}>
-            <CustomMenu menuItems={this.state.menuItems}/>
-        </Drawer>
 
         {/*
             <MenuItem>

@@ -16,7 +16,7 @@ public class DocumentBuilder {
 	        documentUpdateSQL.append("UPDATE egpt_document")
 	        .append(" SET  fileStore = ?, lastModifiedBy = ?,")
 	        .append(" lastModifiedTime = ?, propertydetails = ? ")
-	        .append(" WHERE id = " );
+	        .append(" WHERE id = ?" );
 
 	        return documentUpdateSQL.toString();
 	    }

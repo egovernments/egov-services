@@ -51,7 +51,7 @@ public class SubmissionJpaRepositoryTest {
         assertEquals(expectedEscalationDate.toDate(), actualSubmission.getEscalationDate());
         assertEquals("landmark1", actualSubmission.getLandmarkDetails());
         assertEquals(Long.valueOf(26), actualSubmission.getDepartment());
-        assertEquals(Long.valueOf(3), actualSubmission.getAssignee());
+        assertEquals(Long.valueOf(3), actualSubmission.getPosition());
         assertEquals(1.2d, actualSubmission.getLatitude(), 0);
         assertEquals(4.5d, actualSubmission.getLongitude(), 0);
         assertEquals("REGISTERED", actualSubmission.getStatus());
@@ -70,7 +70,7 @@ public class SubmissionJpaRepositoryTest {
         "/sql/insertSubmissions.sql"
     })
     public void test_should_retrieve_assigneeid_for_given_crn() {
-        final Long assigneeId = submissionJpaRepository.findAssigneeByCrnAndTenantId("crn1", "tenant1");
+        final Long assigneeId = submissionJpaRepository.findPositionByCrnAndTenantId("crn1", "tenant1");
 
         assertEquals(Long.valueOf(3), assigneeId);
     }

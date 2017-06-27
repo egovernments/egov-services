@@ -68,8 +68,8 @@ class DefineEscalation extends Component {
       this.state = {
               positionSource:[],
               dataSourceConfig : {
-                text: 'textKey',
-                value: 'valueKey',
+                text: 'name',
+                value: 'id',
               },
               isSearchClicked: false,
               resultList: [],
@@ -78,14 +78,7 @@ class DefineEscalation extends Component {
 
     componentWillMount() {
       let{initForm} = this.props;
-      initForm()
-
-      this.setState({
-        positionSource: [
-          {textKey: 'From Position Source', valueKey: 'someFirstValue'},
-          {textKey: 'From Position Source', valueKey: 'someSecondValue'},
-        ]
-      })
+      initForm();
 
       $('#searchTable').DataTable({
            dom: 'lBfrtip',
@@ -98,10 +91,20 @@ class DefineEscalation extends Component {
     }
 
     componentDidMount() {
-
+      let self = this;
+      Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+          self.setState({
+            positionSource: response.Position
+          })
+      }, function(err) {
+        self.setState({
+            positionSource: []
+          })
+      });
     }
 
     componentWillUpdate() {
+
       if(flag == 1) {
         flag = 0;
         $('#searchTable').dataTable().fnDestroy();
@@ -134,6 +137,8 @@ class DefineEscalation extends Component {
       } = this.props;
 
       let {submitForm} = this;
+
+      console.log(defineEscalation);
 
       let {isSearchClicked, resultList} = this.state;
 
@@ -196,7 +201,7 @@ class DefineEscalation extends Component {
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
                   	                        handleChange(e, "position", true, "");

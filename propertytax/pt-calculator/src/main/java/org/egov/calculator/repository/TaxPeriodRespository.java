@@ -176,7 +176,8 @@ public class TaxPeriodRespository {
 		return taxPeriods;
 	}
 
-	public List<TaxPeriod> searchTaxPeriodsByTenantAndDate(String tenantId, String validDate) {
+	
+    public List<TaxPeriod> searchTaxPeriodsByTenantAndDate(String tenantId, String validDate) {
 		String searchQuery = TaxPeriodBuilder.getTaxperiodsByDateAndTenantId(tenantId, validDate);
 
 		List<TaxPeriod> taxPeriods = null;

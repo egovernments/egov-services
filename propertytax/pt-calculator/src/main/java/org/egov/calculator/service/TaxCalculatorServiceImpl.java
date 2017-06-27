@@ -46,135 +46,147 @@ import org.springframework.stereotype.Service;
 @Service
 public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
-	@Autowired
-	TaxCalculatorMasterService taxCalculatorMasterService;
+    @Autowired
+    TaxCalculatorMasterService taxCalculatorMasterService;
 
-	@Autowired
-	FactorRepository taxFactorRepository;
+    @Autowired
+    FactorRepository taxFactorRepository;
 
-	@Autowired
-	ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	TaxRatesRepository taxRatesRepository;
+    @Autowired
+    TaxRatesRepository taxRatesRepository;
 
-	@Autowired
-	private TaxPeriodRespository taxPeriodRespository;
+    @Autowired
+    TaxPeriodRespository taxPeriodRespository;
 
-	@Autowired
-	private Environment environment;
+    @Autowired
+    Environment environment;
 
-	private List<TaxRates> getTaxRateByTenantAndDate(String tenantId, String validDate) throws Exception {
-		List<TaxRates> listOfTaxRates = taxRatesRepository.searchTaxRatesByTenantAndDate(tenantId, validDate);
-		return listOfTaxRates;
-	};
+    public List<CalculationFactor> getFactorsByTenantIdAndValidDate(
+            String tenantId, String validDate) {
 
-	private List<TaxPeriod> getTaxPeriodsByTenantIdAndDate(String tenantId, String validDate) {
+        List<CalculationFactor> calculationFactors = new ArrayList<CalculationFactor>();
+        calculationFactors = taxFactorRepository
+                .getFactorsByTenantIdAndValidDate(tenantId, validDate);
 
-		return taxPeriodRespository.searchTaxPeriodsByTenantAndDate(tenantId, validDate);
+        return calculationFactors;
+    }
 
-	}
+    public List<TaxRates> getTaxRateByTenantAndDate(String tenantId, String validDate) throws Exception {
+        List<TaxRates> listOfTaxRates = taxRatesRepository.searchTaxRatesByTenantAndDate(tenantId, validDate);
+        return listOfTaxRates;
+    };
 
-	@Override
-	public CalculationResponse calculatePropertyTax(CalculationRequest calculationRequest) throws Exception {
-		// TODO Auto-generated method stub
-		KieSession kieSession = kieSession(calculationRequest.getProperty().getTenantId());
-		TaxCalculationModel taxCalculationModel = getDataForPropertyTax(calculationRequest);
-		TaxCalculationWrapper taxCalculationWrapper = new TaxCalculationWrapper();
-		taxCalculationWrapper.setProperty(calculationRequest.getProperty());
-		taxCalculationWrapper.setTaxCalculationModel(taxCalculationModel);
-		kieSession.insert(taxCalculationWrapper);
-		kieSession.fireAllRules();
-		return new CalculationResponse();
-	};
+    public List<TaxPeriod> getTaxPeriodsByTenantIdAndDate(String tenantId, String validDate) {
 
-	public KieFileSystem kieFileSystem(String tenantId) throws IOException {
-		KieFileSystem kieFileSystem = getKieServices().newKieFileSystem();
+        return taxPeriodRespository.searchTaxPeriodsByTenantAndDate(tenantId, validDate);
 
-		for (Resource file : getRuleFiles(tenantId)) {
-			kieFileSystem.write(ResourceFactory
-					.newClassPathResource(environment.getProperty("rules.path") + file.getFilename(), "UTF-8"));
-		}
+    }
 
-		return kieFileSystem;
-	}
+    @Override
+    public CalculationResponse calculatePropertyTax(
+            CalculationRequest calculationRequest) throws Exception {
+        // TODO Auto-generated method stub
+        KieSession kieSession = kieSession(calculationRequest.getProperty().getTenantId());
+        TaxCalculationModel taxCalculationModel = getDataForPropertyTax(calculationRequest);
+        TaxCalculationWrapper taxCalculationWrapper = new TaxCalculationWrapper();
+        taxCalculationWrapper.setProperty(calculationRequest.getProperty());
+        taxCalculationWrapper.setTaxCalculationModel(taxCalculationModel);
+        kieSession.insert(taxCalculationWrapper);
+        kieSession.fireAllRules();
+        return new CalculationResponse();
+    };
 
-	private Resource[] getRuleFiles(String tenantId) throws IOException {
-		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-		return resourcePatternResolver
-				.getResources("classpath*:" + environment.getProperty("rules.path") + "**/" + tenantId + ".*");
-	}
+    public KieFileSystem kieFileSystem(String tenantId) throws IOException {
+        KieFileSystem kieFileSystem = getKieServices().newKieFileSystem();
 
-	private KieServices getKieServices() {
-		return KieServices.Factory.get();
-	}
+        for (Resource file : getRuleFiles(tenantId)) {
+            kieFileSystem.write(
+                    ResourceFactory.newClassPathResource(environment.getProperty("rules.path") + file.getFilename(), "UTF-8"));
+        }
 
-	public KieSession kieSession(String tenantId) throws IOException {
-		final KieRepository kieRepository = getKieServices().getRepository();
-		kieRepository.addKieModule(new KieModule() {
-			public ReleaseId getReleaseId() {
-				return kieRepository.getDefaultReleaseId();
-			}
-		});
+        return kieFileSystem;
+    }
 
-		KieBuilder kieBuilder = getKieServices().newKieBuilder(kieFileSystem(tenantId));
-		kieBuilder.buildAll();
+    private Resource[] getRuleFiles(String tenantId) throws IOException {
+        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        return resourcePatternResolver
+                .getResources("classpath*:" + environment.getProperty("rules.path") + "**/" + tenantId + ".*");
+    }
 
-		KieContainer kieContainer = getKieServices().newKieContainer(kieRepository.getDefaultReleaseId());
-		return kieContainer.newKieSession();
-	}
+    private KieServices getKieServices() {
+        return KieServices.Factory.get();
+    }
 
-	private List<CalculationFactor> getFactorsByTenantIdAndValidDate(String tenantId, String validDate) {
+    public KieSession kieSession(String tenantId) throws IOException {
+        final KieRepository kieRepository = getKieServices().getRepository();
+        kieRepository.addKieModule(new KieModule() {
+            public ReleaseId getReleaseId() {
+                return kieRepository.getDefaultReleaseId();
+            }
+        });
 
-		List<CalculationFactor> calculationFactors = new ArrayList<CalculationFactor>();
-		calculationFactors = taxFactorRepository.getFactorsByTenantIdAndValidDate(tenantId, validDate);
+        KieBuilder kieBuilder = getKieServices().newKieBuilder(kieFileSystem(tenantId));
+        kieBuilder.buildAll();
 
-		return calculationFactors;
-	}
+        KieContainer kieContainer = getKieServices().newKieContainer(kieRepository.getDefaultReleaseId());
+        return kieContainer.newKieSession();
+    }
 
-	private TaxCalculationModel getDataForPropertyTax(CalculationRequest calculationRequest) throws Exception {
-		TaxCalculationModel taxCalculationModel = new TaxCalculationModel();
-		for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
-			List<Map<String, Double>> factorsMapList = new ArrayList<Map<String, Double>>();
-			List<Map<String, TaxRates>> taxRatesMapList = new ArrayList<Map<String, TaxRates>>();
-			List<Map<String, TaxPeriod>> taxPeriodMapList = new ArrayList<Map<String, TaxPeriod>>();
-			List<Double> guidanceValues = new ArrayList<Double>();
-			for (Unit unit : floor.getUnits()) {
-				List<CalculationFactor> factorsList = null;
-				List<TaxRates> taxRates = null;
-				List<TaxPeriod> taxPeriods = null;
-				String tenantId = calculationRequest.getProperty().getTenantId();
-				factorsList = getFactorsByTenantIdAndValidDate(tenantId, unit.getOccupancyDate());
-				Map<String, Double> factors = factorsList.stream().collect(Collectors
-						.toMap(factor -> factor.getFactorType().toString(), factor -> factor.getFactorValue()));
-				factorsMapList.add(factors);
-				taxRates = getTaxRateByTenantAndDate(tenantId, unit.getOccupancyDate());
+    public TaxCalculationModel getDataForPropertyTax(CalculationRequest calculationRequest) throws Exception {
+        TaxCalculationModel taxCalculationModel = new TaxCalculationModel();
+        List<List<Map<String, Double>>> factorTypes = new ArrayList<List<Map<String, Double>>>();
+        List<List<Map<String, TaxPeriod>>> taxPeriodsList = new ArrayList<List<Map<String, TaxPeriod>>>();
+        List<List<List<TaxRates>>> taxRatesData = new ArrayList<List<List<TaxRates>>>();
+        List<List<Double>> guidanceValuesList = new ArrayList<List<Double>>();
 
-				Map<String, TaxRates> taxHeads = taxRates.stream()
-						.collect(Collectors.toMap(taxHead -> taxHead.getTaxHead(), taxHead -> taxHead));
+        for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
+            List<Map<String, Double>> factorsMapList = new ArrayList<Map<String, Double>>();
+            List<List<TaxRates>> taxRatesList = new ArrayList<List<TaxRates>>();
+            List<Map<String, TaxPeriod>> taxPeriodMapList = new ArrayList<Map<String, TaxPeriod>>();
+            List<Double> guidanceValues = new ArrayList<Double>();
+            for (Unit unit : floor.getUnits()) {
+                List<CalculationFactor> factorsList = null;
+                List<TaxRates> taxRates = null;
+                List<TaxPeriod> taxPeriods = null;
+                String tenantId = calculationRequest.getProperty().getTenantId();
+                factorsList = getFactorsByTenantIdAndValidDate(tenantId,
+                        unit.getOccupancyDate());
+                Map<String, Double> factors = factorsList.stream().collect(
+                        Collectors.toMap(factor -> factor.getFactorType().toString(), factor -> factor.getFactorValue()));
+                factorsMapList.add(factors);
+                taxRates = getTaxRateByTenantAndDate(tenantId, unit.getOccupancyDate());
 
-				taxRatesMapList.add(taxHeads);
-				taxPeriods = getTaxPeriodsByTenantIdAndDate(tenantId, unit.getOccupancyDate());
+                taxRatesList.add(taxRates);
+                taxPeriods = getTaxPeriodsByTenantIdAndDate(tenantId,
+                        unit.getOccupancyDate());
 
-				Map<String, TaxPeriod> taxPeriodsMap = taxPeriods.stream().collect(Collectors.toMap(
-						taxPeriod -> taxPeriod.getFromDate() + "-" + taxPeriod.getToDate(), taxPeriod -> taxPeriod));
-				taxPeriodMapList.add(taxPeriodsMap);
+                Map<String, TaxPeriod> taxPeriodsMap = taxPeriods.stream()
+                        .collect(Collectors.toMap(taxPeriod -> taxPeriod.getFromDate() + "-" + taxPeriod.getToDate(),
+                                taxPeriod -> taxPeriod));
+                taxPeriodMapList.add(taxPeriodsMap);
 
-				GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
-						calculationRequest.getRequestInfo(), tenantId,
-						calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
-						unit.getStructure(), calculationRequest.getProperty().getPropertyDetail().getUsage(), null,
-						unit.getOccupancy(), unit.getOccupancyDate());
-				Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
-				guidanceValues.add(guidanceValue);
-			}
-			taxCalculationModel.setFactors(factorsMapList);
-			taxCalculationModel.setTaxPeriods(taxPeriodMapList);
-			taxCalculationModel.setTaxRates(taxRatesMapList);
-			taxCalculationModel.setGuidanceValues(guidanceValues);
+                GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
+                        calculationRequest.getRequestInfo(), tenantId,
+                        calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
+                        unit.getStructure(), calculationRequest.getProperty().getPropertyDetail().getUsage(), null,
+                        unit.getOccupancy(), unit.getOccupancyDate());
+                Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
+                guidanceValues.add(guidanceValue);
 
-		}
-		return taxCalculationModel;
-	}
+            }
+            factorTypes.add(factorsMapList);
+            taxPeriodsList.add(taxPeriodMapList);
+            taxRatesData.add(taxRatesList);
+            guidanceValuesList.add(guidanceValues);
 
+        }
+        taxCalculationModel.setFactors(factorTypes);
+        taxCalculationModel.setTaxPeriods(taxPeriodsList);
+        taxCalculationModel.setTaxRates(taxRatesData);
+        taxCalculationModel.setGuidanceValues(guidanceValuesList);
+        return taxCalculationModel;
+    }
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
@@ -16,7 +17,7 @@ import org.joda.time.LocalDate;
 @Getter
 @ToString
 public class BillDetails   {
-  private String businessDetailsCode;
+  private Long businessDetailsCode;
 
   private String refNo;
 
@@ -38,7 +39,7 @@ public class BillDetails   {
 
   private String receiptNumber;
 
-  private LocalDate receiptDate;
+  private Timestamp receiptDate;
 
   private String channel;
   

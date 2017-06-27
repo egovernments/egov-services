@@ -92,7 +92,7 @@ public class ServiceGroupController {
 	
 	@Autowired
     private ErrorHandler errHandler;
-
+	
 	@PostMapping(value = "/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
@@ -139,7 +139,7 @@ public class ServiceGroupController {
 
 	}
 	
-	@PostMapping("_search")
+	@PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final ServiceGroupGetRequest serviceGroupGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

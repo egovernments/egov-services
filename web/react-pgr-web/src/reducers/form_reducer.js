@@ -37,10 +37,7 @@ export default(state = defaultState, action) => {
 
         return {
           ...state,
-          form: {
-            ...state.form,
-            [action.object]:null
-          }
+          form: {}
         }
 
     case "UPDATE_OBJECT":

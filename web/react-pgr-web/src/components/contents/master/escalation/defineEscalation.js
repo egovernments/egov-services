@@ -73,6 +73,9 @@ class DefineEscalation extends Component {
               },
               isSearchClicked: false,
               resultList: [],
+              noData:false,
+              escalationForm:{
+              }
             };
     }
 
@@ -119,14 +122,65 @@ class DefineEscalation extends Component {
 
   submitForm = (e) => {
       e.preventDefault();
-      flag = 1;
-  		this.setState({
-  			resultList: [],
-  			isSearchClicked: true
-  		})
+      let current = this;
+
+      let query = {
+        id:this.props.defineEscalation.position.id
+      }
+
+      Api.commonApiPost("/pgr-master/escalation/_search",query,{}).then(function(response){
+          console.log(response);
+
+          if (response.EscalationTimeType[0] != null) {
+              flag = 1;
+              current.setState({
+                resultList: response.EscalationTimeType,
+                isSearchClicked: true
+              })
+          } else {
+            current.setState({
+              noData: true,
+            })
+          }
+      }).catch((error)=>{
+          console.log(error);
+      })
+
+  }
+
+  localHandleChange = (e, property, isRequired, pattern) => {
+    if(this.state.escalationForm.hasOwnProperty('fromPosition')){
+      this.setState({
+          escalationForm: {
+            ...this.state.escalationForm,
+              [property]: e.target.value
+          }
+      })
+    } else {
+      this.setState({
+          escalationForm: {
+            ...this.state.escalationForm,
+            fromPosition: this.props.defineEscalation.position.id,
+              [property]: e.target.value
+          }
+      })
+    }
+
+
+  }
+
+  addEscalation = () => {
+        this.setState({
+          resultList:[
+            ...this.state.resultList,
+            this.state.escalationForm
+          ]
+      })
   }
 
     render() {
+
+      var current = this;
 
       let {
         isFormValid,
@@ -136,20 +190,22 @@ class DefineEscalation extends Component {
         handleAutoCompleteKeyUp
       } = this.props;
 
-      let {submitForm} = this;
+      let {submitForm, localHandleChange, addEscalation} = this;
 
-      console.log(defineEscalation);
+      console.log(this.state.escalationForm, this.state.resultList);
 
-      let {isSearchClicked, resultList} = this.state;
+      let {isSearchClicked, resultList, escalationForm} = this.state;
 
       const renderBody = function() {
       	  if(resultList && resultList.length)
       		return resultList.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{val.serviceName}</td>
-      					<td>{val.boundaryType}</td>
-      					<td>{val.boundary}</td>
+                <td>{val.fromPosition}</td>
+      					<td>{val.grievanceType}</td>
+      					<td>{val.department}</td>
+      					<td>{val.designation}</td>
+                <td>{val.toPosition}</td>
       				</tr>
       			)
       		})
@@ -159,14 +215,102 @@ class DefineEscalation extends Component {
       	  if(isSearchClicked)
       		return (
    	        <Card>
-   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+              <CardText>
+                  <Row>
+                    <Col xs={12} md={3} sm={6}>
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="From Position"
+                            value={defineEscalation.position ? defineEscalation.position.name : ""}
+                            id="name"
+                            disabled={true}
+                        />
+                    </Col>
+                    <Col xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="Grievance Type"
+                           fullWidth={true}
+                           value={escalationForm.grievanceType ? escalationForm.grievanceType : ""}
+                           onChange= {(e, index ,value) => {
+                             var e = {
+                               target: {
+                                 value: value
+                               }
+                             };
+                             localHandleChange(e, "grievanceType", true, "");
+                            }}
+                          >
+                           <MenuItem value={1} primaryText="Options" />
+                        </SelectField>
+                    </Col>
+                    <Col xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="Department"
+                           fullWidth={true}
+                           value={escalationForm.department ? escalationForm.department : ""}
+                           onChange= {(e, index ,value) => {
+                             var e = {
+                               target: {
+                                 value: value
+                               }
+                             };
+                             localHandleChange(e, "department", true, "");
+                            }}
+                         >
+                           <MenuItem value={2} primaryText="Options" />
+                        </SelectField>
+                    </Col>
+                    <Col xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="Designation"
+                           fullWidth={true}
+                           value={escalationForm.designation ? escalationForm.designation : ""}
+                           onChange= {(e, index ,value) => {
+                             var e = {
+                               target: {
+                                 value: value
+                               }
+                             };
+                             localHandleChange(e, "designation", true, "");
+                            }}
+                         >
+                           <MenuItem value={1} primaryText="Options" />
+                        </SelectField>
+                    </Col>
+                    <Col xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="To Position"
+                           fullWidth={true}
+                           value={escalationForm.toPosition ? escalationForm.toPosition : ""}
+                           onChange= {(e, index ,value) => {
+                             var e = {
+                               target: {
+                                 value: value
+                               }
+                             };
+                             localHandleChange(e, "toPosition", true, "");
+                            }}
+                         >
+                           <MenuItem value={1} primaryText="Options" />
+                        </SelectField>
+                    </Col>
+                    <div className="clearfix"></div>
+                    <Col xs={12} md={12} style={{textAlign:"center"}}>
+                        <RaisedButton style={{margin:'15px 5px'}} label="Update" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                          addEscalation();
+                        }}/>
+                    </Col>
+                  </Row>
+              </CardText>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
+   		              <th>From Position</th>
    		              <th>Grievance Type</th>
-   		              <th>Boundary Type</th>
-   		              <th>Boundary</th>
+   		              <th>Department</th>
+                    <th>Designation</th>
+                    <th>To Position</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -201,7 +345,7 @@ class DefineEscalation extends Component {
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest.id
+                  	                            value: chosenRequest
                   	                          }
                   	                        };
                   	                        handleChange(e, "position", true, "");
@@ -216,6 +360,19 @@ class DefineEscalation extends Component {
                       <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
                       <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
                   </div>
+                  {this.state.noData &&
+                    <Card style = {{textAlign:"center"}}>
+                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
+                      <CardText>
+                          <RaisedButton style={{margin:'10px 0'}} label="Add Escalation Details" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                            this.setState({
+                              isSearchClicked: true,
+                              noData:false
+                            })
+                          }}/>
+                     </CardText>
+                  </Card>
+                  }
                   {viewTable()}
               </CardText>
           </Card>

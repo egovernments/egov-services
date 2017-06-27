@@ -28,7 +28,7 @@ public class EmployeeContextEnricher implements NotificationContextEnricher {
     @Override
     public void enrich(SevaRequest sevaRequest, NotificationContext context) {
         final Employee employee = this.employeeRepository
-            .getEmployeeByPosition(sevaRequest.getAssigneeId(), sevaRequest.getTenantId());
+            .getEmployeeByPosition(sevaRequest.getPositionId(), sevaRequest.getTenantId());
         context.setEmployee(employee);
         setDesignation(sevaRequest, context);
         setPosition(sevaRequest, context);

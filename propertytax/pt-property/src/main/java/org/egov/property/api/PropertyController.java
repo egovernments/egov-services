@@ -25,6 +25,7 @@ public class PropertyController {
 	@Autowired
 	PropertyService propertyService;
 
+
 	/**
 	 * Description: this api will use for creating property
 	 * 
@@ -47,6 +48,7 @@ public class PropertyController {
 	@RequestMapping(method = RequestMethod.POST, path = "_update")
 	public PropertyResponse updateProperty(@Valid @RequestBody PropertyRequest propertyRequest) {
 		return propertyService.updateProperty(propertyRequest);
+
 	}
 
 	/**

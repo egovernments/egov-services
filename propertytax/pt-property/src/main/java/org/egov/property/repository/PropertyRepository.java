@@ -8,18 +8,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.egov.models.Address;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
 import org.egov.models.Floor;
-import org.egov.models.OwnerInfo;
 import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
 import org.egov.models.RequestInfo;
 import org.egov.models.Unit;
+import org.egov.models.User;
 import org.egov.models.VacantLandDetail;
 import org.egov.property.model.PropertyLocationRowMapper;
 import org.egov.property.model.PropertyUser;
@@ -239,7 +238,7 @@ public class PropertyRepository {
 
 		Object[] unitArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
 				unit.getBuiltupArea(), unit.getAssessableArea(), unit.getBpaBuiltupArea(), unit.getBpaNo(),
-				TimeStampUtil.getTimeStamp(unit.getBpaDate()), unit.getUsage(), unit.getOccupancy(),
+				TimeStampUtil.getTimeStamp(unit.getBpaDate()), unit.getUsage(), unit.getOccupancyType(),
 				unit.getOccupierName(), unit.getFirmName(), unit.getRentCollected(), unit.getStructure(), unit.getAge(),
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
@@ -362,7 +361,7 @@ public class PropertyRepository {
 	 * @param owner
 	 * @param propertyId
 	 */
-	public void saveUser(OwnerInfo owner, Integer propertyId) {
+	public void saveUser(User owner, Integer propertyId) {
 		Long createdTime = new Date().getTime();
 
 		Object[] userPropertyArgs = { propertyId, owner.getId(), owner.getIsPrimaryOwner(), owner.getIsSecondaryOwner(),
@@ -580,7 +579,7 @@ public class PropertyRepository {
 
 		Object[] unitArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
 				unit.getBuiltupArea(), unit.getAssessableArea(), unit.getBpaBuiltupArea(), unit.getBpaNo(),
-				TimeStampUtil.getTimeStamp(unit.getBpaDate()), unit.getUsage(), unit.getOccupancy(),
+				TimeStampUtil.getTimeStamp(unit.getBpaDate()), unit.getUsage(), unit.getOccupancyType(),
 				unit.getOccupierName(), unit.getFirmName(), unit.getRentCollected(), unit.getStructure(), unit.getAge(),
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
@@ -615,7 +614,7 @@ public class PropertyRepository {
 		jdbcTemplate.update(documentTypeUpdate, documentTypeArgs);
 	}
 
-	public void updateUser(OwnerInfo owner, Long propertyId) {
+	public void updateUser(User owner, Long propertyId) {
 
 		Long updatedTime = new Date().getTime();
 

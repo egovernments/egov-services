@@ -51,7 +51,8 @@ public class ServiceTypeQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceTypeQueryBuilder.class);
 
-    private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, adef.code attributecode, " 
+    private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, "   
+    			+ " comp.hasfinancialimpact, adef.code attributecode, "  
     			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "   
     			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
     			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode ";

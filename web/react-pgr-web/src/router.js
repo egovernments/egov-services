@@ -49,10 +49,9 @@ const Main = () => (
       <Route exact path='/serviceGroup/edit' component={ViewEditServiceGroup}/>
       <Route exact path='/bulkEscalationGeneration' component={BulkEscalationGeneration}/>
       <Route exact path='/serviceTypeCreate' component={serviceTypeCreate}/>
-      <Route exact name="serviceTypeCreate" path='/serviceTypeCreate/:id' component={serviceTypeCreate}/>
-      <Route exact path='/viewOrUpdateServiceType/view' component={viewOrUpdateServiceType}/>
-      <Route exact path='/viewOrUpdateServiceType/edit' component={viewOrUpdateServiceType}/>
-      <Route exact path='/viewServiceType/:id' component={viewServiceType}/>
+      <Route exact name="serviceTypeCreate" path='/serviceTypeCreate/:type/:id' component={serviceTypeCreate}/>
+      <Route exact path='/viewOrUpdateServiceType/:type' component={viewOrUpdateServiceType}/>
+      <Route exact path='/viewServiceType/:type/:id' component={viewServiceType}/>
       <Route exact path='/viewServiceGroup/:id' component={ViewServiceGroup}/>
       <Route exact path='/viewEscalation' component={ViewEscalation}/>
       <Route exact path='/defineEscalation' component={DefineEscalation}/>

@@ -14,4 +14,6 @@ public class TaxCalculationWrapper {
     private Property property;
     
     private  TaxCalculationModel taxCalculationModel;
+    
+    private String text;
 }

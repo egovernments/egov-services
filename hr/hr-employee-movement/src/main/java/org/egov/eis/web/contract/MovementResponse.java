@@ -38,49 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.enums;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
+package org.egov.eis.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TransferType {
+import org.egov.eis.model.Movement;
 
-    TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB(
-            "Transfer within department/Corporation/ULB"), TRANSFER_OUTSIDE_CORPORATION_OR_ULB(
-                    "Transfer outside Corporation/ULB");
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private String value;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    TransferType(String value) {
-        this.value = value;
-    }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class MovementResponse {
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @JsonCreator
-    public static List<String> getAllObjectValues() {
-        List<String> allObjectValues = new ArrayList<>();
-        for (TransferType obj : TransferType.values()) {
-            allObjectValues.add(obj.value);
-        }
-        return allObjectValues;
-    }
+    @JsonProperty("Movement")
+    private List<Movement> movement = new ArrayList<>();
 
-    @JsonCreator
-    public static TransferType fromValue(String passedValue) {
-        for (TransferType obj : TransferType.values()) {
-            if (String.valueOf(obj).equals(passedValue.toUpperCase())) {
-                return obj;
-            }
-        }
-        return null;
-    }
 }

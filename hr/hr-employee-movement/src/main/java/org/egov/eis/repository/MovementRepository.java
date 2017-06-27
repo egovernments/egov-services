@@ -38,49 +38,39 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.enums;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
+package org.egov.eis.repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TransferType {
+import org.egov.eis.model.Movement;
+import org.egov.eis.repository.builder.MovementQueryBuilder;
+import org.egov.eis.repository.rowmapper.MovementRowMapper;
+import org.egov.eis.web.contract.MovementSearchRequest;
+import org.egov.eis.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-    TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB(
-            "Transfer within department/Corporation/ULB"), TRANSFER_OUTSIDE_CORPORATION_OR_ULB(
-                    "Transfer outside Corporation/ULB");
+@Repository
+public class MovementRepository {
 
-    private String value;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    TransferType(String value) {
-        this.value = value;
-    }
+    @Autowired
+    private MovementRowMapper movementRowMapper;
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    @Autowired
+    private MovementQueryBuilder movementQueryBuilder;
 
-    @JsonCreator
-    public static List<String> getAllObjectValues() {
-        List<String> allObjectValues = new ArrayList<>();
-        for (TransferType obj : TransferType.values()) {
-            allObjectValues.add(obj.value);
-        }
-        return allObjectValues;
-    }
-
-    @JsonCreator
-    public static TransferType fromValue(String passedValue) {
-        for (TransferType obj : TransferType.values()) {
-            if (String.valueOf(obj).equals(passedValue.toUpperCase())) {
-                return obj;
-            }
-        }
-        return null;
+    public List<Movement> findForCriteria(final MovementSearchRequest movementSearchRequest,
+            final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
+                requestInfo);
+        final List<Movement> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                movementRowMapper);
+        return leaveApplications;
     }
 }

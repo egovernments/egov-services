@@ -38,49 +38,42 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.enums;
+package org.egov.eis.service;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public enum TransferType {
+import org.egov.eis.model.Movement;
+import org.egov.eis.repository.MovementRepository;
+import org.egov.eis.web.contract.MovementSearchRequest;
+import org.egov.eis.web.contract.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-    TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB(
-            "Transfer within department/Corporation/ULB"), TRANSFER_OUTSIDE_CORPORATION_OR_ULB(
-                    "Transfer outside Corporation/ULB");
+@Service
+public class MovementService {
 
-    private String value;
+    public static final Logger LOGGER = LoggerFactory.getLogger(MovementService.class);
 
-    TransferType(String value) {
-        this.value = value;
-    }
+    @Value("${kafka.topics.movement.create.name}")
+    private String movementCreateTopic;
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    @Value("${kafka.topics.movement.create.key}")
+    private String movementCreateKey;
 
-    @JsonCreator
-    public static List<String> getAllObjectValues() {
-        List<String> allObjectValues = new ArrayList<>();
-        for (TransferType obj : TransferType.values()) {
-            allObjectValues.add(obj.value);
-        }
-        return allObjectValues;
-    }
+    @Value("${kafka.topics.movement.update.name}")
+    private String movementUpdateTopic;
 
-    @JsonCreator
-    public static TransferType fromValue(String passedValue) {
-        for (TransferType obj : TransferType.values()) {
-            if (String.valueOf(obj).equals(passedValue.toUpperCase())) {
-                return obj;
-            }
-        }
-        return null;
+    @Value("${kafka.topics.movement.update.key}")
+    private String movementUpdateKey;
+
+    @Autowired
+    private MovementRepository movementRepository;
+
+    public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
+            final RequestInfo requestInfo) {
+        return movementRepository.findForCriteria(movementSearchRequest, requestInfo);
     }
 }

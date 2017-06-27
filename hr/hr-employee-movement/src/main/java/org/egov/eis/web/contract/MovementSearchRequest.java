@@ -65,26 +65,30 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class MovementSearchRequest {
 
-	private List<Long> id = new ArrayList<>();
+    private List<Long> id = new ArrayList<>();
 
-	private Long employeeId;
+    private Long employeeId;
 
-	private String typeOfmovement;
+    private String typeOfmovement;
 
-	private Date effectiveFromDate;
-	
-	private Date effectiveToDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date effectiveFromDate;
 
-	private String sortBy;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date effectiveToDate;
 
-	private String sortOrder;
+    private Long stateId;
 
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
+    private String sortBy;
 
-	private Short pageNumber;
+    private String sortOrder;
 
-	@NotNull
-        private String tenantId;
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
+
+    @NotNull
+    private String tenantId;
 }

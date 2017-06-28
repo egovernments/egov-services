@@ -175,7 +175,7 @@ class searchRouter extends Component {
         })
     });
 
-    Api.commonApiPost("/pgr/services/_search", {type:'all'}).then(function(response) {
+    Api.commonApiPost("/pgr/services/v1/_search", {type:'all'}).then(function(response) {
        self.setState({
         complaintSource : response.complaintTypes
        });

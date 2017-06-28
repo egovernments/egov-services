@@ -143,7 +143,7 @@ class routerGeneration extends Component {
 
   loadGrievanceType(value){
      var self = this;
-     Api.commonApiPost("/pgr/services/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
        self.setState({typeList : response.complaintTypes});
      },function(err) {

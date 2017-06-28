@@ -93,7 +93,7 @@ public class ReceivingModeTypeController {
 	@Autowired
 	private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final ReceivingModeTypeReq ModeTypeRequest,
 			final BindingResult errors) {
@@ -116,7 +116,7 @@ public class ReceivingModeTypeController {
 
 	}
 
-	@PostMapping(value = "/{code}/_update")
+	@PostMapping(value = "/v1/{code}/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final ReceivingModeTypeReq modeTypeRequest,
 			final BindingResult errors, @PathVariable("code") final String code) {
@@ -139,7 +139,7 @@ public class ReceivingModeTypeController {
 		return getSuccessResponse(modeTypes, modeTypeRequest.getRequestInfo());
 	}
 
-	@PostMapping("_search")
+	@PostMapping("/v1/_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid final ReceivingModeTypeGetReq modeTypeGetRequest,
 			final BindingResult modelAttributeBindingResult,

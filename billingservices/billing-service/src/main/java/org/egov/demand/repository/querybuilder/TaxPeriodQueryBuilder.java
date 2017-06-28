@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TaxPeriodQueryBuilder {
@@ -84,10 +85,8 @@ public class TaxPeriodQueryBuilder {
             preparedStatementValues.add(taxPeriodCriteria.getCode());
         }
 
-        if (StringUtils.isNotBlank(taxPeriodCriteria.getId())) {
-            selectQuery.append(" and taxperiod.id = ? ");
-            preparedStatementValues.add(taxPeriodCriteria.getId());
-        }
+        if (!taxPeriodCriteria.getId().isEmpty())
+            selectQuery.append(" and taxperiod.id IN "+getQueryForCollection(taxPeriodCriteria.getId()));
     }
 
     public String getInsertQuery(){
@@ -121,5 +120,16 @@ public class TaxPeriodQueryBuilder {
                 whereClause = whereClause.append(" or ");
         }
         return baseQuery.concat(whereClause.toString()).concat(" )");
+    }
+
+    private String getQueryForCollection(Set<String> values) {
+        StringBuilder query = new StringBuilder();
+        if (!values.isEmpty()) {
+            String[] list = values.toArray(new String[values.size()]);
+            query.append(" ('"+list[0]+"'");
+            for (int i = 1; i < values.size(); i++)
+                query.append("," + "'"+list[i]+"'");
+        }
+        return query.append(")").toString();
     }
 }

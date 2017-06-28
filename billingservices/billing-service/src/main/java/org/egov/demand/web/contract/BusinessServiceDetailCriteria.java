@@ -58,4 +58,6 @@ public class BusinessServiceDetailCriteria {
 
     @NotNull
     private Set<String> businessService;
+
+    private Set<String> id;
 }

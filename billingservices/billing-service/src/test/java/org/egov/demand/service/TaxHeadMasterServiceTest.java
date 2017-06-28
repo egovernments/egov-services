@@ -23,6 +23,7 @@ import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -57,6 +58,9 @@ public class TaxHeadMasterServiceTest {
 	@Mock
 	private SequenceGenService sequenceGenService;
 
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
 	@Test
 	public void testSearch() {
 		List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
@@ -96,13 +100,81 @@ public class TaxHeadMasterServiceTest {
 		when(taxHeadMasterRepository.create(any(TaxHeadMasterRequest.class))).thenReturn(taxHead);
 		
 		assertTrue(taxHeadMasterResponse.equals(taxHeadMasterService.create(taxHeadMasterRequest)));
+<<<<<<< ad85c0bb386e2258dde52398b7d5be186b5494d1
 	}*/
+//	}
+	
+	@Test
+	public void testCreateAsync() {
+		
+		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
+		TaxHeadMasterRequest taxHeadMasterRequest = new TaxHeadMasterRequest();
+		
 
+		List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
+		taxHeadMasters.add(taxHeadMaster);
+		taxHeadMasterRequest.setTaxHeadMasters(taxHeadMasters);
+		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
+		taxHeadMasterResponse.setResponseInfo(null);
+		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMasters);
+		List<String> ids=new ArrayList<>();
+		ids.add("23");
+		
+		when(applicationProperties.getTaxHeadSeqName()).thenReturn("seq_egbs_taxHeadMaster");
+		when(applicationProperties.getTaxHeadCodeSeqName()).thenReturn("seq_egbs_taxHeadMastercode");
+		when(sequenceGenService.getIds(taxHeadMasters.size(),applicationProperties.getTaxHeadSeqName())).thenReturn(ids);
+		when(sequenceGenService.getIds(taxHeadMasters.size(),
+				applicationProperties.getTaxHeadCodeSeqName())).thenReturn(ids);
+		
+		
+		when(sequenceGenService.getIds(any(Integer.class),any(String.class))).thenReturn(ids);
+		
+		assertTrue(taxHeadMasterResponse.equals(taxHeadMasterService.createAsync(taxHeadMasterRequest)));
+	}
+
+	@Test
+	public void testUpdate() {
+		List<TaxHeadMaster> taxHead = new ArrayList<>();
+		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
+		taxHead.add(taxHeadMaster);
+		TaxHeadMasterRequest taxHeadMasterRequest = new TaxHeadMasterRequest();
+		taxHeadMasterRequest.setTaxHeadMasters(taxHead);
+
+		List<TaxHeadMaster> taxHeads = new ArrayList<>();
+		taxHeads.add(taxHeadMaster);
+		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
+		taxHeadMasterResponse.setResponseInfo(null);
+		taxHeadMasterResponse.setTaxHeadMasters(taxHeads);
+
+		when(taxHeadMasterRepository.update(any(TaxHeadMasterRequest.class))).thenReturn(taxHead);
+		
+		assertTrue(taxHeadMasterResponse.equals(taxHeadMasterService.update(taxHeadMasterRequest)));
+	}
+	
+	@Test
+	public void testUpdateAsync() {
+		
+		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
+		TaxHeadMasterRequest taxHeadMasterRequest = new TaxHeadMasterRequest();
+		
+
+		List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
+		taxHeadMasters.add(taxHeadMaster);
+		taxHeadMasterRequest.setTaxHeadMasters(taxHeadMasters);
+		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
+		taxHeadMasterResponse.setResponseInfo(null);
+		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMasters);
+		
+		
+		assertTrue(taxHeadMasterResponse.equals(taxHeadMasterService.updateAsync(taxHeadMasterRequest)));
+	}
+
+	
 	private TaxHeadMaster getTaxHeadMaster() {
 		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
 		TaxPeriod taxPeriod = new TaxPeriod();
 		taxHeadMaster.setId("23");
-		taxHeadMaster.setCode("string");
+		taxHeadMaster.setCode("23");
 		taxHeadMaster.setTenantId("ap.kurnool");
 		taxHeadMaster.setCategory(Category.fromValue("TAX"));
 		taxHeadMaster.setService("string");
@@ -110,14 +182,10 @@ public class TaxHeadMasterServiceTest {
 		taxHeadMaster.setGlCode("string");
 		taxHeadMaster.setIsDebit(true);
 		taxHeadMaster.setIsActualDemand(true);
-		taxPeriod.setId("string");
-		taxPeriod.setCode("string");
-		taxPeriod.setFinancialYear("2017-2018");
-		taxPeriod.setService("string");
+		taxHeadMaster.setValidFrom(324l);
+		taxHeadMaster.setValidTill(23l);
+		taxHeadMaster.setOrder(12);
 
-		taxPeriod.setFromDate(123L);
-		taxPeriod.setToDate(345L);
-		//taxHeadMaster.setTaxPeriod(taxPeriod);
 		return taxHeadMaster;
 	}
 	private TaxPeriod getTaxPeriod() {

@@ -49,13 +49,13 @@ public class TaxHeadMasterRepository {
 	}
 	
 	public Integer getNextTaxHeadMasterId() {
-		String query = "SELECT nextval('seq_egBillingServices_taxHeadMaster')";
+		String query = "SELECT nextval('seq_egbs_taxHeadMaster')";
 		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
 		return result;
 	}
 	
 	public String getTaxHeadMasterCode() {
-		String query = "SELECT nextval('seq_egBillingServices_taxHeadMastercode')";
+		String query = "SELECT nextval('seq_egbs_taxHeadMastercode')";
 		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
 		log.debug("result:" + result);
 		StringBuilder code = null;
@@ -66,8 +66,9 @@ public class TaxHeadMasterRepository {
 		}
 		return code.toString();
 	}
+
 	@Transactional
-	public void create(TaxHeadMasterRequest taxHeadMasterRequest){
+	public List<TaxHeadMaster> create(TaxHeadMasterRequest taxHeadMasterRequest){
 		
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
@@ -81,6 +82,7 @@ public class TaxHeadMasterRepository {
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
+
 
 				ps.setString(1, taxHeadMaster.getId());
 				ps.setString(2, taxHeadMaster.getTenantId());
@@ -105,27 +107,31 @@ public class TaxHeadMasterRepository {
 				return taxHeadMasters.size();
 			}
 		});
-		
+		return taxHeadMasters;
 	}
 	
 	
 	
 	public List<TaxHeadMaster> update(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeads = taxHeadMasterRequest.getTaxHeadMasters();
-		
-		/*if(taxHeads!=null){
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
+
+		/*if(taxHeadMasters!=null){
 			String query = taxHeadMasterQueryBuilder.getUpdateQuery();
-		
 			List<Object[]> taxHeadsBatchArgs = new ArrayList<>();
-			int taxHeadsCount=taxHeads.size();
+			int taxHeadsCount=taxHeadMasters.size();
 			RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
-			
-			for (int i = 0; i < taxHeadsCount; i++) {
-				Object[] demandRecord = { taxHeads.get(i).getCategory().toString(),
-						taxHeads.get(i).getService(),taxHeads.get(i).getName(),taxHeads.get(i).getCode(),
-						taxHeads.get(i).getGlCode(),taxHeads.get(i).getIsDebit(),taxHeads.get(i).getIsActualDemand(),
-						requestInfo.getUserInfo().getId(),taxHeads.get(i).getTaxPeriod().getId() ,
-						new java.util.Date().getTime(),taxHeads.get(i).getTenantId()};
+			for (TaxHeadMaster master:taxHeadMasters) {
+				Object[] demandRecord = { master.getCategory().toString(),
+						master.getService(),
+						master.getName(),
+						master.getCode(),
+						master.getGlCode(),
+						master.getIsDebit(),
+						master.getIsActualDemand(),
+						requestInfo.getUserInfo().getId(),
+//						master.getTaxPeriod().getId() ,
+						new java.util.Date().getTime(),
+						master.getTenantId()};
 				taxHeadsBatchArgs.add(demandRecord);
 			}
 
@@ -135,13 +141,9 @@ public class TaxHeadMasterRepository {
 				ex.printStackTrace();
 				throw new RuntimeException(ex.getMessage());
 			}
-			
+
 		}*/
-		return taxHeads;
+		
+		return taxHeadMasters;
 	}
-	
-	
-	
-	
-	
 }

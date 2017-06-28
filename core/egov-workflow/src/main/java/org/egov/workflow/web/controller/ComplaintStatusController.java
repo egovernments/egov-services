@@ -25,7 +25,7 @@ public class ComplaintStatusController {
     @Autowired
     private KeywordStatusMappingService keywordStatusMappingService;
 
-    @PostMapping("/statuses/_search")
+    @PostMapping("/statuses/v1/_search")
     public List<ComplaintStatus> getAllStatus(@RequestBody final ComplaintStatusRequest request,
                                               @RequestParam(defaultValue = "Complaint") final String keyword,
                                               @RequestParam(defaultValue = "default") final String tenantId) {
@@ -41,7 +41,7 @@ public class ComplaintStatusController {
             .collect(Collectors.toList());
     }
 
-    @PostMapping("/nextstatuses/_search")
+    @PostMapping("/nextstatuses/v1/_search")
     public List<ComplaintStatus> getNextStatuses(@RequestBody final ComplaintStatusRequest request,
                                                  @RequestParam final String currentStatus,
                                                  @RequestParam(defaultValue = "default") final String tenantId) {

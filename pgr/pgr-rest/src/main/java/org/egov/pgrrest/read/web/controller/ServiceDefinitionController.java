@@ -17,7 +17,7 @@ public class ServiceDefinitionController {
         this.serviceDefinitionService = serviceDefinitionService;
     }
 
-    @PostMapping("/_search")
+    @PostMapping("/v1/_search")
     public ServiceDefinitionResponse getServiceDefinition(@RequestParam("serviceCode") String serviceCode,
                                                           @RequestParam("tenantId") String tenantId) {
         final ServiceDefinition serviceDefinition = serviceDefinitionService.
@@ -25,7 +25,7 @@ public class ServiceDefinitionController {
         return new ServiceDefinitionResponse(null, serviceDefinition);
     }
 
-    @PostMapping("/_create")
+    @PostMapping("/v1/_create")
     public ServiceDefinitionResponse createServiceDefinition(@RequestBody ServiceDefinitionRequest request) {
         final ServiceDefinition serviceDefinition = serviceDefinitionService.create();
         return new ServiceDefinitionResponse(null, serviceDefinition);

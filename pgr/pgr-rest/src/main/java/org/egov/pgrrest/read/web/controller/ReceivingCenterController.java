@@ -21,7 +21,7 @@ public class ReceivingCenterController {
         this.receivingCenterService = receivingCenterService;
     }
 
-    @PostMapping("/_search")
+    @PostMapping("/v1/_search")
     public ReceivingCenterResponse getAllReceivingCenters(
         @RequestParam(value = "tenantId", defaultValue = "default") String tenantId,
         @RequestParam(value = "id", required = false) Long id) {

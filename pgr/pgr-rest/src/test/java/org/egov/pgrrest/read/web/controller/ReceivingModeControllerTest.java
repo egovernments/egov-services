@@ -48,7 +48,7 @@ public class ReceivingModeControllerTest {
 		when(mockReceivingModeService.getAllReceivingModes(tenantId)).thenReturn(receivingModes);
 		  String expectedContent = readResource("getServiceRequests.json");
 		mockMvc.perform(
-				post("/receivingmode/_search?tenantId=ap.public"))
+				post("/receivingmode/v1/_search?tenantId=ap.public"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 		.andExpect(content().json(expectedContent));

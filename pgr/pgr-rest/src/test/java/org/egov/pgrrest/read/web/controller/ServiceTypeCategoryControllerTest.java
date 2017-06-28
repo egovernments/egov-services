@@ -37,7 +37,7 @@ public class ServiceTypeCategoryControllerTest {
     @Test
     public void test_should_return_service_type_categories() throws Exception {
         when(serviceTypeCategoryService.getAll("ap.public")).thenReturn(getComplaintTypeCategoryEntity());
-        mockMvc.perform(post("/servicecategories/_search")
+        mockMvc.perform(post("/servicecategories/v1/_search")
             .param("tenantId", "ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))

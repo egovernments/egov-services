@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 public class ComplaintTypeRepositoryTest {
 
     private static final String HOST = "http://host";
-    private static final String COMPLAINT_TYPES_BY_CODE_URL = "/pgr/services/C001?tenantId=ap.public";
+    private static final String COMPLAINT_TYPES_BY_CODE_URL = "/pgr/services/v1/C001?tenantId=ap.public";
 
     private MockRestServiceServer server;
 
@@ -36,7 +36,7 @@ public class ComplaintTypeRepositoryTest {
 
     @Test
     public void test_should_get_complainttype_by_code() {
-        server.expect(once(), requestTo("http://host/pgr/services/C001?tenantId=ap.public"))
+        server.expect(once(), requestTo("http://host/pgr/services/v1/C001?tenantId=ap.public"))
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(new Resources().getFileContents("complaintTypeResponse.json"),
                         MediaType.APPLICATION_JSON_UTF8));

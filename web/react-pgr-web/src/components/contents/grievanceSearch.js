@@ -12,6 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
+import Snackbar from 'material-ui/Snackbar';
 import Api from '../../api/api';
 
 const getNameByProperty = function(object, key) {
@@ -72,7 +73,8 @@ class grievanceSearch extends Component {
        		resultList: [],
        		isSearchClicked: false,
        		pageCount: 0,
-       		fromIndex: 0
+       		fromIndex: 0,
+          open1: false
        };
        this.search = this.search.bind(this);
        this.setInitialState = this.setInitialState.bind(this);
@@ -136,7 +138,11 @@ class grievanceSearch extends Component {
 			    }, function(err) {
 
 			    });
-  			}
+  			} else {
+          self.setState({
+            open1: true
+          })
+        }
   		}, function(err) {
 
 	    });
@@ -411,6 +417,12 @@ class grievanceSearch extends Component {
 				        onTouchTap={this.handleOpenNClose}
 				      />}>
 	        </Dialog>
+          <Snackbar
+            open={this.state.open1}
+            message="No search results"
+            autoHideDuration={4000}
+            style={{"textAlign": "center"}}
+          />
         </div>
   	);
   }

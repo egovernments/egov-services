@@ -91,7 +91,7 @@ public class RouterController{
 
 	
 
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final RouterTypeReq routerTypeReq,
 			final BindingResult errors) {
@@ -113,7 +113,7 @@ public class RouterController{
 
 	}
 	
-	@PostMapping(value = "/_update")
+	@PostMapping(value = "/v1/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final RouterTypeReq routerTypeReq,
 			final BindingResult errors) {
@@ -134,7 +134,7 @@ public class RouterController{
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
 
 	}
-	@PostMapping("/_search")
+	@PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final RouterTypeGetReq routerTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

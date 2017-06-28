@@ -1,66 +1,60 @@
 package org.egov.commons.web.contract;
 
-
-
 import java.util.Date;
 import java.util.List;
 
-
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
 public class BusinessDetailsRequestInfo {
-	
-private Long id;
 
-private String code;
+	private Long id;
 
-private String name;
+	private String code;
 
-private Boolean active;
+	private String name;
 
-private Long businessCategory;
+	private Boolean active;
 
-private String businessType;
+	private Long businessCategory;
 
-private String businessUrl;
+	private String businessType;
 
-private String department;
+	private String businessUrl;
 
-private String fundSource;
+	private String department;
 
-private String functionary;
+	private String fundSource;
 
-private Boolean voucherCreation;
+	private String functionary;
 
-private Boolean isVoucherApproved;
+	private Boolean voucherCreation;
 
-@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
-private Date voucherCutoffDate;
+	private Boolean isVoucherApproved;
 
-private Integer ordernumber;
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
+	private Date voucherCutoffDate;
 
-private String fund;
+	private Integer ordernumber;
 
-private String function;
+	private String fund;
 
-private String tenantId;
+	private String function;
 
-private List<BusinessAccountDetails> accountDetails;
+	private String tenantId;
 
-private List<BusinessAccountSubLedger> subledgerDetails;
+	private List<BusinessAccountDetails> accountDetails;
 
-
-
-
+	private List<BusinessAccountSubLedger> subledgerDetails;
 
 }

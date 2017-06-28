@@ -13,25 +13,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BusinessDetailsService {
-	
+
 	@Autowired
 	private BusinessDetailsRepository businessDetailsRepository;
 
 	public BusinessDetailsCommonModel createBusinessDetails(BusinessDetails modelDetails,
-         List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails,
+			List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails,
 			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger, AuthenticatedUser user) {
-		return businessDetailsRepository.createBusinessDetails(modelDetails,listModelAccountDetails,
-				listModelAccountSubledger,user);
-		
-		
+		return businessDetailsRepository.createBusinessDetails(modelDetails, listModelAccountDetails,
+				listModelAccountSubledger, user);
+
 	}
 
 	public BusinessDetailsCommonModel updateBusinessDetails(BusinessDetails modelDetails,
 			List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails,
 			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger, AuthenticatedUser user) {
-		return businessDetailsRepository.updateBusinessDetails(modelDetails,listModelAccountDetails,
-				listModelAccountSubledger,user);
-		
+		return businessDetailsRepository.updateBusinessDetails(modelDetails, listModelAccountDetails,
+				listModelAccountSubledger, user);
+
 	}
 
 	public BusinessDetailsCommonModel getForCriteria(BusinessDetailsCriteria detailsCriteria) {
@@ -39,11 +38,11 @@ public class BusinessDetailsService {
 	}
 
 	public boolean getBusinessDetailsByNameAndTenantId(String name, String tenantId) {
-		return businessDetailsRepository.checkDetailsByNameAndTenantIdExists(name,tenantId);
+		return businessDetailsRepository.checkDetailsByNameAndTenantIdExists(name, tenantId);
 	}
 
 	public boolean getBusinessDetailsByCodeAndTenantId(String code, String tenantId) {
-		return businessDetailsRepository.checkDetailsByCodeAndTenantIdExists(code,tenantId);
+		return businessDetailsRepository.checkDetailsByCodeAndTenantIdExists(code, tenantId);
 	}
 
 }

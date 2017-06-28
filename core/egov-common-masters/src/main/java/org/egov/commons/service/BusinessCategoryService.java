@@ -39,9 +39,6 @@
  */
 package org.egov.commons.service;
 
-
-
-
 import java.util.List;
 
 import org.egov.commons.model.AuthenticatedUser;
@@ -49,7 +46,6 @@ import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.repository.BusinessCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,35 +57,32 @@ public class BusinessCategoryService {
 		this.businessCategoryRepository = businessCategoryRepository;
 	}
 
-	public BusinessCategory create(BusinessCategory category,AuthenticatedUser user) {
-     return businessCategoryRepository.create(category,user);
-		
+	public BusinessCategory create(BusinessCategory category, AuthenticatedUser user) {
+		return businessCategoryRepository.create(category, user);
+
 	}
 
-	public BusinessCategory update(String businessCategoryCode,BusinessCategory category,
-			AuthenticatedUser user) {
-        return businessCategoryRepository.update(businessCategoryCode,category,user);
+	public BusinessCategory update(String businessCategoryCode, BusinessCategory category, AuthenticatedUser user) {
+		return businessCategoryRepository.update(businessCategoryCode, category, user);
 	}
 
-    public List<BusinessCategory> getForCriteria(BusinessCategoryCriteria criteria) {
-    	
+	public List<BusinessCategory> getForCriteria(BusinessCategoryCriteria criteria) {
+
 		return businessCategoryRepository.getForCriteria(criteria);
 	}
-    
-    public boolean getBusinessCategoryByNameAndTenantId(String name,String tenantId)
-    {
-    	return businessCategoryRepository.checkCategoryByNameAndTenantIdExists(name,tenantId);
-    }
+
+	public boolean getBusinessCategoryByNameAndTenantId(String name, String tenantId) {
+		return businessCategoryRepository.checkCategoryByNameAndTenantIdExists(name, tenantId);
+	}
 
 	public boolean getBusinessCategoryByCodeAndTenantId(String code, String tenantId) {
-		
-		return businessCategoryRepository.checkCategoryByCodeAndTenantIdExists(code,tenantId);
-	}
-	
-	public BusinessCategory getBusinessCategoryByIdAndTenantId(Long id,String tenantId){
-		
-		return businessCategoryRepository.getByIdAndTenantId(id,tenantId);
+
+		return businessCategoryRepository.checkCategoryByCodeAndTenantIdExists(code, tenantId);
 	}
 
+	public BusinessCategory getBusinessCategoryByIdAndTenantId(Long id, String tenantId) {
+
+		return businessCategoryRepository.getByIdAndTenantId(id, tenantId);
+	}
 
 }

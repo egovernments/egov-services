@@ -13,7 +13,6 @@ import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessAccountDetails;
 import org.egov.commons.model.BusinessAccountSubLedgerDetails;
 import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.model.BusinessDetails;
 import org.egov.commons.model.BusinessDetailsCommonModel;
 import org.egov.commons.model.BusinessDetailsCriteria;
@@ -21,10 +20,8 @@ import org.egov.commons.repository.BusinessDetailsRepository;
 import org.egov.commons.repository.builder.BusinessDetailsQueryBuilder;
 import org.egov.commons.repository.rowmapper.BusinessAccountDetailsRowMapper;
 import org.egov.commons.repository.rowmapper.BusinessAccountSubledgerDetailsRowMapper;
-import org.egov.commons.repository.rowmapper.BusinessCategoryRowMapper;
 import org.egov.commons.repository.rowmapper.BusinessDetailsCombinedRowMapper;
 import org.egov.commons.repository.rowmapper.BusinessDetailsRowMapper;
-import org.hibernate.mapping.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,204 +35,205 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 public class BusinessDetailsRepositoryTest {
 	@Mock
 	JdbcTemplate jdbcTemplate;
-	
+
 	@Mock
-    BusinessAccountDetailsRowMapper businessAccountDetailsRowMapper;
-	
-    @Mock
+	BusinessAccountDetailsRowMapper businessAccountDetailsRowMapper;
+
+	@Mock
 	BusinessDetailsCombinedRowMapper businessDetailsCombinedRowMapper;
-	
-    @Mock
+
+	@Mock
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-    @Mock
+
+	@Mock
 	BusinessDetailsRowMapper businessDetailsRowMapper;
-	
-    @Mock
+
+	@Mock
 	BusinessAccountSubledgerDetailsRowMapper businessAccountSubledgerDetailsRowMapper;
-	
-    @Mock
+
+	@Mock
 	BusinessDetailsQueryBuilder businessDetailsQueryBuilder;
-	
-    @InjectMocks
-    BusinessDetailsRepository businessDetailsRepository;
-    
-    @Test
-    public void test_should_create_businessDetail(){
-    	BusinessDetailsCommonModel commonModel=getBusinessDetailsCommonModel();
-    	when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
-    	int[] intArray={1,2};
-    	when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(intArray);
-    	when(jdbcTemplate.query(any(String.class), any (Object[].class),any(BusinessAccountDetailsRowMapper.class))).
-    			thenReturn(getListOfModelAccountDetails());
-		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(intArray);
-    	assertTrue(commonModel.equals(businessDetailsRepository.createBusinessDetails(getModelDetails()
-    			, getListOfModelAccountDetails(), getListOfModelAccountSubledger(),
-    			getAuthenticatedUser())));
-    }
-    
-    @Test
-    public void test_should_update_businessDetail(){
-    	BusinessDetailsCommonModel commonModel=getBusinessDetailsCommonModel();
-    	when(jdbcTemplate.query(any(String.class),any(Object[].class),
-				any(BusinessAccountDetailsRowMapper.class))).thenReturn(getListOfModelAccountDetails());
-    	when(namedParameterJdbcTemplate.query(any(String.class),any(SqlParameterSource.class),
-    			any(BusinessAccountSubledgerDetailsRowMapper.class))).
-    	thenReturn(getListOfModelAccountSubledger());
-    	
-    	when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-    	
-    	assertTrue(commonModel.equals(businessDetailsRepository.updateBusinessDetails(getModelDetails()
-    			, getListOfModelAccountDetails(), getListOfModelAccountSubledger(),
-    			getAuthenticatedUser())));
-    }
+
+	@InjectMocks
+	BusinessDetailsRepository businessDetailsRepository;
 
 	@Test
-    public void test_should_search_businessDetail(){
-    	BusinessDetailsCommonModel commonModel=getBusinessDetailsCommonModelForSearch();
-  when(businessDetailsQueryBuilder.getQuery(any(BusinessDetailsCriteria.class),
-		  any(List.class))).thenReturn("");
-  when(jdbcTemplate.query(any(String.class),any(Object[].class),
-		 any(BusinessDetailsCombinedRowMapper.class))).
- thenReturn(Collections.singletonList(getModelDetailsForSearch())); 	
- assertTrue(commonModel.equals(businessDetailsRepository.getForCriteria(getBusinessDetailsCriteria())));
-    	
-    }
-	
-	
-	
-	@Test
-	public void test_should_return_false_if_details_exists_with_name_and_tenantid(){
-		when(jdbcTemplate.query(any(String.class), any (Object[].class),any(BusinessDetailsRowMapper.class)))
-		.thenReturn(Arrays.asList(getModelDetails()));
-	Boolean value=	businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default");
-	assertTrue(value.equals(false));
+	public void test_should_create_businessDetail() {
+		BusinessDetailsCommonModel commonModel = getBusinessDetailsCommonModel();
+		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+		int[] intArray = { 1, 2 };
+		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(intArray);
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessAccountDetailsRowMapper.class)))
+				.thenReturn(getListOfModelAccountDetails());
+		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(intArray);
+		assertTrue(commonModel.equals(businessDetailsRepository.createBusinessDetails(getModelDetails(),
+				getListOfModelAccountDetails(), getListOfModelAccountSubledger(), getAuthenticatedUser())));
 	}
-	
+
 	@Test
-	public void test_should_return_true_if_details_doesnot_exists_with_name_and_tenantid(){
-		List<BusinessDetails> businessDetails=new ArrayList<>();
-		when(jdbcTemplate.query(any(String.class), any (Object[].class),any(BusinessDetailsRowMapper.class)))
-		.thenReturn(businessDetails);
-	Boolean value=	businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default");
-	assertTrue(value.equals(true));
+	public void test_should_update_businessDetail() {
+		BusinessDetailsCommonModel commonModel = getBusinessDetailsCommonModel();
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessAccountDetailsRowMapper.class)))
+				.thenReturn(getListOfModelAccountDetails());
+		when(namedParameterJdbcTemplate.query(any(String.class), any(SqlParameterSource.class),
+				any(BusinessAccountSubledgerDetailsRowMapper.class))).thenReturn(getListOfModelAccountSubledger());
+
+		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+
+		assertTrue(commonModel.equals(businessDetailsRepository.updateBusinessDetails(getModelDetails(),
+				getListOfModelAccountDetails(), getListOfModelAccountSubledger(), getAuthenticatedUser())));
 	}
-	
+
 	@Test
-	public void test_should_return_false_if_details_exists_with_code_and_tenantid(){
-		when(jdbcTemplate.query(any(String.class), any (Object[].class),any(BusinessDetailsRowMapper.class)))
-		.thenReturn(Arrays.asList(getModelDetails()));	
-		Boolean value=	businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default");
+	public void test_should_search_businessDetail() {
+		BusinessDetailsCommonModel commonModel = getBusinessDetailsCommonModelForSearch();
+		when(businessDetailsQueryBuilder.getQuery(any(BusinessDetailsCriteria.class), any(List.class))).thenReturn("");
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsCombinedRowMapper.class)))
+				.thenReturn(Collections.singletonList(getModelDetailsForSearch()));
+		assertTrue(commonModel.equals(businessDetailsRepository.getForCriteria(getBusinessDetailsCriteria())));
+
+	}
+
+	@Test
+	public void test_should_return_false_if_details_exists_with_name_and_tenantid() {
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(Arrays.asList(getModelDetails()));
+		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default");
 		assertTrue(value.equals(false));
 	}
-	
+
 	@Test
-	public void test_should_return_true_if_details_doesnot_exists_with_code_and_tenantid(){
-		List<BusinessDetails> businessDetails=new ArrayList<>();
-		when(jdbcTemplate.query(any(String.class), any (Object[].class),any(BusinessDetailsRowMapper.class)))
-		.thenReturn(businessDetails);	
-		Boolean value=	businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default");
+	public void test_should_return_true_if_details_doesnot_exists_with_name_and_tenantid() {
+		List<BusinessDetails> businessDetails = new ArrayList<>();
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(businessDetails);
+		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default");
 		assertTrue(value.equals(true));
 	}
-	
-    private BusinessDetailsCommonModel getBusinessDetailsCommonModelForSearch() {
-    	BusinessCategory businessCategory=BusinessCategory.builder().id(1L).build();
-    	BusinessDetails	businessDetails= BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true).
-    			businessCategory(businessCategory).businessType("C").businessUrl("/receipts/receipt-create.action").
-    			voucherCreation(true).isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").
-    			functionary("456").department("56").tenantId("default").build();
-    	List<BusinessDetails>listOfBusinessDetails=new ArrayList<>();
-    	listOfBusinessDetails=Arrays.asList(businessDetails);
-    	BusinessDetails businessDetail=BusinessDetails.builder().id(1L).build();
-		BusinessAccountDetails account1 =	BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L).tenantId("default").
-				businessDetails(businessDetail).build();
-	
-		  
-	    BusinessAccountDetails businessAccountDetail=BusinessAccountDetails.builder().id(1L).build();
-		BusinessAccountSubLedgerDetails subledger1=  BusinessAccountSubLedgerDetails.builder().id(1L).accountDetailType(34L).
-						  accountDetailKey(23L).amount(10000.00).businessAccountDetail(businessAccountDetail).tenantId("default").build();
-	   		 	return BusinessDetailsCommonModel.builder().businessDetails(listOfBusinessDetails)
-				.businessAccountDetails(Arrays.asList(account1)).businessAccountSubledgerDetails(Arrays.asList(subledger1)).build();
+
+	@Test
+	public void test_should_return_false_if_details_exists_with_code_and_tenantid() {
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(Arrays.asList(getModelDetails()));
+		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default");
+		assertTrue(value.equals(false));
 	}
 
+	@Test
+	public void test_should_return_true_if_details_doesnot_exists_with_code_and_tenantid() {
+		List<BusinessDetails> businessDetails = new ArrayList<>();
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(businessDetails);
+		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default");
+		assertTrue(value.equals(true));
+	}
 
+	private BusinessDetailsCommonModel getBusinessDetailsCommonModelForSearch() {
+		BusinessCategory businessCategory = BusinessCategory.builder().id(1L).build();
+		BusinessDetails businessDetails = BusinessDetails.builder().id(1L).code("TL").name("Trade Licence")
+				.isEnabled(true).businessCategory(businessCategory).businessType("C")
+				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
+				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
+				.tenantId("default").build();
+		List<BusinessDetails> listOfBusinessDetails = new ArrayList<>();
+		listOfBusinessDetails = Arrays.asList(businessDetails);
+		BusinessDetails businessDetail = BusinessDetails.builder().id(1L).build();
+		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L)
+				.tenantId("default").businessDetails(businessDetail).build();
+
+		BusinessAccountDetails businessAccountDetail = BusinessAccountDetails.builder().id(1L).build();
+		BusinessAccountSubLedgerDetails subledger1 = BusinessAccountSubLedgerDetails.builder().id(1L)
+				.accountDetailType(34L).accountDetailKey(23L).amount(10000.00)
+				.businessAccountDetail(businessAccountDetail).tenantId("default").build();
+		return BusinessDetailsCommonModel.builder().businessDetails(listOfBusinessDetails)
+				.businessAccountDetails(Arrays.asList(account1))
+				.businessAccountSubledgerDetails(Arrays.asList(subledger1)).build();
+	}
 
 	private BusinessDetails getModelDetailsForSearch() {
-		BusinessCategory businessCategory=BusinessCategory.builder().id(1L).build();
-    	return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true).
-    			businessCategory(businessCategory).businessType("C").businessUrl("/receipts/receipt-create.action").
-    			voucherCreation(true).isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").
-    			functionary("456").department("56").accountDetails(getListOfModelAccountDetailsForSearch())
-    			.tenantId("default").build();
+		BusinessCategory businessCategory = BusinessCategory.builder().id(1L).build();
+		return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
+				.businessCategory(businessCategory).businessType("C").businessUrl("/receipts/receipt-create.action")
+				.voucherCreation(true).isVoucherApproved(true).ordernumber(2).fund("12").function("123")
+				.fundSource("234").functionary("456").department("56")
+				.accountDetails(getListOfModelAccountDetailsForSearch()).tenantId("default").build();
 	}
-    
+
 	private List<BusinessAccountDetails> getListOfModelAccountDetailsForSearch() {
-		  BusinessAccountDetails businessAccountDetail=BusinessAccountDetails.builder().id(1L).build();
-		  
-		BusinessAccountSubLedgerDetails subledger1=  BusinessAccountSubLedgerDetails.builder().id(1L).accountDetailType(34L).
-				  accountDetailKey(23L).amount(10000.00).businessAccountDetail(businessAccountDetail).tenantId("default").build();
-		  BusinessAccountSubLedgerDetails subledger2= BusinessAccountSubLedgerDetails.builder().id(2L).accountDetailType(35L).
-				  accountDetailKey(24L).amount(20000.00).businessAccountDetail(businessAccountDetail).tenantId("default").build();
-   
-		 	BusinessDetails businessDetails=BusinessDetails.builder().id(1L).build();
-			BusinessAccountDetails account1 =	BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L).tenantId("default").
-				businessDetails(businessDetails).subledgerDetails(Arrays.asList(subledger1,subledger2)).build();
-		BusinessAccountDetails account2 =   BusinessAccountDetails.builder().id(2L).amount(2000.00).chartOfAccount(57L).tenantId("default").
-				businessDetails(businessDetails).build();	
-		return Arrays.asList(account1,account2);
+		BusinessAccountDetails businessAccountDetail = BusinessAccountDetails.builder().id(1L).build();
+
+		BusinessAccountSubLedgerDetails subledger1 = BusinessAccountSubLedgerDetails.builder().id(1L)
+				.accountDetailType(34L).accountDetailKey(23L).amount(10000.00)
+				.businessAccountDetail(businessAccountDetail).tenantId("default").build();
+		BusinessAccountSubLedgerDetails subledger2 = BusinessAccountSubLedgerDetails.builder().id(2L)
+				.accountDetailType(35L).accountDetailKey(24L).amount(20000.00)
+				.businessAccountDetail(businessAccountDetail).tenantId("default").build();
+
+		BusinessDetails businessDetails = BusinessDetails.builder().id(1L).build();
+		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L)
+				.tenantId("default").businessDetails(businessDetails)
+				.subledgerDetails(Arrays.asList(subledger1, subledger2)).build();
+		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(2L).amount(2000.00).chartOfAccount(57L)
+				.tenantId("default").businessDetails(businessDetails).build();
+		return Arrays.asList(account1, account2);
 	}
 
 	private BusinessDetailsCriteria getBusinessDetailsCriteria() {
-		  
-		  return BusinessDetailsCriteria.builder().active(true).businessCategoryCode("TL").ids(Arrays.asList(1L)).
-		  tenantId("default").sortBy("code").sortOrder("desc").build();
+
+		return BusinessDetailsCriteria.builder().active(true).businessCategoryCode("TL").ids(Arrays.asList(1L))
+				.tenantId("default").sortBy("code").sortOrder("desc").build();
 	}
 
-    
 	private BusinessDetailsCommonModel getBusinessDetailsCommonModel() {
 		return BusinessDetailsCommonModel.builder().businessDetails(Collections.singletonList(getModelDetails()))
-		.businessAccountDetails(getListOfModelAccountDetails()).businessAccountSubledgerDetails(getListOfModelAccountSubledger()).build();
+				.businessAccountDetails(getListOfModelAccountDetails())
+				.businessAccountSubledgerDetails(getListOfModelAccountSubledger()).build();
 	}
 
 	private BusinessAccountDetails getAccountAssociatedWithSubledger() {
-		return  BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L).tenantId("default").
-		businessDetails(getModelDetails()).build();
-	
-	}
-	
-	private BusinessDetails getModelDetails() {
-		return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true).
-		businessCategory(getBusinessCategoryModel()).businessType("C").businessUrl("/receipts/receipt-create.action").
-		voucherCreation(true).isVoucherApproved(true).ordernumber(2).fund("12").function("123").fundSource("234").
-		functionary("456").department("56").tenantId("default").build();
+		return BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L).tenantId("default")
+				.businessDetails(getModelDetails()).build();
 
-		 
 	}
+
+	private BusinessDetails getModelDetails() {
+		return BusinessDetails.builder().id(1L).code("TL").name("Trade Licence").isEnabled(true)
+				.businessCategory(getBusinessCategoryModel()).businessType("C")
+				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
+				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
+				.tenantId("default").build();
+
+	}
+
 	private BusinessCategory getBusinessCategoryModel() {
-		  BusinessCategory category=BusinessCategory.builder().id(1L).code("TL").name("Trade Licence")
-					.isactive(true).tenantId("default").build();
-			return category;
+		BusinessCategory category = BusinessCategory.builder().id(1L).code("TL").name("Trade Licence").isactive(true)
+				.tenantId("default").build();
+		return category;
 	}
+
 	private List<BusinessAccountSubLedgerDetails> getListOfModelAccountSubledger() {
-		  BusinessAccountSubLedgerDetails subledger1=  BusinessAccountSubLedgerDetails.builder().id(1L).accountDetailType(34L).
-				  accountDetailKey(23L).amount(10000.00).businessAccountDetail(getAccountAssociatedWithSubledger()).tenantId("default").build();
-		  BusinessAccountSubLedgerDetails subledger2= BusinessAccountSubLedgerDetails.builder().id(2L).accountDetailType(35L).
-				  accountDetailKey(24L).amount(20000.00).businessAccountDetail(getAccountAssociatedWithSubledger()).tenantId("default").build();
-        return Arrays.asList(subledger1,subledger2);
+		BusinessAccountSubLedgerDetails subledger1 = BusinessAccountSubLedgerDetails.builder().id(1L)
+				.accountDetailType(34L).accountDetailKey(23L).amount(10000.00)
+				.businessAccountDetail(getAccountAssociatedWithSubledger()).tenantId("default").build();
+		BusinessAccountSubLedgerDetails subledger2 = BusinessAccountSubLedgerDetails.builder().id(2L)
+				.accountDetailType(35L).accountDetailKey(24L).amount(20000.00)
+				.businessAccountDetail(getAccountAssociatedWithSubledger()).tenantId("default").build();
+		return Arrays.asList(subledger1, subledger2);
 	}
-	
+
 	private AuthenticatedUser getAuthenticatedUser() {
-		
-		return AuthenticatedUser.builder().id(1L).name("ram").anonymousUser(false).emailId("ram@gmail.com").mobileNumber("73878921").build();
-		
+
+		return AuthenticatedUser.builder().id(1L).name("ram").anonymousUser(false).emailId("ram@gmail.com")
+				.mobileNumber("73878921").build();
+
 	}
-	
+
 	private List<BusinessAccountDetails> getListOfModelAccountDetails() {
-		BusinessAccountDetails account1 =	BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L).tenantId("default").
-				businessDetails(getModelDetails()).build();
-		BusinessAccountDetails account2 =   BusinessAccountDetails.builder().id(2L).amount(2000.00).chartOfAccount(57L).tenantId("default").
-				businessDetails(getModelDetails()).build();	
-		return Arrays.asList(account1,account2);
+		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L)
+				.tenantId("default").businessDetails(getModelDetails()).build();
+		BusinessAccountDetails account2 = BusinessAccountDetails.builder().id(2L).amount(2000.00).chartOfAccount(57L)
+				.tenantId("default").businessDetails(getModelDetails()).build();
+		return Arrays.asList(account1, account2);
 	}
-    
+
 }

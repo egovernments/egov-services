@@ -1,6 +1,7 @@
 package org.egov.commons.repository.builder;
 
 import java.util.List;
+
 import org.egov.commons.model.BusinessDetailsCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +12,9 @@ import lombok.EqualsAndHashCode;
 @Component
 @EqualsAndHashCode
 public class BusinessDetailsQueryBuilder {
-private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQueryBuilder.class);
-	
-	private static final String BASE_QUERY ="Select bd.id as bd_id,bd.name as bd_name,bd.businessurl as bd_url,"
+	private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQueryBuilder.class);
+
+	private static final String BASE_QUERY = "Select bd.id as bd_id,bd.name as bd_name,bd.businessurl as bd_url,"
 			+ "bd.isenabled as bd_enabled,bd.code as bd_code,bd.businesstype as bd_type,"
 			+ "bd.fund as bd_fund,bd.function as bd_function,bd.fundsource as bd_fundsource,"
 			+ "bd.functionary as bd_functionary,bd.department as bd_department,"
@@ -28,19 +29,19 @@ private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQuer
 			+ " as basd_id,basd.tenantid as basd_tenant from eg_businesscategory bc FULL JOIN eg_businessdetails"
 			+ " bd ON bc.id=bd.businesscategory FULL JOIN"
 			+ " eg_business_accountdetails bad ON bd.id=bad.businessdetails"
-            +" FULL JOIN eg_business_subledgerinfo basd ON bad.id=basd.businessaccountdetail";
-	
+			+ " FULL JOIN eg_business_subledgerinfo basd ON bad.id=basd.businessaccountdetail";
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(BusinessDetailsCriteria detailsCriteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, detailsCriteria);
 		addOrderByClause(selectQuery, detailsCriteria);
-		
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			BusinessDetailsCriteria criteria) {
@@ -55,8 +56,8 @@ private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQuer
 			isAppendAndClause = true;
 			selectQuery.append(" bd.tenantId = ?");
 			preparedStatementValues.add(criteria.getTenantId());
-			
-			}
+
+		}
 
 		if (criteria.getIds() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -74,7 +75,7 @@ private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQuer
 			selectQuery.append(" bd.isenabled = ?");
 			preparedStatementValues.add(criteria.getActive());
 		}
-		
+
 		if (criteria.getBusinessDetailsCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" bd.code = ?");
@@ -84,17 +85,16 @@ private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQuer
 
 	private void addOrderByClause(StringBuilder selectQuery, BusinessDetailsCriteria criteria) {
 		String sortBy = (criteria.getSortBy() == null ? "bd.name" : "bd." + criteria.getSortBy());
-		String sortOrder = (criteria.getSortOrder() == null ? "ASC"
-				: criteria.getSortOrder());
-        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-}
-	
+		String sortOrder = (criteria.getSortOrder() == null ? "ASC" : criteria.getSortOrder());
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+	}
+
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
 		return true;
-}
-	
+	}
+
 	private static String getIdQuery(List<Long> idList) {
 		StringBuilder query = new StringBuilder("(");
 		if (idList.size() >= 1) {
@@ -104,7 +104,6 @@ private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsQuer
 			}
 		}
 		return query.append(")").toString();
-}
-
+	}
 
 }

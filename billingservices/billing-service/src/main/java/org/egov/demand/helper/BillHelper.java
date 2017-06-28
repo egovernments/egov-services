@@ -67,8 +67,8 @@ public class BillHelper {
 				
 			}
 		}
-		log.info("BillHelper bill:"+billIds);
-		log.info("BillHelper billRequest:"+billRequest);
+		log.debug("BillHelper bill:"+billIds);
+		log.debug("BillHelper billRequest:"+billRequest);
 	}
 
 	

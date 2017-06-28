@@ -95,11 +95,31 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		case RENEWAL:
 			validateRenewal(agreementRequest, errors);
 			break;
+			
+		case EVICTION:
+			validateEviction(agreementRequest, errors);
+			break;
 
 		default:
 			break;
 		}
 	}
+
+	private void validateEviction(AgreementRequest agreementRequest, Errors errors) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		AssetCategory assetCategory = agreement.getAsset().getCategory();
+
+		List<String> assetCategoryNames = getConfigurations(propertiesManager.getEvictionAssetCategoryKey());
+		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
+		for (String string : assetCategoryNames) {
+			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
+	
+					errors.rejectValue("Agreement.asset.assetCategory", "",
+							"eviction is valid only for shop asset category");
+				}
+			}
+		}
 
 	public void validateRenewal(AgreementRequest agreementRequest, Errors errors) {
 

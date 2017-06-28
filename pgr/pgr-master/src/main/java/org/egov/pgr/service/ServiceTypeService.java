@@ -119,7 +119,10 @@ public class ServiceTypeService {
 
     public List<ServiceType> getServiceTypes(final ServiceGetRequest serviceGetRequest) {
         return grievanceRepository.findForCriteria(serviceGetRequest);
-
+    }
+    
+    public boolean checkServiceCodeIfExists(final String serviceCode, final String tenantId) {
+    	return grievanceRepository.checkServiceCodeIfExists(serviceCode, tenantId);
     }
 
 }

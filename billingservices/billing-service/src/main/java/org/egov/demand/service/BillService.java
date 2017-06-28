@@ -115,7 +115,7 @@ public class BillService {
 		try {
 			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),billRequest);
 		} catch (Exception e) {
-			log.info("BillService createAsync:"+e);
+			log.debug("BillService createAsync:"+e);
 			throw new RuntimeException(e);
 			
 		}
@@ -137,9 +137,9 @@ public class BillService {
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
 		
-		log.info("generateBill demandCriteria: "+demandCriteria);
+		log.debug("generateBill demandCriteria: "+demandCriteria);
 		DemandResponse demandResponse = demandService.getDemands(demandCriteria,requestInfo);
-		log.info("generateBill demandResponse: "+demandResponse);
+		log.debug("generateBill demandResponse: "+demandResponse);
 		List<Demand> demands = demandResponse.getDemands();
 		
 		List<Bill> bills = null; 
@@ -158,11 +158,11 @@ public class BillService {
 		
 		Map<String, List<TaxHeadMaster>> taxHeadCodes = getTaxHeadMaster(demands, tenantId, requestInfo);
 		
-		log.info("prepareBill taxHeadCodes:" + taxHeadCodes);
+		log.debug("prepareBill taxHeadCodes:" + taxHeadCodes);
 		
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		
-		log.info("prepareBill map:" +map);
+		log.debug("prepareBill map:" +map);
 		Demand demand = demands.get(0);
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
 				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
@@ -172,7 +172,7 @@ public class BillService {
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
 			String businessService = entry.getKey();
 			List<Demand> demands2 = entry.getValue();
-			log.info("prepareBill demands2:" +demands2);
+			log.debug("prepareBill demands2:" +demands2);
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 			Demand demand3 = demands2.get(0);
 			BigDecimal totalTaxAmount = BigDecimal.ZERO;
@@ -181,12 +181,12 @@ public class BillService {
 	
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
-				log.info("prepareBill demandDetails:" +demandDetails);
+				log.debug("prepareBill demandDetails:" +demandDetails);
 				
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
 					
-					log.info("prepareBill demandDetail:" +demandDetail);
+					log.debug("prepareBill demandDetail:" +demandDetail);
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 					
@@ -194,7 +194,7 @@ public class BillService {
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter((t) -> 
 					demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
 					
-					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
+					log.debug("prepareBill taxHeadMaster:" + taxHeadMaster);
 					//TODO
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
 							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).
@@ -233,18 +233,18 @@ public class BillService {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
 		
-		log.info("getTaxHeadMaster demandDetails:"+demandDetails);
+		log.debug("getTaxHeadMaster demandDetails:"+demandDetails);
 		
 		Set<String>  taxHeadMasterCode = demandDetails.stream().
 				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
 		
-		log.info("getTaxHeadMaster taxHeadMasterCode:"+taxHeadMasterCode);
+		log.debug("getTaxHeadMaster taxHeadMasterCode:"+taxHeadMasterCode);
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService.getTaxHeads(
 				TaxHeadMasterCriteria.builder().tenantId(tenantId).code(taxHeadMasterCode).build(),requestInfo).getTaxHeadMasters();
-		log.info("getTaxHeadMaster taxHeadMasters:"+taxHeadMasters);
+		log.debug("getTaxHeadMaster taxHeadMasters:"+taxHeadMasters);
 		Map<String, List<TaxHeadMaster>> map = taxHeadMasters.stream().collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
 		
-		log.info("getTaxHeadMaster map:"+map);
+		log.debug("getTaxHeadMaster map:"+map);
 		return map;
 	}
 	

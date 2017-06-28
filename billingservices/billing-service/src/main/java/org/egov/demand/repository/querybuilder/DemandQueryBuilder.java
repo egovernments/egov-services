@@ -108,7 +108,7 @@ public class DemandQueryBuilder {
 		addOrderByClause(demandQueryBuilder, DEMAND_QUERY_ORDER_BY_CLAUSE);
 		addPagingClause(demandQueryBuilder, preparedStatementValues);
 
-		log.info("the query String for demand : " + demandQueryBuilder.toString());
+		log.debug("the query String for demand : " + demandQueryBuilder.toString());
 		return demandQueryBuilder.toString();
 	}
 
@@ -140,7 +140,7 @@ public class DemandQueryBuilder {
 		}
 		addOrderByClause(demandQueryBuilder, BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE);
 		addPagingClause(demandQueryBuilder, preparedStatementValues);
-		log.info("the query String for demand detail: " + demandQueryBuilder.toString());
+		log.debug("the query String for demand detail: " + demandQueryBuilder.toString());
 		return demandQueryBuilder.toString();
 	}
 

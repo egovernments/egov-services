@@ -13,6 +13,7 @@ import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
 import org.egov.lams.model.Cancellation;
 import org.egov.lams.model.Document;
+import org.egov.lams.model.Eviction;
 import org.egov.lams.model.Renewal;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
@@ -401,13 +402,18 @@ public class AgreementRepository {
 					orderNumber = renewal.getRenewalOrderNumber();
 					orderDate = renewal.getRenewalOrderDate();
 					reason = renewal.getReasonForRenewal();
-					break;	
+					break;
 		case EVICTION:
-			break;
+			        Eviction eviction = agreement.getEviction();
+			        orderNumber = eviction.getEvictionProceedingNumber();
+			        orderDate = eviction.getEvictionProceedingDate();
+			        reason = eviction.getReasonForEviction();
+			        courtReferenceNumber = eviction.getCourtReferenceNumber();
+			        break;
 		case CREATE:
-			orderNumber = agreement.getOrderNumber();
-			orderDate = agreement.getOrderDate();
-			break;
+			        orderNumber = agreement.getOrderNumber();
+			        orderDate = agreement.getOrderDate();
+			        break;
 		case OBJECTION:
 			break;
 		}

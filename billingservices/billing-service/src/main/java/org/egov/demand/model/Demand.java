@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import org.egov.demand.model.enums.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,7 +43,7 @@ public class Demand {
 	@NotNull
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 
-	private BigDecimal minimumAmountPayable = new BigDecimal(0.0d);
+	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
 
 	private AuditDetail auditDetail;
 }

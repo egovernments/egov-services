@@ -42,7 +42,7 @@ public class BillingServiceConsumer {
 	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-		log.info("key:" + topic + ":" + "value:" + consumerRecord);
+		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
 		try {
 
@@ -57,7 +57,7 @@ public class BillingServiceConsumer {
 			else if (applicationProperties.getUpdateTaxHeadMasterTopicName().equals(topic))
 				taxheadMasterService.update(objectMapper.convertValue(consumerRecord, TaxHeadMasterRequest.class));
 		} catch (Exception exception) {
-			log.info("processMessage:" + exception);
+			log.debug("processMessage:" + exception);
 			throw exception;
 		}
 	}

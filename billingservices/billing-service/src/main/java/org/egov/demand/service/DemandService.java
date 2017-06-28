@@ -62,7 +62,7 @@ public class DemandService {
 
 	public DemandResponse create(DemandRequest demandRequest) {
 
-		log.info("the demand service : " + demandRequest);
+		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
@@ -93,8 +93,8 @@ public class DemandService {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
 		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
-		log.info("demand Request object : " + demandRequest);
-		log.info("demand detail list : " + demandDetails);
+		log.debug("demand Request object : " + demandRequest);
+		log.debug("demand detail list : " + demandDetails);
 
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 
@@ -102,7 +102,7 @@ public class DemandService {
 
 	public DemandResponse updateAsync(DemandRequest demandRequest) {
 
-		log.info("the demand service : " + demandRequest);
+		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
 		String userId = demandRequest.getRequestInfo().getUserInfo().getId().toString();

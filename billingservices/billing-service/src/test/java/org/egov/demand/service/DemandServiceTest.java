@@ -14,8 +14,6 @@ import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.TaxHeadMaster;
-import org.egov.demand.model.enums.Type;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.DemandRequest;

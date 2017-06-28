@@ -129,6 +129,33 @@ public class AgreementController {
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/_eviction")
+	@ResponseBody
+	public ResponseEntity<?> eviction(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		LOGGER.info("agreementRequest::" + agreementRequest);
+		agreementValidator.validate(agreementRequest,errors);
+		
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		Agreement agreement = agreementService.createAgreement(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = new AgreementResponse();
+		agreementResponse.setAgreement(agreements);
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		LOGGER.info(agreementResponse.toString());
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+	
 	@PostMapping("/_cancel")
 	@ResponseBody
 	public ResponseEntity<?> cancel(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {

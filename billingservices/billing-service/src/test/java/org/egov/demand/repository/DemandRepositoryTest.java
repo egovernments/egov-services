@@ -13,8 +13,6 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.TaxHeadMaster;
-import org.egov.demand.model.enums.Type;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -40,6 +38,7 @@ public class DemandRepositoryTest {
 	@InjectMocks
 	private DemandRepository demandRepository;
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void methodSaveCreateDemand() {
 

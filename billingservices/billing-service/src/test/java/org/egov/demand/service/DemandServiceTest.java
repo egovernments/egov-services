@@ -115,15 +115,11 @@ public class DemandServiceTest {
 		
 		demandDetail.setTaxAmount(BigDecimal.valueOf(100d));
 		demandDetail.setCollectionAmount(BigDecimal.ZERO);
-		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
-		taxHeadMaster.setCode("0002");
-	//	demandDetail.setTaxHeadMaster(taxHeadMaster);
+		demandDetail.setTaxHeadMasterCode("0002");
 		DemandDetail demandDetail1 = new DemandDetail();
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200d));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
-		TaxHeadMaster taxHeadMaster1 = new TaxHeadMaster();
-		taxHeadMaster1.setCode("0003");
-	//	demandDetail1.setTaxHeadMaster(taxHeadMaster1);
+		demandDetail1.setTaxHeadMasterCode("0003");
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;

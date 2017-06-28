@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+  import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import ImagePreview from '../../../common/ImagePreview.js';
 import SimpleMap from '../../../common/GoogleMaps.js';

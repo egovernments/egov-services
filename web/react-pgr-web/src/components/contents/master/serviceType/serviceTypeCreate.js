@@ -1,0 +1,743 @@
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import SimpleMap from '../../../common/GoogleMaps.js';
+
+import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+import TextField from 'material-ui/TextField';
+import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
+import Checkbox from 'material-ui/Checkbox';
+import DatePicker from 'material-ui/DatePicker';
+import SelectField from 'material-ui/SelectField';
+import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Api from '../../../../api/api';
+
+
+var flag = 0;
+const styles = {
+  headerStyle : {
+    color: 'rgb(90, 62, 27)',
+    fontSize : 19
+  },
+  marginStyle:{
+    margin: '15px'
+  },
+  paddingStyle:{
+    padding: '15px'
+  },
+  errorStyle: {
+    color: red500
+  },
+  underlineStyle: {
+    borderColor: brown500
+  },
+  underlineFocusStyle: {
+    borderColor: brown500
+  },
+  floatingLabelStyle: {
+    color: brown500
+  },
+  floatingLabelFocusStyle: {
+    color: brown500
+  },
+  customWidth: {
+    width:100
+  },
+  checkbox: {
+    marginTop: 37
+  }
+};
+
+var _this;
+
+class ServiceTypeCreate extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+          id:'',
+          data:'',
+          nomineeFieldsDefination: [],
+          isCustomFormVisible: true,
+          showMsg:true,
+          grievanceType:[],
+          isCustomFormVisible:false,
+          assetFieldsDefination: [],
+      }
+      this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
+      this.addAsset = this.addAsset.bind(this);
+      this.renderDelEvent = this.renderDelEvent.bind(this);
+    }
+
+    componentWillMount() {
+
+        if(this.props.match.params.id) {
+          console.log();
+            this.setState({id:this.props.match.params.id});
+            var body = {}
+            let  current = this;
+            let {setForm} = this.props;
+
+            Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},body).then(function(response){
+                console.log("response",response);
+                  console.log("response object",response.ServiceGroups[0]);
+                current.setState({data:response.ServiceGroups})
+                setForm(response.ServiceGroups[0])
+            }).catch((error)=>{
+                console.log(error);
+            })
+        } else {
+          let {initForm}=this.props;
+          initForm();
+        }
+    }
+
+    componentDidMount() {
+        let self = this;
+      Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+        console.log("response",response);
+          self.setState({
+            grievanceType: response.ServiceGroups
+          })
+      }, function(err) {
+        self.setState({
+            grievanceType: []
+          })
+      });
+    }
+
+    componentDidUpdate() {
+
+
+    }
+
+    addAsset(to="") {
+      var {
+        isEdit,
+        index,
+        list,
+        customField,
+        column,
+        assetCategory
+      } = this.state;
+
+      if(!to && (!customField.name || !customField.type)) {
+        return this.setState({
+          showMsg: true,
+          readonly: false
+        })
+      } else {
+        var _this = this;
+        setTimeout(function() {
+          _this.setState({
+            showMsg: false,
+            readonly: false
+          });
+        }, 300);
+      }
+
+      if (isEdit) {
+        // console.log(isEdit,index);
+        //update holidays with current holiday
+        assetCategory["assetFieldsDefination"][index] = customField
+        this.setState({
+          assetCategory,
+          isEdit: false,
+          readonly: false
+        })
+        //this.setState({isEdit:false})
+      } else {
+        //get asset Category from state
+        // customFieldData["columns"]=[];
+
+        if (to=="column") {
+          var temp = customField;
+          temp.columns.push(column);
+          this.setState({
+            customField: temp,
+            readonly: false,
+            column:{
+                 "name": null,
+                 "type": null,
+                 "isActive": false,
+                 "isMandatory": false,
+                 "values": null,
+                 "localText": null,
+                 "regExFormate": null,
+                 "url": null,
+                 "order": null,
+                 "columns": []
+            }
+          })
+        } else {
+          var temp = Object.assign({}, assetCategory);
+          temp.assetFieldsDefination.push(customField);
+          this.setState({
+            assetCategory: temp,
+            readonly: false,
+            customField: {
+                 "name": null,
+                 "type": null,
+                 "isActive": false,
+                 "isMandatory": false,
+                 "values": null,
+                 "localText": null,
+                 "regExFormate": null,
+                 "url": null,
+                 "order": null,
+                 "columns": []
+            } ,
+            isCustomFormVisible:false,
+            column: {
+                 "name": null,
+                 "type": null,
+                 "isActive": false,
+                 "isMandatory": false,
+                 "values": null,
+                 "localText": null,
+                 "regExFormate": null,
+                 "url": null,
+                 "order": null,
+                 "columns": []
+            }
+          })
+        }
+
+        //use push to add new customField inside assetCategory
+        //set back assetCategory to state
+      }
+    }
+
+
+
+    submitForm = (e) => {
+
+      e.preventDefault()
+
+      var body = {
+          "ServiceGroup":{
+           "id": this.props.createServiceType.id,
+           "name" :this.props.createServiceType.name,
+           "code" :this.props.createServiceType.code,
+           "description" :this.props.createServiceType.description,
+           "tenantId":"default"
+          }
+      }
+
+      if(this.props.match.params.id){
+        console.log("hi");
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
+              console.log(response);
+          }).catch((error)=>{
+              console.log(error);
+          })
+      } else {
+          Api.commonApiPost("/pgr-master/service/v1/_create",{},body).then(function(response){
+              console.log(response);
+          }).catch((error)=>{
+              console.log(error);
+          })
+      }
+
+
+    }
+
+    renderDelEvent(index,to="") {
+      if (to==="column") {
+        var columns = this.state.customField.columns;
+        columns.splice(index, 1);
+        this.setState({
+          customField:{
+            ...this.state.customField,
+            columns
+          }
+        });
+      } else {
+        var assetFieldsDefination = this.state.assetCategory.assetFieldsDefination;
+        assetFieldsDefination.splice(index, 1);
+        this.setState({
+          assetFieldsDefination
+        });
+      }
+    }
+    showCustomFieldForm(isShow)
+    {
+      this.setState({isCustomFormVisible:isShow})
+    }
+
+
+    render() {
+
+      let {
+        createServiceType ,
+        fieldErrors,
+        isFormValid,
+        isTableShow,
+        handleUpload,
+        files,
+        handleChange,
+        handleMap,
+        handleChangeNextOne,
+        handleChangeNextTwo,
+        buttonText
+      } = this.props;
+
+      let {submitForm,showCustomFieldForm,renderDelEvent,addAsset} = this;
+      let {nomineeFieldsDefination,isCustomFormVisible,showMsg,customField,assetFieldsDefination} = this.state;
+
+
+
+      const showAddNewBtn = function() {
+
+          return (
+              <button type="button" className="btn btn-primary  pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+            )
+
+      }
+
+      const renderBody=function(to="")
+      {
+          if (to=="column") {
+            if(customField.columns.length>0) {
+                return customField.columns.map((item,index)=> {
+                    return (<tr  key={index} className="text-center">
+                    <td>{index+1}</td>
+                      <td  >
+                    {item.name}
+                      </td>
+                      <td  >
+                        {item.type}
+                      </td>
+                      <td  >
+                    {item.isActive?"true":"false"}
+                      </td>
+                      <td  >
+                    {item.isMandatory?"true":"false"}
+                      </td>
+                      <td  >
+                    {item.values}
+                      </td>
+                      <td  >
+                    {item.order}
+                      </td>
+
+                    {/*  <td  >
+                    {item.columns.length>0?item.columns.length:""}
+                      </td>
+                    */}
+
+                      <td data-label="Action">
+                                  <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,"column")}} ><span className="glyphicon glyphicon-trash"></span></button>
+                    </td></tr>)
+                })
+            }
+          } else {
+            if(assetFieldsDefination.length>0) {
+                return assetFieldsDefination.map((item,index)=> {
+                    return (<tr  key={index} className="text-center">
+                    <td>{index+1}</td>
+                      <td  >
+                    {item.name}
+                      </td>
+                      <td  >
+                        {item.type}
+                      </td>
+                      <td>
+                    {item.isActive?"true":"false"}
+                      </td>
+                      <td  >
+                    {item.isMandatory?"true":"false"}
+                      </td>
+                      <td  >
+                    {item.values}
+                      </td>
+
+                      <td  >
+                    {item.order}
+                      </td>
+
+                      <td  >
+                    {item.columns.length>0?item.columns.length:""}
+                      </td>
+
+                      <td data-label="Action">
+                      <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} ><span className="glyphicon glyphicon-trash"></span></button>
+                    </td></tr>)
+                })
+            }
+          }
+
+
+      }
+
+
+      const  promotionFunc =function() {
+          if(createServiceType.metaData=="true"||createServiceType.metaData==true){
+            console.log("hi");
+            return (
+              <div className="form-section">
+                <h3 style = {styles.headerStyle} >Attributes</h3>
+                <div className="row" style={{"paddingRight": "18px"}}>
+                  {showAddNewBtn()}
+                </div>
+                <div className="land-table table-responsive">
+                    <table className="table table-bordered">
+                        <thead>
+                        <tr>
+                          <th>Key</th>
+                           <th>Name</th>
+                           <th>isActive</th>
+
+
+                         </tr>
+                        </thead>
+                        <tbody>
+                          {renderBody()}
+                        </tbody>
+                    </table>
+                </div>
+                {showCustomFieldAddForm()}
+              </div>
+
+            )
+          }
+        };
+        const showCustomFieldAddForm=function()
+        {
+            if(isCustomFormVisible)
+            {
+              return (
+                <div>
+                  <Col xs={12} md={3} sm={6}>
+                      <TextField
+                          fullWidth={true}
+                          floatingLabelText="Code"
+                          value={createServiceType.code? createServiceType.code : ""}
+                          errorText={fieldErrors.code ? fieldErrors.code : ""}
+                            onChange={(e) => handleChange(e, "code", true, '')}
+                          id="code"
+                      />
+                  </Col>
+
+                  <Col  xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="Data Type"
+                           fullWidth={true}
+                           value={createServiceType.dataType ? createServiceType.dataType : ""}
+                           onChange= {(e, index ,values) => {
+                             var e = {
+                               target: {
+                                 value: values
+                               }
+                             };
+                             handleChange(e, "dataType", true, "");
+                            }}
+                         >
+                        <MenuItem  value={1} primaryText={"Single value list"} />
+                        <MenuItem  value={2} primaryText={"Text"} />
+
+                      </SelectField>
+                  </Col>
+                    <Col xs={12} md={3} sm={6}>
+                      <TextField
+                          fullWidth={true}
+                          floatingLabelText="Description"
+                          value={createServiceType.description? createServiceType.description : ""}
+                          errorText={fieldErrors.description ? fieldErrors.description : ""}
+                          onChange={(e) => handleChange(e, "description", false, '')}
+                          multiLine={true}
+                          id="description"
+                      />
+                  </Col>
+                  <Col xs={12} md={3} sm={6}>
+                      <TextField
+                          fullWidth={true}
+                          floatingLabelText="Group Code"
+                          value={createServiceType.groupCode? createServiceType.groupCode : ""}
+                          errorText={fieldErrors.groupCode ? fieldErrors.groupCode : ""}
+                          onChange={(e) => handleChange(e, "groupCode", false, '')}
+                          multiLine={true}
+                          id="groupCode"
+                      />
+                  </Col>
+                  <Col xs={12} md={3} sm={6}>
+                      <Checkbox
+                        label="Required"
+                        style={styles.metaData}
+                        checked = {createServiceType.required || false}
+                        onCheck = {(e, i, v) => { console.log(createServiceType.required, i);
+
+                          var e = {
+                            target: {
+                              value:i
+                            }
+                          }
+                          handleChange(e, "required", false, '')
+                        }}
+                        id="required"
+                      />
+                  </Col>
+                  <Col xs={12} md={3} sm={6}>
+                      <Checkbox
+                        label="Variable"
+                        style={styles.variable}
+                        checked = {createServiceType.variable || false}
+                        onCheck = {(e, i, v) => { console.log(createServiceType.variable, i);
+
+                          var e = {
+                            target: {
+                              value:i
+                            }
+                          }
+                          handleChange(e, "variable", false, '')
+                        }}
+                        id="variable"
+                      />
+                  </Col>
+                {showNoteMsg()}
+                  <div className="text-center">
+                    <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}} >Add/Edit</button>
+                  </div>
+
+                </div>
+              )
+            }
+        }
+        const showNoteMsg = function() {
+          if(showMsg) {
+            return (<p className="text-danger">ALl mandatory field are required.</p>)
+          } else
+            return "";
+        }
+
+
+
+      return(
+        <div className="createServiceType">
+          <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
+              <Card style={styles.marginStyle}>
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create Service Type < /div>} />
+                  <CardText style={{padding:0}}>
+                      <Grid>
+                          <Row>
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="Service Code"
+                                      value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
+                                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
+                                        onChange={(e) => handleChange(e, "serviceCode", true, '')}
+                                      id="serviceCode"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="Service Name"
+                                      value={createServiceType.serviceName? createServiceType.serviceName : ""}
+                                      errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
+                                      onChange={(e) => handleChange(e, "serviceName", true, '')}
+                                      id="serviceName"
+                                      disabled={this.state.id ? true : false }
+                                  />
+                              </Col>
+
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="Description"
+                                      value={createServiceType.description? createServiceType.description : ""}
+                                      errorText={fieldErrors.description ? fieldErrors.description : ""}
+                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      multiLine={true}
+                                      id="description"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="Type"
+                                      value={createServiceType.type? createServiceType.type : ""}
+                                      errorText={fieldErrors.type ? fieldErrors.type : ""}
+                                      onChange={(e) => handleChange(e, "type", false, '')}
+                                      multiLine={true}
+                                      id="type"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="Keywords"
+                                      value={createServiceType.keywords? createServiceType.keywords : ""}
+                                      errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
+                                      onChange={(e) => handleChange(e, "keywords", false, '')}
+                                      multiLine={true}
+                                      id="keywords"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="Group"
+                                      value={createServiceType.group? createServiceType.type : ""}
+                                      errorText={fieldErrors.group ? fieldErrors.group : ""}
+                                      onChange={(e) => handleChange(e, "group", false, '')}
+                                      multiLine={true}
+                                      id="group"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                                    <SelectField
+                                       floatingLabelText="Category"
+                                       fullWidth={true}
+                                       value={createServiceType.grievanceType ? createServiceType.grievanceType : ""}
+                                       onChange= {(e, index ,values) => {
+                                         var e = {
+                                           target: {
+                                             value: values
+                                           }
+                                         };
+                                         handleChange(e, "grievanceType", true, "");
+                                        }}
+                                     >
+                                     {this.state.grievanceType.map((item, index) => (
+                                               <MenuItem
+                                                 value={item.id}
+                                                 key={index}
+                                                 primaryText={item.name}
+
+                                               />
+                                      ))}
+                                      </SelectField>
+                              </Col>
+
+                              <div className="clearfix"></div>
+
+                              <Col xs={12} md={3} sm={6}>
+                              {console.log(createServiceType.active)}
+                                  <Checkbox
+                                    label="Active"
+                                    style={styles.metaData}
+                                    checked = {createServiceType.active || false}
+                                    onCheck = {(e, i, v) => { console.log(createServiceType.active, i);
+
+                                      var e = {
+                                        target: {
+                                          value:i
+                                        }
+                                      }
+                                      handleChange(e, "active", false, '')
+                                    }}
+                                    id="active"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                              {console.log(createServiceType.hasFinancialImpact)}
+                                  <Checkbox
+                                    label="Has Financial Impact"
+                                    style={styles.metaData}
+                                    checked = {createServiceType.hasFinancialImpact || false}
+                                    onCheck = {(e, i, v) => { console.log(createServiceType.hasFinancialImpact, i);
+
+                                      var e = {
+                                        target: {
+                                          value:i
+                                        }
+                                      }
+                                      handleChange(e, "hasFinancialImpact", false, '')
+                                    }}
+                                    id="hasFinancialImpact"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                              {console.log(createServiceType.metaData)}
+                                  <Checkbox
+                                    label="Meta Data"
+                                    style={styles.metaData}
+                                    checked = {createServiceType.metaData || false}
+                                    onCheck = {(e, i, v) => { console.log(createServiceType.metaData, i);
+
+                                      var e = {
+                                        target: {
+                                          value:i
+                                        }
+                                      }
+                                      handleChange(e, "metaData", false, '')
+                                    }}
+                                    id="metaData"
+                                  />
+                              </Col>
+                              <div className="clearfix"></div>
+                                {promotionFunc()}
+
+                          </Row>
+                      </Grid>
+                  </CardText>
+              </Card>
+              <div style={{textAlign:'center'}}>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+              </div>
+          </form>
+        </div>)
+    }
+
+}
+
+const mapStateToProps = state => {
+
+  return ({createServiceType : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+}
+
+const mapDispatchToProps = dispatch => ({
+  initForm: () => {
+    dispatch({
+      type: "RESET_STATE",
+      validationData: {
+        required: {
+          current: [],
+          required: ["name","code"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
+
+  setForm: (data) => {
+    dispatch({
+      type: "SET_FORM",
+      data,
+      isFormValid:true,
+      fieldErrors: {},
+      validationData: {
+        required: {
+          current: ["name","code"],
+          required: ["name","code"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
+
+  handleChange: (e, property, isRequired, pattern) => {
+    console.log("handlechange"+e+property+isRequired+pattern);
+    dispatch({
+      type: "HANDLE_CHANGE",
+      property,
+      value: e.target.value,
+      isRequired,
+      pattern
+    });
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceTypeCreate);

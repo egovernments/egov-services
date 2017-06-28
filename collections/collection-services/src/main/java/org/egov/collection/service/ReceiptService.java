@@ -77,7 +77,6 @@ public class ReceiptService {
 		try{
 			receiptRepository.persistCreateRequest(receiptReq);
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Exception caused at the Repository layer: "+e.getCause());
 		}
 

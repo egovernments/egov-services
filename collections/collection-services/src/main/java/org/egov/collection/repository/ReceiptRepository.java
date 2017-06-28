@@ -121,6 +121,7 @@ public class ReceiptRepository {
 		auditDetails.setCreatedDate(new Date(new java.util.Date().getTime()));
 		auditDetails.setLastModifiedDate(new Date(new java.util.Date().getTime()));
 		receiptInfo.setAuditDetails(auditDetails);
+		
 		try{
 			collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(),
 					applicationProperties.getCreateReceiptTopicKey(), receiptReq);
@@ -134,9 +135,12 @@ public class ReceiptRepository {
 		
 	@SuppressWarnings("unchecked") 
 	public boolean persistCreateRequest(ReceiptReq receiptReq){
-		logger.info("Insert process intiated");
+		logger.info("Insert process initiated");
 		boolean isInsertionSuccessfull = false;	
 		Receipt receiptInfo = receiptReq.getReceipt();
+		
+	//	String statusCode = getStatusCode(receiptReq.getRequestInfo());
+
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		
 		for(BillDetails billdetails: receiptInfo.getBillInfo().getBillDetails()){				
@@ -200,7 +204,9 @@ public class ReceiptRepository {
 				parametersMap.put("location", null);
 				parametersMap.put("isreconciled", false);
 				
-				parametersMap.put("status", 1); //This should be retrieved from egw_status table of common service
+				parametersMap.put("status", "status");
+
+			//	parametersMap.put("status", statusCode);
 				
 				
 				try{
@@ -309,6 +315,33 @@ public class ReceiptRepository {
 			isCodeValid = false;
 		
 		return isCodeValid;
+	}
+	
+	private String getStatusCode(RequestInfo requestInfo){
+		logger.info("fetching status for the receipt.");	
+		
+		StringBuilder builder = new StringBuilder();
+		String baseUri = CollectionServiceConstants.STATUS_SEARCH_URI;
+		String searchCriteria="";
+		builder.append(baseUri).append(searchCriteria);
+		
+		logger.info("URI being hit: "+builder.toString());
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		Object response = null;
+
+		try{
+			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
+		}catch(Exception e){
+			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
+		}
+		
+		logger.info("Response from collection-masters: "+response.toString());
+		
+		String status = JsonPath.read(response, "$.");
+		
+		return status;
 	}
 	
 

@@ -44,6 +44,8 @@ public class CollectionServiceConstants {
 	//URIs for other micro services collection depends on
 	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
 	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
+	public static final String STATUS_SEARCH_URI = " ";
+
 
 
 

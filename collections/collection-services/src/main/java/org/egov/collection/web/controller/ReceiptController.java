@@ -56,6 +56,7 @@ import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,8 @@ public class ReceiptController {
 	
 	@Autowired 
 	private ReceiptReqValidator receiptReqValidator;
-
+	
+	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("_search")
@@ -111,20 +113,7 @@ public class ReceiptController {
 			}
 		return getSuccessResponse(receipts, requestInfo);
 	}
-
-	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
-			RequestInfo requestInfo) {
-		LOGGER.info("Building success response.");
-		ReceiptRes receiptResponse = new ReceiptRes();
-		receiptResponse.setReceipts(receipts);
-		receiptResponse.setResponseInfo(responseInfoFactory
-				.createResponseInfoFromRequestInfo(requestInfo, true));
-		System.err.println("before returning from getsucces resposne ::"
-				+ receiptResponse);
-		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
-	}
-
-
+	
 	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(
@@ -140,7 +129,7 @@ public class ReceiptController {
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		
 		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
-		
+				
 		if(null == receiptInfo){
 			LOGGER.info("Service returned null");
 			Error error = new Error();
@@ -171,6 +160,18 @@ public class ReceiptController {
 
 		return null;
 	}
+	
+	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
+			RequestInfo requestInfo) {
+		LOGGER.info("Building success response.");
+		ReceiptRes receiptResponse = new ReceiptRes();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		receiptResponse.setReceipts(receipts);
+		receiptResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
+	}
+
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

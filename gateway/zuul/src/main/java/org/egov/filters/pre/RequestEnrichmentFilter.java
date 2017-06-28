@@ -7,17 +7,15 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
 import org.egov.contract.User;
+import org.egov.model.RequestBodyInspector;
 import org.egov.wrapper.CustomRequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 import static org.egov.constants.RequestContextConstants.*;
@@ -125,19 +123,24 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     @SuppressWarnings("unchecked")
     private void enrichRequestBody() throws IOException {
         RequestContext ctx = RequestContext.getCurrentContext();
-        HashMap<String, Object> requestBody = getRequestBody(ctx);
-        HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get(REQUEST_INFO_FIELD_NAME);
+        final RequestBodyInspector requestBodyInspector = getRequestBodyInspector(ctx);
+        HashMap<String, Object> requestInfo = requestBodyInspector.getRequestInfo();
         if (requestInfo == null) {
             logger.info(SKIPPED_BODY_ENRICHMENT_DUE_TO_NO_KNOWN_FIELD_MESSAGE);
             return;
         }
         setUserInfo(requestInfo);
         setCorrelationId(requestInfo);
-        requestBody.put(REQUEST_INFO_FIELD_NAME, requestInfo);
+        requestBodyInspector.updateRequestInfo(requestInfo);
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper(ctx.getRequest());
-        requestWrapper.setPayload(objectMapper.writeValueAsString(requestBody));
+        requestWrapper.setPayload(objectMapper.writeValueAsString(requestBodyInspector.getRequestBody()));
         logger.info(BODY_ENRICHED_MESSAGE);
         ctx.setRequest(requestWrapper);
+    }
+
+    private RequestBodyInspector getRequestBodyInspector(RequestContext ctx) throws IOException {
+        HashMap<String, Object> requestBody = getRequestBody(ctx);
+        return new RequestBodyInspector(requestBody);
     }
 
     private void setCorrelationId(HashMap<String, Object> requestInfo) {

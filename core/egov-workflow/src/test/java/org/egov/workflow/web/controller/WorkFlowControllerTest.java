@@ -171,6 +171,8 @@ public class WorkFlowControllerTest {
             .thenReturn(history);
 
         mockMvc.perform(post("/history/v1/_search")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("requestInfo.json"))
             .param("tenantId", TENANT_ID)
             .param("workflowId", "2"))
             .andExpect(status().isOk())

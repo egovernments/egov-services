@@ -180,9 +180,11 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: businessService
           in: query
-          description: Name of the business service for which 'BusinessServiceDetails' to be returned.
+          description: Name of the businessservice(s) for which 'BusinessServiceDetails' to be returned.
           required: true
-          type: string
+          type: array
+          items: 
+            type: string
         - name: id
           in: query
           description: Id(s) of the BusinessServiceDetail(s) to be returned

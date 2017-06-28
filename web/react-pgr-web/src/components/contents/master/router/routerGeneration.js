@@ -21,7 +21,6 @@ const dt = require('datatables.net-bs');
 
 
 const buttons = require('datatables.net-buttons-bs');
-
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
@@ -143,7 +142,7 @@ class routerGeneration extends Component {
 
   loadGrievanceType(value){
      var self = this;
-     Api.commonApiPost("/pgr/services/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
        self.setState({typeList : response.complaintTypes});
      },function(err) {
@@ -195,7 +194,7 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr/servicecategories/_search").then(function(response) {
+  	Api.commonApiPost("/pgr/servicecategories/v1/_search").then(function(response) {
       	checkCountAndCall("categoryList", response.serviceTypeCategories);
     }, function(err) {
     	checkCountAndCall("categoryList", []);
@@ -224,7 +223,7 @@ class routerGeneration extends Component {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
-  	Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
+  	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
   			resultList: response.RouterTypRes,
@@ -266,7 +265,7 @@ class routerGeneration extends Component {
   	 		});
   	 	}
 
-  	 	Api.commonApiPost("/workflow/router/_create", {}, {routertype: routerType}).then(function(response) {
+  	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {routertype: routerType}).then(function(response) {
 	  		self.props.initForm();
 	  		self.setState({
 	  			resultList: [],

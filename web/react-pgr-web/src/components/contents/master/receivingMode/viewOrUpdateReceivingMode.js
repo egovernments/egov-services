@@ -66,7 +66,7 @@ class viewOrUpdateReceivingMode extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/receivingmode/_search",{},body).then(function(response){
+        Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{},body).then(function(response){
             console.log(response.ReceivingModeType);
             current.setState({data:response.ReceivingModeType});
         }).catch((error)=>{

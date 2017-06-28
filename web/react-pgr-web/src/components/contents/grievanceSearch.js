@@ -130,7 +130,7 @@ class grievanceSearch extends Component {
   		searchSet.fromIndex = self.state.fromIndex;
   		Api.commonApiPost("/pgr/seva/_count", searchSet).then(function(response) {
   			if(response.count) {
-  				Api.commonApiPost("/pgr/seva/_search", searchSet).then(function(response1) {
+  				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
 		      		self.setState({
 		      			resultList: response1.serviceRequests || [],
 		      			isSearchClicked: true,
@@ -172,13 +172,13 @@ class grievanceSearch extends Component {
     	checkCountAndCall("locationList", []);
     });
 
-    Api.commonApiPost("/pgr/receivingmode/_search").then(function(response) {
+    Api.commonApiPost("/pgr/receivingmode/v1/_search").then(function(response) {
       	checkCountAndCall("receiveingModeList", response.receivingModes);
     }, function(err) {
     	checkCountAndCall("receiveingModeList", []);
     });
 
-    Api.commonApiPost("pgr/services/_search", {type: "all"}).then(function(response) {
+    Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
       	checkCountAndCall("complaintTypeList", response.complaintTypes);
     }, function(err) {
     	checkCountAndCall("complaintTypeList", []);

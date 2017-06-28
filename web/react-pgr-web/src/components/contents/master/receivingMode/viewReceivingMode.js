@@ -73,7 +73,7 @@ class viewReceivingSet extends Component {
             this.setState({id:this.props.match.params.id});
             let  current = this;
             let {setForm} = this.props;
-            Api.commonApiPost("/pgr-master/receivingmode/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
                 current.setState({data:response.ReceivingModeType})
                 setForm(response.ReceivingModeType[0])
             }).catch((error)=>{

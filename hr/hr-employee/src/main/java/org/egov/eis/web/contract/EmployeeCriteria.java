@@ -78,6 +78,8 @@ public class EmployeeCriteria implements Cloneable {
 
 	private List<Long> employeeStatus;
 
+	private Boolean familyParticularsPresent;
+
 	private Boolean active;
 
 	private String userName;

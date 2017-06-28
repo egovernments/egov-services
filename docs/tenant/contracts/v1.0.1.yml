@@ -1,0 +1,213 @@
+swagger: "2.0"
+info:
+  version: "1.0.1"
+  title: Tenant Service
+  description: Tenant Service - to create, update and search tenant. 
+  
+  contact:
+    name: eGov
+    email: info@egovernments.org
+    
+host: egov-micro-dev.egovernments.org
+basePath: /tenant/v1/
+x-api-id: 'org.egov.tenant'
+
+paths:
+  /tenant/_search:
+    post:
+      tags:
+        - tenant
+      summary: Retrieve tenant(s) using tenant code(s).
+      description: ""
+      operationId: searchTenant
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: code
+          description: Tenant codes to retrieve the tenants. (AP.KURNOOL, AP.GUNTOOR etc.,)
+          required: true
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        200:
+          description: Successful search.
+          schema:
+            $ref: '#/definitions/SearchTenantResponse'
+
+  /tenant/_create:
+    post:
+      tags:
+        - tenant
+      summary: Create new tenant.
+      description: ""
+      operationId: createTenant
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createTenantRequest
+          schema:
+            $ref: '#/definitions/CreateTenantRequest'
+      responses:
+        200:
+          description: Successful creation.
+          schema:
+            $ref: '#/definitions/CreateTenantResponse'
+
+  /tenant/_update:
+    put:
+      tags:
+        - tenant
+      summary: Update an existing tenant
+      description: "Update an existing tenant based on code. All other parameters can be updated except the code."
+      operationId: updateTenant
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateTenantRequest
+          schema:
+            $ref: '#/definitions/TenantRequest'
+      responses:
+          200:
+            description: Update tenant successful
+            schema:
+              $ref: '#/definitions/TenantResponse'
+          400:
+            description: Update tenant failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+definitions:
+  Tenant:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      description:
+        type: "string"
+      imageId:
+        type: "string"
+      logoId:
+        type: "string"
+      domainUrl:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "CITY"
+      address:
+        type: "string"
+        description: Address of the tenant
+        maxLength: 300
+      contactNumber:
+        type: string
+        description: Contact number of the tenant
+        maxLength: 16
+      helpLineNumber:
+        type: string
+        description: Help line number of the tenant
+        maxLength: 16
+      twitterUrl:
+        type: string
+        description: Twitter URL of the tenant
+        maxLength: 100
+      facebookUrl:
+        type: string
+        description: Facebook URL of the tenant
+        maxLength: 100
+      emailId:
+        type: string
+        description: Email address of the tenant
+        maxLength: 100
+      city:
+        $ref: "#/definitions/City"
+
+  City:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      localName:
+        type: "string"
+      districtCode:
+        type: "string"
+      districtName:
+        type: "string"
+      regionName:
+        type: "string"
+      longitude:
+        type: "number"
+      latitude:
+        type: "number"
+      shapeFilePath:
+        type: "string"
+        description: Path in which tenant wise shape files are saved
+        maxLength: 100
+      captcha:
+        type: "string"
+        description: Captcha to distinguish human from machine input 
+        maxLength: 100
+
+  ResponseInfo:
+    type: "object"
+    properties:
+      apiId:
+        type: "string"
+
+  RequestInfo:
+    type: "object"
+    properties:
+      apiId:
+        type: "string"
+
+  SearchTenantResponse:
+    type: "object"
+    properties:
+      responseInfo:
+        $ref: "#/definitions/ResponseInfo"
+      tenant:
+        type: "array"
+        items:
+          $ref: "#/definitions/Tenant"
+
+  CreateTenantRequest:
+    type: "object"
+    properties:
+      RequestInfo:
+        $ref: "#/definitions/RequestInfo"
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+  CreateTenantResponse:
+    type: "object"
+    properties:
+      responseInfo:
+        $ref: "#/definitions/ResponseInfo"
+      tenant:
+        $ref: "#/definitions/Tenant"
+        
+  TenantRequest:
+    type: "object"
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      tenant:
+        $ref: "#/definitions/Tenant"
+
+  TenantResponse:
+    type: "object"
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      tenant:
+        $ref: "#/definitions/Tenant"
+

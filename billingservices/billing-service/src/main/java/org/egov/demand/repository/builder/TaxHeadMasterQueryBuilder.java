@@ -5,9 +5,6 @@ import java.util.Set;
 
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.egov.demand.repository.querybuilder.GlCodeMasterQueryBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -108,7 +105,7 @@ public class TaxHeadMasterQueryBuilder {
 	
 	public String getUpdateQuery() {
 		return "UPDATE public.egbs_taxheadmaster SET id=?, tenantid=?, category=?, service=?,"
-				+ "name=?, code=?,isdebit=?, isactualdemand=?, orderno=?, validfrom=?,"
+				+ "name=?, code=?, glcode=?,isdebit=?, isactualdemand=?, orderno=?, validfrom=?,"
 				+ "validtill=?, createdby=?, createdtime=?, lastmodifiedby=?, lastmodifiedtime=? "
 				+ "WHERE tenantid=?";
 

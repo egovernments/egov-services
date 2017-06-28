@@ -41,19 +41,22 @@ package org.egov.demand.web.validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.OwnerRepository;
+import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.TaxHeadMasterService;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,12 +64,15 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 public class DemandValidator implements Validator {
-	
+
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
 
 	@Autowired
 	private OwnerRepository ownerRepository;
+
+	@Autowired
+	private BusinessServDetailService businessServDetailService;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -89,35 +95,56 @@ public class DemandValidator implements Validator {
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	private void validateBusinessService(DemandRequest demandRequest, Errors errors) {
-		
-		
+
+		Set<String> businessServiceSet = demandRequest.getDemands().stream().map(
+				demand -> demand.getBusinessService()).collect(Collectors.toSet());
+		BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder()
+				.tenantId(demandRequest.getDemands().get(0).getTenantId()).businessService(businessServiceSet).build();
+		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService
+				.searchBusinessServiceDetails(businessServiceDetailCriteria, demandRequest.getRequestInfo())
+				.getBusinessServiceDetails();
+		Map<String, BusinessServiceDetail> map = businessServiceDetails.stream()
+				.collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
+		for (String businessService : businessServiceSet) {
+			if (map.get(businessService) == null)
+				errors.rejectValue("Demand.businessService", "", "the given businessService value '" + businessService
+						+ "'of Demand is invalid, please give a valid businessService code");
+		}
 	}
 
 	private void validateTaxHeadMaster(DemandRequest demandRequest, Errors errors) {
 
-		Set<String> codes = new HashSet<>();
+		Map<String, Demand> codeDemandMap = new HashMap<>();
 		for (Demand demand : demandRequest.getDemands()) {
 			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-				codes.add(demandDetail.getTaxHeadMasterCode());
+				codeDemandMap.put(demandDetail.getTaxHeadMasterCode(), demand);
 			}
 		}
-		TaxHeadMasterCriteria taxHeadMasterCriteria = new TaxHeadMasterCriteria();
-		taxHeadMasterCriteria.setTenantId(demandRequest.getDemands().get(0).getTenantId());
-		taxHeadMasterCriteria.setCode(codes);
-		Map<String, String> codesMap = new HashMap<>();
-		for (TaxHeadMaster taxHeadMaster : taxHeadMasterService
-				.getTaxHeads(taxHeadMasterCriteria, demandRequest.getRequestInfo()).getTaxHeadMasters()) {
-			codesMap.put(taxHeadMaster.getCode(), taxHeadMaster.getCode());
-		}
-		for (String code : codes) {
-			if (codesMap.get(code) == null)
+		TaxHeadMasterCriteria taxHeadMasterCriteria = TaxHeadMasterCriteria.builder()
+				.tenantId(demandRequest.getDemands().get(0).getTenantId()).code(codeDemandMap.keySet()).build();
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService
+				.getTaxHeads(taxHeadMasterCriteria, demandRequest.getRequestInfo()).getTaxHeadMasters();
+		Map<String, List<TaxHeadMaster>> taxHeadMap = taxHeadMasters.stream()
+				.collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
+
+		for (String code : codeDemandMap.keySet()) {
+			Demand demand = codeDemandMap.get(code);
+			if (taxHeadMap.get(code) == null)
 				errors.rejectValue("Demand.DemandDetail.code", "",
 						"the given code value '" + code + "'of teaxheadmaster is invalid, please give a valid code");
+			else {
+				TaxHeadMaster taxHeadMaster = taxHeadMasters.stream()
+						.filter(t -> demand.getTaxPeriodFrom().equals(t.getValidFrom())
+								&& demand.getTaxPeriodTo().equals(t.getValidTill()))
+						.findAny().orElse(null);
+				if (taxHeadMaster == null)
+					errors.rejectValue("Demand.DemandDetail.code", "", "the given code value '" + code
+							+ "'of teaxheadmaster is invalid, please give a valid code");
+			}
 		}
 	}
 
@@ -126,8 +153,7 @@ public class DemandValidator implements Validator {
 		List<Demand> demands = demandRequest.getDemands();
 		List<Long> ownerIds = new ArrayList<>(
 				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-		UserSearchRequest userSearchRequest = new UserSearchRequest();
-		userSearchRequest.setId(ownerIds);
+		UserSearchRequest userSearchRequest = UserSearchRequest.builder().id(ownerIds).build();
 		Map<Long, Long> ownerMap = new HashMap<>();
 		for (Owner owner : ownerRepository.getOwners(userSearchRequest)) {
 			ownerMap.put(owner.getId(), owner.getId());

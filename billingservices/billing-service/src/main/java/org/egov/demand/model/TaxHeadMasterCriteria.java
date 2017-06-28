@@ -26,11 +26,11 @@ public class TaxHeadMasterCriteria {
 	private String service;
 	private String category;
 	private String name;
-	private Set<String> code=new HashSet<String>();
+	private Set<String> code=new HashSet<>();
 	private Boolean isDebit;
 	private Boolean isActualDemand;
 	
-	private Set<String> id=new HashSet<String>();
+	private Set<String> id=new HashSet<>();
 	private Long size;
 	private Long offset;
 }

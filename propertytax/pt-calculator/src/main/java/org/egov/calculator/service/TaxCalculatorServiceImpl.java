@@ -123,9 +123,10 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         CalculationResponse calculationResponse = new CalculationResponse();
         TaxCalculation taxCalculation = new TaxCalculation();
         CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
-        commonTaxDetails.setCalculatedARV(taxCalculationWrapper.getTaxCalculationModel().getTaxResponse().getAnnualRentalValue());
-        commonTaxDetails.setDepreciation(taxCalculationWrapper.getTaxCalculationModel().getTaxResponse().getDepreciation());
-        commonTaxDetails.setHeadWiseTaxes(taxCalculationWrapper.getTaxCalculationModel().getTaxResponse().getTaxHeadWiseList());
+        commonTaxDetails.setCalculatedARV(taxCalculationWrapper.getTaxResponse().getAnnualRentalValue());
+        commonTaxDetails.setDepreciation(taxCalculationWrapper.getTaxResponse().getDepreciation());
+        commonTaxDetails.setHeadWiseTaxes(taxCalculationWrapper.getTaxResponse().getTaxHeadWiseList());
+        commonTaxDetails.setTotalTax(taxCalculationWrapper.getTaxResponse().getTotalTax());
         taxCalculation.setPropertyTaxes(commonTaxDetails);
         List<UnitTax> unitTaxes = new ArrayList<UnitTax>();
         for (TaxResponse taxResponse : taxCalculationWrapper.getTaxResponses()) {
@@ -137,8 +138,8 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         taxCalculationList.add(taxCalculation);
         calculationResponse.setResponseInfo(
                 responseInfoFactory.createResponseInfoFromRequestInfo(calculationRequest.getRequestInfo(), true));
-
-        return new CalculationResponse();
+        calculationResponse.setTaxes(taxCalculationList);
+        return calculationResponse;
     };
 
     public UnitTax getUnitTax(TaxResponse taxResponse) {
@@ -149,6 +150,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         commonTaxDetails.setCalculatedARV(taxResponse.getAnnualRentalValue());
         commonTaxDetails.setDepreciation(taxResponse.getDepreciation());
         commonTaxDetails.setHeadWiseTaxes(taxResponse.getTaxHeadWiseList());
+        commonTaxDetails.setTotalTax(taxResponse.getTotalTax());
         unitTax.setUnitTaxes(commonTaxDetails);
         return unitTax;
 

@@ -43,9 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transanction.config.ConfigurationManager;
-import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
+import org.egov.wcms.transanction.web.contract.AckIdRequest;
+import org.egov.wcms.transanction.web.contract.AckNoGenerationRequest;
+import org.egov.wcms.transanction.web.contract.AckNoGenerationResponse;
 import org.egov.wcms.transanction.web.contract.CategoryResponseInfo;
 import org.egov.wcms.transanction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transanction.web.contract.PipeSizeResponseInfo;
@@ -61,7 +62,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Service
-public class ConnectionMasterValidator {
+public class RestConnectionService {
     
     @Autowired
     private ConfigurationManager configurationManager;
@@ -73,43 +74,6 @@ public class ConnectionMasterValidator {
     ResponseInfoFactory responseInfoFactory;
     
 
-    public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-
-        if (getCategoryTypeByName(waterConnectionRequest) ==null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsTranasanctionConstants.CATEGORY_INVALID_CODE)
-                    .message(WcmsTranasanctionConstants.CATEGORY_INVALID_FIELD_NAME)
-                    .field(WcmsTranasanctionConstants.CATEGORY_INVALID_ERROR_MESSAGE)
-                    .build();
-            errorFields.add(errorField);
-        }
-        if (getPipesizeTypeByCode(waterConnectionRequest)==null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsTranasanctionConstants.PIPESIZE_INVALID_CODE)
-                    .message(WcmsTranasanctionConstants.PIPESIZE_INVALID_FIELD_NAME)
-                    .field(WcmsTranasanctionConstants.PIPESIZE_INVALID_ERROR_MESSAGE)
-                    .build();
-            errorFields.add(errorField);
-        }
-        if (getSourceTypeByName(waterConnectionRequest)==null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsTranasanctionConstants.SOURCETYPE_INVALID_CODE)
-                    .message(WcmsTranasanctionConstants.SOURCETYPE_INVALID_FIELD_NAME)
-                    .field(WcmsTranasanctionConstants.SOURCETYPE_INVALID_ERROR_MESSAGE)
-                    .build();
-            errorFields.add(errorField);
-        }
-        if (getSupplyTypeByName(waterConnectionRequest)==null) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_CODE)
-                    .message(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_FIELD_NAME)
-                    .field(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_ERROR_MESSAGE)
-                    .build();
-            errorFields.add(errorField);
-        }
-        return errorFields;
-    }
 
    
     public CategoryResponseInfo getCategoryTypeByName(WaterConnectionReq waterConnectionRequest) {
@@ -188,6 +152,28 @@ public class ConnectionMasterValidator {
                 && donation1.getDonations().get(0)!=null?donation1.getDonations().get(0).getDonationAmount():"");
         }
         return donation1;
+    }
+    public String generateAcknowledgementNumber(final String tenantId)
+    {
+        StringBuilder url = new StringBuilder();
+        String ackNumber=null;
+        url.append(configurationManager.getIdGenServiceBasePathTopic())
+        .append(configurationManager.getIdGenServiceCreatePathTopic()); 
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        List<AckIdRequest> idRequests = new ArrayList<>();
+        AckIdRequest idrequest = new AckIdRequest();
+        idrequest.setIdName(configurationManager.getIdGenNameServiceTopic());
+        idrequest.setTenantId(tenantId);
+        AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
+        idRequests.add(idrequest);
+        idGeneration.setIdRequests(idRequests);
+        idGeneration.setRequestInfo(requestInfo);
+        AckNoGenerationResponse response=restTemplate.patchForObject(url.toString(), requestInfo,AckNoGenerationResponse.class);
+        
+        if(response!=null && !response.getIdResponses().isEmpty() && response.getIdResponses().get(0).getId()!=null)
+            ackNumber=response.getIdResponses().get(0).getId();
+        
+        return ackNumber;
     }
     
 }

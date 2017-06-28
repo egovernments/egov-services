@@ -42,7 +42,7 @@ package org.egov.wcms.transanction.service;
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WaterConnectionRepository;
-import org.egov.wcms.transanction.util.AckConsumerNoGenerator;
+import org.egov.wcms.transanction.validator.RestConnectionService;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class WaterConnectionService {
     private WaterTransactionProducer waterTransactionProducer;
 
     @Autowired
-    private AckConsumerNoGenerator ackConsumerNoGenerator;
+    private RestConnectionService restConnectionService;
 
     @Autowired
     private WaterConnectionRepository waterConnectionRepository;
@@ -71,7 +71,7 @@ public class WaterConnectionService {
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
         try {
-            waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
+            waterConnectionRequest.getConnection().setAcknowledgementNumber(restConnectionService.generateAcknowledgementNumber(waterConnectionRequest.getConnection().getTenantId()));
             logger.info("WaterConnectionService request::" + waterConnectionRequest);
             waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
             logger.info("waterConnectionValue::" + waterConnectionValue);

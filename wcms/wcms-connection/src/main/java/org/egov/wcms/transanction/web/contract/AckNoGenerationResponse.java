@@ -37,56 +37,27 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.util;
+package org.egov.wcms.transanction.web.contract;
 
-import java.util.Calendar;
+import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.egov.common.contract.response.ResponseInfo;
 
-@Service
-public class AckConsumerNoGenerator {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    public String getAckNo() {
-        String randomAlphabet = "";
-        int randomPIN = 0;
-        int lastTwoDigits = 0;
-        String ackNo = "";
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class AckNoGenerationResponse {
 
-        lastTwoDigits = Calendar.getInstance().get(Calendar.YEAR) % 100;
+    private ResponseInfo responseInfo;
 
-        randomAlphabet = RandomStringUtils.randomAlphabetic(2);
-
-        randomPIN = (int) (Math.random() * 9000) + 1000;
-
-        ackNo = lastTwoDigits + String.valueOf(randomAlphabet) + randomPIN;
-
-        return ackNo;
-
-    }
-
-    public String getConsumerNo() {
-        String randomAlphabet = "";
-        int randomPIN = 0;
-        final String consumerAlphabets = "CN";
-        String ackNo = "";
-
-        randomAlphabet = RandomStringUtils.randomAlphabetic(2);
-
-        randomPIN = (int) (Math.random() * 9000) + 1000;
-
-        ackNo = consumerAlphabets + String.valueOf(randomAlphabet) + randomPIN;
-
-        return ackNo;
-
-    }
-
-    public String getAckNofromService() {
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getForObject("http://egov.org/idgen", String.class);
-        return getAckNo();
-
-    }
+    private List<AckIdResponse> idResponses;
 
 }

@@ -61,7 +61,7 @@ import org.springframework.validation.FieldError;
 public class NewWaterConnectionValidator {
 
     @Autowired
-    private ConnectionMasterValidator connectionMasterValidator;
+    private RestConnectionService restConnectionService;
 
     public static final Logger LOGGER = LoggerFactory.getLogger(NewWaterConnectionValidator.class);
 
@@ -177,7 +177,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsTranasanctionConstants.INVALID_REQUEST_MESSAGE)
                     .errorFields(errorFields).build();
 
-        final List<ErrorField> masterfielderrorList = connectionMasterValidator.getMasterValidation(waterConnectionRequest);
+        final List<ErrorField> masterfielderrorList = getMasterValidation(waterConnectionRequest);
         errorFields.addAll(masterfielderrorList);
 
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
@@ -229,7 +229,7 @@ public class NewWaterConnectionValidator {
                 errorFields.add(errorField);
             }
 
-        final DonationResponseInfo donationresInfo = connectionMasterValidator.validateDonationAmount(waterConnectionRequest);
+        final DonationResponseInfo donationresInfo = restConnectionService.validateDonationAmount(waterConnectionRequest);
         if (donationresInfo == null) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.DONATION_INVALID_CODE)
@@ -316,5 +316,41 @@ public class NewWaterConnectionValidator {
      * donationGetRequest.setMinHSCPipeSize(waterConnectionRequest.getConnection().getHscPipeSizeType().getSizeInInch());
      * donationGetRequest.setTenantId(waterConnectionRequest.getConnection().getTenantId()); return donationGetRequest; }
      */
+    public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {
+        final List<ErrorField> errorFields = new ArrayList<>();
 
+        if (restConnectionService.getCategoryTypeByName(waterConnectionRequest) ==null) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsTranasanctionConstants.CATEGORY_INVALID_CODE)
+                    .message(WcmsTranasanctionConstants.CATEGORY_INVALID_FIELD_NAME)
+                    .field(WcmsTranasanctionConstants.CATEGORY_INVALID_ERROR_MESSAGE)
+                    .build();
+            errorFields.add(errorField);
+        }
+        if (restConnectionService.getPipesizeTypeByCode(waterConnectionRequest)==null) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsTranasanctionConstants.PIPESIZE_INVALID_CODE)
+                    .message(WcmsTranasanctionConstants.PIPESIZE_INVALID_FIELD_NAME)
+                    .field(WcmsTranasanctionConstants.PIPESIZE_INVALID_ERROR_MESSAGE)
+                    .build();
+            errorFields.add(errorField);
+        }
+        if (restConnectionService.getSourceTypeByName(waterConnectionRequest)==null) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsTranasanctionConstants.SOURCETYPE_INVALID_CODE)
+                    .message(WcmsTranasanctionConstants.SOURCETYPE_INVALID_FIELD_NAME)
+                    .field(WcmsTranasanctionConstants.SOURCETYPE_INVALID_ERROR_MESSAGE)
+                    .build();
+            errorFields.add(errorField);
+        }
+        if (restConnectionService.getSupplyTypeByName(waterConnectionRequest)==null) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_CODE)
+                    .message(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_FIELD_NAME)
+                    .field(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_ERROR_MESSAGE)
+                    .build();
+            errorFields.add(errorField);
+        }
+        return errorFields;
+    }
 }

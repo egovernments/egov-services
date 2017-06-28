@@ -1,15 +1,12 @@
 name: PGR Exception
-type: blacklist
+type: any
 index: {{LOG_INDEX_NAME}}
  
-compare_key: log
-blacklist:
-  - Exception
-  - Error
-
 filter:
 - terms:
-     kubernetes.container_name: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
+     kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
+- terms:
+     log: ["Exception", "exception", "Error", "error", "ERROR"]
 
 included:
  - log

@@ -32,4 +32,4 @@ web/react-pgr-web/src/reducers/form_reducer.js
 web/property-tax-web/package.json
 web/property-tax-web/package.json
 
-environment-addons/alerts/config.yaml
+environment-addons/es-alerts/config.yaml

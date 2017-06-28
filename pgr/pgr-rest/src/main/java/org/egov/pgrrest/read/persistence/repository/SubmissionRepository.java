@@ -28,12 +28,20 @@ public class SubmissionRepository {
     }
 
     public List<ServiceRequest> findBy(List<String> serviceRequestIdList, String tenantId) {
-        final List<Submission> submissions = submissionJpaRepository.findCRNList(serviceRequestIdList, tenantId);
+        final List<Submission> submissions = submissionJpaRepository.findByCRNList(serviceRequestIdList, tenantId);
         enrichSubmissionsWithAttributeEntries(tenantId, submissions);
         enrichSubmissionsWithServiceTypes(tenantId, submissions);
         return submissions.stream()
             .map(Submission::toDomain)
             .collect(Collectors.toList());
+    }
+
+    public Long getPosition(String serviceRequestId, String tenantId) {
+        return submissionJpaRepository.findPosition(serviceRequestId, tenantId);
+    }
+
+    public Long getLoggedInRequester(String serviceRequestId, String tenantId) {
+        return submissionJpaRepository.findLoggedInRequester(serviceRequestId, tenantId);
     }
 
     private void enrichSubmissionsWithServiceTypes(String tenantId, List<Submission> submissions) {
@@ -85,7 +93,4 @@ public class SubmissionRepository {
             .collect(Collectors.groupingBy(SubmissionAttribute::getCrn));
     }
 
-    public Long getPositionByCrnAndTenantId(String serviceRequestId, String tenantId) {
-        return submissionJpaRepository.findPositionByCrnAndTenantId(serviceRequestId, tenantId);
-    }
 }

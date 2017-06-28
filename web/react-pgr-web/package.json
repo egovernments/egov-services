@@ -39,5 +39,5 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://egov-micro-dev.egovernments.org",
-  "homepage": "."
+  "homepage": "/pgr-web/v2/"
 }

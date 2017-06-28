@@ -1292,8 +1292,6 @@ class CruProperty extends Component {
                   handleChangeNextOne(e,"floor" ,"unitType", true, "");
                   if(value == 2) {
                     this.setState({addRoom:false});
-                    this.setState({addFloor:false});
-                    this.setState({addFloor:true});
                   }
                 }
               }
@@ -1311,8 +1309,7 @@ class CruProperty extends Component {
             <RaisedButton type="button" label="Add Room" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} onClick={
               () => {
                 this.setState({addRoom:true});
-                this.setState({addFloor:false});
-                this.setState({addFloor:true});
+
               }
             }/>
         </Col>}
@@ -1324,7 +1321,7 @@ class CruProperty extends Component {
           <Col xs={12} style={{textAlign:"right"}}>
               <br/>
               { (editIndex == -1 || editIndex == undefined) &&
-                <RaisedButton type="button" label="Add Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                <RaisedButton type="button" label="Save Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
                     //  this.props.addNestedFormData("floor","units");
                       this.props.addNestedFormData("floors","floor");
                       this.props.resetObject("floor");
@@ -1761,7 +1758,7 @@ class CruProperty extends Component {
                                                   }
                                                   handleChange(e, "cAddressDiffPAddress", false, '')
                                                 }}
-                                                
+
                                               />
                                           </Col>
                                           {cruProperty.cAddressDiffPAddress &&

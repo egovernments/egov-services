@@ -21,7 +21,8 @@ public class AgreementQueryBuilder {
 			+ "agreement.asset=?";
 	
 	public static final String BASE_SEARCH_QUERY =  "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
-			+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid";
+			+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid "
+			+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id";
 	
 	public static final String INSERT_AGREEMENT_QUERY = "INSERT INTO eglams_agreement values "
 				+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

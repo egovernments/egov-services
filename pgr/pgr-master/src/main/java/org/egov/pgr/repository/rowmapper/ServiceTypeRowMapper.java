@@ -123,6 +123,7 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			attr.setDescription(rs.getString("description"));
 			attr.setRequired(rs.getString("required").equals("Y")? true : false);
 			attr.setVariable(rs.getString("variable").equals("Y")? true : false);
+			attr.setGroupCode(rs.getString("groupcode"));
 		} catch (Exception e) {
 			LOGGER.error("Encountered an Exception while creating Attribute Object using Result Set " + e);
 		}

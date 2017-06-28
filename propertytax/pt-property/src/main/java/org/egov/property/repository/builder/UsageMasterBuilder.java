@@ -1,7 +1,7 @@
 package org.egov.property.repository.builder;
 
 /**
- * @author Yosadhara This Class contains INSERT, UPDATE and SELECT queries for
+ * @author Yosadhara This Class contains INSERT & UPDATE  queries for
  *         UsageMaster API's
  */
 public class UsageMasterBuilder {

@@ -53,7 +53,7 @@ public class ServiceTypeQueryBuilder {
 
     private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, "   
     			+ " comp.hasfinancialimpact, adef.code attributecode, "  
-    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "   
+    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, adef.groupcode, vdef.key, vdef.name keyname "   
     			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
     			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode ";
 
@@ -166,9 +166,9 @@ public class ServiceTypeQueryBuilder {
 
     
     public static String insertServiceTypeQueryAttribValues() {
-        return "INSERT INTO attribute_definition (code, variable, datatype, description, datatypedescription, servicecode,  required, "
+        return "INSERT INTO attribute_definition (code, variable, datatype, description, datatypedescription, servicecode,  required, groupcode, "
         		+ "tenantid, createdby, createddate) values "
-                + "(?,?,?,?,?,?,?,?,?,?)";
+                + "(?,?,?,?,?,?,?,?,?,?,?)";
     }
     
     public static String insertValueDefinitionQuery(){
@@ -191,6 +191,10 @@ public class ServiceTypeQueryBuilder {
 
     public static String selectServiceNameAndCodeQuery() {
         return " select code FROM egpgr_complainttype where name = ? OR (tenantId = ? and code = ?)";
+    }
+    
+    public static String checkServiceCodeIfExists() {
+    	return " SELECT code FROM service_definition WHERE code = ? and tenantid = ? "; 
     }
 
     public static String selectServiceNameAndCodeNotInQuery() {

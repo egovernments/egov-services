@@ -42,7 +42,6 @@ package org.egov.wcms.transanction.service;
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WorkflowRepository;
-import org.egov.wcms.transanction.util.AckConsumerNoGenerator;
 import org.egov.wcms.transanction.web.contract.ProcessInstance;
 import org.egov.wcms.transanction.web.contract.TaskResponse;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
@@ -62,8 +61,6 @@ public class WorkflowService {
     @Autowired
     private WaterTransactionProducer waterTransactionProducer;
 
-    @Autowired
-    private AckConsumerNoGenerator ackConsumerNoGenerator;
 
     @Autowired
     private WorkflowRepository workflowRepository;
@@ -85,7 +82,7 @@ public class WorkflowService {
             logger.error("Producer failed to post request to kafka queue", e);
             waterConnectionRequest.getConnection().setAcknowledgementNumber("0000000000");
         }
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
+       // waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
 
         return waterConnectionRequest.getConnection();
     }

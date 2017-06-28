@@ -41,11 +41,8 @@
 package org.egov.demand.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
@@ -61,6 +58,8 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
+import org.egov.demand.model.TaxHeadMaster;
+import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -79,137 +78,177 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class BillService {
-	
+
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	@Autowired
 	private BillRepository billRepository;
-	
+
 	@Autowired
 	private BillHelper billHelper;
-	
+
 	@Autowired
 	private DemandService demandService;
-	
+
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
 
-	public BillResponse createAsync(BillRequest billRequest) { 
-		
+	@Autowired
+	private TaxHeadMasterService taxHeadMasterService;
+
+	public BillResponse createAsync(BillRequest billRequest) {
+
 		billHelper.getBillRequestWithIds(billRequest);
-		
+
 		try {
 			kafkaTemplate.send(applicationProperties.getCreateBillTopic(),applicationProperties.getCreateBillTopicKey(),billRequest);
 		} catch (Exception e) {
-			log.info("BillService createAsync:"+e);
+			log.debug("BillService createAsync:"+e);
 			throw new RuntimeException(e);
-			
+
 		}
 		return getBillResponse(billRequest.getBills());
 	}
-	
-	public void create(BillRequest billRequest){		
+
+	public void create(BillRequest billRequest){
 		billRepository.saveBill(billRequest);
 	}
-	
+
 	public BillResponse generateBill(GenerateBillCriteria billCriteria, RequestInfo requestInfo) {
-		
+
 		Set<String> ids = new HashSet<>();
 		if(billCriteria.getDemandId()!=null)
-		ids.add(billCriteria.getDemandId());
-		
+			ids.add(billCriteria.getDemandId());
+
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
 				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
-		
-		log.info("generateBill demandCriteria: "+demandCriteria);
+
+		log.debug("generateBill demandCriteria: "+demandCriteria);
 		DemandResponse demandResponse = demandService.getDemands(demandCriteria,requestInfo);
-		log.info("generateBill demandResponse: "+demandResponse);
+		log.debug("generateBill demandResponse: "+demandResponse);
 		List<Demand> demands = demandResponse.getDemands();
-		
-		List<Bill> bills = null; 
-		
+
+		List<Bill> bills = null;
+
 		if(!demands.isEmpty())
 			bills = prepareBill(demands, billCriteria.getTenantId(), requestInfo);
-		else 
+		else
 			throw new RuntimeException("Invalid demand criteria");
-			
+
 		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
-	
+
 	private List<Bill> prepareBill(List<Demand> demands,String tenantId,RequestInfo requestInfo){
-		
+
 		List<Bill> bills = new ArrayList<Bill>();
-		
+
+		Map<String, List<TaxHeadMaster>> taxHeadCodes = getTaxHeadMaster(demands, tenantId, requestInfo);
+
+		log.debug("prepareBill taxHeadCodes:" + taxHeadCodes);
+
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
-		
-		log.info("prepareBill map:" +map);
+
+		log.debug("prepareBill map:" +map);
 		Demand demand = demands.get(0);
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
 				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
-		
-		List<BillDetail> billDetails = new ArrayList<>(); 
-		
+
+		List<BillDetail> billDetails = new ArrayList<>();
+
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
 			String businessService = entry.getKey();
 			List<Demand> demands2 = entry.getValue();
-			log.info("prepareBill demands2:" +demands2);
+			log.debug("prepareBill demands2:" +demands2);
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 			Demand demand3 = demands2.get(0);
 			BigDecimal totalTaxAmount = BigDecimal.ZERO;
 			BigDecimal totalMinAmount = BigDecimal.ZERO;
 			BigDecimal totalCollectedAmount = BigDecimal.ZERO;
-	
+
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
-				log.info("prepareBill demandDetails:" +demandDetails);
+				log.debug("prepareBill demandDetails:" +demandDetails);
+
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
-					
-					log.info("prepareBill demandDetail:" +demandDetail);
+
+					log.debug("prepareBill demandDetail:" +demandDetail);
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
-					BillAccountDetail billAccountDetail = BillAccountDetail.builder().
-							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).build();
+
+					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
+					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter((t) ->
+							demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
+
+					log.debug("prepareBill taxHeadMaster:" + taxHeadMaster);
+					//TODO
+					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
+							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).
+							glcode(taxHeadMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand()).
+							order(taxHeadMaster.getOrder()).build();
+
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
-		
+
 			BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder().
-					businessService(businessService).tenantId(tenantId).build();
+					businessService(new HashSet<String>(Arrays.asList(businessService.split(", ")))).tenantId(tenantId).build();
 			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
 			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
-			
+
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).
-					billAccountDetails(billAccountDetails).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
+					billAccountDetails(billAccountDetails).billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
 					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
 					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
 					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
-			
+
 			billDetails.add(billDetail);
-			
+
 		}
 		bill.setBillDetails(billDetails);
 		bills.add(bill);
-		
+
 		return bills;
 	}
-	
+
+	private Map<String, List<TaxHeadMaster>> getTaxHeadMaster(List<Demand> demands, String tenantId, RequestInfo requestInfo) {
+
+		List<DemandDetail> demandDetails = new ArrayList<>();
+		for(Demand demand : demands){
+			demandDetails.addAll(demand.getDemandDetails());
+		}
+
+		log.debug("getTaxHeadMaster demandDetails:"+demandDetails);
+
+		Set<String>  taxHeadMasterCode = demandDetails.stream().
+				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
+
+		log.debug("getTaxHeadMaster taxHeadMasterCode:"+taxHeadMasterCode);
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService.getTaxHeads(
+				TaxHeadMasterCriteria.builder().tenantId(tenantId).code(taxHeadMasterCode).build(),requestInfo).getTaxHeadMasters();
+		log.debug("getTaxHeadMaster taxHeadMasters:"+taxHeadMasters);
+		Map<String, List<TaxHeadMaster>> map = taxHeadMasters.stream().collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
+
+		log.debug("getTaxHeadMaster map:"+map);
+		return map;
+	}
+
 	public BillResponse getBillResponse(List<Bill> bills) {
 		BillResponse billResponse = new BillResponse();
 		billResponse.setBill(bills);
 		return billResponse;
 	}
-	
-	
+
+
 
 }

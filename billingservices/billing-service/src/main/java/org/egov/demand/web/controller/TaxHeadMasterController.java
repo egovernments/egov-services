@@ -50,7 +50,6 @@ public class TaxHeadMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("::::taxHeadMasterCriteria::::" + taxHeadMasterCriteria);
 		final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria,
 				requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(taxHeadMasterResponse, HttpStatus.OK);
@@ -82,7 +81,7 @@ public class TaxHeadMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.update(taxHeadMasterRequest);
+		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.updateAsync(taxHeadMasterRequest);
 		return new ResponseEntity<>(taxHeadMasterRponse, HttpStatus.OK);
 	}
 }

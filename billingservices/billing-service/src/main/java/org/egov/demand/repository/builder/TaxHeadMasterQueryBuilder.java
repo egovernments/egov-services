@@ -100,18 +100,18 @@ public class TaxHeadMasterQueryBuilder {
 	}
 	
 	public String getUpdateQuery() {
-		return "UPDATE egbs_taxheadmaster SET "
-				+ "category=?, service=?, name=?, code=?, glcode=?,isdebit=?, isactualdemand=?,"
-				+ "lastmodifiedby=?, taxperiod=?, lastmodifiedtime=? "
+		return "UPDATE public.egbs_taxheadmaster SET id=?, tenantid=?, category=?, service=?,"
+				+ "name=?, code=?, glcode=?,isdebit=?, isactualdemand=?, orderno=?, validfrom=?,"
+				+ "validtill=?, createdby=?, createdtime=?, lastmodifiedby=?, lastmodifiedtime=? "
 				+ "WHERE tenantid=?";
 
 	}
 	
 	public String getInsertQuery() {
 		return "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
-				+ "service, name, code, glcode, isdebit,isactualdemand, createdby, createdtime,"
-				+ "lastmodifiedby, lastmodifiedtime,taxperiod) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";
+				+ "service, name, code, glcode, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
+				+ "lastmodifiedby, lastmodifiedtime) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	}
 	
 	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {

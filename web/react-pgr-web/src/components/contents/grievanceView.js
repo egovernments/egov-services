@@ -266,8 +266,8 @@ class grievanceView extends Component{
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
   		if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
   			req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assignmentId'){
-  				req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.assignmentId : currentThis.props.grievanceView.positionId;
+  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'positionId'){
+  				req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
   		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'locationId'){
   				req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
   		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'childLocationId'){

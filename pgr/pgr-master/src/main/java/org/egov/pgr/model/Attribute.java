@@ -76,4 +76,6 @@ public class Attribute {
     private Boolean required;
     
     private List<Value> attributes;
+    
+    private String groupCode;
 }

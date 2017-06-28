@@ -59,7 +59,7 @@ public class WorkFlowControllerTest {
         when(workflow.start(eq(TENANT_ID), argThat(new ProcessInstanceMatcher(expectedProcessInstance))))
             .thenReturn(expectedProcessInstance);
 
-        mockMvc.perform(post("/create")
+        mockMvc.perform(post("/v1/_create")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("startWorkflowRequest.json")))
             .andExpect(status().isOk())
@@ -81,7 +81,7 @@ public class WorkFlowControllerTest {
         when(workflow.end(eq(TENANT_ID), argThat(new processInstanceMatcherForCloseWorkflow(expectedProcessInstance))))
             .thenReturn(expectedProcessInstance);
 
-        mockMvc.perform(post("/close")
+        mockMvc.perform(post("/v1/_close")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("closeWorkflowRequest.json")))
             .andExpect(status().isOk())
@@ -161,7 +161,7 @@ public class WorkFlowControllerTest {
 
     @Test
     public void testGetWorkFlowHistoryFailsWithoutJurisdictionId() throws Exception {
-        mockMvc.perform(get("/history")).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/history/v1/_search")).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class WorkFlowControllerTest {
         when(workflow.getHistoryDetail(TENANT_ID, "2"))
             .thenReturn(history);
 
-        mockMvc.perform(get("/history")
+        mockMvc.perform(post("/history/v1/_search")
             .param("tenantId", TENANT_ID)
             .param("workflowId", "2"))
             .andExpect(status().isOk())
@@ -209,7 +209,7 @@ public class WorkFlowControllerTest {
         Task task = getTask();
         when(workflow.update(eq(TENANT_ID), argThat(new TaskMatcherForUpdateWorkflow(task))))
             .thenReturn(task);
-        mockMvc.perform(post("/task")
+        mockMvc.perform(post("/v1/_update")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateWorkflowRequest.json")))
             .andExpect(status().isOk())

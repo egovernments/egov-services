@@ -7,11 +7,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
 @AllArgsConstructor
 @Builder
 @Getter
 public class BusinessDetails {
-    private Long id;
+	private Long id;
 
 	private String code;
 
@@ -28,9 +29,9 @@ public class BusinessDetails {
 	private Boolean voucherCreation;
 
 	private Boolean isVoucherApproved;
-	
+
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
-    private Date voucherCutoffDate;
+	private Date voucherCutoffDate;
 
 	private Integer ordernumber;
 
@@ -39,14 +40,11 @@ public class BusinessDetails {
 	private String function;
 
 	private String tenantId;
-	
-	private String department;
-	
-	private String fundSource;
-	
-	private String functionary;
-	
 
-	
-	
+	private String department;
+
+	private String fundSource;
+
+	private String functionary;
+
 }

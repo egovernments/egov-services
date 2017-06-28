@@ -43,6 +43,9 @@ package org.egov.eis.model;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 
 @AllArgsConstructor
 @Builder
@@ -52,8 +55,13 @@ import lombok.*;
 @ToString
 public class PromotionBasis {
 
+    @NotNull
     private Long id;
 
+    @Size(max = 250)
     private String description;
+
+    @NotNull
+    private String tenantId;
 
 }

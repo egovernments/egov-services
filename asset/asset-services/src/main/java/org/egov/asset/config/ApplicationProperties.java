@@ -99,6 +99,12 @@ public class ApplicationProperties {
 	@Value("${egov.municipality.host}")
 	private String municipalityHostName;
 
+	@Value("${egov.services.disposal.voucher.name}")
+	private String disposalVoucherName;
+
+	@Value("${egov.services.disposal.voucher.description}")
+	private String disposalVoucherDescription;
+
 	@Autowired
 	private Environment environment;
 
@@ -168,6 +174,14 @@ public class ApplicationProperties {
 
 	public String getMunicipalityHostName() {
 		return municipalityHostName;
+	}
+
+	public String getDisposalVoucherName() {
+		return disposalVoucherName;
+	}
+
+	public String getDisposalVoucherDescription() {
+		return disposalVoucherDescription;
 	}
 
 }

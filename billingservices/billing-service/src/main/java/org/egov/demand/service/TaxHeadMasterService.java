@@ -26,79 +26,91 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TaxHeadMasterService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterService.class);
-	
+
 	@Autowired
 	private ResponseFactory responseInfoFactory;
-	
+
 	@Autowired
 	private TaxHeadMasterRepository taxHeadMasterRepository;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private TaxPeriodService taxPeriodService;
-	
+
 	@Autowired
 	private SequenceGenService sequenceGenService;
-	
+
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
+
 	public TaxHeadMasterResponse getTaxHeads(TaxHeadMasterCriteria searchTaxHead, RequestInfo requestInfo) {
 		logger.info("TaxHeadMasterService getTaxHeads");
-		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();
+		TaxPeriodCriteria taxPeriodCriteria = new TaxPeriodCriteria();
 		taxPeriodCriteria.setTenantId(searchTaxHead.getTenantId());
 		taxPeriodCriteria.setService(searchTaxHead.getService());
+
 		List<TaxHeadMaster> taxHeadMaster= taxHeadMasterRepository.findForCriteria(searchTaxHead);
-		List<TaxPeriod> taxPeriod= taxPeriodService.searchTaxPeriods(taxPeriodCriteria, requestInfo).getTaxPeriods();
-		for(int i=0;i<taxHeadMaster.size();i++){
-			taxHeadMaster.get(i).setTaxPeriod(taxPeriod.get(i));
-		}
 		return getTaxHeadMasterResponse(taxHeadMaster,requestInfo);
 	}
 	
-	public TaxHeadMasterResponse create(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeadMaster=taxHeadMasterRequest.getTaxHeadMasters();
-		taxHeadMaster = taxHeadMasterRepository.create(taxHeadMasterRequest);
-		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
+	public void create(TaxHeadMasterRequest taxHeadMasterRequest) {
+		taxHeadMasterRepository.create(taxHeadMasterRequest);
 	}
-	
+
 	public TaxHeadMasterResponse createAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
 		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRequest.getTaxHeadMasters();
-		
-		List<String> taxHeadIds = sequenceGenService.getIds(taxHeadMaster.size(),applicationProperties.getTaxHeadSeqName());
-		List<String> taxHeadCodes = sequenceGenService.getIds(taxHeadMaster.size(),applicationProperties.getTaxHeadCodeSeqName());
-		
-		for(int i=0;i<taxHeadMaster.size();i++){
-			taxHeadMaster.get(i).setId(taxHeadIds.get(i));
-			taxHeadMaster.get(i).setCode(taxHeadCodes.get(i));
+
+		List<String> taxHeadIds = sequenceGenService.getIds(taxHeadMaster.size(),
+				applicationProperties.getTaxHeadSeqName());
+		List<String> taxHeadCodes = sequenceGenService.getIds(taxHeadMaster.size(),
+				applicationProperties.getTaxHeadCodeSeqName());
+		int id=0;
+		for (TaxHeadMaster master: taxHeadMaster) {
+			master.setId(taxHeadIds.get(id));
+			master.setCode(taxHeadCodes.get(id++));
 		}
 		taxHeadMasterRequest.setTaxHeadMasters(taxHeadMaster);
 
 		logger.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
 
-		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(),applicationProperties.getCreateTaxHeadMasterTopicKey(),taxHeadMasterRequest);
-//		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(), taxHeadMasterRequest);
+		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(),
+				applicationProperties.getCreateTaxHeadMasterTopicKey(), taxHeadMasterRequest);
+		// kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(),
+		// taxHeadMasterRequest);
 
-		
-		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
+		return getTaxHeadMasterResponse(taxHeadMaster, taxHeadMasterRequest.getRequestInfo());
+	}
+	
+	public TaxHeadMasterResponse updateAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
+		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRequest.getTaxHeadMasters();
+
+
+		logger.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
+
+		kafkaTemplate.send(applicationProperties.getUpdateTaxHeadMasterTopicName(),
+				applicationProperties.getUpdateTaxHeadMasterTopicKey(), taxHeadMasterRequest);
+		// kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(),
+		// taxHeadMasterRequest);
+
+		return getTaxHeadMasterResponse(taxHeadMaster, taxHeadMasterRequest.getRequestInfo());
 	}
 
 	public TaxHeadMasterResponse update(TaxHeadMasterRequest taxHeadMasterRequest) {
-
+		System.out.println("::::::::update method got called:::::::::;;;;");
 		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRepository.update(taxHeadMasterRequest);
-		
-		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
+
+		return getTaxHeadMasterResponse(taxHeadMaster, taxHeadMasterRequest.getRequestInfo());
 	}
-	
+
 	private TaxHeadMasterResponse getTaxHeadMasterResponse(List<TaxHeadMaster> taxHeadMaster, RequestInfo requestInfo) {
 		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
 		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMaster);
-		taxHeadMasterResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo,HttpStatus.OK));
+		taxHeadMasterResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
 		return taxHeadMasterResponse;
 	}
 }

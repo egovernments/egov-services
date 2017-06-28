@@ -11,52 +11,52 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DisposalQueryBuilder {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(RevaluationQueryBuilder.class);
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	
-	public static final String INSERT_QUERY = "INSERT into egasset_disposal " 
-	  + "(id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
-	  + "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
-	  + "createdby,createddate,lastmodifiedby,lastmodifieddate)"
-	  + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	
+	public static final String INSERT_QUERY = "INSERT into egasset_disposal "
+			+ "(id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
+			+ "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
+			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference)"
+			+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
 	public String BASE_QUERY = "SELECT "
 			+ "id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
 			+ "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
-			+ "createdby,createddate,lastmodifiedby,lastmodifieddate FROM"
+			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM"
 			+ " egasset_disposal as disposal";
-	
+
 	@SuppressWarnings("rawtypes")
-	public String getQuery(DisposalCriteria disposalCriteria, List preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+	public String getQuery(final DisposalCriteria disposalCriteria, final List preparedStatementValues) {
+		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		logger.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, disposalCriteria);
 		addPagingClause(selectQuery, preparedStatementValues, disposalCriteria);
 		logger.info("Query from asset querybuilde for search : " + selectQuery);
 		return selectQuery.toString();
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues, DisposalCriteria disposalCriteria) {
 
-		System.out.println("revaluationCriteria>>"+disposalCriteria);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final DisposalCriteria disposalCriteria) {
+
+		System.out.println("revaluationCriteria>>" + disposalCriteria);
 		boolean isAppendAndClause = false;
-		
+
 		selectQuery.append(" WHERE");
-	
+
 		if (disposalCriteria.getTenantId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" disposal.tenantId = ?");
 			preparedStatementValues.add(disposalCriteria.getTenantId());
 		}
-		
+
 		if (disposalCriteria.getId() == null && disposalCriteria.getAssetId() == null)
 			return;
-		
+
 		if (disposalCriteria.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" disposal.id IN (" + getIdQuery(disposalCriteria.getId()));
@@ -65,13 +65,13 @@ public class DisposalQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" disposal.assetid IN (" + getIdQuery(disposalCriteria.getAssetId()));
 		}
-		
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,DisposalCriteria disposalCriteria) {
+	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final DisposalCriteria disposalCriteria) {
 		// handle limit(also called pageSize) here
-		
 
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
@@ -89,31 +89,29 @@ public class DisposalQueryBuilder {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * This method is always called at the beginning of the method so that and
 	 * is prepended before the field's predicate is handled.
-	 * 
+	 *
 	 * @param appendAndClauseFlag
 	 * @param queryString
 	 * @return boolean indicates if the next predicate should append an "AND"
 	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
 		return true;
 	}
 
-	private static String getIdQuery(List<Long> idList) {
+	private static String getIdQuery(final List<Long> idList) {
 		StringBuilder query = null;
 		if (idList.size() >= 1) {
 			query = new StringBuilder(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
+			for (int i = 1; i < idList.size(); i++)
 				query.append("," + idList.get(i));
-			}
 		}
 		return query.append(")").toString();
 	}
-	  
 
 }

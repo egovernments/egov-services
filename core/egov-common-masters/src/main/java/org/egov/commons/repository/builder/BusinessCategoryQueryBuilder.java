@@ -2,7 +2,6 @@ package org.egov.commons.repository.builder;
 
 import java.util.List;
 
-
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,25 +9,26 @@ import org.springframework.stereotype.Component;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
 @EqualsAndHashCode
 @Component
 @Getter
 public class BusinessCategoryQueryBuilder {
 	private static final Logger logger = LoggerFactory.getLogger(BusinessCategoryQueryBuilder.class);
-	
-	private static final String BASE_QUERY ="select id,name,code,active,tenantId,createdBy,"
+
+	private static final String BASE_QUERY = "select id,name,code,active,tenantId,createdBy,"
 			+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_businesscategory";
-	
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(BusinessCategoryCriteria criteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, criteria);
 		addOrderByClause(selectQuery, criteria);
-	    logger.debug("Query : " + selectQuery);
+		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
-}
-	
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			BusinessCategoryCriteria criteria) {
@@ -65,17 +65,16 @@ public class BusinessCategoryQueryBuilder {
 
 	private void addOrderByClause(StringBuilder selectQuery, BusinessCategoryCriteria criteria) {
 		String sortBy = (criteria.getSortBy() == null ? "name" : criteria.getSortBy());
-		String sortOrder = (criteria.getSortOrder() == null ? "ASC"
-				: criteria.getSortOrder());
+		String sortOrder = (criteria.getSortOrder() == null ? "ASC" : criteria.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-}
-	
+	}
+
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");
 		return true;
-}
-	
+	}
+
 	private static String getIdQuery(List<Long> idList) {
 		StringBuilder query = new StringBuilder("(");
 		if (idList.size() >= 1) {
@@ -85,6 +84,6 @@ public class BusinessCategoryQueryBuilder {
 			}
 		}
 		return query.append(")").toString();
-}
+	}
 
 }

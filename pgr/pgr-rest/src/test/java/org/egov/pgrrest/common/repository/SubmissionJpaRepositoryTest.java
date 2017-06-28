@@ -70,7 +70,7 @@ public class SubmissionJpaRepositoryTest {
         "/sql/insertSubmissions.sql"
     })
     public void test_should_retrieve_assigneeid_for_given_crn() {
-        final Long assigneeId = submissionJpaRepository.findPositionByCrnAndTenantId("crn1", "tenant1");
+        final Long assigneeId = submissionJpaRepository.findPosition("crn1", "tenant1");
 
         assertEquals(Long.valueOf(3), assigneeId);
     }

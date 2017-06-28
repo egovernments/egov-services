@@ -192,32 +192,44 @@ class grievanceCreate extends Component {
     data['attribValues'] = [];
 
     var finobj = {};
+
     finobj = {
         key: 'receivingMode',
         name: this.props.grievanceCreate.receivingMode ? this.props.grievanceCreate.receivingMode : 'Website'
     };
     data['attribValues'].push(finobj);
+
     finobj = {
         key: 'receivingCenter',
         name: this.props.grievanceCreate.receivingCenter ? this.props.grievanceCreate.receivingCenter : ''
     };
     data['attribValues'].push(finobj);
+
     finobj = {
         key: 'status',
         name: 'REGISTERED'
     };
     data['attribValues'].push(finobj);
+
     finobj = {
         key: 'requesterAddress',
         name: this.props.grievanceCreate.requesterAddress ? this.props.grievanceCreate.requesterAddress : ''
     };
     data['attribValues'].push(finobj);
-    finobj = {};
+
     finobj = {
         key: 'keyword',
         name:'Complaint'
     };
     data['attribValues'].push(finobj);
+
+    if(localStorage.getItem('type') == 'CITIZEN'){
+      finobj = {
+          key: 'citizenUserId',
+          name: localStorage.getItem('id')
+      };
+      data['attribValues'].push(finobj);
+    }
 
     var request = {};
     request['serviceRequest'] = data;

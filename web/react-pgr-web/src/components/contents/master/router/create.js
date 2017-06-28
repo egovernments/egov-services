@@ -12,6 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var _this;
 let searchTextCom = "",
@@ -308,7 +309,7 @@ class createRouter extends Component {
                    <Col xs={12} md={8}>
                    	<AutoComplete
                         hintText=""
-                        floatingLabelText="Grievance Type"
+                        floatingLabelText={translate("pgr.lbl.grievance.type")}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.complaintSource}
@@ -403,13 +404,13 @@ class createRouter extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              {showBtn()}
-             <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={close}/>
+             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")} onClick={close}/>
            </div>
          </form>
          <Dialog
           title="Success"
           actions={[<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={handleOpenNClose}
 				      />]}

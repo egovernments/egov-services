@@ -28,9 +28,7 @@ public class RentIncrementRepository {
 			ex.printStackTrace();
 			throw new RuntimeException("No records found for given criteria");
 		}
-
 		return rentIncrements;
-
 	}
 	
 	public List<RentIncrementType> getRentIncrementById(Long rentID) {

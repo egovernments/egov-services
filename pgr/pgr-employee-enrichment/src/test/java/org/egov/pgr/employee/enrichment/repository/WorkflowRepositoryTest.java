@@ -33,9 +33,9 @@ public class WorkflowRepositoryTest {
     public void before() {
         RestTemplate restTemplate = new RestTemplate();
         String workflowHostname = "http://host/";
-        String workflowCreatePath = "workflow/create";
-        String workflowUpdate = "workflow/update";
-        String workflowClosePath = "workflow/close";
+        String workflowCreatePath = "workflow/v1/_create";
+        String workflowUpdate = "workflow/v1/_update";
+        String workflowClosePath = "workflow/v1/_close";
         workflowRepository = new WorkflowRepository(workflowHostname, workflowCreatePath,
             workflowClosePath, workflowUpdate, restTemplate);
         server = MockRestServiceServer.bindTo(restTemplate).build();
@@ -43,7 +43,7 @@ public class WorkflowRepositoryTest {
 
     @Test
     public void test_should_send_request_to_create_workflow() {
-        server.expect(once(), requestTo("http://host/workflow/create"))
+        server.expect(once(), requestTo("http://host/workflow/v1/_create"))
             .andExpect(method(HttpMethod.POST))
             .andExpect(content().string(resources.getFileContents("createWorkflowRequest.json")))
             .andRespond(withSuccess(getFileContents("createWorkflowResponse.json"),
@@ -56,7 +56,7 @@ public class WorkflowRepositoryTest {
 
     @Test
     public void test_should_send_request_to_close_workflow() {
-        server.expect(once(), requestTo("http://host/workflow/close"))
+        server.expect(once(), requestTo("http://host/workflow/v1/_close"))
             .andExpect(method(HttpMethod.POST))
             .andExpect(content().string(getFileContents("closeWorkflowRequest.json")))
             .andRespond(
@@ -70,7 +70,7 @@ public class WorkflowRepositoryTest {
 
     @Test
     public void testShouldSendRequestToUpdateWorkflow() {
-        server.expect(once(), requestTo("http://host/workflow/update"))
+        server.expect(once(), requestTo("http://host/workflow/v1/_update"))
             .andExpect(method(HttpMethod.POST))
             .andExpect(content().string(getFileContents("updateWorkflowRequest.json")))
             .andRespond(

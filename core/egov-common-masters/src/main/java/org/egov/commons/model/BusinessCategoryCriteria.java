@@ -8,24 +8,24 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @Setter
-public class BusinessCategoryCriteria
-{
-    private String businessCategoryName;
-	
+public class BusinessCategoryCriteria {
+	private String businessCategoryName;
+
 	private Boolean active;
-	
+
 	private List<Long> ids;
-	
+
 	private String tenantId;
-	
+
 	private String sortBy;
-	
-	private String sortOrder;	
-	
+
+	private String sortOrder;
+
 }

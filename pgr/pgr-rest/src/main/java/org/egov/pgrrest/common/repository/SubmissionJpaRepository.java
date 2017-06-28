@@ -12,8 +12,11 @@ import java.util.List;
 @Repository
 public interface SubmissionJpaRepository extends JpaRepository<Submission, SubmissionKey> {
     @Query("select s from Submission s where s.id.crn in :crns and s.id.tenantId = :tenantId")
-    List<Submission> findCRNList(@Param("crns") List<String> crns, @Param("tenantId") String tenantId);
+    List<Submission> findByCRNList(@Param("crns") List<String> crns, @Param("tenantId") String tenantId);
 
-    @Query("select s.position from Submission s where s.id.crn in :crn and s.id.tenantId = :tenantId")
-    Long findPositionByCrnAndTenantId(@Param("crn") String crn, @Param("tenantId") String tenantId);
+    @Query("select s.position from Submission s where s.id.crn = :crn and s.id.tenantId = :tenantId")
+    Long findPosition(@Param("crn") String crn, @Param("tenantId") String tenantId);
+
+    @Query("select s.loggedInRequester from Submission s where s.id.crn = :crn and s.id.tenantId = :tenantId")
+    Long findLoggedInRequester(@Param("crn") String crn, @Param("tenantId") String tenantId);
 }

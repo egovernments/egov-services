@@ -39,22 +39,23 @@
  */
 package org.egov.demand.web.contract;
 
-import lombok.*;
-
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
-@Setter
-@Getter
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
+@Data
 public class BusinessServiceDetailCriteria {
 
     @NotNull
     private String tenantId;
 
     @NotNull
-    private String businessService;
-
+    private Set<String> businessService;
 }

@@ -103,7 +103,7 @@ public class ServiceTypeRepository {
 			Attribute attribute = attributeList.get(i);
 			final Object[] obj1 = new Object[] { attribute.getCode(), attribute.getVariable()? "Y" : "N",
 					attribute.getDatatype(), attribute.getDescription(), attribute.getDatatypeDescription(), serviceRequest.getService().getServiceCode(), attribute.getRequired()? "Y" : "N",
-					serviceRequest.getService().getTenantId(),
+					attribute.getGroupCode(), serviceRequest.getService().getTenantId(),
 					serviceRequest.getRequestInfo().getUserInfo().getId(),
 					new Date(new java.util.Date().getTime()) };
 			jdbcTemplate.update(serviceInsertAttribValues, obj1);
@@ -153,6 +153,19 @@ public class ServiceTypeRepository {
 		if (!serviceTypes.isEmpty())
 			return false;
 		return true;
+	}
+	
+	public boolean checkServiceCodeIfExists(final String serviceCode, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(serviceCode);
+		preparedStatementValues.add(tenantId);
+		final String query = ServiceTypeQueryBuilder.checkServiceCodeIfExists();
+		final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!serviceTypes.isEmpty())
+			return true;
+		return false;
+		
 	}
 
     public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {

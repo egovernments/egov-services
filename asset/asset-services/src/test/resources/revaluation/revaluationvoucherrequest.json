@@ -1,0 +1,51 @@
+{
+	"RequestInfo": 
+	{
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"action": null,
+		"did": null,
+		"key": null,
+		"msgId": null,
+		"authToken": "28019e45-e23e-4e76-b3dc-79ee7a289dec",
+		"correlationId": null,
+		"userInfo": 
+		{
+			"id": 5,
+			"userName": null,
+			"name": null,
+			"type": null,
+			"mobileNumber": null,
+			"emailId": null,
+			"roles": null
+		}
+	},
+
+	"Revaluation": 
+	{
+		"tenantId": "ap.kurnool",
+		"assetId": 12,
+		"currentCapitalizedValue": 100.58,
+		"typeOfChange": "INCREASED",
+		"revaluationAmount": 10,
+		"valueAfterRevaluation": 90.68,
+		"revaluationDate": 1496430744825,
+		"reevaluatedBy": "5",
+		"reasonForRevaluation": "reasonForRevaluation",
+		"fixedAssetsWrittenOffAccount": 1,
+		"function": 124,
+		"fund": 3,
+		"scheme": 4,
+		"subScheme": 5,
+		"comments": "coments",
+		"status": "ACTIVE",
+		"auditDetails": 
+		{
+			"createdBy": "5",
+			"createdDate": 1495978422356,
+			"lastModifiedBy": "5",
+			"lastModifiedDate": 1495978422356
+		}
+	}
+}

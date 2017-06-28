@@ -21,7 +21,7 @@ public class ServiceTypeController {
         this.serviceRequestTypeService = serviceRequestTypeService;
     }
 
-    @PostMapping(value = "/_search")
+    @PostMapping(value = "/v1/_search")
     public ServiceTypeResponse getServiceTypes(@RequestParam String type,
                                                @RequestParam(required = false) Long categoryId,
                                                @RequestParam(required = false) Integer count,
@@ -41,7 +41,7 @@ public class ServiceTypeController {
         return new ServiceTypeResponse(null, serviceTypes);
     }
 
-    @PostMapping("/{serviceCode}/_search")
+    @PostMapping("/v1/{serviceCode}/_search")
     public ServiceTypeResponse getServiceTypes(@PathVariable(name = "serviceCode") String complaintTypeCode,
                                                @RequestParam(value = "tenantId", defaultValue = "default")
                                                    String tenantId,

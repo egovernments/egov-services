@@ -3,6 +3,8 @@ package org.egov.asset.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,24 +20,26 @@ import lombok.ToString;
 @ToString
 public class Function {
 
+	@JsonProperty("id")
 	private Long id;
 
 	@Size(max = 128, min = 2)
-	@NotNull
+	@JsonProperty("name")
 	private String name;
 
 	@Size(max = 16, min = 2)
-	@NotNull
+	@JsonProperty("code")
 	private String code;
 
-	@NotNull
-	private Integer level;
+	@JsonProperty("level")
+	private Long level;
 
-	@NotNull
+	@JsonProperty("active")
 	private Boolean active;
 
-	@NotNull
+	@JsonProperty("isParent")
 	private Boolean isParent;
 
+	@JsonProperty("parentId")
 	private Long parentId;
 }

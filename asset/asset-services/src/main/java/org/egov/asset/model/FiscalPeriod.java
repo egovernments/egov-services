@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,9 +32,11 @@ public class FiscalPeriod {
 	private FinancialYear financialYear;
 
 	@NotNull
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date startingDate;
 
 	@NotNull
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date endingDate;
 
 	@NotNull

@@ -19,9 +19,20 @@ public class UpdateServiceRequestEligibilityService {
         this.employeeRepository = employeeRepository;
     }
 
-    public void validate(String serviceRequestId, String tenantId, AuthenticatedUser authenticatedUser) {
-        validateAnonymousUserNotAllowedToUpdate(authenticatedUser);
-        validateEmployeeUpdateEligibility(serviceRequestId, tenantId, authenticatedUser);
+    public void validate(String serviceRequestId, String tenantId, AuthenticatedUser user) {
+        validateAnonymousUserNotAllowedToUpdate(user);
+        validateCitizenUpdateEligibility(serviceRequestId, tenantId, user);
+        validateEmployeeUpdateEligibility(serviceRequestId, tenantId, user);
+    }
+
+    private void validateCitizenUpdateEligibility(String serviceRequestId, String tenantId, AuthenticatedUser user) {
+        if (!user.isCitizen()) {
+            return;
+        }
+        final Long loggedInRequester = submissionRepository.getLoggedInRequester(serviceRequestId, tenantId);
+        if(!user.getId().equals(loggedInRequester)) {
+            throw new UpdateServiceRequestNotAllowedException();
+        }
     }
 
     private void validateEmployeeUpdateEligibility(String serviceRequestId, String tenantId,
@@ -44,8 +55,7 @@ public class UpdateServiceRequestEligibilityService {
     }
 
     private Long getPositionId(String serviceRequestId, String tenantId) {
-        return submissionRepository.getPositionByCrnAndTenantId(serviceRequestId, tenantId);
-
+        return submissionRepository.getPosition(serviceRequestId, tenantId);
     }
 
     private Employee getEmployeeByAssignee(Long userId, String tenantId) {

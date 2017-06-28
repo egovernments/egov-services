@@ -40,9 +40,11 @@
 package org.egov.demand.repository;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.querybuilder.TaxPeriodQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxPeriodRowMapper;
+import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.slf4j.Logger;
@@ -85,15 +87,15 @@ public class TaxPeriodRepository {
         return taxPeriods;
     }
 
-    public List<TaxPeriod> create(TaxPeriodRequest taxPeriodRequest) {
+    public List<TaxPeriod> create(TaxPeriodRequest taxPeriodRequest){
         List<TaxPeriod> taxPeriods = taxPeriodRequest.getTaxPeriods();
 
-        if (!taxPeriods.isEmpty()) {
+        if(!taxPeriods.isEmpty()){
             String query = taxPeriodQueryBuilder.getInsertQuery();
             List<Object[]> argsList = new ArrayList<>();
             RequestInfo requestInfo = taxPeriodRequest.getRequestInfo();
-            for (int i = 0; i < taxPeriods.size(); i++) {
-                Object[] values = {taxPeriods.get(i).getId(), taxPeriods.get(i).getService(), taxPeriods.get(i).getCode(), taxPeriods.get(i).getFromDate(),
+            for(int i = 0; i < taxPeriods.size(); i++){
+                Object[] values = { taxPeriods.get(i).getId(), taxPeriods.get(i).getService(), taxPeriods.get(i).getCode(), taxPeriods.get(i).getFromDate(),
                         taxPeriods.get(i).getToDate(), taxPeriods.get(i).getFinancialYear(), new Date().getTime(), new Date().getTime(),
                         requestInfo.getUserInfo().getId(),
                         requestInfo.getUserInfo().getId(), taxPeriods.get(i).getTenantId()};
@@ -109,8 +111,30 @@ public class TaxPeriodRepository {
         return taxPeriods;
     }
 
-    public boolean checkForDuplicates(List<TaxPeriod> taxPeriodList, String mode) {
-        boolean duplicatesExist;
+    public List<TaxPeriod> update(TaxPeriodRequest taxPeriodRequest) {
+        List<TaxPeriod> taxPeriods = taxPeriodRequest.getTaxPeriods();
+        if(!taxPeriods.isEmpty()){
+            String query = taxPeriodQueryBuilder.getUpdateQuery();
+            List<Object[]> argsList = new ArrayList<>();
+            RequestInfo requestInfo = taxPeriodRequest.getRequestInfo();
+            for(int i=0;i<taxPeriods.size();i++){
+                Object[] values = {taxPeriods.get(i).getService(), taxPeriods.get(i).getCode(), taxPeriods.get(i).getFromDate(),
+                        taxPeriods.get(i).getToDate(), taxPeriods.get(i).getFinancialYear(), new Date().getTime(),
+                        requestInfo.getUserInfo().getId(), taxPeriods.get(i).getTenantId(), taxPeriods.get(i).getId()};
+                argsList.add(values);
+            }
+            try {
+                jdbcTemplate.batchUpdate(query, argsList);
+            } catch (DataAccessException ex) {
+                ex.printStackTrace();
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
+        return taxPeriods;
+    }
+
+    public boolean checkForDuplicates(List<TaxPeriod> taxPeriodList, String mode){
+        boolean duplicatesExist = false;
         String query = taxPeriodQueryBuilder.prepareQueryForValidation(taxPeriodList, mode);
         try {
             duplicatesExist = jdbcTemplate.queryForObject(query, Boolean.class);

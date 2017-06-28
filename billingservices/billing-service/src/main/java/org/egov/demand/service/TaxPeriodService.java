@@ -41,12 +41,10 @@ package org.egov.demand.service;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
-import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.model.*;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.util.SequenceGenService;
-import org.egov.demand.web.contract.TaxPeriodCriteria;
-import org.egov.demand.web.contract.TaxPeriodRequest;
-import org.egov.demand.web.contract.TaxPeriodResponse;
+import org.egov.demand.web.contract.*;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
@@ -55,6 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -88,18 +87,37 @@ public class TaxPeriodService {
         return getTaxPeriodResponse(taxPeriodList, taxPeriodRequest.getRequestInfo());
     }
 
-    public TaxPeriodResponse createAsync(TaxPeriodRequest taxPeriodRequest) {
+    public TaxPeriodResponse createAsync(TaxPeriodRequest taxPeriodRequest){
         List<TaxPeriod> taxPeriodList = taxPeriodRequest.getTaxPeriods();
 
         List<String> taxPeriodIds = sequenceGenService.getIds(taxPeriodList.size(), applicationProperties.getTaxPeriodSeqName());
-        for (int i = 0; i < taxPeriodList.size(); i++)
+        for(int i=0; i<taxPeriodList.size(); i++)
             taxPeriodList.get(i).setId(taxPeriodIds.get(i));
 
         taxPeriodRequest.setTaxPeriods(taxPeriodList);
 
-        LOGGER.info(" -- createAsync taxPeriodRequest -- " + taxPeriodRequest);
+        LOGGER.info(" -- createAsync taxPeriodRequest -- "+taxPeriodRequest);
         kafkaTemplate.send(applicationProperties.getCreateTaxPeriodTopicName(), applicationProperties.getCreateTaxPeriodTopicKey(), taxPeriodRequest);
         return getTaxPeriodResponse(taxPeriodList, taxPeriodRequest.getRequestInfo());
+    }
+
+    public TaxPeriodResponse updateAsync(TaxPeriodRequest taxPeriodRequest) {
+        List<TaxPeriod> taxPeriods = taxPeriodRequest.getTaxPeriods();
+        String userId = taxPeriodRequest.getRequestInfo().getUserInfo().getId().toString();
+        Long currEpochDate = new Date().getTime();
+        AuditDetail auditDetail;
+        for (TaxPeriod taxPeriod : taxPeriods) {
+            auditDetail = taxPeriod.getAuditDetail();
+            auditDetail.setLastModifiedBy(userId);
+            auditDetail.setLastModifiedTime(currEpochDate);
+        }
+        kafkaTemplate.send(applicationProperties.getUpdateTaxPeriodTopicName(), taxPeriodRequest);
+        return getTaxPeriodResponse(taxPeriods, taxPeriodRequest.getRequestInfo());
+    }
+
+    public TaxPeriodResponse update(TaxPeriodRequest taxPeriodRequest) {
+        List<TaxPeriod> taxPeriods = taxPeriodRepository.update(taxPeriodRequest);
+        return getTaxPeriodResponse(taxPeriods,taxPeriodRequest.getRequestInfo());
     }
 
     private TaxPeriodResponse getTaxPeriodResponse(final List<TaxPeriod> taxPeriods, final RequestInfo requestInfo) {

@@ -62,11 +62,11 @@ const styles = {
   }
 };
 
-class DefineEscalation extends Component {
+class DefineEscalationTime extends Component {
     constructor(props) {
       super(props)
       this.state = {
-              positionSource:[],
+              serviceTypeSource:[],
               dataSourceConfig : {
                 text: 'name',
                 value: 'id',
@@ -96,12 +96,13 @@ class DefineEscalation extends Component {
     componentDidMount() {
       let self = this;
       Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
+        console.log(response);
           self.setState({
-            positionSource: response.Position
+            serviceTypeSource: response.Position
           })
       }, function(err) {
         self.setState({
-            positionSource: []
+            serviceTypeSource: []
           })
       });
     }
@@ -125,7 +126,7 @@ class DefineEscalation extends Component {
       let current = this;
 
       let query = {
-        id:this.props.defineEscalation.position.id
+        id:this.props.defineEscalationTime.serviceType.id
       }
 
       Api.commonApiPost("/pgr-master/escalation/_search",query,{}).then(function(response){
@@ -149,22 +150,12 @@ class DefineEscalation extends Component {
   }
 
   localHandleChange = (e, property, isRequired, pattern) => {
-    if(this.state.escalationForm.hasOwnProperty('fromPosition')){
       this.setState({
           escalationForm: {
             ...this.state.escalationForm,
               [property]: e.target.value
           }
       })
-    } else {
-      this.setState({
-          escalationForm: {
-            ...this.state.escalationForm,
-            fromPosition: this.props.defineEscalation.position.id,
-              [property]: e.target.value
-          }
-      })
-    }
   }
 
   addEscalation = () => {
@@ -182,7 +173,7 @@ class DefineEscalation extends Component {
 
       let {
         isFormValid,
-        defineEscalation,
+        defineEscalationTime,
         fieldErrors,
         handleChange,
         handleAutoCompleteKeyUp
@@ -199,11 +190,13 @@ class DefineEscalation extends Component {
       		return resultList.map(function(val, i) {
       			return (
       				<tr key={i}>
-                <td>{val.fromPosition}</td>
-      					<td>{val.grievanceType}</td>
-      					<td>{val.department}</td>
+                <td>{i+1}</td>
       					<td>{val.designation}</td>
-                <td>{val.toPosition}</td>
+                <td>{val.numberOfHours}</td>
+                <td>
+                <RaisedButton style={{margin:'15px 5px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+
+                }}/></td>
       				</tr>
       			)
       		})
@@ -215,49 +208,6 @@ class DefineEscalation extends Component {
    	        <Card>
               <CardText>
                   <Row>
-                    <Col xs={12} md={3} sm={6}>
-                        <TextField
-                            fullWidth={true}
-                            floatingLabelText="From Position"
-                            value={defineEscalation.position ? defineEscalation.position.name : ""}
-                            id="name"
-                            disabled={true}
-                        />
-                    </Col>
-                    <Col xs={12} md={3} sm={6}>
-                        <SelectField
-                           floatingLabelText="Grievance Type"
-                           fullWidth={true}
-                           value={escalationForm.grievanceType ? escalationForm.grievanceType : ""}
-                           onChange= {(e, index ,value) => {
-                             var e = {
-                               target: {
-                                 value: value
-                               }
-                             };
-                             localHandleChange(e, "grievanceType", true, "");
-                            }}
-                          >
-                           <MenuItem value={1} primaryText="Options" />
-                        </SelectField>
-                    </Col>
-                    <Col xs={12} md={3} sm={6}>
-                        <SelectField
-                           floatingLabelText="Department"
-                           fullWidth={true}
-                           value={escalationForm.department ? escalationForm.department : ""}
-                           onChange= {(e, index ,value) => {
-                             var e = {
-                               target: {
-                                 value: value
-                               }
-                             };
-                             localHandleChange(e, "department", true, "");
-                            }}
-                         >
-                           <MenuItem value={2} primaryText="Options" />
-                        </SelectField>
-                    </Col>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
                            floatingLabelText="Designation"
@@ -271,22 +221,22 @@ class DefineEscalation extends Component {
                              };
                              localHandleChange(e, "designation", true, "");
                             }}
-                         >
+                          >
                            <MenuItem value={1} primaryText="Options" />
                         </SelectField>
                     </Col>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="To Position"
+                           floatingLabelText="Number of hours"
                            fullWidth={true}
-                           value={escalationForm.toPosition ? escalationForm.toPosition : ""}
+                           value={escalationForm.numberOfHours ? escalationForm.numberOfHours : ""}
                            onChange= {(e, index ,value) => {
                              var e = {
                                target: {
                                  value: value
                                }
                              };
-                             localHandleChange(e, "toPosition", true, "");
+                             localHandleChange(e, "numberOfHours", true, "");
                             }}
                          >
                            <MenuItem value={1} primaryText="Options" />
@@ -304,11 +254,10 @@ class DefineEscalation extends Component {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
-   		              <th>From Position</th>
-   		              <th>Grievance Type</th>
-   		              <th>Department</th>
+   		              <th>No.</th>
                     <th>Designation</th>
-                    <th>To Position</th>
+                    <th>Number of Hours</th>
+                    <th>Action</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -320,10 +269,10 @@ class DefineEscalation extends Component {
    		)
       }
 
-      return(<div className="defineEscalation">
+      return(<div className="defineEscalationTime">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Escalation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation Time < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -331,22 +280,22 @@ class DefineEscalation extends Component {
                               <Row>
                                   <Col xs={12} md={4} mdPush={4}>
                                         <AutoComplete
-                                          floatingLabelText="Position"
+                                          floatingLabelText="Grievance Type"
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.positionSource}
+                                          dataSource={this.state.serviceTypeSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
-                                          value={defineEscalation.position ? defineEscalation.position : ""}
+                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceType")}}
+                                          value={defineEscalationTime.serviceType ? defineEscalationTime.serviceType : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
                   	                            value: chosenRequest
                   	                          }
                   	                        };
-                  	                        handleChange(e, "position", true, "");
+                  	                        handleChange(e, "serviceType", true, "");
                   	                       }}
                                         />
                                   </Col>
@@ -360,7 +309,7 @@ class DefineEscalation extends Component {
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
-                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
+                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected service type. </strong>}/>
                       <CardText>
                           <RaisedButton style={{margin:'10px 0'}} label="Add Escalation Details" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                             this.setState({
@@ -381,7 +330,7 @@ class DefineEscalation extends Component {
 
 
 const mapStateToProps = state => {
-  return ({defineEscalation : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({defineEscalationTime : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -391,7 +340,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["position"]
+          required: ["serviceType"]
         },
         pattern: {
           current: [],
@@ -442,4 +391,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefineEscalation);
+export default connect(mapStateToProps, mapDispatchToProps)(DefineEscalationTime);

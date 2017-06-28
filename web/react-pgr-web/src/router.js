@@ -22,6 +22,8 @@ import viewServiceType from './components/contents/master/serviceType/viewServic
 import ViewServiceGroup from './components/contents/master/serviceGroup/viewServiceGroup';
 import ViewEscalation from './components/contents/master/escalation/viewEscalation';
 import DefineEscalation from './components/contents/master/escalation/defineEscalation';
+import SearchEscalation from './components/contents/master/escalationTime/searchEscalation';
+import DefineEscalationTime from './components/contents/master/escalationTime/defineEscalationTime';
 
 const Main = () => (
   <main>
@@ -55,6 +57,9 @@ const Main = () => (
       <Route exact path='/viewServiceGroup/:id' component={ViewServiceGroup}/>
       <Route exact path='/viewEscalation' component={ViewEscalation}/>
       <Route exact path='/defineEscalation' component={DefineEscalation}/>
+      <Route exact path='/searchEscalationTime' component={SearchEscalation}/>
+      <Route exact path='/defineEscalationTime' component={DefineEscalationTime}/>
+
     </Switch>
   </main>
 )

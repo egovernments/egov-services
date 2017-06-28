@@ -21,7 +21,7 @@ public class AgreementQueryBuilderTest {
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
 				+ "ON agreement.id=demand.agreementid "
-				+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id"
+				+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id "
 				+ "ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?", AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
 	}
 	

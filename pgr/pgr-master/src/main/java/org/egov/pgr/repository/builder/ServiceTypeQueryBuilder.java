@@ -192,6 +192,10 @@ public class ServiceTypeQueryBuilder {
     public static String selectServiceNameAndCodeQuery() {
         return " select code FROM egpgr_complainttype where name = ? OR (tenantId = ? and code = ?)";
     }
+    
+    public static String checkServiceCodeIfExists() {
+    	return " SELECT code FROM service_definition WHERE code = ? and tenantid = ? "; 
+    }
 
     public static String selectServiceNameAndCodeNotInQuery() {
         return " select code from egpgr_grievancetype where name = ? and tenantId = ? and code != ? ";

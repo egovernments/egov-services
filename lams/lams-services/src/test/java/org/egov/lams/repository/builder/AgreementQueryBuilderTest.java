@@ -20,7 +20,9 @@ public class AgreementQueryBuilderTest {
 		AgreementCriteria agreementsModel = new AgreementCriteria();
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
-				+ "ON agreement.id=demand.agreementid ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?", AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
+				+ "ON agreement.id=demand.agreementid "
+				+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id"
+				+ "ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?", AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
 	}
 	
 	@Test
@@ -48,6 +50,7 @@ public class AgreementQueryBuilderTest {
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
 						+ "ON agreement.id=demand.agreementid"
+				        + " LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id"
 						+ " WHERE AGREEMENT.ID IN (1,2) AND AGREEMENT.AGREEMENT_NO=? AND AGREEMENT.STATUS=?"
 						+ " AND AGREEMENT.TENANT_ID=? AND AGREEMENT.TENDER_NUMBER=? AND AGREEMENT.TIN_NUMBER=?"
 						+ " AND AGREEMENT.TRADE_LICENSE_NUMBER=? AND AGREEMENT.acknowledgementnumber=?"
@@ -69,7 +72,9 @@ public class AgreementQueryBuilderTest {
 		agreementsModel.setToDate(calendar.getTime());
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
-						+ "ON agreement.id=demand.agreementid WHERE AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') AND"
+						+ "ON agreement.id=demand.agreementid "
+						+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id "
+						+ "WHERE AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') AND"
 						+ " AGREEMENT.TENANT_ID=?"
 						+ " AND AGREEMENT.CREATED_DATE>=? AND AGREEMENT.CREATED_DATE<=?"
 						+ " ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?",

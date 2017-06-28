@@ -40,11 +40,15 @@
 package org.egov.demand.service;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +68,38 @@ public class TaxPeriodService {
     @Autowired
     private ResponseFactory responseInfoFactory;
 
+    @Autowired
+    private SequenceGenService sequenceGenService;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
     public TaxPeriodResponse searchTaxPeriods(final TaxPeriodCriteria taxPeriodCriteria, final RequestInfo requestInfo) {
         LOGGER.info("-- TaxPeriodService searchTaxPeriods -- ");
         final List<TaxPeriod> taxPeriods = taxPeriodRepository.searchTaxPeriods(taxPeriodCriteria);
         return getTaxPeriodResponse(taxPeriods, requestInfo);
+    }
+
+    public TaxPeriodResponse create(TaxPeriodRequest taxPeriodRequest) {
+        List<TaxPeriod> taxPeriodList = taxPeriodRepository.create(taxPeriodRequest);
+        return getTaxPeriodResponse(taxPeriodList, taxPeriodRequest.getRequestInfo());
+    }
+
+    public TaxPeriodResponse createAsync(TaxPeriodRequest taxPeriodRequest) {
+        List<TaxPeriod> taxPeriodList = taxPeriodRequest.getTaxPeriods();
+
+        List<String> taxPeriodIds = sequenceGenService.getIds(taxPeriodList.size(), applicationProperties.getTaxPeriodSeqName());
+        for (int i = 0; i < taxPeriodList.size(); i++)
+            taxPeriodList.get(i).setId(taxPeriodIds.get(i));
+
+        taxPeriodRequest.setTaxPeriods(taxPeriodList);
+
+        LOGGER.info(" -- createAsync taxPeriodRequest -- " + taxPeriodRequest);
+        kafkaTemplate.send(applicationProperties.getCreateTaxPeriodTopicName(), applicationProperties.getCreateTaxPeriodTopicKey(), taxPeriodRequest);
+        return getTaxPeriodResponse(taxPeriodList, taxPeriodRequest.getRequestInfo());
     }
 
     private TaxPeriodResponse getTaxPeriodResponse(final List<TaxPeriod> taxPeriods, final RequestInfo requestInfo) {

@@ -40,9 +40,12 @@
 package org.egov.demand.service;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.junit.Test;
@@ -55,6 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -70,6 +74,12 @@ public class TaxPeriodServiceTest {
     @Mock
     private ResponseFactory responseInfoFactory;
 
+    @Mock
+    private SequenceGenService sequenceGenService;
+
+    @Mock
+    private ApplicationProperties applicationProperties;
+
     @Test
     public void shouldSearchTaxPeriods() {
         List<TaxPeriod> taxPeriods = new ArrayList<>();
@@ -82,6 +92,23 @@ public class TaxPeriodServiceTest {
         TaxPeriodCriteria taxPeriodCriteria = TaxPeriodCriteria.builder().tenantId("ap").build();
         when(taxPeriodRepository.searchTaxPeriods(any(TaxPeriodCriteria.class))).thenReturn(taxPeriods);
         assertEquals(taxPeriodResponse, taxPeriodService.searchTaxPeriods(taxPeriodCriteria, new RequestInfo()));
+    }
+
+    @Test
+    public void shouldCreateTaxPeriods() {
+        List<TaxPeriod> taxPeriodsForRequest = new ArrayList<>();
+        taxPeriodsForRequest.add(getTaxPeriod());
+        TaxPeriodRequest taxPeriodRequest = new TaxPeriodRequest();
+        taxPeriodRequest.setTaxPeriods(taxPeriodsForRequest);
+
+        List<TaxPeriod> taxPeriodsForResponse = new ArrayList<>();
+        taxPeriodsForResponse.add(getTaxPeriod());
+        TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
+        taxPeriodResponse.setResponseInfo(null);
+        taxPeriodResponse.setTaxPeriods(taxPeriodsForResponse);
+
+        when(taxPeriodRepository.create(any(TaxPeriodRequest.class))).thenReturn(taxPeriodsForRequest);
+        assertTrue(taxPeriodResponse.equals(taxPeriodService.create(taxPeriodRequest)));
     }
 
     private TaxPeriod getTaxPeriod() {

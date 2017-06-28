@@ -92,6 +92,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.update.taxHeadMaster.key}")
 	private String updateTaxHeadMasterTopicKey;
 
+	@Value("${kafka.topics.create.taxperiod.name}")
+	private String createTaxPeriodTopicName;
+
+	@Value("${kafka.topics.create.taxperiod.key}")
+	private String createTaxPeriodTopicKey;
+
 	@Value("${bs.bill.seq.name}")
 	private String billSeqName;
 	
@@ -121,7 +127,10 @@ public class ApplicationProperties {
 	
 	@Value("${bs.taxhead.code.seq.name}")
 	private String taxHeadCodeSeqName;
-	
+
+	@Value("${bs.taxperiod.seq.name}")
+	private String taxPeriodSeqName;
+
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

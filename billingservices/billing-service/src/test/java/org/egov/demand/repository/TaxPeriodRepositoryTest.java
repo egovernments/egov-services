@@ -39,10 +39,15 @@
  */
 package org.egov.demand.repository;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.querybuilder.TaxPeriodQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxPeriodRowMapper;
+import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -55,6 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -82,5 +88,34 @@ public class TaxPeriodRepositoryTest {
         when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), taxPeriodRowMapper))
                 .thenReturn(taxPeriods);
         assertTrue(taxPeriods.equals(taxPeriodRepository.searchTaxPeriods(taxPeriodCriteria)));
+    }
+
+    @Test
+    public void shouldCreateTaxPeriod() {
+
+        TaxPeriodRequest taxPeriodRequest = new TaxPeriodRequest();
+        RequestInfo requestInfo = new RequestInfo();
+        User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        taxPeriodRequest.setRequestInfo(requestInfo);
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+        taxPeriods.add(getTaxPeriod());
+        taxPeriodRequest.setTaxPeriods(taxPeriods);
+
+        when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+        assertTrue(taxPeriods.equals(taxPeriodRepository.create(taxPeriodRequest)));
+    }
+
+    private TaxPeriod getTaxPeriod() {
+        TaxPeriod taxPeriod = new TaxPeriod();
+        taxPeriod.setId("1");
+        taxPeriod.setTenantId("ap.kurnool");
+        taxPeriod.setService("Test Service");
+        taxPeriod.setCode("2017-2018-I");
+        taxPeriod.setFromDate(1478930l);
+        taxPeriod.setToDate(4783525l);
+        taxPeriod.setFinancialYear("2017-18");
+        return taxPeriod;
     }
 }

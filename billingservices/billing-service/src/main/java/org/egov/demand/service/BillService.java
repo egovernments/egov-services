@@ -192,10 +192,11 @@ public class BillService {
 							demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
 
 					log.debug("prepareBill taxHeadMaster:" + taxHeadMaster);
-					//TODO
+					//TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
-							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).
-							glcode(taxHeadMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand()).
+							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+							//.glcode(taxHeadMaster.getGlCode())
+							.isActualDemand(taxHeadMaster.getIsActualDemand()).
 							order(taxHeadMaster.getOrder()).build();
 
 					billAccountDetails.add(billAccountDetail);

@@ -1,0 +1,13 @@
+{
+    "RequestInfo":{
+        "apiId":"org.egov.pgr",
+        "ver":"1.0",
+        "ts":"21-04-2017 16:20:57",
+        "action":"POST",
+        "did":"4354648646",
+        "key":"xyz",
+        "msgId":"654654",
+        "requesterId":"61",
+        "authToken":"16ee18ad-3c30-496e-9145-b26ac08da6d3"
+    }
+}

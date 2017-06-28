@@ -3,6 +3,7 @@ package org.egov.workflow.web.controller;
 import org.egov.workflow.domain.service.Workflow;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.web.contract.ProcessInstance;
+import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,10 +35,10 @@ public class WorkFlowController {
     }
 
     @PostMapping(value = "/history/v1/_search")
-    public List<Task> getHistory(@RequestParam(value="tenantId",required=true)final String tenantId , @RequestParam final String workflowId) {
-        return workflow.getHistoryDetail(tenantId,workflowId);
+    public List<Task> getHistory(@RequestParam(value = "tenantId", required = true) final String tenantId, @RequestParam final String workflowId, @RequestBody RequestInfoWrapper requestInfoWrapper) {
+        return workflow.getHistoryDetail(tenantId, workflowId);
     }
-    
+
     @PostMapping(value = "/v1/_update")
     public Task createTask(@RequestBody final Task task) {
         String tenantId = task.getTenantId();

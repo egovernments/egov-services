@@ -33,7 +33,7 @@ public class DemandEnrichmentUtil {
 	return rsDemands;
 	}
 
-	public void enrichTaxHeadMAsters(List<DemandDetail> demandDetails, List<TaxHeadMaster> taxHeadMAsters) {
+	/*public void enrichTaxHeadMAsters(List<DemandDetail> demandDetails, List<TaxHeadMaster> taxHeadMAsters) {
 
 		System.err.println("taxheadmaster list : "+taxHeadMAsters);
 		System.err.println("demanddetails list : "+demandDetails);
@@ -48,5 +48,5 @@ public class DemandEnrichmentUtil {
 			if(map.containsKey(code))
 				demandDetail.setTaxHeadMaster(map.get(code));
 		}
-	}
+	}*/
 }

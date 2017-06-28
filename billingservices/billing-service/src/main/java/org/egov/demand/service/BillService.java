@@ -42,10 +42,12 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
@@ -61,6 +63,8 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
+import org.egov.demand.model.TaxHeadMaster;
+import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -100,6 +104,9 @@ public class BillService {
 	
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
+	
+	@Autowired
+	private TaxHeadMasterService taxHeadMasterService;
 
 	public BillResponse createAsync(BillRequest billRequest) { 
 		
@@ -149,6 +156,10 @@ public class BillService {
 		
 		List<Bill> bills = new ArrayList<Bill>();
 		
+		Map<String, List<TaxHeadMaster>> taxHeadCodes = getTaxHeadMaster(demands, tenantId, requestInfo);
+		
+		log.info("prepareBill taxHeadCodes:" + taxHeadCodes);
+		
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		
 		log.info("prepareBill map:" +map);
@@ -171,14 +182,25 @@ public class BillService {
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
 				log.info("prepareBill demandDetails:" +demandDetails);
+				
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
 					
 					log.info("prepareBill demandDetail:" +demandDetail);
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
-					BillAccountDetail billAccountDetail = BillAccountDetail.builder().
-							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).build();
+					
+					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
+					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter((t) -> 
+					demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
+					
+					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
+					//TODO
+					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
+							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).
+							glcode(taxHeadMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand()).
+							order(taxHeadMaster.getOrder()).build();
+					
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
@@ -189,7 +211,7 @@ public class BillService {
 			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
 			
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).
-					billAccountDetails(billAccountDetails).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
+					billAccountDetails(billAccountDetails).billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
 					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
 					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
@@ -202,6 +224,28 @@ public class BillService {
 		bills.add(bill);
 		
 		return bills;
+	}
+	
+	private Map<String, List<TaxHeadMaster>> getTaxHeadMaster(List<Demand> demands, String tenantId, RequestInfo requestInfo) {
+		
+		List<DemandDetail> demandDetails = new ArrayList<>();
+		for(Demand demand : demands){
+			demandDetails.addAll(demand.getDemandDetails());
+		}
+		
+		log.info("getTaxHeadMaster demandDetails:"+demandDetails);
+		
+		Set<String>  taxHeadMasterCode = demandDetails.stream().
+				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
+		
+		log.info("getTaxHeadMaster taxHeadMasterCode:"+taxHeadMasterCode);
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService.getTaxHeads(
+				TaxHeadMasterCriteria.builder().tenantId(tenantId).code(taxHeadMasterCode).build(),requestInfo).getTaxHeadMasters();
+		log.info("getTaxHeadMaster taxHeadMasters:"+taxHeadMasters);
+		Map<String, List<TaxHeadMaster>> map = taxHeadMasters.stream().collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
+		
+		log.info("getTaxHeadMaster map:"+map);
+		return map;
 	}
 	
 	public BillResponse getBillResponse(List<Bill> bills) {

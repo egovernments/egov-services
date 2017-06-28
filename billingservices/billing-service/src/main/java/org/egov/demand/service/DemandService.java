@@ -136,11 +136,11 @@ public class DemandService {
 				demandDetails.add(demandDetail);
 			}
 		}
-		List<TaxHeadMaster> taxHeadMAsters = taxHeadMasterService.getTaxHeads(
+		/*List<TaxHeadMaster> taxHeadMAsters = taxHeadMasterService.getTaxHeads(
 				TaxHeadMasterCriteria.builder().tenantId(demandCriteria.getTenantId())
 				.code(demandDetails.stream().map(ddl -> ddl.getTaxHeadMaster().getCode())
 				.collect(Collectors.toSet())).build(),requestInfo).getTaxHeadMasters();
-		demandEnrichmentUtil.enrichTaxHeadMAsters(demandDetails, taxHeadMAsters);
+		demandEnrichmentUtil.enrichTaxHeadMAsters(demandDetails, taxHeadMAsters);*/
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

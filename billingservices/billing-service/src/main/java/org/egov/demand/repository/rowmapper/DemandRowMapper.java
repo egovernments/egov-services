@@ -65,9 +65,9 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				demandDetail.setId(rs.getString("dlid"));
 				demandDetail.setDemandId(rs.getString("dldemandid"));
 				
-				TaxHeadMaster headMaster = new TaxHeadMaster();
-				headMaster.setCode(rs.getString("dltaxheadcode"));
-				demandDetail.setTaxHeadMaster(headMaster);
+				//TaxHeadMaster headMaster = new TaxHeadMaster();
+				//headMaster.setCode(rs.getString("dltaxheadcode"));
+				demandDetail.setTaxHeadMasterCode(rs.getString("dltaxheadcode"));;
 				demandDetail.setTenantId(rs.getString("dltenantid"));
 				demandDetail.setTaxAmount(rs.getBigDecimal("dltaxamount"));
 				demandDetail.setCollectionAmount(rs.getBigDecimal("dlcollectionamount"));

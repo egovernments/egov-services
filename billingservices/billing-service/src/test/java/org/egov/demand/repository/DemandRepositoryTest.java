@@ -40,7 +40,7 @@ public class DemandRepositoryTest {
 	@InjectMocks
 	private DemandRepository demandRepository;
 
-	@Test
+	/*@Test
 	public void methodSaveCreateDemand() {
 
 		Demand demand = getDemand();
@@ -54,7 +54,7 @@ public class DemandRepositoryTest {
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1, 2 });
 		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length); 
 		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
-	}
+	}*/
 	
 	public  ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -64,7 +64,7 @@ public class DemandRepositoryTest {
 		return responseInfo;
 	}
 
-	public  Demand getDemand() {
+/*	public  Demand getDemand() {
 
 		Demand demand = new Demand();
 		Owner owner = new Owner();
@@ -80,9 +80,9 @@ public class DemandRepositoryTest {
 		demand.setTenantId("ap.kurnool");
 		demand.setDemandDetails(getDemandDetails());
 		return demand;
-	}
+	}*/
 
-	public  List<DemandDetail> getDemandDetails() {
+	/*public  List<DemandDetail> getDemandDetails() {
 
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		DemandDetail demandDetail = new DemandDetail();
@@ -100,7 +100,7 @@ public class DemandRepositoryTest {
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;
-	}
+	}*/
 
 	public  RequestInfo getRequestInfo() {
 

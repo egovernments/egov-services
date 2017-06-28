@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaxHeadMasterValidator {
 
-	
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
 	

@@ -130,7 +130,7 @@ public class TaxHeadMasterControllerTest {
 		taxPeriod.setFromDate(123L);
 		taxPeriod.setToDate(345L);
 		
-		taxHeadMaster.setTaxPeriod(taxPeriod);
+	//	taxHeadMaster.setTaxPeriod(taxPeriod);
 		
 	return taxHeadMaster;
 	}

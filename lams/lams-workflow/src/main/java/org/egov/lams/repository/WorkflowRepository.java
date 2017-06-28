@@ -126,6 +126,9 @@ public class WorkflowRepository {
 		}else if(agreement.getCancellation()!=null){
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+		}else if(agreement.getEviction()!=null){
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
 		}else{
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
@@ -161,6 +164,9 @@ public class WorkflowRepository {
 		}else if(agreement.getCancellation()!=null){
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+		}else if(agreement.getEviction()!=null){
+			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
 		}else{
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());

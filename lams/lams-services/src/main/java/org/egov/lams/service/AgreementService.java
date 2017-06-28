@@ -113,6 +113,12 @@ public class AgreementService {
 		logger.info("createAgreement service::" + agreement);
 		String kafkaTopic = null;
 		String agreementValue = null;
+		
+		if(agreement.getAction().equals(Action.EVICTION)){
+			kafkaTopic = propertiesManager.getStartWorkflowTopic();
+			agreement.setStatus(Status.WORKFLOW);
+			setInitiatorPosition(agreementRequest);
+		} else if(agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)){
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
@@ -133,8 +139,7 @@ public class AgreementService {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);
 			setInitiatorPosition(agreementRequest);
-	
-			if(agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)){
+			
 			List<Demand> demands = prepareDemands(agreementRequest);
 			
 			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
@@ -144,10 +149,10 @@ public class AgreementService {
 			logger.info(agreement.getAcknowledgementNumber());
 			agreement.setDemands(demandIdList);
 			}
-		}
 		agreement.setId(agreementRepository.getAgreementID());
+		}
+		
 		try {
-
 			agreementValue = objectMapper.writeValueAsString(agreementRequest);
 			logger.info("agreementValue::" + agreementValue);
 		} catch (JsonProcessingException JsonProcessingException) {
@@ -184,16 +189,15 @@ public class AgreementService {
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 			if (workFlowDetails != null) {
-				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
+				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction()) && (agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL))) {
 					agreement.setStatus(Status.ACTIVE);
 					agreement.setAgreementDate(new Date());
 					if (agreement.getAgreementNumber() == null) {
 						agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
 					}
-					if (agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)) {
-						updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
-								agreementRequest.getRequestInfo());
-					}
+				updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),agreementRequest.getRequestInfo());
+				} else if ("Approve".equalsIgnoreCase(workFlowDetails.getAction()) && (agreement.getAction().equals(Action.EVICTION))) {
+					agreement.setStatus(Status.EVICTED);
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.REJECTED);
 				} else if ("Cancel".equalsIgnoreCase(workFlowDetails.getAction())) {

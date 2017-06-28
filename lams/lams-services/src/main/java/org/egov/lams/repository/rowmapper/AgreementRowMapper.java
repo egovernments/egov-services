@@ -110,6 +110,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 
 					RentIncrementType rentIncrementType = new RentIncrementType();
 					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));
+					rentIncrementType.setPercentage(rs.getDouble("percentage"));
 					agreement.setRentIncrementMethod(rentIncrementType);
 
 					Allottee allottee = new Allottee();

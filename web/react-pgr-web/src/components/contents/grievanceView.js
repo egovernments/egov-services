@@ -88,7 +88,7 @@ class grievanceView extends Component{
         addMandatory();
       });
 
-      Api.commonApiGet('/workflow/history',{workflowId : currentThis.state.stateId}).then(function(response)
+      Api.commonApiGet('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
       {
         //console.log(JSON.stringify(response));
         currentThis.setState({workflow : response});

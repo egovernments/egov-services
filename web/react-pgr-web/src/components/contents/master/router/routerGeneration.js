@@ -194,7 +194,7 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr/servicecategories/_search").then(function(response) {
+  	Api.commonApiPost("/pgr/servicecategories/v1/_search").then(function(response) {
       	checkCountAndCall("categoryList", response.serviceTypeCategories);
     }, function(err) {
     	checkCountAndCall("categoryList", []);

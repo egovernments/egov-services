@@ -5,7 +5,7 @@ swagger: '2.0'
 info:
   version: 1.0.0
   ######################################################
-  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
+  # All API's are POST. _create,_search,_update stands for post,get and put. RequestInfo will be part of body.*
   # All _search will be synchronous and all _create and _update will be asynchronous*.
   # RequestInfo and ResponseInfo object should be reffered from Common*.
   # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
@@ -35,15 +35,10 @@ paths:
   ######################################################
     post:
       summary: Get the list of usage types in the system or a particular usage type.
-      description: Return(s) `UsageType` for the given input params.
+      description: Return(s) `UsageType(s)` for the given input params.
       parameters:
-        - name: requestInfo
-          in: body
-          description: Commmon request info to get usage type.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
-        - $ref: "#/parameters/tenantId"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/sortUsageTypes"
         - name: name
           in: query
@@ -82,9 +77,9 @@ paths:
           default: true
           allowEmptyValue: true
       responses:
-      ####################################################
-      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
-      ####################################################
+      ###################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
+      ###################################################
         200:
           description: Successful response
           schema:
@@ -92,30 +87,31 @@ paths:
         400:
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
       tags: 
        - Usage Type
+       
   /usageType/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
   # Validate tenantId before persisting.
+  # Must support bulk create.
   ######################################################
     post:
-      summary: Create a new Usage Type.
-      description: API to create new usage type.
+      summary: Create new Usage Type(s).
+      description: API to create new usage type(s).
       parameters:
-        - name: usageType
+        - name: usageTypes
           in: body
-          description: Details for the new usage type.
+          description: Details for the new usage types + RequestInfo meta data.
           required: true
           schema:
             $ref: '#/definitions/UsageTypeReq'
       
       responses:
-      ####################################################
-      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ################################################### All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
           description: Usage Type created sucessfully.
@@ -124,33 +120,30 @@ paths:
         400:
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Usage Type      
   
-  /usageType/{code}/_update:
+  /usageType/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
   # Validate tenantId before persisting.
-  # Unique identifier of the model to be updated should be passed as path parameter. 
+  # Must support bulk update.
   ######################################################
-   parameters:
-    - $ref: "#/parameters/usageTypeCode"
    post:
-      summary: Update existing usage type data for the code passed.
-      description: To update an existing usage type master data.
+      summary: Update usage type(s).
+      description: This API will update usage type(s) based on code.
       parameters:
-        - name: usageType
+        - name: usageTypes
           in: body
           description: Request header for the usage type with new set of values.
           required: true
           schema:
             $ref: '#/definitions/UsageTypeReq'
       responses:
-      ####################################################
-      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
-      ####################################################
+      ################################################### All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
         200:
           description: Usage Type updated.
           schema:
@@ -158,7 +151,7 @@ paths:
         400:
           description: Invalid input.
           schema:
-            $ref: '#/definitions/ErrorRes'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Usage Type
         
@@ -168,91 +161,6 @@ definitions:
 #Definition must start with Upper case followed by camel case.
 #Every model will have tenantId
 ########################################################
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts
-  ResponseInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
-      
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      fields:
-        type: object
-    required:
-      - code
-      - message
-  ErrorRes:
-    properties:
-      ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      Error:
-        $ref: '#/definitions/Error'
-    type: object
-
   UsageType:
     type: object
     properties:
@@ -304,51 +212,36 @@ definitions:
       - code 
       - active
       - tenantId
+      
   UsageTypeRes:
     type: object
     properties:
       ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
-      UsageType:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      UsageTypes:
         type: array
+        maximum: 500
         items: 
          $ref: '#/definitions/UsageType' 
   UsageTypeReq:
     type: object
     properties:
-      tenantId:
-        description: Unique id for for a tenant.
-        type: string
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
-      UsageType:
-        $ref: '#/definitions/UsageType'   
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      UsageTypes:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/UsageType'   
     required:
-      - tenantId
       - RequestInfo
-      - UsageType    
+      - UsageTypes    
 
 parameters:
-##########################################################
+#########################################################
 #Parameter name must start with small case followed by camel case.
-##########################################################
-  tenantId:
-    name: tenantid
-    in: query
-    description: Unique id for for a tenant.
-    required: true
-    type: string
-    format: varchar
-  usageTypeCode:
-    name: code
-    in: path
-    required: true
-    description: The code of the usage type master.
-    type: string
-    minLength: 0
-    maxLength: 20
-    exclusiveMinimum: true
-    exclusiveMaximum: false
+#########################################################
   sortUsageTypes:
     name: sort
     in: query

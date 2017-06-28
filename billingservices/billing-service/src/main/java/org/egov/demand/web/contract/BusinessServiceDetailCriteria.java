@@ -42,6 +42,7 @@ package org.egov.demand.web.contract;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -55,6 +56,6 @@ public class BusinessServiceDetailCriteria {
     private String tenantId;
 
     @NotNull
-    private String businessService;
+    private Set<String> businessService;
 
 }

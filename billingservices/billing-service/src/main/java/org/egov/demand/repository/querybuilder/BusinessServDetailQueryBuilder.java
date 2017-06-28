@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Slf4j
@@ -59,7 +60,6 @@ public class BusinessServDetailQueryBuilder {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         log.debug("prepareSearchQuery --> ");
         prepareWhereClause(selectQuery, preparedStatementValues, businessServiceDetailCriteria);
-        // addPagingClause(selectQuery, preparedStatementValues, searchAsset);
         log.debug("Search business service details query from BusinessServDetailQueryBuilder -> " + selectQuery);
         return selectQuery.toString();
     }
@@ -74,9 +74,19 @@ public class BusinessServDetailQueryBuilder {
             preparedStatementValues.add(businessServiceDetailCriteria.getTenantId());
         }
 
-        if (StringUtils.isNotBlank(businessServiceDetailCriteria.getBusinessService())) {
-            selectQuery.append(" and businessservice.businessservice = ? ");
-            preparedStatementValues.add(businessServiceDetailCriteria.getBusinessService());
+        if (!businessServiceDetailCriteria.getBusinessService().isEmpty())
+            selectQuery.append(" and businessservice.businessservice IN "+getQueryForCollection(businessServiceDetailCriteria.getBusinessService()));
+
+    }
+
+    private String getQueryForCollection(Set<String> values) {
+        StringBuilder query = new StringBuilder();
+        if (!values.isEmpty()) {
+            String[] list = values.toArray(new String[values.size()]);
+            query.append(" ('"+list[0]+"'");
+            for (int i = 1; i < values.size(); i++)
+                query.append("," + "'"+list[i]+"'");
         }
+        return query.append(")").toString();
     }
 }

@@ -77,7 +77,7 @@ class receivingModeCreate extends Component {
              let  _this = this;
              let {setForm} = this.props;
 
-             Api.commonApiPost("/pgr-master/receivingmode/_search",{id:this.props.match.params.id},body).then(function(response){
+             Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{id:this.props.match.params.id},body).then(function(response){
 
                  _this.setState({data:response.ReceivingModeType})
                  setForm(response.ReceivingModeType[0])

@@ -199,7 +199,7 @@ class searchRouter extends Component {
     e.preventDefault();
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
-    Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
+    Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.RouterTypRes,

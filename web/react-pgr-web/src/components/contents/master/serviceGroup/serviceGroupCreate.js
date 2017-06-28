@@ -72,7 +72,7 @@ class ServiceGroupCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/serviceGroup/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log("response",response);
                   console.log("response object",response.ServiceGroups[0]);
                 current.setState({data:response.ServiceGroups})
@@ -111,13 +111,13 @@ class ServiceGroupCreate extends Component {
 
       if(this.props.match.params.id){
         console.log("hi");
-          Api.commonApiPost("/pgr-master/serviceGroup/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
               console.log(response);
           }).catch((error)=>{
               console.log(error);
           })
       } else {
-          Api.commonApiPost("/pgr-master/serviceGroup/_create",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/_create",{},body).then(function(response){
               console.log(response);
           }).catch((error)=>{
               console.log(error);

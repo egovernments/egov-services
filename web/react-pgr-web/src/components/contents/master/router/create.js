@@ -128,7 +128,7 @@ class createRouter extends Component {
     const checkIfUpdateOrView = function() {
       if(type === "edit" || type === "view") {
         var id=self.props.match.params.id;
-        Api.commonApiPost("/workflow/router/_search", {id}).then(function(response) {
+        Api.commonApiPost("/workflow/router/v1/_search", {id}).then(function(response) {
           var routerType = {
             id: response.RouterTypRes[0].id,
             position: response.RouterTypRes[0].position,
@@ -255,7 +255,7 @@ class createRouter extends Component {
    		tenantId: localStorage.getItem("tenantId")
   	};
 
-  	Api.commonApiPost("/workflow/router/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
+  	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
   		self.props.initForm();
   		self.setState({
   			open: true

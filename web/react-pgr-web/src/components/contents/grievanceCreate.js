@@ -74,7 +74,7 @@ class grievanceCreate extends Component {
    loadReceivingCenter(value){
      if(value == 'MANUAL'){
        var currentThis = this;
-       Api.commonApiPost("/pgr-master/receivingcenter/_search").then(function(response)
+       Api.commonApiPost("/pgr-master/receivingcenter/v1/_search").then(function(response)
        {
          currentThis.setState({receivingCenter : response.ReceivingCenterType});
        },function(err) {
@@ -107,7 +107,7 @@ class grievanceCreate extends Component {
 
     //ReceivingMode
     if(localStorage.getItem('type') == 'EMPLOYEE'){
-      Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
+      Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response)
       {
         currentThis.setState({receivingModes : response.ReceivingModeType});
       },function(err) {
@@ -130,7 +130,7 @@ class grievanceCreate extends Component {
     });
 
     //Grievance Category
-    Api.commonApiPost("/pgr-master/serviceGroup/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response)
     {
       currentThis.setState({grievanceCategory : response.ServiceGroups});
     },function(err) {

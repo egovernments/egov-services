@@ -71,7 +71,7 @@ class ViewReceivingCenter extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/serviceGroup/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
                 console.log(response);
                 current.setState({data:response.ServiceGroups})
                 setForm(response.ServiceGroups[0])

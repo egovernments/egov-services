@@ -223,7 +223,7 @@ class routerGeneration extends Component {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
-  	Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
+  	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
   			resultList: response.RouterTypRes,
@@ -265,7 +265,7 @@ class routerGeneration extends Component {
   	 		});
   	 	}
 
-  	 	Api.commonApiPost("/workflow/router/_create", {}, {routertype: routerType}).then(function(response) {
+  	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {routertype: routerType}).then(function(response) {
 	  		self.props.initForm();
 	  		self.setState({
 	  			resultList: [],

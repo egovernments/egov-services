@@ -253,7 +253,7 @@ $(document).ready(function() {
 
     var renewAgreement = {};
     //Getting data for user input
-    $("input").on("keyup", function() {
+    /*$("input").on("keyup", function() {
         // console.log(this.value);
       //  renewAgreement[this.id] = this.value;
         fillValueToObject(this);
@@ -261,7 +261,7 @@ $(document).ready(function() {
 
     $("textarea").on("keyup", function() {
         fillValueToObject(this);
-    });
+    });*/
 
     //Getting data for user input
     $("select").on("change", function() {
@@ -553,9 +553,8 @@ $(document).ready(function() {
             "action": data.action
         };
 
-        if(_agrmntDet.wFremarks) {
-            _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
-            delete _agrmntDet.wFremarks;
+        if($("#wFremarks").val()) {
+            _agrmntDet["workflowDetails"]["comments"] = $("#wFremarks").val();
         }
 
         if (data.action && data.action != "Print Notice") {

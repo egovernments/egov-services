@@ -63,12 +63,6 @@ public class ReceiptReqValidator {
 					.field(CollectionServiceConstants.PAID_BY_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
-		if(null == receipt.getBankAccount().getChartOfAccount().getName() || receipt.getBankAccount().getChartOfAccount().getName().isEmpty()){
-			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COA_MISSING_CODE)
-					.message(CollectionServiceConstants.COA_MISSING_MESSAGE)
-					.field(CollectionServiceConstants.COA_MISSING_FIELD).build();
-			errorFields.add(errorField);
-		}
 		
 		for(BillDetails billDetails:  receipt.getBillInfo().getBillDetails()){
 			if(null == billDetails.getReceiptType()|| billDetails.getReceiptType().isEmpty()){
@@ -85,7 +79,7 @@ public class ReceiptReqValidator {
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetails.getBusinessDetailsCode() || 0L == billDetails.getBusinessDetailsCode()){
+			if(null == billDetails.getBusinessDetailsCode() || billDetails.getBusinessDetailsCode().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BD_CODE_MISSING_CODE)
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.BD_CODE_MISSING_FIELD).build();
@@ -98,6 +92,13 @@ public class ReceiptReqValidator {
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)
 							.message(CollectionServiceConstants.PURPOSE_MISSING_MESSAGE)
 							.field(CollectionServiceConstants.PURPOSE_MISSING_FIELD).build();
+					errorFields.add(errorField);
+				}
+				
+				if(null == billAccountDetails.getGlcode() || billAccountDetails.getGlcode().isEmpty()){
+					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COA_MISSING_CODE)
+							.message(CollectionServiceConstants.COA_MISSING_MESSAGE)
+							.field(CollectionServiceConstants.COA_MISSING_FIELD).build();
 					errorFields.add(errorField);
 				}
 			}

@@ -25,20 +25,14 @@
                 {
                     "id": null,
                     "demandId": null,
-                    "taxHeadMaster": {
-                    "code" : "0002",
-                    "isDebit" : false
-                    },
+                    "taxHeadMasterCode" : "0002",
                     "taxAmount": 100,
                     "collectionAmount": 0
                },
                 {
                     "id": null,
                     "demandId": null,
-                   "taxHeadMaster": {
-                    "code" : "0003",
-                    "isDebit" : false
-                    },
+                    "taxHeadMasterCode" : "0003",
                     "taxAmount": 200,
                     "collectionAmount": 0
                 }

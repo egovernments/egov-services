@@ -64,6 +64,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
     @Autowired
     Environment environment;
 
+    /**
+     * Description: this method will get all factors based on tenantId and valid date
+     * @param tenantId
+     * @param validDate
+     * @return calculationFactorList
+     */
     public List<CalculationFactor> getFactorsByTenantIdAndValidDate(
             String tenantId, String validDate) {
 
@@ -74,10 +80,23 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         return calculationFactors;
     }
 
+    /**
+     * Description: this method will get all tax rates based on tenantId and valid date
+     * @param tenantId
+     * @param validDate
+     * @return taxRatesList
+     */
     public List<TaxRates> getTaxRateByTenantAndDate(String tenantId, String validDate) throws Exception {
         List<TaxRates> listOfTaxRates = taxRatesRepository.searchTaxRatesByTenantAndDate(tenantId, validDate);
         return listOfTaxRates;
     };
+
+    /**
+     * Description: this method will get all tax periods based on tenantId and valid date
+     * @param tenantId
+     * @param validDate
+     * @return taxPeriodsList
+     */
 
     public List<TaxPeriod> getTaxPeriodsByTenantIdAndDate(String tenantId, String validDate) {
 
@@ -99,6 +118,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         return new CalculationResponse();
     };
 
+    /**
+     * Description: this method will get and create keyFileSystem object based on tenantId
+     * @param tenantId
+     * @throws IOException
+     * @return kieFileSystem
+     */
     public KieFileSystem kieFileSystem(String tenantId) throws IOException {
         KieFileSystem kieFileSystem = getKieServices().newKieFileSystem();
 
@@ -110,6 +135,11 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         return kieFileSystem;
     }
 
+    /**
+     * Description :this method wil return the resources from rules path
+     * @param tenantId
+     * @throws IOException
+     */
     private Resource[] getRuleFiles(String tenantId) throws IOException {
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         return resourcePatternResolver
@@ -120,6 +150,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         return KieServices.Factory.get();
     }
 
+    /**
+     * Description : this method will return kiesession object
+     * @param tenantId
+     * @return kieSession
+     * @throws IOException
+     */
     public KieSession kieSession(String tenantId) throws IOException {
         final KieRepository kieRepository = getKieServices().getRepository();
         kieRepository.addKieModule(new KieModule() {
@@ -135,6 +171,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         return kieContainer.newKieSession();
     }
 
+    /**
+     * Description : this method for getting all requried data for tax calculation
+     * @param calculationRequest
+     * @return taxCalculationModel
+     * @throws Exception
+     */
     public TaxCalculationModel getDataForPropertyTax(CalculationRequest calculationRequest) throws Exception {
         TaxCalculationModel taxCalculationModel = new TaxCalculationModel();
         List<List<Map<String, Double>>> factorTypes = new ArrayList<List<Map<String, Double>>>();
@@ -172,7 +214,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                         calculationRequest.getRequestInfo(), tenantId,
                         calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
                         unit.getStructure(), calculationRequest.getProperty().getPropertyDetail().getUsage(), null,
-                        unit.getOccupancy(), unit.getOccupancyDate());
+                        unit.getOccupancyType(), unit.getOccupancyDate());
                 Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
                 guidanceValues.add(guidanceValue);
 

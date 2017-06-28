@@ -65,7 +65,7 @@ public class DemandRepository {
 
 			AuditDetail auditDetail = demandDetail.getAuditDetail();
 			Object[] demandDetailRecord = { demandDetail.getId(), demandDetail.getDemandId(),
-					demandDetail.getTaxHeadMaster().getCode(), demandDetail.getTaxAmount(), demandDetail.getCollectionAmount(),
+					demandDetail.getTaxHeadMasterCode(), demandDetail.getTaxAmount(), demandDetail.getCollectionAmount(),
 					auditDetail.getCreatedBy(), auditDetail.getLastModifiedBy(), auditDetail.getCreatedTime(),
 					auditDetail.getLastModifiedTime(), demandDetail.getTenantId() };
 			demandDetailBatchArgs.add(demandDetailRecord);

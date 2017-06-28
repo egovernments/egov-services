@@ -9,24 +9,28 @@ import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
+@Setter
 @ToString
-@Builder
 public class VoucherResponse {
 
-	@JsonProperty("responseInfo")
+	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
-	@JsonProperty("vouchers")
+	@JsonProperty("Vouchers")
 	private List<Voucher> vouchers = new ArrayList<Voucher>();
-	
+
 	@JsonProperty("page")
 	private Pagination page = null;
-	
+
 }

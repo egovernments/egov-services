@@ -5,9 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.asset.model.enums.VoucherType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,11 +21,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Voucher {
-	
+
 	private Long id;
-	
+
 	@NotNull
-	private VoucherType type;
+	private String type;
 
 	private String name;
 
@@ -36,22 +34,23 @@ public class Voucher {
 	private String voucherNumber;
 
 	@NotNull
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	private String voucherDate;
 
 	private Fund fund;
 
 	private FiscalPeriod fiscalPeriod;
 
-	private EgfStatus status;
+	private String status;
 
 	private Long originalVhId;
 
 	private Long refVhId;
 
 	private Long moduleId;
-	
+
 	private String cgvn;
-	
+
 	@NotNull
 	private Long department;
 

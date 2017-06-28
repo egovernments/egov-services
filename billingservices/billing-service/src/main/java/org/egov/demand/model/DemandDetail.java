@@ -18,7 +18,7 @@ public class DemandDetail {
 	private String demandId;	
 
 	@NotNull
-	private TaxHeadMaster taxHeadMaster;
+	private String taxHeadMasterCode;
 
 	@NotNull
 	private BigDecimal taxAmount;

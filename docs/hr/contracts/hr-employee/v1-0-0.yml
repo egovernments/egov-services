@@ -27,7 +27,8 @@ paths:
           description: Commmon request info for getting employee.
           required: true
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: code
           in: query
           required: false
@@ -86,9 +87,22 @@ paths:
             type: integer
           format: int64
           maxItems: 10
+        - name: familyParticularsPresent
+          in: query
+          description: >-
+            True will be set in case where only employees who have family
+            particulars defined in the system are required. False will be set
+            when all employees who do not have family particulars defined in the
+            system are needed. Do not set any value when employee search is not
+            based on family particulars data.
+          required: false
+          type: boolean
+          format: varchar
+          allowEmptyValue: true
         - $ref: '#/parameters/pageSize'
         - $ref: '#/parameters/pageNumber'
-        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - $ref: '#/parameters/sortEmployees'
       responses:
         '200':
@@ -98,7 +112,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Employee
   /employees/_create:
@@ -128,7 +143,8 @@ paths:
         '400':
           description: Invalid Input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   '/employees/{id}/_search':
     parameters:
       - $ref: '#/parameters/id'
@@ -155,7 +171,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   '/employees/{id}/_update':
     parameters:
       - $ref: '#/parameters/id'
@@ -182,7 +199,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /hod/employees/_search:
     post:
       summary: >-
@@ -197,7 +215,8 @@ paths:
           description: Commmon request info for getting employee.
           required: true
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: departmentId
           in: query
           description: Unique id of the department for which the HOD needs to be searched.
@@ -214,7 +233,8 @@ paths:
           type: string
           format: date
           pattern: '[dd/mm/yyyy]'
-        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - $ref: '#/parameters/sortEmployees'
       responses:
         '200':
@@ -224,7 +244,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Employee
   '/employees/{id}/assignments/_search':
@@ -242,11 +263,13 @@ paths:
           description: Commmon request info for getting employee.
           required: true
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - $ref: '#/parameters/assignmentId'
         - $ref: '#/parameters/pageSize'
         - $ref: '#/parameters/pageNumber'
-        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - $ref: '#/parameters/sortAssignments'
         - name: asOnDate
           in: query
@@ -276,7 +299,8 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Assignment
   '/employees/{id}/positions/_search':
@@ -295,10 +319,12 @@ paths:
           description: Commmon request info for getting employee position.
           required: true
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - $ref: '#/parameters/pageSize'
         - $ref: '#/parameters/pageNumber'
-        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - name: asOnDate
           in: query
           description: >-
@@ -345,11 +371,13 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/PositionRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/PositionRes
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Assignment
   /nonvacantpositions/_search:
@@ -367,10 +395,12 @@ paths:
           description: Commmon request info for getting vacant position.
           required: true
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - $ref: '#/parameters/pageSize'
         - $ref: '#/parameters/pageNumber'
-        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - $ref: '#/parameters/sortPositions'
         - name: asOnDate
           in: query
@@ -396,26 +426,32 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/PositionRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/PositionRes
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Assignment
-        
   /nominees/_search:
     post:
-      summary: Get the list of nominees/family members for the list of employees defined in the system.
+      summary: >-
+        Get the list of nominees/family members for the list of employees
+        defined in the system.
       description: >
-        Get the list of all the family members or only the nominee who is nominated for availing an employee's benefits. We can get the list of nominees for a list of employees as well.
+        Get the list of all the family members or only the nominee who is
+        nominated for availing an employee's benefits. We can get the list of
+        nominees for a list of employees as well.
       parameters:
         - name: requestInfo
           in: body
           description: Commmon request info for getting nominee.
           required: true
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         - name: name
           in: query
           required: false
@@ -427,8 +463,10 @@ paths:
         - name: nominated
           in: query
           description: >-
-            True will be set in cases where only family members who are nominated are required
-            and False will be set when family members who are not nominated are required.Do not set any value when this property need not be checked.
+            True will be set in cases where only family members who are
+            nominated are required and False will be set when family members who
+            are not nominated are required.Do not set any value when this
+            property need not be checked.
           required: false
           type: boolean
           format: varchar
@@ -444,7 +482,9 @@ paths:
           maxItems: 100
         - name: employeeId
           in: query
-          description: List of Unique Id of employee for whom the nominee details are to be searched.
+          description: >-
+            List of Unique Id of employee for whom the nominee details are to be
+            searched.
           required: false
           type: array
           items:
@@ -453,7 +493,8 @@ paths:
           maxItems: 100
         - $ref: '#/parameters/pageSize'
         - $ref: '#/parameters/pageNumber'
-        - $ref: 'swagger-yaml/hr-masters.yaml/#/parameters/tenantId'
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
         - $ref: '#/parameters/sortNominees'
       responses:
         '200':
@@ -463,15 +504,16 @@ paths:
         '400':
           description: Invalid input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Nominee
   /nominees/_create:
     post:
-      summary: >-
-        Create a new family member/nominee for an employee in the system.
+      summary: Create a new family member/nominee for an employee in the system.
       description: >-
-        Create a list of new family members for an existing employee in the system.
+        Create a list of new family members for an existing employee in the
+        system.
       parameters:
         - name: nominee
           in: body
@@ -489,13 +531,12 @@ paths:
         '400':
           description: Invalid Input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /nominees/_update:
     post:
-      summary: >-
-        Update a family member/nominee details for an employee in the system.
-      description: >-
-        Update a list of family members for an existing employee in the system.
+      summary: Update a family member/nominee details for an employee in the system.
+      description: Update a list of family members for an existing employee in the system.
       parameters:
         - name: nominee
           in: body
@@ -513,7 +554,8 @@ paths:
         '400':
           description: Invalid Input.
           schema:
-            $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ErrorRes'
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
 definitions:
   Employee:
     title: Employee of the system
@@ -522,7 +564,8 @@ definitions:
       employee.
     type: object
     allOf:
-      - $ref: 'swagger-yaml/User.yaml/#/definitions/User'
+      - $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User
     properties:
       code:
         type: string
@@ -725,7 +768,7 @@ definitions:
         maxItems: 25
         uniqueItems: true
         items:
-          $ref: '#/definitions/APRDetails'    
+          $ref: '#/definitions/APRDetails'
       tenantId:
         type: string
         description: >-
@@ -1148,7 +1191,9 @@ definitions:
       - yearOfPassing
   APRDetails:
     type: object
-    description: This will give the details about the assets and property returns of the employee.
+    description: >-
+      This will give the details about the assets and property returns of the
+      employee.
     properties:
       id:
         type: integer
@@ -1159,12 +1204,16 @@ definitions:
         format: int32
         description: The year in which the employee has submitted the APR details.
       detailsSubmitted:
-       type: boolean
-       description: True if the asset and property details are submitted for the year and False if it is not submitted.
+        type: boolean
+        description: >-
+          True if the asset and property details are submitted for the year and
+          False if it is not submitted.
       dateOfSubmission:
         type: string
         format: date
-        description: The date on which the yearly asset and property details were submitted.
+        description: >-
+          The date on which the yearly asset and property details were
+          submitted.
       remarks:
         type: string
         description: Any general remarks.
@@ -1193,13 +1242,13 @@ definitions:
         description: Date on which the user master data was last modified.
     required:
       - yearOfSubmission
-      - detailsSubmitted    
-      
+      - detailsSubmitted
   EmployeeReq:
     type: object
     properties:
       RequestInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Employee:
         type: array
         items:
@@ -1508,7 +1557,8 @@ definitions:
     type: object
     properties:
       ResponseInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Employee:
         type: array
         items:
@@ -1520,7 +1570,8 @@ definitions:
       response.
     properties:
       ResponseInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Employee:
         type: array
         items:
@@ -1529,7 +1580,8 @@ definitions:
     type: object
     properties:
       ResponseInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Assignment:
         type: array
         items:
@@ -1720,7 +1772,9 @@ definitions:
   Nominee:
     type: object
     title: Nominees/Family details of the employees of the system
-    description: Family member details of all the employees in the system. Each employee can have one or more nominees defined in the system.
+    description: >-
+      Family member details of all the employees in the system. Each employee
+      can have one or more nominees defined in the system.
     properties:
       id:
         type: integer
@@ -1752,8 +1806,8 @@ definitions:
       maritalStatus:
         type: string
         description: >-
-          Defines if this family member is currently married or single or anything other
-          than that.
+          Defines if this family member is currently married or single or
+          anything other than that.
         items:
           type: string
           enum:
@@ -1763,34 +1817,44 @@ definitions:
             - WIDOWER
             - DIVORCED
       relationship:
-       type: string
-       description: >-
-          Defines the relationship this family member holds with the associated employee.
-       items:
         type: string
-        enum:
-          - Father
-          - Mother
-          - Spouse
-          - Son
-          - Daughter
-          - Other
+        description: >-
+          Defines the relationship this family member holds with the associated
+          employee.
+        items:
+          type: string
+          enum:
+            - Father
+            - Mother
+            - Spouse
+            - Son
+            - Daughter
+            - Other
       bank:
         type: string
-        description: Bank id in which the family member has account. Bank ids will be referenced from the Bank Master
+        description: >-
+          Bank id in which the family member has account. Bank ids will be
+          referenced from the Bank Master
       bankBranch:
         type: string
-        description: Bank branch id in which the family member has account. Bank branch will be referenced from the BankBranch  Master.
+        description: >-
+          Bank branch id in which the family member has account. Bank branch
+          will be referenced from the BankBranch  Master.
       bankAccount:
         type: string
         description: The unique bank account Number of an family member has account.
         maxLength: 20
       nominated:
         type: boolean
-        description: True if it this family member is nominated for availing the employee benefits and False if this person is not nominated for availing the employee benefits.
+        description: >-
+          True if it this family member is nominated for availing the employee
+          benefits and False if this person is not nominated for availing the
+          employee benefits.
       employed:
         type: boolean
-        description: True if it this family member has an employment and False if this person is not currently employed.
+        description: >-
+          True if it this family member has an employment and False if this
+          person is not currently employed.
       createdBy:
         type: string
         description: Id of the user who created the record.
@@ -1805,10 +1869,11 @@ definitions:
         type: string
         format: date
         description: Date on which the master data was last modified.
-      
       tenantId:
         type: string
-        description: Unique Identifier of which tenant this data is defined. For example AP, AP-Kurnool etc
+        description: >-
+          Unique Identifier of which tenant this data is defined. For example
+          AP, AP-Kurnool etc
         maxLength: 256
     required:
       - name
@@ -1818,29 +1883,29 @@ definitions:
       - gender
       - nominated
       - employed
-      
   NomineeReq:
     type: object
     properties:
       RequestInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/RequestInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Nominee:
         type: array
         items:
           $ref: '#/definitions/Nominee'
     required:
       - RequestInfo
-      - Nominee      
+      - Nominee
   NomineeRes:
     type: object
     properties:
       ResponseInfo:
-        $ref: 'swagger-yaml/hr-masters.yaml/#/definitions/ResponseInfo'
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
       Nominee:
         type: array
         items:
-          $ref: '#/definitions/Nominee'  
-          
+          $ref: '#/definitions/Nominee'
 parameters:
   pageSize:
     name: pagesize

@@ -109,9 +109,9 @@ public class TaxHeadMasterQueryBuilder {
 	
 	public String getInsertQuery() {
 		return "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
-				+ "service, name, code, glcode, isdebit,isactualdemand, createdby, createdtime,"
-				+ "lastmodifiedby, lastmodifiedtime,taxperiod) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";
+				+ "service, name, code, glcode, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
+				+ "lastmodifiedby, lastmodifiedtime) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	}
 	
 	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {

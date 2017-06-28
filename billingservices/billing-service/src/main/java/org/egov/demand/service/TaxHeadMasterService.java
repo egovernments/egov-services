@@ -54,17 +54,17 @@ public class TaxHeadMasterService {
 		taxPeriodCriteria.setTenantId(searchTaxHead.getTenantId());
 		taxPeriodCriteria.setService(searchTaxHead.getService());
 		List<TaxHeadMaster> taxHeadMaster= taxHeadMasterRepository.findForCriteria(searchTaxHead);
-		List<TaxPeriod> taxPeriod= taxPeriodService.searchTaxPeriods(taxPeriodCriteria, requestInfo).getTaxPeriods();
-		for(int i=0;i<taxHeadMaster.size();i++){
+		//List<TaxPeriod> taxPeriod= taxPeriodService.searchTaxPeriods(taxPeriodCriteria, requestInfo).getTaxPeriods();
+		/*for(int i=0;i<taxHeadMaster.size();i++){
 			taxHeadMaster.get(i).setTaxPeriod(taxPeriod.get(i));
-		}
+		}*/
 		return getTaxHeadMasterResponse(taxHeadMaster,requestInfo);
 	}
 	
-	public TaxHeadMasterResponse create(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeadMaster=taxHeadMasterRequest.getTaxHeadMasters();
-		taxHeadMaster = taxHeadMasterRepository.create(taxHeadMasterRequest);
-		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
+	public void create(TaxHeadMasterRequest taxHeadMasterRequest) {
+		//List<TaxHeadMaster> taxHeadMaster=taxHeadMasterRequest.getTaxHeadMasters();
+		taxHeadMasterRepository.create(taxHeadMasterRequest);
+		//return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
 	}
 	
 	public TaxHeadMasterResponse createAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
@@ -82,8 +82,6 @@ public class TaxHeadMasterService {
 		logger.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
 
 		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(),applicationProperties.getCreateTaxHeadMasterTopicKey(),taxHeadMasterRequest);
-//		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(), taxHeadMasterRequest);
-
 		
 		return getTaxHeadMasterResponse(taxHeadMaster,taxHeadMasterRequest.getRequestInfo());
 	}

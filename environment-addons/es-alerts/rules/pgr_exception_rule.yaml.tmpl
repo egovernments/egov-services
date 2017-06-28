@@ -1,0 +1,20 @@
+name: PGR Exception
+type: blacklist
+index: {{LOG_INDEX_NAME}}
+ 
+compare_key: log
+blacklist:
+  - Exception
+
+filter:
+- terms:
+     kubernetes.container_name: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
+
+included:
+ - log
+ - kubernetes.pod_name
+
+alert:
+- "slack"
+slack_username_override: alert-job
+slack_channel_override: pgr

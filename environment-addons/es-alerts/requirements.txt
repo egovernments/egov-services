@@ -1,0 +1,2 @@
+elastalert==0.1.15
+envtpl==0.5.3

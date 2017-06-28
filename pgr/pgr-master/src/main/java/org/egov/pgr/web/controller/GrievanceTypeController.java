@@ -243,7 +243,7 @@ public class GrievanceTypeController {
 			final List<ErrorField> errorFields) {
 		final ServiceType serviceType = serviceTypeRequest.getService();
 		if (serviceType.isMetadata()) {
-			if (null == serviceType.getAttributes() && serviceType.getAttributes().size() <= 0) {
+			if (null == serviceType.getAttributes() || serviceType.getAttributes().size() <= 0) {
 				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ATTRIBUTE_DETAILS_MANDATORY_CODE)
 						.message(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE)
 						.field(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME).build();

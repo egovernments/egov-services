@@ -177,9 +177,9 @@ definitions:
       transferedLocation:
         type: integer
         format: int64
-        description: The tenant reference to which this employee is proposed to be transferred.
+        description: The city/ULB reference to which this employee is proposed to be transferred.
         items:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1-0-0.yml#/definitions/Tenant'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1-0-0.yml#/definitions/City'
       departmentAssigned:
         type: integer
         format: int64

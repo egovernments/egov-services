@@ -103,7 +103,7 @@ public class ServiceTypeRepository {
 			Attribute attribute = attributeList.get(i);
 			final Object[] obj1 = new Object[] { attribute.getCode(), attribute.getVariable()? "Y" : "N",
 					attribute.getDatatype(), attribute.getDescription(), attribute.getDatatypeDescription(), serviceRequest.getService().getServiceCode(), attribute.getRequired()? "Y" : "N",
-					serviceRequest.getService().getTenantId(),
+					attribute.getGroupCode(), serviceRequest.getService().getTenantId(),
 					serviceRequest.getRequestInfo().getUserInfo().getId(),
 					new Date(new java.util.Date().getTime()) };
 			jdbcTemplate.update(serviceInsertAttribValues, obj1);

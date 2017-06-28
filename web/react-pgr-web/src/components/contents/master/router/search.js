@@ -13,6 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
 import DataTable from '../../../common/Table';
+import {translate} from '../../../common/common';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -262,8 +263,8 @@ class searchRouter extends Component {
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
               <thead style={{backgroundColor:"#f2851f",color:"white"}}>
                 <tr>
-                  <th>Sl No.</th>
-                  <th>Grievance Type</th>
+                  <th>#</th>
+                  <th>{translate("pgr.lbl.grievance.type")}</th>
                   <th>Boundary Type</th>
                   <th>Boundary</th>
                   <th>Position</th>
@@ -289,7 +290,7 @@ class searchRouter extends Component {
                    <Col xs={12} md={8}>
                     <AutoComplete
                         hintText=""
-                        floatingLabelText="Grievance Type"
+                        floatingLabelText={translate("pgr.lbl.grievance.type")}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.complaintSource}
@@ -343,8 +344,8 @@ class searchRouter extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
-             <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
            </div>
          </form>
          {viewTable()}

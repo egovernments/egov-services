@@ -14,6 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
 import Snackbar from 'material-ui/Snackbar';
 import Api from '../../api/api';
+import {translate} from '../common/common';
 
 const getNameByProperty = function(object, key) {
 	if(object) {
@@ -164,7 +165,7 @@ class grievanceSearch extends Component {
   		}
   	}
 
-  	this.props.changeButtonText("More");
+  	this.props.changeButtonText(translate("core.lbl.more"));
   	Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName: "Ward", hierarchyTypeName: "Administration"}).then(function(response) {
       	checkCountAndCall("locationList", response.Boundary);
     }, function(err) {
@@ -266,13 +267,13 @@ class grievanceSearch extends Component {
 				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive>
 			    <thead style={{backgroundColor:"#f2851f",color:"white"}}>
 			      <tr>
-			        <th>Application No.</th>
-			        <th>Grivience/Service Type</th>
-			        <th>Name</th>
-			        <th>Location</th>
-			        <th>Status</th>
-			        <th>Department</th>
-			        <th>Registered Date</th>
+			        <th>{translate("pgr.lbl.srn")}</th>
+			        <th>{translate("pgr.lbl.grievance.type")}</th>
+			        <th>{translate("core.lbl.add.name")}</th>
+			        <th>{translate("core.lbl.location")}</th>
+			        <th>{translate("core.lbl.status")}</th>
+			        <th>{translate("core.lbl.department")}</th>
+			        <th>{translate("pgr.lbl.registered.date")}</th>
 			      </tr>
 			    </thead>
 			    <tbody>
@@ -300,20 +301,20 @@ class grievanceSearch extends Component {
   	}
 
   	const showOtherFields = function() {
-  		if(buttonText == "Less") {
+  		if(buttonText == translate("core.lbl.less")) {
   			return (
   				<Row>
                 	<Col xs={12} md={3}>
-        				<TextField fullWidth={true} floatingLabelText="Full Name" value={grievanceSearchSet.name} onChange={(e) => {handleChange(e, "name", false, "")}}/>
+        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e) => {handleChange(e, "name", false, "")}}/>
         			</Col>
         			<Col xs={12} md={3}>
-        				<TextField fullWidth={true} floatingLabelText="Mobile Number" errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e) => {handleChange(e, "mobileNumber", false, /^\d{10}$/g)}}/>
+        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e) => {handleChange(e, "mobileNumber", false, /^\d{10}$/g)}}/>
         			</Col>
         			<Col xs={12} md={3}>
-        				<TextField fullWidth={true} floatingLabelText="Email ID" errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e) => {handleChange(e, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
+        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e) => {handleChange(e, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
         			<Col xs={12} md={3}>
-        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText="Complaint Type" value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
+        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={"pgr.lbl.complainttype"} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
         					var e = {target: {value: val}};
         					handleChange(e, "serviceCode", false, "")}}>
                 			{complaintTypeList.map((com, index) => (
@@ -325,7 +326,7 @@ class grievanceSearch extends Component {
 	                	<SelectField
                         multiple={true}
                         fullWidth={true}
-                        floatingLabelText="Status"
+                        floatingLabelText={translate("core.lbl.status")}
                         value={grievanceSearchSet.status}
                         onChange={(e, i, val) => {
 	                		var e = {target: {value: val}};
@@ -341,7 +342,7 @@ class grievanceSearch extends Component {
                     	</SelectField>
                 	</Col>
                 	<Col xs={12} md={3}>
-                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText="Receiving Mode" value={grievanceSearchSet.receiving_mode} onChange={(e, i, val) => {
+                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receiving_mode} onChange={(e, i, val) => {
                     		var e = {target: {value: val}};
                     		handleChange(e, "receiving_mode", false, "")}}>
                     		{receiveingModeList.map((mod, index) => (
@@ -362,10 +363,10 @@ class grievanceSearch extends Component {
 	              		<Grid>
 	                		<Row>
 	                			<Col xs={12} md={3}>
-	                				<TextField fullWidth={true} floatingLabelText="SRN(Service Request No.)" value={grievanceSearchSet.serviceRequestId} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
+	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.srn")} value={grievanceSearchSet.serviceRequestId} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
 	                			</Col>
 	                			<Col xs={12} md={3}>
-	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText="Location" value={grievanceSearchSet.locationId} onChange={(e, i, val) => {
+	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "locationId", false, "")}}>
                             			{locationList.map((loc, index) => (
@@ -374,13 +375,13 @@ class grievanceSearch extends Component {
                             		</SelectField>
 	                			</Col>
 	                			<Col xs={12} md={3}>
-	                				<DatePicker floatingLabelText="From Date" hintText="From Date" container="inline" value={grievanceSearchSet.startDate} onChange={(e, dat) => {
+	                				<DatePicker floatingLabelText={translate("core.lbl.date.fromdate")} hintText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate} onChange={(e, dat) => {
 	                					var e = {target: {value: dat}};
 	                					handleChange(e, "startDate", false, "")
 	                				}}/>
 	                			</Col>
 	                			<Col xs={12} md={3}>
-	                				<DatePicker floatingLabelText="To Date" hintText="To Date" container="inline" value={grievanceSearchSet.toDate} onChange={(e, dat) => {
+	                				<DatePicker floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.toDate} onChange={(e, dat) => {
 	                					var e = {target: {value: dat}};
 	                					handleChange(e, "toDate", false, "");
 	                				}}/>
@@ -392,7 +393,7 @@ class grievanceSearch extends Component {
 			                        backgroundColor="#a4c639"
 			                        hoverColor="#8AA62F"
 			                        label={buttonText}
-			                        onClick={(e) => {e.preventDefault(); buttonText == "More" ? changeButtonText("Less") : changeButtonText("More")}}
+			                        onClick={(e) => {e.preventDefault(); buttonText == translate("core.lbl.more") ? changeButtonText(translate("core.lbl.less")) : changeButtonText(translate("core.lbl.more"))}}
 			                      />
 			                    </Col>
 			                </Row>
@@ -401,18 +402,18 @@ class grievanceSearch extends Component {
 	            	</CardText>
 	          </Card>
 	          <div style={{textAlign: 'center'}}>
-		          <RaisedButton style={{margin:'15px 5px'}} type="submit" label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
+		          <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
 	              <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
 	        </form>
 	        {displayTableCard()}
 
 	        <Dialog
-	          title="Atleast one search criteria is required"
+	          title={translate("core.msg.criteria.required")}
 	          open={this.state.open}
 	          onRequestClose={this.handleOpenNClose}
 	          actions={<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={this.handleOpenNClose}
 				      />}>

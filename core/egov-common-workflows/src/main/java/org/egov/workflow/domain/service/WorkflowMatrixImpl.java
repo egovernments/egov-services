@@ -100,13 +100,22 @@ public class WorkflowMatrixImpl implements Workflow {
 		}
 
 		RequestInfo requestInfo = processInstanceRequest.getRequestInfo();
-		UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
+
+		Long userId;
+		if (requestInfo.getUserInfo().getTenantId() != null && !requestInfo.getUserInfo().getTenantId().isEmpty()) {
+			// TO-DO We need to remove this call to user service for user
+			// details, once erp is sending userinfo from user microservice.
+			UserResponse userResponse = userRepository.findUserByUserNameAndTenantId(requestInfo);
+			userId = userResponse.getUsers().get(0).getId();
+		} else {
+			userId = requestInfo.getUserInfo().getId();
+		}
 
 		if (processInstance.getInitiatorPosition() != null)
 			state.setInitiatorPosition(processInstance.getInitiatorPosition());
 		else {
 			Position initiator = positionRepository
-					.getPrimaryPositionByEmployeeId(userResponse.getUsers().get(0).getId(), requestInfo);
+					.getPrimaryPositionByEmployeeId(userId, requestInfo);
 			if (initiator != null && initiator.getId() != null)
 				state.setInitiatorPosition(initiator.getId());
 		}

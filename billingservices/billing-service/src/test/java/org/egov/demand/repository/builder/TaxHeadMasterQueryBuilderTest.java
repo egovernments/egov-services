@@ -59,9 +59,9 @@ public class TaxHeadMasterQueryBuilderTest {
 	@Test
 	public void getInsertQuery() {
 		String queryWithTenantId = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
-				+ "service, name, code, glcode, isdebit,isactualdemand, createdby, createdtime,"
-				+ "lastmodifiedby, lastmodifiedtime,taxperiod) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";
+				+ "service, name, code, glcode, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
+				+ "lastmodifiedby, lastmodifiedtime) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		assertEquals(queryWithTenantId, taxHeadMasterQueryBuilder.getInsertQuery());
 	}
 }

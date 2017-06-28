@@ -90,16 +90,15 @@ public class TaxHeadMasterRepository {
 				ps.setString(4, taxHeadMaster.getService());
 				ps.setString(5, taxHeadMaster.getName());
 				ps.setString(6, taxHeadMaster.getCode());
-				ps.setString(7, taxHeadMaster.getGlCode());
-				ps.setBoolean(8, taxHeadMaster.getIsDebit());
-				ps.setBoolean(9, taxHeadMaster.getIsActualDemand());
-				ps.setInt(10, taxHeadMaster.getOrder());
-				ps.setObject(11, taxHeadMaster.getValidFrom());
-				ps.setObject(12, taxHeadMaster.getValidTill());
-				ps.setString(13, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(14, new Date().getTime());
-				ps.setString(15, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(16, new Date().getTime());
+				ps.setBoolean(7, taxHeadMaster.getIsDebit());
+				ps.setBoolean(8, taxHeadMaster.getIsActualDemand());
+				ps.setInt(9, taxHeadMaster.getOrder());
+				ps.setObject(10, taxHeadMaster.getValidFrom());
+				ps.setObject(11, taxHeadMaster.getValidTill());
+				ps.setString(12, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(13, new Date().getTime());
+				ps.setString(14, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(15, new Date().getTime());
 			}
 			
 			@Override

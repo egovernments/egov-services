@@ -1,7 +1,7 @@
 package org.egov.demand.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,19 +18,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class TaxHeadMasterCriteria {
+public class GlCodeMasterCriteria {
 
 	@NotNull
 	private String tenantId;
 	@NotNull
 	private String service;
-	private String category;
-	private String name;
-	private Set<String> code=new HashSet<String>();
-	private Boolean isDebit;
-	private Boolean isActualDemand;
+	@NotNull
+	private List<String> taxHead = new ArrayList<>();
 	
-	private Set<String> id=new HashSet<String>();
-	private Long size;
-	private Long offset;
+	private List<String> id = new ArrayList<>();
+	
+	private Long fromDate;
+	
+	private Long toDate;
+	
 }

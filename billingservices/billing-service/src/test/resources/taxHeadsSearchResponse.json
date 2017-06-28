@@ -15,7 +15,6 @@
       "service": "string",
       "name": "string",
       "code": "string",
-      "glCode": "string",
       "isDebit": true,
       "isActualDemand": true,
         "validFrom":324,

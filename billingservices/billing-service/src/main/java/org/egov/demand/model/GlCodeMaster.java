@@ -4,6 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.demand.model.enums.Category;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,33 +12,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaxHeadMaster {
+public class GlCodeMaster {
 
 	private String id;
 
 	@NotNull
 	private String tenantId;
-	@Valid
 	@NotNull
-	private Category category;
+	private String taxHead;
 	@NotNull
 	private String service;
 	@NotNull
-	private String name;
-
-	private String code;
-
-	private Boolean isDebit = false;
-
-	private Boolean isActualDemand;
+	private String glCode;
+	@NotNull
+	private Long fromDate;
+	@NotNull
+	private Long toDate;
 	
-	private Long validFrom;
-	
-	private Long validTill;
-	
-	private Integer order;
-
-	private AuditDetail auditDetail;
-	
-
+	private AuditDetail auditDetails;
 }

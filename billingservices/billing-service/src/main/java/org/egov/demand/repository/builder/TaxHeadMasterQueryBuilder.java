@@ -5,26 +5,29 @@ import java.util.Set;
 
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.repository.querybuilder.GlCodeMasterQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class TaxHeadMasterQueryBuilder {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterQueryBuilder.class);
 
 	private static final String BASE_QUERY="select * from egbs_taxheadmaster";
 	public String getQuery(final TaxHeadMasterCriteria searchTaxHead, final List<Object> preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		logger.info("get query");
+		log.info("get query");
 	    addWhereClause(selectQuery, preparedStatementValues, searchTaxHead);
 		addPagingClause(selectQuery, preparedStatementValues, searchTaxHead);
-		logger.info("Query from asset querybuilde for search : " + selectQuery);
+		log.info("Query from taxHeadMaster querybuilde for search : " + selectQuery);
 		return selectQuery.toString();
 	}
 	
@@ -54,7 +57,12 @@ public class TaxHeadMasterQueryBuilder {
 			selectQuery.append(" service = ?");
 			preparedStatementValues.add(searchTaxHead.getService());
 		}
-		if (searchTaxHead.getCode() != null) {
+		if (!searchTaxHead.getId().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" id IN (" + getIdQuery(searchTaxHead.getId()));
+		}
+		
+		if (searchTaxHead.getId().isEmpty() && !searchTaxHead.getCode().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" code IN ("+ getIdQuery(searchTaxHead.getCode()));
 			//preparedStatementValues.add("%" + searchTaxHead.getCode() + "%");
@@ -75,7 +83,6 @@ public class TaxHeadMasterQueryBuilder {
 			preparedStatementValues.add("%" + searchTaxHead.getIsDebit() + "%");
 		}
 	}
-	
 	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -101,7 +108,7 @@ public class TaxHeadMasterQueryBuilder {
 	
 	public String getUpdateQuery() {
 		return "UPDATE public.egbs_taxheadmaster SET id=?, tenantid=?, category=?, service=?,"
-				+ "name=?, code=?, glcode=?,isdebit=?, isactualdemand=?, orderno=?, validfrom=?,"
+				+ "name=?, code=?,isdebit=?, isactualdemand=?, orderno=?, validfrom=?,"
 				+ "validtill=?, createdby=?, createdtime=?, lastmodifiedby=?, lastmodifiedtime=? "
 				+ "WHERE tenantid=?";
 
@@ -109,9 +116,9 @@ public class TaxHeadMasterQueryBuilder {
 	
 	public String getInsertQuery() {
 		return "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
-				+ "service, name, code, glcode, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
+				+ "service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
 				+ "lastmodifiedby, lastmodifiedtime) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	}
 	
 	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {

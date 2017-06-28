@@ -264,19 +264,21 @@
             educationCess += taxResponse.getEducationalCess();
             employeeGuaranteecess += taxResponse.getEmployeeGuranteeCess();
             totalTaxValue+=taxResponse.getTotalTax();
-            genralTaxList=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("GENERALTAX")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
-            educationCessTaxList=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EDU_NON_RESD")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
-            employeeGuaranteecessList=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
-            treeTaxList=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("TREETAX")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            genralTaxList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("GENERALTAX")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            educationCessTaxList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EDU_NON_RESD")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            employeeGuaranteecessList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            treeTaxList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("TREETAX")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
               
         }
-       
+       System.out.println("sum of tax heads"+genralTaxList+" "+educationCessTaxList);
         List<HeadWiseTax> taxHeads=(List<HeadWiseTax>)getTaxHeadWiseList(treeTaxList,genralTaxList,educationCessTaxList,employeeGuaranteecessList);
          TaxResponse totaltax =  getTaxResponse(finalMRV,depreciation,grossARV,finalARV,generalTax,treeTax,educationCess,employeeGuaranteecess,taxHeads);
         taxwrapper.setTaxResponses(taxResponses);
         taxwrapper.setTaxResponse(totaltax);
        
     }
+    
+   
     
     function TaxResponse getTaxResponse(Double finalMRV,Double depreciation,Double grossARV,Double finalARV,Double generalTax,Double treeTax,Double educationCess,Double employeeGuaranteecess,List taxHeads ){
     TaxResponse taxResponse=new TaxResponse();

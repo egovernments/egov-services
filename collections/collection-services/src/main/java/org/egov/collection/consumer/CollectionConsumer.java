@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.service.ReceiptService;
-import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CollectionConsumer {
 		try {
 			if (topic.equals(applicationProperties.getCreateReceiptTopicName())) {
 				logger.info("Consuming create Receipt request");
-				recieptService.create(objectMapper.convertValue(record, Receipt.class));
+				recieptService.create(objectMapper.convertValue(record, ReceiptReq.class));
 			}		
 			
 		} catch (final Exception e) {

@@ -57,10 +57,10 @@ public class BusinessServDetailQueryBuilder {
 
     public String prepareSearchQuery(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        log.info("prepareSearchQuery --> ");
+        log.debug("prepareSearchQuery --> ");
         prepareWhereClause(selectQuery, preparedStatementValues, businessServiceDetailCriteria);
         // addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-        log.info("Search business service details query from BusinessServDetailQueryBuilder -> " + selectQuery);
+        log.debug("Search business service details query from BusinessServDetailQueryBuilder -> " + selectQuery);
         return selectQuery.toString();
     }
 

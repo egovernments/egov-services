@@ -30,7 +30,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 
 			try {
 				String demandId = rs.getString(demandIdRsName);
-				log.info("demandid in row mapper" + demandId);
+				log.debug("demandid in row mapper" + demandId);
 				Demand demand = demandMap.get(demandId);
 
 				if (demand == null) {
@@ -82,11 +82,11 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				if (demand.getId().equals(demandDetail.getDemandId()))
 					demand.getDemandDetails().add(demandDetail);
 			} catch (Exception e) {
-				log.info("exception in demandRowMapper : " + e);
+				log.debug("exception in demandRowMapper : " + e);
 				throw new RuntimeException("error while mapping object from reult set : " + e);
 			}
 		}
-		log.info("converting map to list object ::: " + demandMap.values());
+		log.debug("converting map to list object ::: " + demandMap.values());
 		return new ArrayList<>(demandMap.values());
 	}
 }

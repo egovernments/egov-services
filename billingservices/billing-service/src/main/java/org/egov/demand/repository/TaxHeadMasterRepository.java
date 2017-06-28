@@ -13,7 +13,6 @@ import org.egov.demand.repository.builder.TaxHeadMasterQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxHeadMasterRowMapper;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -40,11 +39,11 @@ public class TaxHeadMasterRepository {
 		String queryStr = taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteria, preparedStatementValues);
 		List<TaxHeadMaster> taxHeadMaster = null;
 		try {
-			log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+			log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 			taxHeadMaster = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), taxHeadMasterRowMapper);
-			log.info("TaxHeadRepository::" + taxHeadMaster);
+			log.debug("TaxHeadRepository::" + taxHeadMaster);
 		} catch (Exception ex) {
-			log.info("the exception from findforcriteria : " + ex);
+			log.debug("the exception from findforcriteria : " + ex);
 		}
 		return taxHeadMaster;
 	}
@@ -58,12 +57,12 @@ public class TaxHeadMasterRepository {
 	public String getTaxHeadMasterCode() {
 		String query = "SELECT nextval('seq_egBillingServices_taxHeadMastercode')";
 		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-		log.info("result:" + result);
+		log.debug("result:" + result);
 		StringBuilder code = null;
 		try {
 			code = new StringBuilder(String.format("%06d", result));
 		} catch (Exception ex) {
-			log.info("the exception from seq number gen for code : " + ex);
+			log.debug("the exception from seq number gen for code : " + ex);
 		}
 		return code.toString();
 	}
@@ -73,8 +72,8 @@ public class TaxHeadMasterRepository {
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
 		
-		log.info("create requestInfo:"+ requestInfo);
-		log.info("create taxHeadMasters:"+ taxHeadMasters);
+		log.debug("create requestInfo:"+ requestInfo);
+		log.debug("create taxHeadMasters:"+ taxHeadMasters);
 		
 		
 		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getInsertQuery(), new BatchPreparedStatementSetter() {

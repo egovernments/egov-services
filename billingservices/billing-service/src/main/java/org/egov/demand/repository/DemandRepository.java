@@ -31,7 +31,7 @@ public class DemandRepository {
 	@Transactional
 	public void save(DemandRequest demandRequest) {
 
-		log.info("the request object : "+demandRequest);
+		log.debug("the request object : "+demandRequest);
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		for (Demand demand : demands) {

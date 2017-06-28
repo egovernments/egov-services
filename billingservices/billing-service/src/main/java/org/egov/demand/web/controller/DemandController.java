@@ -35,23 +35,31 @@ public class DemandController {
 	private ResponseFactory responseFactory;
 
 	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
-
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
-		//TODO: try to give debug loggers instead info, this applied across the code base.
-		log.info("the demand request object : " + demandRequest);
+		log.debug("the demand request object : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		DemandResponse demandResponse =  demandService.create(demandRequest);
-		System.err.println(demandResponse);
+		log.debug("the Response Object from service : "+demandResponse);
 		return new ResponseEntity<>(demandResponse, HttpStatus.CREATED);
 	}
 
 	@PostMapping("_update")
 	public ResponseEntity<?> update(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+
+		RequestInfo requestInfo = demandRequest.getRequestInfo();
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(demandService.updateAsync(demandRequest), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("_edit")
+	public ResponseEntity<?> edit(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {

@@ -27,7 +27,7 @@ public class TaxHeadMasterValidator {
 	private TaxPeriodService taxPeriodService;
 	
 	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest) {
-		log.info(":::::in validator class:::::::");
+		log.debug(":::::in validator class:::::::");
 		TaxHeadMasterCriteria taxHeadMasterCriteria=new TaxHeadMasterCriteria();
 		List<TaxHeadMaster> taxHeads = taxHeadsRequest.getTaxHeadMasters();
 		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();

@@ -39,7 +39,7 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody BillRequest billRequest, BindingResult bindingResult){
 		//TODO: try to give debug loggers instead info, this applied across the code base.
-		log.info("create billRequest:"+billRequest);
+		log.debug("create billRequest:"+billRequest);
 		
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.
@@ -55,8 +55,8 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
-		log.info("genrateBill generateBillCriteria : "+generateBillCriteria);
-		log.info("genrateBill requestInfoWrapper : "+requestInfoWrapper);
+		log.debug("genrateBill generateBillCriteria : "+generateBillCriteria);
+		log.debug("genrateBill requestInfoWrapper : "+requestInfoWrapper);
 		
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.

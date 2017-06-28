@@ -190,7 +190,7 @@ $(document).ready(function() {
             for (var key in values) {
                 if (typeof values[key] === "object") {
                     for (ckey in values[key]) {
-                        if (values[key][ckey]) {
+                        if (typeof values[key][ckey] != "undefined") {
                             //Get description
                             if (isAsset && key == "locationDetails" && ["locality", "electionWard", "street", "revenueWard", "revenueZone", "revenueBlock"].indexOf(ckey) > -1) {
                                 var _obj;
@@ -219,7 +219,7 @@ $(document).ready(function() {
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
                     }
-                } else if (values[key]) {
+                } else if (typeof values[key] != "undefined") {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
                 } else {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");

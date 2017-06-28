@@ -21,7 +21,6 @@ const dt = require('datatables.net-bs');
 
 
 const buttons = require('datatables.net-buttons-bs');
-
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export

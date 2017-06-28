@@ -194,8 +194,7 @@ class DefineEscalationTime extends Component {
       					<td>{val.designation}</td>
                 <td>{val.numberOfHours}</td>
                 <td>
-                <RaisedButton style={{margin:'15px 5px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
-
+                <RaisedButton style={{margin:'0 3px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                 }}/></td>
       				</tr>
       			)

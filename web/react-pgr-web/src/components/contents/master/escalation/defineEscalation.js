@@ -204,6 +204,8 @@ class DefineEscalation extends Component {
       					<td>{val.department}</td>
       					<td>{val.designation}</td>
                 <td>{val.toPosition}</td>
+                <td>    <RaisedButton style={{margin:'15px 5px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                    }}/></td></td>
       				</tr>
       			)
       		})
@@ -294,7 +296,7 @@ class DefineEscalation extends Component {
                     </Col>
                     <div className="clearfix"></div>
                     <Col xs={12} md={12} style={{textAlign:"center"}}>
-                        <RaisedButton style={{margin:'15px 5px'}} label="Update" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        <RaisedButton style={{margin:'0 3px'}} label="Update" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                           addEscalation();
                         }}/>
                     </Col>
@@ -309,6 +311,7 @@ class DefineEscalation extends Component {
    		              <th>Department</th>
                     <th>Designation</th>
                     <th>To Position</th>
+                    <th></th>
    		            </tr>
    		          </thead>
    		          <tbody>

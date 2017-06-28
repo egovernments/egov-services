@@ -13,29 +13,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommonTaxDetails {
 
-	@NotNull
-	private String occupancyDate;
-	
-	@NotNull
-	private String	effectiveDate;	
-	
-	private Double	depreciation;	
-	
-	private Double	rebateValue;
-	
-	@NotNull
-	private Double	calculatedARV;	
-	
-	private Double	manualARV;	
-	
-	private Double	residentialARV;
-	
-	private Double	nonResidentialARV;	
-	
-	@NotNull
-	private Double	totalTax;	
-		
-	private List<HeadWiseTax>	headWiseTaxes;	
+    @NotNull
+    private String occupancyDate;
 
-	
+    @NotNull
+    private String effectiveDate;
+
+    private Double depreciation;
+
+    private Double rebateValue;
+
+    @NotNull
+    private Double calculatedARV;
+
+    private Double manualARV;
+
+    private Double residentialARV;
+
+    private Double nonResidentialARV;
+
+    @NotNull
+    private Double totalTax;
+
+    private List<HeadWiseTax> headWiseTaxes;
+
 }

@@ -85,7 +85,7 @@ public class VoucherService {
 			} catch (final IOException e) {
 				logger.info("Voucher response Deserialization Issue : " + e.getMessage());
 			}
-			return Long.valueOf(voucherRes.getVouchers().get(0).getId());
+			return voucherRes.getVouchers().get(0).getId();
 		} catch (final HttpClientErrorException e) {
 
 			try {

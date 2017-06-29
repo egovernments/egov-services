@@ -1,7 +1,9 @@
 package org.egov.demand.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,9 +27,9 @@ public class GlCodeMasterCriteria {
 	@NotNull
 	private String service;
 	@NotNull
-	private List<String> taxHead = new ArrayList<>();
+	private Set<String> taxHead = new HashSet<String>();
 	
-	private List<String> id = new ArrayList<>();
+	private Set<String> id = new HashSet<String>();
 	
 	private Long fromDate;
 	

@@ -1,6 +1,7 @@
 package org.egov.demand.repository.querybuilder;
 
 import java.util.List;
+import java.util.Set;
 
 import org.egov.demand.model.GlCodeMasterCriteria;
 import org.springframework.stereotype.Component;
@@ -64,13 +65,27 @@ public class GlCodeMasterQueryBuilder {
 		}
 	}
 	
-	private static String getInQuery(final List<String> idList) {
+	/*private static String getInQuery(final Set<String> idList) {
 		log.info("getInQuery idList:"+idList+","+idList.size());
 		StringBuilder query = null;
 		if (idList.size() >= 1) {
 			query = new StringBuilder("'"+idList.get(0).toString()+"'");
 			for (int i = 1; i < idList.size(); i++)
 				query.append(",'" + idList.get(i)+"'");
+		}
+		return query.append(")").toString();
+	}*/
+	
+	private static String getInQuery(Set<String> idList) {
+
+		StringBuilder query = new StringBuilder();
+		if (!idList.isEmpty()) {
+
+			String[] list = idList.toArray(new String[idList.size()]);
+			query.append("'"+list[0]+"'");
+			for (int i = 1; i < idList.size(); i++) {
+				query.append("," + "'"+list[i]+"'");
+			}
 		}
 		return query.append(")").toString();
 	}

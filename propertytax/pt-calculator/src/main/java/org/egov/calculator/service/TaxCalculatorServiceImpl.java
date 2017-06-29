@@ -113,6 +113,20 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
             CalculationRequest calculationRequest) throws Exception {
         // TODO Auto-generated method stub
         KieSession kieSession = kieSession(calculationRequest.getProperty().getTenantId());
+        for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
+            List<Unit> roomsList = new ArrayList<Unit>();
+            for (Unit unit : floor.getUnits()) {
+                if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+                        && unit.getUnits() != null) {
+                    for (Unit room : unit.getUnits()) {
+                        roomsList.add(room);
+                    }
+                } else {
+                    roomsList.add(unit);
+                }
+            }
+            floor.setUnits(roomsList);
+        }
 
         TaxCalculationModel taxCalculationModel = getDataForPropertyTax(calculationRequest);
         TaxCalculationWrapper taxCalculationWrapper = new TaxCalculationWrapper();
@@ -217,7 +231,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
     }
 
     /**
-     * Description : this method for getting all requried data for tax calculation
+     * Description : this method for getting all required data for tax calculation
      * @param calculationRequest
      * @return taxCalculationModel
      * @throws Exception
@@ -234,6 +248,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
             List<List<TaxRates>> taxRatesList = new ArrayList<List<TaxRates>>();
             List<Map<String, TaxPeriod>> taxPeriodMapList = new ArrayList<Map<String, TaxPeriod>>();
             List<Double> guidanceValues = new ArrayList<Double>();
+
             for (Unit unit : floor.getUnits()) {
                 List<CalculationFactor> factorsList = null;
                 List<TaxRates> taxRates = null;

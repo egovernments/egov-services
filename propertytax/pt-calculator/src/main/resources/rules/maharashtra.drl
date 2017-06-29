@@ -13,29 +13,30 @@
      * Amenity factor, parking factor
      **/
 
-    function Double
+   
 
-    calculateMonthlyRentValue (Double builtUpArea,Map factors,Double guidanceValue){
+   function Double  calculateMonthlyRentValue (Double builtUpArea,Map factors,Double guidanceValue){
     Map<String,Double> factorsList=(Map<String,Double>)factors;
     Double rent= guidanceValue * builtUpArea * factorsList.get("usage") * factorsList.get("propertytype")* factorsList.get("structure") * factorsList.get("occupancy");     
+   System.out.println("rent"+rent);
     return rent;
     }
 
     /**
      * @Maharashtra Depreciation = MRV * %age depreciation (This depreciation percentage depends on age of the building)
      **/
-    function Double
+   
 
-    calculateDepreciation (Double monthlyRentalValue,Double ageDepreciation){
+    function Double calculateDepreciation (Double monthlyRentalValue,Double ageDepreciation){
             return  monthlyRentalValue*(ageDepreciation/100);
     }
 
     /**
      * @Maharashtra MRV = MRV – Depreciation (Here the depreciation is from db master)
      **/
-    function Double
+    
 
-    calculateFinalMahaMRV (Double monthlyRentalValue,Double depreciation){
+   function Double calculateFinalMahaMRV (Double monthlyRentalValue,Double depreciation){
             return monthlyRentalValue-depreciation;
             
     }
@@ -43,9 +44,9 @@
     /**
      * @Maharashtra Gross ARV = 12 * MRV
      **/
-    function Double
+   
 
-    calculateGrossARV (Double monthlyRentalValue){
+    function Double calculateGrossARV (Double monthlyRentalValue){
             return 12*monthlyRentalValue;
             
     }
@@ -53,9 +54,9 @@
     /**
      * @Maharashtra ARV = Gross ARV -10% of Gross ARV
      **/
-    function Double
+   
 
-    calculateARV (Double grossAnnualRent, Unit unit){
+   function Double  calculateARV (Double grossAnnualRent, Unit unit){
 
     Double annualRentValue=grossAnnualRent-(0.1*grossAnnualRent);
                     
@@ -71,9 +72,9 @@
      * @Maharashtra On ARV, General Tax is 24% for residential and 28% for Non-residential (Here the percentages are from db
      * master) .*
      **/
-    function Double
+   
 
-    calculateGeneralTax (Double annualRent,List taxRates){
+     function Double calculateGeneralTax (Double annualRent,List taxRates){
     /*
     Assuming General Tax is 24% for residential and 28% for Non-residential (Here the percentages are from db master)
     */
@@ -101,9 +102,9 @@
      * 4% on ARV, GT: 4000 – 5999-5% on ARV, GT: 6000-999999 – 6%% on ARV.
      *
      **/
-    function Double
+   
 
-    calculateEducationCess (Double generalTax,List taxRates){
+   function Double  calculateEducationCess (Double generalTax,List taxRates){
     Double educationCess=0.0;
     List<TaxRates> taxList=(List<TaxRates>)taxRates;
             List<TaxRates> educationCessData=taxList.stream().filter(taxRate->taxRate.getTaxHead().equalsIgnoreCase("EDU_NON_RESD")).collect(Collectors.toList());
@@ -124,9 +125,9 @@
      *
      **/
 
-    function Double
 
-    calculateEmployeeGuaranteeCess (Double generalTax,List taxRates){
+   
+    function Double calculateEmployeeGuaranteeCess (Double generalTax,List taxRates){
     Double  employeeGuaranteecess =0.0;
     List<TaxRates> taxList=(List<TaxRates>)taxRates;
             List<TaxRates> educationCessData=taxList.stream().filter(taxRate->taxRate.getTaxHead().equalsIgnoreCase("EMP_GUA_CESS")).collect(Collectors.toList());
@@ -142,9 +143,9 @@
     /**
      * @Maharashtra Tree tax: 0.5% on ARV.
      **/
-    function Double
+   
 
-    calculateTreeTax (Double annualRent,List taxRates){
+   function Double  calculateTreeTax (Double annualRent,List taxRates){
      Double treeTax=0.0;
     List<TaxRates> taxList=(List<TaxRates>)taxRates;
     System.out.println("treeTaxList"+taxList);
@@ -160,9 +161,9 @@
             return treeTax; 
     }
 
-    function TaxResponse
+    
 
-    getUnitTax(Property property,Unit unit,Map factors,Map taxPeriods,List taxRates,Double guidanceValue,String floorNumber){
+   function TaxResponse getUnitTax(Property property,Unit unit,Map factors,Map taxPeriods,List taxRates,Double guidanceValue,String floorNumber){
             Map<String,Double> factorsList=(Map<String,Double>)factors;
             Map<String,TaxPeriod> taxPeriodMap=(Map<String,TaxPeriod>)taxPeriods;
             List<TaxRates> taxRateList=(List<TaxRates>)taxRates;

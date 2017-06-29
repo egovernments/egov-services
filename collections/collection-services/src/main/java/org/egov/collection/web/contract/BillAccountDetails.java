@@ -17,7 +17,7 @@ public class BillAccountDetails   {
   private String accountDescription;
 
   private Double creditAmount;
-
+  
   private Double debitAmount;
 
   private String functionCode;

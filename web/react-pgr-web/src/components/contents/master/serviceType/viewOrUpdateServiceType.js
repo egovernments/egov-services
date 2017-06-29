@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+  import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import ImagePreview from '../../../common/ImagePreview.js';
 import SimpleMap from '../../../common/GoogleMaps.js';
@@ -89,7 +89,7 @@ class viewOrUpdateServiceType extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/service/_search",{},body).then(function(response){
+        Api.commonApiPost("/pgr-master/service/v1/_search",{},body).then(function(response){
             console.log(response.Service);
             current.setState({data:response.Service});
         }).catch((error)=>{
@@ -102,7 +102,7 @@ class viewOrUpdateServiceType extends Component {
      initForm();
      _this = this;
 
-     Api.commonApiPost("/pgr-master/serviceGroup/_search").then(function(response) {
+     Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
          _this.setState({
            categorySource: response.ServiceGroups
          })

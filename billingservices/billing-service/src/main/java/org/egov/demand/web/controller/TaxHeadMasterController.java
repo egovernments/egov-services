@@ -50,7 +50,6 @@ public class TaxHeadMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("::::taxHeadMasterCriteria::::" + taxHeadMasterCriteria);
 		final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria,
 				requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(taxHeadMasterResponse, HttpStatus.OK);
@@ -67,7 +66,7 @@ public class TaxHeadMasterController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		// TODO Input field validation, it will be a part of phase-2
-		//taxHeadMasterValidator.validateTaxHeads(taxHeadMasterRequest);
+		taxHeadMasterValidator.validateTaxHeads(taxHeadMasterRequest);
 		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.createAsync(taxHeadMasterRequest);
 		return new ResponseEntity<>(taxHeadMasterRponse, HttpStatus.CREATED);
 	}
@@ -82,7 +81,7 @@ public class TaxHeadMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.update(taxHeadMasterRequest);
+		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.updateAsync(taxHeadMasterRequest);
 		return new ResponseEntity<>(taxHeadMasterRponse, HttpStatus.OK);
 	}
 }

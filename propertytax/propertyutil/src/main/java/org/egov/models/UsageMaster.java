@@ -41,7 +41,7 @@ public class UsageMaster {
 	private String nameLocal = null;
 
 	@JsonProperty("parent")
-	private Long parent = null;
+	private long parent = 0L;
 
 	@JsonProperty("description")
 	@Size(min = 8, max = 512)

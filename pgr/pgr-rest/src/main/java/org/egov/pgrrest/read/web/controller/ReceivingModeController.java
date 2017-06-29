@@ -24,7 +24,7 @@ public class ReceivingModeController {
         this.receivingModeService = receivingModeService;
     }
 
-	@PostMapping(value="/_search")
+	@PostMapping(value="/v1/_search")
 	public ReceivingModeResponse getAll(@RequestParam(value = "tenantId",defaultValue="default") final String tenantId){
 	
 		List<org.egov.pgrrest.common.model.ReceivingMode> receivingModes  = receivingModeService

@@ -86,6 +86,10 @@ $("select").on("change", function() {
 
 });
 
+$("textarea").on("keyup", function() {
+    fillValueToObject(this);
+});
+
 //file change handle for file upload
 $("input[type=file]").on("change", function(evt) {
     agreement["documents"] = evt.currentTarget.files;

@@ -59,7 +59,7 @@ public class ComplaintStatusControllerTest {
         when(keywordStatusMappingService.getStatusForKeyword(searchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
-                    post("/statuses/_search")
+                    post("/statuses/v1/_search")
                         .param("tenantId", "default")
                         .param("keyword", "Complaint")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +81,7 @@ public class ComplaintStatusControllerTest {
         when(complaintStatusService.getNextStatuses(complaintStatusSearchCriteria)).thenReturn(complaintStatuses);
 
         mockMvc.perform(
-                    post("/nextstatuses/_search")
+                    post("/nextstatuses/v1/_search")
                         .param("currentStatus", status)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(resources.getFileContents("complaintStatusRequest.json"))
@@ -99,7 +99,7 @@ public class ComplaintStatusControllerTest {
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
         mockMvc.perform(
-                    post("/nextstatuses/_search")
+                    post("/nextstatuses/v1/_search")
                         .param("currentStatus", "")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(resources.getFileContents("complaintStatusRequest.json"))
@@ -115,7 +115,7 @@ public class ComplaintStatusControllerTest {
         when(complaintStatusService.getNextStatuses(any(ComplaintStatusSearchCriteria.class))).thenThrow(exception);
 
         mockMvc.perform(
-                    post("/nextstatuses/_search")
+                    post("/nextstatuses/v1/_search")
                             .param("currentStatus", CURRENT_STATUS)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(resources.getFileContents("complaintStatusRequest.json"))

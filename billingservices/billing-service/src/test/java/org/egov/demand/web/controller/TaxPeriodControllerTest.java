@@ -46,8 +46,10 @@ import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.TaxPeriodValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -63,6 +65,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -82,6 +85,9 @@ public class TaxPeriodControllerTest {
     @MockBean
     private ResponseFactory responseFactory;
 
+    @MockBean
+    private TaxPeriodValidator taxPeriodValidator;
+
     @Test
     public void shouldSearchTaxPeriods() throws Exception {
         List<TaxPeriod> taxPeriods = new ArrayList<>();
@@ -100,6 +106,24 @@ public class TaxPeriodControllerTest {
                 .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("taxperiodsearchresponse.json")));
+    }
+
+    @Test
+    public void shouldCreateTaxPeriod() throws Exception {
+
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+        TaxPeriod taxPeriod = getTaxPeriod();
+        taxPeriods.add(taxPeriod);
+        TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
+        taxPeriodResponse.setTaxPeriods(taxPeriods);
+        taxPeriodResponse.setResponseInfo(new ResponseInfo());
+
+        when(taxPeriodService.createAsync(any(TaxPeriodRequest.class))).thenReturn(taxPeriodResponse);
+
+        mockMvc.perform(post("/taxperiod/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("taxperiodcreaterequest.json"))).andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("taxperiodcreateresponse.json")));
     }
 
     private TaxPeriod getTaxPeriod() {

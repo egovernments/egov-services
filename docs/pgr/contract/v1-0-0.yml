@@ -922,10 +922,10 @@ definitions:
         description: realtime (Currently we only support real time srevices)
       keywords:
         type: string
-        description: tags for this service
+        description: tags for this service.
       group:
         type: string
-        description: Group associated to service
+        description: Group associated to service.
       attributes:
         type: array
         items:
@@ -966,6 +966,22 @@ definitions:
       datatypeDescription:
         type: string
         description: A description of the datatype which helps the user provide their input
+      url:
+        type: string
+        description: url to be referred to populate data.
+      groupCode:
+        type: string
+        description: To represents group to which this attribute belongs to.
+      roles:
+        type: array
+        items:
+         type: string
+        description: roles associated to this attribute.
+      actions:
+        type: array
+        items:
+         type: string
+        description: actions for which this attribute should be displayed.
       attribValues:
         type: array
         items:

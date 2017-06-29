@@ -88,7 +88,7 @@ public class WcmsTranasanctionConstants {
     
     public static final String APPLICATIONTYPE_MANDATORY_CODE = "wcms.0042";
     public static final String APPLICATIONTYPE_INVALID_FIELD_NAME = "applicationType";
-    public static final String APPLICATIONTYPE_INVALID_ERROR_MESSAGE = "Please provide valid APplication Type";
+    public static final String APPLICATIONTYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";
 
     public static final String PIPESIZE_SIZEINMM_MANDATORY_CODE = "wcms.0007";
     public static final String PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME = "sizeInMilimeter";

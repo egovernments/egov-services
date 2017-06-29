@@ -12,6 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var _this;
 let searchTextCom = "",
@@ -127,7 +128,7 @@ class createRouter extends Component {
     const checkIfUpdateOrView = function() {
       if(type === "edit" || type === "view") {
         var id=self.props.match.params.id;
-        Api.commonApiPost("/workflow/router/_search", {id}).then(function(response) {
+        Api.commonApiPost("/workflow/router/v1/_search", {id}).then(function(response) {
           var routerType = {
             id: response.RouterTypRes[0].id,
             position: response.RouterTypRes[0].position,
@@ -209,7 +210,7 @@ class createRouter extends Component {
         })
     });
 
-    Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+    Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
         self.setState({
           complaintSource: response.complaintTypes
         })
@@ -254,7 +255,7 @@ class createRouter extends Component {
    		tenantId: localStorage.getItem("tenantId")
   	};
 
-  	Api.commonApiPost("/workflow/router/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
+  	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
   		self.props.initForm();
   		self.setState({
   			open: true
@@ -308,7 +309,7 @@ class createRouter extends Component {
                    <Col xs={12} md={8}>
                    	<AutoComplete
                         hintText=""
-                        floatingLabelText="Grievance Type"
+                        floatingLabelText={translate("pgr.lbl.grievance.type")}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.complaintSource}
@@ -403,13 +404,13 @@ class createRouter extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              {showBtn()}
-             <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={close}/>
+             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")} onClick={close}/>
            </div>
          </form>
          <Dialog
           title="Success"
           actions={[<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={handleOpenNClose}
 				      />]}

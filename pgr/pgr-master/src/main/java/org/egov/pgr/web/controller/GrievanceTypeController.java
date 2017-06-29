@@ -93,7 +93,7 @@ public class GrievanceTypeController {
     @Autowired
 	private ApplicationProperties applicationProperties;
 
-    @PostMapping(value = "/_create")
+    @PostMapping(value = "/v1/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final ServiceRequest serviceTypeRequest,
             final BindingResult errors) {
@@ -114,7 +114,7 @@ public class GrievanceTypeController {
 
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/v1/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ServiceRequest serviceTypeRequest,
             final BindingResult errors, @PathVariable("code") final String code) {
@@ -138,7 +138,7 @@ public class GrievanceTypeController {
         return getSuccessResponse(services, serviceTypeRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final ServiceGetRequest serviceTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

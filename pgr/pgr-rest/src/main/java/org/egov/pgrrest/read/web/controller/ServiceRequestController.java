@@ -37,7 +37,7 @@ public class ServiceRequestController {
         this.updateEligibilityService = updateEligibilityService;
     }
 
-    @PostMapping(value = "/_create")
+    @PostMapping(value = "/v1/_create")
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponse createServiceRequest(@RequestBody SevaRequest request) {
         final ServiceRequest complaint = request.toDomainForCreateRequest();
@@ -46,7 +46,7 @@ public class ServiceRequestController {
         return new ServiceResponse(responseInfo, Collections.singletonList(request.getServiceRequest()));
     }
 
-    @PostMapping(value = "/_update")
+    @PostMapping(value = "/v1/_update")
     @ResponseStatus(HttpStatus.OK)
     public ServiceResponse updateServiceRequest(@RequestBody SevaRequest request) {
         final ServiceRequest complaint = request.toDomainForUpdateRequest();
@@ -56,7 +56,7 @@ public class ServiceRequestController {
             .ServiceRequest(complaint)));
     }
 
-    @PostMapping(value = "/_search")
+    @PostMapping(value = "/v1/_search")
     public ServiceResponse getServiceRequests(@RequestParam(value = "tenantId", required = false) String tenantId,
                                               @RequestParam(value = "serviceRequestId", required = false) String
                                                   serviceRequestId,
@@ -113,7 +113,7 @@ public class ServiceRequestController {
         return createResponse(submissions);
     }
 
-    @PostMapping(value = "/_count")
+    @PostMapping(value = "/v1/_count")
     public CountResponse getServiceRequestCount(@RequestParam(value = "tenantId") String tenantId,
                                                 @RequestParam(value = "serviceRequestId", required = false)
                                                     String serviceRequestId,

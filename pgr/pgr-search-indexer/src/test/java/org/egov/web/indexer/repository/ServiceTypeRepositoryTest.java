@@ -28,7 +28,7 @@ public class ServiceTypeRepositoryTest {
 
 	@Test
 	public void test_should_fetch_complainttype_for_given_code() throws Exception {
-		server.expect(once(), requestTo("http://host/pgr/services/AOS/_search?tenantId=ap.public")).andExpect(method(HttpMethod.POST))
+		server.expect(once(), requestTo("http://host/pgr/services/v1/AOS/_search?tenantId=ap.public")).andExpect(method(HttpMethod.POST))
 				.andRespond(withSuccess(new Resources().getFileContents("successComplaintTypeResponse.json"),
 						MediaType.APPLICATION_JSON_UTF8));
 

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,5 +37,17 @@ public class CrnControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("{\"value\": \"crn_value\"}"));
+    }
+
+    @Test
+    public void testCreateCrn() throws Exception {
+        when(crnGeneratorService.generate()).thenReturn("crn_value");
+
+        mockMvc.perform(
+            post("/crn/v1/_create")
+        )
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json("{\"value\": \"crn_value\"}"));
     }
 }

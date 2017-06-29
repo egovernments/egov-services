@@ -27,7 +27,7 @@ public class TaxHeadMasterValidator {
 	private TaxPeriodService taxPeriodService;
 	
 	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest) {
-		log.debug(":::::in validator class:::::::");
+		log.debug(":::::in validator class:::::::"+taxHeadsRequest);
 		TaxHeadMasterCriteria taxHeadMasterCriteria=new TaxHeadMasterCriteria();
 		List<TaxHeadMaster> taxHeads = taxHeadsRequest.getTaxHeadMasters();
 		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();
@@ -35,12 +35,6 @@ public class TaxHeadMasterValidator {
 		for (int i = 0; i < taxHeadsCount; i++) {
 			taxHeadMasterCriteria.setTenantId(taxHeads.get(i).getTenantId());
 			taxHeadMasterCriteria.setName(taxHeads.get(i).getName());
-			taxPeriodCriteria.setTenantId(taxHeads.get(i).getTenantId());
-			taxPeriodCriteria.setService(taxHeads.get(i).getService());
-			List<TaxPeriod> taxPeriod= taxPeriodService.searchTaxPeriods(taxPeriodCriteria, taxHeadsRequest.getRequestInfo()).getTaxPeriods();
-		if(taxPeriod.isEmpty())
-			throw new RuntimeException("There are no tax period details");
-		
 		final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria, taxHeadsRequest.getRequestInfo());
 	    if(! taxHeadMasterResponse.getTaxHeadMasters().isEmpty())
 	    	throw new RuntimeException("Record Already exist");

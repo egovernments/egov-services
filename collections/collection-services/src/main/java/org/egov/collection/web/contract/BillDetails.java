@@ -17,7 +17,7 @@ import org.joda.time.LocalDate;
 @Getter
 @ToString
 public class BillDetails   {
-  private Long businessDetailsCode;
+  private String businessDetailsCode;
 
   private String refNo;
 

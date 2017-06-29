@@ -13,6 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
 import DataTable from '../../../common/Table';
+import {translate} from '../../../common/common';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -20,7 +21,6 @@ const dt = require('datatables.net-bs');
 
 
 const buttons = require('datatables.net-buttons-bs');
-
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
@@ -142,7 +142,7 @@ class routerGeneration extends Component {
 
   loadGrievanceType(value){
      var self = this;
-     Api.commonApiPost("/pgr/services/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
        self.setState({typeList : response.complaintTypes});
      },function(err) {
@@ -194,7 +194,7 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr/servicecategories/_search").then(function(response) {
+  	Api.commonApiPost("/pgr/servicecategories/v1/_search").then(function(response) {
       	checkCountAndCall("categoryList", response.serviceTypeCategories);
     }, function(err) {
     	checkCountAndCall("categoryList", []);
@@ -223,7 +223,7 @@ class routerGeneration extends Component {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
-  	Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
+  	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
   			resultList: response.RouterTypRes,
@@ -265,7 +265,7 @@ class routerGeneration extends Component {
   	 		});
   	 	}
 
-  	 	Api.commonApiPost("/workflow/router/_create", {}, {routertype: routerType}).then(function(response) {
+  	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {routertype: routerType}).then(function(response) {
 	  		self.props.initForm();
 	  		self.setState({
 	  			resultList: [],
@@ -317,8 +317,8 @@ class routerGeneration extends Component {
    		if(resultList && resultList.length) {
    			return (
    				<div style={{textAlign: 'center'}}>
-	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label="Save" backgroundColor={"#5a3e1b"} labelColor={white} onClick={(e) => {save(e)}}/>
-	   				<RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={(e) => {save(e)}}/>
+	   				<RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
    				</div>
    			)
    		}
@@ -348,8 +348,8 @@ class routerGeneration extends Component {
 		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
 		            <tr>
-		              <th>Sl No</th>
-		              <th>Grievance Type</th>
+		              <th>#</th>
+		              <th>{translate("pgr.lbl.grievance.type")}</th>
 		              <th>Boundary Type</th>
 		              <th>Boundary</th>
 		              <th>Position</th>
@@ -373,7 +373,7 @@ class routerGeneration extends Component {
                  <Grid>
                    <Row>
                    <Col xs={12} md={8}>
-                     <SelectField fullWidth={true} floatingLabelText="Grievance Category" errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.grievance.category")} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
 	                					handleChange(e, "complaintTypeCategory", true, "")}}>
@@ -385,7 +385,7 @@ class routerGeneration extends Component {
                    <Col xs={12} md={8}>
                     <SelectField 
                       fullWidth={true} 
-                      floatingLabelText="Grievance Type" 
+                      floatingLabelText={translate("pgr.lbl.grievance.type")} 
                       errorText={fieldErrors.complaintTypes} 
                       value={routerCreateSet.complaintTypes} 
                       onChange={(e, i, val) => {
@@ -460,8 +460,8 @@ class routerGeneration extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label="Search" disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>
-             <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>
+             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
            </div>
            {viewTable()}
            {showSaveButton()}
@@ -487,7 +487,7 @@ class routerGeneration extends Component {
         <Dialog
           title="Success"
           actions={[<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={handleOpenNClose2}
 				      />]}

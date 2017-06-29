@@ -61,7 +61,7 @@ public class ServiceRequestControllerTest {
         doThrow(new TenantIdMandatoryException()).when(serviceRequestService)
             .save(any(ServiceRequest.class), any(SevaRequest.class));
 
-        mockMvc.perform(post("/seva/_create")
+        mockMvc.perform(post("/seva/v1/_create")
             .param("foo", "b1", "b2")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("createComplaintRequest.json")))
@@ -75,7 +75,7 @@ public class ServiceRequestControllerTest {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
         doThrow(new UpdateServiceRequestNotAllowedException()).when(serviceRequestService)
             .update(any(ServiceRequest.class), any(SevaRequest.class));
-        mockMvc.perform(post("/seva/_update")
+        mockMvc.perform(post("/seva/v1/_update")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateComplaintRequestRedresalOfficer.json")))
             .andExpect(status().isBadRequest())
@@ -87,7 +87,7 @@ public class ServiceRequestControllerTest {
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
 
-        mockMvc.perform(post("/seva/_create")
+        mockMvc.perform(post("/seva/v1/_create")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isCreated())
@@ -99,7 +99,7 @@ public class ServiceRequestControllerTest {
         throws Exception {
         when(userRepository.getUser("authToken")).thenReturn(getCitizen());
 
-        mockMvc.perform(post("/seva/_update")
+        mockMvc.perform(post("/seva/v1/_update")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateComplaintRequest.json")))
             .andExpect(status().isOk())
@@ -113,7 +113,7 @@ public class ServiceRequestControllerTest {
         doThrow(new ServiceRequestIdMandatoryException()).when(serviceRequestService)
             .update(any(ServiceRequest.class), any(SevaRequest.class));
 
-        mockMvc.perform(post("/seva/_update")
+        mockMvc.perform(post("/seva/v1/_update")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("updateComplaintRequest.json")))
             .andExpect(status().isBadRequest())
@@ -173,7 +173,7 @@ public class ServiceRequestControllerTest {
         when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
 
         mockMvc.perform(
-            post("/seva/_search")
+            post("/seva/v1/_search")
                 .param("tenantId", "tenantId")
                 .param("serviceRequestId", "serid_123")
                 .param("serviceCode", "serviceCode_123")
@@ -227,7 +227,7 @@ public class ServiceRequestControllerTest {
         when(serviceRequestService.findAll(criteria)).thenReturn(complaints);
 
         mockMvc.perform(
-            post("/seva/_search")
+            post("/seva/v1/_search")
                 .param("tenantId", "tenantId")
                 .param("serviceRequestId", "serid_123")
                 .param("serviceCode", "serviceCode_123")
@@ -273,7 +273,7 @@ public class ServiceRequestControllerTest {
         when(serviceRequestService.getCount(criteria)).thenReturn(30L);
 
         mockMvc.perform(
-            post("/seva/_count")
+            post("/seva/v1/_count")
                 .param("tenantId", "tenantId")
                 .param("serviceRequestId", "serid_123")
                 .param("serviceCode", "serviceCode_123")

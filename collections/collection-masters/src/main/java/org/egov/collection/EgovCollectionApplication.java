@@ -39,11 +39,9 @@
  */
 package org.egov.collection;
 
-import org.egov.collection.domain.service.UserService;
-import org.egov.collection.persistence.repository.UserRepository;
+
 import org.egov.collection.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.collection.web.interceptor.CorrelationIdInterceptor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -60,23 +58,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class EgovCollectionApplication {
 
-	@Value("${user.service.url}")
-	private String userServiceUrl;
-
+	
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new CorrelationIdAwareRestTemplate();
 	}
 
-	@Bean
-	public UserRepository userRepository(RestTemplate restTemplate) {
-		return new UserRepository(restTemplate, userServiceUrl);
-	}
-
-	@Bean
-	public UserService userService(UserRepository userRepository) {
-		return new UserService(userRepository);
-	}
 
 	@Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {

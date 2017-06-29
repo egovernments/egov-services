@@ -32,12 +32,22 @@ public class CollectionServiceConstants {
 	public static final String BD_CODE_MISSING_MESSAGE = "Business Details Code is mising";
 	
 	public static final String COA_MISSING_CODE = "egcl_007";
-	public static final String COA_MISSING_FIELD = "charOfAccount";
-	public static final String COA_MISSING_MESSAGE = "Chart of Account Name is mising";
+	public static final String COA_MISSING_FIELD = "glcode";
+	public static final String COA_MISSING_MESSAGE = "Chart of Account Code/ GL Code is mising";
 	
 	public static final String PURPOSE_MISSING_CODE = "egcl_008";
 	public static final String PURPOSE_MISSING_FIELD = "purpose";
 	public static final String PURPOSE_MISSING_MESSAGE = "Purpose is mising";
+	
+	
+	
+	//URIs for other micro services collection depends on
+	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
+	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
+	public static final String STATUS_SEARCH_URI = " ";
+
+
+
 
 
 }

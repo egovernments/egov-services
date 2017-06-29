@@ -18,7 +18,7 @@ public class ServiceTypeCategoryController {
         this.serviceTypeCategoryService = serviceTypeCategoryService;
     }
 
-    @PostMapping(value ="/servicecategories/_search")
+    @PostMapping(value ="/servicecategories/v1/_search")
     public ServiceTypeCategoryResponse getAllServiceTypeCategories(
         @RequestParam(value = "tenantId", defaultValue = "default") final String tenantId,
         @RequestBody RequestInfoBody requestInfo) {

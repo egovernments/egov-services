@@ -1,0 +1,307 @@
+  package org.egov.calculator
+    import java.util.*;
+    import java.util.stream.Collectors;
+    import org.egov.calculator.models.*;
+    import org.egov.models.*;
+    import java.util.Map;
+    dialect"mvel";
+    dialect"java";
+
+    /**
+     * @Maharashtra MRV = Guidance Value * Carpet area * Usage Factor * Property type Factor * Construction type Factor *
+     * Occupancy Factor. (Here the Factors are from db master) Note: Some more factors might come like road factor, toilet factor,
+     * Amenity factor, parking factor
+     **/
+
+    function Double
+
+    calculateMonthlyRentValue (Double builtUpArea,Map factors,Double guidanceValue){
+    Map<String,Double> factorsList=(Map<String,Double>)factors;
+    Double rent= guidanceValue * builtUpArea * factorsList.get("usage") * factorsList.get("propertytype")* factorsList.get("structure") * factorsList.get("occupancy");     
+    return rent;
+    }
+
+    /**
+     * @Maharashtra Depreciation = MRV * %age depreciation (This depreciation percentage depends on age of the building)
+     **/
+    function Double
+
+    calculateDepreciation (Double monthlyRentalValue,Double ageDepreciation){
+            return  monthlyRentalValue*(ageDepreciation/100);
+    }
+
+    /**
+     * @Maharashtra MRV = MRV – Depreciation (Here the depreciation is from db master)
+     **/
+    function Double
+
+    calculateFinalMahaMRV (Double monthlyRentalValue,Double depreciation){
+            return monthlyRentalValue-depreciation;
+            
+    }
+
+    /**
+     * @Maharashtra Gross ARV = 12 * MRV
+     **/
+    function Double
+
+    calculateGrossARV (Double monthlyRentalValue){
+            return 12*monthlyRentalValue;
+            
+    }
+
+    /**
+     * @Maharashtra ARV = Gross ARV -10% of Gross ARV
+     **/
+    function Double
+
+    calculateARV (Double grossAnnualRent, Unit unit){
+
+    Double annualRentValue=grossAnnualRent-(0.1*grossAnnualRent);
+                    
+                            if( unit.getManualArv() >= annualRentValue){
+                                    annualRentValue=unit.getManualArv ();
+                            }
+                            
+                    return annualRentValue;
+                    
+            }
+
+    /**
+     * @Maharashtra On ARV, General Tax is 24% for residential and 28% for Non-residential (Here the percentages are from db
+     * master) .*
+     **/
+    function Double
+
+    calculateGeneralTax (Double annualRent,List taxRates){
+    /*
+    Assuming General Tax is 24% for residential and 28% for Non-residential (Here the percentages are from db master)
+    */
+        Double generalTax=0.0;
+        List<TaxRates> taxList=(List<TaxRates>)taxRates;
+            List<TaxRates> generalTaxData=taxList.stream().filter(taxRate->taxRate.getTaxHead().equalsIgnoreCase("GENERALTAX")).collect(Collectors.toList());
+            for(TaxRates taxRate:generalTaxData){
+            System.out.println("taxrates"+taxRate.getFromValue() +"annual rent"+annualRent+"to value"+taxRate.getToValue());
+            if(taxRate.getFromValue()<=annualRent && annualRent<=taxRate.getToValue()){
+            System.out.println("tax percentage"+taxRate.getRatePercentage());
+            generalTax=annualRent*(taxRate.getRatePercentage()/100);
+            System.out.println("general tax"+generalTax);
+            break;
+            }
+            }
+            System.out.println("tax percentage"+generalTax);
+            return generalTax;
+            
+    }
+
+    /**
+     * @Maharashtra Education Cess: EC is Slab based. Slab base values are:
+     *
+     * If General Tax is 1-74 slab = 0% on ARV, If General Tax is 74-150 slab = 2% on ARV, GT: 151-300=3% on ARV, GT: 300-2999 =
+     * 4% on ARV, GT: 4000 – 5999-5% on ARV, GT: 6000-999999 – 6%% on ARV.
+     *
+     **/
+    function Double
+
+    calculateEducationCess (Double generalTax,List taxRates){
+    Double educationCess=0.0;
+    List<TaxRates> taxList=(List<TaxRates>)taxRates;
+            List<TaxRates> educationCessData=taxList.stream().filter(taxRate->taxRate.getTaxHead().equalsIgnoreCase("EDU_NON_RESD")).collect(Collectors.toList());
+            for(TaxRates taxRate:educationCessData){
+            if(taxRate.getFromValue()<=generalTax && generalTax<=taxRate.getToValue()){
+            educationCess=generalTax*(taxRate.getRatePercentage()/100);
+            break;
+            }
+            }
+            return educationCess;
+
+    }
+
+    /**
+     * @Maharashtra Employee Guarantee cess on Non residential properties only: Slab based. If General Tax is 1-74 = 0% on ARV, If
+     * General Tax is 74-150=1% on ARV, GT: 151-300=1.5% on ARV, GT: 300-2999 = 2% on ARV, GT: 4000 – 5999 = 2.5% on ARV, GT:
+     * 6000-999999 = 3%on ARV.
+     *
+     **/
+
+    function Double
+
+    calculateEmployeeGuaranteeCess (Double generalTax,List taxRates){
+    Double  employeeGuaranteecess =0.0;
+    List<TaxRates> taxList=(List<TaxRates>)taxRates;
+            List<TaxRates> educationCessData=taxList.stream().filter(taxRate->taxRate.getTaxHead().equalsIgnoreCase("EMP_GUA_CESS")).collect(Collectors.toList());
+            for(TaxRates taxRate:educationCessData){
+            if(taxRate.getFromValue()<=generalTax && generalTax<=taxRate.getToValue()){
+            employeeGuaranteecess=generalTax*(taxRate.getRatePercentage()/100);
+            break;
+            }
+            }
+            return employeeGuaranteecess;
+    }
+
+    /**
+     * @Maharashtra Tree tax: 0.5% on ARV.
+     **/
+    function Double
+
+    calculateTreeTax (Double annualRent,List taxRates){
+     Double treeTax=0.0;
+    List<TaxRates> taxList=(List<TaxRates>)taxRates;
+    System.out.println("treeTaxList"+taxList);
+            List<TaxRates> generalTaxData=taxList.stream().filter(taxRate->taxRate.getTaxHead().equalsIgnoreCase("TREETAX")).collect(Collectors.toList());
+            for(TaxRates taxRate:generalTaxData){
+            System.out.println("treeTax"+taxRate.getFromValue() +"annual rent"+annualRent+"to value"+taxRate.getToValue());
+            if(taxRate.getFromValue()<=annualRent && annualRent<=taxRate.getToValue()){
+            treeTax=annualRent*(taxRate.getRatePercentage()/100);
+            System.out.println("treeTax"+treeTax);
+            break;
+            }
+            }
+            return treeTax; 
+    }
+
+    function TaxResponse
+
+    getUnitTax(Property property,Unit unit,Map factors,Map taxPeriods,List taxRates,Double guidanceValue,String floorNumber){
+            Map<String,Double> factorsList=(Map<String,Double>)factors;
+            Map<String,TaxPeriod> taxPeriodMap=(Map<String,TaxPeriod>)taxPeriods;
+            List<TaxRates> taxRateList=(List<TaxRates>)taxRates;
+            
+            Double monthlyRentalValue=calculateMonthlyRentValue(unit.getBuiltupArea(),factorsList,guidanceValue);
+            Double ageDepreciation=factorsList.get("age");
+            Double depreciation=calculateDepreciation(monthlyRentalValue,ageDepreciation);
+            Double finalMRV=calculateFinalMahaMRV(monthlyRentalValue,depreciation);
+            Double grossARV=calculateGrossARV(finalMRV);
+            Double finalARV=calculateARV(grossARV,unit);
+            Double generalTax=calculateGeneralTax(finalARV,taxRateList);
+            Double treeTax=calculateTreeTax(finalARV,taxRateList);
+            Double educationCess=calculateEducationCess(generalTax,taxRateList);
+            Double employeeGuaranteecess=0.0;
+                    if(property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
+                            employeeGuaranteecess=calculateEmployeeGuaranteeCess(generalTax,taxRateList);
+                    }
+                   
+                    List<HeadWiseTax> taxHeads=(List<HeadWiseTax>)getTaxHeadWiseList(treeTax,generalTax,educationCess,employeeGuaranteecess);
+                   TaxResponse taxResponse= getTaxResponse(finalMRV,depreciation,grossARV,finalARV,generalTax,treeTax,educationCess,employeeGuaranteecess,taxHeads);
+                   taxResponse.setFloorNumber(floorNumber);
+                   taxResponse.setUnitNo(unit.getUnitNo());
+                    System.out.println("taxrates"+taxResponse);
+            return  taxResponse;
+
+    }
+    
+    function List getTaxHeadWiseList(Double treeTax,Double generalTax,Double educationCess,Double employeeGuaranteecess ){
+    
+               HeadWiseTax treeTaxHead=new HeadWiseTax();
+                    treeTaxHead.setTaxName("TREETAX");
+                    treeTaxHead.setTaxValue(treeTax);
+                    HeadWiseTax generalTaxHead=new HeadWiseTax();
+                    generalTaxHead.setTaxName("GENERALTAX");
+                    generalTaxHead.setTaxValue(generalTax);
+                    HeadWiseTax educationalTaxHead=new HeadWiseTax();
+                    educationalTaxHead.setTaxName("EDU_NON_RESD");
+                    educationalTaxHead.setTaxValue(educationCess);
+                    HeadWiseTax employeeGurenteeTaxHead=new HeadWiseTax();
+                    employeeGurenteeTaxHead.setTaxName("EMP_GUA_CESS");
+                    employeeGurenteeTaxHead.setTaxValue(employeeGuaranteecess);
+                    List<HeadWiseTax> taxHeads=new ArrayList<HeadWiseTax>();
+                    taxHeads.add(treeTaxHead);
+                    taxHeads.add(generalTaxHead);
+                    taxHeads.add(educationalTaxHead);
+                    taxHeads.add(employeeGurenteeTaxHead);
+                    return taxHeads;
+    }
+
+    
+
+   function  void updatePropertyTax(TaxCalculationWrapper taxwrapper) {
+        Double depreciation = 0.0;
+        Double finalMRV = 0.0;
+        Double grossARV = 0.0;
+        Double finalARV = 0.0;
+        Double generalTax = 0.0;
+        Double treeTax = 0.0;
+        Double educationCess = 0.0;
+        Double employeeGuaranteecess = 0.0;
+        Double totalTaxValue=0.0;
+        Double educationCessTaxList=0.0;
+        Double treeTaxList=0.0;
+        Double genralTaxList=0.0;
+        Double employeeGuaranteecessList=0.0;
+        
+        List<List<Map<String, Double>>> factorTypes = taxwrapper.getTaxCalculationModel().getFactors();
+        List<TaxResponse> taxResponses = new ArrayList<TaxResponse>();
+        List<List<List<TaxRates>>> taxRatesList = taxwrapper.getTaxCalculationModel().getTaxRates();
+        List<List<Map<String, TaxPeriod>>> taxPeriodsList = taxwrapper.getTaxCalculationModel().getTaxPeriods();
+        List<List<Double>> guidanceValuesList = taxwrapper.getTaxCalculationModel().getGuidanceValues();
+        for (Floor flr : taxwrapper.getProperty().getPropertyDetail().getFloors()) {
+            int floorIndex = 0;
+            List<Map<String, Double>> factorsList = factorTypes.get(floorIndex);
+            List<Map<String, TaxPeriod>> taxPeriods = taxPeriodsList.get(floorIndex);
+            List<List<TaxRates>> taxRates = taxRatesList.get(floorIndex);
+            List<Double> guidanceValues = guidanceValuesList.get(floorIndex);
+            for (Unit unit : flr.getUnits()) {
+                int unitIndex = 0;
+                Map<String, Double> factors = factorsList.get(unitIndex);
+                Map<String, TaxPeriod> taxPeriod = taxPeriods.get(unitIndex);
+                List<TaxRates> taxRateList = taxRates.get(unitIndex);
+                Double guidanceValue = guidanceValues.get(unitIndex);
+                TaxResponse taxResponse = getUnitTax(taxwrapper.getProperty(), unit, factors, taxPeriod, taxRateList,
+                        guidanceValue,flr.getFloorNo());
+                taxResponses.add(taxResponse);
+                unitIndex++;
+            }
+            floorIndex++;
+        }
+       
+        for (TaxResponse taxResponse : taxResponses) {
+            depreciation += taxResponse.getDepreciation();
+            finalMRV += taxResponse.getMonthlyRentalvalue();
+            grossARV += taxResponse.getGrossARV();
+            finalARV += taxResponse.getAnnualRentalValue();
+            generalTax += taxResponse.getGeneralTax();
+            treeTax += taxResponse.getTreeTax();
+            educationCess += taxResponse.getEducationalCess();
+            employeeGuaranteecess += taxResponse.getEmployeeGuranteeCess();
+            totalTaxValue+=taxResponse.getTotalTax();
+            genralTaxList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("GENERALTAX")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            educationCessTaxList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EDU_NON_RESD")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            employeeGuaranteecessList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+            treeTaxList+=taxResponse.getTaxHeadWiseList().stream().filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("TREETAX")).mapToDouble(HeadWiseTax->HeadWiseTax.getTaxValue()).sum();
+              
+        }
+       System.out.println("sum of tax heads"+genralTaxList+" "+educationCessTaxList);
+        List<HeadWiseTax> taxHeads=(List<HeadWiseTax>)getTaxHeadWiseList(treeTaxList,genralTaxList,educationCessTaxList,employeeGuaranteecessList);
+         TaxResponse totaltax =  getTaxResponse(finalMRV,depreciation,grossARV,finalARV,generalTax,treeTax,educationCess,employeeGuaranteecess,taxHeads);
+        taxwrapper.setTaxResponses(taxResponses);
+        taxwrapper.setTaxResponse(totaltax);
+       
+    }
+    
+   
+    
+    function TaxResponse getTaxResponse(Double finalMRV,Double depreciation,Double grossARV,Double finalARV,Double generalTax,Double treeTax,Double educationCess,Double employeeGuaranteecess,List taxHeads ){
+    TaxResponse taxResponse=new TaxResponse();
+    List<HeadWiseTax> taxHeadsList=(List<HeadWiseTax>) taxHeads;
+         taxResponse.setMonthlyRentalvalue(finalMRV);
+                    taxResponse.setDepreciation(depreciation);
+                    taxResponse.setGrossARV(grossARV);
+                    taxResponse.setAnnualRentalValue(finalARV);
+                    taxResponse.setGeneralTax(generalTax);
+                    taxResponse.setTreeTax(treeTax);
+                    taxResponse.setEducationalCess(educationCess);
+                    taxResponse.setEmployeeGuranteeCess(employeeGuaranteecess);
+                    taxResponse.setTotalTax(generalTax+treeTax+educationCess+employeeGuaranteecess);
+                    taxResponse.setTaxHeadWiseList(taxHeadsList);
+    return taxResponse;
+}
+    rule"Tax calculation in maharashtra mvel"
+
+    when $taxCalculation:
+
+    TaxCalculationWrapper( property!=null )
+     then   
+     System.out.println("tax calculation object"+ $taxCalculation.getTaxCalculationModel());
+     System.out.println("taxrates"+$taxCalculation.getTaxCalculationModel().getTaxRates());
+     updatePropertyTax($taxCalculation);
+      end

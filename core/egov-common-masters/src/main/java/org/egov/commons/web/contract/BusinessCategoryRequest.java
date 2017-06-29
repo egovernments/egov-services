@@ -40,13 +40,12 @@
 
 package org.egov.commons.web.contract;
 
-
-import lombok.Getter;
-import lombok.Setter;
-
 import org.egov.commons.model.AuthenticatedUser;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -58,10 +57,9 @@ public class BusinessCategoryRequest {
 	private BusinessCategory businessCategoryInfo;
 
 	public AuthenticatedUser toDomain() {
-		UserInfo userInfo=requestInfo.getUserInfo();
+		UserInfo userInfo = requestInfo.getUserInfo();
 		return AuthenticatedUser.builder().id(userInfo.getId()).anonymousUser(false).emailId(userInfo.getEmailId())
 				.mobileNumber(userInfo.getMobileNumber()).name(userInfo.getName()).build();
-		
-		
+
 	}
 }

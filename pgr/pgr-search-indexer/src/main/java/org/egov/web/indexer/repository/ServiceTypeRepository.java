@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ServiceTypeRepository {
 
-    private static final String SERVICE_TYPE_BY_CODE_URL = "pgr/services/{serviceCode}/_search?tenantId={tenantId}";
+    private static final String SERVICE_TYPE_BY_CODE_URL = "pgr/services/v1/{serviceCode}/_search?tenantId={tenantId}";
     private final String complaintTypeServiceHostname;
     private RestTemplate restTemplate;
 

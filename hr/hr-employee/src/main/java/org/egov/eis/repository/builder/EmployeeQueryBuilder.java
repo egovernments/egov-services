@@ -49,6 +49,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class EmployeeQueryBuilder {
 
@@ -61,7 +63,8 @@ public class EmployeeQueryBuilder {
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON e.id = a.employeeId AND a.tenantId = e.tenantId"
 			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = e.tenantId"
-			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId";
+			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId"
+			+ " WHERE e.tenantId = ?";
 
 	private static final String BASE_QUERY = "SELECT e.id AS e_id, e.code AS e_code,"
 			+ " e.employeeStatus AS e_employeeStatus, e.employeeTypeId AS e_employeeTypeId, e.bankId AS e_bankId,"
@@ -77,7 +80,8 @@ public class EmployeeQueryBuilder {
 			+ " FROM egeis_employee e"
 			+ " JOIN egeis_assignment a ON e.id = a.employeeId AND a.tenantId = e.tenantId"
 			+ " LEFT JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = e.tenantId"
-			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId";
+			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId"
+			+ " WHERE e.tenantId = ?";
 
 	@SuppressWarnings("rawtypes")
 	public String getQueryForListOfEmployeeIds(EmployeeCriteria employeeCriteria, List preparedStatementValues) {
@@ -105,75 +109,67 @@ public class EmployeeQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			EmployeeCriteria employeeCriteria, List<Long> empIds) {
 
-		if (employeeCriteria.getId() == null && employeeCriteria.getCode() == null
-				&& employeeCriteria.getDepartmentId() == null && employeeCriteria.getIsPrimary() == null
-				&& employeeCriteria.getDesignationId() == null && employeeCriteria.getPositionId() == null
-				&& employeeCriteria.getAsOnDate() == null && employeeCriteria.getEmployeeStatus() == null
-				&& employeeCriteria.getTenantId() == null)
+		// adding tenantId for first placeholder
+		preparedStatementValues.add(employeeCriteria.getTenantId());
+
+		if (isEmpty(employeeCriteria.getId()) && isEmpty(employeeCriteria.getCode())
+				&& isEmpty(employeeCriteria.getDepartmentId()) && isEmpty(employeeCriteria.getIsPrimary())
+				&& isEmpty(employeeCriteria.getDesignationId()) && isEmpty(employeeCriteria.getPositionId())
+				&& isEmpty(employeeCriteria.getAsOnDate()) && isEmpty(employeeCriteria.getEmployeeStatus())
+				&& isEmpty(employeeCriteria.getTenantId()) && isEmpty(employeeCriteria.getFamilyParticularsPresent()))
 			return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
-
-		if (employeeCriteria.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" e.tenantId = ?");
-			preparedStatementValues.add(employeeCriteria.getTenantId());
+		if(!isEmpty(empIds)) {
+			selectQuery.append(" AND e.id IN " + getIdQuery(empIds));
+		} else if (!isEmpty(employeeCriteria.getId())) {
+			selectQuery.append(" AND e.id IN " + getIdQuery(employeeCriteria.getId()));
 		}
 
-		if(empIds != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" e.id IN " + getIdQuery(empIds));
-		} else if (employeeCriteria.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" e.id IN " + getIdQuery(employeeCriteria.getId()));
-		}
-
-		if (employeeCriteria.getCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" e.code = ?");
+		if (!isEmpty(employeeCriteria.getCode())) {
+			selectQuery.append(" AND e.code = ?");
 			preparedStatementValues.add(employeeCriteria.getCode());
 		}
 
-		if (employeeCriteria.getDepartmentId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" a.departmentId = ?");
+		if (!isEmpty(employeeCriteria.getDepartmentId())) {
+			selectQuery.append(" AND a.departmentId = ?");
 			preparedStatementValues.add(employeeCriteria.getDepartmentId());
 		}
 
-		if (employeeCriteria.getDesignationId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" a.designationId = ?");
+		if (!isEmpty(employeeCriteria.getDesignationId())) {
+			selectQuery.append(" AND a.designationId = ?");
 			preparedStatementValues.add(employeeCriteria.getDesignationId());
 		}
 
-		if (employeeCriteria.getPositionId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" a.positionId = ?");
+		if (!isEmpty(employeeCriteria.getPositionId())) {
+			selectQuery.append(" AND a.positionId = ?");
 			preparedStatementValues.add(employeeCriteria.getPositionId());
 		}
 
-		if (employeeCriteria.getAsOnDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ? BETWEEN a.fromDate AND a.toDate");
+		if (!isEmpty(employeeCriteria.getAsOnDate())) {
+			selectQuery.append(" AND ? BETWEEN a.fromDate AND a.toDate");
 			preparedStatementValues.add(employeeCriteria.getAsOnDate());
 		}
 
-		if (employeeCriteria.getIsPrimary() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" a.isPrimary = ?");
+		if (!isEmpty(employeeCriteria.getIsPrimary())) {
+			selectQuery.append(" AND a.isPrimary = ?");
 			preparedStatementValues.add(employeeCriteria.getIsPrimary());
 		}
 
-		if (employeeCriteria.getEmployeeStatus() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" e.employeeStatus IN " + getIdQuery(employeeCriteria.getEmployeeStatus()));
+		if (!isEmpty(employeeCriteria.getEmployeeStatus())) {
+			selectQuery.append(" AND e.employeeStatus IN " + getIdQuery(employeeCriteria.getEmployeeStatus()));
+		}
+
+		if (!isEmpty(employeeCriteria.getFamilyParticularsPresent())) {
+			if (employeeCriteria.getFamilyParticularsPresent())
+				selectQuery.append(" AND e.id IN (SELECT DISTINCT employeeId FROM egeis_nominee)");
+			else
+				selectQuery.append(" AND e.id NOT IN (SELECT DISTINCT employeeId FROM egeis_nominee)");
 		}
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, EmployeeCriteria employeeCriteria) {
-		String sortBy = (employeeCriteria.getSortBy() == null ? "e.id" : employeeCriteria.getSortBy());
-		String sortOrder = (employeeCriteria.getSortOrder() == null ? "ASC" : employeeCriteria.getSortOrder());
+		String sortBy = isEmpty(employeeCriteria.getSortBy()) ? "e.id" : employeeCriteria.getSortBy();
+		String sortOrder = isEmpty(employeeCriteria.getSortOrder()) ? "ASC" : employeeCriteria.getSortOrder();
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
@@ -183,31 +179,16 @@ public class EmployeeQueryBuilder {
 		// handle limit(also called pageSize) here
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.empSearchPageSizeDefault());
-		if (employeeCriteria.getPageSize() != null)
+		if (!isEmpty(employeeCriteria.getPageSize()))
 			pageSize = employeeCriteria.getPageSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
 
 		// handle offset here
 		selectQuery.append(" OFFSET ?");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (employeeCriteria.getPageNumber() != null)
+		if (!isEmpty(employeeCriteria.getPageNumber()))
 			pageNumber = employeeCriteria.getPageNumber() - 1;
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
-	}
-
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
-
-		return true;
 	}
 
 	// FIXME : Optimize - Add Question Marks instead of hard-coding the values

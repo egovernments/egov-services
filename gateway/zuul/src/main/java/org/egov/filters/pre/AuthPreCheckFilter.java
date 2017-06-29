@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.egov.model.RequestBodyInspector;
 import org.egov.wrapper.CustomRequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,14 +107,15 @@ public class AuthPreCheckFilter extends ZuulFilter {
     private String getAuthTokenFromRequestBody() throws IOException {
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper(getRequest());
         HashMap<String, Object> requestBody = getRequestBody(requestWrapper);
+        final RequestBodyInspector requestBodyInspector = new RequestBodyInspector(requestBody);
         @SuppressWarnings("unchecked")
-        HashMap<String, String> requestInfo = (HashMap<String, String>) requestBody.get(REQUEST_INFO_FIELD_NAME);
+        HashMap<String, Object> requestInfo = requestBodyInspector.getRequestInfo();
         if (requestInfo == null) {
             logger.info(NO_REQUEST_INFO_FIELD_MESSAGE, getRequestURI());
             return null;
         }
-        sanitizeAndSetRequest(requestBody, requestWrapper);
-        return requestInfo.get(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
+        sanitizeAndSetRequest(requestBodyInspector, requestWrapper);
+        return (String) requestInfo.get(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
     }
 
     private HashMap<String, Object> getRequestBody(CustomRequestWrapper requestWrapper) throws IOException {
@@ -121,14 +123,12 @@ public class AuthPreCheckFilter extends ZuulFilter {
             new TypeReference<HashMap<String, Object>>() { });
     }
 
-    private void sanitizeAndSetRequest(HashMap<String, Object> requestBody, CustomRequestWrapper requestWrapper) {
-        @SuppressWarnings("unchecked")
-        HashMap<String, Object> requestInfo = (HashMap<String, Object>) requestBody.get(REQUEST_INFO_FIELD_NAME);
-
+    private void sanitizeAndSetRequest(RequestBodyInspector requestBodyInspector, CustomRequestWrapper requestWrapper) {
+        HashMap<String, Object> requestInfo = requestBodyInspector.getRequestInfo();
         requestInfo.remove(USER_INFO_FIELD_NAME);
-        requestBody.put(REQUEST_INFO_FIELD_NAME, requestInfo);
+        requestBodyInspector.updateRequestInfo(requestInfo);
         try {
-            requestWrapper.setPayload(objectMapper.writeValueAsString(requestBody));
+            requestWrapper.setPayload(objectMapper.writeValueAsString(requestBodyInspector.getRequestBody()));
         } catch (JsonProcessingException e) {
             logger.error(FAILED_TO_SERIALIZE_REQUEST_BODY_MESSAGE, e);
             throw new RuntimeException(e);

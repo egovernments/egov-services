@@ -51,7 +51,7 @@ public class TaxHeadMasterRepositoryTest {
 	}
 	
 	
-/*	@Test
+	@Test
 	public void testCreateTaxHeadMaster() {
 		
 		TaxHeadMasterRequest taxHeadMasterRequest = new TaxHeadMasterRequest();
@@ -68,7 +68,25 @@ public class TaxHeadMasterRepositoryTest {
 		when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
 		assertTrue(taxHeads.equals(taxHeadMasterRepository.create(taxHeadMasterRequest)));
 	}
-	*/
+	
+	@Test
+	public void testUpdateTaxHeadMaster() {
+		
+		TaxHeadMasterRequest taxHeadMasterRequest = new TaxHeadMasterRequest();
+		RequestInfo requestInfo = new RequestInfo();
+		User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		taxHeadMasterRequest.setRequestInfo(requestInfo);
+		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
+		List<TaxHeadMaster> taxHeads = new ArrayList<>();
+		taxHeads.add(taxHeadMaster);
+		taxHeadMasterRequest.setTaxHeadMasters(taxHeads);
+		
+		when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+		assertTrue(taxHeads.equals(taxHeadMasterRepository.update(taxHeadMasterRequest)));
+	}
+	
 	
 	private TaxHeadMaster getTaxHeadMaster() {
 		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
@@ -79,17 +97,12 @@ public class TaxHeadMasterRepositoryTest {
 		taxHeadMaster.setCategory(Category.fromValue("TAX"));
 		taxHeadMaster.setService("string");
 		taxHeadMaster.setName("string");
-		taxHeadMaster.setGlCode("string");
 		taxHeadMaster.setIsDebit(true);
 		taxHeadMaster.setIsActualDemand(true);
-		taxPeriod.setId("string");
-		taxPeriod.setCode("string");
-		taxPeriod.setFinancialYear("2017-2018");
-		taxPeriod.setService("string");
-		taxPeriod.setFromDate(123L);
-		taxPeriod.setToDate(345L);
+		taxHeadMaster.setValidFrom(324l);
+		taxHeadMaster.setValidTill(23l);
+		taxHeadMaster.setOrder(12);
 
-		//taxHeadMaster.setTaxPeriod(taxPeriod);
 		return taxHeadMaster;
 	}
 

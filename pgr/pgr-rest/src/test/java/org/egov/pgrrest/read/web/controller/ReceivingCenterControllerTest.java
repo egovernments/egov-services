@@ -46,7 +46,7 @@ public class ReceivingCenterControllerTest {
         List<ReceivingCenter> recievingCenters =getReceivingCenters();
         String expectedContent = readResource();
         when(mockReceivingCenterService.getAllReceivingCenters(tenantId)).thenReturn(recievingCenters);
-        mockMvc.perform(post("/receivingcenter/_search?tenantId=ap.public"))
+        mockMvc.perform(post("/receivingcenter/v1/_search?tenantId=ap.public"))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
     		.andExpect(content().json(expectedContent));
@@ -74,7 +74,7 @@ public class ReceivingCenterControllerTest {
             .orderNo(8L).tenantId("ap.public").build();
         when(mockReceivingCenterService.getReceivingCenterById("ap.public", 1L)).thenReturn(receivingCenter);
 
-        mockMvc.perform(post("/receivingcenter/_search?tenantId=ap.public&id= 1"))
+        mockMvc.perform(post("/receivingcenter/v1/_search?tenantId=ap.public&id= 1"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(content().json(getFileContents("receivingCenter.json")));

@@ -59,7 +59,7 @@ public class EscalationHoursController {
         this.escalationService = escalationService;
     }
 
-    @PostMapping("/_search")
+    @PostMapping("/v1/_search")
     public EscalationHoursResponse getEscalationDate(@RequestParam(value="tenantId",required=true) String tenantId,
                                                      @RequestParam("designationId") Long designationId,
                                                      @RequestParam("complaintTypeId") Long complaintTypeId,
@@ -73,7 +73,7 @@ public class EscalationHoursController {
         return new EscalationHoursResponse(null, escalationHours,tenantId);
     }
     
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,
 			final BindingResult errors) {
@@ -106,7 +106,7 @@ public class EscalationHoursController {
 
 	}
 	
-	@PostMapping(value = "/_update/{id}")
+	@PostMapping(value = "/v1/_update/{id}")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,
 			@PathVariable("id") final long id, final BindingResult errors) {

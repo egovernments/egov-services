@@ -40,6 +40,7 @@
 package org.egov.demand.repository.querybuilder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TaxPeriodQueryBuilder {
@@ -83,9 +85,51 @@ public class TaxPeriodQueryBuilder {
             preparedStatementValues.add(taxPeriodCriteria.getCode());
         }
 
-        if (StringUtils.isNotBlank(taxPeriodCriteria.getId())) {
-            selectQuery.append(" and taxperiod.id = ? ");
-            preparedStatementValues.add(taxPeriodCriteria.getId());
+        if (!taxPeriodCriteria.getId().isEmpty())
+            selectQuery.append(" and taxperiod.id IN "+getQueryForCollection(taxPeriodCriteria.getId()));
+    }
+
+    public String getInsertQuery(){
+        return "INSERT INTO egbs_taxperiod(id,service,code,fromdate,todate,financialYear, " +
+                "createddate, lastmodifieddate, createdby, lastmodifiedby, tenantid) " +
+                "values (?,?,?,?,?,?,?,?,?,?,?);";
+    }
+
+    public String getUpdateQuery(){
+        return "UPDATE egbs_taxperiod SET service=?, code=?, fromdate=?, todate=?, financialyear=?, " +
+                "lastmodifieddate=?, lastmodifiedby=? WHERE tenantid = ? and id = ?;";
+    }
+
+    public String prepareQueryForValidation(List<TaxPeriod> taxPeriodList, String mode){
+        String baseQuery = "select exists (select * from egbs_taxperiod taxperiod where ";
+        StringBuilder whereClause = new StringBuilder();
+        int count = 0;
+        for(TaxPeriod taxPeriod : taxPeriodList){
+            whereClause = whereClause.append(" ( ");
+            if(StringUtils.isNotBlank(taxPeriod.getService()))
+                whereClause = whereClause.append(" taxperiod.service = '").append(taxPeriod.getService()).append("' and ");
+            if(StringUtils.isNotBlank(taxPeriod.getCode()))
+                whereClause = whereClause.append(" taxperiod.code = '").append(taxPeriod.getCode()).append("' and ");
+            if("edit".equalsIgnoreCase(mode))
+                whereClause = whereClause.append(" taxperiod.id != '").append(taxPeriod.getId()).append("' and ");
+            if(StringUtils.isNotBlank(taxPeriod.getTenantId()))
+                whereClause = whereClause.append(" taxperiod.tenantId = '").append(taxPeriod.getTenantId()).append("')");
+
+            count++;
+            if(taxPeriodList.size()>count)
+                whereClause = whereClause.append(" or ");
         }
+        return baseQuery.concat(whereClause.toString()).concat(" )");
+    }
+
+    private String getQueryForCollection(Set<String> values) {
+        StringBuilder query = new StringBuilder();
+        if (!values.isEmpty()) {
+            String[] list = values.toArray(new String[values.size()]);
+            query.append(" ('"+list[0]+"'");
+            for (int i = 1; i < values.size(); i++)
+                query.append("," + "'"+list[i]+"'");
+        }
+        return query.append(")").toString();
     }
 }

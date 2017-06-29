@@ -43,6 +43,7 @@ public class TaxHeadMasterRepository {
 			taxHeadMaster = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), taxHeadMasterRowMapper);
 			log.debug("TaxHeadRepository::" + taxHeadMaster);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			log.debug("the exception from findforcriteria : " + ex);
 		}
 		return taxHeadMaster;

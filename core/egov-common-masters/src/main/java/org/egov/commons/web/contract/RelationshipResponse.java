@@ -38,27 +38,26 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.repository.rowmapper;
+package org.egov.commons.web.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-import org.egov.pgr.model.ReceivingModeType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.List;
 
-@Component
-public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
-	@Override
-	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final ReceivingModeType modeType = new ReceivingModeType();
-		modeType.setId(rs.getLong("id"));
-		modeType.setCode(rs.getString("code"));
-		modeType.setName(rs.getString("name"));
-		modeType.setDescription(rs.getString("description"));
-		modeType.setTenantId(rs.getString("tenantId"));
-		modeType.setActive(rs.getBoolean("active"));
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class RelationshipResponse {
 
-		return modeType;
-	}
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+
+	@JsonProperty("Relationship")
+	private List<String> relationship = new ArrayList<String>();
+
 }

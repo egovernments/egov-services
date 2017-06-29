@@ -135,6 +135,7 @@ public class RequestEnrichmentFilterTest {
         mockUser.setName("name");
         mockUser.setMobileNumber("1234567890");
         mockUser.setEmailId("fu@bar.com");
+        mockUser.setTenantId("default");
         mockUser.setType("EMPLOYEE");
         Role mockRole1 = new Role();
         mockRole1.setId(1L);

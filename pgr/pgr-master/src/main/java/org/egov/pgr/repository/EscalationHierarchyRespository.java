@@ -109,7 +109,7 @@ public class EscalationHierarchyRespository {
 		LOGGER.info("EscalationHierarchy::" + escHierarchyGetRequest);
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		String getQuery = escalationHierarchyQueryBuilder.getQuery(escHierarchyGetRequest, preparedStatementValues);
-		LOGGER.info("We will run this now ::" + getQuery);
+		LOGGER.info("Query for Get All Escalation Hierarchy ::" + getQuery);
 		final List<EscalationHierarchy> escalationHierarchies = jdbcTemplate.query(getQuery,
 				preparedStatementValues.toArray(), escalationHierarchyRowMapper);
 		return escalationHierarchies;

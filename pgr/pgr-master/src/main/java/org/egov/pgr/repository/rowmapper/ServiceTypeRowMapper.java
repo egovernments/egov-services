@@ -117,13 +117,13 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 	private Attribute createAttributeObjectForMe(ResultSet rs) {
 		Attribute attr = new Attribute();
 		try {
-			attr.setCode(rs.getString("attributecode"));
-			attr.setDatatype(rs.getString("datatype"));
-			attr.setDatatypeDescription(rs.getString("datatypedescription"));
-			attr.setDescription(rs.getString("description"));
-			attr.setRequired(rs.getString("required").equals("Y")? true : false);
-			attr.setVariable(rs.getString("variable").equals("Y")? true : false);
-			attr.setGroupCode(rs.getString("groupcode"));
+			attr.setCode(null == rs.getString("attributecode") || rs.getString("attributecode").equals("")? "" : rs.getString("attributecode"));
+			attr.setDatatype(null == rs.getString("datatype") || rs.getString("datatype").equals("")? "" : rs.getString("datatype"));
+			attr.setDatatypeDescription(null == rs.getString("datatypedescription") || rs.getString("datatypedescription").equals("")? "" : rs.getString("datatypedescription"));
+			attr.setDescription(null == rs.getString("description") || rs.getString("description").equals("")? "" :rs.getString("description"));
+			attr.setRequired(null == rs.getString("required") || rs.getString("required").equals("") ? false : rs.getString("required").equals("Y")? true : false);
+			attr.setVariable(null == rs.getString("required") || rs.getString("required").equals("") ? false : rs.getString("variable").equals("Y")? true : false);
+			attr.setGroupCode(null == rs.getString("groupcode") || rs.getString("groupcode").equals("")? "" : rs.getString("groupcode"));
 		} catch (Exception e) {
 			LOGGER.error("Encountered an Exception while creating Attribute Object using Result Set " + e);
 		}

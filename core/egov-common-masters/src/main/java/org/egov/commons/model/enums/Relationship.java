@@ -38,27 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.repository.rowmapper;
+package org.egov.commons.model.enums;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.apache.commons.lang3.StringUtils;
 
-import org.egov.pgr.model.ReceivingModeType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.List;
 
-@Component
-public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
+public enum Relationship {
+	FATHER("FATHER"), MOTHER("MOTHER"), SPOUSE("SPOUSE"), SON("SON"), DAUGHTER("DAUGHTER"), OTHER("OTHER");
+
+	private String value;
+
+	Relationship(String value) {
+		this.value = value;
+	}
+
 	@Override
-	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final ReceivingModeType modeType = new ReceivingModeType();
-		modeType.setId(rs.getLong("id"));
-		modeType.setCode(rs.getString("code"));
-		modeType.setName(rs.getString("name"));
-		modeType.setDescription(rs.getString("description"));
-		modeType.setTenantId(rs.getString("tenantId"));
-		modeType.setActive(rs.getBoolean("active"));
+	@JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-		return modeType;
+	@JsonCreator
+	public static List<String> getAllObjectValues() {
+		List<String> allObjectValues = new ArrayList<>();
+		for (Relationship obj : Relationship.values()) {
+			allObjectValues.add(obj.value);
+		}
+		return allObjectValues;
+	}
+
+	@JsonCreator
+	public static Relationship fromValue(String passedValue) {
+		for (Relationship obj : Relationship.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
 	}
 }

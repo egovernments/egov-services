@@ -38,27 +38,38 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.repository.rowmapper;
+package org.egov.commons.web.validator;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.egov.pgr.model.ReceivingModeType;
-import org.springframework.jdbc.core.RowMapper;
+import org.egov.commons.web.contract.RequestInfo;
+import org.egov.commons.web.errorhandlers.ErrorHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 
 @Component
-public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
-	@Override
-	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final ReceivingModeType modeType = new ReceivingModeType();
-		modeType.setId(rs.getLong("id"));
-		modeType.setCode(rs.getString("code"));
-		modeType.setName(rs.getString("name"));
-		modeType.setDescription(rs.getString("description"));
-		modeType.setTenantId(rs.getString("tenantId"));
-		modeType.setActive(rs.getBoolean("active"));
+public class RequestValidator {
 
-		return modeType;
+	@Autowired
+	private ErrorHandler errHandler;
+
+	/**
+	 * Validates request & returns ErrorResponseEntity if there are any errors or else returns null
+	 * 
+	 * @param requestInfo
+	 * @param modelAttributeBindingResult
+	 * @param requestBodyBindingResult
+	 * @return ResponseEntity<?>
+	 */
+	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult modelAttributeBindingResult,
+			BindingResult requestBodyBindingResult) {
+		// validate input params
+		if (modelAttributeBindingResult != null && modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+		if (requestBodyBindingResult != null && requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		}
+		return null;
 	}
 }

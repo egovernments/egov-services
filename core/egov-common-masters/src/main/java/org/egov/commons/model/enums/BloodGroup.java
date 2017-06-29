@@ -38,27 +38,51 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pgr.repository.rowmapper;
+package org.egov.commons.model.enums;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.apache.commons.lang3.StringUtils;
 
-import org.egov.pgr.model.ReceivingModeType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Component
-public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
+public enum BloodGroup {
+	A_POSITIVE("A+"), B_POSITIVE("B+"), AB_POSITIVE("AB+"), O_POSITIVE("O+"),
+	A_NEGATIVE("A-"), B_NEGATIVE("B-"), AB_NEGATIVE("AB-"), O_NEGATIVE("O-");
+
+	private String value;
+
+	BloodGroup(String value) {
+		this.value = value;
+	}
+
 	@Override
-	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-		final ReceivingModeType modeType = new ReceivingModeType();
-		modeType.setId(rs.getLong("id"));
-		modeType.setCode(rs.getString("code"));
-		modeType.setName(rs.getString("name"));
-		modeType.setDescription(rs.getString("description"));
-		modeType.setTenantId(rs.getString("tenantId"));
-		modeType.setActive(rs.getBoolean("active"));
+	@JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-		return modeType;
+	public static List<Map<String, String>> getBloodGroups() {
+		List<Map<String, String>> bloodGroups = new ArrayList<>();
+		for (BloodGroup obj : BloodGroup.values()) {
+			Map<String, String> bloodGroup = new HashMap<>();
+			bloodGroup.put("id", obj.toString());
+			bloodGroup.put("name", obj.value);
+			bloodGroups.add(bloodGroup);
+		}
+		return bloodGroups;
+	}
+
+	@JsonCreator
+	public static BloodGroup fromValue(String passedValue) {
+		for (BloodGroup obj : BloodGroup.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
 	}
 }

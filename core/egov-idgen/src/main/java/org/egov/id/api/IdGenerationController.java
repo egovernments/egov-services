@@ -28,7 +28,7 @@ public class IdGenerationController {
 	 * @return IdGenerationResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(method = RequestMethod.POST, path = "_genearate")
+	@RequestMapping(method = RequestMethod.POST, path = "_generate")
 	public IdGenerationResponse generateIdResponse(
 			@RequestBody IdGenerationRequest idGenerationRequest)
 			throws Exception {

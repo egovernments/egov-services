@@ -229,6 +229,10 @@ definitions:
         type: number
         format: double
         description: Total bill amount to be paid.
+      amountPaid:
+        type: number
+        format: double
+        description: Amount paid by the citizen.
       collectionModesNotAllowed:
         type: array
         items: 
@@ -265,18 +269,6 @@ definitions:
         description: To be used by third party applications, to send the channel name.
       voucherHeader:
         description: Voucher header  need to refer from Finanicals.
-      Fund:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Fund'
-      Function:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Function'
-      fundSource:
-        description: Fund Source need to refer from Financials.
-        items:
-          type: string
-      department:
-        description: Department need to refer from Core services.
-        items:
-          type: string
       boundary:
         description: Boundary need to refer from Core services.
         items:
@@ -372,6 +364,3 @@ parameters:
     description: Page number
     type: integer
     default: 1
-      
-
-

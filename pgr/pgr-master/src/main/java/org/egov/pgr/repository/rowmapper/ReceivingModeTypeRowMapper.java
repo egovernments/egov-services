@@ -42,6 +42,10 @@ package org.egov.pgr.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.pgr.model.ReceivingModeType;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,16 +53,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> {
+	public Map<String, ReceivingModeType> modeMap = new HashMap<>();
 	@Override
 	public ReceivingModeType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		final ReceivingModeType modeType = new ReceivingModeType();
+		if(modeMap.containsKey(rs.getString("code"))){
+			List<String> channelList = modeMap.get(rs.getString("code")).getChannels();
+			channelList.add(rs.getString("channel"));
+		} else {
 		modeType.setId(rs.getLong("id"));
 		modeType.setCode(rs.getString("code"));
 		modeType.setName(rs.getString("name"));
 		modeType.setDescription(rs.getString("description"));
 		modeType.setTenantId(rs.getString("tenantId"));
 		modeType.setActive(rs.getBoolean("active"));
-
-		return modeType;
+		List<String> channelList = new ArrayList<>();
+		channelList.add(rs.getString("channel"));
+		modeType.setChannels(channelList);
+		modeMap.put(rs.getString("code"), modeType);
+		}
+		return null;
 	}
 }

@@ -41,9 +41,14 @@
 package org.egov.pgr.repository;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.egov.pgr.model.ReceivingModeType;
 import org.egov.pgr.repository.builder.ReceivingModeTypeQueryBuilder;
@@ -53,6 +58,8 @@ import org.egov.pgr.web.contract.ReceivingModeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -67,30 +74,69 @@ public class ReceivingModeTypeRepository {
 	@Autowired
 	private ReceivingModeTypeQueryBuilder receivingModeTypeQueryBuilder;
 
-	@Autowired
-	private ReceivingModeTypeRowMapper receivingModeRowMapper;
-
 	public ReceivingModeTypeReq persistReceivingModeType(final ReceivingModeTypeReq modeTypeRequest) {
 		LOGGER.info("ReceivingModeType Create Request::" + modeTypeRequest);
 		final String receivingModeTypeInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeTypeQuery();
+		final String receivingModeChannelInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeChannelQuery();
 		final ReceivingModeType modeType = modeTypeRequest.getModeType();
-		final Object[] obj = new Object[] {modeType.getCode(), modeType.getName(), modeType.getDescription(),
-				modeType.getActive(),modeType.getChannel(),
+		final Object[] obj = new Object[] { modeType.getCode(), modeType.getName(), modeType.getDescription(),
+				modeType.getActive(), 
 				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
 				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
 				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
 				modeType.getTenantId() };
 		jdbcTemplate.update(receivingModeTypeInsert, obj);
+
+		insertReceivingModeChannel(modeType,receivingModeChannelInsert);
 		return modeTypeRequest;
+	}
+	
+	
+	private void insertReceivingModeChannel(final ReceivingModeType modeType,final String receivingModeChannelInsert ){
+		
+		if (modeType.getChannels().size() != 0) {
+
+			List<String> distinctChannelList = modeType.getChannels().stream().distinct().collect(Collectors.toList());
+
+			jdbcTemplate.batchUpdate(receivingModeChannelInsert, new BatchPreparedStatementSetter() {
+
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					String channel = distinctChannelList.get(i);
+					ps.setString(1, modeType.getCode());
+					ps.setString(2, channel);
+
+				}
+
+				@Override
+				public int getBatchSize() {
+					return distinctChannelList.size();
+				}
+			});
+		}
+		
 	}
 
 	public ReceivingModeTypeReq persistModifyReceivingModeType(final ReceivingModeTypeReq modeTypeRequest) {
 		LOGGER.info("ReceivingModeType Update Request::" + modeTypeRequest);
 		final String receivingCenterTypeUpdate = ReceivingModeTypeQueryBuilder.updateReceivingModeTypeQuery();
+		final String receivingModeChannelInsert = ReceivingModeTypeQueryBuilder.insertReceivingModeChannelQuery();
 		final ReceivingModeType modeType = modeTypeRequest.getModeType();
-		final Object[] obj = new Object[] {modeType.getName(), modeType.getDescription(),modeType.getChannel(),modeType.getActive(),
-				Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()), modeType.getCode() };
+		final Object[] obj = new Object[] { modeType.getName(), modeType.getDescription(),
+				modeType.getActive(), Long.valueOf(modeTypeRequest.getRequestInfo().getUserInfo().getId()),
+				new Date(new java.util.Date().getTime()), modeType.getCode() };
 		jdbcTemplate.update(receivingCenterTypeUpdate, obj);
+
+		if (modeType.getChannels() != null && modeType.getChannels().size() != 0) {
+			
+			final String receivingCenterChanneldelete = ReceivingModeTypeQueryBuilder.deleteReceivingModeChannelQuery();
+			jdbcTemplate.update(receivingCenterChanneldelete,new Object[]{modeType.getCode()});
+			
+			
+		}
+
+		insertReceivingModeChannel(modeType,receivingModeChannelInsert);
+
 		return modeTypeRequest;
 
 	}
@@ -99,32 +145,37 @@ public class ReceivingModeTypeRepository {
 		LOGGER.info("ReceivingModeType search Request::" + modeTypeGetRequest);
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String queryStr = receivingModeTypeQueryBuilder.getQuery(modeTypeGetRequest, preparedStatementValues);
-		final List<ReceivingModeType> receivingModeTypes = jdbcTemplate.query(queryStr,
-				preparedStatementValues.toArray(), receivingModeRowMapper);
-		return receivingModeTypes;
+		ReceivingModeTypeRowMapper receivingModeRowMapper = new ReceivingModeTypeRowMapper();
+		jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), receivingModeRowMapper);
+		Map<String, ReceivingModeType> modeMap = receivingModeRowMapper.modeMap;
+		Iterator<Entry<String, ReceivingModeType>> itr = modeMap.entrySet().iterator();
+		List<ReceivingModeType> receivingModeList = new ArrayList<>();
+		while (itr.hasNext()) {
+			Entry<String, ReceivingModeType> itrEntry = itr.next();
+			receivingModeList.add(itrEntry.getValue());
+		}
+		return receivingModeList;
 	}
-	
-	
-	
-    public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-      
-        // preparedStatementValues.add(id);
-        preparedStatementValues.add(tenantId);
-        String query="";
-        if(code!=null && code!=""){
-        	
-        	preparedStatementValues.add(code);
-        	query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByNameAndCode();
-        	
-        } 
-        
-        final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
-                preparedStatementValues.toArray());
-        if (!ceneterTypes.isEmpty())
-            return false;
 
-        return true;
-    }
+	public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+
+		// preparedStatementValues.add(id);
+		preparedStatementValues.add(tenantId);
+		String query = "";
+		if (code != null && code != "") {
+
+			preparedStatementValues.add(code);
+			query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByNameAndCode();
+
+		}
+
+		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!ceneterTypes.isEmpty())
+			return false;
+
+		return true;
+	}
 
 }

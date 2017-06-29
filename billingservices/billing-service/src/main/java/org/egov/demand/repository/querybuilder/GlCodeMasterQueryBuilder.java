@@ -108,4 +108,11 @@ public class GlCodeMasterQueryBuilder {
 			queryString.append("AND");
 		return true;
 	}
+
+	public String getInsertQuery() {
+		// TODO Auto-generated method stub
+		return "INSERT INTO public.egbs_glcodemaster(id, tenantid, taxhead, service, "
+				+ "fromdate, todate, createdby,createdtime, lastmodifiedby, lastmodifiedtime,"
+				+ " glcode)VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?);";
+	}
 }

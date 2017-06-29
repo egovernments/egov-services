@@ -16,7 +16,7 @@
       "glCode":"string",
       "fromDate":0,
       "toDate":0,
-      "auditDetail": null
+      "auditDetails": null
     }
   ]
 }

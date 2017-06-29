@@ -6,6 +6,7 @@ import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.DemandService;
+import org.egov.demand.service.GlCodeMasterService;
 import org.egov.demand.service.TaxHeadMasterService;
 import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.web.contract.*;
@@ -41,13 +42,16 @@ public class BillingServiceConsumer {
 
 	@Autowired
 	private TaxPeriodService taxPeriodService;
+	
+	@Autowired
+	private GlCodeMasterService glCodeMasterService;
 
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
 
 	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
-			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}"})
+			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
@@ -67,6 +71,8 @@ public class BillingServiceConsumer {
 				taxPeriodService.create(objectMapper.convertValue(consumerRecord, TaxPeriodRequest.class));
 			else if(applicationProperties.getUpdateTaxPeriodTopicName().equals(topic))
 				taxPeriodService.update(objectMapper.convertValue(consumerRecord, TaxPeriodRequest.class));
+			else if(applicationProperties.getCreateGlCodeMasterTopicName().equals(topic))
+				glCodeMasterService.create(objectMapper.convertValue(consumerRecord, GlCodeMasterRequest.class));
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);
 			throw exception;

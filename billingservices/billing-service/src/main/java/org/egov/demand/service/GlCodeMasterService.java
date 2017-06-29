@@ -10,6 +10,7 @@ import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.repository.GlCodeMasterRepository;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.GlCodeMasterResponse;
+import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.GlCodeMasterRequest;
 import org.egov.demand.web.contract.GlCodeMasterResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
@@ -46,18 +47,21 @@ public class GlCodeMasterService {
 		return getGlCodeMasterResponse(glCodeMaster,requestInfo);
 	}
 
-	/*public GlCodeMasterResponse createAsync(GlCodeMasterRequest glCodeMasterRequest) {
-		List<GlCodeMaster> taxHeadMaster = glCodeMasterRequest.getGlCodeMasters();
+	public void create(GlCodeMasterRequest glCodeMasterRequest) {
+		glCodeMasterRepository.create(glCodeMasterRequest);
+	}
+	
+	public GlCodeMasterResponse createAsync(GlCodeMasterRequest glCodeMasterRequest) {
+		List<GlCodeMaster> glCodeMaster = glCodeMasterRequest.getGlCodeMasters();
 
-		List<String> taxHeadIds = sequenceGenService.getIds(taxHeadMaster.size(),
-				applicationProperties.getTaxHeadSeqName());
+		List<String> glCodeMasterIds = sequenceGenService.getIds(glCodeMaster.size(),
+				applicationProperties.getGlCodeMasterseqName());
 		
 		int id=0;
-		for (GlCodeMaster master: taxHeadMaster) {
-			master.setId(taxHeadIds.get(id));
-			master.setCode(taxHeadCodes.get(id++));
+		for (GlCodeMaster master: glCodeMaster) {
+			master.setId(glCodeMasterIds.get(id));
 		}
-		glCodeMasterRequest.setGlCodeMasters(taxHeadMaster);
+		glCodeMasterRequest.setGlCodeMasters(glCodeMaster);
 
 		logger.info("taxHeadMasterRequest createAsync::" + glCodeMasterRequest);
 
@@ -66,8 +70,8 @@ public class GlCodeMasterService {
 		// kafkaTemplate.send(applicationProperties.getCreateGlCodeMasterTopicName(),
 		// taxHeadMasterRequest);
 
-		return getGlCodeMasterResponse(taxHeadMaster, glCodeMasterRequest.getRequestInfo());
-	}*/
+		return getGlCodeMasterResponse(glCodeMaster, glCodeMasterRequest.getRequestInfo());
+	}
 	
 	private GlCodeMasterResponse getGlCodeMasterResponse(List<GlCodeMaster> glCodeMaster, RequestInfo requestInfo) {
 		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();

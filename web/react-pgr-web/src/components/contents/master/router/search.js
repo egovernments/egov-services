@@ -211,7 +211,7 @@ class searchRouter extends Component {
   }
 
   handleNavigation(id) {
-    window.open("/createRouter/" + this.props.match.params.type + "/" + id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    window.open("#/createRouter/" + this.props.match.params.type + "/" + id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
   }
 
   render() {

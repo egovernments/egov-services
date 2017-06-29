@@ -109,21 +109,21 @@ public class EscalationHierarchyService {
 		return new EscalationHierarchy();
 	}
 	
-	public void create(EscalationHierarchyReq escalationHierarchyRequest) {
+	public List<EscalationHierarchy> create(EscalationHierarchyReq escalationHierarchyRequest) {
 		logger.info("Persisting Escalation Hierarchy record");
 		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRequest.getEscalationHierarchy();
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(escalationHierarchyRequest.getRequestInfo().getUserInfo().getId());
-		escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
+		return escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
 	}
 	
-	public void update(EscalationHierarchyReq escalationHierarchyRequest) {
+	public List<EscalationHierarchy> update(EscalationHierarchyReq escalationHierarchyRequest) {
 		logger.info("Updating Escalation Hierarchy record");
 		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRequest.getEscalationHierarchy();
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(escalationHierarchyRequest.getRequestInfo().getUserInfo().getId());
 		escalationHierarchyRepository.deleteEscalationHierarchy(escHierarchyList);
-		escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
+		return escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
 	}
 	
 	public List<EscalationHierarchy> getAllEscalationHierarchy(EscalationHierarchyGetReq escHierarchyGetRequest) {

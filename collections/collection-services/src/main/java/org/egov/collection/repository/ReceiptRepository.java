@@ -160,7 +160,6 @@ public class ReceiptRepository {
 			}catch(Exception e){
 				logger.error("All business details fields are not available: "+e.getCause());
 			}
-			
         	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
         	
         	if(((null != fund && null != fundSource) && null != function) && null != department){
@@ -170,6 +169,10 @@ public class ReceiptRepository {
 				parametersMap.put("paidby", receiptInfo.getBillInfo().getPaidBy());
 				parametersMap.put("referencenumber", billdetails.getRefNo());
 				parametersMap.put("receipttype", billdetails.getReceiptType());
+				
+				String receiptNumber = generateReceiptNumber(receiptReq.getRequestInfo());
+				billdetails.setReceiptNumber(receiptNumber);
+				
 				parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("businessdetails", billdetails.getBusinessDetailsCode());
@@ -342,6 +345,30 @@ public class ReceiptRepository {
 		String status = JsonPath.read(response, "$.");
 		
 		return status;
+	}
+	
+	private String generateReceiptNumber(RequestInfo requestInfo){
+		logger.info("Generating receipt number for the receipt.");	
+		
+		StringBuilder builder = new StringBuilder();
+		String baseUri = CollectionServiceConstants.ID_GEN_URI;
+		builder.append(baseUri);
+		
+		logger.info("URI being hit: "+builder.toString());
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		Object response = null;
+
+		try{
+			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
+		}catch(Exception e){
+			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
+		}
+		
+		logger.info("Response from collection-masters: "+response.toString());
+		
+		return "";
 	}
 	
 

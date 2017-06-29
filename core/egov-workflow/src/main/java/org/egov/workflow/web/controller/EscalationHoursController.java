@@ -91,7 +91,7 @@ public class EscalationHoursController {
 		if(null == escalationTypeRequest){
 			Error error = new Error();
 			error.setMessage(PgrMasterConstants.INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE);
-			
+			error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
 			ErrorResponse errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
 			

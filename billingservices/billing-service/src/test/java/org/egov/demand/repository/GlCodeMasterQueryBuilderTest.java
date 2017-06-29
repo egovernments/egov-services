@@ -1,4 +1,4 @@
-package org.egov.demand.repository.builder;
+package org.egov.demand.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.repository.querybuilder.GlCodeMasterQueryBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,18 +23,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(TaxHeadMasterQueryBuilder.class)
+@WebMvcTest(GlCodeMasterQueryBuilder.class)
 @Import(TestConfiguration.class)
-public class TaxHeadMasterQueryBuilderTest {
+public class GlCodeMasterQueryBuilderTest {
 
+	@InjectMocks
+	private GlCodeMasterQueryBuilder glCodeMasterQueryBuilder;
+	
 	@MockBean
 	private ApplicationProperties applicationProperties;
-	
-	@MockBean
-	private TaxHeadMasterCriteria taxHeadMasterCriteria;
-	
-	@InjectMocks
-	private TaxHeadMasterQueryBuilder taxHeadMasterQueryBuilder;
 	
 	@Before
 	public void initMocks() {
@@ -43,25 +42,17 @@ public class TaxHeadMasterQueryBuilderTest {
 	@Test
 	public void getQueryTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
-		TaxHeadMasterCriteria taxHeadMasterCriteriaQuery = TaxHeadMasterCriteria.builder().tenantId("ap.kurnool").build();
+		GlCodeMasterCriteria glCodeMasterCriteriaQuery = GlCodeMasterCriteria.builder().tenantId("ap.kurnool").build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "select * from egbs_taxheadmaster WHERE tenantId = ? ORDER BY name LIMIT ? OFFSET ?";
+		String queryWithTenantId = "select * from egbs_glcodemaster WHERE tenantId = ?  ORDER BY fromdate LIMIT ? OFFSET ?";
+		
 		assertEquals(queryWithTenantId,
-				taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteriaQuery, preparedStatementValues));
+				glCodeMasterQueryBuilder.getQuery(glCodeMasterCriteriaQuery, preparedStatementValues));
 
 		List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(Long.valueOf("500"));
 		expectedPreparedStatementValues.add(Long.valueOf("0"));
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
-	}
-	
-	@Test
-	public void getInsertQuery() {
-		String queryWithTenantId = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
-				+ "service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
-				+ "lastmodifiedby, lastmodifiedtime) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-		assertEquals(queryWithTenantId, taxHeadMasterQueryBuilder.getInsertQuery());
 	}
 }

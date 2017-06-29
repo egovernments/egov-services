@@ -92,7 +92,7 @@ public class TaxHeadMasterRepository {
 				ps.setString(6, taxHeadMaster.getCode());
 				ps.setBoolean(7, taxHeadMaster.getIsDebit());
 				ps.setBoolean(8, taxHeadMaster.getIsActualDemand());
-				ps.setInt(9, taxHeadMaster.getOrder());
+				ps.setObject(9, taxHeadMaster.getOrder());
 				ps.setObject(10, taxHeadMaster.getValidFrom());
 				ps.setObject(11, taxHeadMaster.getValidTill());
 				ps.setString(12, requestInfo.getUserInfo().getId().toString());

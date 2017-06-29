@@ -54,12 +54,10 @@ public class TaxHeadMasterQueryBuilder {
 			selectQuery.append(" service = ?");
 			preparedStatementValues.add(searchTaxHead.getService());
 		}
-		if (!searchTaxHead.getId().isEmpty()) {
+		if (searchTaxHead.getId()!=null && !searchTaxHead.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" id IN (" + getIdQuery(searchTaxHead.getId()));
-		}
-		
-		if (searchTaxHead.getId().isEmpty() && !searchTaxHead.getCode().isEmpty()) {
+		}else if(searchTaxHead.getCode()!=null && !searchTaxHead.getCode().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" code IN ("+ getIdQuery(searchTaxHead.getCode()));
 			//preparedStatementValues.add("%" + searchTaxHead.getCode() + "%");
@@ -78,6 +76,15 @@ public class TaxHeadMasterQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" isDebit = ?");
 			preparedStatementValues.add("%" + searchTaxHead.getIsDebit() + "%");
+		}
+		
+		if (searchTaxHead.getValidFrom() != null && searchTaxHead.getValidTill()!=null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" validfrom >= ?");
+			preparedStatementValues.add(searchTaxHead.getValidFrom());
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" validtill <= ?");
+			preparedStatementValues.add(searchTaxHead.getValidTill());
 		}
 	}
 	

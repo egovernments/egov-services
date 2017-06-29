@@ -255,7 +255,7 @@ class grievanceSearch extends Component {
   		if(isSearchClicked) {
   			return (
 	  			<Card style={styles.marginStyle}>
-		          	<CardHeader style={{paddingBottom: 0}} title={<div style = {styles.headerStyle} > Search Result </div>}/>
+		          	<CardHeader style={{paddingBottom: 0}} title={<div style = {styles.headerStyle} > {translate("pgr.searchresult")} </div>}/>
 	  				{showTable()}
 	  				{showPagination()}
 	  			</Card>
@@ -286,8 +286,8 @@ class grievanceSearch extends Component {
   	const showPagination = function() {
 			return (
 				<div style={{"textAlign": "center"}}>
-					<ReactPaginate previousLabel={"Previous"}
-                   nextLabel={"Next"}
+					<ReactPaginate previousLabel={translate("pgr.lbl.previous")}
+                   nextLabel={translate("pgr.lbl.next")}
                    breakLabel={<a href="">...</a>}
                    pageCount={pageCount}
                    marginPagesDisplayed={2}
@@ -420,7 +420,7 @@ class grievanceSearch extends Component {
 	        </Dialog>
           <Snackbar
             open={this.state.open1}
-            message="No search results"
+            message={translate("pgr.lbl.noresult")}
             autoHideDuration={4000}
             style={{"textAlign": "center"}}
           />

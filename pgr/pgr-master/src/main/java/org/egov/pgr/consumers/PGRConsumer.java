@@ -45,7 +45,6 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
-import org.egov.pgr.model.EscalationHierarchy;
 import org.egov.pgr.model.OTPConfig;
 import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.service.EscalationTimeTypeService;
@@ -57,6 +56,7 @@ import org.egov.pgr.service.RouterService;
 import org.egov.pgr.service.ServiceGroupService;
 /*import org.egov.pgr.web.contract.RouterReq;*/
 import org.egov.pgr.service.ServiceTypeService;
+import org.egov.pgr.web.contract.EscalationHierarchyReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
 import org.egov.pgr.web.contract.ReceivingModeTypeReq;
@@ -165,10 +165,10 @@ public class PGRConsumer {
 				otpConfigService.update(objectMapper.readValue(record.value(),  OTPConfig.class)); 
 			} else if (record.topic().equals(applicationProperties.getCreateEscalationHierarchyTopicName())) {
 				LOGGER.info("Consuming Create Escalation Hierarchy Request");
-				escalationHierarchyService.create(objectMapper.readValue(record.value(), EscalationHierarchy.class));
+				escalationHierarchyService.create(objectMapper.readValue(record.value(), EscalationHierarchyReq.class));
 			} else if (record.topic().equals(applicationProperties.getUpdateEscalationHierarchyTopicName())) {
 				LOGGER.info("Consuming Update Escalation Hierarchy Request");
-				escalationHierarchyService.update(objectMapper.readValue(record.value(), EscalationHierarchy.class));
+				escalationHierarchyService.update(objectMapper.readValue(record.value(), EscalationHierarchyReq.class));
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

@@ -39,7 +39,10 @@
  */
 package org.egov.pgr.web.contract;
 
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.model.EscalationHierarchy;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,6 +63,6 @@ public class EscalationHierarchyReq {
 	
 	private RequestInfo RequestInfo;
 	
-	private EscalationHierarchy escalationHierarchy; 
+	private List<EscalationHierarchy> escalationHierarchy; 
 
 }

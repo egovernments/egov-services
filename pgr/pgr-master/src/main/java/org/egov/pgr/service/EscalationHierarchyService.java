@@ -40,12 +40,14 @@
 
 package org.egov.pgr.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.EscalationHierarchy;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.EscalationHierarchyRespository;
+import org.egov.pgr.web.contract.EscalationHierarchyGetReq;
+import org.egov.pgr.web.contract.EscalationHierarchyReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,13 +67,13 @@ public class EscalationHierarchyService {
 	@Autowired
 	private PGRProducer pgrProducer;
 	
-	public org.egov.pgr.web.contract.EscalationHierarchy createEscalationHierarchy(final String topic, final String key,
-			final EscalationHierarchy escalationHierarchy) {
+	public EscalationHierarchy createEscalationHierarchy(final String topic, final String key,
+			final EscalationHierarchyReq escalationHierarchyRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String escalationHierarchyValue = null;
 		try {
-			logger.info("EscalationHierarchy::" + escalationHierarchy);
-			escalationHierarchyValue = mapper.writeValueAsString(escalationHierarchy);
+			logger.info("EscalationHierarchy::" + escalationHierarchyRequest);
+			escalationHierarchyValue = mapper.writeValueAsString(escalationHierarchyRequest);
 			logger.info("Value being pushed on the Queue, EscalationHierarchyValue::" + escalationHierarchyValue);
 		} catch (final JsonProcessingException e) {
 			logger.error("Exception Encountered : " + e);
@@ -80,19 +82,19 @@ public class EscalationHierarchyService {
 			pgrProducer.sendMessage(topic, key, escalationHierarchyValue);
 		} catch (final Exception e) {
 			logger.error("Exception while posting to kafka Queue : " + e);
-			return new org.egov.pgr.web.contract.EscalationHierarchy();
+			return new EscalationHierarchy();
 		}
 		logger.error("Producer successfully posted the request to Queue");
-		return new org.egov.pgr.web.contract.EscalationHierarchy();
+		return new EscalationHierarchy();
 	}
 	
-	public org.egov.pgr.web.contract.EscalationHierarchy updateEscalationHierarchy(final String topic, final String key,
-			final EscalationHierarchy escalationHierarchy) {
+	public EscalationHierarchy updateEscalationHierarchy(final String topic, final String key,
+			final EscalationHierarchyReq escalationHierarchyRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String escalationHierarchyValue = null;
 		try {
-			logger.info("EscalationHierarchy::" + escalationHierarchy);
-			escalationHierarchyValue = mapper.writeValueAsString(escalationHierarchy);
+			logger.info("EscalationHierarchy::" + escalationHierarchyRequest);
+			escalationHierarchyValue = mapper.writeValueAsString(escalationHierarchyRequest);
 			logger.info("Value being pushed on the Queue, EscalationHierarchyValue::" + escalationHierarchyValue);
 		} catch (final JsonProcessingException e) {
 			logger.error("Exception Encountered : " + e);
@@ -101,42 +103,33 @@ public class EscalationHierarchyService {
 			pgrProducer.sendMessage(topic, key, escalationHierarchyValue);
 		} catch (final Exception e) {
 			logger.error("Exception while posting to kafka Queue : " + e);
-			return new org.egov.pgr.web.contract.EscalationHierarchy();
+			return new EscalationHierarchy();
 		}
 		logger.error("Producer successfully posted the request to Queue");
-		return new org.egov.pgr.web.contract.EscalationHierarchy();
+		return new EscalationHierarchy();
 	}
 	
-	public void create(EscalationHierarchy escalationHierarchy) {
+	public void create(EscalationHierarchyReq escalationHierarchyRequest) {
 		logger.info("Persisting Escalation Hierarchy record");
-		escalationHierarchyRepository.persistEscalationHierarchy(escalationHierarchy);
+		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRequest.getEscalationHierarchy();
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy(escalationHierarchyRequest.getRequestInfo().getUserInfo().getId());
+		escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
 	}
 	
-	public void update(EscalationHierarchy escalationHierarchy) {
+	public void update(EscalationHierarchyReq escalationHierarchyRequest) {
 		logger.info("Updating Escalation Hierarchy record");
-		escalationHierarchyRepository.deleteEscalationHierarchy(escalationHierarchy);
-		escalationHierarchyRepository.persistEscalationHierarchy(escalationHierarchy);
+		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRequest.getEscalationHierarchy();
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy(escalationHierarchyRequest.getRequestInfo().getUserInfo().getId());
+		escalationHierarchyRepository.deleteEscalationHierarchy(escHierarchyList);
+		escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
 	}
 	
-	public List<org.egov.pgr.web.contract.EscalationHierarchy> getAllEscalationHierarchy(EscalationHierarchy escalationHierarchy) {
-		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRepository.getAllEscalationHierarchy(escalationHierarchy);
-		return convertModelToContract(escHierarchyList);
+	public List<EscalationHierarchy> getAllEscalationHierarchy(EscalationHierarchyGetReq escHierarchyGetRequest) {
+		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRepository.getAllEscalationHierarchy(escHierarchyGetRequest);
+		return escHierarchyList;
 	}
 	
-	private List<org.egov.pgr.web.contract.EscalationHierarchy> convertModelToContract(
-			List<EscalationHierarchy> escHierarchyList) {
-		List<org.egov.pgr.web.contract.EscalationHierarchy> list = new ArrayList<>();
-		if (null != escHierarchyList && escHierarchyList.size() <= 0) {
-			for (int i = 0; i < escHierarchyList.size(); i++) {
-				org.egov.pgr.web.contract.EscalationHierarchy escHierarchy = new org.egov.pgr.web.contract.EscalationHierarchy();
-				escHierarchy.setFromPosition(escHierarchyList.get(i).getFromPosition());
-				escHierarchy.setToPosition(escHierarchyList.get(i).getToPosition());
-				escHierarchy.setServiceCode(escHierarchyList.get(i).getServiceCode());
-				escHierarchy.setTenantId(escHierarchyList.get(i).getTenantId());
-				list.add(escHierarchy);
-			}
-		}
-		return list;
-	}
 }
 

@@ -24,13 +24,13 @@ public class CrnRepositoryTest {
 
     @Test
     public void shouldGetCrn() {
-        final String CRN_SERVICE_URL = "http://localhost:8088/";
+        final String CRN_HOST = "http://localhost:8088/";
+        final String EXPECTED_URL = "http://localhost:8088/crn-generation/crn/v1/_create";
         final String CRN = "crn_number";
         final ServiceRequestRegistrationNumber expected = new ServiceRequestRegistrationNumber(CRN);
-        when(restTemplate.postForObject(eq(CRN_SERVICE_URL), any(), eq(ServiceRequestRegistrationNumber.class)))
+        when(restTemplate.postForObject(eq(EXPECTED_URL), any(), eq(ServiceRequestRegistrationNumber.class)))
             .thenReturn(expected);
-
-        CrnRepository crnRepository = new CrnRepository(restTemplate, CRN_SERVICE_URL);
+        CrnRepository crnRepository = new CrnRepository(restTemplate, CRN_HOST);
 
         ServiceRequestRegistrationNumber actual = crnRepository.getCrn();
 

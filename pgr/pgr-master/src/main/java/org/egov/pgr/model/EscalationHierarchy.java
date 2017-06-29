@@ -39,8 +39,6 @@
  */
 package org.egov.pgr.model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -60,7 +58,7 @@ public class EscalationHierarchy {
 	
 	private Long fromPosition;
 	
-	private List<String> serviceCode;
+	private String serviceCode;
 	
 	private Long toPosition;
 	

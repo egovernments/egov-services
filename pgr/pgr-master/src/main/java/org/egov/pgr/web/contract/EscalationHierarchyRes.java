@@ -41,6 +41,7 @@ package org.egov.pgr.web.contract;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.pgr.model.EscalationHierarchy;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

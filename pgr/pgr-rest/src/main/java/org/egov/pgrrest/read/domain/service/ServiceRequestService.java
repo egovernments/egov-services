@@ -19,7 +19,6 @@ public class ServiceRequestService {
     private ServiceRequestRepository serviceRequestRepository;
     private UserRepository userRepository;
     private SevaNumberGeneratorService sevaNumberGeneratorService;
-    private OtpService otpService;
     private ServiceRequestTypeService serviceRequestTypeService;
     private List<ServiceRequestValidator> validators;
 
@@ -27,13 +26,11 @@ public class ServiceRequestService {
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
                                  SevaNumberGeneratorService sevaNumberGeneratorService,
                                  UserRepository userRepository,
-                                 OtpService otpService,
                                  ServiceRequestTypeService serviceRequestTypeService,
                                  List<ServiceRequestValidator> validators) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
-        this.otpService = otpService;
         this.serviceRequestTypeService = serviceRequestTypeService;
         this.validators = validators;
     }
@@ -51,7 +48,6 @@ public class ServiceRequestService {
     public void save(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
         validate(serviceRequest);
         enrichWithServiceType(serviceRequest);
-        otpService.validateOtp(serviceRequest);
         enrichWithCRN(serviceRequest);
         contractSevaRequest.update(serviceRequest);
         setUserIdForAnonymousUser(contractSevaRequest);

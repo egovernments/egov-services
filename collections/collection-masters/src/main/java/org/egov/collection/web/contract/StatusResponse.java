@@ -37,36 +37,23 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.pgr.web.contract;
+package org.egov.collection.web.contract;
 
 import java.util.List;
 
-import org.egov.pgr.model.AuditDetails;
+import org.egov.common.contract.response.ResponseInfo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
-@ToString
-@Builder
-public class EscalationHierarchy {
-	
-	private Long fromPosition;
-	
-	private List<String> serviceCode;
-	
-	private Long toPosition;
-	
-	private String tenantId;
-	
-	private AuditDetails auditDetails; 
+public class StatusResponse {
+
+	@JsonProperty("ResponseInfo")
+	ResponseInfo responseInfo;
+
+	@JsonProperty("StatusInfo")
+	List<Status> status;
+
 }

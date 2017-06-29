@@ -258,16 +258,16 @@ class searchRouter extends Component {
       if(isSearchClicked)
       return (
           <Card>
-            <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+            <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
             <CardText>
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
               <thead style={{backgroundColor:"#f2851f",color:"white"}}>
                 <tr>
                   <th>#</th>
                   <th>{translate("pgr.lbl.grievance.type")}</th>
-                  <th>Boundary Type</th>
-                  <th>Boundary</th>
-                  <th>Position</th>
+                  <th>{translate("pgr.lbl.boundarytype")}</th>
+                  <th>{translate("pgr.lbl.boundary")}</th>
+                  <th>{translate("pgr.lbl.position")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -309,7 +309,7 @@ class searchRouter extends Component {
                         />
                    </Col>
                    <Col xs={12} md={8}>
-                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Boundary Type" value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
+                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
                             loadBoundaries(val);
                             handleChange(e, "boundaryType", true, "")}}>
@@ -321,7 +321,7 @@ class searchRouter extends Component {
                    <Col xs={12} md={8}>
                     <AutoComplete
                         hintText=""
-                        floatingLabelText="Boundary"
+                        floatingLabelText={translate("pgr.lbl.boundary")}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}

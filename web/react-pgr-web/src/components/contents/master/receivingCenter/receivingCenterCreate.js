@@ -15,6 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -169,7 +170,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Name"
+                                      floatingLabelText={translate("core.lbl.add.name")}
                                       value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       onChange={(e) => handleChange(e, "name", true, '')}
@@ -179,7 +180,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Code"
+                                      floatingLabelText={translate("core.lbl.code")}
                                       value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       onChange={(e) => handleChange(e, "code", true, '')}
@@ -190,7 +191,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Description"
+                                      floatingLabelText={translate("core.lbl.description")}
                                       value={createReceivingCenter.description? createReceivingCenter.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       onChange={(e) => handleChange(e, "description", false, '')}
@@ -250,13 +251,13 @@ class CreateReceivingCenter extends Component {
               </Card>
               <div style={{textAlign:'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
               </div>
           </form>
           <Dialog
                title="Data Added Successfully"
                actions={<FlatButton
-   				        label="Close"
+   				        label={translate("core.lbl.close")}
    				        primary={true}
    				        onTouchTap={this.handleClose}
    				      />}

@@ -43,9 +43,6 @@ public class ServiceRequestServiceTest {
     @Mock
     private ServiceRequestTypeService serviceRequestTypeService;
 
-    @Mock
-    private OtpService otpService;
-
     private ServiceRequestService serviceRequestService;
 
     @Mock
@@ -62,7 +59,7 @@ public class ServiceRequestServiceTest {
         when(serviceRequestValidator.canValidate(any())).thenReturn(true);
         final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
         serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
-            userRepository, otpService, serviceRequestTypeService, validators);
+            userRepository, serviceRequestTypeService, validators);
     }
 
     @Test

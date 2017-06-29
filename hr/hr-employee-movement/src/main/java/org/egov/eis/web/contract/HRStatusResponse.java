@@ -43,10 +43,6 @@ package org.egov.eis.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import org.egov.eis.model.Movement;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -62,15 +58,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class MovementRequest {
+public class HRStatusResponse {
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
+    @JsonProperty("HRStatus")
+    private List<HRStatus> hrStatus = new ArrayList<HRStatus>();
 
-    private String type;
 }

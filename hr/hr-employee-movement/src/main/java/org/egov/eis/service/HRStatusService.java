@@ -38,39 +38,39 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import org.egov.eis.service.helper.HRStatusSearchURLHelper;
+import org.egov.eis.web.contract.HRStatus;
+import org.egov.eis.web.contract.HRStatusResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import org.egov.eis.model.Movement;
+@Service
+public class HRStatusService {
+    @Autowired
+    private HRStatusSearchURLHelper hrStatusSearchURLHelper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+    public List<HRStatus> getHRStatuses(final String code, final String tenantId, final RequestInfo requestInfo) {
+        final String url = hrStatusSearchURLHelper.searchURL(code, tenantId);
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class MovementRequest {
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+        final HRStatusResponse hrStatusResponse = restTemplate.postForObject(url, request,
+                HRStatusResponse.class);
 
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
-
-    private String type;
+        return hrStatusResponse.getHrStatus();
+    }
 }

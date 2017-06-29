@@ -38,39 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model.enums;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import org.egov.eis.model.Movement;
+public enum MovementStatus {
+    APPLIED("APPLIED"), APPROVED("APPROVED"), REJECTED("REJECTED"), CANCELLED("CANCELLED"), RESUBMITTED("RESUBMITTED");
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+    private String value;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+    MovementStatus(final String value) {
+        this.value = value;
+    }
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class MovementRequest {
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
-
-    private String type;
+    @JsonCreator
+    public static MovementStatus fromValue(final String passedValue) {
+        for (final MovementStatus obj : MovementStatus.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }

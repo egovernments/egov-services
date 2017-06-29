@@ -38,39 +38,50 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.broker;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-import javax.validation.constraints.NotNull;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.egov.eis.service.MovementService;
+import org.egov.eis.web.contract.MovementRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 
-import org.egov.eis.model.Movement;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class MovementConsumer {
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+    public static final Logger LOGGER = LoggerFactory.getLogger(MovementConsumer.class);
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class MovementRequest {
+    @Value("${kafka.topics.movement.create.name}")
+    private String movementCreateTopic;
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    @Value("${kafka.topics.movement.update.name}")
+    private String movementUpdateTopic;
 
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
+    @Autowired
+    private MovementService movementService;
 
-    private String type;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
+            "${kafka.topics.movement.create.name}",
+            "${kafka.topics.movement.update.name}" })
+
+    public void listen(final ConsumerRecord<String, String> record) {
+        LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
+        try {
+            if (record.topic().equalsIgnoreCase(movementCreateTopic))
+                movementService.create(objectMapper.readValue(record.value(), MovementRequest.class));
+            else if (record.topic().equalsIgnoreCase(movementUpdateTopic))
+                movementService.update(objectMapper.readValue(record.value(), MovementRequest.class));
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

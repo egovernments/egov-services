@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.egovernments.org
+ *  is available at http://www.empernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,42 +35,55 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.egov.eis.model.Movement;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
+@Component
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class MovementRequest {
+public class PropertiesManager {
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    @Value("${egov.services.common_workflow_service.hostname}")
+    private String commonWorkFlowServiceHostName;
 
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
+    @Value("${egov.services.common_workflow_service.process.basepath}")
+    private String commonWorkFlowServiceProcessBasePath;
 
-    private String type;
+    @Value("${egov.services.common_workflow_service.process.startpath}")
+    private String commonWorkFlowServiceProcessStartPath;
+
+    @Value("${egov.services.common_workflow_service.process.updatepath}")
+    private String commonWorkFlowServiceProcessUpdatePath;
+
+    @Value("${egov.services.workflow_service.transfer.businesskey}")
+    private String workflowServiceTransferBusinessKey;
+
+    @Value("${egov.services.workflow_service.promotion.businesskey}")
+    private String workflowServicePromotionBusinessKey;
+
+    @Value("${egov.services.hr_masters_service.hostname}")
+    private String hrMastersServiceHostName;
+
+    @Value("${egov.services.hr_masters_service.hrstatus.basepath}")
+    private String hrMastersServiceHRStatusBasePath;
+
+    @Value("${egov.services.hr_masters_service.hrstatuses.searchpath}")
+    private String hrMastersServiceStatusesSearchPath;
+
+    @Value("${egov.services.hr_masters_service.hrstatuses.key}")
+    private String hrMastersServiceStatusesKey;
 }

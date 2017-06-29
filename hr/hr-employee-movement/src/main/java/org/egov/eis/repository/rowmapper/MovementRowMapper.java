@@ -65,7 +65,7 @@ public class MovementRowMapper implements RowMapper<Movement> {
 
         final Movement movement = new Movement();
         movement.setId(rs.getLong("m_id"));
-        movement.setEmployee(rs.getLong("m_employee"));
+        movement.setEmployeeId(rs.getLong("m_employee"));
         movement.setTypeOfMovement(TypeOfMovement.fromValue(rs.getString("m_typeOfMovement")));
         movement.setCurrentAssignment(rs.getLong("m_currentAssignment"));
         movement.setTransferType(TransferType.fromValue(rs.getString("m_transferType")));
@@ -89,11 +89,14 @@ public class MovementRowMapper implements RowMapper<Movement> {
             movement.setLastModifiedDate(date);
             date = isEmpty(rs.getDate("m_effectiveFrom")) ? null : sdf.parse(sdf.format(rs.getDate("m_effectiveFrom")));
             movement.setEffectiveFrom(date);
-        } catch (ParseException e) {
+            date = isEmpty(rs.getDate("m_enquiryPassedDate")) ? null : sdf.parse(sdf.format(rs.getDate("m_enquiryPassedDate")));
+            movement.setEnquiryPassedDate(date);
+        } catch (final ParseException e) {
             e.printStackTrace();
             throw new SQLException("Parse exception while parsing Date");
         }
 
+        movement.setTransferedLocation(rs.getLong("m_transferedLocation"));
         movement.setDepartmentAssigned(rs.getLong("m_departmentAssigned"));
         movement.setDesignationAssigned(rs.getLong("m_designationAssigned"));
         movement.setPositionAssigned(rs.getLong("m_positionAssigned"));

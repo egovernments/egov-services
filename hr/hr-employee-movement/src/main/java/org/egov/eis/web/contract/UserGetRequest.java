@@ -40,16 +40,15 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import org.egov.eis.model.Movement;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,20 +56,48 @@ import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class MovementRequest {
+public class UserGetRequest {
 
-    @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
+    private List<Long> id;
 
-    private String type;
+    @Size(min = 1, max = 100)
+    private String userName;
+
+    @Size(min = 3, max = 100)
+    private String name;
+
+    @Size(max = 10)
+    private String mobileNumber;
+
+    @Size(max = 12)
+    private String aadhaarNumber;
+
+    @Size(max = 10)
+    private String pan;
+
+    @Size(max = 128)
+    private String emailId;
+
+    private List<String> roleCodes;
+
+    private Boolean active = true;
+
+    private Integer pageSize = 20;
+
+    private Integer pageNumber = 0;
+
+    private List<String> sort = Collections.singletonList("name");
+
+    @Size(max = 256)
+    private String tenantId;
+
 }

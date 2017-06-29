@@ -38,39 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.broker;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import javax.validation.constraints.NotNull;
+@Service
+public class MovementProducer {
 
-import org.egov.eis.model.Movement;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+    public void sendMessage(final String topic, final String key, final Object message) {
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class MovementRequest {
+        // Handle success or failure of sending
+        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+            @Override
+            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+            }
 
-    @NotNull
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-
-    @NotNull
-    @JsonProperty("Movement")
-    private List<Movement> movement = new ArrayList<>();
-
-    private String type;
+            @Override
+            public void onFailure(final Throwable throwable) {
+            }
+        });
+    }
 }

@@ -163,7 +163,14 @@ class Nominee extends React.Component{
             nominated: !this.state.nomineeSet.nominated
         }
       })
-    } else if (name === "bank"){
+    } else if(name === "employed") {
+    this.setState({
+      nomineeSet:{
+          ...this.state.nomineeSet,
+          employed: !this.state.nomineeSet.employed
+      }
+    })
+  } else if (name === "bank"){
       try {
         var branchList = commonApiPost("egf-masters", "bankbranches", "_search", {
           tenantId,
@@ -282,53 +289,78 @@ class Nominee extends React.Component{
         // widow.close();
         open(location, '_self').close();
     }
-  //   addOrUpdate(e){
-  //       // var finalPost={
-  //       //   "RequestInfo":requestInfo,
-  //       //
-  //       // }
-  //       e.preventDefault();
-  //       // console.log(zone);
-  //       // console.log(this.state.assetCategory);
-  //       var tempInfo=this.state.assetCategory;
-  //       // tempInfo["assetSet"]["assetCategory"]["id"]=parseInt(tempInfo["assetSet"]["assetCategory"]["id"])
-  //       var body = {
-  //           "RequestInfo":requestInfo,
-  //           "AssetCategory":tempInfo
-  //       };
-  //
-  //       $.ajax({
-  //           url:baseUrl+"/asset-services/assetCategories/_create?tenantId=" + tenantId,
-  //           type: 'POST',
-  //           dataType: 'json',
-  //           data:JSON.stringify(body),
-  //           contentType: 'application/json',
-  //           headers:{
-  //             'auth-token': authToken
-  //           },
-  //           success: function(res) {
-  //             window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=category&value=${getUrlVars()["type"]}`;
-  //           },
-  //           error: function(err) {
-  //             var _err = err["responseJSON"].Error.message || "";
-  //             if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
-  //               for(var key in err["responseJSON"].Error.fields) {
-  //                 _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
-  //               }
-  //               showError(_err);
-  //             } else if(_err) {
-  //               showError(_err);
-  //             } else {
-  //               showError(err["statusText"]);
-  //             }
-  //           }
-  //       })
-  // }
 
-    addOrUpdate(e,mode) {
-      e.preventDefault();
-      console.log(this.state.allNomineeValue);
-    }
+
+    addOrUpdate(e){
+        // var finalPost={
+        //   "RequestInfo":requestInfo,
+        //
+        // }
+        e.preventDefault();
+
+        var _this = this;
+        var _fieldDate = Object.assign([], this.state.allNomineeValue.nomineeFieldsDefination);
+        for (var i = 0; i < _fieldDate.length; i++) {
+          var _date = _fieldDate[i].dateOfBirth;
+          var dateParts1 = _date.split("/");
+          var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+          var date1 = new Date(newDateStr);
+          var _final = date1.getTime();
+          _fieldDate[i].dateOfBirth = _final;
+        }
+        var nomineeFieldsDefination = Object.assign([], _this.state.allNomineeValue.nomineeFieldsDefination);
+        var nominees = [];
+        for(var i=0; i<nomineeFieldsDefination.length; i++) {
+          var _tempInfo=Object.assign({}, _this.state.allNomineeValue);
+          delete _tempInfo.nomineeFieldsDefination;
+          nominees.push({..._tempInfo, ...nomineeFieldsDefination[i]});
+        }
+
+
+        var body = {
+            "RequestInfo":requestInfo,
+            "Nominee":nominees
+        };
+        
+        $.ajax({
+            url:baseUrl+"/hr-employee/nominees/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(body),
+            contentType: 'application/json',
+            headers:{
+              'auth-token': authToken
+            },
+            success: function(res) {
+              showSuccess("Nominee Created successfully.");
+              _this.setState({allNomineeValue: {
+                  "tenantId": tenantId,
+                  "employeeid": {
+                      id: "",
+                      name: "",
+                      code: ""
+                  },
+                  nomineeFieldsDefination: []
+              },
+            })
+            },
+            error: function(err) {
+              var _err = err["responseJSON"].Error.message || "";
+              if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                for(var key in err["responseJSON"].Error.fields) {
+                  _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
+                }
+                showError(_err);
+              } else if(_err) {
+                showError(_err);
+              } else {
+                showError(err["statusText"]);
+              }
+            }
+        })
+  }
+
+
 
 
 
@@ -355,7 +387,7 @@ class Nominee extends React.Component{
   render(){
 
     let {handleChange,addOrUpdate,addNewRow,showCustomFieldForm,addNominee,renderDelEvent,handleChangeThreeLevel}=this;
-    let {MaritalList,bankList,list,branchList,genderList,isEdit,index,isCustomFormVisible, readonly, showMsg,allNomineeValue}=this.state;
+    let {MaritalList,bankList,list,branchList,genderList,relationList,isEdit,index,isCustomFormVisible, readonly, showMsg,allNomineeValue}=this.state;
     let {nomineeFieldsDefination}=this.state.allNomineeValue;
     let mode=getUrlVars()["type"];
     let {name,gender,dateOfBirth,code,maritalStatus,relationship,bank,bankBranch,bankAccount,nominated,employed}=this.state.nomineeSet;
@@ -451,9 +483,7 @@ class Nominee extends React.Component{
                         <select  name="gender" value={gender}
                             onChange={(e)=>{handleChange(e,"gender")}}required>
                               <option value="">Select Type</option>
-                              <option>Male</option>
-                              <option>Female</option>
-                              <option>Other</option>
+                                {renderOption(genderList)}
                          </select>
                       </div>
                     </div>
@@ -470,11 +500,7 @@ class Nominee extends React.Component{
                     <select  name="relationship" value={relationship}
                         onChange={(e)=>{handleChange(e,"relationship")}}required>
                           <option value="">Select Type</option>
-                          <option>Father</option>
-                          <option>Mother</option>
-                          <option>Spouse</option>
-                          <option>son</option>
-                          <option>daughter</option>
+                          {renderOption(relationList)}
                      </select>
                   </div>
                 </div>
@@ -560,13 +586,7 @@ class Nominee extends React.Component{
                     <label for="employed"> Is Employee <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
-                    <div className="styled-select">
-                      <select id = "employed" name="employed" value={employed}
-                          onChange={(e)=>{handleChange(e,"employed")}}required>
-                            <option value="">Select Type</option>
-                            <option>Full Time</option>
-                       </select>
-                    </div>
+                      <input type="checkbox" name="employed" value={employed} onChange={(e)=>{ handleChange(e,"employed", true)}} checked={employed? true : false}/>
                   </div>
                 </div>
               </div>

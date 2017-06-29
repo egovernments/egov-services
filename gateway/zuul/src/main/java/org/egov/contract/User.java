@@ -27,6 +27,9 @@ public class User {
     @JsonProperty("emailId")
     private String emailId;
 
+    @JsonProperty("tenantId")
+    private String tenantId;
+
     @JsonProperty("roles")
     private List<Role> roles;
 
@@ -74,4 +77,9 @@ public class User {
     public void setActions(List<Action> actions) {
         this.actions = actions;
     }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
 }

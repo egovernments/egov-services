@@ -9,6 +9,7 @@
             "type": "EMPLOYEE",
             "mobileNumber": "1234567890",
             "emailId": "fu@bar.com",
+            "tenantId": "default",
             "roles": [
                 {
                     "id": 1,

@@ -42,6 +42,7 @@ package org.egov.pgr.repository.builder;
 import java.util.List;
 
 import org.egov.pgr.model.EscalationHierarchy;
+import org.egov.pgr.web.contract.EscalationHierarchyGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -54,7 +55,7 @@ private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchy
 	private static final String BASE_QUERY = "SELECT tenantid, fromposition, toposition, servicecode FROM egpgr_escalation_hierarchy esc ";
 	
 	@SuppressWarnings("rawtypes")
-	public String getQuery(final EscalationHierarchy escHierarchy, final List preparedStatementValues) {
+	public String getQuery(final EscalationHierarchyGetReq escHierarchy, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		addWhereClause(selectQuery, preparedStatementValues, escHierarchy);
 		logger.debug("Query : " + selectQuery);
@@ -63,9 +64,9 @@ private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchy
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final EscalationHierarchy escHierarchy) {
+			final EscalationHierarchyGetReq escHierarchy) {
 
-		if (escHierarchy.getToPosition() == null && escHierarchy.getTenantId() == null)
+		if (escHierarchy.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -77,7 +78,7 @@ private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchy
 			preparedStatementValues.add(escHierarchy.getTenantId());
 		}
 
-		if (escHierarchy.getFromPosition() != 0) {
+		if (null != escHierarchy.getFromPosition() && escHierarchy.getFromPosition() != 0) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" esc.fromposition = ?");
 			preparedStatementValues.add(escHierarchy.getFromPosition());
@@ -87,6 +88,11 @@ private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchy
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" esc.toposition = ?");
 			preparedStatementValues.add(escHierarchy.getToPosition());
+		}
+		
+		if (null != escHierarchy.getServiceCode() && 0 <= escHierarchy.getServiceCode().size()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" esc.servicecode IN " + getCodeQuery(escHierarchy.getServiceCode()));
 		}
 	}	
 	/**
@@ -104,40 +110,54 @@ private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchy
 		return true;
 	}
 
-	/*private static String getIdQuery(final List<Long> idList) {
+	private static String getCodeQuery(final List<String> codeList) {
 		final StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++)
-				query.append(", " + idList.get(i));
+		if (codeList.size() >= 1) {
+			query.append("'" + codeList.get(0).toString()+ "'");
+			for (int i = 1; i < codeList.size(); i++)
+				query.append(", " + "'" + codeList.get(i) + "'");
 		}
 		return query.append(")").toString();
-	}*/
-
-
+	}
 	
 	public String insertEscalationHierarchy() {
 		return "INSERT INTO egpgr_escalation_hierarchy (tenantid, fromposition, toposition, servicecode, createdby, createddate) "
 				+ " values (?, ?, ?, ?, ?, ?)";
 	}
 	
-	public String deleteEscalationHierarchy(List<String> serviceCodes) {
-		StringBuilder deleteBaseQuery = new StringBuilder(
-				"DELETE FROM egpgr_escalation_hierarchy WHERE tenantid = ? AND fromposition = ? ");
-		if (null != serviceCodes && serviceCodes.size() > 0) {
-			deleteBaseQuery.append(" AND servicecode IN (");
-			for (int i = 0; i < serviceCodes.size(); i++) {
-				if(i==0 && serviceCodes.size()-1==0){
-					deleteBaseQuery.append("'" + serviceCodes.get(i) + "'"); 
-				} else if (i== serviceCodes.size()-1) {
-					deleteBaseQuery.append("'" + serviceCodes.get(i) + "'");
+	public String deleteEscalationHierarchy(List<EscalationHierarchy> escHierarchyList) {
+		StringBuilder deleteBaseQuery = new StringBuilder();
+		StringBuilder tenantIdConstructor= new StringBuilder();
+		StringBuilder fromPositionConstructor = new StringBuilder();
+		StringBuilder serviceCodeConstructor = new StringBuilder();
+		if (null != escHierarchyList && escHierarchyList.size() > 0) {
+			serviceCodeConstructor.append("servicecode IN (");
+			tenantIdConstructor.append("tenantid IN (");
+			fromPositionConstructor.append("fromposition IN (");
+			for (int i = 0; i < escHierarchyList.size(); i++) {
+				if(i==0 && escHierarchyList.size()-1==0){
+					serviceCodeConstructor.append("'" + escHierarchyList.get(i).getServiceCode() + "'"); 
+					tenantIdConstructor.append("'" + escHierarchyList.get(i).getTenantId() + "'");
+					fromPositionConstructor.append("'" + escHierarchyList.get(i).getFromPosition() + "'");
+				} else if (i== escHierarchyList.size()-1) {
+					serviceCodeConstructor.append("'" + escHierarchyList.get(i).getServiceCode() + "'");
+					tenantIdConstructor.append("'" + escHierarchyList.get(i).getTenantId() + "'");
+					fromPositionConstructor.append("'" + escHierarchyList.get(i).getFromPosition() + "'");
 				} else {
-					deleteBaseQuery.append("'" + serviceCodes.get(i) + "'");
-					deleteBaseQuery.append(",");
+					serviceCodeConstructor.append("'" + escHierarchyList.get(i).getServiceCode() + "'");
+					serviceCodeConstructor.append(",");
+					tenantIdConstructor.append("'" + escHierarchyList.get(i).getTenantId() + "'");
+					tenantIdConstructor.append(",");
+					fromPositionConstructor.append("'" + escHierarchyList.get(i).getFromPosition() + "'");
+					fromPositionConstructor.append(",");
 				}
 			}
-			deleteBaseQuery.append(")");
+			deleteBaseQuery.append("DELETE FROM egpgr_escalation_hierarchy WHERE ");
+			deleteBaseQuery.append(serviceCodeConstructor.toString() + ")");
+			deleteBaseQuery.append(" AND " + tenantIdConstructor.toString() + ")");
+			deleteBaseQuery.append(" AND " + fromPositionConstructor.toString() + ")");
 		}
+		logger.info("We will be running this : "+ deleteBaseQuery);
 		return deleteBaseQuery.toString();
 	}
 

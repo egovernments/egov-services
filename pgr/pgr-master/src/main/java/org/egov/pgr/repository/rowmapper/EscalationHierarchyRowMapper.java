@@ -49,11 +49,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class EscalationHierarchyRowMapper implements RowMapper<EscalationHierarchy> {
 	@Override
-	//SELECT tenantid, fromposition, toposition, servicecode FROM egpgr_escalation_hierarchy esc 
 	public EscalationHierarchy mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		EscalationHierarchy escHierarchy = new EscalationHierarchy();
 		escHierarchy.setFromPosition(rs.getLong("fromposition"));
 		escHierarchy.setToPosition(rs.getLong("toposition"));
+		escHierarchy.setServiceCode(rs.getString("servicecode"));
+		escHierarchy.setTenantId(rs.getString("tenantid"));
 		return escHierarchy;
 	}
 

@@ -256,7 +256,7 @@ public class GrievanceTypeController {
     
     private void checkCategorySLAValues(final ServiceRequest serviceTypeRequest,
             final List<ErrorField> errorFields) {
-        final ServiceType serviceType = serviceTypeRequest.getService();
+        /*final ServiceType serviceType = serviceTypeRequest.getService();
         if (0 >= serviceType.getCategory()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(PgrMasterConstants.CATEGORY_ID_MANDATORY_CODE)
@@ -271,7 +271,7 @@ public class GrievanceTypeController {
                     .field(PgrMasterConstants.SLA_HOURS_MANDATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-        }
+        }*/
             return;
     }
     

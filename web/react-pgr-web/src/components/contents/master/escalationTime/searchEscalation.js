@@ -204,8 +204,8 @@ class SearchEscalation extends Component {
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
                     <th>{translate("pgr.lbl.grievance.type")}</th>
-                    <th>Designation</th>
-                    <th>Number of hours</th>
+                    <th>{translate("pgr.lbl.designation")}</th>
+                    <th>{translate("pgr.noof.hours")}</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -249,7 +249,7 @@ class SearchEscalation extends Component {
                                   </Col>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          floatingLabelText="Designation"
+                                          floatingLabelText={translate("pgr.lbl.designation")}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());

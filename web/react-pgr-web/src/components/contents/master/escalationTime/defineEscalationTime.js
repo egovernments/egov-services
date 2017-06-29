@@ -354,8 +354,8 @@ class DefineEscalationTime extends Component {
    		            <tr>
    		              <th>No.</th>
                     <th>{translate("pgr.lbl.designation")}</th>
-                    <th>Number of Hours</th>
-                    <th>Action</th>
+                    <th>{translate("pgr.noof.hours")}</th>
+                    <th></th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -409,9 +409,9 @@ class DefineEscalationTime extends Component {
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
-                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected service type. </strong>}/>
+                      <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} >{translate("pgr.lbl.escdetail")}</strong>}/>
                       <CardText>
-                          <RaisedButton style={{margin:'10px 0'}} label="Add Escalation Details" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                          <RaisedButton style={{margin:'10px 0'}} label={translate("pgr.lbl.addesc")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                             this.setState({
                               isSearchClicked: true,
                               noData:false

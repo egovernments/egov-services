@@ -394,6 +394,7 @@ public class UserControllerTest {
 				.type("EMPLOYEE")
 				.active(Boolean.TRUE)
 				.roles(getRoles())
+				.tenantId("default")
 				.build();
 	}
 

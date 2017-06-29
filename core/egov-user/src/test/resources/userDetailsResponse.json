@@ -13,6 +13,7 @@
     }
   ],
   "active": true,
+  "tenantId": "default",
   "actions": [
     {
       "name": "ReceivingMode",

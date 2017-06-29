@@ -69,7 +69,7 @@ class ViewEditServiceGroup extends Component {
         var body = {}
         let  current = this;
         Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{},body).then(function(response){
-            //console.log(response);
+            console.log(response);
             current.setState({data:response.ReceivingCenterType});
         }).catch((error)=>{
             console.log(error);
@@ -86,7 +86,7 @@ class ViewEditServiceGroup extends Component {
     render() {
 
       let {
-        receivingCenterCreate,
+        viewEditServiceGroup,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -102,7 +102,7 @@ class ViewEditServiceGroup extends Component {
       let url = this.props.location.pathname;
 
       return(
-        <div className="receivingCenterCreate">
+        <div className="viewEditServiceGroup">
             <Card style={styles.marginStyle}>
                 <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Center</div>} />
                 <CardText style={{padding:0}}>
@@ -131,7 +131,7 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
-                                              <td>{e.active}</td>
+                                              <td>{e.active  ? "true" : "false"}</td>
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
@@ -153,7 +153,7 @@ class ViewEditServiceGroup extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({receivingCenterCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({viewEditServiceGroup: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({

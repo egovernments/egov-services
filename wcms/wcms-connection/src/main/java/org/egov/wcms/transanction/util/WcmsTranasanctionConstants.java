@@ -265,6 +265,11 @@ public class WcmsTranasanctionConstants {
     public static final String SUPPLYTYPE_INVALID_CODE = "wcms.0041";
     public static final String SUPPLYTYPE_INVALID_FIELD_NAME = "supplyType.name";
     public static final String SUPPLYTYPE_INVALID_ERROR_MESSAGE = "SupplyType name doesn't Exist";
+    
+    
+    public static final String CONNECTION_METERED_INVALID_CODE = "wcms.0042";
+    public static final String CONNECTION_METERED_INVALID_FIELD_NAME = "billingType";
+    public static final String CONNECTION_METERED_INVALID_ERROR_MESSAGE = "Please provide Meter Deatils for Metered Connection";
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

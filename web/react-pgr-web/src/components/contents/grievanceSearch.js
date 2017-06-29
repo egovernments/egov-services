@@ -128,7 +128,7 @@ class grievanceSearch extends Component {
 
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
-  		Api.commonApiPost("/pgr/seva/_count", searchSet).then(function(response) {
+  		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
 		      		self.setState({
@@ -172,7 +172,7 @@ class grievanceSearch extends Component {
     	checkCountAndCall("locationList", []);
     });
 
-    Api.commonApiPost("/pgr/receivingmode/v1/_search").then(function(response) {
+    Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response) {
       	checkCountAndCall("receiveingModeList", response.receivingModes);
     }, function(err) {
     	checkCountAndCall("receiveingModeList", []);
@@ -190,7 +190,7 @@ class grievanceSearch extends Component {
     	checkCountAndCall("departmentList", []);
     });
 
-    Api.commonApiPost("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+    Api.commonApiPost("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}, true).then(function(response) {
       	checkCountAndCall("boundaryList", response.Boundary);
     }, function(err) {
     	checkCountAndCall("boundaryList", []);

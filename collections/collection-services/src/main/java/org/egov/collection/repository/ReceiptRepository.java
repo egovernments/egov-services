@@ -41,6 +41,7 @@
 package org.egov.collection.repository;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,8 @@ import java.util.Map;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.IdRequest;
+import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.producer.CollectionProducer;
@@ -170,8 +173,10 @@ public class ReceiptRepository {
 				parametersMap.put("referencenumber", billdetails.getRefNo());
 				parametersMap.put("receipttype", billdetails.getReceiptType());
 				
-				String receiptNumber = generateReceiptNumber(receiptReq.getRequestInfo());
-				billdetails.setReceiptNumber(receiptNumber);
+			//	String receiptNumber = generateReceiptNumber(receiptReq);
+			//	logger.info("Receipt Number generated is: "+receiptNumber);
+				
+				billdetails.setReceiptNumber("receiptNumber");
 				
 				parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
@@ -339,7 +344,6 @@ public class ReceiptRepository {
 		}catch(Exception e){
 			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
 		}
-		
 		logger.info("Response from collection-masters: "+response.toString());
 		
 		String status = JsonPath.read(response, "$.");
@@ -347,7 +351,7 @@ public class ReceiptRepository {
 		return status;
 	}
 	
-	private String generateReceiptNumber(RequestInfo requestInfo){
+	private String generateReceiptNumber(ReceiptReq receiptReq){
 		logger.info("Generating receipt number for the receipt.");	
 		
 		StringBuilder builder = new StringBuilder();
@@ -356,19 +360,29 @@ public class ReceiptRepository {
 		
 		logger.info("URI being hit: "+builder.toString());
 		
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
+		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
+		IdRequest idRequest = new IdRequest();
+		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
+		idRequest.setTenantId(receiptReq.getReceipt().getTenantId());
+		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
+		
+		List<IdRequest> idRequests = new ArrayList<>();
+		idRequests.add(idRequest);
+		
+		idRequestWrapper.setRequestInfo(receiptReq.getRequestInfo());
+		idRequestWrapper.setIdRequests(idRequests);
 		Object response = null;
 
 		try{
-			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
+			response = restTemplate.postForObject(builder.toString(), idRequestWrapper , Object.class);
 		}catch(Exception e){
-			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
+			logger.error("Error while generating receipt number. "+e.getCause());
 		}
+		logger.info("Response from id gen service: "+response.toString());
 		
-		logger.info("Response from collection-masters: "+response.toString());
-		
-		return "";
+		String receiptNo = JsonPath.read(response, "$.");
+
+		return receiptNo;
 	}
 	
 

@@ -13,6 +13,8 @@ var instance = axios.create({
 
 var authToken = localStorage.getItem("auth");
 
+console.log(authToken);
+
 //request info from cookies
 var requestInfo = {
   "apiId": "org.egov.pt",

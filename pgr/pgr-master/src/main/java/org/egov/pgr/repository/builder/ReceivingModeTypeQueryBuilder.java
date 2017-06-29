@@ -52,7 +52,7 @@ public class ReceivingModeTypeQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,modeType.channel from egpgr_receivingmode modeType";
+	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active from egpgr_receivingmode modeType";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final ReceivingModeTypeGetReq modeTypeRequest, final List preparedStatementValues) {

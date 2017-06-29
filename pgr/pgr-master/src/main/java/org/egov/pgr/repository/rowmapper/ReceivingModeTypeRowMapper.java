@@ -58,7 +58,6 @@ public class ReceivingModeTypeRowMapper implements RowMapper<ReceivingModeType> 
 		modeType.setDescription(rs.getString("description"));
 		modeType.setTenantId(rs.getString("tenantId"));
 		modeType.setActive(rs.getBoolean("active"));
-		modeType.setChannel(rs.getString("channel"));
 
 		return modeType;
 	}

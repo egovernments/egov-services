@@ -59,7 +59,7 @@ public class PgrMasterConstants {
 	public static final String INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE = "ReceivingCenter is Invalid.";
 	public static final String INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE = "ReceivingMode is Invalid.";
 	public static final String INVALID_SERVICETYPE_REQUEST_MESSAGE = "Service Type Message is Invalid";
-	public static final String INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE = "Service Group is invalid";
+	public static final String INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE = "Escalation time type is invalid";
 
 	
 

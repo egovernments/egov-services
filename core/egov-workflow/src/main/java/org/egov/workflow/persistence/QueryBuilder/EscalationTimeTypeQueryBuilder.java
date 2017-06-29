@@ -56,8 +56,9 @@ public class EscalationTimeTypeQueryBuilder {
 	
 	public String insertEscalationTimeType(){
 		logger.info("Returning insertEscalationTimeType query from builder");
-		return "INSERT INTO egpgr_escalation(complaint_type_id, no_of_hrs, designation_id, tenantid, createdby"
-				+ ", lastmodifiedby, createddate, lastmodifieddate) VALUES(?,?,?,?,?,?,?,?)";
+		
+		return "INSERT INTO egpgr_escalation(id, complaint_type_id, no_of_hrs, designation_id, tenantid, createdby"
+				+ ", lastmodifiedby, createddate, lastmodifieddate) VALUES(NEXTVAL('seq_egpgr_escalation'),?,?,?,?,?,?,?,?)";
 	}
 	
 	public String updateEscalationTimeType(){

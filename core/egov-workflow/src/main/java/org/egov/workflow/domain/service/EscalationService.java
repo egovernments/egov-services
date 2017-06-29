@@ -32,7 +32,7 @@ public class EscalationService {
 		try{
 			response = escalationRepository.persistCreateEscalationTimeType(escalationTimeTypeReq);
 		}catch(Exception e){
-			logger.error("Persisiting escilation time type record FAILED.", e.getMessage());
+			logger.error("Persisiting escilation time type record FAILED.", e.getCause());
 			return null;
 		}
 		

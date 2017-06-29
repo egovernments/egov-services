@@ -112,37 +112,43 @@ public class TaxHeadMasterRepository {
 	
 	
 	public List<TaxHeadMaster> update(TaxHeadMasterRequest taxHeadMasterRequest) {
+		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
-
-		/*if(taxHeadMasters!=null){
-			String query = taxHeadMasterQueryBuilder.getUpdateQuery();
-			List<Object[]> taxHeadsBatchArgs = new ArrayList<>();
-			int taxHeadsCount=taxHeadMasters.size();
-			RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
-			for (TaxHeadMaster master:taxHeadMasters) {
-				Object[] demandRecord = { master.getCategory().toString(),
-						master.getService(),
-						master.getName(),
-						master.getCode(),
-						master.getGlCode(),
-						master.getIsDebit(),
-						master.getIsActualDemand(),
-						requestInfo.getUserInfo().getId(),
-//						master.getTaxPeriod().getId() ,
-						new java.util.Date().getTime(),
-						master.getTenantId()};
-				taxHeadsBatchArgs.add(demandRecord);
-			}
-
-			try {
-				jdbcTemplate.batchUpdate(query, taxHeadsBatchArgs);
-			} catch (DataAccessException ex) {
-				ex.printStackTrace();
-				throw new RuntimeException(ex.getMessage());
-			}
-
-		}*/
 		
+		/*log.debug("create requestInfo:"+ requestInfo);
+		log.debug("create taxHeadMasters:"+ taxHeadMasters);
+		
+		
+		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getUpdateQuery(), new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
+
+
+				ps.setString(1, taxHeadMaster.getId());
+				ps.setString(2, taxHeadMaster.getTenantId());
+				ps.setString(3, taxHeadMaster.getCategory().toString());
+				ps.setString(4, taxHeadMaster.getService());
+				ps.setString(5, taxHeadMaster.getName());
+				ps.setString(6, taxHeadMaster.getCode());
+				ps.setBoolean(7, taxHeadMaster.getIsDebit());
+				ps.setBoolean(8, taxHeadMaster.getIsActualDemand());
+				ps.setInt(9, taxHeadMaster.getOrder());
+				ps.setObject(10, taxHeadMaster.getValidFrom());
+				ps.setObject(11, taxHeadMaster.getValidTill());
+				ps.setString(12, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(13, new Date().getTime());
+				ps.setString(14, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(15, new Date().getTime());
+				ps.setString(16, taxHeadMaster.getTenantId());
+			}
+			
+			@Override
+			public int getBatchSize() {
+				return taxHeadMasters.size();
+			}
+		});*/
 		return taxHeadMasters;
 	}
 }

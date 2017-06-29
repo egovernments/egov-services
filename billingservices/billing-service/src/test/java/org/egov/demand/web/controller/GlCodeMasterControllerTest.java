@@ -29,9 +29,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(GlCodeMasterController.class)
 @Import(TestConfiguration.class)
+@Slf4j
 public class GlCodeMasterControllerTest {
 
 	/*@Autowired
@@ -39,10 +43,29 @@ public class GlCodeMasterControllerTest {
 	
 	@MockBean
 	private ResponseFactory responseFactory;
+	
 	@MockBean
 	private GlCodeMasterService glCodeMasterService;
 	
-	
+	@Test
+	public void test_Should_Search_GlCodeMaster() throws Exception {
+		List<GlCodeMaster> glCodeMaster = new ArrayList<>();
+		glCodeMaster.add(getGlCodeMaster());
+
+		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();
+		glCodeMasterResponse.setGlCodeMasters(glCodeMaster);
+		glCodeMasterResponse.setResponseInfo(new ResponseInfo());
+
+		when(glCodeMasterService.getGlCodes(Matchers.any(GlCodeMasterCriteria.class), Matchers.any(RequestInfo.class)))
+				.thenReturn(glCodeMasterResponse);
+
+		log.info("response::::::::"+glCodeMasterResponse);
+		mockMvc.perform(post("/glcodemasters/_search").param("tenantId", "ap.kurnool")
+				.param("service", "string").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("glCodeMasterSearchResponse.json")));
+	}
 	@Test
 	public void test_Should_Search_GlCodeMaster() throws Exception {
 		List<GlCodeMaster> glCodeMaster = new ArrayList<>();
@@ -55,7 +78,6 @@ public class GlCodeMasterControllerTest {
 		System.out.println("glCodeMasterResponse:::::"+glCodeMasterResponse);
 		when(glCodeMasterService.getGlCodes(Matchers.any(GlCodeMasterCriteria.class), Matchers.any(RequestInfo.class)))
 				.thenReturn(glCodeMasterResponse);
-		System.out.println(":::::json:::::::"+content().json(getFileContents("glCodeMasterSearchResponse.json")));
 		mockMvc.perform(post("/glcodemasters/_search").param("tenantId", "ap.kurnool")
 				.param("service","string").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
@@ -75,8 +97,8 @@ public class GlCodeMasterControllerTest {
 		glCodeMaster.setTaxHead("string");
 		glCodeMaster.setTenantId("ap.kurnool");
 		glCodeMaster.setGlCode("string");
-		glCodeMaster.setFromDate(0L);
-		glCodeMaster.setToDate(0L);
+		glCodeMaster.setFromDate(0l);
+		glCodeMaster.setToDate(0l);
 		
 		return glCodeMaster;
 	}*/

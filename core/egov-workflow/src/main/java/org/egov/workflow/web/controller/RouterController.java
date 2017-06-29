@@ -201,7 +201,7 @@ public class RouterController{
 					.field(PgrMasterConstants.ROUTER_POSITION_MANADATORY_ERROR_MESSAGE).build();
 			errorFields.add(errorField);
 		}
-		if (routerType.getBoundary() == null || routerType.getBoundary().isEmpty()) {
+		if (routerType.getBoundaries() == null || routerType.getBoundaries().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_BOUNDARY_MANDATORY_CODE)
 					.message(PgrMasterConstants.ROUTER_BOUNDARY_MANADATORY_FIELD_NAME)
 					.field(PgrMasterConstants.ROUTER_BOUNDARY_MANADATORY_ERROR_MESSAGE).build();

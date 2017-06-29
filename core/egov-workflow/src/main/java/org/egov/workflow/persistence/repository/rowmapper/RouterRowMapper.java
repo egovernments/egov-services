@@ -154,11 +154,9 @@ public class RouterRowMapper implements RowMapper<RouterType> {
 			router.setId(rs.getLong("id"));
 			router.setPosition(rs.getInt("position"));
 			router.setTenantId(rs.getString("tenantid"));
-			List<BoundaryIdType> boundaryList = new ArrayList<>();
 			BoundaryIdType boundary = new BoundaryIdType();
 			boundary.setBoundaryType(rs.getInt("bndryid"));
-			boundaryList.add(boundary);
-			router.setBoundary(boundaryList);
+			router.setBoundary(boundary);
 		} catch (Exception e) {
 			logger.error("Exception Encountered : " + e);
 		}

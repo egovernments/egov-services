@@ -146,8 +146,8 @@ public class PgrMasterConstants {
 	public static final String CATEGORY_ID_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 	
 	public static final String SLA_HOURS_MANDATORY_CODE = "pgr.0015";
-	public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "category";
-	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
+	public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "slaHours";
+	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "SLA Hours is mandatory";
 
 	public static final String RECEIVINGMODE_CHANNEL_VALID_CODE = "pgr.0012";
 	public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channel";

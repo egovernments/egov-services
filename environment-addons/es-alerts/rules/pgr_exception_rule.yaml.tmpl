@@ -7,7 +7,7 @@ filter:
      kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
 - query:
      query_string:	
-       query: "log: exception OR log: error"]
+       query: "log: exception OR log: error"
 
 included:
  - log

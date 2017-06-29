@@ -11,15 +11,16 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class CrnRepository {
 
+    private static final String CREATE_CRN_URL = "crn-generation/crn/v1/_create";
     private RestTemplate restTemplate;
     private String crnServiceUrl;
 
     @Autowired
     public CrnRepository(RestTemplate restTemplate,
-                         @Value("${crn.service.url}") String crnServiceUrl) {
+                         @Value("${crn.host}") String crnHost) {
 
         this.restTemplate = restTemplate;
-        this.crnServiceUrl = crnServiceUrl;
+        this.crnServiceUrl = crnHost + CREATE_CRN_URL;
     }
 
     public ServiceRequestRegistrationNumber getCrn() {

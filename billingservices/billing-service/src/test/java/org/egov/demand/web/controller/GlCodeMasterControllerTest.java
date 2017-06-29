@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GlCodeMasterControllerTest {
 
-	/*@Autowired
+	@Autowired
 	private MockMvc mockMvc;
 	
 	@MockBean
@@ -56,28 +56,10 @@ public class GlCodeMasterControllerTest {
 		glCodeMasterResponse.setGlCodeMasters(glCodeMaster);
 		glCodeMasterResponse.setResponseInfo(new ResponseInfo());
 
-		when(glCodeMasterService.getGlCodes(Matchers.any(GlCodeMasterCriteria.class), Matchers.any(RequestInfo.class)))
-				.thenReturn(glCodeMasterResponse);
-
-		log.info("response::::::::"+glCodeMasterResponse);
-		mockMvc.perform(post("/glcodemasters/_search").param("tenantId", "ap.kurnool")
-				.param("service", "string").contentType(MediaType.APPLICATION_JSON)
-				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-				.andExpect(content().json(getFileContents("glCodeMasterSearchResponse.json")));
-	}
-	@Test
-	public void test_Should_Search_GlCodeMaster() throws Exception {
-		List<GlCodeMaster> glCodeMaster = new ArrayList<>();
-		glCodeMaster.add(getGlCodeMaster());
-
-		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();
-		glCodeMasterResponse.setGlCodeMasters(glCodeMaster);
-		glCodeMasterResponse.setResponseInfo(new ResponseInfo());
-
 		System.out.println("glCodeMasterResponse:::::"+glCodeMasterResponse);
 		when(glCodeMasterService.getGlCodes(Matchers.any(GlCodeMasterCriteria.class), Matchers.any(RequestInfo.class)))
 				.thenReturn(glCodeMasterResponse);
+		
 		mockMvc.perform(post("/glcodemasters/_search").param("tenantId", "ap.kurnool")
 				.param("service","string").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
@@ -101,5 +83,5 @@ public class GlCodeMasterControllerTest {
 		glCodeMaster.setToDate(0l);
 		
 		return glCodeMaster;
-	}*/
+	}
 }

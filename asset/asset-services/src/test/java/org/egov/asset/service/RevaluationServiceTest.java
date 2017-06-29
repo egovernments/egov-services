@@ -120,6 +120,7 @@ public class RevaluationServiceTest {
 	@Test
 	public void testCreateAsync() throws NumberFormatException, Exception {
 
+		when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class))).thenReturn(get_Asset());
 		//RevaluationService spy = PowerMockito.spy(new RevaluationService());
 		RevaluationService mock = PowerMockito.mock(RevaluationService.class);
 		PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForReevaluation",

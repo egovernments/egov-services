@@ -294,7 +294,7 @@ class createRouter extends Component {
     console.log(this.props.routerCreateSet);
   	const showBtn = function() {
   		if(!readonly) {
-  			return (<RaisedButton style={{margin:'15px 5px'}} type="submit" label={match.params && match.params.type == "edit" ? "Update" : "Create"} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>);
+  			return (<RaisedButton style={{margin:'15px 5px'}} type="submit" label={match.params && match.params.type == "edit" ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>);
   		}
   	}
 
@@ -302,7 +302,7 @@ class createRouter extends Component {
   		<div className="routerGeneration">
          <form autoComplete="off" onSubmit={(e) => {create(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {(match.params && match.params.type == "view" ? "View " : match.params && match.params.type == "edit" ? "Edit " : "Create ") + "Grievance Router"} </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > {(match.params && match.params.type == "view" ? translate("pgr.lbl.view.router") : match.params && match.params.type == "edit" ? translate("pgr.lbl.edit.router") : translate("pgr.lbl.create.router"))} </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
@@ -335,7 +335,7 @@ class createRouter extends Component {
                    	<SelectField
                       disabled={readonly}
                       fullWidth={true}
-                      floatingLabelText="Boundary Type"
+                      floatingLabelText={translate("pgr.lbl.boundarytype")}
                       errorText={fieldErrors.boundaryType || ""}
                       value={(routerCreateSet.boundaryType + "") || ""}
                       onChange={(e, i, val) => {
@@ -352,7 +352,7 @@ class createRouter extends Component {
                    	<AutoComplete
                    		disabled={readonly}
                         hintText=""
-                        floatingLabelText="Boundary"
+                        floatingLabelText={translate("pgr.lbl.boundary")}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.boundarySource}
@@ -377,7 +377,7 @@ class createRouter extends Component {
                    	<AutoComplete
                    		disabled={readonly}
                         hintText=""
-                        floatingLabelText="Position"
+                        floatingLabelText={translate("pgr.lbl.position")}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.positionSource}
@@ -418,7 +418,7 @@ class createRouter extends Component {
           open={open}
           onRequestClose={handleOpenNClose}
         >
-          Grievance router {match.params && match.params.type == "edit" ? "updated" : "created"} successfully.
+          {match.params && match.params.type == "edit" ? translate("pgr.lbl.router.update.success") : translate("pgr.lbl.router.create.success")}
         </Dialog>
         </div>
   	);

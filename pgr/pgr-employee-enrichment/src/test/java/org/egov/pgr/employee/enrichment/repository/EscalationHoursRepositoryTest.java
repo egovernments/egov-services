@@ -26,7 +26,7 @@ public class EscalationHoursRepositoryTest {
     public void setUp() throws Exception {
         final RestTemplate restTemplate = new RestTemplate();
         String positionHost = "http://host/";
-        String designationUrl = "escalation-hours/_search?tenantId={tenantId}&complaintTypeId={complaintTypeId}&designationId={designationId}";
+        String designationUrl = "escalation-hours/v1/_search?tenantId={tenantId}&complaintTypeId={complaintTypeId}&designationId={designationId}";
         escalationHoursRepository = new EscalationHoursRepository(restTemplate, positionHost, designationUrl);
         server = MockRestServiceServer.bindTo(restTemplate).build();
     }
@@ -36,7 +36,7 @@ public class EscalationHoursRepositoryTest {
         String tenantId = "tenantId";
         final String complaintTypeId = "1";
         final String designationId1 = "2";
-        String expectedUrl = "http://host/escalation-hours/_search?tenantId=tenantId&complaintTypeId=1&designationId=2";
+        String expectedUrl = "http://host/escalation-hours/v1/_search?tenantId=tenantId&complaintTypeId=1&designationId=2";
         server.expect(once(), requestTo(expectedUrl))
             .andExpect(method(HttpMethod.POST))
             .andExpect(content().string(resources.getFileContents("escalationHoursRequest.json")))

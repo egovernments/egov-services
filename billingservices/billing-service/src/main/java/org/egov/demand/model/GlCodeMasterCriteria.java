@@ -35,4 +35,7 @@ public class GlCodeMasterCriteria {
 	
 	private Long toDate;
 	
+	private Long size;
+	private Long offset;
+	
 }

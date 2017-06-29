@@ -49,4 +49,17 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.agreement}")
 	private String kafkaUpdateAgreementTopic;
+	
+	@Value("${egov.services.workflow_service.status.advancepaid}")
+	private String wfSatusAdvancePaid;
+	
+	@Value("${egov.services.workflow_service.status.assistantapproved}")
+	private String wfStatusAssistantApproved;
+	
+	@Value("${egov.services.workflow_service.agreement.status.rejected}")
+	private String agreementStatusRejected;
+	
+	@Value("${egov.services.workflow_service.status.rejected}")
+	private String wfStatusRejected;
+	
 }

@@ -343,16 +343,16 @@ class routerGeneration extends Component {
    	  if(isSearchClicked)
    		return (
 	        <Card>
-	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
 	          <CardText>
 		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
 		            <tr>
 		              <th>#</th>
 		              <th>{translate("pgr.lbl.grievance.type")}</th>
-		              <th>Boundary Type</th>
-		              <th>Boundary</th>
-		              <th>Position</th>
+		              <th>{translate("pgr.lbl.boundarytype")}</th>
+		              <th>{translate("pgr.lbl.boundary")}</th>
+		              <th>{translate("pgr.lbl.position")}</th>
 		            </tr>
 		          </thead>
 		          <tbody>
@@ -403,7 +403,7 @@ class routerGeneration extends Component {
                     </SelectField>
                    </Col>
                    <Col xs={12} md={8}>
-                     <SelectField fullWidth={true} floatingLabelText="Boundary Type" errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
 	                					handleChange(e, "boundaryType", true, "")}}>
@@ -415,7 +415,7 @@ class routerGeneration extends Component {
                    <Col xs={12} md={8}>
                     <SelectField 
                       fullWidth={true} 
-                      floatingLabelText="Boundary" 
+                      floatingLabelText={translate("pgr.lbl.boundary")} 
                       errorText={fieldErrors.boundaries || ""} 
                       value={routerCreateSet.boundaries} 
                       onChange={(e, i, val) => {
@@ -437,7 +437,7 @@ class routerGeneration extends Component {
                    <Col xs={12} md={8}>
                     	<AutoComplete
                         hintText=""
-                        floatingLabelText="Position"
+                        floatingLabelText={translate("pgr.lbl.position")}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.positionSource}
@@ -482,10 +482,10 @@ class routerGeneration extends Component {
           open={open}
           onRequestClose={handleOpenNClose}
         >
-          Existing Router Data will be overridden, Are you sure?
+          {translate("pgr.lbl.alert.router")}
         </Dialog>
         <Dialog
-          title="Success"
+          title={translate("pgr.lbl.success")}
           actions={[<FlatButton
 				        label={translate("core.lbl.close")}
 				        primary={true}
@@ -495,7 +495,7 @@ class routerGeneration extends Component {
           open={open2}
           onRequestClose={handleOpenNClose2}
         >
-          Grievance routers created successfully.
+          {translate("pgr.lbl.router.create.success")}
         </Dialog>
         </div>
    );

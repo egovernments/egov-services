@@ -26,13 +26,15 @@ public class TaxHeadMaster {
 	private String name;
 
 	private String code;
+	
+	private GlCodeMaster glCodes;
 
 	private Boolean isDebit = false;
 
 	private Boolean isActualDemand;
-	
+	@NotNull
 	private Long validFrom;
-	
+	@NotNull
 	private Long validTill;
 	
 	private Integer order;

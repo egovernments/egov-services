@@ -6,8 +6,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.service.GlCodeMasterService;
+import org.egov.demand.web.contract.GlCodeMasterRequest;
 import org.egov.demand.web.contract.GlCodeMasterResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
+import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,4 +51,18 @@ public class GlCodeMasterController {
 		return new ResponseEntity<>(glCodeMasterResponse, HttpStatus.OK);
 	}
 
+	/*@PostMapping("_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid final GlCodeMasterRequest glCodeMasterRequest,
+			final BindingResult bindingResult) {
+		RequestInfo requestInfo = glCodeMasterRequest.getRequestInfo();
+		logger.info("create gl code Master:" + glCodeMasterRequest);
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		// TODO Input field validation, it will be a part of phase-2
+		final GlCodeMasterResponse glCodeMasterRponse = glCodeMasterService.createAsync(glCodeMasterRequest);
+		return new ResponseEntity<>(glCodeMasterRponse, HttpStatus.CREATED);
+	}*/
 }

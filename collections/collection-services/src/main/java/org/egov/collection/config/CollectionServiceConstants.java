@@ -39,13 +39,16 @@ public class CollectionServiceConstants {
 	public static final String PURPOSE_MISSING_FIELD = "purpose";
 	public static final String PURPOSE_MISSING_MESSAGE = "Purpose is mising";
 	
+	public static final String COLL_ID_NAME = "collection.receiptnumber";
+	public static final String COLL_ID_FORMAT = "[MM/YYYY]-[SEQ_ACK_NUM]";
+	
 	
 	
 	//URIs for other micro services collection depends on
 	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
 	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
 	public static final String STATUS_SEARCH_URI = " ";
-	public static final String ID_GEN_URI = " ";
+	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/id/v1/_genearte";
 
 
 

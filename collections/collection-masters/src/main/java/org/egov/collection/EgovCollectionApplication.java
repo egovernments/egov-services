@@ -39,9 +39,11 @@
  */
 package org.egov.collection;
 
+import java.util.TimeZone;
 
 import org.egov.collection.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.collection.web.interceptor.CorrelationIdInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -58,20 +60,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class EgovCollectionApplication {
 
-	
+	@Value("${app.timezone}")
+	private String timeZone;
+
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new CorrelationIdAwareRestTemplate();
 	}
-
 
 	@Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
 		return new WebMvcConfigurerAdapter() {
 
 			@Override
-			public void configureContentNegotiation(
-					ContentNegotiationConfigurer configurer) {
+			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 
@@ -81,6 +83,14 @@ public class EgovCollectionApplication {
 			}
 
 		};
+	}
+
+	@Bean
+	public ObjectMapper getObjectMapper() {
+		final ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return objectMapper;
 	}
 
 	@Bean

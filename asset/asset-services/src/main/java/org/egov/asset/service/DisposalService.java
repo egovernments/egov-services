@@ -67,13 +67,13 @@ public class DisposalService {
 
 		disposalRequest.getDisposal().setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
 
-//		try {
-//			final Long voucherId = createVoucherForDisposal(disposalRequest);
-//			if (voucherId != null)
-//				disposalRequest.getDisposal().setVoucherReference(voucherId);
-//		} catch (final Exception e) {
-//			throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
-//		}
+		try {
+			final Long voucherId = createVoucherForDisposal(disposalRequest);
+			if (voucherId != null)
+				disposalRequest.getDisposal().setVoucherReference(voucherId);
+		} catch (final Exception e) {
+			throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
+		}
 
 		String value = null;
 		try {

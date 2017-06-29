@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -46,6 +47,9 @@ public class ServiceRequestTypeRepository {
 
     public List<ServiceType> getFrequentlyFiledServiceRequests(Integer count, String tenantId) {
         final List<String> serviceCodes = getFrequentlyUsedServiceCodes(count, tenantId);
+        if (CollectionUtils.isEmpty(serviceCodes)) {
+            return Collections.emptyList();
+        }
         final List<ServiceType> serviceTypes = serviceRequestTypeJpaRepository
             .findActiveServiceTypes(serviceCodes, tenantId);
         enrichWithKeywords(serviceTypes, tenantId);

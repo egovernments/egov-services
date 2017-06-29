@@ -59,10 +59,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouterRowMapper implements RowMapper<RouterType> {
 	private static final Logger logger = LoggerFactory.getLogger(RouterRowMapper.class);
-	public static Map<String, List<Value>> attribValue = new HashMap<>();
-	public static Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
-	public static Map<Long, Map< String, List<ServiceType>>> serviceMap = new HashMap<>();
-	public static Map<Long, RouterType> routerMap = new HashMap<>();
+	public Map<String, List<Value>> attribValue = new HashMap<>();
+	public Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
+	public Map<Long, Map< String, List<ServiceType>>> serviceMap = new HashMap<>();
+	public Map<Long, RouterType> routerMap = new HashMap<>();
 	
 	@Override
 	public RouterType mapRow(final ResultSet rs, final int rowNum) throws SQLException {

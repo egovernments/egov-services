@@ -189,7 +189,7 @@ class DefineEscalationTime extends Component {
           id: this.props.defineEscalationTime.serviceType.id
         },
         noOfHours:this.props.defineEscalationTime.numberOfHours,
-        designation:this.props.defineEscalationTime.designation,
+        designation:this.props.defineEscalationTime.designation.id,
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 
       }
@@ -224,7 +224,7 @@ class DefineEscalationTime extends Component {
           id: this.props.defineEscalationTime.serviceType.id
         },
         noOfHours:this.props.defineEscalationTime.numberOfHours,
-        designation:this.props.defineEscalationTime.designation,
+        designation:this.props.defineEscalationTime.designation.id,
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
       }
     }
@@ -285,14 +285,14 @@ class DefineEscalationTime extends Component {
       			return (
       				<tr key={i}>
                 <td>{i+1}</td>
-      					<td>{val.designation}</td>
+      					<td>{val.designation.name}</td>
                 <td>{val.numberOfHours}</td>
                 <td>
-                <RaisedButton style={{margin:'0 3px'}} label="Update" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                     editObject(i);
                     current.setState({editIndex:i})
                 }}/>
-                {false && <RaisedButton style={{margin:'0 3px'}} label="Delete" disabled={editIndex<0?false:true} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                {false && <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.delete")} disabled={editIndex<0?false:true} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                     deleteObject(i);
                 }}/>}</td>
       				</tr>
@@ -308,7 +308,7 @@ class DefineEscalationTime extends Component {
                   <Row>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="Designation"
+                           floatingLabelText={translate("pgr.lbl.designation")}
                            fullWidth={true}
                            value={defineEscalationTime.designation ? defineEscalationTime.designation : ""}
                            onChange= {(e, index ,value) => {
@@ -321,15 +321,14 @@ class DefineEscalationTime extends Component {
                             }}
                           >
                               {current.state.designation && current.state.designation.map((e,i)=>{
-                                  return(<MenuItem key={i} value={e.id} primaryText={e.name} />)
+                                  return(<MenuItem key={i} value={e} primaryText={e.name} />)
                               })}
-                           <MenuItem value={1} primaryText="Options" />
                         </SelectField>
                     </Col>
                     <Col xs={12} md={3} sm={6}>
                         <TextField
                             fullWidth={true}
-                            floatingLabelText="Number of hours"
+                            floatingLabelText={translate("pgr.noof.hours")}
                             value={defineEscalationTime.numberOfHours ? defineEscalationTime.numberOfHours : ""}
                             errorText={fieldErrors.numberOfHours ? fieldErrors.numberOfHours : ""}
                             onChange={(e) => {
@@ -340,10 +339,10 @@ class DefineEscalationTime extends Component {
                     </Col>
                     <div className="clearfix"></div>
                     <Col xs={12} md={12} style={{textAlign:"center"}}>
-                        {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label="Add" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.add")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                           addEscalation();
                         }}/>}
-                        {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label="Update" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                           updateEscalation();
                         }}/>}
                     </Col>
@@ -354,7 +353,7 @@ class DefineEscalationTime extends Component {
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
    		              <th>No.</th>
-                    <th>Designation</th>
+                    <th>{translate("pgr.lbl.designation")}</th>
                     <th>Number of Hours</th>
                     <th>Action</th>
    		            </tr>

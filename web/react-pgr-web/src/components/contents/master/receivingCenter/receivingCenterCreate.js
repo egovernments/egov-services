@@ -202,7 +202,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                               {console.log(createReceivingCenter.active)}
                                   <Checkbox
-                                    label="Active"
+                                    label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
                                     checked = {createReceivingCenter.active || false}
                                     onCheck = {(e, i, v) => { console.log(createReceivingCenter.active, i);
@@ -220,7 +220,7 @@ class CreateReceivingCenter extends Component {
                               <div className="clearfix"></div>
                               <Col xs={12} md={3} sm={6}>
                                   <Checkbox
-                                    label="CRN"
+                                    label={translate("pgr.lbl.crn")}
                                     style={styles.checkbox}
                                     checked ={createReceivingCenter.iscrnrequired}
                                     onCheck = {(e, i, v) => {
@@ -237,7 +237,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Order No"
+                                      floatingLabelText={translate("pgr.lbl.order.no")}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
                                       onChange={(e) => handleChange(e, "orderno", true, '')}
@@ -250,7 +250,7 @@ class CreateReceivingCenter extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
                 <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
               </div>
           </form>

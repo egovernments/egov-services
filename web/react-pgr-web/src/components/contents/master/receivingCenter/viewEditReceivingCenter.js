@@ -116,10 +116,10 @@ class ViewEditServiceGroup extends Component {
                                           <th>{translate("core.lbl.add.name")}</th>
                                           <th>{translate("core.lbl.code")}</th>
                                           <th>{translate("core.lbl.description")}</th>
-                                          <th>Active</th>
-                                          <th>Audit Details</th>
-                                          <th>CRN Required</th>
-                                          <th>Order No</th>
+                                          <th>{translate("pgr.lbl.active")} </th>
+                                          <th>{translate("pgr.lblauditdetails")}</th>
+                                          <th>{translate("pgr.lbl.crn")}</th>
+                                          <th>{translate("pgr.lbl.order.no")}</th>
                                           <th></th>
                                         </tr>
                                     </thead>
@@ -135,8 +135,8 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/receivingCenter/view' && <td><Link to={`/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/receivingCenter/edit' && <td><Link to={`/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/receivingCenter/view' && <td><Link to={`/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")}/></Link></td>}
+                                              {url == '/receivingCenter/edit' && <td><Link to={`/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")}/></Link></td>}
                                             </tr>
                                           )
                                         })}

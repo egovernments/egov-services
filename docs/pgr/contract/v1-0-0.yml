@@ -926,6 +926,12 @@ definitions:
       group:
         type: string
         description: Group associated to service.
+      category:
+        type: number
+        description: Defines the ID of the Service Group Category.
+      slaHours:
+        type: number
+        description: Service Level Agreement in hours for Service.
       attributes:
         type: array
         items:
@@ -934,6 +940,8 @@ definitions:
       - tenantId
       - serviceCode
       - serviceName
+      - category
+      - slaHours
   Value:
     type: object
     properties:

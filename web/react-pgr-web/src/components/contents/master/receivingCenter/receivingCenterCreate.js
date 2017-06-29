@@ -73,7 +73,7 @@ class CreateReceivingCenter extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/receivingcenter/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log(response);
                 current.setState({data:response.ReceivingCenterType})
                 setForm(response.ReceivingCenterType[0])
@@ -112,7 +112,7 @@ class CreateReceivingCenter extends Component {
       }
 
       if(this.props.match.params.id){
-          Api.commonApiPost("/pgr-master/receivingcenter/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/receivingcenter/v1/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -121,7 +121,7 @@ class CreateReceivingCenter extends Component {
               console.log(error);
           })
       } else {
-          Api.commonApiPost("/pgr-master/receivingcenter/_create",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/receivingcenter/v1/_create",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true

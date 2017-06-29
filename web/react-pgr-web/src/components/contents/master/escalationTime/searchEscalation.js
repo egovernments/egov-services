@@ -95,7 +95,7 @@ class SearchEscalation extends Component {
       let self = this;
 
 
-      Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+      Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
           console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
@@ -103,6 +103,17 @@ class SearchEscalation extends Component {
       }, function(err) {
         self.setState({
             grievanceTypeSource: []
+          })
+      });
+
+      Api.commonApiPost("/hr-masters/designations/_search").then(function(response) {
+          console.log(response);
+          self.setState({
+            designationSource: response.Designation
+          })
+      }, function(err) {
+        self.setState({
+            designationSource: []
           })
       });
 
@@ -128,10 +139,10 @@ class SearchEscalation extends Component {
       let current = this;
 
       let query = {
-        id:this.props.searchEscalation.designation
+        designation:this.props.searchEscalation.designation
       }
 
-      Api.commonApiPost("/pgr-master/escalation/_search",query,{}).then(function(response){
+      Api.commonApiPost("/workflow/escalation-hours/v1/_search",query,{}).then(function(response){
           console.log(response);
           flag = 1;
           current.setState({

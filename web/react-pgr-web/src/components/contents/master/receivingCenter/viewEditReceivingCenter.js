@@ -67,7 +67,7 @@ class ViewEditServiceGroup extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/receivingcenter/_search",{},body).then(function(response){
+        Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{},body).then(function(response){
             //console.log(response);
             current.setState({data:response.ReceivingCenterType});
         }).catch((error)=>{

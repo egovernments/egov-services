@@ -204,7 +204,7 @@ class DefineEscalation extends Component {
       					<td>{val.department}</td>
       					<td>{val.designation}</td>
                 <td>{val.toPosition}</td>
-                <td>    <RaisedButton style={{margin:'15px 5px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                <td><RaisedButton style={{margin:'15px 5px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                     }}/></td>
       				</tr>
       			)

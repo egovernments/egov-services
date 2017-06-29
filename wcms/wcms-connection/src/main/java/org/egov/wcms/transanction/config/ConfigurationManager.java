@@ -110,5 +110,15 @@ public class ConfigurationManager {
 
     @Value("${id.idName}")
     private String idGenNameServiceTopic;
+    
+    @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
+    private String waterMasterPropCategoryMappingTopic;
+    
+    @Value("${egov.services.wcms_masters_propertyPipeSize.searchpath}")
+    private String waterMasterPropPipeSizeMappingTopic;
+    
+    
+    @Value("${egov.services.wcms_masters_propertyUsageType.searchpath}")
+    private String waterMasterPropUsageTypeMappingTopic;
 
 }

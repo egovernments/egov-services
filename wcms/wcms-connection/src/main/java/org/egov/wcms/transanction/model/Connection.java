@@ -86,9 +86,16 @@ public class Connection {
     private String supplyType;
     
     private String supplyTypeId;
+    
+    private Boolean isPropertyAttached;
+    
+    private String propertyIdentifier;
+    
+    private String assetIdentifier;
 
     @NotNull
     private String sourceType;
+    
     private String sourceTypeId;
 
     @NotNull

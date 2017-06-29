@@ -104,7 +104,7 @@ public class WaterConnectionRepository {
                 statement.setLong(15, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
-                statement.setLong(18, waterConnectionRequest.getConnection().getProperty().getId());
+                statement.setLong(18, waterConnectionRequest.getConnection().getProperty().getPropertyid());
                 statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageType());
                 statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyType());
                 statement.setString(21

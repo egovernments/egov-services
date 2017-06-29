@@ -10,17 +10,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CategoryResponseInfo {
+public class PropertyPipeSizeResponseInfo {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("CategoryTypes")
-    private List<CommonResponseInfo> category;
+    @JsonProperty("propertyCategories")
+    private List<CommonResponseInfo> propCategory;
     
     
     

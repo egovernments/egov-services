@@ -11,7 +11,5 @@ public class CommonResponseInfo {
 
     @JsonProperty("id")
     private String id;
-    @JsonProperty("code")
-    private String code;
         
 }

@@ -72,8 +72,8 @@ public class ResponseFactory {
 
 		Error error = new Error();
 		error.setCode(400);
-		error.setMessage("Mandatory Fields Null");
-		error.setDescription("exception occurred in DemandController");
+		error.setMessage("Mandatory Fields Missing");
+		error.setDescription("exception occurred");
 		error.setFields(new ArrayList<ErrorField>());
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			ErrorField errorField = new ErrorField(fieldError.getCode(), fieldError.getDefaultMessage(),fieldError.getField());

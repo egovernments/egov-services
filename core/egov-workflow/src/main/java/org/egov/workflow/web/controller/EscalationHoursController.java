@@ -59,7 +59,7 @@ public class EscalationHoursController {
         this.escalationService = escalationService;
     }
 
-    @PostMapping("/v1/_search")
+    @PostMapping("/disabledAPI/_search")
     public EscalationHoursResponse getEscalationDate(@RequestParam(value="tenantId",required=true) String tenantId,
                                                      @RequestParam("designationId") Long designationId,
                                                      @RequestParam("complaintTypeId") Long complaintTypeId,
@@ -141,7 +141,7 @@ public class EscalationHoursController {
 		return getSuccessResponse(escalationTimeTypes, escalationTimeTypeRequest.getRequestInfo());
 
 	}
-	@PostMapping("_searchupdate")
+	@PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final EscalationTimeTypeGetReq escTimeTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

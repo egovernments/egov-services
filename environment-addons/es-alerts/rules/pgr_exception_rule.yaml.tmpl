@@ -3,12 +3,11 @@ type: any
 index: {{LOG_INDEX_NAME}}
  
 filter:
-- and:
-  - terms:
-      kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
-  - query:
-      query_string:
-        query: "log: exception OR log: error"
+- terms:
+    kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
+- query:
+    query_string:
+      query: "log: exception OR log: error"
 
 included:
  - log

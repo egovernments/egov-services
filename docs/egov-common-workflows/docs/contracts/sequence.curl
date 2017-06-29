@@ -19,7 +19,7 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
   	"comments":"creating first worflow"
    }
   
-}' "http://localhost:8086/workflow/_start" >89.log
+}' "http://localhost:8086/egov-common-workflows/_start" >89.log
 
 
 
@@ -31,7 +31,7 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
     "msgId": null,
     "status": "200"
   }
-' "http://localhost:8086/workflow/process/_search?tenantId=1&id=89" >>89.log
+' "http://localhost:8086/egov-common-workflows/process/_search?tenantId=1&id=89" >>89.log
 
 
 
@@ -53,7 +53,7 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
   	"action":"forward"
   }	
   
-}' "http://localhost:8086/workflow/tasks/89/_update" >>82.log
+}' "http://localhost:8086/egov-common-workflows/tasks/89/_update" >>82.log
 
 
 
@@ -76,7 +76,7 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
   }	
   	
   
-}' "http://localhost:8086/workflow/tasks/89/_update" >>82.log
+}' "http://localhost:8086/egov-common-workflows/tasks/89/_update" >>82.log
 
 
 curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: e81253e5-da93-21ea-a314-5bb4bcf72c21" -d '{
@@ -98,7 +98,7 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
   	"action":"forward"
   }	
   
-}' "http://localhost:8086/workflow/tasks/89/_update" >>82.log
+}' "http://localhost:8086/egov-common-workflows/tasks/89/_update" >>82.log
 
 
 
@@ -111,4 +111,4 @@ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H
     "status": "200",
     "authtoken":"1111"
   
-}' "http://localhost:8086/workflow/designations/_search?businessKey=EgBillregister&approvalDepartmentName=Accounts&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule="
+}' "http://localhost:8086/egov-common-workflows/designations/_search?businessKey=EgBillregister&approvalDepartmentName=Accounts&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule="

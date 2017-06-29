@@ -51,7 +51,7 @@ public class GlCodeMasterController {
 		return new ResponseEntity<>(glCodeMasterResponse, HttpStatus.OK);
 	}
 
-	/*@PostMapping("_create")
+	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final GlCodeMasterRequest glCodeMasterRequest,
 			final BindingResult bindingResult) {
@@ -64,5 +64,5 @@ public class GlCodeMasterController {
 		// TODO Input field validation, it will be a part of phase-2
 		final GlCodeMasterResponse glCodeMasterRponse = glCodeMasterService.createAsync(glCodeMasterRequest);
 		return new ResponseEntity<>(glCodeMasterRponse, HttpStatus.CREATED);
-	}*/
+	}
 }

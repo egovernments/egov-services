@@ -265,14 +265,13 @@ definitions:
         type: string
         readOnly: true
         description: Unique Identifier of the tenant
- 
+        
   Property:
     type: object
     properties:
-      id:
-       type: integer
-       format: int64
-       description : Unique identifier of the property.
+      propertyidentifier:
+       type: string
+       description : tax Assessment number which will come from propertyTax
       usageType:
         type: string
         description: all possible combination of usage type and subusage type.
@@ -283,9 +282,32 @@ definitions:
         type: string
         description: address of the property.
         readOnly: true
-      assessmentNumber:
+      nameOfApplicant:
         type: string
-        description: tax Assessment number which will come from propertyTax
+        description: Name Of the Applicant
+      mobileNumber:
+        type: string
+        description: Applicant MobileNumber
+      email:
+        type: string
+        description: Applicant Email
+      adharNumber:
+        type: string
+        description: Applicany AdharNumber.
+      locality:
+        type: string
+        description: Applicant Locality.
+      zone/word/block:
+        type: string
+        description: Zone or Word of the Applicant.
+        
+  Asset:
+    type: object
+    properties:
+      address: 
+        type: string
+        description: address of the Asset.
+        readOnly: true
       nameOfApplicant:
         type: string
         description: Name Of the Applicant
@@ -305,7 +327,6 @@ definitions:
         type: string
         description: Zone or Word of the Applicant.
       
-  
   LegacyConnectionTypeReq:
       type: object
       properties:
@@ -511,12 +532,6 @@ definitions:
           - CLOSINGCONNECTION
           - HOLDINGCONNECTION
           - REGULARIZATIONCONNECTION
-      propertyIdentifier:
-        type: string
-        description: Unique identifier of Property tax module.
-      assetIdentifier:
-        type: string
-        description: Unique identifier of Asset Module.Creating Asset Entry and returning Unique Identifier from Asset Module.
       hscPipeSizeType:
         type: string
         description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.
@@ -526,12 +541,17 @@ definitions:
       sourceType:
         type: string
         description: This field holds the pre-defined value of supported source type. Check master API to look at supported values for your ULB.
+      waterTreatment:
+        type: string 
+        description: This field holds pre-defined value of supported  water Treatment.check
+         master API to look at supported values your ULB.
       connectionStatus: 
         type: string
         description: water connection status.
         enum:
           - ACTIVE
           - INACTIVE
+          - INPROGRESS
       sumpCapacity: 
         type: number
         description: Capacity of the sump.
@@ -574,6 +594,8 @@ definitions:
           $ref: "#/definitions/Timeline"
       property:
         $ref: '#/definitions/Property'
+      asset:
+        $ref: '#/definitions/Asset'
       estimationCharge: 
         type: array
         items:
@@ -590,6 +612,7 @@ definitions:
       - property
       - documents
       - connectionType
+      - waterTreatment
       - billingType
       - categoryType
       - hscPipeSizeType

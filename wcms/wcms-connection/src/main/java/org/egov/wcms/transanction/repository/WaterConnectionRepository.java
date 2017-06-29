@@ -71,7 +71,7 @@ public class WaterConnectionRepository {
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
         String insertQuery = "";
-        if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() != null)
+        if (waterConnectionRequest.getConnection().getIsLegacy() )
             insertQuery = WaterConnectionQueryBuilder.insertLegacyConnectionQuery();
         else if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
             insertQuery = WaterConnectionQueryBuilder.insertAdditionalConnectionQuery();
@@ -104,22 +104,26 @@ public class WaterConnectionRepository {
                 statement.setLong(15, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
-                statement.setLong(18, waterConnectionRequest.getConnection().getProperty().getPropertyid());
+                statement.setString(18, waterConnectionRequest.getConnection().getProperty()
+                        .getPropertyidentifier());
                 statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageType());
                 statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyType());
                 statement.setString(21
                         , "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
-                statement.setString(22, waterConnectionRequest.getConnection().getDonationCharge());
+                statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
 
-                if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() != null
-                        || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
-
-                    statement.setString(23, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(24, waterConnectionRequest.getConnection().getConsumerNumber());
+                statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
+                statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatment());
+                statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
+                statement.setInt(26, 1);
+                statement.setInt(27, 1);
+                if (waterConnectionRequest.getConnection().getIsLegacy()  || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
+                    statement.setString(28, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(29, waterConnectionRequest.getConnection().getConsumerNumber());
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(25, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(29, waterConnectionRequest.getConnection().getParentConnectionId());
 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
 
@@ -132,10 +136,11 @@ public class WaterConnectionRepository {
             LOGGER.error("Inserting Connection Object failed!", e);
         }
 
-        if (connectionId > 0 && waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) {
+        if (connectionId > 0 && !waterConnectionRequest.getConnection().getIsLegacy()) {
             final List<Object[]> values = new ArrayList<>();
             for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
-                final Object[] obj = { document.getDocument(),
+                document.setDocumentId(Integer.parseInt(document.getDocument()));
+                final Object[] obj = { document.getDocumentId(),
                         document.getName(),
                         document.getFileStoreId(),
                         waterConnectionRequest.getConnection().getId(),

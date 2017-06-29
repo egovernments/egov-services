@@ -145,8 +145,15 @@ public class NewWaterConnectionValidator {
                     .field(WcmsTranasanctionConstants.SUPPLY_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-
-        if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null)
+        if(waterConnectionRequest.getConnection().getBillingType() !=null  && waterConnectionRequest.getConnection().getBillingType().equals("METERED")
+                 && ( waterConnectionRequest.getConnection().getMeter()==null)){
+            final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.CONNECTION_METERED_INVALID_CODE)
+            .message(WcmsTranasanctionConstants.CONNECTION_METERED_INVALID_ERROR_MESSAGE)
+            .field(WcmsTranasanctionConstants.CONNECTION_METERED_INVALID_FIELD_NAME).build();
+        errorFields.add(errorField);
+        }
+/*
+        if (!waterConnectionRequest.getConnection().getIsLegacy())
             if (waterConnectionRequest.getConnection().getDocuments() == null
                     || waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.DOCUMENTS_INVALID_CODE)
@@ -168,7 +175,7 @@ public class NewWaterConnectionValidator {
                                 .message(WcmsTranasanctionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
                                 .field(WcmsTranasanctionConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
                         errorFields.add(errorField);
-                    }
+                    }*/
 
         if (errorFields.size() > 0)
             return Error.builder().code(HttpStatus.BAD_REQUEST.value())
@@ -189,7 +196,8 @@ public class NewWaterConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        isRequestValid = restConnectionService.validatePropertyUsageTypeMapping(waterConnectionRequest);
+        //TODO: need to  enalbe once PTIS Integration done
+        /*isRequestValid = restConnectionService.validatePropertyUsageTypeMapping(waterConnectionRequest);
 
         if (!isRequestValid) {
             final ErrorField errorField = ErrorField.builder()
@@ -197,7 +205,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_ERROR_MESSAGE)
                     .field(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        }
+        }*/
 
         isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
         if (!isRequestValid) {

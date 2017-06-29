@@ -77,26 +77,35 @@ public class WaterConnectionQueryBuilder {
             + " AND connection.sourcetype=watersource.id AND connection.supplytype=supplytype.id ";
     
     public static String insertDocumentQuery() {
-        return "INSERT INTO egwtr_documentowner(document,name,filestoreid,connectionid,tenantid) values "
-                + "(?,?,?,?,?)";
+        return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
+                + "(nextval('seq_egwtr_documentowner'),?,?,?,?,?)";
     }
 
     public static String insertMeterReadingQuery() {
-        return "INSERT INTO egwtr_meterreading(connectionid,reading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values "
-                + "(?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_meterreading(id,connectionid,reading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values "
+                + "(nextval('seq_egwtr_meterreading'),?,?,?,?,?,?,?)";
     }
 
     public static String insertMeterQuery() {
 
-        return "INSERT INTO egwtr_meter(metermake,connectionid,meterreading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values(?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_meter(metermake,connectionid,meterreading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
+                + " values(nextval('seq_egwtr_meter'),?,?,?,?,?,?,?)";
     }
 
     public static String insertConnectionQuery() {
 
-        return "INSERT INTO egwtr_waterconnection (tenantid, connectiontype,applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
-                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress, donationcharge) values"
-                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_waterconnection (id,tenantid, connectiontype,"
+                + "applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
+                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
+                + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
+                + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
+                + "assetidentifier,waterTreatmentId,islegacy,status,stateid) values"
+                + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?)";
     }
     
     public static String updateConnectionQuery() {
@@ -109,20 +118,27 @@ public class WaterConnectionQueryBuilder {
      }
 
     public static String insertLegacyConnectionQuery() {
-        return "INSERT INTO egwtr_waterconnection(tenantid, connectiontype,applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
-                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress,donationcharge,"
-                + "legacyconsumernumber,consumernumber) values"
-                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,"
+                + "applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
+                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
+                + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
+                + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
+                + "assetidentifier,waterTreatmentId,islegacy,status,stateid,legacyconsumernumber,consumerNumber) values"
+                + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?"
+                + ",?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {
 
-        return "INSERT INTO egwtr_waterconnection(tenantid, connectiontype,applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
+        return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyid, usagetype, propertytype, propertyaddress,donationcharge,"
+                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyidentifier, usagetype, propertytype, propertyaddress,donationcharge,"
                 + "legacyconsumernumber,consumernumber,parentconnectionid) values"
-                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
     
     public static String getWaterConnectionByacknowledgenumber()

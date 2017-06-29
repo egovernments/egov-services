@@ -91,6 +91,13 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.update.taxHeadMaster.key}")
 	private String updateTaxHeadMasterTopicKey;
 
+	//Added for GlCodeMaster
+	@Value("${kafka.topics.save.glCodeMaster}")
+	private String createGlCodeMasterTopicName;
+	
+	@Value("${kafka.topics.save.glCodeMaster.key}")
+	private String createGlCodeMasterTopicKey;
+	
 	@Value("${kafka.topics.create.taxperiod.name}")
 	private String createTaxPeriodTopicName;
 
@@ -132,6 +139,9 @@ public class ApplicationProperties {
 
 	@Value("${bs.taxhead.code.seq.name}")
 	private String taxHeadCodeSeqName;
+	
+	@Value("${bs.glcodehead.seq.name}")
+	private String glCodeMasterseqName;
 
 	@Value("${bs.taxperiod.seq.name}")
 	private String taxPeriodSeqName;

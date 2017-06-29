@@ -94,7 +94,7 @@ public class EscalationHierarchyController {
 	@Autowired
 	private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final EscalationHierarchyReq escalationHierarchyRequest,
 			final BindingResult errors) {
@@ -119,7 +119,7 @@ public class EscalationHierarchyController {
 
 	}
 
-	@PostMapping(value = "/_update")
+	@PostMapping(value = "/v1/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final EscalationHierarchyReq escalationHierarchyRequest,
 			final BindingResult errors) {
@@ -144,7 +144,7 @@ public class EscalationHierarchyController {
 
 	}
 	
-	@PostMapping("_search")
+	@PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final EscalationHierarchyGetReq escHierarchyGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

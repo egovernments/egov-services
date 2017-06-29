@@ -3,6 +3,7 @@ package org.egov.demand.web.contract;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -18,7 +19,7 @@ public class TaxPeriodCriteria {
     @NotNull
     private String service;
 
-    private String id;
+    private Set<String> id;
 
     private String code;
 

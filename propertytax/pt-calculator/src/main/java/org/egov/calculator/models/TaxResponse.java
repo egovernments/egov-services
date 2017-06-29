@@ -1,5 +1,9 @@
 package org.egov.calculator.models;
 
+import java.util.List;
+
+import org.egov.models.HeadWiseTax;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +25,8 @@ public class TaxResponse {
     public Double generalTax; // General Tax
     public Double educationalCess; // Educational Cess
     public Double employeeGuranteeCess; // Employee Guarantee cess
+    public List<HeadWiseTax> taxHeadWiseList;
+    public Double totalTax;
+    private String floorNumber;
+    private Integer unitNo;
 }

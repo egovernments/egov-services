@@ -19,7 +19,7 @@ public class CategoryResponseInfo {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("Category")
+    @JsonProperty("CategoryTypes")
     private List<CommonResponseInfo> category;
     
     

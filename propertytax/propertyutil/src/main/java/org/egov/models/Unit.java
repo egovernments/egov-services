@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,6 +26,9 @@ public class Unit {
 	@JsonProperty("unitNo")
 	@NotNull
 	private Integer unitNo = null;
+	
+	@JsonProperty("units")
+        private List<Unit> units;
 
 	@JsonProperty("unitType")
 	@Size(min = 1, max = 16)
@@ -111,4 +116,6 @@ public class Unit {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+	
 }

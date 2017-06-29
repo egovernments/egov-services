@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UnitTax {
 
-    private String	floorNumber;	
+    private String floorNumber;
 
-	private Integer	unitNo;
-	
-	@NotNull
-	private Double	assessableArea;	
-	
-	private Double	structureFactor;
-		
-	private Number	usageFactor;	
+    private Integer unitNo;
 
-	private Number	subUsageFactor;
-	
-	@NotNull
-	private CommonTaxDetails unitTaxes;	
-	
+    @NotNull
+    private Double assessableArea;
+
+    private Double structureFactor;
+
+    private Number usageFactor;
+
+    private Number subUsageFactor;
+
+    @NotNull
+    private CommonTaxDetails unitTaxes;
+
 }

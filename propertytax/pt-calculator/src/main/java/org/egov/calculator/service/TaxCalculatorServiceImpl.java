@@ -1,5 +1,6 @@
 package org.egov.calculator.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,24 +9,27 @@ import java.util.stream.Collectors;
 
 import org.egov.calculator.models.TaxCalculationModel;
 import org.egov.calculator.models.TaxCalculationWrapper;
+import org.egov.calculator.models.TaxResponse;
 import org.egov.calculator.repository.FactorRepository;
 import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
+import org.egov.models.CommonTaxDetails;
 import org.egov.models.Floor;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.models.TaxCalculation;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxRates;
 import org.egov.models.Unit;
+import org.egov.models.UnitTax;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.KieModule;
-import org.kie.api.builder.KieRepository;
-import org.kie.api.builder.ReleaseId;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
@@ -109,14 +113,62 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
             CalculationRequest calculationRequest) throws Exception {
         // TODO Auto-generated method stub
         KieSession kieSession = kieSession(calculationRequest.getProperty().getTenantId());
+        for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
+            List<Unit> roomsList = new ArrayList<Unit>();
+            for (Unit unit : floor.getUnits()) {
+                if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+                        && unit.getUnits() != null) {
+                    for (Unit room : unit.getUnits()) {
+                        roomsList.add(room);
+                    }
+                } else {
+                    roomsList.add(unit);
+                }
+            }
+            floor.setUnits(roomsList);
+        }
+
         TaxCalculationModel taxCalculationModel = getDataForPropertyTax(calculationRequest);
         TaxCalculationWrapper taxCalculationWrapper = new TaxCalculationWrapper();
         taxCalculationWrapper.setProperty(calculationRequest.getProperty());
         taxCalculationWrapper.setTaxCalculationModel(taxCalculationModel);
         kieSession.insert(taxCalculationWrapper);
         kieSession.fireAllRules();
-        return new CalculationResponse();
+        CalculationResponse calculationResponse = new CalculationResponse();
+        TaxCalculation taxCalculation = new TaxCalculation();
+        CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
+        commonTaxDetails.setCalculatedARV(taxCalculationWrapper.getTaxResponse().getAnnualRentalValue());
+        commonTaxDetails.setDepreciation(taxCalculationWrapper.getTaxResponse().getDepreciation());
+        commonTaxDetails.setHeadWiseTaxes(taxCalculationWrapper.getTaxResponse().getTaxHeadWiseList());
+        commonTaxDetails.setTotalTax(taxCalculationWrapper.getTaxResponse().getTotalTax());
+        taxCalculation.setPropertyTaxes(commonTaxDetails);
+        List<UnitTax> unitTaxes = new ArrayList<UnitTax>();
+        for (TaxResponse taxResponse : taxCalculationWrapper.getTaxResponses()) {
+            UnitTax unitTax = getUnitTax(taxResponse);
+            unitTaxes.add(unitTax);
+        }
+        taxCalculation.setUnitTaxes(unitTaxes);
+        List<TaxCalculation> taxCalculationList = new ArrayList<TaxCalculation>();
+        taxCalculationList.add(taxCalculation);
+        calculationResponse.setResponseInfo(
+                responseInfoFactory.createResponseInfoFromRequestInfo(calculationRequest.getRequestInfo(), true));
+        calculationResponse.setTaxes(taxCalculationList);
+        return calculationResponse;
     };
+
+    public UnitTax getUnitTax(TaxResponse taxResponse) {
+        UnitTax unitTax = new UnitTax();
+        unitTax.setFloorNumber(taxResponse.getFloorNumber());
+        unitTax.setUnitNo(taxResponse.getUnitNo());
+        CommonTaxDetails commonTaxDetails = new CommonTaxDetails();
+        commonTaxDetails.setCalculatedARV(taxResponse.getAnnualRentalValue());
+        commonTaxDetails.setDepreciation(taxResponse.getDepreciation());
+        commonTaxDetails.setHeadWiseTaxes(taxResponse.getTaxHeadWiseList());
+        commonTaxDetails.setTotalTax(taxResponse.getTotalTax());
+        unitTax.setUnitTaxes(commonTaxDetails);
+        return unitTax;
+
+    }
 
     /**
      * Description: this method will get and create keyFileSystem object based on tenantId
@@ -157,22 +209,29 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
      * @throws IOException
      */
     public KieSession kieSession(String tenantId) throws IOException {
-        final KieRepository kieRepository = getKieServices().getRepository();
-        kieRepository.addKieModule(new KieModule() {
-            public ReleaseId getReleaseId() {
-                return kieRepository.getDefaultReleaseId();
-            }
-        });
+        KieServices kieServices = KieServices.Factory.get();
+        KieFileSystem kfs = kieServices.newKieFileSystem();
+        FileInputStream fis = new FileInputStream(environment.getProperty("rules.path") + "/" + tenantId + ".drl");
 
-        KieBuilder kieBuilder = getKieServices().newKieBuilder(kieFileSystem(tenantId));
-        kieBuilder.buildAll();
+        kfs.write(environment.getProperty("rules.path") + "/" + tenantId + ".drl",
+                kieServices.getResources().newInputStreamResource(fis));
 
-        KieContainer kieContainer = getKieServices().newKieContainer(kieRepository.getDefaultReleaseId());
-        return kieContainer.newKieSession();
+        KieBuilder kieBuilder = kieServices.newKieBuilder(kfs).buildAll();
+
+        Results results = kieBuilder.getResults();
+        if (results.hasMessages(Message.Level.ERROR)) {
+            System.out.println(results.getMessages());
+            throw new IllegalStateException("### errors ###");
+        }
+
+        KieContainer kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
+
+        KieSession kieSession = kieContainer.newKieSession();
+        return kieSession;
     }
 
     /**
-     * Description : this method for getting all requried data for tax calculation
+     * Description : this method for getting all required data for tax calculation
      * @param calculationRequest
      * @return taxCalculationModel
      * @throws Exception
@@ -189,6 +248,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
             List<List<TaxRates>> taxRatesList = new ArrayList<List<TaxRates>>();
             List<Map<String, TaxPeriod>> taxPeriodMapList = new ArrayList<Map<String, TaxPeriod>>();
             List<Double> guidanceValues = new ArrayList<Double>();
+
             for (Unit unit : floor.getUnits()) {
                 List<CalculationFactor> factorsList = null;
                 List<TaxRates> taxRates = null;

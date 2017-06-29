@@ -37,7 +37,6 @@ public class TaxHeadMasterRowMapper implements RowMapper<TaxHeadMaster> {
 			taxHead.setService(rs.getString("service"));
 			taxHead.setName(rs.getString("name"));
 			taxHead.setCode(rs.getString("code"));
-			taxHead.setGlCode(rs.getString("glcode"));
 			taxHead.setIsDebit(rs.getBoolean("isdebit"));
 			taxHead.setIsActualDemand(rs.getBoolean("isactualdemand"));
 			taxHead.setOrder(rs.getInt("orderno"));

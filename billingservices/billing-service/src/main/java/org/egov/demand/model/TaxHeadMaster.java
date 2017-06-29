@@ -27,8 +27,6 @@ public class TaxHeadMaster {
 
 	private String code;
 
-	private String glCode;
-
 	private Boolean isDebit = false;
 
 	private Boolean isActualDemand;

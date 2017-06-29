@@ -13,18 +13,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaxCalculation {
 
-	@NotNull
-	private String fromDate;
-	
-	@NotNull
-	private String	toDate;
-
-	@NotNull
-	private String	effectiveDate;	
-
-	@NotNull
-	private  CommonTaxDetails	propertyTaxes;
-	
     @NotNull
-	private List<UnitTax>	unitTaxes;	
+    private String fromDate;
+
+    @NotNull
+    private String toDate;
+
+    @NotNull
+    private String effectiveDate;
+
+    @NotNull
+    private CommonTaxDetails propertyTaxes;
+
+    @NotNull
+    private List<UnitTax> unitTaxes;
 }

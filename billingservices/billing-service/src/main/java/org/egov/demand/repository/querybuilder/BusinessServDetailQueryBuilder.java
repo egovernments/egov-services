@@ -75,7 +75,11 @@ public class BusinessServDetailQueryBuilder {
         }
 
         if (!businessServiceDetailCriteria.getBusinessService().isEmpty())
-            selectQuery.append(" and businessservice.businessservice IN "+getQueryForCollection(businessServiceDetailCriteria.getBusinessService()));
+            selectQuery.append(" and businessservice.businessservice IN "+
+                    getQueryForCollection(businessServiceDetailCriteria.getBusinessService()));
+
+        if (!businessServiceDetailCriteria.getId().isEmpty())
+            selectQuery.append(" and businessservice.id IN "+getQueryForCollection(businessServiceDetailCriteria.getId()));
 
     }
 

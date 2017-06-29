@@ -62,9 +62,7 @@ public class PropertyCategoryGetRequest {
     private Long propertyTypeId;
     private Long categoryTypeId;
     private Boolean active;
-
     private String tenantId;
-
     private String sortBy;
     private String sortOrder;
     private Short pageSize;

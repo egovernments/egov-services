@@ -41,11 +41,14 @@
 package org.egov.demand.service;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
@@ -66,7 +69,6 @@ import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.controller.BusinessServiceDetailController;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -190,10 +192,11 @@ public class BillService {
 							demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
 
 					log.debug("prepareBill taxHeadMaster:" + taxHeadMaster);
-					//TODO
+					//TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
-							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount())).
-							glcode(taxHeadMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand()).
+							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+							//.glcode(taxHeadMaster.getGlCode())
+							.isActualDemand(taxHeadMaster.getIsActualDemand()).
 							order(taxHeadMaster.getOrder()).build();
 
 					billAccountDetails.add(billAccountDetail);

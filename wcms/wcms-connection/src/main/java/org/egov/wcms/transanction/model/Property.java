@@ -59,7 +59,7 @@ import lombok.ToString;
 public class Property {
 
     @NotNull
-    private long id;
+    private long propertyid;
 
     @NotNull
     private String usageType;

@@ -39,12 +39,18 @@
  */
 package org.egov.demand.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
-import org.egov.demand.model.*;
+import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.util.SequenceGenService;
-import org.egov.demand.web.contract.*;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodRequest;
+import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
@@ -53,8 +59,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class TaxPeriodService {

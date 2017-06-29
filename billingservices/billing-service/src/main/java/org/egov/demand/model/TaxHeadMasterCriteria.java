@@ -1,5 +1,6 @@
 package org.egov.demand.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -25,12 +26,11 @@ public class TaxHeadMasterCriteria {
 	private String service;
 	private String category;
 	private String name;
-	private Set<String> code;
-	private String glCode;
+	private Set<String> code=new HashSet<>();
 	private Boolean isDebit;
 	private Boolean isActualDemand;
 	
-	
+	private Set<String> id=new HashSet<>();
 	private Long size;
 	private Long offset;
 }

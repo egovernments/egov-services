@@ -6,7 +6,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxHeadMasterRepository;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;

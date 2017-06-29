@@ -8,6 +8,7 @@ import lombok.Setter;
 
 /**
  * Description : Invalid input custom exception class
+ * 
  * @author Narendra
  *
  */
@@ -16,14 +17,12 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class InvalidInputException  extends RuntimeException{
+public class InvalidInputException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	//private String customMsg;
 	
 	private RequestInfo requestInfo;
-	
-	
+
 }

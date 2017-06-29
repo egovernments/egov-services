@@ -123,7 +123,6 @@ public class TaxHeadMasterControllerTest {
 		taxHeadMaster.setCategory(Category.fromValue("TAX"));
 		taxHeadMaster.setService("string");
 		taxHeadMaster.setName("string");
-		taxHeadMaster.setGlCode("string");
 		taxHeadMaster.setIsDebit(true);
 		taxHeadMaster.setIsActualDemand(true);
 		

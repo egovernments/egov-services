@@ -78,7 +78,7 @@ public class ReceivingModeTypeRepositoryTest {
     @InjectMocks
     private ReceivingModeTypeRepository receivingModeRepository;
 
-    @Test(expected=Exception.class)
+    @Test
     public void test_Should_Create_ReceivingMode_Valid() {
         final ReceivingModeTypeReq receivingModeRequest = getReceivingModeRequest();
         final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
@@ -95,7 +95,7 @@ public class ReceivingModeTypeRepositoryTest {
         assertTrue(receivingModeRequest.equals(receivingModeRepository.persistReceivingModeType(receivingModeRequest)));
     }
 
-    @Test(expected=Exception.class)
+    @Test
     public void test_Should_Create_ReceivingMode_Invalid() {
         final ReceivingModeTypeReq receivingModeReq = getReceivingModeRequest();
         final ReceivingModeType receivingMode = receivingModeReq.getModeType();

@@ -94,7 +94,7 @@ public class ReceivingModeTypeRepository {
 	
 	private void insertReceivingModeChannel(final ReceivingModeType modeType,final String receivingModeChannelInsert ){
 		
-		if (modeType.getChannels().size() != 0) {
+		if (modeType.getChannels()!=null && modeType.getChannels().size() != 0) {
 
 			List<String> distinctChannelList = modeType.getChannels().stream().distinct().collect(Collectors.toList());
 

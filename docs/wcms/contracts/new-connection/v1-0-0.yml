@@ -514,6 +514,9 @@ definitions:
       propertyIdentifier:
         type: string
         description: Unique identifier of Property tax module.
+      assetIdentifier:
+        type: string
+        description: Unique identifier of Asset Module.Creating Asset Entry and returning Unique Identifier from Asset Module.
       hscPipeSizeType:
         type: string
         description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.

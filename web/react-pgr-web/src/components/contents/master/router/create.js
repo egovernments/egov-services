@@ -418,7 +418,7 @@ class createRouter extends Component {
           open={open}
           onRequestClose={handleOpenNClose}
         >
-          {match.params && match.params.type == "edit" ? translate("pgr.lbl.router.update.success") : translate("pgr.lbl.router.create.success")}
+          {match.params && match.params.type == "edit" ?  translate("pgr.lbl.router.update.success") : translate("pgr.lbl.router.create.success")}
         </Dialog>
         </div>
   	);

@@ -25,5 +25,7 @@ public class User {
     private String emailId;
 
     private List<Role> roles;
+
+    private String tenantId;
 }
 

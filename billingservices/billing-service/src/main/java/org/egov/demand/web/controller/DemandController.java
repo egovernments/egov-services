@@ -49,6 +49,7 @@ import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.DemandValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,12 +74,18 @@ public class DemandController {
 	@Autowired
 	private ResponseFactory responseFactory;
 
+	@Autowired
+	private DemandValidator demandValidator;
 	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 		log.debug("the demand request object : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
+		demandValidator.validate(demandRequest, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}

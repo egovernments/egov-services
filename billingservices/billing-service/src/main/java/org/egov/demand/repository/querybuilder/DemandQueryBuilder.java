@@ -139,11 +139,12 @@ public class DemandQueryBuilder {
 			demandQueryBuilder.append("demanddetail.taxamount<=?");
 			preparedStatementValues.add(demandCriteria.getDemandTo());
 		}
-		if (demandCriteria.getType() != null) {
+		//TODO add the type criteria using due current and arrear logic not priority
+		/*if (demandCriteria.getType() != null) {
 			addAndClause(demandQueryBuilder);
 			demandQueryBuilder.append("demand.type=?");
 			preparedStatementValues.add(demandCriteria.getType());
-		}
+		}*/
 		addOrderByClause(demandQueryBuilder, DEMAND_QUERY_ORDER_BY_CLAUSE);
 		addPagingClause(demandQueryBuilder, preparedStatementValues);
 
@@ -169,6 +170,7 @@ public class DemandQueryBuilder {
 			demandQueryBuilder.append("demanddetail.taxheadcode=?");
 			preparedStatementValues.add(demandDetailCriteria.getTaxHeadCode());
 		}
+		//TODO period from and period to , list of demanddeetailsid
 		/*if (demandDetailCriteria.getPeriod() != null) {
 			addAndClause(demandQueryBuilder);
 			demandQueryBuilder.append("demand.taxPeriodFrom<=?");

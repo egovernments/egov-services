@@ -126,10 +126,9 @@ public class DemandService {
 		for (DemandDetail demandDetail : demandDetails) {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
-		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
 		log.debug("demand Request object : " + demandRequest);
 		log.debug("demand detail list : " + demandDetails);
-
+		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 
 	}
@@ -158,23 +157,13 @@ public class DemandService {
 
 	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
 
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).tenantId(demandCriteria.getTenantId())
-				.emailId(demandCriteria.getEmail()).mobileNumber(demandCriteria.getMobileNumber()).build();
+		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+				.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
+				.mobileNumber(demandCriteria.getMobileNumber()).build();
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
 		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
-		List<Demand> demands = demandRepository.getDemands(demandCriteria,ownerIds);
+		List<Demand> demands = demandRepository.getDemands(demandCriteria, ownerIds);
 		demands = demandEnrichmentUtil.enrichOwners(demands, owners);
-		List<DemandDetail> demandDetails = new ArrayList<>();
-		for (Demand demand : demands) {
-			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-				demandDetails.add(demandDetail);
-			}
-		}
-		/*List<TaxHeadMaster> taxHeadMAsters = taxHeadMasterService.getTaxHeads(
-				TaxHeadMasterCriteria.builder().tenantId(demandCriteria.getTenantId())
-				.code(demandDetails.stream().map(ddl -> ddl.getTaxHeadMaster().getCode())
-				.collect(Collectors.toSet())).build(),requestInfo).getTaxHeadMasters();
-		demandEnrichmentUtil.enrichTaxHeadMAsters(demandDetails, taxHeadMAsters);*/
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

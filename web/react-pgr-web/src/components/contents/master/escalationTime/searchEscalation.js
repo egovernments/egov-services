@@ -10,7 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../common/Table';
 import Api from '../../../../api/api';
-
+import {translate} from '../../../common/common';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -138,6 +138,18 @@ class SearchEscalation extends Component {
 
       let current = this;
 
+      let {searchEscalation} = this.props;
+
+    /*  if(searchEscalation.designation && searchEscalation.designation != ''){
+
+      } else if (searchEscalation.serviceType.id && searchEscalation.serviceType.id != ''){
+
+      } else {
+        let query = {
+          designation:this.props.searchEscalation.designation
+        }
+      }*/
+
       let query = {
         designation:this.props.searchEscalation.designation
       }
@@ -175,8 +187,8 @@ class SearchEscalation extends Component {
       			return (
       				<tr key={i}>
       					<td>{val.serviceName}</td>
-      					<td>{val.boundaryType}</td>
-      					<td>{val.boundary}</td>
+      					<td>{val.designation}</td>
+      					<td>{val.noofhours}</td>
       				</tr>
       			)
       		})
@@ -191,7 +203,7 @@ class SearchEscalation extends Component {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
-                    <th>Grievance Type</th>
+                    <th>{translate("pgr.lbl.grievance.type")}</th>
                     <th>Designation</th>
                     <th>Number of hours</th>
    		            </tr>
@@ -216,7 +228,7 @@ class SearchEscalation extends Component {
                               <Row>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          hintText="Grievance Type"
+                                          floatingLabelText={translate("pgr.lbl.grievance.type")}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -237,7 +249,7 @@ class SearchEscalation extends Component {
                                   </Col>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          hintText="Designation"
+                                          floatingLabelText="Designation"
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -261,8 +273,8 @@ class SearchEscalation extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
-                      <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                      <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
                   </div>
                   {viewTable()}
               </CardText>

@@ -14,7 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../common/Table';
 import Api from '../../../../api/api';
-
+import {translate} from '../../../common/common';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -61,6 +61,28 @@ const styles = {
     marginTop: 37
   }
 };
+
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
 
 class DefineEscalationTime extends Component {
     constructor(props) {
@@ -156,18 +178,19 @@ class DefineEscalationTime extends Component {
       }).catch((error)=>{
           console.log(error);
       })
-      
+
   }
 
   addEscalation = () => {
     var current = this
     var body = {
-      escalationtimetype:{
+      EscalationTimeType:{
         grievancetype:{
-          serviceCode: this.props.defineEscalationTime.serviceType.serviceCode
+          id: this.props.defineEscalationTime.serviceType.id
         },
-        noofhours:this.props.defineEscalationTime.noofhours,
+        noOfHours:this.props.defineEscalationTime.numberOfHours,
         designation:this.props.defineEscalationTime.designation,
+        tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 
       }
     }
@@ -176,47 +199,49 @@ class DefineEscalationTime extends Component {
         console.log(response);
         current.setState({
           resultList:[
-            ...this.state.resultList,
-            this.props.defineEscalationTime
+            ...current.state.resultList,
+            current.props.defineEscalationTime
           ]
       })
     }).catch((error)=>{
         console.log(error);
     })
+
+  /*  current.setState({
+      resultList:[
+        ...this.state.resultList,
+        this.props.defineEscalationTime
+      ]
+    })*/
   }
 
   updateEscalation = () => {
 
     var current = this
     var body = {
-      escalationtimetype:{
+      EscalationTimeType:{
         grievancetype:{
-          serviceCode: this.props.defineEscalationTime.serviceType.serviceCode
+          id: this.props.defineEscalationTime.serviceType.id
         },
-        noofhours:this.props.defineEscalationTime.noofhours,
+        noOfHours:this.props.defineEscalationTime.numberOfHours,
         designation:this.props.defineEscalationTime.designation,
-
+        tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
       }
     }
 
-    Api.commonApiPost("workflow/escalation-hours/v1/_update",{id:this.props.defineEscalationTime.serviceType.id},body).then(function(response){
+    var idd = this.props.defineEscalationTime.serviceType.id
+
+    Api.commonApiPost("workflow/escalation-hours/v1/_update/"+idd,{},body).then(function(response){
         console.log(response);
-        current.setState({
+        current.setState((prevState)=>{
           resultList:[
-            ...this.state.resultList,
-            this.props.defineEscalationTime
-          ]
-      })
+            ...current.state.resultList,
+            prevState.resultList[prevState.editIndex] = current.props.defineEscalationTime
+          ],
+          prevState.editIndex=-1
+        })
     }).catch((error)=>{
         console.log(error);
-    })
-
-    this.setState((prevState)=>{
-      resultList:[
-        ...this.state.resultList,
-        prevState.resultList[prevState.editIndex] = this.props.defineEscalationTime
-      ],
-      prevState.editIndex=-1
     })
 
   }
@@ -267,9 +292,9 @@ class DefineEscalationTime extends Component {
                     editObject(i);
                     current.setState({editIndex:i})
                 }}/>
-                <RaisedButton style={{margin:'0 3px'}} label="Delete" disabled={editIndex<0?false:true} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                {false && <RaisedButton style={{margin:'0 3px'}} label="Delete" disabled={editIndex<0?false:true} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                     deleteObject(i);
-                }}/></td>
+                }}/>}</td>
       				</tr>
       			)
       		})
@@ -356,7 +381,7 @@ class DefineEscalationTime extends Component {
                               <Row>
                                   <Col xs={12} md={4} mdPush={4}>
                                         <AutoComplete
-                                          floatingLabelText="Grievance Type"
+                                          floatingLabelText={translate("pgr.lbl.grievance.type")}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -380,8 +405,8 @@ class DefineEscalationTime extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.serviceType ? false : true} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
-                      <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.serviceType ? false : true} label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                      <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>

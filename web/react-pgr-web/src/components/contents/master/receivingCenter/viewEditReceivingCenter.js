@@ -17,6 +17,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -112,9 +113,9 @@ class ViewEditServiceGroup extends Component {
                                     <thead>
                                         <tr>
                                           <th>ID</th>
-                                          <th>Name</th>
-                                          <th>Code</th>
-                                          <th>Description</th>
+                                          <th>{translate("core.lbl.add.name")}</th>
+                                          <th>{translate("core.lbl.code")}</th>
+                                          <th>{translate("core.lbl.description")}</th>
                                           <th>Active</th>
                                           <th>Audit Details</th>
                                           <th>CRN Required</th>

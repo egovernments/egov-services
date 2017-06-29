@@ -105,7 +105,7 @@ class ViewEditReceivingCenter extends Component {
       return(
         <div className="serviceGroupCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Center</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Group</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>

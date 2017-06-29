@@ -168,7 +168,7 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{e.slaHours}</td>
                                               <td>{e.hasFinancialImpact?"True":"False"}</td>
                                               {url == '/viewOrUpdateServiceType/view' && <td><Link to={`/viewServiceType/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/viewOrUpdateServiceType/edit' && <td><Link  to={`/serviceGroupCreate/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/viewOrUpdateServiceType/edit' && <td><Link  to={`/serviceTypeCreate/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}

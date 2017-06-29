@@ -54,7 +54,7 @@ const styles = {
 
 var _this;
 
-class ViewReceivingCenter extends Component {
+class ViewServiceGroup extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -87,7 +87,7 @@ class ViewReceivingCenter extends Component {
     render() {
 
       let {
-        viewReceivingCenter ,
+        viewServiceGroup ,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -105,9 +105,9 @@ class ViewReceivingCenter extends Component {
       console.log(isFormValid);
 
       return(
-        <div className="viewReceivingCenter">
+        <div className="viewServiceGroup">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >Receiving Center< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >Service Group< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>
@@ -115,10 +115,10 @@ class ViewReceivingCenter extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewReceivingCenter.id ? viewReceivingCenter.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Name <span style={{float:'right'}}>{viewReceivingCenter.name ? viewReceivingCenter.name : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Code <span style={{float:'right'}}>{viewReceivingCenter.code ? viewReceivingCenter.code : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Description <span style={{float:'right'}}>{viewReceivingCenter.description? viewReceivingCenter.description : ''}</span></ListGroupItem>
+                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewServiceGroup.id ? viewServiceGroup.id : ''}</span></ListGroupItem>
+                                      <ListGroupItem>Name <span style={{float:'right'}}>{viewServiceGroup.name ? viewServiceGroup.name : ''}</span></ListGroupItem>
+                                      <ListGroupItem>Code <span style={{float:'right'}}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</span></ListGroupItem>
+                                      <ListGroupItem>Description <span style={{float:'right'}}>{viewServiceGroup.description? viewServiceGroup.description : ''}</span></ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>
@@ -130,7 +130,7 @@ class ViewReceivingCenter extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({viewReceivingCenter : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({viewServiceGroup : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -156,4 +156,4 @@ const mapDispatchToProps = dispatch => ({
 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewReceivingCenter);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewServiceGroup);

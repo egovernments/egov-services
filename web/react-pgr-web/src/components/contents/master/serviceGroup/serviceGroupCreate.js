@@ -196,6 +196,19 @@ class ServiceGroupCreate extends Component {
                 <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
           </form>
+          <Dialog
+               title="Data Added Successfully"
+               actions={<FlatButton
+   				        label="Close"
+   				        primary={true}
+   				        onTouchTap={this.handleClose}
+   				      />}
+               modal={false}
+               open={this.state.open}
+               onRequestClose={this.handleClose}
+             >
+              Data Added Successfully
+         </Dialog>
         </div>)
     }
 

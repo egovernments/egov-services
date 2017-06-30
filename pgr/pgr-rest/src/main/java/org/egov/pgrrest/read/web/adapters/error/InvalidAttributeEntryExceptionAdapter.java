@@ -8,20 +8,19 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceRequestIdMandatoryExceptionAdapter implements ErrorAdapter<Void> {
+public class InvalidAttributeEntryExceptionAdapter implements ErrorAdapter<String> {
 
-    private static final String MESSAGE = "serviceRequestId is mandatory";
-    private static final String CODE = "PGR.SERVICE_REQUEST_ID_MANDATORY";
-    private static final String FIELD_NAME = "serviceRequest.serviceRequestId";
+    private static final String MESSAGE = "attribValues entry is invalid";
+    private static final String CODE = "PGR.INVALID_ATTRIBUTE_VALUE_ENTRY";
 
     @Override
-    public ErrorResponse adapt(Void model) {
-        final Error error = getError();
+    public ErrorResponse adapt(String fieldName) {
+        final Error error = getError(fieldName);
         return new ErrorResponse(null, error);
     }
 
-    private Error getError() {
-        List<ErrorField> errorFields = getErrorFields();
+    private Error getError(String fieldName) {
+        List<ErrorField> errorFields = getErrorFields(fieldName);
         return Error.builder()
             .code(HttpStatus.BAD_REQUEST.value())
             .message(MESSAGE)
@@ -29,21 +28,15 @@ public class ServiceRequestIdMandatoryExceptionAdapter implements ErrorAdapter<V
             .build();
     }
 
-    private List<ErrorField> getErrorFields() {
+    private List<ErrorField> getErrorFields(String fieldName) {
         List<ErrorField> errorFields = new ArrayList<>();
-        addCRNValidationErrors(errorFields);
-        return errorFields;
-    }
-
-    private void addCRNValidationErrors(List<ErrorField> errorFields) {
         final ErrorField errorField = ErrorField.builder()
             .code(CODE)
             .message(MESSAGE)
-            .field(FIELD_NAME)
+            .field(fieldName)
             .build();
         errorFields.add(errorField);
+        return errorFields;
     }
 
 }
-
-

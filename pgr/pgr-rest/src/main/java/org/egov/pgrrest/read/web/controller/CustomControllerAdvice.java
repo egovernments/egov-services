@@ -74,4 +74,10 @@ public class CustomControllerAdvice {
     public ErrorResponse handleServiceRequestIdMandatoryException() {
         return new ServiceRequestIdMandatoryExceptionAdapter().adapt(null);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidAttributeEntryException.class)
+    public ErrorResponse handleInvalidAttributeEntryException(InvalidAttributeEntryException ex) {
+        return new InvalidAttributeEntryExceptionAdapter().adapt(ex.getField());
+    }
 }

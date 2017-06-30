@@ -7,6 +7,7 @@ import org.egov.pgrrest.common.model.AuthenticatedUser;
 import org.egov.pgrrest.common.model.Requester;
 import org.egov.pgrrest.common.model.UserType;
 import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException;
 import org.egov.pgrrest.read.domain.exception.ServiceRequestIdMandatoryException;
 import org.egov.pgrrest.read.domain.exception.TenantIdMandatoryException;
 import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
@@ -67,6 +68,21 @@ public class ServiceRequestControllerTest {
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(resources.getFileContents("tenantIdMandatoryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_attribute_values_are_invalid_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new InvalidAttributeEntryException("key")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("invalidAttributeEntryErrorResponse.json")));
     }
 
     @Test

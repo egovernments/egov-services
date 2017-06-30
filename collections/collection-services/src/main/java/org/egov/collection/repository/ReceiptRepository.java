@@ -185,7 +185,6 @@ public class ReceiptRepository {
 				logger.info("Receipt Number generated is: "+receiptNumber);
 				
 				billdetails.setReceiptNumber("receiptNumber");
-				
 				parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("businessdetails", billdetails.getBusinessDetailsCode());
@@ -196,12 +195,10 @@ public class ReceiptRepository {
 				parametersMap.put("collmodesnotallwd", billdetails.getCollectionModesNotAllowed().toString());
 				parametersMap.put("consumercode", billdetails.getConsumerCode());
 				parametersMap.put("channel", billdetails.getChannel());
-				
 				parametersMap.put("fund", fund);
 				parametersMap.put("fundsource", fundSource);
 				parametersMap.put("function", function);
 				parametersMap.put("department", department);
-				
 				parametersMap.put("boundary", billdetails.getBoundary());
 				parametersMap.put("voucherheader", billdetails.getVoucherHeader());
 				parametersMap.put("depositedbranch", receiptInfo.getBankAccount().getBankBranch().getName());
@@ -218,11 +215,7 @@ public class ReceiptRepository {
 				parametersMap.put("stateid", null);
 				parametersMap.put("location", null);
 				parametersMap.put("isreconciled", false);
-				
-				parametersMap.put("status", "status");
-
 				parametersMap.put("status", statusCode);
-				
 				
 				try{
 					logger.info("Inserting into receipt header");
@@ -230,7 +223,6 @@ public class ReceiptRepository {
 				}catch(Exception e){
 					logger.error("Persisting to DB FAILED! ",e.getCause());
 					return isInsertionSuccessfull;
-	
 				}
 				
 				String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
@@ -242,7 +234,6 @@ public class ReceiptRepository {
 	
 				for(BillAccountDetails billAccountDetails: billdetails.getBillAccountDetails()){
 					final Map<String, Object> parameterMap = new HashMap<>();
-					
 					if(validateGLCode(billAccountDetails.getGlcode(), receiptReq.getTenantId(), receiptReq.getRequestInfo())){
 						parameterMap.put("chartofaccount", billAccountDetails.getGlcode());
 						parameterMap.put("dramount", billAccountDetails.getDebitAmount());
@@ -270,8 +261,7 @@ public class ReceiptRepository {
 					logger.error("Persisting to receiptdetails table FAILED! ", e.getCause());
 					isInsertionSuccessfull= false;
 					return isInsertionSuccessfull;
-				}
-			
+				}		
 		}else{
 			logger.error("BuisnessDetails unavailable for the code: "+billdetails.getBusinessDetailsCode());
 			logger.error("Record COULDN'T BE PERSISTED");

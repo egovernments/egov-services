@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter

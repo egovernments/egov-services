@@ -13,6 +13,7 @@ import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.producers.AgreementProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,6 +127,9 @@ public class WorkflowRepository {
 		}else if(agreement.getCancellation()!=null){
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+		}else if(agreement.getEviction()!=null){
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
 		}else{
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
@@ -161,6 +165,9 @@ public class WorkflowRepository {
 		}else if(agreement.getCancellation()!=null){
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+		}else if(agreement.getEviction()!=null){
+			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
 		}else{
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
@@ -170,7 +177,15 @@ public class WorkflowRepository {
 		if (workflowDetails != null) {
 
 			task.setAction(workflowDetails.getAction());
-			task.setStatus(workflowDetails.getStatus());
+			if (propertiesManager.getWfStatusRejected().equalsIgnoreCase(workflowDetails.getStatus())
+					&& agreement.getIsAdvancePaid()
+					&& propertiesManager.getAgreementStatusRejected().equalsIgnoreCase(agreement.getStatus().toString())
+					&& agreement.getAction().equals(Action.CREATE)) {
+
+				task.setStatus(propertiesManager.getWfStatusAssistantApproved());
+				LOGGER.info("updating the task status for reject-forward case after payment : ", task.getStatus());
+			} else
+				task.setStatus(workflowDetails.getStatus());
 			assignee.setId(workflowDetails.getAssignee());
 			task.setAssignee(assignee);
 			task.setComments(workflowDetails.getComments());

@@ -1570,6 +1570,7 @@ function getPositions(_this, cb) {
 function showAndPrint(currentEmployee) {
     employee = currentEmployee;
     $("#code").prop("disabled", true);
+    $("#user\\.userName").prop("disabled", true);
     printValue("", currentEmployee);
     displayFiles(employee);
 

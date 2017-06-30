@@ -43,7 +43,7 @@ public class ServiceRequest {
     private String receivingCenter;
     private Long department;
     private String childLocation;
-    private Long assignee;
+    private Long position;
     private String state;
     private String citizenFeedback;
     private String otpReference;

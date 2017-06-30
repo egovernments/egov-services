@@ -48,6 +48,7 @@ import javax.validation.Valid;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
@@ -55,6 +56,7 @@ import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +79,11 @@ public class ReceiptController {
 
 	@Autowired
 	private ReceiptService receiptService;
-
+	
+	@Autowired 
+	private ReceiptReqValidator receiptReqValidator;
+	
+	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("_search")
@@ -107,19 +113,7 @@ public class ReceiptController {
 			}
 		return getSuccessResponse(receipts, requestInfo);
 	}
-
-	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
-			RequestInfo requestInfo) {
-		ReceiptRes receiptResponse = new ReceiptRes();
-		// receiptResponse.setReceiptInfo(receipts);
-		receiptResponse.setResponseInfo(responseInfoFactory
-				.createResponseInfoFromRequestInfo(requestInfo, true));
-		System.err.println("before returning from getsucces resposne ::"
-				+ receiptResponse);
-		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
-	}
-
-
+	
 	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(
@@ -129,13 +123,15 @@ public class ReceiptController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		
-		/*receiptRequest.getReceipt().getAuditDetails().setCreatedBy(receiptRequest.getRequestInfo().getUserInfo().getName());
-		receiptRequest.getReceipt().getAuditDetails().setLastModifiedBy(receiptRequest.getRequestInfo().getUserInfo().getName()); */
+				
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		
 		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
-		
+				
 		if(null == receiptInfo){
+			LOGGER.info("Service returned null");
 			Error error = new Error();
 			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);
 			
@@ -164,6 +160,18 @@ public class ReceiptController {
 
 		return null;
 	}
+	
+	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
+			RequestInfo requestInfo) {
+		LOGGER.info("Building success response.");
+		ReceiptRes receiptResponse = new ReceiptRes();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		receiptResponse.setReceipts(receipts);
+		receiptResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
+	}
+
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

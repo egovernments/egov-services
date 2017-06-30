@@ -64,14 +64,14 @@ class grievanceView extends Component{
     let {initForm, addMandatory} = this.props;
     initForm();
 
-    Api.commonApiPost("/pgr/servicedefinition/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
+    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
     {
       currentThis.setState({SD : response.attributes})
     },function(err) {
 
     });
 
-    Api.commonApiPost("/pgr/seva/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
+    Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
       //console.log(JSON.stringify(response.serviceRequests))
       currentThis.setState({srn : response.serviceRequests});
@@ -88,7 +88,7 @@ class grievanceView extends Component{
         addMandatory();
       });
 
-      Api.commonApiGet('/workflow/history',{workflowId : currentThis.state.stateId}).then(function(response)
+      Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
       {
         //console.log(JSON.stringify(response));
         currentThis.setState({workflow : response});
@@ -123,7 +123,7 @@ class grievanceView extends Component{
   }
   getReceivingCenter(){
     if(this.state.receivingCenter){
-      Api.commonApiPost("/pgr/receivingcenter/_search", {id:this.state.receivingCenter}).then(function(response)
+      Api.commonApiPost("/pgr/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
       {
         currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
         currentThis.getLocation();
@@ -158,7 +158,7 @@ class grievanceView extends Component{
   }
   allServices = () => {
     if(localStorage.getItem('type') == 'EMPLOYEE'){
-      Api.commonApiPost("/pgr/services/_search", {type:'ALL'}).then(function(response)
+      Api.commonApiPost("/pgr/services/v1/_search", {type:'ALL'}).then(function(response)
       {
         currentThis.setState({complaintTypes : response.complaintTypes});
         currentThis.getWard();
@@ -266,8 +266,8 @@ class grievanceView extends Component{
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
   		if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
   			req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'assignmentId'){
-  				req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.assignmentId : currentThis.props.grievanceView.positionId;
+  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'positionId'){
+  				req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
   		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'locationId'){
   				req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
   		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'childLocationId'){
@@ -331,7 +331,7 @@ class grievanceView extends Component{
   }
   updateSeva = (req_obj) =>{
     //console.log('Before Submit',JSON.stringify(req_obj));
-    Api.commonApiPost("/pgr/seva/_update",{},req_obj).then(function(updateResponse)
+    Api.commonApiPost("/pgr/seva/v1/_update",{},req_obj).then(function(updateResponse)
     {
       //console.log('After submit',JSON.stringify(updateResponse));
       currentThis.setState({loadingstatus:'hide'});

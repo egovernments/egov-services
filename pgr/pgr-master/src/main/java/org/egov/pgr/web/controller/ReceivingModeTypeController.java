@@ -41,6 +41,7 @@ package org.egov.pgr.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -93,7 +94,7 @@ public class ReceivingModeTypeController {
 	@Autowired
 	private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final ReceivingModeTypeReq ModeTypeRequest,
 			final BindingResult errors) {
@@ -116,7 +117,7 @@ public class ReceivingModeTypeController {
 
 	}
 
-	@PostMapping(value = "/{code}/_update")
+	@PostMapping(value = "/v1/{code}/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final ReceivingModeTypeReq modeTypeRequest,
 			final BindingResult errors, @PathVariable("code") final String code) {
@@ -139,7 +140,7 @@ public class ReceivingModeTypeController {
 		return getSuccessResponse(modeTypes, modeTypeRequest.getRequestInfo());
 	}
 
-	@PostMapping("_search")
+	@PostMapping("/v1/_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid final ReceivingModeTypeGetReq modeTypeGetRequest,
 			final BindingResult modelAttributeBindingResult,
@@ -242,20 +243,29 @@ public class ReceivingModeTypeController {
 
 		final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
 
-		if(receivingMode.getChannel() == null || receivingMode.getChannel().isEmpty()){
-			
+		if (receivingMode.getChannels().isEmpty() || receivingMode.getChannels().size() == 0) {
+
 			final ErrorField errorField = ErrorField.builder()
 					.code(PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANDATORY_CODE)
 					.message(PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-			
-			
-	}else if (receivingMode.getChannel().contains(",")) {
 
-			String[] channels = receivingMode.getChannel().split(",");
+		} else
+			return;
+	}
 
-			for (String chanel : channels) {
+	private void addTeanantIdValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
+			final List<ErrorField> errorFields) {
+		final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
+		if (receivingMode.getTenantId() == null || receivingMode.getTenantId().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
+					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (receivingMode.getChannels().size() > 0) {
+
+			for (String chanel : receivingMode.getChannels()) {
 
 				ChannelType chaType = ChannelType.fromValue(chanel);
 
@@ -271,32 +281,8 @@ public class ReceivingModeTypeController {
 
 			}
 
-		} else if (receivingMode.getChannel() != null) {
-
-			ChannelType channelType = ChannelType.fromValue(receivingMode.getChannel());
-
-			if (channelType == null) {
-
-				final ErrorField errorField = ErrorField.builder()
-						.code(PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID_CODE)
-						.message(PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE)
-						.field(PgrMasterConstants.RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME).build();
-				errorFields.add(errorField);
-
-			}
-		} else return;
-	}
-
-	private void addTeanantIdValidationErrors(final ReceivingModeTypeReq receivingModeRequest,
-			final List<ErrorField> errorFields) {
-		final ReceivingModeType receivingMode = receivingModeRequest.getModeType();
-		if (receivingMode.getTenantId() == null || receivingMode.getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
+		}
+		return;
 	}
 
 	private Error getError(final ReceivingModeTypeReq ModeTypeRequest, boolean flag) {

@@ -1,33 +1,29 @@
 package org.egov.demand.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.builder.TaxHeadMasterQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxHeadMasterRowMapper;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Repository
+@Slf4j
 public class TaxHeadMasterRepository {
 
-	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterRepository.class);
-	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -43,93 +39,117 @@ public class TaxHeadMasterRepository {
 		String queryStr = taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteria, preparedStatementValues);
 		List<TaxHeadMaster> taxHeadMaster = null;
 		try {
-			logger.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+			log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 			taxHeadMaster = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), taxHeadMasterRowMapper);
-			logger.info("TaxHeadRepository::" + taxHeadMaster);
+			log.debug("TaxHeadRepository::" + taxHeadMaster);
 		} catch (Exception ex) {
-			logger.info("the exception from findforcriteria : " + ex);
+			ex.printStackTrace();
+			log.debug("the exception from findforcriteria : " + ex);
 		}
 		return taxHeadMaster;
 	}
 	
 	public Integer getNextTaxHeadMasterId() {
-		String query = "SELECT nextval('seq_egBillingServices_taxHeadMaster')";
+		String query = "SELECT nextval('seq_egbs_taxHeadMaster')";
 		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
 		return result;
 	}
 	
 	public String getTaxHeadMasterCode() {
-		String query = "SELECT nextval('seq_egBillingServices_taxHeadMastercode')";
+		String query = "SELECT nextval('seq_egbs_taxHeadMastercode')";
 		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-		logger.info("result:" + result);
+		log.debug("result:" + result);
 		StringBuilder code = null;
 		try {
 			code = new StringBuilder(String.format("%06d", result));
 		} catch (Exception ex) {
-			logger.info("the exception from seq number gen for code : " + ex);
+			log.debug("the exception from seq number gen for code : " + ex);
 		}
 		return code.toString();
 	}
-	public List<TaxHeadMaster> create(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeads = taxHeadMasterRequest.getTaxHeadMasters();
-		
-		if(taxHeads!=null){
-			String query = taxHeadMasterQueryBuilder.getInsertQuery();
-			List<Object[]> taxHeadsBatchArgs = new ArrayList<>();
-			int taxHeadsCount=taxHeads.size();
-			RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
-			for (int i = 0; i < taxHeadsCount; i++) {
-				Object[] demandRecord = { taxHeads.get(i).getId(),taxHeads.get(i).getTenantId(),taxHeads.get(i).getCategory().toString(),
-						taxHeads.get(i).getService(),taxHeads.get(i).getName(),taxHeads.get(i).getCode(),taxHeads.get(i).getGlCode()
-						,taxHeads.get(i).getIsDebit(),taxHeads.get(i).getIsActualDemand(),
-						requestInfo.getUserInfo().getId(),  new java.util.Date().getTime(),requestInfo.getUserInfo().getId(),  new java.util.Date().getTime(),
-						taxHeads.get(i).getTaxPeriod().getId()};
-				taxHeadsBatchArgs.add(demandRecord);
-			}
 
-			try {
-				jdbcTemplate.batchUpdate(query, taxHeadsBatchArgs);
-			} catch (DataAccessException ex) {
-				ex.printStackTrace();
-				throw new RuntimeException(ex.getMessage());
-			}
-		}
+	@Transactional
+	public List<TaxHeadMaster> create(TaxHeadMasterRequest taxHeadMasterRequest){
 		
-		return taxHeads;
+		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
+		
+		log.debug("create requestInfo:"+ requestInfo);
+		log.debug("create taxHeadMasters:"+ taxHeadMasters);
+		
+		
+		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getInsertQuery(), new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
+
+
+				ps.setString(1, taxHeadMaster.getId());
+				ps.setString(2, taxHeadMaster.getTenantId());
+				ps.setString(3, taxHeadMaster.getCategory().toString());
+				ps.setString(4, taxHeadMaster.getService());
+				ps.setString(5, taxHeadMaster.getName());
+				ps.setString(6, taxHeadMaster.getCode());
+				ps.setBoolean(7, taxHeadMaster.getIsDebit());
+				ps.setBoolean(8, taxHeadMaster.getIsActualDemand());
+				ps.setObject(9, taxHeadMaster.getOrder());
+				ps.setObject(10, taxHeadMaster.getValidFrom());
+				ps.setObject(11, taxHeadMaster.getValidTill());
+				ps.setString(12, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(13, new Date().getTime());
+				ps.setString(14, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(15, new Date().getTime());
+			}
+			
+			@Override
+			public int getBatchSize() {
+				return taxHeadMasters.size();
+			}
+		});
+		return taxHeadMasters;
 	}
+	
+	
 	
 	public List<TaxHeadMaster> update(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeads = taxHeadMasterRequest.getTaxHeadMasters();
+		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
 		
-		if(taxHeads!=null){
-			String query = taxHeadMasterQueryBuilder.getUpdateQuery();
+		/*log.debug("create requestInfo:"+ requestInfo);
+		log.debug("create taxHeadMasters:"+ taxHeadMasters);
 		
-			List<Object[]> taxHeadsBatchArgs = new ArrayList<>();
-			int taxHeadsCount=taxHeads.size();
-			RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
+		
+		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getUpdateQuery(), new BatchPreparedStatementSetter() {
 			
-			for (int i = 0; i < taxHeadsCount; i++) {
-				Object[] demandRecord = { taxHeads.get(i).getCategory().toString(),
-						taxHeads.get(i).getService(),taxHeads.get(i).getName(),taxHeads.get(i).getCode(),
-						taxHeads.get(i).getGlCode(),taxHeads.get(i).getIsDebit(),taxHeads.get(i).getIsActualDemand(),
-						requestInfo.getUserInfo().getId(),taxHeads.get(i).getTaxPeriod().getId() ,
-						new java.util.Date().getTime(),taxHeads.get(i).getTenantId()};
-				taxHeadsBatchArgs.add(demandRecord);
-			}
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
 
-			try {
-				jdbcTemplate.batchUpdate(query, taxHeadsBatchArgs);
-			} catch (DataAccessException ex) {
-				ex.printStackTrace();
-				throw new RuntimeException(ex.getMessage());
+
+				ps.setString(1, taxHeadMaster.getId());
+				ps.setString(2, taxHeadMaster.getTenantId());
+				ps.setString(3, taxHeadMaster.getCategory().toString());
+				ps.setString(4, taxHeadMaster.getService());
+				ps.setString(5, taxHeadMaster.getName());
+				ps.setString(6, taxHeadMaster.getCode());
+				ps.setBoolean(7, taxHeadMaster.getIsDebit());
+				ps.setBoolean(8, taxHeadMaster.getIsActualDemand());
+				ps.setInt(9, taxHeadMaster.getOrder());
+				ps.setObject(10, taxHeadMaster.getValidFrom());
+				ps.setObject(11, taxHeadMaster.getValidTill());
+				ps.setString(12, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(13, new Date().getTime());
+				ps.setString(14, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(15, new Date().getTime());
+				ps.setString(16, taxHeadMaster.getTenantId());
 			}
 			
-		}
-		return taxHeads;
+			@Override
+			public int getBatchSize() {
+				return taxHeadMasters.size();
+			}
+		});*/
+		return taxHeadMasters;
 	}
-	
-	
-	
-	
-	
 }

@@ -922,10 +922,16 @@ definitions:
         description: realtime (Currently we only support real time srevices)
       keywords:
         type: string
-        description: tags for this service
+        description: tags for this service.
       group:
         type: string
-        description: Group associated to service
+        description: Group associated to service.
+      category:
+        type: number
+        description: Defines the ID of the Service Group Category.
+      slaHours:
+        type: number
+        description: Service Level Agreement in hours for Service.
       attributes:
         type: array
         items:
@@ -934,6 +940,8 @@ definitions:
       - tenantId
       - serviceCode
       - serviceName
+      - category
+      - slaHours
   Value:
     type: object
     properties:
@@ -966,6 +974,22 @@ definitions:
       datatypeDescription:
         type: string
         description: A description of the datatype which helps the user provide their input
+      url:
+        type: string
+        description: url to be referred to populate data.
+      groupCode:
+        type: string
+        description: To represents group to which this attribute belongs to.
+      roles:
+        type: array
+        items:
+         type: string
+        description: roles associated to this attribute.
+      actions:
+        type: array
+        items:
+         type: string
+        description: actions for which this attribute should be displayed.
       attribValues:
         type: array
         items:
@@ -1078,7 +1102,7 @@ definitions:
           **locationId:string --location id based on cross hierarchy id or lat/lng,
           **childLocationId:string--child location id based on cross hierarchy id,
           **locationName :string--name of the location,
-          **assignmentId:string--Id of the assignee,
+          **positionId:string--Id of the position,
           **stateId:string--workflow id,
           **receivingMode:string--Originating channel for the request. Mobile, Desktop etc..,
           **userId:string--user id of the complainant. This can be different than logged in user,

@@ -94,7 +94,7 @@ public class ReceivingCenterTypeController {
 	@Autowired
     private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final ReceivingCenterTypeReq centerTypeRequest,
 			final BindingResult errors) {
@@ -115,7 +115,7 @@ public class ReceivingCenterTypeController {
 
 	}
 	
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/v1/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ReceivingCenterTypeReq centerTypeRequest, final BindingResult errors,
             @PathVariable("code") final String code) {
@@ -137,7 +137,7 @@ public class ReceivingCenterTypeController {
         return getSuccessResponse(centerTypes, centerTypeRequest.getRequestInfo());
     }
     
-    @PostMapping("_search")
+    @PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final ReceivingCenterTypeGetReq centerTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

@@ -40,6 +40,8 @@
 
 package org.egov.pgr.model;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -80,8 +82,7 @@ public class ReceivingModeType {
 	@NotNull
 	private Boolean active;
 	
-	@Length(max = 250)
-	private String channel;
+	private List<String> channels;
 
 	private AuditDetails auditDetails;
 

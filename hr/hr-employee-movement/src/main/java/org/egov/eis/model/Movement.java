@@ -56,7 +56,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @AllArgsConstructor
 @Builder
 @Getter
@@ -66,40 +65,47 @@ import lombok.ToString;
 public class Movement {
 
     private Long id;
-    
+
     private Long employeeId;
-    
+
     private TypeOfMovement typeOfMovement;
-    
+
     private Long currentAssignment;
-    
+
     private TransferType transferType;
-    
+
     private PromotionBasis promotionBasis;
 
     private String remarks;
-    
+
     private TransferReason reason;
-    
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date effectiveFrom;
-    
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date enquiryPassedDate;
+
+    private Long transferedLocation;
+
     private Long departmentAssigned;
-    
+
     private Long designationAssigned;
-    
+
     private Long positionAssigned;
-    
+
     private Long fundAssigned;
-    
+
     private Long functionAssigned;
-    
+
     private String documents;
-    
+
     private Boolean employeeAcceptance;
-    
+
     private Long status;
-    
+
+    private Long stateId;
+
     private Long createdBy;
 
     @JsonFormat(pattern = "dd/MM/yyyy")

@@ -67,7 +67,7 @@ class ViewEditReceivingCenter extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/serviceGroup/_search",{},body).then(function(response){
+        Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{},body).then(function(response){
             console.log(response);
             current.setState({data:response.ServiceGroups});
         }).catch((error)=>{
@@ -105,7 +105,7 @@ class ViewEditReceivingCenter extends Component {
       return(
         <div className="serviceGroupCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Center</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Group</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>

@@ -57,7 +57,6 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.servicegroup.create.key}")
     private String createServiceGroupTopicKey;
-    
 
     @Value("${kafka.topics.router.create.name}")
     private String createRouterTopicName;
@@ -130,6 +129,18 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.otpconfig.update.key}")
     private String updateOtpConfigKey;
+	
+	@Value("${kafka.topics.escalationhierarchy.create.name}")
+    private String createEscalationHierarchyName;
+    
+	@Value("${kafka.topics.escalationhierarchy.create.key}")
+    private String createEscalationHierarchyKey;
+	
+    @Value("${kafka.topics.escalationhierarchy.update.name}")
+    private String updateEscalationHierarchyName;
+    
+	@Value("${kafka.topics.escalationhierarchy.update.key}")
+    private String updateEscalationHierarchyKey;
     
 	public String getUpdateEscalationTimeTypeName() {
 		return updateEscalationTimeTypeName;
@@ -232,6 +243,21 @@ public class ApplicationProperties {
 	public String getUpdateOtpConfigTopicKey() {
 		return updateOtpConfigKey;
 	}
+	
+	public String getCreateEscalationHierarchyTopicName() {
+		return createEscalationHierarchyName;
+	}
 
+	public String getCreateEscalationHierarchyTopicKey() {
+		return createEscalationHierarchyKey;
+	}
+	
+	public String getUpdateEscalationHierarchyTopicName() {
+		return updateEscalationHierarchyName;
+	}
 
+	public String getUpdateEscalationHierarchyTopicKey() {
+		return updateEscalationHierarchyKey;
+	}
+	
 }

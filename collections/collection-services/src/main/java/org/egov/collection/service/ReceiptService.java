@@ -72,14 +72,16 @@ public class ReceiptService {
 		return receiptRepository.pushToQueue(receiptReq);
 	}
 	
-	public Receipt create(Receipt receiptInfo){
+	public Receipt create(ReceiptReq receiptReq){
 		logger.info("Persisting recieptdetail");
-		boolean isInsertionSuccessfull = false;
-		isInsertionSuccessfull = receiptRepository.persistCreateRequest(receiptInfo);
-		if(!isInsertionSuccessfull){
-			receiptInfo = null;
+		try{
+			receiptRepository.persistCreateRequest(receiptReq);
+		}catch(Exception e){
+			logger.error("Exception caused at the Repository layer: "+e.getCause());
 		}
-		return receiptInfo;
+
+		return receiptReq.getReceipt();
 	}
 
 }
+	

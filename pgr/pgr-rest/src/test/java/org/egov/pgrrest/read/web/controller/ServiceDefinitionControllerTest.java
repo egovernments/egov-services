@@ -45,7 +45,7 @@ public class ServiceDefinitionControllerTest {
         when(serviceDefinitionService.find(searchCriteria))
             .thenReturn(getServiceDefinitionStubResponse());
 
-        mockMvc.perform(post("/servicedefinition/_search")
+        mockMvc.perform(post("/servicedefinition/v1/_search")
             .param("serviceCode", "serviceCode1")
             .param("tenantId", "tenantId")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -61,7 +61,7 @@ public class ServiceDefinitionControllerTest {
             new ServiceDefinitionSearchCriteria("serviceCode1", "tenantId");
         when(serviceDefinitionService.find(searchCriteria)).thenThrow(new ServiceDefinitionNotFoundException());
 
-        mockMvc.perform(post("/servicedefinition/_search")
+        mockMvc.perform(post("/servicedefinition/v1/_search")
             .param("serviceCode", "serviceCode1")
             .param("tenantId", "tenantId")
             .contentType(MediaType.APPLICATION_JSON_UTF8)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { withRouter } from 'react-router';
+import { browserRouter } from 'react-router';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Header from './common/Header';
@@ -8,6 +8,8 @@ import Footer from './common/Footer';
 
 import router from "../router";
 var axios = require('axios');
+
+
 
 class App extends Component {
 
@@ -85,4 +87,4 @@ const mapDispatchToProps = dispatch => ({
 
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

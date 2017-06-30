@@ -38,5 +38,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://egov-micro-dev.egovernments.org"
+  "proxy": "http://egov-micro-dev.egovernments.org",
+  "homepage": "."
 }

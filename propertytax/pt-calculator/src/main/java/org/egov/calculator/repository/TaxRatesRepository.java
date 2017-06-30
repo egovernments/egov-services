@@ -145,20 +145,20 @@ public class TaxRatesRepository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 		for (Map row : rows) {
 			TaxRates taxRate = new TaxRates();
-			taxRate.setId(Long.valueOf(row.get("id").toString()));
-			taxRate.setTenantId(row.get("tenantid").toString());
-			taxRate.setDependentTaxHead(row.get("dependenttaxhead").toString());
-			taxRate.setFromDate(row.get("fromdate").toString());
-			taxRate.setToDate(row.get("todate").toString());
-			taxRate.setFromValue(Double.parseDouble(row.get("fromvalue").toString()));
-			taxRate.setToValue(Double.parseDouble(row.get("tovalue").toString()));
-			taxRate.setRatePercentage(Double.parseDouble(row.get("ratepercentage").toString()));
-			taxRate.setTaxFlatValue(Double.parseDouble(row.get("taxflatvalue").toString()));
+			taxRate.setId(getLong(row.get("id")));
+			taxRate.setTenantId(getString(row.get("tenantid")));
+			taxRate.setDependentTaxHead(getString(row.get("dependenttaxhead")));
+			taxRate.setFromDate(getString(row.get("fromdate")));
+			taxRate.setToDate(getString(row.get("todate")));
+			taxRate.setFromValue(getDouble(row.get("fromvalue")));
+			taxRate.setToValue(getDouble(row.get("tovalue")));
+			taxRate.setRatePercentage(getDouble(row.get("ratepercentage")));
+			taxRate.setTaxFlatValue(getDouble(row.get("taxflatvalue")));
 			AuditDetails auditDetails = new AuditDetails();
-			auditDetails.setCreatedBy(row.get("createdby").toString());
-			auditDetails.setLastModifiedBy(row.get("lastmodifiedby").toString());
-			auditDetails.setCreatedTime(Long.valueOf(row.get("createdtime").toString()));
-			auditDetails.setLastModifiedTime(Long.valueOf(row.get("lastmodifiedtime").toString()));
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong((row.get("createdtime"))));
+			auditDetails.setLastModifiedTime(getLong((row.get("lastmodifiedtime"))));
 			taxRate.setAuditDetails(auditDetails);
 
 			taxRates.add(taxRate);
@@ -168,6 +168,7 @@ public class TaxRatesRepository {
 		return taxRates;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<TaxRates> searchTaxRatesByTenantAndDate(String tenantId, String validDate) {
 		String taxRatesSelect = TaxRatesBuilder.getTaxRatesByTenantAndDate(tenantId, validDate);
 		List<TaxRates> listOfTaxRates = new ArrayList();
@@ -175,4 +176,38 @@ public class TaxRatesRepository {
 
 		return listOfTaxRates;
 	}
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to double
+	 * 
+	 * @param object
+	 *            that need to be cast to Double
+	 * @return {@link Double}
+	 */
+	private Double getDouble(Object object) {
+		return object == null ? 0.0 : Double.parseDouble(object.toString());
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
+	}
+
 }

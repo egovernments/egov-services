@@ -50,7 +50,7 @@ public class SevaRequestTest {
         assertEquals("email@email.com", serviceRequestRecord.getRequesterEmail());
         assertEquals("complainant address", serviceRequestRecord.getRequesterAddress());
         assertEquals("complaintTypeCode", serviceRequestRecord.getServiceRequestTypeCode());
-        assertEquals(Long.valueOf(6), serviceRequestRecord.getAssigneeId());
+        assertEquals(Long.valueOf(6), serviceRequestRecord.getPositionId());
         assertEquals("REGISTERED", serviceRequestRecord.getServiceRequestStatus());
         assertEquals("ap.public", serviceRequestRecord.getTenantId());
         final List<AttributeEntry> actualAttributeEntries = serviceRequestRecord.getAttributeEntries();

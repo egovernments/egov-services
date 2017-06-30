@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HeadWiseTax {
-	
-	@NotNull
-	private String taxName;
-	
-	private String taxDays;
-	
-	@NotNull
-	private String taxValue;
+
+    @NotNull
+    private String taxName;
+
+    private String taxDays;
+
+    @NotNull
+    private Double taxValue;
 }

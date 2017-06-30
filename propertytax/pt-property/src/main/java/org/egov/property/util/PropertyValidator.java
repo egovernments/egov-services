@@ -14,6 +14,7 @@ import org.egov.models.ResponseInfoFactory;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.exception.InvalidPropertyBoundaryException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.BoundaryResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -92,10 +93,14 @@ public class PropertyValidator {
 			if (boundaryResponseInfo.getResponseInfo() != null && boundaryResponseInfo.getBoundary().size() != 0) {
 				return true;
 			} else {
-				throw new InvalidPropertyBoundaryException(requestInfo);
+				throw new InvalidPropertyBoundaryException(env.getProperty("invalid.property.boundary"),
+						env.getProperty("invalid.property.boundary.message").replace("{boundaryId}", "" + id),
+						requestInfo);
 			}
 		} catch (HttpClientErrorException ex) {
-			throw new InvalidPropertyBoundaryException(requestInfo);
+			throw new ValidationUrlNotFoundException(env.getProperty("invalid.property.boundary.validation.url"),
+					uri.toString(), requestInfo);
+
 		}
 	}
 
@@ -148,7 +153,7 @@ public class PropertyValidator {
 		List<String> result = new ArrayList<String>();
 		for (Field field : fields) {
 			if (field.getType().equals(searchType)) {
-				result.add(searchType.getName());
+				result.add(field.getName());
 			}
 		}
 		return result;

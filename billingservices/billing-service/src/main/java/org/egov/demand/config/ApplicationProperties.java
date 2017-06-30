@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -55,7 +54,7 @@ import lombok.ToString;
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @ToString
 public class ApplicationProperties {
-	
+
 	@Value("${egov.services.user_service.hostname}")
 	private String userServiceHostName;
 
@@ -63,65 +62,90 @@ public class ApplicationProperties {
 	private String userServiceSearchPath;
 
 	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
-	
+
 	@Autowired
 	private Environment environment;
-	
+
 	@Value("${kafka.topics.save.bill}")
 	private String createBillTopic;
-	
+
 	@Value("${kafka.topics.update.bill}")
 	private String updateBillTopic;
-	
+
 	@Value("${kafka.topics.save.bill.key}")
 	private String createBillTopicKey;
-	
+
 	@Value("${kafka.topics.update.bill.key}")
 	private String updatekBillTopicKey;
-	
+
 	//Added for Creatining taxHeadMaster
 	@Value("${kafka.topics.save.taxHeadMaster}")
 	private String createTaxHeadMasterTopicName;
 
 	@Value("${kafka.topics.update.taxHeadMaster}")
 	private String updateTaxHeadMasterTopicName;
-	
+
 	@Value("${kafka.topics.save.taxHeadMaster.key}")
 	private String createTaxHeadMasterTopicKey;
 
 	@Value("${kafka.topics.update.taxHeadMaster.key}")
 	private String updateTaxHeadMasterTopicKey;
 
+	//Added for GlCodeMaster
+	@Value("${kafka.topics.save.glCodeMaster}")
+	private String createGlCodeMasterTopicName;
+	
+	@Value("${kafka.topics.save.glCodeMaster.key}")
+	private String createGlCodeMasterTopicKey;
+	
+	@Value("${kafka.topics.create.taxperiod.name}")
+	private String createTaxPeriodTopicName;
+
+	@Value("${kafka.topics.update.taxperiod.name}")
+	private String updateTaxPeriodTopicName;
+
+	@Value("${kafka.topics.create.taxperiod.key}")
+	private String createTaxPeriodTopicKey;
+
+	@Value("${kafka.topics.update.taxperiod.key}")
+	private String updateTaxPeriodTopicKey;
+
 	@Value("${bs.bill.seq.name}")
 	private String billSeqName;
-	
+
 	@Value("${bs.billdetail.seq.name}")
 	private String billDetailSeqName;
-	
+
 	@Value("${bs.billaccountdetail.seq.name}")
 	private String billAccDetailSeqName;
-	
+
 	@Value("${kafka.topics.save.demand}")
 	private String createDemandTopic;
-	
+
 	@Value("${kafka.topics.update.demand}")
 	private String updateDemandTopic;
-	
+
 	@Value("${bs.demand.seq.name}")
 	private String demandSeqName;
-	
+
 	@Value("${bs.demanddetail.seq.name}")
 	private String demandDetailSeqName;
 
 	@Value("${bs.billdetail.billnumber.seq.name}")
 	private String billNumSeqName;
-	
+
 	@Value("${bs.taxhead.seq.name}")
 	private String taxHeadSeqName;
-	
+
 	@Value("${bs.taxhead.code.seq.name}")
 	private String taxHeadCodeSeqName;
 	
+	@Value("${bs.glcodehead.seq.name}")
+	private String glCodeMasterseqName;
+
+	@Value("${bs.taxperiod.seq.name}")
+	private String taxPeriodSeqName;
+
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

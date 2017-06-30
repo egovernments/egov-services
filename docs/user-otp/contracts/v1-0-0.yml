@@ -1,0 +1,73 @@
+swagger: '2.0'
+
+info:
+  version: "1.1.0"
+  title: User otp service
+  description: User otp services APIs - which internaly call create otp endpoint which generate the otp, 
+  contact:
+    name: eGov
+    email: info@egovernments.org
+  
+basePath: "/user-otp/v110"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.user-otp'
+
+paths:
+ /user-otp/v1/_send:
+      post:
+        summary: Send otp
+        description: |
+          this API used for generate otp  and it internaly call create otp end point
+        parameters:
+          - name: otp genarate
+            in: body
+            description: Request header for the otp with new of values.
+            required: true
+            schema:
+              $ref: '#/definitions/otpReq'
+        tags:
+          - otp
+        responses:
+          '200':
+            description: Otp  successful
+            schema:
+              $ref: '#/definitions/otpRes'
+          '400':
+            description: Otp creation failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'   
+              
+ 
+
+definitions:
+  
+  otpReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      
+      mobileNumber: 
+        type: string
+        description: Enter valid mobile number
+      tenantId: 
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
+      type:
+        type: string
+        description: enter which type it is either PASSWORDRESET or REGISTER
+      
+  otpRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        
+      isSuccessful:
+        type: boolean
+        description: if it sucess then return true else false
+      
+ 
+  
+
+  

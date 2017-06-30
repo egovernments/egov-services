@@ -117,8 +117,8 @@ public class ServiceGroupQueryBuilder {
 	}
 
 	public static String insertServiceGroupQuery() {
-		return "INSERT INTO egpgr_complainttype_category(code, name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_complainttype_category(id, code, name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?)";
 	}
 	
 	public static String updateServiceGroupQuery() {

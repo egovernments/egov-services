@@ -15,6 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -73,7 +74,7 @@ class CreateReceivingCenter extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/receivingcenter/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log(response);
                 current.setState({data:response.ReceivingCenterType})
                 setForm(response.ReceivingCenterType[0])
@@ -112,7 +113,7 @@ class CreateReceivingCenter extends Component {
       }
 
       if(this.props.match.params.id){
-          Api.commonApiPost("/pgr-master/receivingcenter/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/receivingcenter/v1/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -121,7 +122,7 @@ class CreateReceivingCenter extends Component {
               console.log(error);
           })
       } else {
-          Api.commonApiPost("/pgr-master/receivingcenter/_create",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/receivingcenter/v1/_create",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -162,14 +163,14 @@ class CreateReceivingCenter extends Component {
         <div className="createReceivingCenter">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>} />
+                  <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Receiving Center < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Name"
+                                      floatingLabelText={translate("core.lbl.add.name")}
                                       value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       onChange={(e) => handleChange(e, "name", true, '')}
@@ -179,7 +180,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Code"
+                                      floatingLabelText={translate("core.lbl.code")}
                                       value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       onChange={(e) => handleChange(e, "code", true, '')}
@@ -190,7 +191,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Description"
+                                      floatingLabelText={translate("core.lbl.description")}
                                       value={createReceivingCenter.description? createReceivingCenter.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       onChange={(e) => handleChange(e, "description", false, '')}
@@ -201,7 +202,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                               {console.log(createReceivingCenter.active)}
                                   <Checkbox
-                                    label="Active"
+                                    label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
                                     checked = {createReceivingCenter.active || false}
                                     onCheck = {(e, i, v) => { console.log(createReceivingCenter.active, i);
@@ -219,7 +220,7 @@ class CreateReceivingCenter extends Component {
                               <div className="clearfix"></div>
                               <Col xs={12} md={3} sm={6}>
                                   <Checkbox
-                                    label="CRN"
+                                    label={translate("pgr.lbl.crn")}
                                     style={styles.checkbox}
                                     checked ={createReceivingCenter.iscrnrequired}
                                     onCheck = {(e, i, v) => {
@@ -236,7 +237,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Order No"
+                                      floatingLabelText={translate("pgr.lbl.order.no")}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
                                       onChange={(e) => handleChange(e, "orderno", true, '')}
@@ -249,14 +250,14 @@ class CreateReceivingCenter extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
               </div>
           </form>
           <Dialog
                title="Data Added Successfully"
                actions={<FlatButton
-   				        label="Close"
+   				        label={translate("core.lbl.close")}
    				        primary={true}
    				        onTouchTap={this.handleClose}
    				      />}

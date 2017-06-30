@@ -37,11 +37,13 @@ public class TaxHeadMasterRowMapper implements RowMapper<TaxHeadMaster> {
 			taxHead.setService(rs.getString("service"));
 			taxHead.setName(rs.getString("name"));
 			taxHead.setCode(rs.getString("code"));
-			taxHead.setGlCode(rs.getString("glcode"));
 			taxHead.setIsDebit(rs.getBoolean("isdebit"));
 			taxHead.setIsActualDemand(rs.getBoolean("isactualdemand"));
-			
-			taxPeriod.setId(rs.getString("taxperiod"));
+			taxHead.setOrder(rs.getInt("orderno"));
+			taxHead.setValidFrom(rs.getLong("validfrom"));
+			taxHead.setValidTill(rs.getLong("validtill"));
+			//taxPeriod.setId(rs.getString("taxperiod"));
+
 			/*taxPeriod.setFromDate((Long)rs.getObject("fromdate"));
 			taxPeriod.setToDate((Long)rs.getObject("todate"));
 			taxPeriod.setModule(rs.getString("module"));
@@ -52,25 +54,13 @@ public class TaxHeadMasterRowMapper implements RowMapper<TaxHeadMaster> {
 			auditDetails.setCreatedTime((Long)rs.getObject("createdtime"));
 			auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
 			auditDetails.setLastModifiedTime((Long)rs.getObject("lastmodifiedtime"));
-			
-			taxHead.setAuditDetail(auditDetails);
-			taxHead.setTaxPeriod(taxPeriod);
-			
-			
-		} catch (Exception e) {
+
+//			taxHead.setTaxPeriod(taxPeriod);
+	} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
 		}
-		
-		
-		
-		
-		
-		return taxHead;
+			return taxHead;
 	}
-
-
-	
-	
 }

@@ -40,8 +40,8 @@ public class BillRepository {
 		RequestInfo requestInfo = billRequest.getRequestInfo();
 		List<Bill> bills = billRequest.getBills();
 		
-		log.info("saveBill requestInfo:"+requestInfo);
-		log.info("saveBill bills:"+bills);
+		log.debug("saveBill requestInfo:"+requestInfo);
+		log.debug("saveBill bills:"+bills);
 		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILL_QUERY, new BatchPreparedStatementSetter() {
 			
 			@Override
@@ -83,7 +83,7 @@ public class BillRepository {
 				billAccountDetails.addAll(billDetail.getBillAccountDetails());
 			}
 		}
-		log.info("saveBillDeails tempBillDetails:"+billDetails);
+		log.debug("saveBillDeails tempBillDetails:"+billDetails);
 		//final List<BillDetail> billDetails = tempBillDetails;	
 		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILLDETAILS_QUERY, new BatchPreparedStatementSetter() {
 				
@@ -127,7 +127,7 @@ public class BillRepository {
 	}
 	
 	public void saveBillAccountDetail(List<BillAccountDetail> billAccountDetails, RequestInfo requestInfo){
-		log.info("saveBillAccountDetail billAccountDetails:"+billAccountDetails);
+		log.debug("saveBillAccountDetail billAccountDetails:"+billAccountDetails);
 		//final List<BillDetail> billDetails = tempBillDetails;	
 		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILLACCOUNTDETAILS_QUERY, new BatchPreparedStatementSetter() {
 				

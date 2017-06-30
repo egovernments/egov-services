@@ -46,6 +46,7 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.model.OTPConfig;
+import org.egov.pgr.service.EscalationHierarchyService;
 import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.service.OTPConfigService;
 import org.egov.pgr.service.ReceivingCenterTypeService;
@@ -55,6 +56,7 @@ import org.egov.pgr.service.RouterService;
 import org.egov.pgr.service.ServiceGroupService;
 /*import org.egov.pgr.web.contract.RouterReq;*/
 import org.egov.pgr.service.ServiceTypeService;
+import org.egov.pgr.web.contract.EscalationHierarchyReq;
 import org.egov.pgr.web.contract.EscalationTimeTypeReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
 import org.egov.pgr.web.contract.ReceivingModeTypeReq;
@@ -98,7 +100,10 @@ public class PGRConsumer {
 	private ApplicationProperties applicationProperties;
 	
 	@Autowired 
-	private OTPConfigService otpConfigService; 
+	private OTPConfigService otpConfigService;
+	
+	@Autowired 
+	private EscalationHierarchyService escalationHierarchyService; 
 
    	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
 			"${kafka.topics.servicegroup.create.name}", "${kafka.topics.receivingcenter.create.name}",
@@ -106,7 +111,8 @@ public class PGRConsumer {
 			"${kafka.topics.receivingmode.update.name}", "${kafka.topics.servicetype.create.name}", 
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.servicetype.update.name}","${kafka.topics.router.create.name}",
 			"${kafka.topics.servicegroup.update.name}", "${kafka.topics.escalationtimetype.create.name}", 
-			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}"})
+			"${kafka.topics.escalationtimetype.update.name}", "${kafka.topics.otpconfig.update.name}", "${kafka.topics.otpconfig.create.name}",
+			"${kafka.topics.escalationhierarchy.update.name}", "${kafka.topics.escalationhierarchy.create.name}"})
 	
 	public void listen(final ConsumerRecord<String, String> record) {
 		LOGGER.info("RECORD: " + record.toString());
@@ -157,6 +163,12 @@ public class PGRConsumer {
 			} else if (record.topic().equals(applicationProperties.getUpdateOtpConfigTopicName())) {
 				LOGGER.info("Consuming update OTP Config request");
 				otpConfigService.update(objectMapper.readValue(record.value(),  OTPConfig.class)); 
+			} else if (record.topic().equals(applicationProperties.getCreateEscalationHierarchyTopicName())) {
+				LOGGER.info("Consuming Create Escalation Hierarchy Request");
+				escalationHierarchyService.create(objectMapper.readValue(record.value(), EscalationHierarchyReq.class));
+			} else if (record.topic().equals(applicationProperties.getUpdateEscalationHierarchyTopicName())) {
+				LOGGER.info("Consuming Update Escalation Hierarchy Request");
+				escalationHierarchyService.update(objectMapper.readValue(record.value(), EscalationHierarchyReq.class));
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();

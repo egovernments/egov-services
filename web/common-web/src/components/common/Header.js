@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-// import {Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
@@ -57,9 +57,9 @@ const RightIcon = (props) => {
           >
           {/*<MenuItem primaryText="Worklist"  leftIcon={<i className="material-icons">list</i>}></MenuItem>
             <MenuItem primaryText="Drafts" leftIcon={<i className="material-icons">drafts</i>}></MenuItem>
-            <MenuItem primaryText="Notification" leftIcon={<i className="material-icons">notifications</i>}></MenuItem>
-            <MenuItem primaryText="Edit Profile" leftIcon={<i className="material-icons">mode_edit</i>}></MenuItem>
-            <MenuItem primaryText="Change Password" leftIcon={<i className="material-icons">fingerprint</i>}></MenuItem>
+            <MenuItem primaryText="Notification" leftIcon={<i className="material-icons">notifications</i>}></MenuItem>*/
+            <MenuItem primaryText="Edit Profile" containerElement={<Link to={`/profileEdit`}></Link>}  leftIcon={<i className="material-icons">mode_edit</i>}></MenuItem>
+          /*  <MenuItem primaryText="Change Password" leftIcon={<i className="material-icons">fingerprint</i>}></MenuItem>
             <MenuItem primaryText="Feedback" leftIcon={<i className="material-icons">chat</i>}></MenuItem>
             <MenuItem primaryText="Report an issue" leftIcon={<i className="material-icons">bug_report</i>}></MenuItem>
             <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>

@@ -1,6 +1,5 @@
 package org.egov.commons.web.contract;
 
-
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -19,16 +18,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BusinessCategoryGetRequest {
-    private String businessCategoryName;
-	
+	private String businessCategoryName;
+
 	private Boolean active;
-	
+
 	private List<Long> ids;
-	
-    @NotNull
+
+	@NotNull
 	private String tenantId;
-	
+
 	private String sortBy;
-	
+
 	private String sortOrder;
 }

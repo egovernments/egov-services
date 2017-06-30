@@ -125,6 +125,9 @@ public class PropertiesManager {
 	@Value("${egov.services.lams.rentincrement_assetcategories}")
 	public String rentIncrementAssetCategoryKey;
 	
+	@Value("${egov.services.lams.eviction_assetcategories}")
+	public String evictionAssetCategoryKey;
+	
 	@Value("${egov.services.lams.securitydeposit_factor}")
 	public String securityDepositFactor;
 	

@@ -91,7 +91,7 @@ public class RouterController{
 
 	
 
-	@PostMapping(value = "/_create")
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final RouterTypeReq routerTypeReq,
 			final BindingResult errors) {
@@ -113,7 +113,7 @@ public class RouterController{
 
 	}
 	
-	@PostMapping(value = "/_update")
+	@PostMapping(value = "/v1/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final RouterTypeReq routerTypeReq,
 			final BindingResult errors) {
@@ -134,7 +134,7 @@ public class RouterController{
 		return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
 
 	}
-	@PostMapping("/_search")
+	@PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final RouterTypeGetReq routerTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -201,7 +201,7 @@ public class RouterController{
 					.field(PgrMasterConstants.ROUTER_POSITION_MANADATORY_ERROR_MESSAGE).build();
 			errorFields.add(errorField);
 		}
-		if (routerType.getBoundary() == null || routerType.getBoundary().isEmpty()) {
+		if (routerType.getBoundaries() == null || routerType.getBoundaries().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_BOUNDARY_MANDATORY_CODE)
 					.message(PgrMasterConstants.ROUTER_BOUNDARY_MANADATORY_FIELD_NAME)
 					.field(PgrMasterConstants.ROUTER_BOUNDARY_MANADATORY_ERROR_MESSAGE).build();

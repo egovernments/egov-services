@@ -39,8 +39,8 @@
  */
 package org.egov.collection;
 
-import org.egov.collection.domain.service.UserService;
-import org.egov.collection.persistence.repository.UserRepository;
+import java.util.TimeZone;
+
 import org.egov.collection.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.collection.web.interceptor.CorrelationIdInterceptor;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,8 +60,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class EgovCollectionApplication {
 
-	@Value("${user.service.url}")
-	private String userServiceUrl;
+	@Value("${app.timezone}")
+	private String timeZone;
 
 	@Bean
 	public RestTemplate getRestTemplate() {
@@ -69,22 +69,11 @@ public class EgovCollectionApplication {
 	}
 
 	@Bean
-	public UserRepository userRepository(RestTemplate restTemplate) {
-		return new UserRepository(restTemplate, userServiceUrl);
-	}
-
-	@Bean
-	public UserService userService(UserRepository userRepository) {
-		return new UserService(userRepository);
-	}
-
-	@Bean
 	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
 		return new WebMvcConfigurerAdapter() {
 
 			@Override
-			public void configureContentNegotiation(
-					ContentNegotiationConfigurer configurer) {
+			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
 			}
 
@@ -94,6 +83,14 @@ public class EgovCollectionApplication {
 			}
 
 		};
+	}
+
+	@Bean
+	public ObjectMapper getObjectMapper() {
+		final ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return objectMapper;
 	}
 
 	@Bean

@@ -58,6 +58,7 @@ public class BusinessServiceDetail {
     @NotNull
     private String tenantId;
 
+    @NotNull
     private String businessService;
 
     private List<String> collectionModesNotAllowed = new ArrayList<>();

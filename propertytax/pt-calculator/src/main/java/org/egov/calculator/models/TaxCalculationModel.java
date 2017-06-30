@@ -10,19 +10,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class TaxCalculationModel {
 
-    private List<Map<String, Double>> factors;
+    private List<List<Map<String, Double>>> factors;
 
-    private List<Map<String, TaxPeriod>> taxPeriods;
+    private List<List<Map<String, TaxPeriod>>> taxPeriods;
 
-    private List<Map<String, TaxRates>> taxRates;
+    private List<List<List <TaxRates>>> taxRates;
 
-    private List<Double> guidanceValues;
+    private List<List<Double>> guidanceValues;
     
     private List<TaxResponse> taxResponses;
+    
+    private TaxResponse taxResponse;
 
+   
 }

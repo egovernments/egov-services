@@ -12,29 +12,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaxHeadMaster {
-		
-		  
-		  private String id;
 
-		  @NotNull
-		  private String tenantId;
-		  @Valid
-		  @NotNull
-		  private Category category;
-		  @NotNull
-		  private String service;
-		  @NotNull
-		  private String name;
+	private String id;
 
-		  private String code;
+	@NotNull
+	private String tenantId;
+	@Valid
+	@NotNull
+	private Category category;
+	@NotNull
+	private String service;
+	@NotNull
+	private String name;
 
-		  private String glCode;
+	private String code;
+	
+	private GlCodeMaster glCodes;
 
-		  private Boolean isDebit = false;
+	private Boolean isDebit = false;
 
-		  private Boolean isActualDemand;
-		  
-		  private TaxPeriod taxPeriod = null;
+	private Boolean isActualDemand;
+	@NotNull
+	private Long validFrom;
+	@NotNull
+	private Long validTill;
+	
+	private Integer order;
 
-		  private AuditDetail auditDetail;
+	private AuditDetail auditDetail;
+	
+
 }

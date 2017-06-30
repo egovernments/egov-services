@@ -58,37 +58,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class EgovEmployeeMovementApplication {
 
-	@Value("${app.timezone}")
-	private String timeZone;
+    @Value("${app.timezone}")
+    private String timeZone;
 
-	@PostConstruct
-	public void initialize() {
-		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-	}
+    @PostConstruct
+    public void initialize() {
+        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+    }
 
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new CorrelationIdAwareRestTemplate();
-	}
-	
-	@Bean
-	public ObjectMapper getObjectMapper() {
-	    final ObjectMapper objectMapper = new ObjectMapper();
-	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-	    objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-	    return objectMapper;
-	}
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new CorrelationIdAwareRestTemplate();
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(EgovEmployeeMovementApplication.class, args);
-	}
+    @Bean
+    public ObjectMapper getObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return objectMapper;
+    }
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(objectMapper);
-		return converter;
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EgovEmployeeMovementApplication.class, args);
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        converter.setObjectMapper(objectMapper);
+        return converter;
+    }
 }

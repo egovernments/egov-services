@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *    accountability and the service delivery of the government  organizations.
+ *
+ *     Copyright (C) <2015>  eGovernments Foundation
+ *
+ *     The updated version of eGov suite of products as by eGovernments Foundation
+ *     is available at http://www.egovernments.org
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program. If not, see http://www.gnu.org/licenses/ or
+ *     http://www.gnu.org/licenses/gpl.html .
+ *
+ *     In addition to the terms of the GPL license to be adhered to in using this
+ *     program, the following additional terms are to be complied with:
+ *
+ *         1) All versions of this program, verbatim or modified must carry this
+ *            Legal Notice.
+ *
+ *         2) Any misrepresentation of the origin of the material is prohibited. It
+ *            is required that all modified versions of this material be marked in
+ *            reasonable ways as different from the original version.
+ *
+ *         3) This license does not grant any rights to any user of the program
+ *            with regards to rights under trademark law for use of the trade names
+ *            or trademarks of eGovernments Foundation.
+ *
+ *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.demand.service;
 
 import java.util.ArrayList;
@@ -14,8 +53,6 @@ import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.TaxHeadMaster;
-import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -57,12 +94,9 @@ public class DemandService {
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
 	
-	@Autowired
-	private TaxHeadMasterService taxHeadMasterService;
-
 	public DemandResponse create(DemandRequest demandRequest) {
 
-		log.info("the demand service : " + demandRequest);
+		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
@@ -92,17 +126,16 @@ public class DemandService {
 		for (DemandDetail demandDetail : demandDetails) {
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
+		log.debug("demand Request object : " + demandRequest);
+		log.debug("demand detail list : " + demandDetails);
 		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
-		log.info("demand Request object : " + demandRequest);
-		log.info("demand detail list : " + demandDetails);
-
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 
 	}
 
 	public DemandResponse updateAsync(DemandRequest demandRequest) {
 
-		log.info("the demand service : " + demandRequest);
+		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
 		String userId = demandRequest.getRequestInfo().getUserInfo().getId().toString();
@@ -124,23 +157,13 @@ public class DemandService {
 
 	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
 
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).tenantId(demandCriteria.getTenantId())
-				.emailId(demandCriteria.getEmail()).mobileNumber(demandCriteria.getMobileNumber()).build();
+		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+				.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
+				.mobileNumber(demandCriteria.getMobileNumber()).build();
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
 		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
-		List<Demand> demands = demandRepository.getDemands(demandCriteria,ownerIds);
+		List<Demand> demands = demandRepository.getDemands(demandCriteria, ownerIds);
 		demands = demandEnrichmentUtil.enrichOwners(demands, owners);
-		List<DemandDetail> demandDetails = new ArrayList<>();
-		for (Demand demand : demands) {
-			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-				demandDetails.add(demandDetail);
-			}
-		}
-		List<TaxHeadMaster> taxHeadMAsters = taxHeadMasterService.getTaxHeads(
-				TaxHeadMasterCriteria.builder().tenantId(demandCriteria.getTenantId())
-				.code(demandDetails.stream().map(ddl -> ddl.getTaxHeadMaster().getCode())
-				.collect(Collectors.toSet())).build(),requestInfo).getTaxHeadMasters();
-		demandEnrichmentUtil.enrichTaxHeadMAsters(demandDetails, taxHeadMAsters);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

@@ -32,7 +32,7 @@ public class UpdateServiceRequestEligibilityServiceTest {
     @Test
     public void test_should_not_throw_exception_when_employee_eligible_to_update_request() {
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployeeEligible());
-        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId")).thenReturn(1L);
+        when(submissionRepository.getPosition("crn", "tenantId")).thenReturn(1L);
         final AuthenticatedUser user = AuthenticatedUser.builder()
             .type(UserType.EMPLOYEE)
             .id(1L)
@@ -49,6 +49,30 @@ public class UpdateServiceRequestEligibilityServiceTest {
     }
 
     @Test(expected = UpdateServiceRequestNotAllowedException.class)
+    public void test_should_throw_exception_when_citizen_attempts_to_update_request_that_was_created_by_another_logged_in_citizen() {
+        final AuthenticatedUser citizen = AuthenticatedUser.builder()
+            .id(1L)
+            .type(UserType.CITIZEN)
+            .build();
+        when(submissionRepository.getLoggedInRequester("crn", "tenantId"))
+            .thenReturn(2L);
+
+        service.validate("crn", "tenantId", citizen);
+    }
+
+    @Test
+    public void test_should_not_throw_exception_when_citizen_updates_request_that_was_created_by_himself() {
+        final AuthenticatedUser citizen = AuthenticatedUser.builder()
+            .id(1L)
+            .type(UserType.CITIZEN)
+            .build();
+        when(submissionRepository.getLoggedInRequester("crn", "tenantId"))
+            .thenReturn(1L);
+
+        service.validate("crn", "tenantId", citizen);
+    }
+
+    @Test(expected = UpdateServiceRequestNotAllowedException.class)
     public void test_should_throw_exception_when_employee_not_eligible_to_update_request() {
         final List<String> roleCodes = Collections.singletonList("RO");
         final AuthenticatedUser user = AuthenticatedUser.builder()
@@ -57,7 +81,7 @@ public class UpdateServiceRequestEligibilityServiceTest {
             .roleCodes(roleCodes).build();
         when(employeeRepository.getEmployeeById(1L, "tenantId"))
             .thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId("crn", "tenantId"))
+        when(submissionRepository.getPosition("crn", "tenantId"))
             .thenReturn(1L);
 
         service.validate("crn", "tenantId", user);

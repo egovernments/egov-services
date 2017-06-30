@@ -61,6 +61,8 @@ public class DocumentOwner {
 
     @NotNull
     private String document;
+    @NotNull
+    private int documentId;
 
     @NotNull
     private String name;

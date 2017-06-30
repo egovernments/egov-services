@@ -42,7 +42,6 @@ package org.egov.wcms.transanction.service;
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WaterConnectionRepository;
-import org.egov.wcms.transanction.util.AckConsumerNoGenerator;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +60,6 @@ public class WaterConnectionService {
     private WaterTransactionProducer waterTransactionProducer;
 
     @Autowired
-    private AckConsumerNoGenerator ackConsumerNoGenerator;
-
-    @Autowired
     private WaterConnectionRepository waterConnectionRepository;
 
     public Connection createWaterConnection(final String topic, final String key,
@@ -71,7 +67,6 @@ public class WaterConnectionService {
         final ObjectMapper mapper = new ObjectMapper();
         String waterConnectionValue = null;
         try {
-            waterConnectionRequest.getConnection().setAcknowledgementNumber(ackConsumerNoGenerator.getAckNo());
             logger.info("WaterConnectionService request::" + waterConnectionRequest);
             waterConnectionValue = mapper.writeValueAsString(waterConnectionRequest);
             logger.info("waterConnectionValue::" + waterConnectionValue);
@@ -112,7 +107,7 @@ public class WaterConnectionService {
     public Connection create(WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
-            waterConnectionRequest = waterConnectionRepository.persistConnection(waterConnectionRequest);
+           waterConnectionRepository.persistConnection(waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("Persisting failed due to db exception", e);
         }
@@ -121,7 +116,7 @@ public class WaterConnectionService {
     public Connection update(WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
-            waterConnectionRequest = waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
+           waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("Persisting failed due to db exception", e);
         }

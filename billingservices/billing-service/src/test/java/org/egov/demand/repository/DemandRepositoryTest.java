@@ -13,8 +13,6 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.TaxHeadMaster;
-import org.egov.demand.model.enums.Type;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -40,6 +38,7 @@ public class DemandRepositoryTest {
 	@InjectMocks
 	private DemandRepository demandRepository;
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void methodSaveCreateDemand() {
 
@@ -52,11 +51,11 @@ public class DemandRepositoryTest {
 		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demands.size());
 
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1, 2 });
-		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length); 
+		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length);
 		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
 	}
-	
-	public  ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
@@ -64,7 +63,7 @@ public class DemandRepositoryTest {
 		return responseInfo;
 	}
 
-	public  Demand getDemand() {
+	public Demand getDemand() {
 
 		Demand demand = new Demand();
 		Owner owner = new Owner();
@@ -82,27 +81,23 @@ public class DemandRepositoryTest {
 		return demand;
 	}
 
-	public  List<DemandDetail> getDemandDetails() {
+	public List<DemandDetail> getDemandDetails() {
 
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		DemandDetail demandDetail = new DemandDetail();
 		demandDetail.setTaxAmount(BigDecimal.valueOf(100d));
 		demandDetail.setCollectionAmount(BigDecimal.ZERO);
-		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
-		taxHeadMaster.setCode("0002");
-		demandDetail.setTaxHeadMaster(taxHeadMaster);
+		demandDetail.setTaxHeadMasterCode("0002");
 		DemandDetail demandDetail1 = new DemandDetail();
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200d));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
-		TaxHeadMaster taxHeadMaster1 = new TaxHeadMaster();
-		taxHeadMaster1.setCode("0003");
-		demandDetail1.setTaxHeadMaster(taxHeadMaster1);
+		demandDetail1.setTaxHeadMasterCode("0003");
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;
 	}
 
-	public  RequestInfo getRequestInfo() {
+	public RequestInfo getRequestInfo() {
 
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setApiId("apiId");

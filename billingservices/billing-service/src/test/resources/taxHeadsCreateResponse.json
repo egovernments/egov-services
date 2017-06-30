@@ -15,14 +15,11 @@
       "service": "string",
       "name": "string",
       "code": "string",
-      "glCode": "string",
       "isDebit": true,
       "isActualDemand": true,
-      "taxPeriod": {
-        "fromDate":123,
-        "toDate": 345,
-        "financialYear": "2017-2018"
-      },
+        "validFrom":324,
+      "validTill":23,
+      "order":12,
       "auditDetail": null
     }
   ]

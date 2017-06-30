@@ -1,0 +1,357 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Employee Information System- Employee Promotion and Transfer
+  contact:
+    name: Elzan Mathew
+externalDocs:
+  description: Complete documentation describing the functionality of promotion and transfer module.
+  url: >-
+    http://182.74.137.193/docs/products/eGov%20EIS/ProdSpecs/eGov%20EIS_PSD_OS.doc
+schemes:
+  - https
+basePath: '/v1/hr-movement/[API endpoint]'
+paths:
+  /employee/movements/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Get the list of promotions and transfers defined for every employee in the system.
+      description: Returns the movement data which can be a promotion or a transfer or promotion cum transfer, for any employee.
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting movement data.
+          required: true
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+        - name: id
+          description: List of Unique id for employee movement.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: employeeId
+          description: List of Unique id for employee movement.
+          in: query
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+        - name: typeOfmovement
+          description: Value of type of movement will be set where search needs to be done for a specific type alone.
+          in: query
+          required: false
+          type: string
+        - name: effectiveFromDate
+          in: query
+          description: Date from which the movements are to be searched for.
+          required: false
+          type: string
+          format: date
+        - name: effectiveToDate
+          in: query
+          description: Date till which the movements are to be searched for.
+          required: false
+          type: string
+          format: date
+        - $ref: '#/parameters/sortMovement'
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/EmployeeMovementRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Employee Movement
+  /employee/movements/_create:
+    post:
+      summary: Create a new employee movement record.
+      description: To create an employee promotion or transfer, this API needs to be called.
+      parameters:
+        - name: movement
+          in: body
+          description: Details for the employee movement record .
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeMovementReq'
+      tags:
+        - Employee Movement
+      responses:
+        '201':
+          description: Employee movement created sucessfully.
+          schema:
+            $ref: '#/definitions/EmployeeMovementRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  /employee/movements/_update:
+    post:
+      summary: Update a newan employee movement record.
+      description: To modify an employee promotion or transfer, this API needs to be called.
+      parameters:
+        - name: movement
+          in: body
+          description: Details for the employee movement record .
+          required: true
+          schema:
+            $ref: '#/definitions/EmployeeMovementReq'
+      tags:
+        - Employee Movement
+      responses:
+        '201':
+          description: Employee movement Updated sucessfully.
+          schema:
+            $ref: '#/definitions/EmployeeMovementRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+definitions:
+  EmployeeMovement:
+    title: All the employee movement records will be captured here which inculdes the promotions and transfers.
+    description: When an employee movement is intiated it will go through work flow where the record can get approved or rejected. When the record gets approved the status will be set to APPROVED. Based on the type of movement following will be taken care->
+        Promotion - New assignment entry needs to be made for the employee based on the assigned values.
+        Transfer - Employee record needs to be created in the new ULB along with the new assignment.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The unique id a employee movement.
+      employeeId:
+        type: integer
+        format: int64
+        description: The unique Id of employee from whom the records applies to.
+      typeOfMovement:
+        type: string
+        description: type of the employee movement. 
+        enum:
+          - TRANSFER
+          - PROMOTION
+          - TRANSFER_CUM_PROMOTION
+      currentAssignment:
+        type: integer
+        format: int64
+        description: The unique Id of employee's current primary assignment when the movement is initiated.
+      transferType:
+        type: string
+        description: If the type of movement is transfer or transfer cum promotion then the transfer type will need to be captured. It shows what type of transfer is this.
+        enum:
+          - Transfer within department/Corporation/ULB
+          - Transfer outside Corporation/ULB
+      promotionBasis:
+        type: integer
+        format: int64
+        description: If the type of movement is promotion or transfer cum promotion then the promotion basis will need to be captured. It shows on what basis is the promotion initiated.
+        $ref: "#/definitions/PromotionBasis"
+      remarks:
+        type: string
+        description: This will define the general remarks for this employee movement.
+        maxLength: 1024
+      reason:
+        type: integer
+        format: int64
+        description: This will define what is the reason this employee is given transfer. Reason will need to be captured mandatory in case of transfer.
+        $ref: "#/definitions/TransferReasons"
+      effectiveFrom:
+        type: string
+        format: date
+        description: The date from which this movement is applicable.
+      enquiryPassedDate:
+        type: string
+        format: date
+        description: The date from which this employee's department enquiry was done and approved. This will be used only in case of promotion and transfer cum promotion.
+      transferedLocation:
+        type: integer
+        format: int64
+        description: The city/ULB reference to which this employee is proposed to be transferred.
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1-0-0.yml#/definitions/City'
+      departmentAssigned:
+        type: integer
+        format: int64
+        description: The unique Id of the department to which the employee is been newly promoted or transferred. The new primary assignment of the employee will be attached to this department.
+      designationAssigned:
+        type: integer
+        format: int64
+        description: The unique Id of the designation to which the employee is been newly promoted or transferred. The new primary assignment of the employee will be attached to this designation.
+      positionAssigned:
+        type: integer
+        format: int64
+        description: The unique Id of the position to which the employee is been newly promoted or transferred. The new primary assignment of the employee will be attached to this position. This position will have to be vacant for the effective date so that this employee can be attached to this position from the effective date till the date of employee retirement.
+      fundAssigned:
+        type: integer
+        format: int64
+        description: The unique Id of the fund to which the employee is been newly promoted or transferred. The new primary assignment of the employee will be attached to this fund.
+      functionAssigned:
+        type: integer
+        format: int64
+        description: The unique Id of the function to which the employee is been newly promoted or transferred. The new primary assignment of the employee will be attached to this function.
+      documents:
+        type: string
+        description: All the valid documents that are associated with the promotion and transfer will be attached here.
+        maxLength: 256
+      employeeAcceptance:
+        type: boolean
+        description: The value will be TRUE in case of when an employee has accepted for the proposed transfer or promotion and value will be FALSE in case the employee has rejected for the proposed movement.
+      status:
+        type: object
+        description: >-
+          Current status of promotion or transfer. Possible values are- Initiated, Approved,
+          Cancelled.
+        items:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-masters/v1-0-0.yml#/definitions/HRStatus'
+      createdBy:
+        type: string
+        description: Id of the user who created the record.
+      createdDate:
+        type: string
+        format: date
+        description: Date on which the data was added into the system.
+      lastModifiedBy:
+        type: string
+        description: Id of the user who last modified the record.
+      lastModifiedDate:
+        type: string
+        format: date
+        description: Date on which this data was last modified.
+      tenantId:
+        type: string
+        description: >-
+          Unique Identifier of which tenant this data is defined. For example,
+          AP, AP-Kurnool etc.
+        maxLength: 256
+      workflowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+    required:
+      - employeeId
+      - typeOfMovement
+      - effectiveFrom
+      - departmentAssigned
+      - designationAssigned
+      - positionAssigned
+      - status
+      - tenantId
+
+  PromotionBasis:
+    type: object
+    title: This is a master which will list all the different values that can be used for promotion basis. This will be used when initiating promotions for an employee.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Id of the promotion basis.
+      description:
+        type: string
+        description: The value for promotion basis.
+        maxLength: 100
+    required:
+      - id
+      - description
+      
+  TransferReasons:
+    type: object
+    title: This is a master which will list all the different reasons why an employee can get transferred. This will be used when initiating transfer for an employee.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Id of the transfer reason.
+      description:
+        type: string
+        description: The value for transfer reason.
+        maxLength: 100
+    required:
+      - id
+      - description
+      
+  EmployeeMovementRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      Movement:
+        type: array
+        items:
+          $ref: '#/definitions/EmployeeMovement'
+  EmployeeMovementReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      Movement:
+        type: array
+        items:
+          $ref: '#/definitions/EmployeeMovement'
+
+  WorkFlowDetails:
+    type: object
+    description: This object holds info about the assignee and other workflow related info
+    properties:
+      department:
+        type: string
+        description: Selected department.
+      designation:
+        type: string
+        description: Selected designation.
+      assignee:
+        type: integer
+        format: int64
+        description: Selected assignee.
+      action:
+        type: string
+        description: chosen action.
+      status:
+        type: string
+        description: current status.  
+parameters:
+  sortMovement:
+    name: sort
+    in: query
+    description: >-
+      Result will be sorted by movement type and date  ascending by default if this parameter
+      is not provided.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 2
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](movementType|effectiveFrom)'
+    default:
+      - +movementType
+      - +effectiveFrom
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of records returned.
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 1000
+    exclusiveMaximum: false
+    multipleOf: 10
+    default: 50
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
+tags:
+  - name:  Employee Movement
+    description: Everything you need to handle Employee Movement.

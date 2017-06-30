@@ -92,8 +92,8 @@ public class ServiceGroupController {
 	
 	@Autowired
     private ErrorHandler errHandler;
-
-	@PostMapping(value = "/_create")
+	
+	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
 			final BindingResult errors) {
@@ -116,7 +116,7 @@ public class ServiceGroupController {
 
 	}
 	
-	@PostMapping(value = "/{code}/_update")
+	@PostMapping(value = "/v1/{code}/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
 			@PathVariable("code") final String code, final BindingResult errors) {
@@ -139,7 +139,7 @@ public class ServiceGroupController {
 
 	}
 	
-	@PostMapping("_search")
+	@PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final ServiceGroupGetRequest serviceGroupGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,

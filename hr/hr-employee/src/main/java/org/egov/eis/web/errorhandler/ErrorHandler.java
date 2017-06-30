@@ -76,7 +76,8 @@ public class ErrorHandler {
 					error.getFields().put(fieldError.getField(), fieldError.getDefaultMessage());
 				} else {
 					String field = getErrorFieldName(fieldError.getField());
-					error.getFields().put(fieldError.getField(), field + " Can't Be Left Empty. Please Provide Valid " + field);
+					error.getFields().put(fieldError.getField(), "Field " + field + " Can't Be Left Empty." +
+							" Please Provide A Valid Value For The Field - " + field);
 				}
 			}
 		}

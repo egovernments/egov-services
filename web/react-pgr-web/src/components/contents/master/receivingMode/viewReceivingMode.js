@@ -63,26 +63,25 @@ class viewReceivingSet extends Component {
       }
     }
 
+    close(){
+     window.open(window.location, '_self').close();
+   }
+
     componentWillMount() {
 
         if(this.props.match.params.id) {
-
             this.setState({id:this.props.match.params.id});
             let  current = this;
             let {setForm} = this.props;
-
-            Api.commonApiPost("/pgr-master/receivingmode/_search",{id:this.props.match.params.id},{}).then(function(response){
-                console.log(response);
+            Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
                 current.setState({data:response.ReceivingModeType})
                 setForm(response.ReceivingModeType[0])
             }).catch((error)=>{
                 console.log(error);
             })
         }
-
     }
 
-    componentDidMount() { }
 
     render() {
 
@@ -101,8 +100,6 @@ class viewReceivingSet extends Component {
       } = this.props;
 
       let {submitForm} = this;
-
-      console.log(isFormValid);
 
       return(
         <div className="viewReceivingSet">
@@ -128,7 +125,7 @@ class viewReceivingSet extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                   <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                   <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={(e)=>{this.close()}}/>
                  </div>
         </div>)
     }

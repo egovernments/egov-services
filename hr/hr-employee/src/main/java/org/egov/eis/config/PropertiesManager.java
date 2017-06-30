@@ -51,51 +51,58 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @ToString
 public class PropertiesManager {
-	
 
-	@Value("${kafka.topics.employee.savedb.name}")
-	private String saveEmployeeTopic;
-	
-	@Value("${kafka.topics.employee.updatedb.name}")
-	private String updateEmployeeTopic;
-	
-	@Value("${kafka.topics.employee.savedb.key}")
-	private String employeeSaveKey;
 
-	@Value("${kafka.topics.nominee.savedb.name}")
-	private String saveNomineeTopic;
+    @Value("${kafka.topics.employee.savedb.name}")
+    private String saveEmployeeTopic;
 
-	@Value("${kafka.topics.nominee.savedb.key}")
-	private String nomineeSaveKey;
+    @Value("${kafka.topics.employee.updatedb.name}")
+    private String updateEmployeeTopic;
 
-	@Value("${kafka.topics.nominee.updatedb.name}")
-	private String updateNomineeTopic;
+    @Value("${kafka.topics.employee.savedb.key}")
+    private String employeeSaveKey;
 
-	@Value("${kafka.topics.nominee.updatedb.key}")
-	private String nomineeUpdateKey;
+    @Value("${kafka.topics.nominee.savedb.name}")
+    private String saveNomineeTopic;
 
-	@Value("${egov.services.users_service.hostname}")
-	private String usersServiceHostName;
+    @Value("${kafka.topics.nominee.savedb.key}")
+    private String nomineeSaveKey;
 
-	@Value("${egov.services.users_service.users.basepath}")
-	private String usersServiceUsersBasePath;
+    @Value("${kafka.topics.nominee.updatedb.name}")
+    private String updateNomineeTopic;
 
-	@Value("${egov.services.users_service.users.searchpath}")
-	private String usersServiceUsersSearchPath;
+    @Value("${kafka.topics.nominee.updatedb.key}")
+    private String nomineeUpdateKey;
 
-	@Value("${egov.services.users_service.users.createpath}")
-	private String usersServiceUsersCreatePath;
-	
-	@Value("${egov.services.users_service.users.updatepath}")
-	private String usersServiceUsersUpdatePath;
+    @Value("${egov.services.users_service.hostname}")
+    private String usersServiceHostName;
 
-	@Value("${egov.services.hr_masters_service.hostname}")
-	private String hrMastersServiceHostName;
+    @Value("${egov.services.users_service.users.basepath}")
+    private String usersServiceUsersBasePath;
 
-	@Value("${egov.services.hr_masters_service.positions.basepath}")
-	private String hrMastersServicePositionsBasePath;
+    @Value("${egov.services.users_service.users.searchpath}")
+    private String usersServiceUsersSearchPath;
 
-	@Value("${egov.services.hr_masters_service.positions.searchpath}")
-	private String hrMastersServicePositionsSearchPath;
+    @Value("${egov.services.users_service.users.createpath}")
+    private String usersServiceUsersCreatePath;
+
+    @Value("${egov.services.users_service.users.updatepath}")
+    private String usersServiceUsersUpdatePath;
+
+    @Value("${egov.services.hr_masters_service.hostname}")
+    private String hrMastersServiceHostName;
+
+    @Value("${egov.services.hr_masters_service.positions.basepath}")
+    private String hrMastersServicePositionsBasePath;
+
+    @Value("${egov.services.hr_masters_service.positions.searchpath}")
+    private String hrMastersServicePositionsSearchPath;
+
+    @Value("${kafka.topics.assignment.update.name}")
+    private String assignmentUpdateName;
+
+    @Value("${kafka.topics.assignment.update.key}")
+    private String assignmentUpdateKey;
+
 
 }

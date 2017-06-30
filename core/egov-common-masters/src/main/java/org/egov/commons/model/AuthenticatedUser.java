@@ -1,14 +1,13 @@
 package org.egov.commons.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
 @Setter
 @Getter
 @AllArgsConstructor
@@ -22,6 +21,5 @@ public class AuthenticatedUser {
 	private boolean anonymousUser;
 	private List<Role> roles;
 	private List<UserType> type;
-
 
 }

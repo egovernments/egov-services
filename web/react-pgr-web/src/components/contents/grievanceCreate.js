@@ -74,7 +74,7 @@ class grievanceCreate extends Component {
    loadReceivingCenter(value){
      if(value == 'MANUAL'){
        var currentThis = this;
-       Api.commonApiPost("/pgr-master/receivingcenter/_search").then(function(response)
+       Api.commonApiPost("/pgr-master/receivingcenter/v1/_search").then(function(response)
        {
          currentThis.setState({receivingCenter : response.ReceivingCenterType});
        },function(err) {
@@ -87,7 +87,7 @@ class grievanceCreate extends Component {
 
    loadGrievanceType(value){
      var currentThis = this;
-     Api.commonApiPost("/pgr/services/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
        currentThis.setState({grievanceType : response.complaintTypes});
      },function(err) {
@@ -107,7 +107,7 @@ class grievanceCreate extends Component {
 
     //ReceivingMode
     if(localStorage.getItem('type') == 'EMPLOYEE'){
-      Api.commonApiPost("/pgr-master/receivingmode/_search").then(function(response)
+      Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response)
       {
         currentThis.setState({receivingModes : response.ReceivingModeType});
       },function(err) {
@@ -116,7 +116,7 @@ class grievanceCreate extends Component {
     }
 
     //Top ComplaintTypes
-    Api.commonApiPost("/pgr/services/_search", {type: 'frequency', count: 5}).then(function(response)
+    Api.commonApiPost("/pgr/services/v1/_search", {type: 'frequency', count: 5}).then(function(response)
     {
       //console.log(JSON.stringify(response))
       var topComplaint = [];
@@ -130,7 +130,7 @@ class grievanceCreate extends Component {
     });
 
     //Grievance Category
-    Api.commonApiPost("/pgr-master/serviceGroup/_search").then(function(response)
+    Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response)
     {
       currentThis.setState({grievanceCategory : response.ServiceGroups});
     },function(err) {
@@ -192,32 +192,44 @@ class grievanceCreate extends Component {
     data['attribValues'] = [];
 
     var finobj = {};
+
     finobj = {
         key: 'receivingMode',
         name: this.props.grievanceCreate.receivingMode ? this.props.grievanceCreate.receivingMode : 'Website'
     };
     data['attribValues'].push(finobj);
+
     finobj = {
         key: 'receivingCenter',
         name: this.props.grievanceCreate.receivingCenter ? this.props.grievanceCreate.receivingCenter : ''
     };
     data['attribValues'].push(finobj);
+
     finobj = {
         key: 'status',
         name: 'REGISTERED'
     };
     data['attribValues'].push(finobj);
+
     finobj = {
         key: 'requesterAddress',
         name: this.props.grievanceCreate.requesterAddress ? this.props.grievanceCreate.requesterAddress : ''
     };
     data['attribValues'].push(finobj);
-    finobj = {};
+
     finobj = {
         key: 'keyword',
         name:'Complaint'
     };
     data['attribValues'].push(finobj);
+
+    if(localStorage.getItem('type') == 'CITIZEN'){
+      finobj = {
+          key: 'citizenUserId',
+          name: localStorage.getItem('id')
+      };
+      data['attribValues'].push(finobj);
+    }
 
     var request = {};
     request['serviceRequest'] = data;
@@ -226,7 +238,7 @@ class grievanceCreate extends Component {
 
     //console.log(JSON.stringify(request));
 
-    Api.commonApiPost("/pgr/seva/_create",{},request).then(function(createresponse)
+    Api.commonApiPost("/pgr/seva/v1/_create",{},request).then(function(createresponse)
     {
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
@@ -553,7 +565,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property: 'serviceCategory', value: e.target.value, isRequired : true, pattern: ''});
 
     var currentThis = _this;
-    Api.commonApiPost("/pgr/services/_search", {type:'category', categoryId : group}).then(function(response)
+    Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : group}).then(function(response)
     {
       currentThis.setState({grievanceType : response.complaintTypes});
       e = {

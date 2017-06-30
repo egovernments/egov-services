@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "attribValues entry is invalid",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.INVALID_ATTRIBUTE_VALUE_ENTRY",
+                "message": "attribValues entry is invalid",
+                "field": "key"
+            }
+        ]
+    }
+}

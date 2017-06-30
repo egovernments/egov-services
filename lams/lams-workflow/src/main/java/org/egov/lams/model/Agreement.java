@@ -120,6 +120,7 @@ public class Agreement {
 	private List<Demand> legacyDemands;
 	private Cancellation cancellation;
 	private Renewal renewal;
+	private Eviction eviction;
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date createdDate;

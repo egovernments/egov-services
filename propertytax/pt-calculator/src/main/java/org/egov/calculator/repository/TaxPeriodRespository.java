@@ -130,8 +130,6 @@ public class TaxPeriodRespository {
 
 		List<TaxPeriod> taxPeriods = null;
 		try {
-			// taxPeriods = jdbcTemplate.query(searchQuery, new
-			// BeanPropertyRowMapper(TaxPeriod.class));
 			taxPeriods = geTaxPeriods(searchQuery);
 		} catch (Exception e) {
 
@@ -155,18 +153,18 @@ public class TaxPeriodRespository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 		for (Map row : rows) {
 			TaxPeriod taxPeriod = new TaxPeriod();
-			taxPeriod.setCode(row.get("code").toString());
-			taxPeriod.setId(Long.valueOf(row.get("id").toString()));
-			taxPeriod.setFinancialYear(row.get("financialYear").toString());
-			taxPeriod.setFromDate(row.get("fromdate").toString());
-			taxPeriod.setToDate(row.get("todate").toString());
-			taxPeriod.setPeriodType(row.get("periodtype").toString());
-			taxPeriod.setTenantId(row.get("tenantid").toString());
+			taxPeriod.setCode(getString(row.get("code")));
+			taxPeriod.setId(getLong(getString(row.get("id"))));
+			taxPeriod.setFinancialYear(getString(row.get("financialYear")));
+			taxPeriod.setFromDate(getString(row.get("fromdate")));
+			taxPeriod.setToDate(getString(row.get("todate")));
+			taxPeriod.setPeriodType(getString(row.get("periodtype")));
+			taxPeriod.setTenantId(getString(row.get("tenantid")));
 			AuditDetails auditDetails = new AuditDetails();
-			auditDetails.setCreatedBy(row.get("createdby").toString());
-			auditDetails.setLastModifiedBy(row.get("lastmodifiedby").toString());
-			auditDetails.setCreatedTime(Long.valueOf(row.get("createdtime").toString()));
-			auditDetails.setLastModifiedTime(Long.valueOf(row.get("lastmodifiedtime").toString()));
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			taxPeriod.setAuditDetails(auditDetails);
 
 			taxPeriods.add(taxPeriod);
@@ -176,6 +174,29 @@ public class TaxPeriodRespository {
 		return taxPeriods;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<TaxPeriod> searchTaxPeriodsByTenantAndDate(String tenantId, String validDate) {
 		String searchQuery = TaxPeriodBuilder.getTaxperiodsByDateAndTenantId(tenantId, validDate);
 

@@ -43,9 +43,6 @@ public class ServiceRequestServiceTest {
     @Mock
     private ServiceRequestTypeService serviceRequestTypeService;
 
-    @Mock
-    private OtpService otpService;
-
     private ServiceRequestService serviceRequestService;
 
     @Mock
@@ -62,7 +59,7 @@ public class ServiceRequestServiceTest {
         when(serviceRequestValidator.canValidate(any())).thenReturn(true);
         final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
         serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
-            userRepository, otpService, serviceRequestTypeService, validators);
+            userRepository, serviceRequestTypeService, validators);
     }
 
     @Test
@@ -84,7 +81,7 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = getSevaRequest();
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(serviceRequest.getCrn(), serviceRequest.getTenantId()))
+        when(submissionRepository.getPosition(serviceRequest.getCrn(), serviceRequest.getTenantId()))
             .thenReturn(1L);
 
         serviceRequestService.update(serviceRequest, sevaRequest);
@@ -168,7 +165,7 @@ public class ServiceRequestServiceTest {
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
-        when(submissionRepository.getAssignmentByCrnAndTenantId(complaint.getCrn(), complaint.getTenantId()))
+        when(submissionRepository.getPosition(complaint.getCrn(), complaint.getTenantId()))
             .thenReturn(1L);
         serviceRequestService.update(complaint, sevaRequest);
 

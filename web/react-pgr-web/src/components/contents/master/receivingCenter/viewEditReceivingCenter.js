@@ -17,6 +17,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -67,8 +68,8 @@ class ViewEditServiceGroup extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/receivingcenter/_search",{},body).then(function(response){
-            //console.log(response);
+        Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{},body).then(function(response){
+            console.log(response);
             current.setState({data:response.ReceivingCenterType});
         }).catch((error)=>{
             console.log(error);
@@ -80,12 +81,14 @@ class ViewEditServiceGroup extends Component {
      initForm();
     }
 
-
+    handleNavigation = (type, id) => {
+      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    }
 
     render() {
 
       let {
-        receivingCenterCreate,
+        viewEditServiceGroup,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -101,7 +104,7 @@ class ViewEditServiceGroup extends Component {
       let url = this.props.location.pathname;
 
       return(
-        <div className="receivingCenterCreate">
+        <div className="viewEditServiceGroup">
             <Card style={styles.marginStyle}>
                 <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Center</div>} />
                 <CardText style={{padding:0}}>
@@ -112,13 +115,13 @@ class ViewEditServiceGroup extends Component {
                                     <thead>
                                         <tr>
                                           <th>ID</th>
-                                          <th>Name</th>
-                                          <th>Code</th>
-                                          <th>Description</th>
-                                          <th>Active</th>
-                                          <th>Audit Details</th>
-                                          <th>CRN Required</th>
-                                          <th>Order No</th>
+                                          <th>{translate("core.lbl.add.name")}</th>
+                                          <th>{translate("core.lbl.code")}</th>
+                                          <th>{translate("core.lbl.description")}</th>
+                                          <th>{translate("pgr.lbl.active")} </th>
+                                          <th>{translate("pgr.lblauditdetails")}</th>
+                                          <th>{translate("pgr.lbl.crn")}</th>
+                                          <th>{translate("pgr.lbl.order.no")}</th>
                                           <th></th>
                                         </tr>
                                     </thead>
@@ -130,12 +133,18 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
-                                              <td>{e.active}</td>
+                                              <td>{e.active  ? "true" : "false"}</td>
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/receivingCenter/view' && <td><Link to={`/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/receivingCenter/edit' && <td><Link to={`/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/receivingCenter/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/viewReceivingCenter/", id);
+                                              }}/></td>}
+                                              {url == '/receivingCenter/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/createReceivingCenter/", id);
+                                              }}/></td>}
                                             </tr>
                                           )
                                         })}
@@ -152,7 +161,7 @@ class ViewEditServiceGroup extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({receivingCenterCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({viewEditServiceGroup: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({

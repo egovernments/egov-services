@@ -1,13 +1,19 @@
-# this is an example of the Localization API
 swagger: '2.0'
+
 info:
-  title: Localization API 
-  description: API's to create,update and search messages for different module and locale
-  version: "1.0.0"
-# will be prefixed to all paths
+  version: "1.1.0"
+  title: egov-localization
+  description: egov-localization services APIs, 
+  contact:
+    name: eGov
+    email: info@egovernments.org
 basePath: /messages
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.localization'
 produces:
   - application/json
+  
+#################################################  
 paths:
   /v1/_search:
     post:
@@ -27,14 +33,10 @@ paths:
           required: true
           type: string
           format: varchar
-        - name : lastupdateddate
-          in : query
-          description : Last updated date for message
-          type : string
-          format : varchar
         - name : module
           in : query
           description : Module name for message
+          required: true
           type : string
           format : varchar
       tags:
@@ -49,7 +51,9 @@ paths:
         '400':
           description: tenantId and locale is not present
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
+            
+#################################################              
   /v1/_create:
     post:
       summary: Create messages for different locale
@@ -74,7 +78,9 @@ paths:
         '400':
           description: Invalid message request input
           schema:
-            $ref: '#/definitions/Error'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+#################################################              
   /v1/_update:
     post:
       summary: update messages for different locale
@@ -97,7 +103,9 @@ paths:
         '400':
           description: Invalid message request input
           schema:
-            $ref: '#/definitions/Error'
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+#################################################              
   /v1/_delete:
     post:
       summary: delete messages
@@ -120,7 +128,8 @@ paths:
         '400':
           description: Invalid delete message request
           schema:
-            $ref: '#/definitions/Error'    
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'   
+#################################################              
 
 definitions:
   
@@ -134,8 +143,9 @@ definitions:
       responseInfo :
         type: object
         items : 
-          $ref: '#/definitions/ResponseInfo'
-  
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+#################################################  
+
   DeleteMessagesResponse:
     type: object
     properties:
@@ -144,9 +154,9 @@ definitions:
       responseInfo :
         type: object
         items : 
-          $ref: '#/definitions/ResponseInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
   
-  
+#################################################    
   Message:
     type: object
     properties:
@@ -162,24 +172,15 @@ definitions:
       locale :
         type : string
         description : locale for message
-      createddate :
-        type : string
-        description : message created date with timestamp
-      lastupdateddate :
-        type : string
-        description : message last update date
+       
      
-        
+#################################################          
   MessagesRequest:
     type: object
     properties:
-      requestInfo:
-        type: object
+      RequestInfo:
         items:
-          $ref: '#/definitions/RequestInfo'
-      locale :
-        type: string
-        description: Locale of message.
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       messages: 
          type: array
          items:
@@ -188,17 +189,18 @@ definitions:
          type : string
          description : Unique tenant id.
          
+            
+#################################################           
   UpdateMessageRequest:
     type: object
     properties:
-      requestInfo:
-        type: object
+      RequestInfo:
         items:
-          $ref: '#/definitions/RequestInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       locale :
         type: string
         description: Locale of message.
-      tenant :
+      tenantId :
         type: string
         description: Tenant of message.
       module :
@@ -208,8 +210,8 @@ definitions:
          type: array
          items:
           $ref: '#/definitions/UpdateMessage'
-         
-         
+        
+#################################################           
   UpdateMessage:
     type: object
     properties:
@@ -219,14 +221,14 @@ definitions:
       message:
         type: string
         description: Message
-         
+        
+#################################################                    
   DeleteMessagesRequest:
     type: object
     properties:
-      requestInfo:
-        type: object
+      RequestInfo:
         items:
-          $ref: '#/definitions/RequestInfo'
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       tenantId :
         type: string
         description: tenant id of message.
@@ -234,77 +236,4 @@ definitions:
          type: array
          items:
           $ref: '#/definitions/Message'
-
-      
-  RequestInfo :
-    type: object
-    properties:
-      apiId :
-         type: string
-         description: unique API ID.
-      ver :
-         type : string
-         description :  API version.
-      ts :
-         type : string
-         description : response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to +5.30) .
-      action :
-         type : string
-         description: api action like GET/POST/PUT/DELETE in case of http calls.
-      did :
-         type : string
-         description : device UUID from which API is called.
-      key :
-         type : string
-         description : API key (dynamic).
-      msgId :
-         type : string 
-         description : unique request message id, UUID, for handling API idempotency.
-      requesterId :
-         type : string
-         description : UserId of the user calling.
-      authToken :
-         type : string
-         description : //session/jwt/saml token/oauth token.
-    required :
-       - apiId
-       - ver
-       - ts
-         
-  ResponseInfo :
-    type : object
-    properties :
-      apiId :
-        type : string
-        description : unique API ID.
-      ver :
-        type : string
-        description : .
-      ts :
-        type : string
-        description : response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to +5.30).
-      resMsgId :
-        type : string
-        description : unique response message id (UUID).
-      msgId :
-        type : string
-        description : message id of the request.
-      status :
-        type : string
-        description : status of request e.g. successful, failed etc.
-    required : 
-        - apiId
-        - ver
-        - ts
-        - status
-         
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      fields:
-        type: string
+          

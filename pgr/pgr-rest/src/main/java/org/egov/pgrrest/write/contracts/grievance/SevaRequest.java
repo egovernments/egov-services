@@ -46,7 +46,7 @@ public class SevaRequest {
             .loggedInRequesterUserId(getCitizenUserId())
             .serviceRequestTypeCode(this.getServiceRequest().getComplaintTypeCode())
             .serviceRequestStatus(this.getServiceRequest().getDynamicSingleValue(VALUES_STATUS))
-            .assigneeId(getAssigneeId())
+            .positionId(getPositionId())
             .escalationDate(this.getServiceRequest().getEscalationDate())
             .department(getDepartment())
             .tenantId(this.getServiceRequest().getTenantId())
@@ -98,9 +98,9 @@ public class SevaRequest {
         return Long.valueOf(this.getServiceRequest().getDynamicSingleValue(VALUES_DEPARTMENT));
     }
 
-    private Long getAssigneeId() {
-        final String assigneeId = this.getServiceRequest().getDynamicSingleValue(VALUES_ASSIGNEE_ID);
-        return isEmpty(assigneeId) ? null : Long.valueOf(assigneeId);
+    private Long getPositionId() {
+        final String positionId = this.getServiceRequest().getDynamicSingleValue(VALUES_POSITION_ID);
+        return isEmpty(positionId) ? null : Long.valueOf(positionId);
     }
 
     private Long getCitizenUserId() {

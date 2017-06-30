@@ -61,7 +61,8 @@ public class PgrMasterConstants {
 	public static final String INVALID_RECEIVING_CENTERTYPE_REQUEST_MESSAGE = "ReceivingCenter is Invalid.";
 	public static final String INVALID_RECEIVING_MODETYPE_REQUEST_MESSAGE = "ReceivingMode is Invalid.";
 	public static final String INVALID_SERVICETYPE_REQUEST_MESSAGE = "Service Type Message is Invalid";
-	public static final String INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE = "Service Group is invalid";
+	public static final String INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE = "Escalation Time Type is Invalid";
+	public static final String INVALID_ESCALATIONHIERARCHY_REQUEST_MESSAGE = "Escalation Hierarchy is Invalid" ; 
 
 	
 
@@ -145,8 +146,8 @@ public class PgrMasterConstants {
 	public static final String CATEGORY_ID_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 	
 	public static final String SLA_HOURS_MANDATORY_CODE = "pgr.0015";
-	public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "category";
-	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
+	public static final String SLA_HOURS_MANDATORY_FIELD_NAME = "slaHours";
+	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "SLA Hours is mandatory";
 
 	public static final String RECEIVINGMODE_CHANNEL_VALID_CODE = "pgr.0012";
 	public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channel";
@@ -155,6 +156,14 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0012";
 	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "channel";
 	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "Channel is required.";
+	
+	public static final String FROMPOSITION_MANDATORY_CODE = "pgr.0013";
+	public static final String FROMPOSITION_MANADATORY_ERROR_MESSAGE = "fromPosition";
+	public static final String FROMPOSITION_MANADATORY_FIELD_NAME = "From Position is required.";
+	
+	public static final String TOPOSITION_MANDATORY_CODE = "pgr.0014";
+	public static final String TOPOSITION_MANADATORY_ERROR_MESSAGE = "toPosition";
+	public static final String TOPOSITION_MANADATORY_FIELD_NAME = "To Position is required.";
 	
 	
 	public String getErrorMessage(final String property) {

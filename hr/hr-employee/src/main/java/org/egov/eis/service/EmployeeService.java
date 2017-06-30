@@ -42,12 +42,10 @@ package org.egov.eis.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.ArrayUtils;
 import org.egov.eis.broker.EmployeeProducer;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.User;
+import org.egov.eis.model.*;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
@@ -63,6 +61,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,289 +70,293 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 public class EmployeeService {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
-	@Autowired
-	private AssignmentService assignmentService;
+    @Autowired
+    private AssignmentService assignmentService;
 
-	@Autowired
-	private ServiceHistoryService serviceHistoryService;
+    @Autowired
+    private ServiceHistoryService serviceHistoryService;
 
-	@Autowired
-	private ProbationService probationService;
+    @Autowired
+    private ProbationService probationService;
 
-	@Autowired
-	private RegularisationService regularisationService;
+    @Autowired
+    private RegularisationService regularisationService;
 
-	@Autowired
-	private TechnicalQualificationService technicalQualificationService;
+    @Autowired
+    private TechnicalQualificationService technicalQualificationService;
 
-	@Autowired
-	private EducationalQualificationService educationalQualificationService;
+    @Autowired
+    private EducationalQualificationService educationalQualificationService;
 
-	@Autowired
-	private DepartmentalTestService departmentalTestService;
+    @Autowired
+    private DepartmentalTestService departmentalTestService;
 
-	@Autowired
-	private EmployeeJurisdictionService employeeJurisdictionService;
+    @Autowired
+    private EmployeeJurisdictionService employeeJurisdictionService;
 
-	@Autowired
-	private EmployeeLanguageService employeeLanguageService;
+    @Autowired
+    private EmployeeLanguageService employeeLanguageService;
 
-	@Autowired
-	private EmployeeDocumentsService employeeDocumentsService;
+    @Autowired
+    private EmployeeDocumentsService employeeDocumentsService;
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-	@Autowired
-	private AssignmentRepository assignmentRepository;
+    @Autowired
+    private AssignmentRepository assignmentRepository;
 
-	@Autowired
-	private HODDepartmentRepository hodDepartmentRepository;
+    @Autowired
+    private HODDepartmentRepository hodDepartmentRepository;
 
-	@Autowired
-	private ServiceHistoryRepository serviceHistoryRepository;
+    @Autowired
+    private ServiceHistoryRepository serviceHistoryRepository;
 
-	@Autowired
-	private ProbationRepository probationRepository;
+    @Autowired
+    private ProbationRepository probationRepository;
 
-	@Autowired
-	private RegularisationRepository regularisationRepository;
+    @Autowired
+    private RegularisationRepository regularisationRepository;
 
-	@Autowired
-	private TechnicalQualificationRepository technicalQualificationRepository;
+    @Autowired
+    private TechnicalQualificationRepository technicalQualificationRepository;
 
-	@Autowired
-	private EducationalQualificationRepository educationalQualificationRepository;
+    @Autowired
+    private EducationalQualificationRepository educationalQualificationRepository;
 
-	@Autowired
-	private DepartmentalTestRepository departmentalTestRepository;
+    @Autowired
+    private DepartmentalTestRepository departmentalTestRepository;
 
-	@Autowired
-	private EmployeeJurisdictionRepository employeeJurisdictionRepository;
+    @Autowired
+    private EmployeeJurisdictionRepository employeeJurisdictionRepository;
 
-	@Autowired
-	private EmployeeLanguageRepository employeeLanguageRepository;
+    @Autowired
+    private EmployeeLanguageRepository employeeLanguageRepository;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private EmployeeHelper employeeHelper;
+    @Autowired
+    private EmployeeHelper employeeHelper;
 
-	@Autowired
-	private EmployeeUserMapper employeeUserMapper;
+    @Autowired
+    private EmployeeUserMapper employeeUserMapper;
 
-	@Autowired
-	private EmployeeProducer employeeProducer;
+    @Autowired
+    private EmployeeProducer employeeProducer;
 
-	@Autowired
-	PropertiesManager propertiesManager;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    PropertiesManager propertiesManager;
 
-	public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
-		List<User> usersList = null;
-		List<Long> ids = null;
-		// If roleCodes or userName is present, get users first, as there will be very limited results
-		if (!isEmpty(employeeCriteria.getRoleCodes()) || !isEmpty(employeeCriteria.getUserName())) {
-			// FIXME : Right now we've to hit user service twice for active & inactive users.
-			// Remove this work around once the user service is updated.
-			employeeCriteria.setActive(true);
-			usersList = userService.getUsers(employeeCriteria, requestInfo);
-			employeeCriteria.setActive(false);
-			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
-			LOGGER.debug("userService: " + usersList);
-			if(isEmpty(usersList))
-				return Collections.EMPTY_LIST;
-			ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
-			employeeCriteria.setId(ids);
-		}
+    @Autowired
+    private ObjectMapper objectMapper;
 
-		List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
+    public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
+        List<User> usersList = null;
+        List<Long> ids = null;
+        // If roleCodes or userName is present, get users first, as there will be very limited results
+        if (!isEmpty(employeeCriteria.getRoleCodes()) || !isEmpty(employeeCriteria.getUserName())) {
+            usersList = userService.getUsers(employeeCriteria, requestInfo);
+            LOGGER.debug("usersList returned by UsersService is :: " + usersList);
+            if (isEmpty(usersList))
+                return Collections.EMPTY_LIST;
+            ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
+            employeeCriteria.setId(ids);
+        }
 
-		if (isEmpty(employeeInfoList))
-			return Collections.EMPTY_LIST;
+        List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
 
-		// If roleCodes or userName is not present, get employees first
-		if (isEmpty(employeeCriteria.getRoleCodes()) || isEmpty(employeeCriteria.getUserName())) {
-			ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
-			LOGGER.debug("Employee ids " + ids);
-			employeeCriteria.setId(ids);
-			// FIXME : Right now we've to hit user service twice for active & inactive users.
-			// Remove this work around once the user service is updated.
-			employeeCriteria.setActive(true);
-			usersList = userService.getUsers(employeeCriteria, requestInfo);
-			employeeCriteria.setActive(false);
-			usersList.addAll(userService.getUsers(employeeCriteria, requestInfo));
-			LOGGER.debug("userService: " + usersList);
-		}
-		employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
+        if (isEmpty(employeeInfoList))
+            return Collections.EMPTY_LIST;
 
-		if (!isEmpty(ids)) {
-			List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
-					employeeCriteria.getTenantId());
-			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
-		}
+        // If roleCodes or userName is not present, get employees first
+        if (isEmpty(employeeCriteria.getRoleCodes()) || isEmpty(employeeCriteria.getUserName())) {
+            ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+            LOGGER.debug("Employee ids are :: " + ids);
+            employeeCriteria.setId(ids);
+            usersList = userService.getUsers(employeeCriteria, requestInfo);
+            LOGGER.debug("usersList returned by UsersService is :: " + usersList);
+        }
+        employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
-		return employeeInfoList;
-	}
+        if (!isEmpty(ids)) {
+            List<EmployeeDocument> employeeDocuments = employeeRepository.getDocumentsForListOfEmployeeIds(ids,
+                    employeeCriteria.getTenantId());
+            employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
+        }
 
-	public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {
-		Employee employee = employeeRepository.findById(employeeId, tenantId);
-		List<Long> ids = new ArrayList<>();
-		ids.add(employeeId);
-		if (employee == null)
-			throw new EmployeeIdNotFoundException(employeeId);
+        return employeeInfoList;
+    }
 
-		EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
-		// FIXME : Right now we've to hit user service twice for inactive user.
-		// Remove this work around once the user service is updated.
-		employeeCriteria.setActive(true);
-		List<User> users = userService.getUsers(employeeCriteria, requestInfo);
-		User user = null;
-		if(users.size() == 1) {
-			user = users.get(0);
-		} else {
-			employeeCriteria.setActive(false);
-			user = userService.getUsers(employeeCriteria, requestInfo).get(0);
-		}
+    public Employee getEmployee(Long employeeId, String tenantId, RequestInfo requestInfo) {
+        Employee employee = employeeRepository.findById(employeeId, tenantId);
+        List<Long> ids = new ArrayList<>();
+        ids.add(employeeId);
+        if (employee == null)
+            throw new EmployeeIdNotFoundException(employeeId);
 
-		user.setBloodGroup(
-				isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
-		employee.setUser(user);
+        EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
+        User user = userService.getUsers(employeeCriteria, requestInfo).get(0);
 
-		employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
-		employee.getAssignments().forEach(assignment -> {
-			assignment.setHod(hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId));
-		});
-		employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setProbation(probationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setJurisdictions(employeeJurisdictionRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setRegularisation(regularisationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setTechnical(technicalQualificationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setEducation(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
-		employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
-		employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
+        user.setBloodGroup(isEmpty(user.getBloodGroup()) ? null : BloodGroup.fromValue(user.getBloodGroup()).toString());
+        employee.setUser(user);
 
-		LOGGER.debug("After Employee Search: " + employee);
+        employee.setLanguagesKnown(employeeLanguageRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setAssignments(assignmentRepository.findByEmployeeId(employeeId, tenantId));
+        employee.getAssignments().forEach(assignment -> {
+            assignment.setHod(hodDepartmentRepository.findByAssignmentId(assignment.getId(), tenantId));
+        });
+        employee.setServiceHistory(serviceHistoryRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setProbation(probationRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setJurisdictions(employeeJurisdictionRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setRegularisation(regularisationRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setTechnical(technicalQualificationRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setEducation(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
+        employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 
-		return employee;
-	}
+        LOGGER.debug("After Employee Search: " + employee);
 
-	public Employee createAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
-		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-		userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
-				: userRequest.getUser().getBloodGroup());
+        return employee;
+    }
 
-		// FIXME : Fix a common standard for date formats in User Service.
-		UserResponse userResponse = userService.createUser(userRequest);;
-		User user = userResponse.getUser().get(0);
+    public Employee createAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+        userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
+                : userRequest.getUser().getBloodGroup());
 
-		Employee employee = employeeRequest.getEmployee();
-		employee.setId(user.getId());
-		employee.setUser(user);
+        // FIXME : Fix a common standard for date formats in User Service.
+        UserResponse userResponse = userService.createUser(userRequest);
+        ;
+        User user = userResponse.getUser().get(0);
 
-		employeeHelper.populateDefaultDataForCreate(employeeRequest);
+        Employee employee = employeeRequest.getEmployee();
+        employee.setId(user.getId());
+        employee.setUser(user);
 
-		String employeeRequestJson = null;
-		employeeRequestJson = objectMapper.writeValueAsString(employeeRequest);
-		LOGGER.info("employeeJson::" + employeeRequestJson);
+        employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-		employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
-				employeeRequestJson);
+        String employeeRequestJson = null;
+        employeeRequestJson = objectMapper.writeValueAsString(employeeRequest);
+        LOGGER.info("employeeJson::" + employeeRequestJson);
 
-		return employee;
-	}
+        employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
+                employeeRequestJson);
 
-	@Transactional
-	public void create(EmployeeRequest employeeRequest) {
-		Employee employee = employeeRequest.getEmployee();
-		employeeRepository.save(employee);
-		employeeJurisdictionRepository.save(employee);
-		if (employee.getLanguagesKnown() != null) {
-			employeeLanguageRepository.save(employee);
-		}
-		assignmentRepository.save(employeeRequest);
-		employee.getAssignments().forEach((assignment) -> {
-			if (assignment.getHod() != null) {
-				hodDepartmentRepository.save(assignment, employee.getTenantId());
-			}
-		});
-		if (employee.getServiceHistory() != null) {
-			serviceHistoryRepository.save(employeeRequest);
-		}
-		if (employee.getProbation() != null) {
-			probationRepository.save(employeeRequest);
-		}
-		if (employee.getRegularisation() != null) {
-			regularisationRepository.save(employeeRequest);
-		}
-		if (employee.getTechnical() != null) {
-			technicalQualificationRepository.save(employeeRequest);
-		}
-		if (employee.getEducation() != null) {
-			educationalQualificationRepository.save(employeeRequest);
-		}
-		if (employee.getTest() != null) {
-			departmentalTestRepository.save(employeeRequest);
-		}
-	}
+        return employee;
+    }
 
-	public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
+    @Transactional
+    public void create(EmployeeRequest employeeRequest) {
+        Employee employee = employeeRequest.getEmployee();
+        employeeRepository.save(employee);
+        employeeJurisdictionRepository.save(employee);
+        if (employee.getLanguagesKnown() != null) {
+            employeeLanguageRepository.save(employee);
+        }
+        assignmentRepository.save(employeeRequest);
+        employee.getAssignments().forEach((assignment) -> {
+            if (assignment.getHod() != null) {
+                hodDepartmentRepository.save(assignment, employee.getTenantId());
+            }
+        });
+        if (employee.getServiceHistory() != null) {
+            serviceHistoryRepository.save(employeeRequest);
+        }
+        if (employee.getProbation() != null) {
+            probationRepository.save(employeeRequest);
+        }
+        if (employee.getRegularisation() != null) {
+            regularisationRepository.save(employeeRequest);
+        }
+        if (employee.getTechnical() != null) {
+            technicalQualificationRepository.save(employeeRequest);
+        }
+        if (employee.getEducation() != null) {
+            educationalQualificationRepository.save(employeeRequest);
+        }
+        if (employee.getTest() != null) {
+            departmentalTestRepository.save(employeeRequest);
+        }
+    }
 
-		Employee employee = employeeRequest.getEmployee();
+    public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
 
-		UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
-		userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
-				: userRequest.getUser().getBloodGroup());
+        Employee employee = employeeRequest.getEmployee();
 
-		UserResponse userResponse = userService.updateUser(userRequest.getUser().getId(), userRequest);
-		User user = userResponse.getUser().get(0);
-		employee.setUser(user);
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+        userRequest.getUser().setBloodGroup(isEmpty(userRequest.getUser().getBloodGroup()) ? null
+                : userRequest.getUser().getBloodGroup());
 
-		employeeHelper.populateDefaultDataForUpdate(employeeRequest);
+        UserResponse userResponse = userService.updateUser(userRequest.getUser().getId(), userRequest);
+        User user = userResponse.getUser().get(0);
+        employee.setUser(user);
 
-		String employeeUpdateRequestJson = null;
+        employeeHelper.populateDefaultDataForUpdate(employeeRequest);
 
-		employeeUpdateRequestJson = objectMapper.writeValueAsString(employeeRequest);
-		LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
+        String employeeUpdateRequestJson = null;
 
-		employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
-				employeeUpdateRequestJson);
-		return employee;
-	}
+        employeeUpdateRequestJson = objectMapper.writeValueAsString(employeeRequest);
+        LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
+        AssignmentGetRequest assignmentGetRequest = AssignmentGetRequest.builder().tenantId(employee.getTenantId()).build();
+        List<Assignment> assignments = assignmentService.getAssignments(employee.getId(), assignmentGetRequest);
 
-	@Transactional
-	public void update(EmployeeRequest employeeRequest) {
-		Employee employee = employeeRequest.getEmployee();
-		employeeRepository.update(employee);
-		employeeLanguageService.update(employee);
-		employeeJurisdictionService.update(employee);
-		assignmentService.update(employee);
-		departmentalTestService.update(employee);
-		serviceHistoryService.update(employee);
-		probationService.update(employee);
-		regularisationService.update(employee);
-		technicalQualificationService.update(employee);
-		educationalQualificationService.update(employee);
-		employeeDocumentsService.update(employee);
-	}
+        List<Long> positionfromDB = assignments.stream().map(assignment -> assignment.getPosition()).collect(Collectors.toList());
+        List<Long> positionFromRequest = employeeRequest.getEmployee().getAssignments().stream()
+                .map(assignment -> assignment.getPosition()).collect(Collectors.toList());
+        boolean isPositionModified = !(ArrayUtils.isEquals(positionfromDB, positionFromRequest));
 
-	public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {
-		UserInfo userInfo = requestInfo.getUserInfo();
-		EmployeeCriteria employeeCriteria = new EmployeeCriteria();
-		employeeCriteria.setUserName(userInfo.getUserName());
-		employeeCriteria.setTenantId(userInfo.getTenantId());
-		employeeCriteria.setActive(true);
+        List<Date> fromDateFromDB = assignments.stream().map(assignment -> assignment.getFromDate()).collect(Collectors.toList());
+        List<Date> fromDateFromRequest = employeeRequest.getEmployee().getAssignments().stream().map(assignment -> assignment.getFromDate()).collect(Collectors.toList());
+        boolean isFromDateModified = !(ArrayUtils.isEquals(fromDateFromDB, fromDateFromRequest));
 
-		List<User> users = userService.getUsers(employeeCriteria, requestInfo);
-		List<Long> userIds = users.stream().map(user -> user.getId()).collect(Collectors.toList());
-		employeeCriteria.setId(userIds);
+        List<Date> toDateFromDB = assignments.stream().map(assignment -> assignment.getToDate()).collect(Collectors.toList());
+        List<Date> toDateFromRequest = employeeRequest.getEmployee().getAssignments().stream()
+                .map(assignment -> assignment.getToDate()).collect(Collectors.toList());
+        boolean isToDateModified = !(ArrayUtils.isEquals(toDateFromDB, toDateFromRequest));
 
-		return getEmployees(employeeCriteria, requestInfo);
-	}
+        boolean isAssignmentDeleted = assignments.size() != employeeRequest.getEmployee().getAssignments().size();
+
+        if (isPositionModified || isFromDateModified || isToDateModified || isAssignmentDeleted) {
+            employeeProducer.sendMessage(propertiesManager.getAssignmentUpdateName(), propertiesManager.getAssignmentUpdateKey(),
+                    employeeUpdateRequestJson);
+        }
+
+
+        employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
+                employeeUpdateRequestJson);
+        return employee;
+    }
+
+    @Transactional
+    public void update(EmployeeRequest employeeRequest) {
+        Employee employee = employeeRequest.getEmployee();
+        employeeRepository.update(employee);
+        employeeLanguageService.update(employee);
+        employeeJurisdictionService.update(employee);
+        assignmentService.update(employee);
+        departmentalTestService.update(employee);
+        serviceHistoryService.update(employee);
+        probationService.update(employee);
+        regularisationService.update(employee);
+        technicalQualificationService.update(employee);
+        educationalQualificationService.update(employee);
+        employeeDocumentsService.update(employee);
+    }
+
+    public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {
+        UserInfo userInfo = requestInfo.getUserInfo();
+        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+        employeeCriteria.setUserName(userInfo.getUserName());
+        employeeCriteria.setTenantId(userInfo.getTenantId());
+        employeeCriteria.setActive(true);
+
+        List<User> users = userService.getUsers(employeeCriteria, requestInfo);
+        List<Long> userIds = users.stream().map(user -> user.getId()).collect(Collectors.toList());
+        employeeCriteria.setId(userIds);
+
+        return getEmployees(employeeCriteria, requestInfo);
+    }
 }

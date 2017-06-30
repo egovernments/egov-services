@@ -93,7 +93,7 @@ public class GrievanceTypeController {
     @Autowired
 	private ApplicationProperties applicationProperties;
 
-    @PostMapping(value = "/_create")
+    @PostMapping(value = "/v1/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final ServiceRequest serviceTypeRequest,
             final BindingResult errors) {
@@ -114,7 +114,7 @@ public class GrievanceTypeController {
 
     }
 
-    @PostMapping(value = "/{code}/_update")
+    @PostMapping(value = "/v1/{code}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final ServiceRequest serviceTypeRequest,
             final BindingResult errors, @PathVariable("code") final String code) {
@@ -138,7 +138,7 @@ public class GrievanceTypeController {
         return getSuccessResponse(services, serviceTypeRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/v1/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final ServiceGetRequest serviceTypeGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -199,6 +199,7 @@ public class GrievanceTypeController {
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
         checkMetadataExists(serviceTypeRequest,errorFields);
         checkCategorySLAValues(serviceTypeRequest, errorFields);
+        checkServiceCodeExists(serviceTypeRequest, errorFields);
         return errorFields;
     }
 
@@ -243,7 +244,7 @@ public class GrievanceTypeController {
 			final List<ErrorField> errorFields) {
 		final ServiceType serviceType = serviceTypeRequest.getService();
 		if (serviceType.isMetadata()) {
-			if (null == serviceType.getAttributes() && serviceType.getAttributes().size() <= 0) {
+			if (null == serviceType.getAttributes() || serviceType.getAttributes().size() <= 0) {
 				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ATTRIBUTE_DETAILS_MANDATORY_CODE)
 						.message(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_ERROR_MESSAGE)
 						.field(PgrMasterConstants.ATTRIBUTE_DETAILS_MANADATORY_FIELD_NAME).build();
@@ -272,6 +273,20 @@ public class GrievanceTypeController {
             errorFields.add(errorField);
         }
             return;
+    }
+    
+    private void checkServiceCodeExists(final ServiceRequest serviceTypeRequest,
+    		final List<ErrorField> errorFields) {
+    	final ServiceType serviceType = serviceTypeRequest.getService();
+    	if(serviceTypeService.checkServiceCodeIfExists(serviceType.getServiceCode(), serviceType.getTenantId())){
+    		final ErrorField errorField = ErrorField.builder()
+                    .code(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_CODE)
+                    .message(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME)
+                    .build();
+            errorFields.add(errorField);
+    	} else
+			return;
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {

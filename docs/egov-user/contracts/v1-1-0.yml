@@ -11,7 +11,7 @@ info:
 basePath: "/users/v110"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.users'
-
+#####################################################
 paths:
   /_create:
     post:
@@ -40,7 +40,8 @@ paths:
           description: User(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
+          
+#####################################################
   /_update:
       post:
         summary: Update user API
@@ -68,7 +69,7 @@ paths:
             description: Update user(s) failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
+#####################################################
   /_search:
     post:
       summary: Search the users in the system based on the criterion specified. 
@@ -100,8 +101,106 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - Users
-
+#####################################################       
+  /password/_update:
+      post:
+        summary: The user can update his password after login 
+        description: |
+          This API used for update the password after login
+        parameters:
+          - name: update password
+            in: body
+            description: Request header for the user with new of values.
+            required: true
+            schema:
+              $ref: '#/definitions/updatePasswordReq'
+        tags:
+          - Update password
+        responses:
+          '200':
+            description: Updated password successful
+            schema:
+              $ref: '#/definitions/PasswordRes'
+          '400':
+            description: Updated password failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'   
+#####################################################              
+  /password/nologin/_update:
+      post:
+        summary: This API act as reset password or forgot password before login
+        description: |
+          This API used for reset the password when user forgot his password   by getting otp Reference through registerd mobile number,
+        parameters:
+          - name: Reset password before login using five digit otp
+            in: body
+            description: Request header for the user with new of values.
+            required: true
+            schema:
+              $ref: '#/definitions/resetpasswordreq'
+        tags:
+          - Update password
+        responses:
+          '200':
+            description: Updated password successful
+            schema:
+              $ref: '#/definitions/PasswordRes'
+          '400':
+            description: Updated password failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'     
+#####################################################
 definitions:
+  resetpasswordreq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      otpReference:
+        type: string
+        description: otp reference number which sent to registered mobile
+      userName: 
+        type: string
+        description: Registered User name
+      newPassword: 
+        type: string
+        description: New password
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
+    required:
+      - otpReference
+      - userName
+      - newPassword
+      - tenantId
+#####################################################
+  updatePasswordReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        
+      
+      existingPassword: 
+        type: string
+        description: Existing password
+      newPassword: 
+        type: string
+        description:  New password
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
+    required:
+      - existingPassword
+      - newPassword
+      - tenantId    
+#####################################################      
+  PasswordRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+#####################################################
   User:
     type: object
     properties:
@@ -201,7 +300,7 @@ definitions:
      - locale
      - type
      - tenantId
-   
+#####################################################   
   UserDetails:
     type: object
     description: Infrequently used details for the user
@@ -290,7 +389,7 @@ definitions:
       photo:
         type: string
         description : Image to be loaded for the photo of the user
-
+#####################################################
   UserReq:
     type: object
     properties:
@@ -305,7 +404,7 @@ definitions:
     required:
       - RequestInfo
       - Users
-
+#####################################################
   UserRes:
     type: object
     properties:

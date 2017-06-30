@@ -1,4 +1,5 @@
 package org.egov.property.exception;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
+import org.egov.models.InvalidIDFormatException;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.web.context.request.WebRequest;
 
 /**
  * Description : Global exception handler for property module
+ * 
  * @author Narendra
  *
  */
@@ -29,114 +32,158 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 	@Autowired
 	private Environment environment;
-	
+
 	/**
 	 * Description : MethodArgumentNotValidException type exception handler
+	 * 
 	 * @param ex
 	 * @return
 	 */
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
-    	Map<String,String> errors=new HashMap<String,String>();
-    	for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
-             errors.put(error.getField(),error.getDefaultMessage());
-         }
-    	
-    	Error error=new Error(HttpStatus.BAD_REQUEST.toString(),environment.getProperty("invalid.input"),null,errors);
-		List<Error> errorList=new ArrayList<Error>();
-		errorList.add(error);
-    	ResponseInfo responseInfo=new ResponseInfo();
-		responseInfo.setStatus(ResponseStatusEnum.FAILED);
-		return new ErrorRes(responseInfo,errorList);		
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<String, String>();
+		for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
+			errors.put(error.getField(), error.getDefaultMessage());
 		}
-    
-    /**
-     * Description : General exception handler method
-     * @param ex
-     * @param req
-     * @return
-     */
-    
+
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), 
+				environment.getProperty("invalid.input"), null,
+				errors);
+		List<Error> errorList = new ArrayList<Error>();
+		errorList.add(error);
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(ResponseStatusEnum.FAILED);
+		return new ErrorRes(responseInfo, errorList);
+	}
+
+	/**
+	 * Description : General exception handler method
+	 * 
+	 * @param ex
+	 * @param req
+	 * @return
+	 */
+
 	@ExceptionHandler(value = { Exception.class })
 
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
-		if(ex instanceof InvalidInputException){
-			Error error=new Error(HttpStatus.BAD_REQUEST.toString(),environment.getProperty("invalid.input"),null,null);
-			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setApiId(((InvalidInputException)ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((InvalidInputException)ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((InvalidInputException)ex).getRequestInfo().getMsgId());
+		if (ex instanceof InvalidInputException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), 
+					environment.getProperty("invalid.input"), null,
+					null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			List<Error> errorList=new ArrayList<Error>();
+			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			return new ErrorRes(responseInfo,errorList);		}
-		else if(ex instanceof InvalidPropertyBoundaryException){
-			Error error=new Error(HttpStatus.BAD_REQUEST.toString(),environment.getProperty("invalid.property.boundary"),null,new HashMap<String,String>());
-			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setApiId(((InvalidPropertyBoundaryException)ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((InvalidPropertyBoundaryException)ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((InvalidPropertyBoundaryException)ex).getRequestInfo().getMsgId());
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof InvalidPropertyBoundaryException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					((InvalidPropertyBoundaryException) ex).getCustomMsg(),
+					((InvalidPropertyBoundaryException) ex).getMsgDetails(), 
+					new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidPropertyBoundaryException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidPropertyBoundaryException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidPropertyBoundaryException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			List<Error> errorList=new ArrayList<Error>();
+			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			return new ErrorRes(responseInfo,errorList);
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof ValidationUrlNotFoundException) {
+			Error error = new Error(HttpStatus.NOT_FOUND.toString(),
+					((ValidationUrlNotFoundException) ex).getCustomMsg(),
+					((ValidationUrlNotFoundException) ex).getMsgDetails(), 
+					new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((ValidationUrlNotFoundException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((ValidationUrlNotFoundException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((ValidationUrlNotFoundException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof InvalidIDFormatException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					((InvalidIDFormatException) ex).getCustomMsg(), null,
+					new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidIDFormatException) ex)
+					.getRequestInfo().getApiId());
+			responseInfo.setVer(
+					((InvalidIDFormatException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidIDFormatException) ex)
+					.getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof IdGenerationException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), 
+					((IdGenerationException) ex).getCustomMsg(),
+					((IdGenerationException) ex).getMsgDetails(), 
+					new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((IdGenerationException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((IdGenerationException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((IdGenerationException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
 		}
-		else if(ex instanceof AttributeNotFoundException){
-			Error error=new Error(HttpStatus.BAD_REQUEST.toString(),environment.getProperty("invalid.input"),environment.getProperty("attribute.notfound"),new HashMap<String,String>());
-			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setApiId(((AttributeNotFoundException)ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((AttributeNotFoundException)ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((AttributeNotFoundException)ex).getRequestInfo().getMsgId());
+
+		else if (ex instanceof InvalidUpdatePropertyException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					((InvalidUpdatePropertyException) ex).getCustomMsg(), 
+					null, new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidUpdatePropertyException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidUpdatePropertyException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidUpdatePropertyException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			List<Error> errorList=new ArrayList<Error>();
+			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			return new ErrorRes(responseInfo,errorList);
+			return new ErrorRes(responseInfo, errorList);
 		}
-		
-		else if(ex instanceof InvalidUpdatePropertyException){
-			Error error=new Error(HttpStatus.BAD_REQUEST.toString(),((InvalidUpdatePropertyException) ex).getCustomMsg(),null,new HashMap<String,String>());
-			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setApiId(((InvalidUpdatePropertyException)ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((InvalidUpdatePropertyException)ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((InvalidUpdatePropertyException)ex).getRequestInfo().getMsgId());
+
+		else if (ex instanceof PropertySearchException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), 
+					environment.getProperty("invalid.input"), null, null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((PropertySearchException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((PropertySearchException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((PropertySearchException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			List<Error> errorList=new ArrayList<Error>();
+			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			return new ErrorRes(responseInfo,errorList);
+			return new ErrorRes(responseInfo, errorList);
+
 		}
-		
-		else if (ex instanceof PropertySearchException){
-			Error error=new Error(HttpStatus.BAD_REQUEST.toString(),environment.getProperty("invalid.input"),null,null);
-			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setApiId(((PropertySearchException)ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((PropertySearchException)ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((PropertySearchException)ex).getRequestInfo().getMsgId());
-			responseInfo.setTs(new Date().getTime());
+
+		else {
+			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+					ex.getMessage(), null, new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			List<Error> errorList=new ArrayList<Error>();
+			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
-			return new ErrorRes(responseInfo,errorList);
-			
-		}
-		
-		else{
-			Error error=new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),ex.getMessage(),null,new HashMap<String,String>());
-			ResponseInfo responseInfo=new ResponseInfo();
-			responseInfo.setStatus(ResponseStatusEnum.FAILED);
-			List<Error> errorList=new ArrayList<Error>();
-			errorList.add(error);
-			return new ErrorRes(responseInfo,errorList);
+			return new ErrorRes(responseInfo, errorList);
 		}
 
 	}
-
-	
 
 }

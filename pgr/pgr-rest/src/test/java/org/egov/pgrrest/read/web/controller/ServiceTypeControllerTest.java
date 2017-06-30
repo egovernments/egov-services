@@ -45,7 +45,7 @@ public class ServiceTypeControllerTest {
     public void getComplaintTypes() throws Exception {
         when(serviceRequestTypeService.getComplaintType("BPS", AP_PUBLIC)).thenReturn(getComplaintType());
 
-        mockMvc.perform(post("/services/BPS/_search?tenantId=ap.public")
+        mockMvc.perform(post("/services/v1/BPS/_search?tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -56,7 +56,7 @@ public class ServiceTypeControllerTest {
     public void getComplaintTypesWhereTypeIsFrequency() throws Exception {
         when(serviceRequestTypeService.findByCriteria(getSearchCriteria(FREQUENCY))).thenReturn(getComplaintTypeList());
 
-        mockMvc.perform(post("/services/_search?type=FREQUENCY&count=2&tenantId=ap.public")
+        mockMvc.perform(post("/services/v1/_search?type=FREQUENCY&count=2&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -67,7 +67,7 @@ public class ServiceTypeControllerTest {
     public void getAllComplaintTypes() throws Exception {
         when(serviceRequestTypeService.findByCriteria(getSearchCriteria(ALL))).thenReturn(getAllComplaintType());
 
-        mockMvc.perform(post("/services/_search?type=ALL&tenantId=ap.public")
+        mockMvc.perform(post("/services/v1/_search?type=ALL&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class ServiceTypeControllerTest {
     public void getComplaintTypesByCategory() throws Exception {
         when(serviceRequestTypeService.findByCriteria(getSearchCriteria(CATEGORY))).thenReturn(getComplaintTypeListForCategoryIdSearch());
 
-        mockMvc.perform(post("/services/_search?type=CATEGORY&categoryId=1&tenantId=ap.public")
+        mockMvc.perform(post("/services/v1/_search?type=CATEGORY&categoryId=1&tenantId=ap.public")
             .content(resources.getFileContents("requestinfobody.json"))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())

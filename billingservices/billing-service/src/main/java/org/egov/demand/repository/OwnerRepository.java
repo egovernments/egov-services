@@ -58,14 +58,12 @@ public class OwnerRepository {
 				log.error("Following Exception Occurred Calling User Service : " + ioe.getMessage());
 				throw new RuntimeException(ioe);
 			}
-			 //return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-				log.info("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
+				log.debug("the exception from user module inside first catch block ::"+userErrorResponse.getError().toString());
 				throw new RuntimeException(e);
 		} catch (Exception e) {
 			log.error("Following Exception Occurred While Calling User Service : " + e.getMessage());
 			throw new RuntimeException(e);
 		}
-		System.err.println(userResponse);
 		List<Owner> owners = new ArrayList<>();
 		if (userResponse != null && !userResponse.getUser().isEmpty())
 			for (User userRequest : userResponse.getUser())

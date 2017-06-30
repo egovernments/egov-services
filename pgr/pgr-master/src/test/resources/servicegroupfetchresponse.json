@@ -1,0 +1,13 @@
+{
+    "ServiceGroups": [
+        {
+            "id": 1,
+            "code": "SG01",
+            "name": "ServiceGroup01",
+            "description": "ServiceGroup01",
+            "tenantId": "default",
+            "version": 0,
+            "auditDetails": null
+        }
+    ]
+}

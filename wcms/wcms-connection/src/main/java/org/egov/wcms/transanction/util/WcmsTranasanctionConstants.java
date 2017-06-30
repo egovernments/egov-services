@@ -88,7 +88,7 @@ public class WcmsTranasanctionConstants {
     
     public static final String APPLICATIONTYPE_MANDATORY_CODE = "wcms.0042";
     public static final String APPLICATIONTYPE_INVALID_FIELD_NAME = "applicationType";
-    public static final String APPLICATIONTYPE_INVALID_ERROR_MESSAGE = "Please provide valid APplication Type";
+    public static final String APPLICATIONTYPE_INVALID_ERROR_MESSAGE = "Please provide valid Application Type";
 
     public static final String PIPESIZE_SIZEINMM_MANDATORY_CODE = "wcms.0007";
     public static final String PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME = "sizeInMilimeter";
@@ -265,6 +265,11 @@ public class WcmsTranasanctionConstants {
     public static final String SUPPLYTYPE_INVALID_CODE = "wcms.0041";
     public static final String SUPPLYTYPE_INVALID_FIELD_NAME = "supplyType.name";
     public static final String SUPPLYTYPE_INVALID_ERROR_MESSAGE = "SupplyType name doesn't Exist";
+    
+    
+    public static final String CONNECTION_METERED_INVALID_CODE = "wcms.0042";
+    public static final String CONNECTION_METERED_INVALID_FIELD_NAME = "billingType";
+    public static final String CONNECTION_METERED_INVALID_ERROR_MESSAGE = "Please provide Meter Deatils for Metered Connection";
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

@@ -86,13 +86,17 @@ public class ServiceType {
     
     private String group;
     
+    @NotNull
     private Integer category;
     
+    @NotNull
     private Integer slaHours;
    
     private AuditDetails auditDeatils;
 
     private List<Attribute> attributes;
+    
+    private boolean hasFinancialImpact; 
     
 }
 

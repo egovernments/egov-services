@@ -1,0 +1,21 @@
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.priority.one','1','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.priority.two','2','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.priority.three','3','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.priority','priority','PGR','default',1);
+
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.searchresult','Search Result','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.next','Next','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.previous','Previous','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.noresult','No search results','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.update','Update','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.create','Create','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.boundarytype','Boundary Type','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.boundary','Boundary','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.position','Position','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.success','Success','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.router.update.success','Grievance router updated successfully','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.router.create.success','Grievance router(s) created successfully','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.create.router','Create Grievance Router','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.alert.router','Existing Router Data will be overridden, Are you sure?','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.edit.router','Edit Grievance Router','PGR','default',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.view.router','View Grievance Router','PGR','default',1);

@@ -149,22 +149,22 @@ public class GuidanceValueRepostory {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 		for (Map row : rows) {
 			GuidanceValue guidanceValue = new GuidanceValue();
-			guidanceValue.setId(Long.valueOf(row.get("id").toString()));
-			guidanceValue.setTenantId(row.get("tenantid").toString());
-			guidanceValue.setName(row.get("name").toString());
-			guidanceValue.setBoundary(row.get("boundary").toString());
-			guidanceValue.setStructure(row.get("structure").toString());
-			guidanceValue.setUsage(row.get("usage").toString());
-			guidanceValue.setSubUsage(row.get("subusage").toString());
-			guidanceValue.setOccupancy(row.get("occupancy").toString());
-			guidanceValue.setValue(Double.parseDouble(row.get("value").toString()));
-			guidanceValue.setFromDate(row.get("fromdate").toString());
-			guidanceValue.setToDate(row.get("todate").toString());
+			guidanceValue.setId(getLong(getString(row.get("id"))));
+			guidanceValue.setTenantId(getString(row.get("tenantid")));
+			guidanceValue.setName(getString(row.get("name")));
+			guidanceValue.setBoundary(getString(row.get("boundary")));
+			guidanceValue.setStructure(getString(row.get("structure")));
+			guidanceValue.setUsage(getString(row.get("usage")));
+			guidanceValue.setSubUsage(getString(row.get("subusage")));
+			guidanceValue.setOccupancy(getString(row.get("occupancy")));
+			guidanceValue.setValue(getDouble(row.get("value")));
+			guidanceValue.setFromDate(getString(row.get("fromdate")));
+			guidanceValue.setToDate(getString(row.get("todate")));
 			AuditDetails auditDetails = new AuditDetails();
-			auditDetails.setCreatedBy(row.get("createdby").toString());
-			auditDetails.setLastModifiedBy(row.get("lastmodifiedby").toString());
-			auditDetails.setCreatedTime(Long.valueOf(row.get("createdtime").toString()));
-			auditDetails.setLastModifiedTime(Long.valueOf(row.get("lastmodifiedtime").toString()));
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			guidanceValue.setAuditDetails(auditDetails);
 
 			guidanceValues.add(guidanceValue);
@@ -172,6 +172,39 @@ public class GuidanceValueRepostory {
 		}
 
 		return guidanceValues;
+	}
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to double
+	 * 
+	 * @param object
+	 *            that need to be cast to Double
+	 * @return {@link Double}
+	 */
+	private Double getDouble(Object object) {
+		return object == null ? 0.0 : Double.parseDouble(object.toString());
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
 	}
 
 }

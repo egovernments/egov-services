@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-//TODO path not defined
+@RequestMapping("bill")
 public class BillController {
 	
 	@Autowired
@@ -39,7 +40,7 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody BillRequest billRequest, BindingResult bindingResult){
 		//TODO: try to give debug loggers instead info, this applied across the code base.
-		log.info("create billRequest:"+billRequest);
+		log.debug("create billRequest:"+billRequest);
 		
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.
@@ -55,8 +56,8 @@ public class BillController {
 	@ResponseBody
 	public ResponseEntity<?> genrateBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute GenerateBillCriteria generateBillCriteria, BindingResult bindingResult){
-		log.info("genrateBill generateBillCriteria : "+generateBillCriteria);
-		log.info("genrateBill requestInfoWrapper : "+requestInfoWrapper);
+		log.debug("genrateBill generateBillCriteria : "+generateBillCriteria);
+		log.debug("genrateBill requestInfoWrapper : "+requestInfoWrapper);
 		
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.

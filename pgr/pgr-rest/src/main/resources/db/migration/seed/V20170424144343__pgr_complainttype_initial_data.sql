@@ -77,7 +77,7 @@ INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, 
 INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby,slahours,hasfinancialimpact,tenantid) VALUES (nextval('seq_egpgr_complainttype'), 'Unsanitary conditions on the road', NULL, 0, 'USCOTR', true, NULL, now(), NULL, 0, NULL,24,false,'default');
 INSERT INTO egpgr_complainttype (id, name, department, version, code, isactive, description, createddate, lastmodifieddate, createdby, lastmodifiedby,slahours,hasfinancialimpact,tenantid) VALUES (nextval('seq_egpgr_complainttype'), 'Violation of DCR/Building bye laws', NULL, 0, 'VODCRBL', true, NULL, now(), NULL, 0, NULL,24,false,'default');
 
-------------------------serviceRequest type updation with category---
+------------------------complaint type updation with category---
 
 update egpgr_complainttype set category=(select id from egpgr_complainttype_category where name='Public Health and Sanitation') where name='Absenteesim of door to door garbage collector';
 update egpgr_complainttype set category=(select id from egpgr_complainttype_category where name='Administration') where name='Absenteesim of sweepers';

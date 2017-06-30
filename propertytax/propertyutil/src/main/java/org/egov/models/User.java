@@ -94,4 +94,17 @@ public class User {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+
+	@JsonProperty("isPrimaryOwner")
+	private Boolean isPrimaryOwner = null;
+
+	@JsonProperty("isSecondaryOwner")
+	private Boolean isSecondaryOwner = null;
+
+	@JsonProperty("ownerShipPercentage")
+	private Double ownerShipPercentage = null;
+
+	@JsonProperty("ownerType")
+	@Size(min = 4, max = 32)
+	private String ownerType = null;
 }

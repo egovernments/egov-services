@@ -190,7 +190,7 @@ $(document).ready(function() {
             for (var key in values) {
                 if (typeof values[key] === "object") {
                     for (ckey in values[key]) {
-                        if (values[key][ckey]) {
+                        if (typeof values[key][ckey] != "undefined") {
                             //Get description
                             if (isAsset && key == "locationDetails" && ["locality", "electionWard", "street", "revenueWard", "revenueZone", "revenueBlock"].indexOf(ckey) > -1) {
                                 var _obj;
@@ -219,7 +219,7 @@ $(document).ready(function() {
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
                         }
                     }
-                } else if (values[key]) {
+                } else if (typeof values[key] != "undefined") {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
                 } else {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
@@ -253,7 +253,7 @@ $(document).ready(function() {
 
     var renewAgreement = {};
     //Getting data for user input
-    $("input").on("keyup", function() {
+    /*$("input").on("keyup", function() {
         // console.log(this.value);
       //  renewAgreement[this.id] = this.value;
         fillValueToObject(this);
@@ -261,7 +261,7 @@ $(document).ready(function() {
 
     $("textarea").on("keyup", function() {
         fillValueToObject(this);
-    });
+    });*/
 
     //Getting data for user input
     $("select").on("change", function() {
@@ -553,9 +553,8 @@ $(document).ready(function() {
             "action": data.action
         };
 
-        if(_agrmntDet.wFremarks) {
-            _agrmntDet["workflowDetails"]["comments"] = _agrmntDet.wFremarks;
-            delete _agrmntDet.wFremarks;
+        if($("#wFremarks").val()) {
+            _agrmntDet["workflowDetails"]["comments"] = $("#wFremarks").val();
         }
 
         if (data.action && data.action != "Print Notice") {

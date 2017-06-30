@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.persistence.entity.Boundary;
+import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class BoundaryControllerTest {
 
     @MockBean
     private CrossHierarchyService crossHierarchyService;
+    
+    @MockBean
+	private ResponseInfoFactory responseInfoFactory;
 
     @Test
     public void testShouldFetchAllLocationsForGivenWard() throws Exception {

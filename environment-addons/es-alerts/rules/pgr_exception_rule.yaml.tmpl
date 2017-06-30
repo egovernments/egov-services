@@ -1,0 +1,19 @@
+name: PGR Exception
+type: any
+index: {{LOG_INDEX_NAME}}
+ 
+filter:
+- terms:
+    kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
+- query:
+    query_string:
+      query: "log: exception OR log: error"
+
+included:
+ - log
+ - kubernetes.pod_name
+
+alert:
+- "slack"
+slack_username_override: alert-job
+slack_channel_override: pgr

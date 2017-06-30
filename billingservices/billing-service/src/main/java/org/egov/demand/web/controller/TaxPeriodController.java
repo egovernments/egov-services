@@ -39,21 +39,29 @@
  */
 package org.egov.demand.web.controller;
 
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
+import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.TaxPeriodValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/taxperiod")
@@ -67,11 +75,13 @@ public class TaxPeriodController {
     @Autowired
     private ResponseFactory responseFactory;
 
+    @Autowired
+    private TaxPeriodValidator taxPeriodValidator;
 
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-           @ModelAttribute @Valid final TaxPeriodCriteria taxPeriodCriteria, final BindingResult bindingResult) {
+                                    @ModelAttribute @Valid final TaxPeriodCriteria taxPeriodCriteria, final BindingResult bindingResult) {
         logger.info("taxPeriodCriteria -> " + taxPeriodCriteria + "requestInfoWrapper -> " + requestInfoWrapper);
 
         if (bindingResult.hasErrors()) {
@@ -80,5 +90,31 @@ public class TaxPeriodController {
         }
         final TaxPeriodResponse taxPeriodResponse = taxPeriodService.searchTaxPeriods(taxPeriodCriteria, requestInfoWrapper.getRequestInfo());
         return new ResponseEntity<>(taxPeriodResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final TaxPeriodRequest taxPeriodRequest, final BindingResult bindingResult){
+        RequestInfo requestInfo = taxPeriodRequest.getRequestInfo();
+        if(bindingResult.hasErrors()){
+            ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        taxPeriodValidator.validateTaxPeriods(taxPeriodRequest, "create");
+        TaxPeriodResponse taxPeriodResponse = taxPeriodService.createAsync(taxPeriodRequest);
+        return new ResponseEntity<>(taxPeriodResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid final TaxPeriodRequest taxPeriodRequest, final BindingResult bindingResult){
+        RequestInfo requestInfo = taxPeriodRequest.getRequestInfo();
+        if(bindingResult.hasErrors()){
+            ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        taxPeriodValidator.validateTaxPeriods(taxPeriodRequest, "edit");
+        TaxPeriodResponse taxPeriodResponse = taxPeriodService.updateAsync(taxPeriodRequest);
+        return new ResponseEntity<>(taxPeriodResponse, HttpStatus.CREATED);
     }
 }

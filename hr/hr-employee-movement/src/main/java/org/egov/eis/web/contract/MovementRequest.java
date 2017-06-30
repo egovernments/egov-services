@@ -64,11 +64,13 @@ import lombok.ToString;
 @ToString
 public class MovementRequest {
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-	@NotNull
-	@JsonProperty("movement")
-	private List<Movement> movement = new ArrayList<>();
+    @NotNull
+    @JsonProperty("Movement")
+    private List<Movement> movement = new ArrayList<>();
+
+    private String type;
 }

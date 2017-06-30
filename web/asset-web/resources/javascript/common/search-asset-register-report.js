@@ -273,6 +273,7 @@ class SearchAsset extends React.Component {
                                     ep1.write({ "sheet":"Success", "cell":"H1", "content":'Report generated on ' + localDate });
                                     ep1.write({ "sheet":"Success", "cell":"B4", "content":"List of Assets :"+searchString});
 
+                                    ep1.writeCell("A1","Kurnool", {"font-weight": "Bold"});
                                   ep1.writeRow(7, ["Sr. No", "Code", "Asset Name","Status","Asset Category", "Location","Current value of asset"] );
                                   for(var i=0;i<printData.length;i++){
                                     for(var j =0;j<locationArray.length;j++){

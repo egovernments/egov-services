@@ -4,11 +4,12 @@ import java.util.Map;
 
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.repository.BillRepository;
+import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.DemandService;
+import org.egov.demand.service.GlCodeMasterService;
 import org.egov.demand.service.TaxHeadMasterService;
-import org.egov.demand.web.contract.BillRequest;
-import org.egov.demand.web.contract.DemandRequest;
-import org.egov.demand.web.contract.TaxHeadMasterRequest;
+import org.egov.demand.service.TaxPeriodService;
+import org.egov.demand.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -32,17 +33,27 @@ public class BillingServiceConsumer {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private BillRepository billRepository;
-	
+
 	@Autowired
 	private TaxHeadMasterService taxheadMasterService;
 
+	@Autowired
+	private TaxPeriodService taxPeriodService;
+	
+	@Autowired
+	private GlCodeMasterService glCodeMasterService;
+
+	@Autowired
+	private BusinessServDetailService businessServDetailService;
+
 	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
-			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}"})
+			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
+			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-		log.info("key:" + topic + ":" + "value:" + consumerRecord);
+		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
 		try {
 
@@ -56,8 +67,14 @@ public class BillingServiceConsumer {
 				taxheadMasterService.create(objectMapper.convertValue(consumerRecord, TaxHeadMasterRequest.class));
 			else if (applicationProperties.getUpdateTaxHeadMasterTopicName().equals(topic))
 				taxheadMasterService.update(objectMapper.convertValue(consumerRecord, TaxHeadMasterRequest.class));
+			else if(applicationProperties.getCreateTaxPeriodTopicName().equals(topic))
+				taxPeriodService.create(objectMapper.convertValue(consumerRecord, TaxPeriodRequest.class));
+			else if(applicationProperties.getUpdateTaxPeriodTopicName().equals(topic))
+				taxPeriodService.update(objectMapper.convertValue(consumerRecord, TaxPeriodRequest.class));
+			else if(applicationProperties.getCreateGlCodeMasterTopicName().equals(topic))
+				glCodeMasterService.create(objectMapper.convertValue(consumerRecord, GlCodeMasterRequest.class));
 		} catch (Exception exception) {
-			log.info("processMessage:" + exception);
+			log.debug("processMessage:" + exception);
 			throw exception;
 		}
 	}

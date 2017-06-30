@@ -12,8 +12,8 @@ import org.egov.calculator.repository.builder.FactorQueryBuilder;
 import org.egov.calculator.util.TimeStampUtil;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
+import org.egov.models.CalculationFactorTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,7 +27,6 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class FactorRepository {
 
 	@Autowired
@@ -146,13 +145,9 @@ public class FactorRepository {
 
 		String factorSearchSql = FactorQueryBuilder.getFactorSearchQueryByTenantIdAndValidDate(tenantId, validDate);
 
-		List<CalculationFactor> calculationFactors = new ArrayList<CalculationFactor>();
-
-		calculationFactors = jdbcTemplate.query(factorSearchSql.toString(),
-				new BeanPropertyRowMapper(CalculationFactor.class));
+		List<CalculationFactor> calculationFactors = geCalculationFactors(factorSearchSql);
 
 		return calculationFactors;
-
 	}
 
 	/**
@@ -168,19 +163,20 @@ public class FactorRepository {
 		List<CalculationFactor> calculationFactors = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
-		for (Map row : rows) {
+		for (Map<String, Object> row : rows) {
 			CalculationFactor calculationFactor = new CalculationFactor();
-			calculationFactor.setId(Long.valueOf(row.get("id").toString()));
-			calculationFactor.setTenantId(row.get("tenantid").toString());
-			calculationFactor.setFactorCode(row.get("factorcode").toString());
-			calculationFactor.setFactorValue(Double.parseDouble(row.get("factorvalue").toString()));
-			calculationFactor.setFromDate(row.get("fromdate").toString());
-			calculationFactor.setToDate(row.get("todate").toString());
+			calculationFactor.setId(getLong(row.get("id")));
+			calculationFactor.setTenantId(getString(row.get("tenantid")));
+			calculationFactor.setFactorCode(getString(row.get("factorcode")));
+			calculationFactor.setFactorType(CalculationFactorTypeEnum.fromValue(row.get("factortype").toString()));
+			calculationFactor.setFactorValue(getDouble(row.get("factorvalue")));
+			calculationFactor.setFromDate(getString(row.get("fromdate")));
+			calculationFactor.setToDate(getString(row.get("todate")));
 			AuditDetails auditDetails = new AuditDetails();
-			auditDetails.setCreatedBy(row.get("createdby").toString());
-			auditDetails.setLastModifiedBy(row.get("lastmodifiedby").toString());
-			auditDetails.setCreatedTime(Long.valueOf(row.get("createdtime").toString()));
-			auditDetails.setLastModifiedTime(Long.valueOf(row.get("lastmodifiedtime").toString()));
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			calculationFactor.setAuditDetails(auditDetails);
 
 			calculationFactors.add(calculationFactor);
@@ -188,6 +184,39 @@ public class FactorRepository {
 		}
 
 		return calculationFactors;
+	}
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to double
+	 * 
+	 * @param object
+	 *            that need to be cast to Double
+	 * @return {@link Double}
+	 */
+	private Double getDouble(Object object) {
+		return object == null ? 0.0 : Double.parseDouble(object.toString());
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
 	}
 
 }

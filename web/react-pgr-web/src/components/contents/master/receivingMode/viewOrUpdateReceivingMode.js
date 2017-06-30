@@ -66,7 +66,7 @@ class viewOrUpdateReceivingMode extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/receivingmode/_search",{},body).then(function(response){
+        Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{},body).then(function(response){
             console.log(response.ReceivingModeType);
             current.setState({data:response.ReceivingModeType});
         }).catch((error)=>{
@@ -79,7 +79,9 @@ class viewOrUpdateReceivingMode extends Component {
      initForm();
     }
 
-
+    handleNavigation = (type, id) => {
+      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    }
 
     render() {
 
@@ -129,8 +131,8 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.channel}</td>
                                               <td>{e.active?"True":"False"}</td>
-                                              {url == '/viewOrUpdateReceivingMode/view' && <td><Link to={`/viewReceivingMode/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/receivingModeCreate/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/viewOrUpdateReceivingMode/view' && <td><Link to={`/viewReceivingMode/${this.props.match.params.type}/${e.id}`} target="_blank"><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
+                                              {url == '/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/receivingModeCreate/${this.props.match.params.type}/${e.id}`} target="_blank"><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}

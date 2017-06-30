@@ -98,7 +98,7 @@ class CruProperty extends Component {
     this.state = {
       addButton: false,
       addOwner: true,
-      addFloor: true,
+      addFloor: false,
       addRoom: false,
       files:[],
       propertytypes: [],
@@ -1292,8 +1292,6 @@ class CruProperty extends Component {
                   handleChangeNextOne(e,"floor" ,"unitType", true, "");
                   if(value == 2) {
                     this.setState({addRoom:false});
-                    this.setState({addFloor:false});
-                    this.setState({addFloor:true});
                   }
                 }
               }
@@ -1311,8 +1309,7 @@ class CruProperty extends Component {
             <RaisedButton type="button" label="Add Room" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} onClick={
               () => {
                 this.setState({addRoom:true});
-                this.setState({addFloor:false});
-                this.setState({addFloor:true});
+
               }
             }/>
         </Col>}
@@ -1324,7 +1321,7 @@ class CruProperty extends Component {
           <Col xs={12} style={{textAlign:"right"}}>
               <br/>
               { (editIndex == -1 || editIndex == undefined) &&
-                <RaisedButton type="button" label="Add Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                <RaisedButton type="button" label="Save Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
                     //  this.props.addNestedFormData("floor","units");
                       this.props.addNestedFormData("floors","floor");
                       this.props.resetObject("floor");
@@ -1761,7 +1758,7 @@ class CruProperty extends Component {
                                                   }
                                                   handleChange(e, "cAddressDiffPAddress", false, '')
                                                 }}
-                                                
+
                                               />
                                           </Col>
                                           {cruProperty.cAddressDiffPAddress &&
@@ -2172,14 +2169,21 @@ class CruProperty extends Component {
                                       <Row>
                                       <Col xs={12} md={12}>
                                       <Row>
+                                          {!this.state.addFloor && <RaisedButton type="button" label="Add Floor" backgroundColor="#0b272e" labelColor={white} style={{marginTop: 21, marginBottom:16}} onClick={()=> {
+                                              this.setState({
+                                                addFloor:true
+                                              })
+                                          }}/>}
                                           {this.state.addFloor && floorForm()}
-                                          { cruProperty.floors &&
+                                          { (this.state.addFloor && cruProperty.floors) &&
                                             <div> <br/>
                                           <Table id="cruPropertyTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
                                             <tr>
                                               <th>#</th>
-                                              <th>Floor Number</th>
+                                              <th>Unit Type</th>
+                                              <th>Floor No.</th>
+                                              <th>Unit No.</th>
                                               <th>Construction Type</th>
                                               <th>Usage Type</th>
                                               <th>Usage Sub Type</th>
@@ -2206,7 +2210,9 @@ class CruProperty extends Component {
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
+                                                    <td>{i.unitType}</td>
                                                     <td>{i.floorNo}</td>
+                                                    <td>{i.unitNo}</td>
                                                     <td>{i.constructionType}</td>
                                                     <td>{i.usageType}</td>
                                                     <td>{i.usageSubType}</td>

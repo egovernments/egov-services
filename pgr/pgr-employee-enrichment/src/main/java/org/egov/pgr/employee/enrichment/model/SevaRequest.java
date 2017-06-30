@@ -17,7 +17,7 @@ public class SevaRequest {
 
     public final static String SERVICE_REQUEST = "serviceRequest";
     public final static String REQUEST_INFO = "RequestInfo";
-    public static final String VALUES_ASSIGNEE_ID = "assignmentId";
+    public static final String VALUES_POSITION_ID = "positionId";
     public static final String VALUES_STATE_ID = "stateId";
     private static final String VALUES_DESIGNATION_ID = "designationId";
     public static final String VALUES_DEPARTMENT_ID = "departmentId";
@@ -47,15 +47,13 @@ public class SevaRequest {
         this.sevaRequestMap = sevaRequestMap;
     }
 
-    public Long getAssignee() {
-        final String assigneeId = getDynamicSingleValue(VALUES_ASSIGNEE_ID);
-        return Long.valueOf(assigneeId);
+    public Long getPositionId() {
+        final String positionId = getDynamicSingleValue(VALUES_POSITION_ID);
+        return Long.valueOf(positionId);
     }
 
-    public Long getEmployeeId() {return Long.valueOf(getRequestInfo().getUserInfo().getId());}
-
     private void setAssignee(String assignee) {
-        createOrUpdateAttributeEntry(VALUES_ASSIGNEE_ID, assignee);
+        createOrUpdateAttributeEntry(VALUES_POSITION_ID, assignee);
     }
 
     private void setStateId(String stateId) {
@@ -87,7 +85,7 @@ public class SevaRequest {
         valuesToSet.put(COMPLAINT_CRN, Attribute.asStringAttr(COMPLAINT_CRN, crn));
         final String status = getDynamicSingleValue(STATUS);
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
-            .assignee(getCurrentAssignee())
+            .positionId(getCurrentPositionId())
             .action(WorkflowRequest.Action.forComplaintStatus(status,isCreate()))
             .requestInfo(requestInfo)
             .values(valuesToSet)
@@ -121,7 +119,7 @@ public class SevaRequest {
     }
 
     public void update(WorkflowResponse workflowResponse) {
-        setAssignee(workflowResponse.getAssignee());
+        setAssignee(workflowResponse.getPositionId());
         setStateId(workflowResponse.getValueForKey(STATE_ID));
     }
 
@@ -147,9 +145,9 @@ public class SevaRequest {
         return getDynamicSingleValue(VALUES_STATE_ID);
     }
 
-    private Long getCurrentAssignee() {
-        final String assignee = getDynamicSingleValue(VALUES_ASSIGNEE_ID);
-        return assignee != null ? Long.valueOf(String.valueOf(assignee)) : null;
+    private Long getCurrentPositionId() {
+        final String positionId = getDynamicSingleValue(VALUES_POSITION_ID);
+        return positionId != null ? Long.valueOf(String.valueOf(positionId)) : null;
     }
 
     public boolean isCreate() {

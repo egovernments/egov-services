@@ -89,18 +89,36 @@ public class ConfigurationManager {
 
     @Value("${egov.services.wcms_masters_supplytype.searchpath}")
     private String waterMasterServiceSupplySearchPathTopic;
-    
+
     @Value("${egov.services.wcms_masters_pipesize.searchpath}")
     private String waterMasterServicePipesizeSearchPathTopic;
-    
+
     @Value("${egov.services.wcms_masters_categoryType.searchpath}")
     private String waterMasterServiceCategorySearchPathTopic;
-    
+
     @Value("${egov.services.wcms_masters_donation.searchpath}")
     private String waterMasterServiceDonationSearchPathTopic;
 
     @Value("${egov.services.wcms_masters.hostname}")
     private String waterMasterServiceBasePathTopic;
+
+    @Value("${egov.services.core_id_service.hostname}")
+    private String idGenServiceBasePathTopic;
+
+    @Value("${egov.services.core_id_service.createpath}")
+    private String idGenServiceCreatePathTopic;
+
+    @Value("${id.idName}")
+    private String idGenNameServiceTopic;
+    
+    @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
+    private String waterMasterPropCategoryMappingTopic;
+    
+    @Value("${egov.services.wcms_masters_propertyPipeSize.searchpath}")
+    private String waterMasterPropPipeSizeMappingTopic;
     
     
+    @Value("${egov.services.wcms_masters_propertyUsageType.searchpath}")
+    private String waterMasterPropUsageTypeMappingTopic;
+
 }

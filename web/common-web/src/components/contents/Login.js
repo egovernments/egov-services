@@ -96,7 +96,18 @@ class Login extends Component {
            newPwd: "",
            pwd: "",
            uuid: "",
-           open2: false
+           open2: false,
+           open3: false,
+           optSent: false,
+           signUpObject: {
+              userName: "",
+              mobileNumber: "",
+              password: "",
+              confirmPassword: "",
+              emailId: "",
+              name: ""
+           },
+           signUpErrorMsg: ""
        }
        this.loginRequest = this.loginRequest.bind(this);
        this.showPasswordModal = this.showPasswordModal.bind(this);
@@ -106,6 +117,9 @@ class Login extends Component {
        this.searchGrievance = this.searchGrievance.bind(this);
        this.validateOTP = this.validateOTP.bind(this);
        this.generatePassword = this.generatePassword.bind(this);
+       this.handleSignUpModalOpen = this.handleSignUpModalOpen.bind(this);
+       this.generateSignUpOTP = this.generateSignUpOTP.bind(this);
+       this.signUp = this.signUp.bind(this);
    }
 
    componentWillMount() {
@@ -196,10 +210,21 @@ class Login extends Component {
    }
 
    handleStateChange(e, name) {
-    this.setState({
-      mobErrorMsg: "",
-      [name]: e.target.value
-    })
+    if(/\./.test(name)) {
+      var names = name.split(".");
+      this.setState({
+        mobErrorMsg: "",
+        [names[0]]: {
+          ...this.state[names[0]],
+          [names[1]]: e.target.value
+        }
+      })
+    } else {
+      this.setState({
+        mobErrorMsg: "",
+        [name]: e.target.value
+      })
+    }
    }
 
    sendRecovery(type) {
@@ -218,11 +243,11 @@ class Login extends Component {
 
     } else {
       var rqst = {
-          "identity": self.state.mobNo,
+          "mobileNumber": self.state.mobNo,
           "tenantId": localStorage.getItem("tenantId") || "default"
       }
 
-      Api.commonApiPost("otp/v1/_create", {}, {otp: rqst}).then(function(response) {
+      Api.commonApiPost("user-otp/v1/_send", {}, {otp: rqst}).then(function(response) {
           self.setState({
             open: false
           }, function() {
@@ -269,6 +294,13 @@ class Login extends Component {
       });
    }
 
+   handleSignUpModalOpen() {
+      this.setState({
+        open3: !this.state.open3,
+        optSent: false
+      })
+   }
+
    generatePassword() {
       var self = this;
       if(!self.state.pwd || !self.state.newPwd) {
@@ -307,8 +339,70 @@ class Login extends Component {
       }
    }
 
-   render() {
-      // console.log();
+   generateSignUpOTP() {
+      var self = this;
+      if(self.state.signUpObject.mobileNumber.length != 10) {
+        self.setState({
+          signUpErrorMsg: "Mobile number should be 10 digits"
+        })
+      } else if (self.state.signUpObject.password != self.state.signUpObject.confirmPassword) {
+        self.setState({
+          signUpErrorMsg: "Passwords do not match"
+        })
+      } else {
+        var signUpObject = Object.assign({}, self.state.signUpObject);
+        delete signUpObject.confirmPassword;
+        signUpObject.userName = signUpObject.mobileNumber;
+        //Generate OTP
+        Api.commonApiPost("user-otp/v1/_send", {}, {"otp": {mobileNumber: signUpObject.mobileNumber, tenantId: localStorage.getItem("tenantId") || "default"}}).then(function(response){
+          self.setState({
+            signUpErrorMsg: "",
+            optSent: true
+          })
+        }, function (err){
+
+        })
+      }
+   }
+
+   signUp() {
+      var self = this;
+      if(!self.state.signUpObject.otp) {
+        self.setState({
+          signUpErrorMsg: "OTP is required"
+        })
+      } else {
+        Api.commonApiPost("otp/v1/_validate", {}, {
+          otp: {
+            "tenantId": localStorage.getItem("tenantId") || "default",
+            "otp": self.state.signUpObject.otp,
+            "identity": self.state.signUpObject.mobileNumber
+          }
+        }).then(function(response) {
+            var user = Object.assign({}, self.state.signUpObject);
+            delete user.confirmPassword;
+            user.userName = user.mobileNumber;
+            user.otpReference = response.otp.UUID;
+            user.tenantId = localStorage.getItem("tenantId") || "default";
+            Api.commonApiPost("user/citizen/_create", {}, {
+              User: user 
+            }).then(function(response){
+              self.setState({
+                open3: false,
+                signUpErrorMsg: "",
+                optSent: false,
+                open4: true
+              })
+            }, function(err) {
+
+            })
+        }, function(err) {
+
+        })
+      }
+   }
+
+   render() { 
       let {
         login,
         credential,
@@ -325,7 +419,10 @@ class Login extends Component {
         sendRecovery,
         searchGrievance,
         validateOTP,
-        generatePassword
+        generatePassword,
+        handleSignUpModalOpen,
+        generateSignUpOTP,
+        signUp
       } = this;
       let {
         errorMsg,
@@ -340,7 +437,10 @@ class Login extends Component {
         hideOtp,
         pwdErrorMsg,
         pwd,
-        newPwd
+        newPwd,
+        open3,
+        optSent,
+        signUpObject
       } = this.state;
 
       // if (token) {
@@ -383,6 +483,14 @@ class Login extends Component {
             </div>
           )
         }
+      }
+
+      const isAllFields = function() {
+        if(signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword) {
+          return true;
+        } 
+
+        return false;
       }
 
         return(
@@ -447,7 +555,7 @@ class Login extends Component {
                         <FloatingActionButton  style={styles.floatingIconButton}>
                             <i className="material-icons">person</i>
                         </FloatingActionButton>
-                        <div style={styles.floatLeft}>
+                        <div style={{"float": "left", "cursor": "pointer"}} onClick={handleSignUpModalOpen}>
                           <h4>Create an account</h4>
                           <p>Create an account to avail our services</p>
                         </div>
@@ -566,8 +674,103 @@ class Login extends Component {
             <Snackbar
               open={this.state.open2}
               message="Password changed successfully."
+              style={{"textAlign": "center"}}
               autoHideDuration={4000}
             />
+            <Snackbar
+              open={this.state.open4}
+              message="Account created successfully."
+              style={{"textAlign": "center"}}
+              autoHideDuration={4000}
+            />
+            <Dialog
+              title="Create An Account"
+              autoScrollBodyContent="true"
+              actions={[
+                <FlatButton
+                  label="Cancel"
+                  primary={false}
+                  onTouchTap={(e) => {handleClose("open3")}}
+                />,
+                <FlatButton
+                  label={!optSent ? "Generate OTP" : "Sign Up"}
+                  secondary={true}
+                  disabled={!isAllFields()}
+                  onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
+                />
+              ]}
+              modal={false}
+              open={open3}
+              onRequestClose={(e) => {handleClose("open3")}}
+              contentStyle={{"width": "500"}}
+            >
+                <Row>
+                  <Col xs={12} md={12}>
+                    <TextField
+                        floatingLabelText="Mobile Number"
+                        style={styles.fullWidth}
+                        value={signUpObject.mobileNumber} 
+                        type="number"
+                        disabled={optSent}
+                        onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber")}
+                    />
+                  </Col>
+                  <Col xs={12} md={12}>
+                    <TextField
+                        floatingLabelText="Password"
+                        style={styles.fullWidth}
+                        value={signUpObject.password} 
+                        disabled={optSent}
+                        type="password"
+                        onChange={(e) => handleStateChange(e, "signUpObject.password")}
+                    />
+                  </Col>
+                  <Col xs={12} md={12}>
+                    <TextField
+                        floatingLabelText="Confirm Password"
+                        style={styles.fullWidth}
+                        value={signUpObject.confirmPassword} 
+                        disabled={optSent}
+                        type="password"
+                        onChange={(e) => handleStateChange(e, "signUpObject.confirmPassword")}
+                    />
+                  </Col>
+                  <Col xs={12} md={12}>
+                    <TextField
+                        floatingLabelText="Full Name"
+                        style={styles.fullWidth}
+                        value={signUpObject.name} 
+                        disabled={optSent}
+                        onChange={(e) => handleStateChange(e, "signUpObject.name")}
+                    />
+                  </Col>
+                  <Col xs={12} md={12}>
+                    <TextField
+                        floatingLabelText="Email Address (Optional)"
+                        style={styles.fullWidth}
+                        value={signUpObject.emailId} 
+                        disabled={optSent}
+                        onChange={(e) => handleStateChange(e, "signUpObject.emailId")}
+                    />
+                  </Col>
+                  <Col xs={12} md={12}>
+                    {
+                      (optSent) ?
+                        (<TextField
+                          floatingLabelText="OTP"
+                          style={styles.fullWidth}
+                          value={signUpObject.otp} 
+                          onChange={(e) => handleStateChange(e, "signUpObject.otp")}
+                        />) : ""
+                    }
+                  </Col>
+                  <Col md={12}>
+                    <p className="text-danger">
+                      {this.state.signUpErrorMsg}
+                    </p>
+                  </Col>
+                </Row>
+            </Dialog>
           </div>
         )
       // }

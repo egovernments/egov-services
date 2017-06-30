@@ -13,6 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
 import DataTable from '../../../common/Table';
+import {translate} from '../../../common/common';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -101,12 +102,15 @@ class searchRouter extends Component {
             text: 'name',
             value: 'id'
           },
+          complaintSourceConfig: {
+            text: 'serviceName',
+            value: 'serviceCode'
+          },
           complaintSource: [],
           boundarySource: [],
           boundaryTypeList: [],
           isSearchClicked: false,
           resultList: [],
-          boundariesList: [],
           boundaryInitialList: [],
           positionSource:[]
        }
@@ -171,7 +175,7 @@ class searchRouter extends Component {
         })
     });
 
-    Api.commonApiPost("/pgr/services/_search", {type:'all'}).then(function(response) {
+    Api.commonApiPost("/pgr/services/v1/_search", {type:'all'}).then(function(response) {
        self.setState({
         complaintSource : response.complaintTypes
        });
@@ -185,7 +189,7 @@ class searchRouter extends Component {
   loadBoundaries(value) {
      var self = this;
      Api.commonApiGet("/egov-location/boundarys", {"Boundary.id": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
-       self.setState({boundariesList : response.Boundary});
+       self.setState({boundarySource : response.Boundary});
      },function(err) {
 
      });
@@ -195,7 +199,7 @@ class searchRouter extends Component {
     e.preventDefault();
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
-    Api.commonApiPost("/workflow/router/_search", searchSet).then(function(response) {
+    Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.RouterTypRes,
@@ -207,7 +211,7 @@ class searchRouter extends Component {
   }
 
   handleNavigation(id) {
-    window.open("/createRouter/" + this.props.match.params.type + "/" + id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    window.open("#/createRouter/" + this.props.match.params.type + "/" + id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
   }
 
   render() {
@@ -224,6 +228,7 @@ class searchRouter extends Component {
     } = this;
     let {
         allSourceConfig,
+        complaintSourceConfig,
         complaintSource,
         boundarySource,
         boundaryTypeList,
@@ -253,16 +258,16 @@ class searchRouter extends Component {
       if(isSearchClicked)
       return (
           <Card>
-            <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+            <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
             <CardText>
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
               <thead style={{backgroundColor:"#f2851f",color:"white"}}>
                 <tr>
-                  <th>Sl No.</th>
-                  <th>Grievance Type</th>
-                  <th>Boundary Type</th>
-                  <th>Boundary</th>
-                  <th>Position</th>
+                  <th>#</th>
+                  <th>{translate("pgr.lbl.grievance.type")}</th>
+                  <th>{translate("pgr.lbl.boundarytype")}</th>
+                  <th>{translate("pgr.lbl.boundary")}</th>
+                  <th>{translate("pgr.lbl.position")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -285,18 +290,18 @@ class searchRouter extends Component {
                    <Col xs={12} md={8}>
                     <AutoComplete
                         hintText=""
-                        floatingLabelText="Grievance Type"
-                        filter={AutoComplete.noFilter}
+                        floatingLabelText={translate("pgr.lbl.grievance.type")}
+                        filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.complaintSource}
-                        dataSourceConfig={this.state.allSourceConfig}
+                        dataSourceConfig={this.state.complaintSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
                         value={routerSearchSet.complaintType}
                         onNewRequest={(chosenRequest, index) => {
                           var e = {
                             target: {
-                              value: chosenRequest
+                              value: chosenRequest.serviceCode
                             }
                           };
                           handleChange(e, "complaintType", true, "");
@@ -304,7 +309,7 @@ class searchRouter extends Component {
                         />
                    </Col>
                    <Col xs={12} md={8}>
-                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText="Boundary Type" value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
+                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
                             loadBoundaries(val);
                             handleChange(e, "boundaryType", true, "")}}>
@@ -316,8 +321,8 @@ class searchRouter extends Component {
                    <Col xs={12} md={8}>
                     <AutoComplete
                         hintText=""
-                        floatingLabelText="Boundary"
-                        filter={AutoComplete.noFilter}
+                        floatingLabelText={translate("pgr.lbl.boundary")}
+                        filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.allSourceConfig}
@@ -327,7 +332,7 @@ class searchRouter extends Component {
                         onNewRequest={(chosenRequest, index) => {
                           var e = {
                             target: {
-                              value: chosenRequest
+                              value: chosenRequest.id
                             }
                           };
                           handleChange(e, "boundary", true, "");
@@ -339,8 +344,8 @@ class searchRouter extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
-             <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
            </div>
          </form>
          {viewTable()}

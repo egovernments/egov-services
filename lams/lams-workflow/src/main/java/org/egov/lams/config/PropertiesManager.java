@@ -34,6 +34,9 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.workflow_service.hostname.cancel_businesskey}")
 	private String workflowServiceCancelBusinessKey;
+
+	@Value("${egov.services.workflow_service.hostname.evict_businesskey}")
+	private String workflowServiceEvictBusinessKey;
 	
 	@Value("${kafka.topics.start.workflow}")
 	private String kafkaStartWorkflowTopic;
@@ -46,4 +49,17 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.agreement}")
 	private String kafkaUpdateAgreementTopic;
+	
+	@Value("${egov.services.workflow_service.status.advancepaid}")
+	private String wfSatusAdvancePaid;
+	
+	@Value("${egov.services.workflow_service.status.assistantapproved}")
+	private String wfStatusAssistantApproved;
+	
+	@Value("${egov.services.workflow_service.agreement.status.rejected}")
+	private String agreementStatusRejected;
+	
+	@Value("${egov.services.workflow_service.status.rejected}")
+	private String wfStatusRejected;
+	
 }

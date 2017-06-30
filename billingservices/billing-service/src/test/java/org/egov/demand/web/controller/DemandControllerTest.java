@@ -16,13 +16,12 @@ import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.TaxHeadMaster;
-import org.egov.demand.model.enums.Type;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.DemandValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,9 @@ public class DemandControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@MockBean
+	private DemandValidator demandValidator;
 
 	@MockBean
 	private DemandService demandService;
@@ -104,16 +106,12 @@ public class DemandControllerTest {
 		
 		demandDetail.setTaxAmount(BigDecimal.valueOf(100));
 		demandDetail.setCollectionAmount(BigDecimal.ZERO);
-		TaxHeadMaster taxHeadMaster = new TaxHeadMaster();
-		taxHeadMaster.setCode("0002");
-		demandDetail.setTaxHeadMaster(taxHeadMaster);
+	 	demandDetail.setTaxHeadMasterCode("0002");
 		DemandDetail demandDetail1 = new DemandDetail();
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
-		TaxHeadMaster taxHeadMaster1 = new TaxHeadMaster();
-		taxHeadMaster1.setCode("0003");
-		demandDetail1.setTaxHeadMaster(taxHeadMaster1);
+		demandDetail1.setTaxHeadMasterCode("0003");
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;

@@ -108,7 +108,7 @@ export default class SimpleMap extends Component {
   render() {
     return (
       <AsyncGettingStartedExampleGoogleMap
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDrxvgg2flbGdU9Fxn6thCbNf3VhLnxuFY"
         loadingElement={
           <div style={{ height: `100%` }}>
           </div>

@@ -33,67 +33,67 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@Import({ TracerConfiguration.class })
+@Import({TracerConfiguration.class})
 public class PgrRestSpringBootApplication {
 
-	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
-	private static final String CLUSTER_NAME = "cluster.name";
+    private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+    private static final String CLUSTER_NAME = "cluster.name";
 
-	@Value("${app.timezone}")
-	private String timeZone;
+    @Value("${app.timezone}")
+    private String timeZone;
 
-	@Value("${user.service.url}")
-	private String userServiceHost;
+    @Value("${user.service.url}")
+    private String userServiceHost;
 
-	@Value("${egov.services.user.get_user_details}")
-	private String getUserDetailsUrl;
+    @Value("${egov.services.user.get_user_details}")
+    private String getUserDetailsUrl;
 
-	@Value("${egov.services.user.get_user_by_username}")
-	private String getUserByUserNameUrl;
+    @Value("${egov.services.user.get_user_by_username}")
+    private String getUserByUserNameUrl;
 
-	@Value("${es.host}")
-	private String elasticSearchHost;
+    @Value("${es.host}")
+    private String elasticSearchHost;
 
-	@Value("${es.transport.port}")
-	private Integer elasticSearchTransportPort;
+    @Value("${es.transport.port}")
+    private Integer elasticSearchTransportPort;
 
-	@Value("${es.cluster.name}")
-	private String elasticSearchClusterName;
+    @Value("${es.cluster.name}")
+    private String elasticSearchClusterName;
 
-	private TransportClient client;
+    private TransportClient client;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
-	@PostConstruct
-	public void init() throws UnknownHostException {
+    @PostConstruct
+    public void init() throws UnknownHostException {
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
         Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
-		final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
-		final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
-				elasticSearchTransportPort);
-		client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
-	}
+        final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
+        final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
+            elasticSearchTransportPort);
+        client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
+    }
 
-	@Bean
-	public UserRepository userRepository(RestTemplate restTemplate) {
-		return new UserRepository(restTemplate, userServiceHost, getUserDetailsUrl, getUserByUserNameUrl);
-	}
+    @Bean
+    public UserRepository userRepository(RestTemplate restTemplate) {
+        return new UserRepository(restTemplate, userServiceHost, getUserDetailsUrl, getUserByUserNameUrl);
+    }
 
-	@Bean
+    @Bean
     public OtpRepository otpRepository(RestTemplate restTemplate, @Value("${otp.host}") String otpHost) {
-	    return new OtpRepository(restTemplate, otpHost);
+        return new OtpRepository(restTemplate, otpHost);
     }
 
     @Bean
     public OtpSMSRepository otpSMSRepository(@Value("${sms.topic}") String smsTopic) {
-	    return new OtpSMSRepository(logAwareKafkaTemplate, smsTopic);
+        return new OtpSMSRepository(logAwareKafkaTemplate, smsTopic);
     }
 
     @Bean
     public EmployeeRepository employeeRepository(RestTemplate restTemplate,
                                                  @Value("${hremployee.host}") String employeeHostName) {
-	    return new EmployeeRepository(restTemplate, employeeHostName);
+        return new EmployeeRepository(restTemplate, employeeHostName);
     }
 
     @Bean
@@ -102,42 +102,40 @@ public class PgrRestSpringBootApplication {
         return new ComplaintConfigurationRepository(restTemplate, pgrMasterHost);
     }
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setObjectMapper(objectMapper);
+        return converter;
+    }
 
-	@Bean
-	public ObjectMapper getObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		return objectMapper;
-	}
+    @Bean
+    public ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return objectMapper;
+    }
 
-	@Bean
-	public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-		return new WebMvcConfigurerAdapter() {
+    @Bean
+    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+        return new WebMvcConfigurerAdapter() {
 
-			@Override
-			public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-				configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-			}
+            @Override
+            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+                configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+            }
 
-		};
-	}
+        };
+    }
 
-	@Bean
-	public TransportClient getTransportClient() {
-		return client;
-	}
+    @Bean
+    public TransportClient getTransportClient() {
+        return client;
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(PgrRestSpringBootApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PgrRestSpringBootApplication.class, args);
+    }
 }

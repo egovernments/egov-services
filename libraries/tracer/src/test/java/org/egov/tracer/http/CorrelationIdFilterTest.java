@@ -31,7 +31,7 @@ public class CorrelationIdFilterTest {
 
     @Before
     public void before() {
-        correlationIdFilter = new CorrelationIdFilter();
+        correlationIdFilter = new CorrelationIdFilter(true);
     }
 
     @Test

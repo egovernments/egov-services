@@ -4,7 +4,7 @@ index: {{LOG_INDEX_NAME}}
  
 filter:
 - terms:
-    kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master"]
+    kubernetes.container_name.keyword: ["pgr-rest", "pgr-location-enrichment", "pgr-employee-enrichment", "pgr-notification", "pgr-search-indexer", "pgr-master" ,"egov-workflow"]
 - query:
     query_string:
       query: "log: exception OR log: error"

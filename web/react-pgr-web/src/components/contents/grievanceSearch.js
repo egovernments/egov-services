@@ -86,7 +86,7 @@ class grievanceSearch extends Component {
   }
 
   handleNavigation(serviceId) {
-    window.open('/grievanceView/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    window.open('#/grievanceView/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   handleOpenNClose() {
@@ -128,7 +128,7 @@ class grievanceSearch extends Component {
 
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
-  		Api.commonApiPost("/pgr/seva/_count", searchSet).then(function(response) {
+  		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
 		      		self.setState({
@@ -172,8 +172,8 @@ class grievanceSearch extends Component {
     	checkCountAndCall("locationList", []);
     });
 
-    Api.commonApiPost("/pgr/receivingmode/v1/_search").then(function(response) {
-      	checkCountAndCall("receiveingModeList", response.receivingModes);
+    Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response) {
+      	checkCountAndCall("receiveingModeList", response.ReceivingModeType);
     }, function(err) {
     	checkCountAndCall("receiveingModeList", []);
     });
@@ -190,7 +190,7 @@ class grievanceSearch extends Component {
     	checkCountAndCall("departmentList", []);
     });
 
-    Api.commonApiPost("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+    Api.commonApiPost("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}, true).then(function(response) {
       	checkCountAndCall("boundaryList", response.Boundary);
     }, function(err) {
     	checkCountAndCall("boundaryList", []);
@@ -314,7 +314,7 @@ class grievanceSearch extends Component {
         				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e) => {handleChange(e, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
         			<Col xs={12} md={3}>
-        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={"pgr.lbl.complainttype"} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
+        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
         					var e = {target: {value: val}};
         					handleChange(e, "serviceCode", false, "")}}>
                 			{complaintTypeList.map((com, index) => (

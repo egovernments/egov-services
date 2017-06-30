@@ -52,7 +52,8 @@ public class ReceivingModeTypeQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReceivingModeTypeQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,modeType.channel from egpgr_receivingmode modeType";
+	private static final String BASE_QUERY = "SELECT modeType.id,modeType.code,modeType.name,modeType.description,modeType.tenantId,modeType.active,channel.channel from egpgr_receivingmode modeType left join egpgr_receivingmode_channel channel"
+                                              +" on channel.receivingmodecode = modeType.code";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final ReceivingModeTypeGetReq modeTypeRequest, final List preparedStatementValues) {
@@ -69,7 +70,7 @@ public class ReceivingModeTypeQueryBuilder {
 			final ReceivingModeTypeGetReq modeTypeRequest) {
 
 		if (modeTypeRequest.getId() == null && modeTypeRequest.getName() == null && modeTypeRequest.getActive() == null
-				&& modeTypeRequest.getTenantId() == null)
+				&& modeTypeRequest.getTenantId() == null && modeTypeRequest.getCode() ==null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -96,12 +97,6 @@ public class ReceivingModeTypeQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" modeType.code = ?");
 			preparedStatementValues.add(modeTypeRequest.getCode());
-		}
-		
-		if (modeTypeRequest.getChannel() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" modeType.channel = ?");
-			preparedStatementValues.add(modeTypeRequest.getChannel());
 		}
 
 		if (modeTypeRequest.getActive() != null) {
@@ -163,23 +158,39 @@ public class ReceivingModeTypeQueryBuilder {
 	}
 
 	public static String insertReceivingModeTypeQuery() {
-		return "INSERT INTO egpgr_receivingmode(id,code,name,description,active,channel,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(nextval('seq_egpgr_receivingmode'),?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egpgr_receivingmode(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egpgr_receivingmode'),?,?,?,?,?,?,?,?,?)";
 	}
 
 	public static String updateReceivingModeTypeQuery() {
 		return "UPDATE egpgr_receivingmode SET name = ?,description = ?,"
-				+ "channel=?,active=?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+				+ "active=?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
 	}
 
-	public static String checkReceivingModeTypeByName(){
-		
+	public static String checkReceivingModeTypeByName() {
+
 		return "select id from egpgr_receivingmode where name=? and tenantid=?";
 	}
 
-	public static String checkReceivinModeTypeByNameAndCode(){
-		
+	public static String checkReceivinModeTypeByNameAndCode() {
+
 		return "select id from egpgr_receivingmode where tenantid=? and code=?";
+
+	}
+	
+   public static String deleteReceivingModeChannelQuery(){
 		
+		return "delete from egpgr_receivingmode_channel where receivingmodecode=? ";
+	}
+	
+	public static String insertReceivingModeChannelQuery(){
+		
+		return "INSERT INTO egpgr_receivingmode_channel(id,receivingmodecode,channel) values (nextval('seq_egpgr_receivingmode_channel'),?,?) ";
+
+	}
+	
+	public static String checkReceivingModeChannelExist(){
+		
+		return "select id from egpgr_receivingmode_channel where receivingmodecode=? and channel=?";
 	}
 }

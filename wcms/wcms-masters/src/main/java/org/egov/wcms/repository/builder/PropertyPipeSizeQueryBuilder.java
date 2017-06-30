@@ -69,8 +69,8 @@ public class PropertyPipeSizeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
 
-        if (propertyPipeSizeGetRequest.getId() == null && propertyPipeSizeGetRequest.getPropertyType() == null &&
-                propertyPipeSizeGetRequest.getPipeSizeType() == null && propertyPipeSizeGetRequest.getActive() == null
+        if (propertyPipeSizeGetRequest.getId() == null && propertyPipeSizeGetRequest.getPropertyTypeName() == null &&
+                propertyPipeSizeGetRequest.getPipeSize() == null && propertyPipeSizeGetRequest.getActive() == null
                 && propertyPipeSizeGetRequest.getTenantId() == null)
             return;
 
@@ -88,13 +88,13 @@ public class PropertyPipeSizeQueryBuilder {
             selectQuery.append(" propertypipesize.id IN " + getIdQuery(propertyPipeSizeGetRequest.getId()));
         }
 
-        if (propertyPipeSizeGetRequest.getPipeSizeType() != null) {
+        if (propertyPipeSizeGetRequest.getPipeSize() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" propertypipesize.pipesizeid = ?");
             preparedStatementValues.add(propertyPipeSizeGetRequest.getPipeSizeId());
         }
 
-        if (propertyPipeSizeGetRequest.getPropertyType() != null) {
+        if (propertyPipeSizeGetRequest.getPropertyTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" propertypipesize.propertytypeid = ?");
             preparedStatementValues.add(propertyPipeSizeGetRequest.getPropertyTypeId());
@@ -158,5 +158,6 @@ public class PropertyPipeSizeQueryBuilder {
     public static String getPipeSizeInmm() {
         return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
     }
+    
 
 }

@@ -71,4 +71,6 @@ public class MovementRequest {
     @NotNull
     @JsonProperty("Movement")
     private List<Movement> movement = new ArrayList<>();
+
+    private String type;
 }

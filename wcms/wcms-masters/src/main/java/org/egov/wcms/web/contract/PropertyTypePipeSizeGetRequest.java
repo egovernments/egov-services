@@ -60,9 +60,9 @@ public class PropertyTypePipeSizeGetRequest {
 
     private List<Long> id;
 
-    private String propertyType;
+    private String propertyTypeName;
 
-    private Double pipeSizeType;
+    private Double pipeSize;
 
     private Long propertyTypeId;
 

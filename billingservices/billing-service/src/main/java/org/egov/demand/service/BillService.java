@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -61,6 +62,8 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
+import org.egov.demand.model.GlCodeMaster;
+import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.BillRepository;
@@ -104,6 +107,9 @@ public class BillService {
 
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
+	
+	@Autowired
+	private GlCodeMasterService glCodeMasterService;
 
 	public BillResponse createAsync(BillRequest billRequest) {
 
@@ -158,7 +164,7 @@ public class BillService {
 		log.debug("prepareBill taxHeadCodes:" + taxHeadCodes);
 
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
-
+		Set<String> businessServices = map.keySet();
 		log.debug("prepareBill map:" +map);
 		Demand demand = demands.get(0);
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
@@ -169,8 +175,13 @@ public class BillService {
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
 			String businessService = entry.getKey();
 			List<Demand> demands2 = entry.getValue();
-			log.debug("prepareBill demands2:" +demands2);
+			log.info("prepareBill demands2:" +demands2);
+			
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+			
+			Map<String, List<GlCodeMaster>> glCodesMap = getGlCodes(demands2, businessService, tenantId, requestInfo);
+			log.info("prepareBill glCodesMap:" +glCodesMap);
+			
 			Demand demand3 = demands2.get(0);
 			BigDecimal totalTaxAmount = BigDecimal.ZERO;
 			BigDecimal totalMinAmount = BigDecimal.ZERO;
@@ -179,6 +190,7 @@ public class BillService {
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
 				log.debug("prepareBill demandDetails:" +demandDetails);
+				log.info("prepareBill demand2:" +demand2);
 
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
@@ -191,11 +203,17 @@ public class BillService {
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter((t) ->
 							demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
 
-					log.debug("prepareBill taxHeadMaster:" + taxHeadMaster);
+					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
+					
+					log.info("prepareBill glCodeMasters:"+ glCodeMasters);
+					GlCodeMaster glCodeMaster = glCodeMasters.stream().filter((t) ->
+					demand2.getTaxPeriodFrom()>=t.getFromDate() && demand2.getTaxPeriodTo()<=t.getToDate()).findAny().orElse(null);
+					
+					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
 					//TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
 							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
-							//.glcode(taxHeadMaster.getGlCode())
+							.glcode(glCodeMaster.getGlCode())
 							.isActualDemand(taxHeadMaster.getIsActualDemand()).
 							order(taxHeadMaster.getOrder()).build();
 
@@ -246,6 +264,34 @@ public class BillService {
 		return map;
 	}
 
+	private Map<String, List<GlCodeMaster>> getGlCodes(List<Demand> demands, String service,String tenantId, RequestInfo requestInfo) {
+
+		List<DemandDetail> demandDetails = new ArrayList<>();
+		for(Demand demand : demands){
+			demandDetails.addAll(demand.getDemandDetails());
+		}
+
+		log.debug("getGlCodes demandDetails:"+demandDetails);
+
+		Set<String>  taxHeadMasterCode = demandDetails.stream().
+				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
+
+		log.debug("getGlCodes taxHeadMasterCode:"+taxHeadMasterCode);
+		List<GlCodeMaster> glCodeMasters = glCodeMasterService.getGlCodes(GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(service).build(), requestInfo).getGlCodeMasters();
+		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
+		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
+
+		log.debug("getTaxHeadMaster map:"+map);
+		return map;
+	}
+	
+	private Map<String, BusinessServiceDetail> getBusinessService(Set<String> businessService, String tenantId, RequestInfo requestInfo) {
+		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService.searchBusinessServiceDetails(BusinessServiceDetailCriteria.builder().businessService(businessService).tenantId(tenantId).build(), requestInfo)
+				.getBusinessServiceDetails();
+		Map<String, BusinessServiceDetail> map = businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
+		return map;
+	}
+	
 	public BillResponse getBillResponse(List<Bill> bills) {
 		BillResponse billResponse = new BillResponse();
 		billResponse.setBill(bills);

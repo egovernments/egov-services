@@ -52,7 +52,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypePipeSize;
-import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
+import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.util.FileUtils;
 import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
@@ -77,7 +77,7 @@ public class PropertyTypePipeSizeTypeControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PropertyTypePipeSizeTypeService propertyPipeSizeService;
+    private PropertyTypePipeSizeService propertyPipeSizeService;
 
     @MockBean
     private ErrorHandler errHandler;
@@ -102,7 +102,7 @@ public class PropertyTypePipeSizeTypeControllerTest {
         final ResponseInfo responseInfo = new ResponseInfo();
         final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setActive(true);
-        propertyPipeSize.setPipeSizeType(2d);
+        propertyPipeSize.setPipeSize(2d);
         propertyPipeSize.setPropertyTypeName("property");
         propertyPipeSize.setTenantId("default");
 

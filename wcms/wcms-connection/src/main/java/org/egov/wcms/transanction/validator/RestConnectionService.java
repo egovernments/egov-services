@@ -152,7 +152,8 @@ public class RestConnectionService {
                 && propCategory.getPropCategory().get(0).getId() != null) {
             isValidPropAndCategory = Boolean.TRUE;
         }
-        return isValidPropAndCategory;
+        //TODO : true as of now untill PTIS Integreation Done
+        return Boolean.TRUE;
     }
 
     public Boolean validatePropertyPipesizeMapping(WaterConnectionReq waterConnectionRequest) {
@@ -171,7 +172,8 @@ public class RestConnectionService {
                 && propCategory.getPropCategory().get(0).getId() != null) {
             isValidPropAndCategory = Boolean.TRUE;
         }
-        return isValidPropAndCategory;
+      //TODO : true as of now untill PTIS Integreation Done
+        return Boolean.TRUE;
     }
 
     public Boolean validatePropertyUsageTypeMapping(WaterConnectionReq waterConnectionRequest) {
@@ -190,8 +192,9 @@ public class RestConnectionService {
                 && propCategory.getPropCategory().get(0).getId() != null) {
             isValidPropAndCategory = Boolean.TRUE;
         }
-        return isValidPropAndCategory;
-    }
+      //TODO : true as of now untill PTIS Integreation Done
+        return Boolean.TRUE;   
+        }
 
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
         final RequestInfo requestInfo = RequestInfo.builder().build();
@@ -212,11 +215,11 @@ public class RestConnectionService {
         // TODO:waterConnectionRequest.getConnection().getProperty().getPropertyType() and
         // waterConnectionRequest.getConnection().getProperty().getUsageType()
         // need to get From PTIS TEAM:usageType ,propertyType
-        DonationResponseInfo donation = new RestTemplate().postForObject(url.toString(), wrapper,
+        DonationResponseInfo donation = restTemplate.postForObject(url.toString(), wrapper,
                 DonationResponseInfo.class);
         if (donation != null) {
             waterConnectionRequest.getConnection().setDonationCharge(donation.getDonations() != null
-                    && donation.getDonations().get(0) != null ? donation.getDonations().get(0).getDonationAmount() : "");
+                    && donation.getDonations().get(0) != null ? new Double (donation.getDonations().get(0).getDonationAmount()) : 0d);
         }
         return donation;
     }

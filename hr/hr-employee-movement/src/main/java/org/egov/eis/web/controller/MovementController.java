@@ -46,6 +46,7 @@ import javax.validation.Valid;
 
 import org.egov.eis.model.Movement;
 import org.egov.eis.service.MovementService;
+import org.egov.eis.web.contract.MovementRequest;
 import org.egov.eis.web.contract.MovementResponse;
 import org.egov.eis.web.contract.MovementSearchRequest;
 import org.egov.eis.web.contract.RequestInfo;
@@ -63,6 +64,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -109,9 +111,30 @@ public class MovementController {
     }
 
     /**
-     * Populate Response object and return leaveApplicationsList
+     * Maps Post Requests for _create & returns ResponseEntity of either MovementResponse type or ErrorResponse type
      *
-     * @param leaveApplicationsList
+     * @param MovementRequest
+     * @param BindingResult
+     * @return ResponseEntity<?>
+     */
+
+    @PostMapping("_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody final MovementRequest movementRequest,
+            final BindingResult bindingResult, @RequestParam(name = "type", required = false) final String type) {
+
+        final ResponseEntity<?> errorResponseEntity = validateMovementRequests(movementRequest,
+                bindingResult);
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        return movementService.createMovements(movementRequest, type);
+    }
+
+    /**
+     * Populate Response object and return movementList
+     *
+     * @param movementList
      * @return
      */
     private ResponseEntity<?> getSuccessResponse(final List<Movement> movements,
@@ -122,6 +145,21 @@ public class MovementController {
         responseInfo.setStatus(HttpStatus.OK.toString());
         movementResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<MovementResponse>(movementResponse, HttpStatus.OK);
+    }
 
+    /**
+     * Validate MovementRequests object & returns ErrorResponseEntity if there are any errors or else returns null
+     *
+     * @param MovementRequest
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    private ResponseEntity<?> validateMovementRequests(final MovementRequest movementRequest,
+            final BindingResult bindingResult) {
+        // validate input params that can be handled by annotations
+        if (bindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+                    movementRequest.getRequestInfo());
+        return null;
     }
 }

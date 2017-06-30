@@ -120,10 +120,10 @@ class ViewReceivingCenter extends Component {
                                       <ListGroupItem>{translate("core.lbl.add.name")} <span style={{float:'right'}}>{viewReceivingCenter.name ? viewReceivingCenter.name : ''}</span></ListGroupItem>
                                       <ListGroupItem>{translate("core.lbl.code")} <span style={{float:'right'}}>{viewReceivingCenter.code ? viewReceivingCenter.code : ''}</span></ListGroupItem>
                                       <ListGroupItem>{translate("core.lbl.description")}<span style={{float:'right'}}>{viewReceivingCenter.description? viewReceivingCenter.description : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Active <span style={{float:'right'}}>{viewReceivingCenter.active? viewReceivingCenter.active : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Audit Details <span style={{float:'right'}}>{viewReceivingCenter.auditdetails ? viewReceivingCenter.auditdetails : ''}</span></ListGroupItem>
-                                      <ListGroupItem>CRN Required <span style={{float:'right'}}>{viewReceivingCenter.iscrnrequired ? viewReceivingCenter.iscrnrequired : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Order No <span style={{float:'right'}}>{viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("pgr.lbl.active")} <span style={{float:'right'}}>{viewReceivingCenter.active? "true": 'false'}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("pgr.lblauditdetails")}<span style={{float:'right'}}>{viewReceivingCenter.auditdetails ? viewReceivingCenter.auditdetails : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("pgr.lbl.crn")} <span style={{float:'right'}}>{viewReceivingCenter.iscrnrequired ? viewReceivingCenter.iscrnrequired : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("pgr.lbl.order.no")}<span style={{float:'right'}}>{viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}</span></ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

@@ -96,6 +96,10 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
+        if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() !=null)
+            waterConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
+        else
+            waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
         final List<ErrorResponse> errorResponses = newWaterConnectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
@@ -152,12 +156,17 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("Legacy WaterConnectionRequest::" + legacyConnectionRequest);
+        if(legacyConnectionRequest.getConnection().getLegacyConsumerNumber() !=null)
+            legacyConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
+        else
+            legacyConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
         final List<ErrorResponse> errorResponses = newWaterConnectionValidator
                 .validateWaterConnectionRequest(legacyConnectionRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         // Call to service.
+        legacyConnectionRequest.getConnection().setAcknowledgementNumber(newWaterConnectionValidator.generateAcknowledgementNumber(legacyConnectionRequest));
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateLegacyConnectionTopicName(),
                 "legacyconnection-create", legacyConnectionRequest);

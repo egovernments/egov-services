@@ -66,7 +66,7 @@ public class Movement {
 
     private Long id;
 
-    private Long employee;
+    private Long employeeId;
 
     private TypeOfMovement typeOfMovement;
 
@@ -82,6 +82,11 @@ public class Movement {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date effectiveFrom;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date enquiryPassedDate;
+
+    private Long transferedLocation;
 
     private Long departmentAssigned;
 

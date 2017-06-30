@@ -178,7 +178,7 @@ public class ServiceTypeQueryBuilder {
 
     public static String updateServiceTypeQuery() {
         return "UPDATE egpgr_complainttype SET name = ?, description = ?, category = ?, "
-                + "isactive = ?, lastmodifiedby = ?, lastmodifieddate = ? where code = ? and tenantid = ? ";
+                + "isactive = ?, hasfinancialimpact = ?, lastmodifiedby = ?, lastmodifieddate = ? where code = ? and tenantid = ? ";
     }
     
     public static String removeAttributeQuery() {

@@ -72,8 +72,6 @@ public class PositionRepository {
 		} else
 			requestInfoWrapper.setRequestInfo(new RequestInfo());
 
-		if(tenantId.isEmpty())
-			tenantId = requestInfo.getTenantId();
 		PositionResponse positionResponse = restTemplate.postForObject(primaryPositionsForEmployeeIdUrl,
 				requestInfoWrapper, PositionResponse.class, employeeId, tenantId,
 				new SimpleDateFormat("dd/MM/yyyy").format(new Date()));

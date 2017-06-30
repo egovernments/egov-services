@@ -74,8 +74,7 @@ public class RouterRepository {
     @Autowired 
     private RouterQueryBuilder routerQueryBuilder;
 	
-	@Autowired 
-	private RouterRowMapper routerRowMapper;
+	
 	
 
 	public PersistRouterReq createRouter(final PersistRouterReq routerReq) {
@@ -128,6 +127,7 @@ public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
 	public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = routerQueryBuilder.getQuery(routerTypeGetRequest, preparedStatementValues);
+        RouterRowMapper routerRowMapper = new RouterRowMapper();
         jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), routerRowMapper);
         return prepareRouterTypeList(routerRowMapper);
     }

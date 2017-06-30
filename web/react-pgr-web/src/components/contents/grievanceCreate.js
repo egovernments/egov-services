@@ -199,11 +199,13 @@ class grievanceCreate extends Component {
     };
     data['attribValues'].push(finobj);
 
-    finobj = {
+    if(this.props.grievanceCreate.receivingCenter) {
+      finobj = {
         key: 'receivingCenter',
         name: this.props.grievanceCreate.receivingCenter ? this.props.grievanceCreate.receivingCenter : ''
-    };
-    data['attribValues'].push(finobj);
+      };
+      data['attribValues'].push(finobj);
+    }
 
     finobj = {
         key: 'status',
@@ -211,11 +213,13 @@ class grievanceCreate extends Component {
     };
     data['attribValues'].push(finobj);
 
-    finobj = {
+    if(this.props.grievanceCreate.requesterAddress) {
+      finobj = {
         key: 'requesterAddress',
         name: this.props.grievanceCreate.requesterAddress ? this.props.grievanceCreate.requesterAddress : ''
-    };
-    data['attribValues'].push(finobj);
+      };
+      data['attribValues'].push(finobj);
+    }
 
     finobj = {
         key: 'keyword',

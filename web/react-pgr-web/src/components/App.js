@@ -9,6 +9,8 @@ import Footer from './common/Footer';
 import router from "../router";
 var axios = require('axios');
 
+
+
 class App extends Component {
 
   componentWillReceiveProps(nextProps) {

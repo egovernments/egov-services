@@ -60,9 +60,11 @@ import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class DemandValidator implements Validator {
 
 	@Autowired
@@ -95,13 +97,13 @@ public class DemandValidator implements Validator {
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {
-		
+
 	}
 
 	private void validateBusinessService(DemandRequest demandRequest, Errors errors) {
 
-		Set<String> businessServiceSet = demandRequest.getDemands().stream().map(
-				demand -> demand.getBusinessService()).collect(Collectors.toSet());
+		Set<String> businessServiceSet = demandRequest.getDemands().stream().map(demand -> demand.getBusinessService())
+				.collect(Collectors.toSet());
 		BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder()
 				.tenantId(demandRequest.getDemands().get(0).getTenantId()).businessService(businessServiceSet).build();
 		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService
@@ -111,8 +113,8 @@ public class DemandValidator implements Validator {
 				.collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
 		for (String businessService : businessServiceSet) {
 			if (map.get(businessService) == null)
-				errors.rejectValue("Demand.businessService", "", "the given businessService value '" + businessService
-						+ "'of Demand is invalid, please give a valid businessService code");
+				errors.rejectValue("Demands", "", "the given businessService value '" + businessService
+						+ "'of Demand.businessService is invalid, please give a valid businessService code");
 		}
 	}
 
@@ -134,16 +136,16 @@ public class DemandValidator implements Validator {
 		for (String code : codeDemandMap.keySet()) {
 			Demand demand = codeDemandMap.get(code);
 			if (taxHeadMap.get(code) == null)
-				errors.rejectValue("Demand.DemandDetail.code", "",
-						"the given code value '" + code + "'of teaxheadmaster is invalid, please give a valid code");
+				errors.rejectValue("Demands", "",
+						"the given code value '" + code + "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
 			else {
 				TaxHeadMaster taxHeadMaster = taxHeadMasters.stream()
-						.filter(t -> demand.getTaxPeriodFrom().equals(t.getValidFrom())
-								&& demand.getTaxPeriodTo().equals(t.getValidTill()))
+						.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0
+								&& demand.getTaxPeriodTo().compareTo(t.getValidTill()) <= 0)
 						.findAny().orElse(null);
 				if (taxHeadMaster == null)
-					errors.rejectValue("Demand.DemandDetail.code", "", "the given code value '" + code
-							+ "'of teaxheadmaster is invalid, please give a valid code");
+					errors.rejectValue("Demands", "", "the given code value '" + code
+							+ "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
 			}
 		}
 	}
@@ -153,15 +155,16 @@ public class DemandValidator implements Validator {
 		List<Demand> demands = demandRequest.getDemands();
 		List<Long> ownerIds = new ArrayList<>(
 				demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder().id(ownerIds).build();
+		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
+				.id(ownerIds).tenantId(demands.get(0).getTenantId()).build();
 		Map<Long, Long> ownerMap = new HashMap<>();
 		for (Owner owner : ownerRepository.getOwners(userSearchRequest)) {
 			ownerMap.put(owner.getId(), owner.getId());
 		}
 		for (Long rsId : ownerIds) {
 			if (ownerMap.get(rsId) == null)
-				errors.rejectValue("Demand.Owner.id", "",
-						"the given user id value '" + rsId + "' is invalid, please give a valid user id");
+				errors.rejectValue("demands", "",
+						"the given user id value '" + rsId + "' in Owner.id is invalid, please give a valid user id");
 		}
 	}
 

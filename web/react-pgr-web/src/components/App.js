@@ -62,7 +62,11 @@ class App extends Component {
     return (
       <div className="App">
           <Header/>
-              {router}
+              <div className="mainWrapper">
+                <div className="pushFooter">
+                  {router}
+                </div>
+              </div>
           <Footer/>
           <Dialog
             actions={actions}

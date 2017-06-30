@@ -201,4 +201,12 @@ public class MovementQueryBuilder {
                 + " VALUES (nextval('seq_egeis_movement'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
                 + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
+
+    public static String updateMovementQuery() {
+        return "UPDATE egeis_movement SET employee=?, typeofmovement=?,"
+                + " currentassignment=?, transfertype=?, promotionbasis=?, remarks=?, reason=?,"
+                + " effectivefrom=?, enquiryPassedDate=?, transferedLocation=?, departmentassigned=?, designationassigned=?, positionassigned=?,"
+                + " fundassigned=?, functionassigned=?, documents=?, employeeacceptance=?, status=?,"
+                + " stateid=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? WHERE id=? and tenantid=?";
+    }
 }

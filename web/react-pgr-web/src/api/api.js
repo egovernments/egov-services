@@ -39,7 +39,7 @@ module.exports = {
     else 
       url += "?"
     for (var variable in queryObject) {
-      if (queryObject[variable]) {
+      if (typeof queryObject[variable] != "undefined") {
         url += "&" + variable + "=" + queryObject[variable];
       }
     }
@@ -57,7 +57,7 @@ module.exports = {
     else 
       url += "?"
     for (var variable in queryObject) {
-      if (queryObject[variable]) {
+      if (typeof queryObject[variable] != "undefined") {
         url += "&" + variable + "=" + queryObject[variable];
       }
     }

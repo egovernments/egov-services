@@ -454,7 +454,7 @@ const mapDispatchToProps = dispatch => ({
 	},
   handleAutoCompleteKeyUp : (e, type) => {
     var currentThis = _this;
-    dispatch({type: "HANDLE_CHANGE", property: type, value: e.target.value, isRequired : true, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property: type, value: '', isRequired : true, pattern: ''});
   },
   setForm: (data) => {
     dispatch({

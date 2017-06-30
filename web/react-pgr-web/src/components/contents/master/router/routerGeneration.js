@@ -152,7 +152,7 @@ class routerGeneration extends Component {
 
   loadBoundaries(value) {
   	 var self = this;
-     Api.commonApiGet("/egov-location/boundarys", {"Boundary.id": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+     Api.commonApiPost("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
        self.setState({boundariesList : response.Boundary});
      },function(err) {
 
@@ -213,7 +213,7 @@ class routerGeneration extends Component {
     	checkCountAndCall("categoryList", []);
     });
 
-	  Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION", boundaryType: "WARD"}).then(function(response) {
+	  Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
       	checkCountAndCall("boundaryTypeList", response.BoundaryType);
     }, function(err) {
     	checkCountAndCall("boundaryTypeList", []);

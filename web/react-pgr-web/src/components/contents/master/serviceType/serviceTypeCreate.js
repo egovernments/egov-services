@@ -231,7 +231,7 @@ class ServiceTypeCreate extends Component {
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
            "metadata" :this.props.createServiceType.metadata,
-
+           "slaHours" : this.props.createServiceType.slaHours,
            "tenantId":"default"
           }
       }
@@ -642,11 +642,22 @@ class ServiceTypeCreate extends Component {
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Group"
-                                      value={createServiceType.group? createServiceType.type : ""}
+                                      value={createServiceType.group? createServiceType.group : ""}
                                       errorText={fieldErrors.group ? fieldErrors.group : ""}
                                       onChange={(e) => handleChange(e, "group", false, '')}
                                       multiLine={true}
                                       id="group"
+                                  />
+                              </Col>
+                              <Col xs={12} md={3} sm={6}>
+                                  <TextField
+                                      fullWidth={true}
+                                      floatingLabelText="SLA Hours"
+                                      value={createServiceType.slaHours? createServiceType.slaHours : ""}
+                                      errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
+                                      onChange={(e) => handleChange(e, "slaHours", true, '')}
+                                      multiLine={true}
+                                      id="slaHours"
                                   />
                               </Col>
                               <Col xs={12} md={3} sm={6}>
@@ -772,7 +783,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["serviceName","serviceCode","category"]
+          required: ["serviceName","serviceCode","category","slaHours"]
         },
         pattern: {
           current: [],
@@ -790,8 +801,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["serviceName","serviceCode","category"],
-          required: ["serviceName","serviceCode","category"]
+          current: ["serviceName","serviceCode","category","slaHours"],
+          required: ["serviceName","serviceCode","category","slaHours"]
         },
         pattern: {
           current: [],

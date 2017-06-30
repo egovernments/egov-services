@@ -61,6 +61,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -129,6 +130,21 @@ public class MovementController {
             return errorResponseEntity;
 
         return movementService.createMovements(movementRequest, type);
+    }
+
+    @PostMapping("/{movementId}/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody final MovementRequest movementRequest,
+            @PathVariable(required = true, name = "movementId") final Long movementId,
+            final BindingResult bindingResult) {
+        final ResponseEntity<?> errorResponseEntity = validateMovementRequests(movementRequest,
+                bindingResult);
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        movementRequest.getMovement().get(0).setId(movementId);
+
+        return movementService.updateMovement(movementRequest);
     }
 
     /**

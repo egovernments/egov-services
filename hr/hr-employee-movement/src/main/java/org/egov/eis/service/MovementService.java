@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.egov.eis.broker.MovementProducer;
 import org.egov.eis.model.Movement;
+import org.egov.eis.model.enums.MovementStatus;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.web.contract.MovementRequest;
 import org.egov.eis.web.contract.MovementResponse;
@@ -177,11 +178,61 @@ public class MovementService {
 
     public MovementRequest create(final MovementRequest movementRequest) {
         return movementRepository.saveMovement(movementRequest);
-
     }
 
-    public void update(final MovementRequest readValue) {
-        // TODO Auto-generated method stub
+    public ResponseEntity<?> updateMovement(final MovementRequest movementRequest) {
+        List<Movement> movements = new ArrayList<>();
+        movements.add(movementRequest.getMovement().get(0));
+        movements = validate(movementRequest, false);
+        if (movements.get(0).getErrorMsg().isEmpty()) {
+            final MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
+            final List<Long> ids = new ArrayList<>();
+            ids.add(movements.get(0).getId());
+            movementSearchRequest.setId(ids);
+            final List<Movement> oldMovements = movementRepository.findForCriteria(movementSearchRequest,
+                    movementRequest.getRequestInfo());
+            movements.get(0).setStatus(oldMovements.get(0).getStatus());
+            movements.get(0).setStateId(oldMovements.get(0).getStateId());
+            String movementRequestJson = null;
+            try {
+                movementRequestJson = objectMapper.writeValueAsString(movementRequest);
+                LOGGER.info("movementRequestJson::" + movementRequestJson);
+            } catch (final JsonProcessingException e) {
+                LOGGER.error("Error while converting Movement to JSON", e);
+                e.printStackTrace();
+            }
+            try {
+                movementProducer.sendMessage(movementUpdateTopic, movementUpdateKey,
+                        movementRequestJson);
+            } catch (final Exception ex) {
+                ex.printStackTrace();
+            }
+            movementStatusChange(movements.get(0), movementRequest.getRequestInfo());
+        }
+        return getSuccessResponseForCreate(movements, movementRequest.getRequestInfo());
+    }
 
+    private void movementStatusChange(final Movement movement, final RequestInfo requestInfo) {
+        final String workFlowAction = movement.getWorkflowDetails().getAction();
+        if ("Approve".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+        else if ("Reject".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.REJECTED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+        else if ("Cancel".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.CANCELLED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+        else if ("Submit".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.RESUBMITTED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+    }
+
+    public Movement update(final MovementRequest movementRequest) {
+        return movementRepository.updateMovement(movementRequest);
     }
 }

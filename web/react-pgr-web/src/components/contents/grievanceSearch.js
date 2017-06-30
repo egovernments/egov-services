@@ -109,7 +109,7 @@ class grievanceSearch extends Component {
   }
 
   handleNavigation(serviceId) {
-    history.push('/viewGrievance/' + serviceId);
+    this.props.history.push('/viewGrievance/' + serviceId);
 		window.location.reload();
   }
 

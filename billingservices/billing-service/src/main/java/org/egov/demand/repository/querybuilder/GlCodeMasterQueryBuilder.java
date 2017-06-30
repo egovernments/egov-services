@@ -47,6 +47,11 @@ public class GlCodeMasterQueryBuilder {
 			selectQuery.append(" service = ?");
 			preparedStatementValues.add(searchGlCode.getService());
 		}
+		if (searchGlCode.getGlCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" glcode = ?");
+			preparedStatementValues.add(searchGlCode.getGlCode());
+		}
 		
 		if (searchGlCode.getId()!=null && !searchGlCode.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

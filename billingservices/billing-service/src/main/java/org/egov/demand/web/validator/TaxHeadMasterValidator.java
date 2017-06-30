@@ -28,13 +28,14 @@ public class TaxHeadMasterValidator {
 	
 	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest) {
 		log.debug(":::::in validator class:::::::"+taxHeadsRequest);
+		System.out.println("::::::inside validator:::::::::::::::");
 		TaxHeadMasterCriteria taxHeadMasterCriteria=new TaxHeadMasterCriteria();
 		List<TaxHeadMaster> taxHeads = taxHeadsRequest.getTaxHeadMasters();
 		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();
 		int taxHeadsCount=taxHeads.size();
-		for (int i = 0; i < taxHeadsCount; i++) {
-			taxHeadMasterCriteria.setTenantId(taxHeads.get(i).getTenantId());
-			taxHeadMasterCriteria.setName(taxHeads.get(i).getName());
+		for (TaxHeadMaster master:taxHeads) {
+			taxHeadMasterCriteria.setTenantId(master.getTenantId());
+			taxHeadMasterCriteria.setName(master.getName());
 		final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria, taxHeadsRequest.getRequestInfo());
 	    if(! taxHeadMasterResponse.getTaxHeadMasters().isEmpty())
 	    	throw new RuntimeException("Record Already exist");

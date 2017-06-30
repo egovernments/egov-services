@@ -83,7 +83,7 @@ public class TaxHeadMasterServiceTest {
 		assertEquals(taxHeadMasterResponse, taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria, new RequestInfo()));
 	}
 	
-/*	@Test
+	@Test
 	public void testCreate() {
 		List<TaxHeadMaster> taxHead = new ArrayList<>();
 		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
@@ -100,9 +100,7 @@ public class TaxHeadMasterServiceTest {
 		when(taxHeadMasterRepository.create(any(TaxHeadMasterRequest.class))).thenReturn(taxHead);
 		
 		assertTrue(taxHeadMasterResponse.equals(taxHeadMasterService.create(taxHeadMasterRequest)));
-<<<<<<< ad85c0bb386e2258dde52398b7d5be186b5494d1
-	}*/
-//	}
+	}
 	
 	@Test
 	public void testCreateAsync() {
@@ -121,10 +119,10 @@ public class TaxHeadMasterServiceTest {
 		ids.add("23");
 		
 		when(applicationProperties.getTaxHeadSeqName()).thenReturn("seq_egbs_taxHeadMaster");
-		when(applicationProperties.getTaxHeadCodeSeqName()).thenReturn("seq_egbs_taxHeadMastercode");
+//		when(applicationProperties.getTaxHeadCodeSeqName()).thenReturn("seq_egbs_taxHeadMastercode");
 		when(sequenceGenService.getIds(taxHeadMasters.size(),applicationProperties.getTaxHeadSeqName())).thenReturn(ids);
-		when(sequenceGenService.getIds(taxHeadMasters.size(),
-				applicationProperties.getTaxHeadCodeSeqName())).thenReturn(ids);
+		/*when(sequenceGenService.getIds(taxHeadMasters.size(),
+				applicationProperties.getTaxHeadCodeSeqName())).thenReturn(ids);*/
 		
 		
 		when(sequenceGenService.getIds(any(Integer.class),any(String.class))).thenReturn(ids);

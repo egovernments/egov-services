@@ -37,16 +37,33 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.transanction.repository.builder;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.egov.common.contract.response.ResponseInfo;
 
-@Component
-public class GenericQueryBuilder {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private static final Logger logger = LoggerFactory.getLogger(GenericQueryBuilder.class);
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class PropertyTypeResponseInfo {
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    @JsonProperty("propertyTypes")
+    private List<PropertyTaxResponseInfo> propertyTypes;
+
+    public boolean getPropertyTypesSize() {
+        return this.propertyTypes.size() > 0;
+    }
+
 
 }

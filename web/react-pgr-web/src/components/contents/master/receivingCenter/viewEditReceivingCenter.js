@@ -81,7 +81,9 @@ class ViewEditServiceGroup extends Component {
      initForm();
     }
 
-
+    handleNavigation = (type, id) => {
+      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    }
 
     render() {
 
@@ -135,8 +137,14 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/receivingCenter/view' && <td><Link to={`/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")}/></Link></td>}
-                                              {url == '/receivingCenter/edit' && <td><Link to={`/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")}/></Link></td>}
+                                              {url == '/receivingCenter/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/viewReceivingCenter/", id);
+                                              }}/></td>}
+                                              {url == '/receivingCenter/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/createReceivingCenter/", id);
+                                              }}/></td>}
                                             </tr>
                                           )
                                         })}

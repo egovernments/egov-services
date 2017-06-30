@@ -1,0 +1,18 @@
+{
+    "ResponseInfo": {
+        "apiId": "org.egov.collection",
+        "ver": "1.0",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+    "StatusInfo": [
+        {
+            "id": 1,
+            "code": "SUBMITTED",
+            "objectType": "ReceiptHeader",
+            "description": "Submitted",
+            "tenantId": "default"
+        }
+    ]
+}

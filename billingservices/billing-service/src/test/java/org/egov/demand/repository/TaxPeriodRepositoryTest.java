@@ -41,11 +41,9 @@ package org.egov.demand.repository;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.querybuilder.TaxPeriodQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxPeriodRowMapper;
-import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.junit.Test;
@@ -103,8 +101,25 @@ public class TaxPeriodRepositoryTest {
         taxPeriods.add(getTaxPeriod());
         taxPeriodRequest.setTaxPeriods(taxPeriods);
 
-        when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(taxPeriods.equals(taxPeriodRepository.create(taxPeriodRequest)));
+    }
+
+    @Test
+    public void shouldUpdateTaxPeriod() {
+        TaxPeriodRequest taxPeriodRequest = new TaxPeriodRequest();
+        RequestInfo requestInfo = new RequestInfo();
+        User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        taxPeriodRequest.setRequestInfo(requestInfo);
+
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+        taxPeriods.add(getTaxPeriod());
+        taxPeriodRequest.setTaxPeriods(taxPeriods);
+
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(taxPeriods.equals(taxPeriodRepository.update(taxPeriodRequest)));
     }
 
     private TaxPeriod getTaxPeriod() {

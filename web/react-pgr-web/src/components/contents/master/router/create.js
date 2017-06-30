@@ -133,13 +133,13 @@ class createRouter extends Component {
             id: response.RouterTypRes[0].id,
             position: response.RouterTypRes[0].position,
          		complaintType: response.RouterTypRes[0].service.serviceCode,
-         		boundary: response.RouterTypRes[0].boundary[0].boundaryType,
-            boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType)
+         		boundary: response.RouterTypRes[0].boundary.boundaryType,
+            boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType)
         	}
 
-          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType));
-          searchTextCom = response.RouterTypRes[0].service.serviceName;
-          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType) || "";
+          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType));
+          searchTextCom = response.RouterTypRes[0].service.serviceName || "";
+          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType) || "";
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
 
           setForm(routerType);
@@ -153,7 +153,7 @@ class createRouter extends Component {
     }
   }
 
-  	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
+  	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION", boundaryTypeName: "WARD"}).then(function(response) {
       	self.setState({
       		boundaryTypeList: response.BoundaryType
       	}, function(){
@@ -249,7 +249,7 @@ class createRouter extends Component {
    		services: [{
    				serviceCode: self.props.routerCreateSet.complaintType
    	    }],
-   		boundary: [{
+   		boundaries: [{
    			boundarytype: self.props.routerCreateSet.boundary
    		}],
    		tenantId: localStorage.getItem("tenantId")
@@ -291,12 +291,14 @@ class createRouter extends Component {
        	open,
        	readonly
   	} = this.state;
-    console.log(this.props.routerCreateSet);
+    console.log(routerCreateSet);
   	const showBtn = function() {
   		if(!readonly) {
   			return (<RaisedButton style={{margin:'15px 5px'}} type="submit" label={match.params && match.params.type == "edit" ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>);
   		}
   	}
+
+
 
   	return (
   		<div className="routerGeneration">
@@ -309,7 +311,7 @@ class createRouter extends Component {
                    <Col xs={12} md={8}>
                    	<AutoComplete
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.grievance.type")}
+                        floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.complaintSource}
@@ -335,7 +337,7 @@ class createRouter extends Component {
                    	<SelectField
                       disabled={readonly}
                       fullWidth={true}
-                      floatingLabelText={translate("pgr.lbl.boundarytype")}
+                      floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
                       errorText={fieldErrors.boundaryType || ""}
                       value={(routerCreateSet.boundaryType + "") || ""}
                       onChange={(e, i, val) => {
@@ -352,7 +354,7 @@ class createRouter extends Component {
                    	<AutoComplete
                    		disabled={readonly}
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.boundary")}
+                        floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.boundarySource}
@@ -377,7 +379,7 @@ class createRouter extends Component {
                    	<AutoComplete
                    		disabled={readonly}
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.position")}
+                        floatingLabelText={translate("pgr.lbl.position") + " *"}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.positionSource}

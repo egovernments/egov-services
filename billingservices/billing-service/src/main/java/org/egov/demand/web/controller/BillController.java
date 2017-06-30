@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-//TODO path not defined
+@RequestMapping("bill")
 public class BillController {
 	
 	@Autowired
@@ -67,10 +68,4 @@ public class BillController {
 		
 		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
 	}
-	
-	
-	
-	
-	
-	
 }

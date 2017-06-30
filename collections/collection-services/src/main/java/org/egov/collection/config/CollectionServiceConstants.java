@@ -48,7 +48,7 @@ public class CollectionServiceConstants {
 	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
 	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
 	public static final String STATUS_SEARCH_URI = " ";
-	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/id/v1/_genearte";
+	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/_generate";
 
 
 

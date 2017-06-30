@@ -1,9 +1,9 @@
 package org.egov.collection.web.errorhandlers;
 
 
+import org.egov.collection.web.contract.RequestInfo;
+import org.egov.collection.web.contract.ResponseInfo;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

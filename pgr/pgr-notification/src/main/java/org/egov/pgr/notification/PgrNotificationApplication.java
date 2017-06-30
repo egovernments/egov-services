@@ -80,25 +80,25 @@ public class PgrNotificationApplication {
 
     @Bean
     public EmployeeRepository employeeRepository(RestTemplate restTemplate,
-                                                 @Value("hremployee.host") String employeeServiceHostName) {
+                                                 @Value("${hremployee.host}") String employeeServiceHostName) {
         return new EmployeeRepository(restTemplate, employeeServiceHostName);
     }
 
     @Bean
     public PositionRepository positionRepository(RestTemplate restTemplate,
-                                                 @Value("hrmaster.host") String hrMasterServiceHostName) {
+                                                 @Value("${hrmaster.host}") String hrMasterServiceHostName) {
         return new PositionRepository(restTemplate, hrMasterServiceHostName);
     }
 
     @Bean
     public DesignationRepository designationRepository(RestTemplate restTemplate,
-                                                       @Value("hrmaster.host") String hrMasterServiceHostName) {
+                                                       @Value("${hrmaster.host}") String hrMasterServiceHostName) {
         return new DesignationRepository(restTemplate, hrMasterServiceHostName);
     }
 
     @Bean
     public LocationRepository locationRepository(RestTemplate restTemplate,
-                                          @Value("location.host") String locationServiceHostName) {
+                                          @Value("${location.host}") String locationServiceHostName) {
         return new LocationRepository(restTemplate, locationServiceHostName);
     }
 

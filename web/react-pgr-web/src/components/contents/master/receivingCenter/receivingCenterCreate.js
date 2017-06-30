@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import SimpleMap from '../../../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -127,7 +126,8 @@ class CreateReceivingCenter extends Component {
               current.setState({
                 open: true
               })
-              current.props.resetObject('createReceivingCenter');
+              let {initForm}=current.props;
+              initForm();
           }).catch((error)=>{
               console.log(error);
           })
@@ -170,7 +170,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("core.lbl.add.name")}
+                                      floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       onChange={(e) => handleChange(e, "name", true, '')}
@@ -180,7 +180,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("core.lbl.code")}
+                                      floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       onChange={(e) => handleChange(e, "code", true, '')}
@@ -237,7 +237,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("pgr.lbl.order.no")}
+                                      floatingLabelText={translate("pgr.lbl.order.no")+"*"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
                                       onChange={(e) => handleChange(e, "orderno", true, '')}

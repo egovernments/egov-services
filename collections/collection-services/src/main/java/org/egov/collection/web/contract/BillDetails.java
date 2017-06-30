@@ -49,19 +49,11 @@ public class BillDetails   {
   
   private String collectionType;
   
-  private String fundSource;
-  
-  private String department;
-
   private String boundary;
 
   private String reasonForCancellation;
   
-  @JsonProperty("Fund")
-  private Fund fund;
-  
-  @JsonProperty("Function")
-  private Function function;
+  private String amountPaid;
 
   @JsonProperty("BillAccountDetails")
   private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();

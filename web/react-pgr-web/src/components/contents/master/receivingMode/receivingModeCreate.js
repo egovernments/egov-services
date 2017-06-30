@@ -13,6 +13,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -108,12 +109,12 @@ class receivingModeCreate extends Component {
          description :receivingmodeSet.description,
          active :receivingmodeSet.active?receivingmodeSet.active:false,
          tenantId :localStorage.getItem("tenantId"),
-         channel :receivingmodeSet.channel
+         channels :[receivingmodeSet.channel]
        }
     }
       if(_this.props.match.params.id){
 
-            Api.commonApiPost("pgr-master/receivingmode/"+body.ReceivingModeType.code+"/_update", {},body).then(function(response) {
+            Api.commonApiPost("pgr-master/receivingmode/v1/"+body.ReceivingModeType.code+"/_update", {},body).then(function(response) {
 
               _this.setState({
           			open: true
@@ -123,7 +124,7 @@ class receivingModeCreate extends Component {
 
         	})
       } else {
-          Api.commonApiPost("pgr-master/receivingmode/_create", {},body).then(function(response) {
+          Api.commonApiPost("pgr-master/receivingmode/v1/_create", {},body).then(function(response) {
             _this.setState({
               open: true
             });
@@ -161,36 +162,60 @@ class receivingModeCreate extends Component {
                  <Grid>
                    <Row>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Name" id="name" errorText={fieldErrors.name} value={receivingmodeSet.name} onChange={(e) => {handleChange(e, "name", true, "")}}/>
+                     <TextField
+                        fullWidth={true}
+                        floatingLabelText={translate("core.lbl.add.name")+"*"}
+                        id="name"
+                        errorText={fieldErrors.name ? fieldErrors.name : ""}
+                        value={receivingmodeSet.name ? receivingmodeSet.name : "" }
+                        onChange={(e) => {handleChange(e, "name", true, "")}}/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Code" id="code" errorText={fieldErrors.code} value={receivingmodeSet.code} onChange={(e) => {handleChange(e, "code", true, "")}} disabled={this.state.id ? true : false }/>
+                     <TextField
+                        fullWidth={true}
+                        floatingLabelText={translate("core.lbl.code")+"*"}
+                        id="code"
+                        errorText={fieldErrors.code ? fieldErrors.code : ""}
+                        value={receivingmodeSet.code ? receivingmodeSet.code : ""}
+                        onChange={(e) => {handleChange(e, "code", true, "")}} disabled={this.state.id ? true : false }/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <TextField fullWidth={true} floatingLabelText="Description" id="description" errorText={fieldErrors.description} value={receivingmodeSet.description} onChange={(e) => {handleChange(e, "description", true, "")}}/>
+                     <TextField
+                        fullWidth={true}
+                        floatingLabelText={translate("core.lbl.description")+"*"}
+                        id="description"
+                        errorText={fieldErrors.description ? fieldErrors.description : ""}
+                        value={receivingmodeSet.description ? receivingmodeSet.description : ""}
+                        onChange={(e) => {handleChange(e, "description", true, "")}}/>
                     </Col>
                     <Col xs={12} md={3}>
-                     <SelectField  value={receivingmodeSet.channel} id="channel" onChange={(e, index, value) => {
-                         var e = {
-                           target: {
-                             value: value
-                           }
-                         };
-                         handleChange(e, "channel", true, "")}} floatingLabelText="channel" >
-                       <MenuItem value={"WEB"} primaryText="WEB"/>
-                       <MenuItem value={"MOBILE"} primaryText="MOBILE"/>
+                     <SelectField
+                          errorText={fieldErrors.description ? fieldErrors.description : ""}
+                          value={receivingmodeSet.channel ? receivingmodeSet.channel : ""}
+                          id="channel"
+                          onChange={(e, index, value) => {
+                             var e = {
+                               target: {
+                                 value: value
+                               }
+                             };
+                             handleChange(e, "channel", true, "")}}
+                          floatingLabelText="Channel*" >
+                              <MenuItem value={"WEB"} primaryText="WEB"/>
+                              <MenuItem value={"MOBILE"} primaryText="MOBILE"/>
                      </SelectField>
                    </Col>
                     <div className="clearfix"></div>
                     <Col xs={12} md={3}>
-                    <Checkbox label="Active" id="active" style={styles.checkbox}
-                      checked ={receivingmodeSet.active}
-                     onCheck={(e,isInputChecked) => { var e={
-                                            "target":{
-                                              "value":isInputChecked
-                                            }
-                                          }
-                                          handleChange(e, "active", false, "")}}/>
+                    <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.checkbox}
+                      checked ={receivingmodeSet.active ? true : false}
+                      onCheck={(e,isInputChecked) => {
+                       var e={
+                            "target":{
+                              "value":isInputChecked
+                            }
+                          }
+                          handleChange(e, "active", false, "")}}/>
                     </Col>
                    </Row>
                  </Grid>

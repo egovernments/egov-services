@@ -39,8 +39,6 @@
  */
 package org.egov.wcms.transanction.model;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;

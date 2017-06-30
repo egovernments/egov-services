@@ -16,6 +16,29 @@ import Snackbar from 'material-ui/Snackbar';
 import Api from '../../api/api';
 import {translate} from '../common/common';
 
+const getNameById = function(object, id, property = "") {
+  if(!object) return;
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 const getNameByProperty = function(object, key) {
 	if(object) {
 		for(var i=0; i<object.length; i++) {
@@ -86,7 +109,8 @@ class grievanceSearch extends Component {
   }
 
   handleNavigation(serviceId) {
-    window.open('/grievanceView/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    this.props.history.push('/viewGrievance/' + serviceId);
+		window.location.reload();
   }
 
   handleOpenNClose() {
@@ -128,7 +152,7 @@ class grievanceSearch extends Component {
 
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
-  		Api.commonApiPost("/pgr/seva/_count", searchSet).then(function(response) {
+  		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
 		      		self.setState({
@@ -172,8 +196,8 @@ class grievanceSearch extends Component {
     	checkCountAndCall("locationList", []);
     });
 
-    Api.commonApiPost("/pgr/receivingmode/v1/_search").then(function(response) {
-      	checkCountAndCall("receiveingModeList", response.receivingModes);
+    Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response) {
+      	checkCountAndCall("receiveingModeList", response.ReceivingModeType);
     }, function(err) {
     	checkCountAndCall("receiveingModeList", []);
     });
@@ -190,7 +214,7 @@ class grievanceSearch extends Component {
     	checkCountAndCall("departmentList", []);
     });
 
-    Api.commonApiPost("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+    Api.commonApiGet("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
       	checkCountAndCall("boundaryList", response.Boundary);
     }, function(err) {
     	checkCountAndCall("boundaryList", []);
@@ -241,9 +265,9 @@ class grievanceSearch extends Component {
   						<td>{val.serviceRequestId}</td>
   						<td>{val.serviceName}</td>
   						<td>{val.firstName}</td>
-  						<td>{(getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
+  						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
   						<td>{getNameByProperty(val.attribValues, "status")}</td>
-  						<td>{getNameByProperty(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
+  						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
   						<td>{val.requestedDatetime}</td>
   					</tr>
   				)
@@ -314,7 +338,7 @@ class grievanceSearch extends Component {
         				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e) => {handleChange(e, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
         			<Col xs={12} md={3}>
-        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={"pgr.lbl.complainttype"} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
+        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
         					var e = {target: {value: val}};
         					handleChange(e, "serviceCode", false, "")}}>
                 			{complaintTypeList.map((com, index) => (

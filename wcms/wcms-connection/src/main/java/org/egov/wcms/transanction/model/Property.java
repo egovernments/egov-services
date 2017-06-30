@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.transanction.model;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -59,7 +61,9 @@ import lombok.ToString;
 public class Property {
 
     @NotNull
-    private long propertyid;
+    private String propertyidentifier;
+    
+    private long propertyidentifierId;
 
     @NotNull
     private String usageType;
@@ -69,8 +73,25 @@ public class Property {
     private String propertyType;
     private long propertyTypeId;
 
-    @NotNull
     private String address;
+    
+    private String nameOfApplicant;
+    
+    private String mobileNumber;
+    
+    private String email;
+    
+    private String adharNumber;
+    
+    private String locality;
+    private String  zone;
+    private String  block;
+    private String  ward;
+    
+    private BigDecimal propertyTaxDue;
+    
+    
+    
     
 }
 

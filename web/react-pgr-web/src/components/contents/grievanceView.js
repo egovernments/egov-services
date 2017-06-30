@@ -64,7 +64,7 @@ class grievanceView extends Component{
     let {initForm, addMandatory} = this.props;
     initForm();
 
-    Api.commonApiPost("/pgr/servicedefinition/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
+    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
     {
       currentThis.setState({SD : response.attributes})
     },function(err) {
@@ -88,7 +88,7 @@ class grievanceView extends Component{
         addMandatory();
       });
 
-      Api.commonApiGet('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
+      Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
       {
         //console.log(JSON.stringify(response));
         currentThis.setState({workflow : response});
@@ -123,7 +123,7 @@ class grievanceView extends Component{
   }
   getReceivingCenter(){
     if(this.state.receivingCenter){
-      Api.commonApiPost("/pgr/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
+      Api.commonApiPost("/pgr-master/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
       {
         currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
         currentThis.getLocation();

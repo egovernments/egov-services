@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
@@ -66,10 +67,10 @@ public class BillRepository {
 				return bills.size();
 			}
 		});
-		saveBillDeails(billRequest);
+		saveBillDetails(billRequest);
 	}
 	
-	public void saveBillDeails(BillRequest billRequest){
+	public void saveBillDetails(BillRequest billRequest){
 		
 		RequestInfo requestInfo = billRequest.getRequestInfo();
 		List<Bill> bills = billRequest.getBills();
@@ -107,9 +108,7 @@ public class BillRepository {
 				ps.setObject(12, billDetail.getTotalAmount());
 				ps.setBoolean(13, billDetail.getCallBackForApportioning());
 				ps.setBoolean(14, billDetail.getPartPaymentAllowed());
-				//TODO
-				//ps.setString(15, billDetail.getCollectionModesNotAllowed().toString());
-				ps.setString(15, null);
+				ps.setString(15, StringUtils.join(billDetail.getCollectionModesNotAllowed(),","));
 				ps.setString(16, requestInfo.getUserInfo().getId().toString());
 				ps.setLong(17, new Date().getTime());
 				ps.setString(18, requestInfo.getUserInfo().getId().toString());

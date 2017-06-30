@@ -67,7 +67,14 @@ public class RouterQueryBuilder {
 
 		if (routerTypeRequest.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" comp.id IN " + getIdQuery(routerTypeRequest.getId()));
+			selectQuery.append(" router.id IN " + getIdQuery(routerTypeRequest.getId()));
+		}
+		
+		if (routerTypeRequest.getServiceid() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" comp.id = ?  ");
+			preparedStatementValues.add(routerTypeRequest.getServiceid());
+			
 		}
 
 		if (routerTypeRequest.getBoundaryid() != null) {
@@ -76,12 +83,6 @@ public class RouterQueryBuilder {
 			preparedStatementValues.add(routerTypeRequest.getBoundaryid());
 		}
 
-		if (routerTypeRequest.getServiceid() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" servicecode = ?");
-			preparedStatementValues.add(routerTypeRequest.getServiceid());
-		}
-		
 		if (routerTypeRequest.getDesignationid() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" router.position = ?");

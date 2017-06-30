@@ -52,7 +52,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BusinessServiceDetail {
 
-    @NotNull
     private String id;
 
     @NotNull
@@ -69,6 +68,5 @@ public class BusinessServiceDetail {
 
     private String callBackApportionURL;
 
-    @NotNull
     private AuditDetail auditDetail;
 }

@@ -39,6 +39,7 @@
  */
 package org.egov.demand.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -109,6 +110,8 @@ public class DemandService {
 		for (Demand demand : demands) {
 			String demandId = demandIds.get(currentDemandId++);
 			demand.setId(demandId);
+			if (demand.getMinimumAmountPayable() == null)
+				demand.setMinimumAmountPayable(BigDecimal.ZERO);
 			demand.setAuditDetail(auditDetail);
 			String tenantId = demand.getTenantId();
 			for (DemandDetail demandDetail : demand.getDemandDetails()) {
@@ -124,13 +127,14 @@ public class DemandService {
 				applicationProperties.getDemandDetailSeqName());
 		int currentDetailId = 0;
 		for (DemandDetail demandDetail : demandDetails) {
+			if (demandDetail.getCollectionAmount() == null)
+				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
 		log.debug("demand Request object : " + demandRequest);
 		log.debug("demand detail list : " + demandDetails);
 		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
-
 	}
 
 	public DemandResponse updateAsync(DemandRequest demandRequest) {

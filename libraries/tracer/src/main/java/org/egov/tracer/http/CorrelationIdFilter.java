@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.egov.tracer.model.RequestContext;
 import org.egov.tracer.model.RequestCorrelationId;
 import org.springframework.http.MediaType;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,9 +33,16 @@ public class CorrelationIdFilter implements Filter {
         "No correlation id found in header for URI {}";
     private static final String FOUND_CORRELATION_ID_IN_HEADER_MESSAGE =
         "Found correlation id {} in header for URI {}";
+    private static final String REQUEST_BODY_LOG_MESSAGE = "Request body - {}";
+    private static final String FAILED_TO_LOG_REQUEST_MESSAGE = "Failed to log request body";
+    private static final String UTF_8 = "UTF-8";
+    private static final String REQUEST_URI_LOG_MESSAGE = "Received request URI: {} with query strings: {}";
+    private static final String LOG_RESPONSE_CODE_MESSAGE = "Response code sent: {}";
     private final ObjectMapper objectMapper;
+    private boolean inboundHttpRequestBodyLoggingEnabled;
 
-    public CorrelationIdFilter() {
+    public CorrelationIdFilter(boolean inboundHttpRequestBodyLoggingEnabled) {
+        this.inboundHttpRequestBodyLoggingEnabled = inboundHttpRequestBodyLoggingEnabled;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -50,11 +59,26 @@ public class CorrelationIdFilter implements Filter {
         if (isBodyCompatibleForParsing(httpRequest)) {
             final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
             setCorrelationIdFromBody(wrappedRequest);
+            logRequestURI(httpRequest);
+            logRequestBody(wrappedRequest);
             filterChain.doFilter(wrappedRequest, servletResponse);
         } else {
             setCorrelationIdFromHeader(httpRequest);
+            logRequestURI(httpRequest);
             filterChain.doFilter(servletRequest, servletResponse);
         }
+        logResponse(servletResponse);
+    }
+
+    private void logResponse(ServletResponse servletResponse) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        log.info(LOG_RESPONSE_CODE_MESSAGE, httpServletResponse.getStatus());
+    }
+
+    private void logRequestURI(HttpServletRequest httpRequest) {
+        String url = httpRequest.getRequestURL().toString();
+        String queryString = httpRequest.getQueryString();
+        log.info(REQUEST_URI_LOG_MESSAGE, url, queryString);
     }
 
     private void setCorrelationIdFromHeader(HttpServletRequest httpRequest) {
@@ -91,12 +115,23 @@ public class CorrelationIdFilter implements Filter {
     private String getCorrelationIdFromRequestBody(HttpServletRequest httpRequest) throws IOException {
         try {
             @SuppressWarnings("unchecked")
-            final HashMap<String, Object> hashMap = (HashMap<String, Object>)
+            final HashMap<String, Object> requestBody = (HashMap<String, Object>)
                 objectMapper.readValue(httpRequest.getInputStream(), HashMap.class);
-            return new RequestCorrelationId(hashMap).get();
+            return new RequestCorrelationId(requestBody).get();
         } catch (JsonParseException | JsonMappingException e) {
             log.error(FAILED_TO_DESERIALIZE_MESSAGE, e);
             return null;
+        }
+    }
+
+    private void logRequestBody(MultiReadRequestWrapper requestWrapper) {
+        if(inboundHttpRequestBodyLoggingEnabled) {
+            try {
+                final String requestBody = IOUtils.toString(requestWrapper.getInputStream(), UTF_8);
+                log.info(REQUEST_BODY_LOG_MESSAGE, requestBody);
+            } catch (IOException e) {
+                log.error(FAILED_TO_LOG_REQUEST_MESSAGE, e);
+            }
         }
     }
 

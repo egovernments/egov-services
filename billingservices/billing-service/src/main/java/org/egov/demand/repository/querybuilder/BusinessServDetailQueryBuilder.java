@@ -39,13 +39,11 @@
  */
 package org.egov.demand.repository.querybuilder;
 
-import org.apache.commons.lang3.StringUtils;
-import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
@@ -75,21 +73,53 @@ public class BusinessServDetailQueryBuilder {
         }
 
         if (!businessServiceDetailCriteria.getBusinessService().isEmpty())
-            selectQuery.append(" and businessservice.businessservice IN "+
+            selectQuery.append(" and businessservice.businessservice IN " +
                     getQueryForCollection(businessServiceDetailCriteria.getBusinessService()));
 
-        if (businessServiceDetailCriteria.getId()!=null && !businessServiceDetailCriteria.getId().isEmpty())
-            selectQuery.append(" and businessservice.id IN "+getQueryForCollection(businessServiceDetailCriteria.getId()));
+        if (businessServiceDetailCriteria.getId() != null && !businessServiceDetailCriteria.getId().isEmpty())
+            selectQuery.append(" and businessservice.id IN " + getQueryForCollection(businessServiceDetailCriteria.getId()));
 
+    }
+
+    public String prepareQueryForValidation(List<BusinessServiceDetail> businessServiceDetailList, String mode) {
+        String baseQuery = "select exists (SELECT * FROM EGBS_BUSINESS_SERVICE_DETAILS businessservice where ";
+        StringBuilder whereClause = new StringBuilder();
+        int count = 0;
+        for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
+            whereClause = whereClause.append(" ( ");
+            if (StringUtils.isNotBlank(businessServiceDetail.getBusinessService()))
+                whereClause = whereClause.append("businessservice.businessservice = '").append(businessServiceDetail.getBusinessService()).append("' and ");
+            if ("edit".equalsIgnoreCase(mode))
+                whereClause = whereClause.append(" businessservice.id != '").append(businessServiceDetail.getId()).append("' and ");
+            if (StringUtils.isNotBlank(businessServiceDetail.getTenantId()))
+                whereClause = whereClause.append(" businessservice.tenantId = '").append(businessServiceDetail.getTenantId()).append("')");
+
+            count++;
+            if (businessServiceDetailList.size() > count)
+                whereClause = whereClause.append(" or ");
+        }
+        return baseQuery.concat(whereClause.toString()).concat(" )");
+    }
+
+    public String getInsertQuery() {
+        return "INSERT INTO EGBS_BUSINESS_SERVICE_DETAILS(id,businessservice,collectionModesNotAllowed,partPaymentAllowed,callBackForApportioning," +
+                "callBackApportionURL,createddate,lastmodifieddate,createdby,lastmodifiedby,tenantid) " +
+                "values (?,?,?,?,?,?,?,?,?,?,?);";
+    }
+
+    public String getUpdateQuery() {
+        return "UPDATE EGBS_BUSINESS_SERVICE_DETAILS SET businessservice = ?, collectionModesNotAllowed = ?, partPaymentAllowed = ?, " +
+                "callBackForApportioning = ?, callBackApportionURL = ?, lastmodifieddate = ?, lastmodifiedby = ? " +
+                "WHERE tenantid = ? and id = ?;";
     }
 
     private String getQueryForCollection(Set<String> values) {
         StringBuilder query = new StringBuilder();
         if (!values.isEmpty()) {
             String[] list = values.toArray(new String[values.size()]);
-            query.append(" ('"+list[0]+"'");
+            query.append(" ('" + list[0] + "'");
             for (int i = 1; i < values.size(); i++)
-                query.append("," + "'"+list[i]+"'");
+                query.append("," + "'" + list[i] + "'");
         }
         return query.append(")").toString();
     }

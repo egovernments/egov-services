@@ -39,19 +39,25 @@
  */
 package org.egov.demand.service;
 
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.BusinessServiceDetailRepository;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.BusinessServiceDetailRequest;
 import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class BusinessServDetailService {
@@ -64,10 +70,60 @@ public class BusinessServDetailService {
     @Autowired
     private ResponseFactory responseInfoFactory;
 
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private SequenceGenService sequenceGenService;
+
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
     public BusinessServiceDetailResponse searchBusinessServiceDetails(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
         LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");
         final List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRepository.searchBusinessServiceDetails(businessServiceDetailCriteria);
         return getBusinessServiceDetailResponse(businessServiceDetails, requestInfo);
+    }
+
+    public BusinessServiceDetailResponse create(BusinessServiceDetailRequest businessServiceDetailRequest) {
+
+        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRepository.create(businessServiceDetailRequest);
+        return getBusinessServiceDetailResponse(businessServiceDetailList, businessServiceDetailRequest.getRequestInfo());
+    }
+
+    public BusinessServiceDetailResponse createAsync(BusinessServiceDetailRequest businessServiceDetailRequest) {
+        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
+
+        List<String> bizServDetailIds = sequenceGenService.getIds(businessServiceDetailList.size(), applicationProperties.getBusinessServiceDetailSeqName());
+        for (int i = 0; i < businessServiceDetailList.size(); i++)
+            businessServiceDetailList.get(i).setId(bizServDetailIds.get(i));
+
+        businessServiceDetailRequest.setBusinessServiceDetails(businessServiceDetailList);
+
+        LOGGER.info(" -- createAsync businessServiceDetailRequest -- " + businessServiceDetailRequest);
+        kafkaTemplate.send(applicationProperties.getCreateBusinessServiceDetailTopicName(), applicationProperties.getCreateBusinessServiceDetailTopicKey(),
+                businessServiceDetailRequest);
+        return getBusinessServiceDetailResponse(businessServiceDetailList, businessServiceDetailRequest.getRequestInfo());
+    }
+
+    public BusinessServiceDetailResponse updateAsync(BusinessServiceDetailRequest businessServiceDetailRequest) {
+        RequestInfo requestInfo = businessServiceDetailRequest.getRequestInfo();
+        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
+        String userId = businessServiceDetailRequest.getRequestInfo().getUserInfo().getId().toString();
+        Long currEpochDate = new Date().getTime();
+        AuditDetail auditDetail;
+        for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
+            auditDetail = businessServiceDetail.getAuditDetail();
+            auditDetail.setLastModifiedBy(userId);
+            auditDetail.setLastModifiedTime(currEpochDate);
+        }
+        kafkaTemplate.send(applicationProperties.getUpdateBusinessServiceDetailTopicName(), businessServiceDetailRequest);
+        return getBusinessServiceDetailResponse(businessServiceDetailList, businessServiceDetailRequest.getRequestInfo());
+    }
+
+    public BusinessServiceDetailResponse update(BusinessServiceDetailRequest businessServiceDetailRequest) {
+        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRepository.update(businessServiceDetailRequest);
+        return getBusinessServiceDetailResponse(businessServiceDetailList, businessServiceDetailRequest.getRequestInfo());
     }
 
     private BusinessServiceDetailResponse getBusinessServiceDetailResponse(final List<BusinessServiceDetail> businessServiceDetails, final RequestInfo requestInfo) {

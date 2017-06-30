@@ -12,6 +12,7 @@ import App from "./components/App";
 
 import './styles/bootstrap.min.css';
 
+
 // import router from "./router";
 
 // Needed for onTouchTap

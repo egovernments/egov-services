@@ -13,6 +13,8 @@ var instance = axios.create({
 
 var authToken = localStorage.getItem("auth");
 
+console.log(authToken);
+
 //request info from cookies
 var requestInfo = {
   "apiId": "org.egov.pt",
@@ -34,6 +36,8 @@ module.exports = {
     var url = context;
     if(!doNotOverride)
       url += "?tenantId=" + tenantId;
+    else 
+      url += "?"
     for (var variable in queryObject) {
       if (queryObject[variable]) {
         url += "&" + variable + "=" + queryObject[variable];
@@ -50,6 +54,8 @@ module.exports = {
     var url = context;
     if(!doNotOverride)
       url += "?tenantId=" + tenantId;
+    else 
+      url += "?"
     for (var variable in queryObject) {
       if (queryObject[variable]) {
         url += "&" + variable + "=" + queryObject[variable];

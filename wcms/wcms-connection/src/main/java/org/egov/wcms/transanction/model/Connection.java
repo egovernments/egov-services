@@ -65,7 +65,7 @@ public class Connection {
 
     @NotNull
     private String connectionType;
-    
+
     @NotNull
     private String applicationType;
 
@@ -74,38 +74,47 @@ public class Connection {
 
     @NotNull
     private String categoryType;
-    
+
     private String categoryId;
 
     @NotNull
     private String hscPipeSizeType;
-    
+
     private String pipesizeId;
 
     @NotNull
     private String supplyType;
-    
+
     private String supplyTypeId;
-    
-    private Boolean isPropertyAttached;
-    
+
     private String propertyIdentifier;
-    
+
     private String assetIdentifier;
 
     @NotNull
     private String sourceType;
-    
+
     private String sourceTypeId;
+
+    @NotNull
+    private String waterTreatment;
+
+    private String waterTreatmentId;
 
     @NotNull
     private String connectionStatus;
 
     @NotNull
+    private int status;
+
+    @NotNull
+    private int stateId;
+
+    @NotNull
     private double sumpCapacity;
 
     @NotNull
-    private String donationCharge;
+    private double donationCharge;
 
     @NotNull
     private int numberOfTaps;
@@ -115,6 +124,9 @@ public class Connection {
 
     @NotNull
     private String legacyConsumerNumber;
+
+    @NotNull
+    private Boolean isLegacy;
 
     @NotNull
     private String acknowledgementNumber;
@@ -136,6 +148,9 @@ public class Connection {
 
     @NotNull
     private Property property;
+
+    @NotNull
+    private Asset asset;
 
     @NotNull
     private List<Meter> meter;

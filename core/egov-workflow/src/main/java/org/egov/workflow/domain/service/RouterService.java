@@ -118,7 +118,7 @@ public class RouterService {
 		logger.info("Service Type size is" +serviceTypes.size());
 		
 		List<BoundaryIdType> boundaries = new ArrayList<BoundaryIdType>();
-		boundaries = routerRequests.getRouterType().getBoundary();
+		boundaries = routerRequests.getRouterType().getBoundaries();
 		
 		PersistRouterReq prq = new PersistRouterReq();
 		PersistRouter pr = new PersistRouter();

@@ -40,7 +40,9 @@
 package org.egov.demand.service;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.util.SequenceGenService;
@@ -48,6 +50,7 @@ import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -80,6 +83,9 @@ public class TaxPeriodServiceTest {
     @Mock
     private ApplicationProperties applicationProperties;
 
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
     @Test
     public void shouldSearchTaxPeriods() {
         List<TaxPeriod> taxPeriods = new ArrayList<>();
@@ -111,6 +117,26 @@ public class TaxPeriodServiceTest {
         assertTrue(taxPeriodResponse.equals(taxPeriodService.create(taxPeriodRequest)));
     }
 
+    @Test
+    public void shouldUpdateTaxPeriods() {
+
+        TaxPeriodRequest taxPeriodRequest = new TaxPeriodRequest();
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+        taxPeriods.add(getTaxPeriod());
+        taxPeriodRequest.setTaxPeriods(taxPeriods);
+        RequestInfo requestInfo = new RequestInfo();
+        User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        taxPeriodRequest.setRequestInfo(requestInfo);
+
+        TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
+        taxPeriodResponse.setResponseInfo(null);
+        taxPeriodResponse.setTaxPeriods(taxPeriods);
+
+        assertTrue(taxPeriodResponse.equals(taxPeriodService.updateAsync(taxPeriodRequest)));
+    }
+
     private TaxPeriod getTaxPeriod() {
         TaxPeriod taxPeriod = new TaxPeriod();
         taxPeriod.setId("1");
@@ -120,6 +146,7 @@ public class TaxPeriodServiceTest {
         taxPeriod.setFromDate(1478930l);
         taxPeriod.setToDate(4783525l);
         taxPeriod.setFinancialYear("2017-18");
+        taxPeriod.setAuditDetail(new AuditDetail());
         return taxPeriod;
     }
 }

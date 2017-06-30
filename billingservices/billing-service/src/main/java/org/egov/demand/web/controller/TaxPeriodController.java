@@ -115,6 +115,6 @@ public class TaxPeriodController {
         }
         taxPeriodValidator.validateTaxPeriods(taxPeriodRequest, "edit");
         TaxPeriodResponse taxPeriodResponse = taxPeriodService.updateAsync(taxPeriodRequest);
-        return new ResponseEntity<>(taxPeriodResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(taxPeriodResponse, HttpStatus.OK);
     }
 }

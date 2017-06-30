@@ -71,7 +71,8 @@ class grievanceCreate extends Component {
     let {initForm, history} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    history.push("/viewGrievance/"+this.state.serviceRequestId);
+    history.replace("/viewGrievance/"+this.state.serviceRequestId);
+    window.location.reload();
   };
 
    loadReceivingCenter(value){

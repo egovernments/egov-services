@@ -64,7 +64,7 @@ public class BoundaryDocumentEnricher implements ServiceRequestDocumentEnricher 
             return;
         }
         document.setWardName(boundary.getName());
-        document.setWardNo(boundary.getBoundaryNum().toString());
+        document.setWardNo(boundary.getId().toString());
         if (boundary.getLongitude() != null && boundary.getLatitude() != null) {
             final GeoPoint geoPoint = new GeoPoint(boundary.getLatitude(), boundary.getLongitude());
             document.setWardGeo(geoPoint.toString());

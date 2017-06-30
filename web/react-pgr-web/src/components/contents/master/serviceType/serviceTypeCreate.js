@@ -640,17 +640,25 @@ class ServiceTypeCreate extends Component {
                                       id="type"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
-                                  <TextField
-                                      fullWidth={true}
-                                      floatingLabelText="Keywords"
-                                      value={createServiceType.keywords? createServiceType.keywords : ""}
-                                      errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
-                                      onChange={(e) => handleChange(e, "keywords", false, '')}
-                                      multiLine={true}
-                                      id="keywords"
-                                  />
-                              </Col>
+                              <Col xs={12} md={3}>
+                               <SelectField
+                                    multiple="true"
+                                    errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
+                                    value={createServiceType.keywords ? createServiceType.keywords : ""}
+                                    id="keywords"
+                                    onChange={(e, index, value) => {
+                                       var e = {
+                                         target: {
+                                           value: value
+                                         }
+                                       };
+                                       console.log(value);
+                                       handleChange(e, "keywords", true, "")}}
+                                    floatingLabelText="keywords*" >
+                                        <MenuItem value={"deliverable"} primaryText="deliverable"/>
+                                        <MenuItem value={"complaint"} primaryText="complaint"/>
+                               </SelectField>
+                             </Col>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
@@ -795,7 +803,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["serviceName","serviceCode","category","slaHours"]
+          required: ["serviceName","serviceCode","category","slaHours","keywords"]
         },
         pattern: {
           current: [],
@@ -813,8 +821,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["serviceName","serviceCode","category","slaHours"],
-          required: ["serviceName","serviceCode","category","slaHours"]
+          current: ["serviceName","serviceCode","category","slaHours","keywords"],
+          required: ["serviceName","serviceCode","category","slaHours","keywords"]
         },
         pattern: {
           current: [],

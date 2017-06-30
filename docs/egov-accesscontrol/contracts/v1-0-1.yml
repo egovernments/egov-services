@@ -248,7 +248,7 @@ paths:
           schema:
            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags: 
-       - Action
+       - Role
   #####################################################
   /access/v1/roles/_update:
     # This is a HTTP operation
@@ -278,7 +278,37 @@ paths:
           schema:
            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags: 
-       - Action
+       - Role
+  #####################################################
+  /access/v1/role-actions/_create:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      summary: Create mapping for role and action(s).
+      description: |
+        Create mapping for role and action(s).
+      parameters:
+        - name: roleActionsRequest
+          in: body
+          description: Details for the Role and Action(s) mapping + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RoleActionsRequest'
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        '200':
+          description: Role - Action(s) mapping created sucessfully
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/RoleActionsResponse"
+        '400':
+          description: Role - Action(s) mapping failed
+          schema:
+           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Role-Action
   #####################################################
 definitions:
 
@@ -392,6 +422,20 @@ definitions:
         description: The Name of the Role.
         minLength: 2
         maxLength: 100
+  
+  RoleAction:
+    type: object
+    properties:
+      roleCode:
+       type: string
+       description : The Role Code which is mapped for the action.
+      actionId:
+        type: integer
+        format: int64
+        description: The Id of the Action which is mapped to the role.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which the role action mapping is done.
         
   ActionRequest:
     type: object
@@ -413,7 +457,7 @@ definitions:
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      action:
+      actions:
         type: array
         maximum: 500
         items:
@@ -444,6 +488,38 @@ definitions:
         maximum: 500
         items:
          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
+  
+  RoleActionsRequest:
+    type: object
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      role:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role'
+      actions: 
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/Action'
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+    required:
+      - role
+      - actions
+      - tenantId
+      
+  RoleActionsResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      roleActions:
+        type: array
+        maximum: 500
+        items:
+         $ref: '#/definitions/RoleAction'
         
   FeatureRoleReq:
     type: object

@@ -15,6 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -277,6 +278,10 @@ class ServiceTypeCreate extends Component {
     {
       this.setState({isCustomFormVisible:isShow})
     }
+
+    handleClose = () => {
+      this.setState({open: false});
+    };
 
 
     render() {
@@ -578,7 +583,7 @@ class ServiceTypeCreate extends Component {
         <div className="createServiceType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Service Type < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Service  < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
@@ -596,7 +601,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Service Name"
+                                      floatingLabelText={translate("core.lbl.servicename")}
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
                                       onChange={(e) => handleChange(e, "serviceName", true, '')}
@@ -723,7 +728,7 @@ class ServiceTypeCreate extends Component {
                                     id="hasFinancialImpact"
                                   />
                               </Col>
-                              {/* <Col xs={12} md={3} sm={6}>
+                               <Col xs={12} md={3} sm={6}>
                               {console.log(createServiceType.metaData)}
                                   <Checkbox
                                     label="Meta Data"
@@ -740,7 +745,7 @@ class ServiceTypeCreate extends Component {
                                     }}
                                     id="metaData"
                                   />
-                              </Col> */}
+                              </Col>
                               <div className="clearfix"></div>
                                 {promotionFunc()}
 
@@ -754,9 +759,9 @@ class ServiceTypeCreate extends Component {
               </div>
           </form>
           <Dialog
-               title="Data Added Successfully"
+               title={this.state.id != '' ? "Service Group Updated Successfully" : "Service Group Added Successfully"}
                actions={<FlatButton
-   				        label="Close"
+   				        label={translate("core.lbl.close")}
    				        primary={true}
    				        onTouchTap={this.handleClose}
    				      />}
@@ -764,7 +769,6 @@ class ServiceTypeCreate extends Component {
                open={this.state.open}
                onRequestClose={this.handleClose}
              >
-              Data Added Successfully
          </Dialog>
         </div>)
     }

@@ -86,7 +86,7 @@ class grievanceSearch extends Component {
   }
 
   handleNavigation(serviceId) {
-    window.open('#/grievanceView/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    window.open('#/viewGrievance/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   handleOpenNClose() {

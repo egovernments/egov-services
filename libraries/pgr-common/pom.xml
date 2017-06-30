@@ -5,7 +5,7 @@
 
     <groupId>org.egov.services</groupId>
     <artifactId>pgr-common</artifactId>
-    <version>0.18.2</version>
+    <version>0.19.0</version>
     <packaging>jar</packaging>
 
     <name>pgr-common</name>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>tracer</artifactId>
-            <version>0.14.0</version>
+            <version>0.17.0</version>
         </dependency>
 
         <dependency>

@@ -99,4 +99,6 @@ public class Asset {
 	private String version;
 	private List<Attributes> assetAttributes = new ArrayList<>();
 
+	private Boolean enableYearWiseDepreciation;
+	private Double depreciationRate;
 }

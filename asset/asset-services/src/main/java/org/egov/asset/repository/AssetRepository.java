@@ -162,7 +162,7 @@ public class AssetRepository {
 				location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
 				asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
-				asset.getVersion() };
+				asset.getVersion(),asset.getEnableYearWiseDepreciation(),asset.getDepreciationRate() };
 		try {
 			jdbcTemplate.update(query, obj);
 		} catch (final Exception ex) {
@@ -212,7 +212,7 @@ public class AssetRepository {
 				location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), asset.getGrossValue(),
 				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getCode(),
-				asset.getTenantId() };
+				asset.getTenantId(), asset.getEnableYearWiseDepreciation(),asset.getDepreciationRate() };
 		try {
 			logger.info("query1::" + query + "," + Arrays.toString(obj));
 			final int i = jdbcTemplate.update(query, obj);

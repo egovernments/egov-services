@@ -259,14 +259,14 @@ public class AssetQueryBuilder {
 		return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
 				+ "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
 				+ "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
-				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version)"
-				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation,depriciationrate)"
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public String getUpdateQuery() {
 		return "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,"
 				+ "width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
-				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=? "
+				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,enableyearwisedepriciation=?,depriciationrate=? "
 				+ "WHERE code=? and tenantid=?";
 
 	}

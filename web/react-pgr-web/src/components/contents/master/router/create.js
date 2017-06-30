@@ -133,13 +133,13 @@ class createRouter extends Component {
             id: response.RouterTypRes[0].id,
             position: response.RouterTypRes[0].position,
          		complaintType: response.RouterTypRes[0].service.serviceCode,
-         		boundary: response.RouterTypRes[0].boundary[0].boundaryType,
-            boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType)
+         		boundary: response.RouterTypRes[0].boundary.boundaryType,
+            boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType)
         	}
 
-          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType));
+          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType));
           searchTextCom = response.RouterTypRes[0].service.serviceName || "";
-          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType) || "";
+          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType) || "";
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
 
           setForm(routerType);

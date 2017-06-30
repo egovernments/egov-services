@@ -169,11 +169,24 @@ class routerGeneration extends Component {
   componentWillMount() {
   	$('#searchTable').DataTable({
          dom: 'lBfrtip',
-         buttons: [
-                   'excel', 'pdf', 'print'
-          ],
+         buttons: [],
           ordering: false,
           bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+  }
+
+  componentDidUpdate() {
+    $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          ordering: false,
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
     });
   }
 
@@ -223,6 +236,17 @@ class routerGeneration extends Component {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
+    if(searchSet.complaintTypes) {
+      searchSet.serviceid = searchSet.complaintTypes.join(",");
+      delete searchSet.complaintTypes;
+    }
+
+    if(searchSet.boundaries) {
+      searchSet.boundaryid = searchSet.boundaries.join(",");
+      delete searchSet.boundaries;
+    }
+    delete searchSet.boundaryType;
+    console.log(self.props.routerCreateSet);
   	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({

@@ -129,11 +129,12 @@ class searchRouter extends Component {
   componentWillMount() {
     $('#searchTable').DataTable({
          dom: 'lBfrtip',
-         buttons: [
-                   'excel', 'pdf', 'print'
-          ],
+         buttons: [],
           ordering: false,
           bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
     });
   }
 
@@ -141,6 +142,18 @@ class searchRouter extends Component {
      $('#searchTable')
      .DataTable()
      .destroy(true);
+  }
+
+  componentDidUpdate() {
+    $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          ordering: false,
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
   }
 
   componentDidMount() {
@@ -296,15 +309,15 @@ class searchRouter extends Component {
                         dataSource={this.state.complaintSource}
                         dataSourceConfig={this.state.complaintSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
-                        value={routerSearchSet.complaintType}
+                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceid")}}
+                        value={routerSearchSet.serviceid}
                         onNewRequest={(chosenRequest, index) => {
                           var e = {
                             target: {
-                              value: chosenRequest.serviceCode
+                              value: chosenRequest.id
                             }
                           };
-                          handleChange(e, "complaintType", true, "");
+                          handleChange(e, "serviceid", true, "");
                          }}
                         />
                    </Col>
@@ -327,15 +340,15 @@ class searchRouter extends Component {
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.allSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
-                        value={routerSearchSet.boundary}
+                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundaryid")}}
+                        value={routerSearchSet.boundaryid}
                         onNewRequest={(chosenRequest, index) => {
                           var e = {
                             target: {
                               value: chosenRequest.id
                             }
                           };
-                          handleChange(e, "boundary", true, "");
+                          handleChange(e, "boundaryid", true, "");
                          }}
                         />
                    </Col>

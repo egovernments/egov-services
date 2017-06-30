@@ -16,6 +16,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -113,6 +114,10 @@ class viewOrUpdateServiceType extends Component {
      });
     }
 
+    handleNavigation = (type, id) => {
+      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    }
+
 
 
     render() {
@@ -136,7 +141,7 @@ class viewOrUpdateServiceType extends Component {
       return(
         <div className="serviceTypeCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Type</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>
@@ -167,8 +172,14 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>
                                               <td>{e.hasFinancialImpact?"True":"False"}</td>
-                                              {url == '/viewOrUpdateServiceType/view' && <td><Link to={`/viewServiceType/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/viewOrUpdateServiceType/edit' && <td><Link  to={`/serviceTypeCreate/${this.props.match.params.type}/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/viewOrUpdateServiceType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/viewServiceType/view/", id);
+                                              }}/></td>}
+                                              {url == '/viewOrUpdateServiceType/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/serviceTypeCreate/edit/", id);
+                                              }}/></td>}
                                             </tr>
                                           )
                                         })}

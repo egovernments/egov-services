@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.egov.models.Address;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
@@ -15,6 +16,7 @@ import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.models.VacantLandDetail;
 import org.egov.property.exception.PropertySearchException;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -152,8 +155,11 @@ public class PropertySearchService {
 			}
 
 			property.setOwners(ownerInfos);
-
+			List<Unit> flats = new ArrayList<>();
+			List<Unit> rooms = new ArrayList<>();
 			PropertyDetail propertyDetail = propertyRepository.getPropertyDetailsByProperty(propertyId);
+
+			propertyDetail.setFloors(propertyDetail.getFloors());
 			property.setPropertyDetail(propertyDetail);
 
 			VacantLandDetail vacantLandDetail = propertyRepository.getVacantLandByProperty(propertyId);
@@ -166,6 +172,44 @@ public class PropertySearchService {
 
 			List<Floor> floors = propertyRepository.getFloorsByPropertyDetails(propertyDetailId);
 			property.getPropertyDetail().setFloors(floors);
+
+			for (Floor floor : property.getPropertyDetail().getFloors()) {
+
+				List<Unit> units = propertyRepository.getUnitsByFloor(floor.getId());
+				floor.setUnits(units);
+
+			}
+
+			for (Floor floor : propertyDetail.getFloors()) {
+				int i = 0;
+				List<Unit> units = propertyDetail.getFloors().get(i).getUnits();
+
+				for (Unit unit : units) {
+					if (unit.getParentId() != 0)
+						rooms.add(unit);
+					flats.add(unit);
+
+				}
+
+				if (flats.size() > 0) {
+					for (Unit flat : flats) {
+						List<Unit> newUnits = new ArrayList<>();
+						for (Unit room : rooms) {
+
+							if (room.getParentId() == flat.getId()) {
+								newUnits.add(room);
+
+							}
+							if (newUnits.size() > 0)
+								flat.setUnits(newUnits);
+
+						}
+						floor.setUnits(flats);
+					}
+
+					i++;
+				}
+			}
 
 			List<Document> documents = propertyRepository.getDocumentByPropertyDetails(propertyDetailId);
 			property.getPropertyDetail().setDocuments(documents);

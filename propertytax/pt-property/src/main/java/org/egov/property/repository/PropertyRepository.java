@@ -232,20 +232,79 @@ public class PropertyRepository {
 	 * @param unit
 	 * @param floorId
 	 */
-	public void saveUnit(Unit unit, Integer floorId) {
+	public Integer saveUnit(Unit unit, Integer floorId) {
 
 		Long createdTime = new Date().getTime();
 
-		Object[] unitArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
+		final PreparedStatementCreator pscUnit = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(UnitBuilder.INSERT_UNIT_QUERY,
+						new String[] { "id" });
+				ps.setInt(1, unit.getUnitNo());
+				ps.setString(2, unit.getUnitType().toString());
+				ps.setDouble(3, unit.getLength());
+				ps.setDouble(4, unit.getWidth());
+				ps.setDouble(5, unit.getBuiltupArea());
+				ps.setDouble(6, unit.getAssessableArea());
+				ps.setDouble(7, unit.getBpaBuiltupArea());
+				ps.setString(8, unit.getBpaNo());
+				ps.setTimestamp(9, TimeStampUtil.getTimeStamp(unit.getBpaDate()));
+				ps.setString(10, unit.getUsage());
+				ps.setString(11, unit.getOccupancyType());
+				ps.setString(12, unit.getOccupierName());
+				ps.setString(13, unit.getFirmName());
+				ps.setDouble(14, unit.getRentCollected());
+				ps.setString(15, unit.getStructure());
+				ps.setString(16, unit.getAge());
+				ps.setString(17, unit.getExemptionReason());
+				ps.setBoolean(18, unit.getIsStructured());
+				ps.setTimestamp(19, TimeStampUtil.getTimeStamp(unit.getOccupancyDate()));
+				ps.setTimestamp(20, TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()));
+				ps.setDouble(21, unit.getManualArv());
+				ps.setDouble(22, unit.getArv());
+				ps.setString(23, unit.getElectricMeterNo());
+				ps.setString(24, unit.getWaterMeterNo());
+				ps.setString(25, unit.getAuditDetails().getCreatedBy());
+				ps.setString(26, unit.getAuditDetails().getLastModifiedBy());
+				ps.setLong(27, createdTime);
+				ps.setLong(28, createdTime);
+				ps.setLong(29, floorId);
+				return ps;
+			}
+		};
+
+		// The newly generated key will be saved in this object
+		final KeyHolder holderUnit = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(pscUnit, holderUnit);
+
+		Integer unitId = holderUnit.getKey().intValue();
+
+		return unitId;
+
+	}
+
+	/**
+	 * room creation query
+	 * 
+	 * @param unit
+	 * @param floorId
+	 */
+	public void saveRoom(Unit unit, Integer floorId, Integer parent) {
+
+		Long createdTime = new Date().getTime();
+
+		Object[] roomArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
 				unit.getBuiltupArea(), unit.getAssessableArea(), unit.getBpaBuiltupArea(), unit.getBpaNo(),
 				TimeStampUtil.getTimeStamp(unit.getBpaDate()), unit.getUsage(), unit.getOccupancyType(),
 				unit.getOccupierName(), unit.getFirmName(), unit.getRentCollected(), unit.getStructure(), unit.getAge(),
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
-				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId };
+				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent };
 
-		jdbcTemplate.update(UnitBuilder.INSERT_UNIT_QUERY, unitArgs);
+		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
 	}
 
@@ -451,6 +510,15 @@ public class PropertyRepository {
 
 	}
 
+	public List<Unit> getUnitsByFloor(Long floorId) {
+
+		List<Unit> units = jdbcTemplate.query(UnitBuilder.UNITS_BY_FLOOR_QUERY, new Object[] { floorId },
+				new BeanPropertyRowMapper(Unit.class));
+
+		return units;
+
+	}
+
 	public List<Document> getDocumentByPropertyDetails(Long propertyDetailId) {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(DocumentBuilder.DOCUMENT_BY_PROPERTY_DETAILS_QUERY,
 				new Object[] { propertyDetailId });
@@ -571,6 +639,10 @@ public class PropertyRepository {
 
 	}
 
+	/**
+	 * Description: updating unit  
+	 * @param unit
+	 */
 	public void updateUnit(Unit unit) {
 
 		Long updatedTime = new Date().getTime();
@@ -584,9 +656,32 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
-				updatedTime, unit.getId() };
+				updatedTime, unit.getParentId(),unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
+
+	}
+	
+	/**
+	 * Description: updating room
+	 * @param unit
+	 */
+	public void updateRoom(Unit unit) {
+
+		Long updatedTime = new Date().getTime();
+
+		String roomUpdate = UnitBuilder.updateRoomQuery();
+
+		Object[] roomArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
+				unit.getBuiltupArea(), unit.getAssessableArea(), unit.getBpaBuiltupArea(), unit.getBpaNo(),
+				TimeStampUtil.getTimeStamp(unit.getBpaDate()), unit.getUsage(), unit.getOccupancyType(),
+				unit.getOccupierName(), unit.getFirmName(), unit.getRentCollected(), unit.getStructure(), unit.getAge(),
+				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
+				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
+				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
+				updatedTime, unit.getParentId(), unit.getId() };
+
+		jdbcTemplate.update(roomUpdate, roomArgs);
 
 	}
 

@@ -19,8 +19,33 @@ public class UnitBuilder {
 				.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
-				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?")
-				.append(" WHERE id = ?");
+				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
+				.append(" parentid = ? WHERE id = ?");
+
+		return unitSql.toString();
+	}
+
+	public static final String UNITS_BY_FLOOR_QUERY = "select * from egpt_unit where floor = ?";
+
+	public static final String INSERT_ROOM_QUERY = "INSERT INTO egpt_unit ("
+			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
+			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
+			+ "floor,parentid) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	public static String updateRoomQuery() {
+
+		StringBuffer unitSql = new StringBuffer();
+
+		unitSql.append("UPDATE egpt_unit").append(" SET unitNo = ?, unitType = ?, length = ?, width = ?,")
+				.append(" builtupArea = ?, assessableArea = ?, bpaBuiltupArea = ?,")
+				.append(" bpaNo = ?, bpaDate = ?, usage = ?, occupancy = ?, occupierName = ?,")
+				.append(" firmName = ?, rentCollected = ?, structure = ?, age = ?,")
+				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
+				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
+				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
+				.append("  parentid = ? WHERE id = ?");
 
 		return unitSql.toString();
 	}

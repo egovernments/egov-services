@@ -132,7 +132,7 @@ class grievanceSearch extends Component {
 
   search(bool) {
   	var self = this, grievanceSearchSet = this.props.grievanceSearchSet;
-  	if(!grievanceSearchSet.serviceRequestId && !grievanceSearchSet.locationId && !grievanceSearchSet.startDate && !grievanceSearchSet.endDate && !grievanceSearchSet.name && !grievanceSearchSet.mobileNumber && !grievanceSearchSet.emailId && !grievanceSearchSet.serviceCode && !grievanceSearchSet.status && !grievanceSearchSet.receiving_mode) {
+  	if(!grievanceSearchSet.serviceRequestId && !grievanceSearchSet.locationId && !grievanceSearchSet.startDate && !grievanceSearchSet.endDate && !grievanceSearchSet.name && !grievanceSearchSet.mobileNumber && !grievanceSearchSet.emailId && !grievanceSearchSet.serviceCode && !grievanceSearchSet.status && !grievanceSearchSet.receivingMode) {
   		self.setState({
   			open: true
   		})
@@ -152,6 +152,7 @@ class grievanceSearch extends Component {
 
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
+      
   		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
@@ -165,7 +166,8 @@ class grievanceSearch extends Component {
 			    });
   			} else {
           self.setState({
-            open1: true
+            open1: true,
+            resultList: []
           })
         }
   		}, function(err) {
@@ -366,9 +368,9 @@ class grievanceSearch extends Component {
                     	</SelectField>
                 	</Col>
                 	<Col xs={12} md={3}>
-                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receiving_mode} onChange={(e, i, val) => {
+                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, val) => {
                     		var e = {target: {value: val}};
-                    		handleChange(e, "receiving_mode", false, "")}}>
+                    		handleChange(e, "receivingMode", false, "")}}>
                     		{receiveingModeList.map((mod, index) => (
                                 <MenuItem value={mod.code} key={index} primaryText={mod.name} />
                             ))}

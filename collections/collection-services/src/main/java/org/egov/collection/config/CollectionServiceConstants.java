@@ -39,16 +39,19 @@ public class CollectionServiceConstants {
 	public static final String PURPOSE_MISSING_FIELD = "purpose";
 	public static final String PURPOSE_MISSING_MESSAGE = "Purpose is mising";
 	
-	public static final String COLL_ID_NAME = "collection.receiptnumber";
-	public static final String COLL_ID_FORMAT = "[MM/YYYY]-[SEQ_ACK_NUM]";
+	public static final String COLLECTIONTYPE_MISSING_CODE = "egcl_009";
+	public static final String COLLECTIONTYPE_MISSING_FIELD = "collectionType";
+	public static final String COLLECTIONTYPE_MISSING_MESSAGE = "Collection type is mising";
 	
+	public static final String COLL_ID_NAME = "collection.receiptno";
+	public static final String COLL_ID_FORMAT = "GN-CL-[yyyy/MM/dd]-[SEQ_COLL_RCPT_NUM]"; // FIXME: Actual format - [MM/Fin-Yr/6-digit]
 	
 	
 	//URIs for other micro services collection depends on
 	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
 	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
-	public static final String STATUS_SEARCH_URI = " ";
-	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/_generate";
+	public static final String STATUS_SEARCH_URI = "egov-micro-dev.egovernments.org/collection/collectionStatus/_search";
+	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate";
 
 
 

@@ -49,6 +49,7 @@ import java.util.Map;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.ReceiptHeader;
@@ -141,15 +142,19 @@ public class ReceiptRepository {
 		logger.info("Insert process initiated");
 		boolean isInsertionSuccessfull = false;	
 		Receipt receiptInfo = receiptReq.getReceipt();		
-	//	String statusCode = getStatusCode(receiptReq.getRequestInfo());
-
+		String statusCode = null;
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		
 		for(BillDetails billdetails: receiptInfo.getBillInfo().getBillDetails()){	
 			
 			//TODO: Trigger Apportioning logic from billingservice if the amountPaid is less than the totalAmount
-
 			
+			if(billdetails.getCollectionType().equals("ONLINE")){
+				statusCode = "PENDING";
+			}else{
+				statusCode = "TO BE SUBMITTED";
+			}
+			logger.info("StatusCode: "+statusCode);
 			final Map<String, Object> parametersMap = new HashMap<>();
 			
 			Object businessDetails = getBusinessDetails(billdetails.getBusinessDetailsCode(), receiptReq);
@@ -176,11 +181,10 @@ public class ReceiptRepository {
 				parametersMap.put("referencenumber", billdetails.getRefNo());
 				parametersMap.put("receipttype", billdetails.getReceiptType());
 				
-			//	String receiptNumber = generateReceiptNumber(receiptReq);
-			//	logger.info("Receipt Number generated is: "+receiptNumber);
+				String receiptNumber = generateReceiptNumber(receiptReq);
+				logger.info("Receipt Number generated is: "+receiptNumber);
 				
 				billdetails.setReceiptNumber("receiptNumber");
-				
 				parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("businessdetails", billdetails.getBusinessDetailsCode());
@@ -191,12 +195,10 @@ public class ReceiptRepository {
 				parametersMap.put("collmodesnotallwd", billdetails.getCollectionModesNotAllowed().toString());
 				parametersMap.put("consumercode", billdetails.getConsumerCode());
 				parametersMap.put("channel", billdetails.getChannel());
-				
 				parametersMap.put("fund", fund);
 				parametersMap.put("fundsource", fundSource);
 				parametersMap.put("function", function);
 				parametersMap.put("department", department);
-				
 				parametersMap.put("boundary", billdetails.getBoundary());
 				parametersMap.put("voucherheader", billdetails.getVoucherHeader());
 				parametersMap.put("depositedbranch", receiptInfo.getBankAccount().getBankBranch().getName());
@@ -209,16 +211,11 @@ public class ReceiptRepository {
 				parametersMap.put("referencedesc", billdetails.getBillDescription());
 				parametersMap.put("manualreceiptnumber", null);
 				parametersMap.put("manualreceiptdate", null);
-				parametersMap.put("partpaymentallowed", null);
 				parametersMap.put("reference_ch_id", null);
 				parametersMap.put("stateid", null);
 				parametersMap.put("location", null);
 				parametersMap.put("isreconciled", false);
-				
-				parametersMap.put("status", "status");
-
-			//	parametersMap.put("status", statusCode);
-				
+				parametersMap.put("status", statusCode);
 				
 				try{
 					logger.info("Inserting into receipt header");
@@ -226,7 +223,6 @@ public class ReceiptRepository {
 				}catch(Exception e){
 					logger.error("Persisting to DB FAILED! ",e.getCause());
 					return isInsertionSuccessfull;
-	
 				}
 				
 				String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
@@ -238,7 +234,6 @@ public class ReceiptRepository {
 	
 				for(BillAccountDetails billAccountDetails: billdetails.getBillAccountDetails()){
 					final Map<String, Object> parameterMap = new HashMap<>();
-					
 					if(validateGLCode(billAccountDetails.getGlcode(), receiptReq.getTenantId(), receiptReq.getRequestInfo())){
 						parameterMap.put("chartofaccount", billAccountDetails.getGlcode());
 						parameterMap.put("dramount", billAccountDetails.getDebitAmount());
@@ -266,8 +261,7 @@ public class ReceiptRepository {
 					logger.error("Persisting to receiptdetails table FAILED! ", e.getCause());
 					isInsertionSuccessfull= false;
 					return isInsertionSuccessfull;
-				}
-			
+				}		
 		}else{
 			logger.error("BuisnessDetails unavailable for the code: "+billdetails.getBusinessDetailsCode());
 			logger.error("Record COULDN'T BE PERSISTED");
@@ -328,12 +322,12 @@ public class ReceiptRepository {
 		return isCodeValid;
 	}
 	
-	private String getStatusCode(RequestInfo requestInfo){
+/*	private String getStatusCode(RequestInfo requestInfo){
 		logger.info("fetching status for the receipt.");	
 		
 		StringBuilder builder = new StringBuilder();
 		String baseUri = CollectionServiceConstants.STATUS_SEARCH_URI;
-		String searchCriteria="";
+		String searchCriteria="?objectType=ReceiptHeader&tenantId=default&code=SUBMITTED";
 		builder.append(baseUri).append(searchCriteria);
 		
 		logger.info("URI being hit: "+builder.toString());
@@ -349,12 +343,12 @@ public class ReceiptRepository {
 		}
 		logger.info("Response from collection-masters: "+response.toString());
 		
-		String status = JsonPath.read(response, "$.");
+		String status = JsonPath.read(response, "$.StatusInfo[0].code");
 		
 		return status;
-	}
+	} */
 	
-	private String generateReceiptNumber(ReceiptReq receiptReq){
+	private String generateReceiptNumber(ReceiptReq receiptRequest){
 		logger.info("Generating receipt number for the receipt.");	
 		
 		StringBuilder builder = new StringBuilder();
@@ -364,15 +358,31 @@ public class ReceiptRepository {
 		logger.info("URI being hit: "+builder.toString());
 		
 		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
+		IdGenRequestInfo idGenReq = new IdGenRequestInfo();
+		
+		//Because idGen Svc uses a slightly different form of requestInfo
+		
+		idGenReq.setAction(receiptRequest.getRequestInfo().getAction());
+		idGenReq.setApiId(receiptRequest.getRequestInfo().getApiId());
+		idGenReq.setAuthToken(receiptRequest.getRequestInfo().getAuthToken());
+		idGenReq.setCorrelationId(receiptRequest.getRequestInfo().getCorrelationId());
+		idGenReq.setDid(receiptRequest.getRequestInfo().getDid());
+		idGenReq.setKey(receiptRequest.getRequestInfo().getKey());
+		idGenReq.setMsgId(receiptRequest.getRequestInfo().getMsgId());
+		idGenReq.setRequesterId(receiptRequest.getRequestInfo().getRequesterId());
+		idGenReq.setTs(receiptRequest.getRequestInfo().getTs().getTime());
+		idGenReq.setUserInfo(receiptRequest.getRequestInfo().getUserInfo());
+		idGenReq.setVer(receiptRequest.getRequestInfo().getVer());
+		
 		IdRequest idRequest = new IdRequest();
 		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
-		idRequest.setTenantId(receiptReq.getReceipt().getTenantId());
+		idRequest.setTenantId(receiptRequest.getReceipt().getTenantId());
 		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
 		
 		List<IdRequest> idRequests = new ArrayList<>();
 		idRequests.add(idRequest);
 		
-		idRequestWrapper.setRequestInfo(receiptReq.getRequestInfo());
+		idRequestWrapper.setIdGenRequestInfo(idGenReq);
 		idRequestWrapper.setIdRequests(idRequests);
 		Object response = null;
 
@@ -383,7 +393,7 @@ public class ReceiptRepository {
 		}
 		logger.info("Response from id gen service: "+response.toString());
 		
-		String receiptNo = JsonPath.read(response, "$.");
+		String receiptNo = JsonPath.read(response, "$.idResponses[0].id");
 
 		return receiptNo;
 	}

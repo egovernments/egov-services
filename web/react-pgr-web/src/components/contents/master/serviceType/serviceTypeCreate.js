@@ -67,6 +67,7 @@ class ServiceTypeCreate extends Component {
           category:[],
           isCustomFormVisible:false,
           assetFieldsDefination: [],
+          open:false
       }
       this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
       this.addAsset = this.addAsset.bind(this);
@@ -219,6 +220,7 @@ class ServiceTypeCreate extends Component {
     submitForm = (e) => {
 
       e.preventDefault()
+      var current = this;
       console.log(this.props);
       var body = {
           "Service":{
@@ -231,7 +233,7 @@ class ServiceTypeCreate extends Component {
            "group" :this.props.createServiceType.group,
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
-           "metadata" :this.props.createServiceType.metadata,
+           "attributes" :this.props.createServiceType.attributes,
            "slaHours" : this.props.createServiceType.slaHours,
            "tenantId":"default"
           }
@@ -242,12 +244,18 @@ class ServiceTypeCreate extends Component {
         console.log("hi");
           Api.commonApiPost("/pgr-master/service/v1/"+body.Service.serviceCode+"/_update",{},body).then(function(response){
               console.log(response);
+              current.setState({
+                open: true
+              });
           }).catch((error)=>{
               console.log(error);
           })
       } else {
           Api.commonApiPost("/pgr-master/service/v1/_create",{},body).then(function(response){
               console.log(response);
+              current.setState({
+                open: true
+              });
           }).catch((error)=>{
               console.log(error);
           })
@@ -433,7 +441,7 @@ class ServiceTypeCreate extends Component {
 
 
       const  promotionFunc =function() {
-          if(createServiceType.metaData=="true"||createServiceType.metaData==true){
+          if(createServiceType.attributes=="true"||createServiceType.attributes==true){
             console.log("hi");
             return (
               <div className="form-section">
@@ -508,7 +516,7 @@ class ServiceTypeCreate extends Component {
                   <Col xs={12} md={3} sm={6}>
                       <Checkbox
                         label="Required"
-                        style={styles.metaData}
+                        style={styles.required}
                         checked = {createServiceType.required || false}
                         onCheck = {(e, i, v) => { console.log(createServiceType.required, i);
 
@@ -583,14 +591,14 @@ class ServiceTypeCreate extends Component {
         <div className="createServiceType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Service  < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Service' : 'Create Service'} < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Service Code"
+                                      floatingLabelText="Service Code*"
                                       value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
                                       errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
                                         onChange={(e) => handleChange(e, "serviceCode", true, '')}
@@ -601,7 +609,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("core.lbl.servicename")}
+                                      floatingLabelText={translate("core.lbl.servicename")+"*"}
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
                                       onChange={(e) => handleChange(e, "serviceName", true, '')}
@@ -613,7 +621,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Description"
+                                      floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceType.description? createServiceType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       onChange={(e) => handleChange(e, "description", false, '')}
@@ -632,17 +640,25 @@ class ServiceTypeCreate extends Component {
                                       id="type"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
-                                  <TextField
-                                      fullWidth={true}
-                                      floatingLabelText="Keywords"
-                                      value={createServiceType.keywords? createServiceType.keywords : ""}
-                                      errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
-                                      onChange={(e) => handleChange(e, "keywords", false, '')}
-                                      multiLine={true}
-                                      id="keywords"
-                                  />
-                              </Col>
+                              <Col xs={12} md={3}>
+                               <SelectField
+                                    multiple="true"
+                                    errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
+                                    value={createServiceType.keywords ? createServiceType.keywords : ""}
+                                    id="keywords"
+                                    onChange={(e, index, value) => {
+                                       var e = {
+                                         target: {
+                                           value: value
+                                         }
+                                       };
+                                       console.log(value);
+                                       handleChange(e, "keywords", true, "")}}
+                                    floatingLabelText="keywords*" >
+                                        <MenuItem value={"deliverable"} primaryText="deliverable"/>
+                                        <MenuItem value={"complaint"} primaryText="complaint"/>
+                               </SelectField>
+                             </Col>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
@@ -657,7 +673,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="SLA Hours"
+                                      floatingLabelText="SLA Hours*"
                                       value={createServiceType.slaHours? createServiceType.slaHours : ""}
                                       errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
                                       onChange={(e) => handleChange(e, "slaHours", true, '')}
@@ -667,7 +683,7 @@ class ServiceTypeCreate extends Component {
                               </Col>
                               <Col xs={12} md={3} sm={6}>
                                     <SelectField
-                                       floatingLabelText="Category"
+                                       floatingLabelText={translate("core.category")+"*"}
                                        fullWidth={true}
                                        value={createServiceType.category ? createServiceType.category : ""}
                                        onChange= {(e, index ,values) => {
@@ -695,8 +711,8 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                               {console.log(createServiceType.active)}
                                   <Checkbox
-                                    label="Active"
-                                    style={styles.metaData}
+                                    label={translate("pgr.lbl.active")}
+                                    style={styles.active}
                                     checked = {createServiceType.active || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.active, i);
 
@@ -714,7 +730,7 @@ class ServiceTypeCreate extends Component {
                               {console.log(createServiceType.hasFinancialImpact)}
                                   <Checkbox
                                     label="Has Financial Impact"
-                                    style={styles.metaData}
+                                    style={styles.hasFinancialImpact}
                                     checked = {createServiceType.hasFinancialImpact || false}
                                     onCheck = {(e, i, v) => { console.log(createServiceType.hasFinancialImpact, i);
 
@@ -729,21 +745,21 @@ class ServiceTypeCreate extends Component {
                                   />
                               </Col>
                                <Col xs={12} md={3} sm={6}>
-                              {console.log(createServiceType.metaData)}
+                              {console.log(createServiceType.attributes)}
                                   <Checkbox
-                                    label="Meta Data"
-                                    style={styles.metaData}
-                                    checked = {createServiceType.metaData || false}
-                                    onCheck = {(e, i, v) => { console.log(createServiceType.metaData, i);
+                                    label="Attributes"
+                                    style={styles.attributes}
+                                    checked = {createServiceType.attributes || false}
+                                    onCheck = {(e, i, v) => { console.log(createServiceType.attributes, i);
 
                                       var e = {
                                         target: {
                                           value:i
                                         }
                                       }
-                                      handleChange(e, "metaData", false, '')
+                                      handleChange(e, "attributes", false, '')
                                     }}
-                                    id="metaData"
+                                    id="attributes"
                                   />
                               </Col>
                               <div className="clearfix"></div>
@@ -754,8 +770,8 @@ class ServiceTypeCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
               </div>
           </form>
           <Dialog
@@ -787,7 +803,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["serviceName","serviceCode","category","slaHours"]
+          required: ["serviceName","serviceCode","category","slaHours","keywords"]
         },
         pattern: {
           current: [],
@@ -805,8 +821,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["serviceName","serviceCode","category","slaHours"],
-          required: ["serviceName","serviceCode","category","slaHours"]
+          current: ["serviceName","serviceCode","category","slaHours","keywords"],
+          required: ["serviceName","serviceCode","category","slaHours","keywords"]
         },
         pattern: {
           current: [],

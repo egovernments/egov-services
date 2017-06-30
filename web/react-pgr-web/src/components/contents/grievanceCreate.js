@@ -465,7 +465,8 @@ handleError = () => {
                         dataSourceConfig={this.state.boundarySourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={handleAutoCompleteKeyUp}
-                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""} value={grievanceCreate.addressId ? grievanceCreate.addressId : ""}
+                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""}
+                        value={grievanceCreate.addressId ? grievanceCreate.addressId : ""}
                         onNewRequest={(chosenRequest, index) => {
                         var e = {
                           target: {

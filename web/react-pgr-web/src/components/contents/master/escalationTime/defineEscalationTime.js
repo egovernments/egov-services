@@ -387,7 +387,8 @@ class DefineEscalationTime extends Component {
                                                  }}
                                           dataSource={this.state.serviceTypeSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
-                                          //onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceType")}}
+                                          onKeyUp={handleAutoCompleteKeyUp}
+                                          errorText={fieldErrors.serviceType ? fieldErrors.serviceType : "" }
                                           value={defineEscalationTime.serviceType ? defineEscalationTime.serviceType : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
@@ -395,7 +396,7 @@ class DefineEscalationTime extends Component {
                   	                            value: chosenRequest
                   	                          }
                   	                        };
-                  	                        handleChange(e, "serviceType", false, "");
+                  	                        handleChange(e, "serviceType", true, "");
                   	                       }}
                                         />
                                   </Col>
@@ -480,15 +481,9 @@ const mapDispatchToProps = dispatch => ({
     });
   },
 
-  handleAutoCompleteKeyUp : (e, type) => {
-    dispatch({
-      type: "HANDLE_CHANGE",
-      property: type,
-      value: e.target.value,
-      isRequired : true,
-      pattern: ''
-    });
-  }
+  handleAutoCompleteKeyUp : (e) => {
+    dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : true, pattern: ''});
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefineEscalationTime);

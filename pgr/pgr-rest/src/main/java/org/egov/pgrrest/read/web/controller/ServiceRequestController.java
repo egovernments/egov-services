@@ -13,6 +13,7 @@ import org.egov.pgrrest.read.web.contract.CountResponse;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
 import org.egov.pgrrest.read.web.contract.SevaResponse;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -63,14 +64,14 @@ public class ServiceRequestController {
                                               @RequestParam(value = "serviceCode", required = false) String
                                                   serviceCode,
                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy") Date startDate,
+                                                  (pattern = "dd-MM-yyyy") DateTime startDate,
                                               @RequestParam(value = "endDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy") Date endDate,
+                                                  (pattern = "dd-MM-yyyy") DateTime endDate,
                                               @RequestParam(value = "escalationDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy HH:mm:ss") Date escalationDate,
+                                                  (pattern = "dd-MM-yyyy HH:mm:ss") DateTime escalationDate,
                                               @RequestParam(value = "status", required = false) List<String> status,
                                               @RequestParam(value = "lastModifiedDatetime", required = false)
-                                              @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                              @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime lastModifiedDate,
                                               @RequestParam(value = "positionId", required = false) Long positionId,
                                               @RequestParam(value = "userId", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
@@ -120,15 +121,15 @@ public class ServiceRequestController {
                                                 @RequestParam(value = "serviceCode", required = false)
                                                     String serviceCode,
                                                 @RequestParam(value = "startDate", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime startDate,
                                                 @RequestParam(value = "endDate", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime endDate,
                                                 @RequestParam(value = "escalationDate", required = false)
                                                 @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-                                                    Date escalationDate,
+                                                    DateTime escalationDate,
                                                 @RequestParam(value = "status", required = false) List<String> status,
                                                 @RequestParam(value = "lastModifiedDatetime", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime lastModifiedDate,
                                                 @RequestParam(value = "positionId", required = false) Long positionId,
                                                 @RequestParam(value = "userId", required = false) Long userId,
                                                 @RequestParam(value = "name", required = false) String name,

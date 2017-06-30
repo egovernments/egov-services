@@ -83,7 +83,7 @@ public class QueryFactory {
                                                      BoolQueryBuilder boolQueryBuilder) {
         if (criteria.getEscalationDate() != null) {
             final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .from(criteria.getEscalationDate().getTime())
+                .from(criteria.getEscalationDate().getMillis())
                 .includeLower(true);
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         }
@@ -101,19 +101,19 @@ public class QueryFactory {
                                                        BoolQueryBuilder boolQueryBuilder) {
         if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
             final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .from(criteria.getStartDate().getTime())
-                .to(criteria.getEndDate().getTime())
+                .from(criteria.getStartDate().getMillis())
+                .to(criteria.getEndDate().getMillis())
                 .includeLower(true)
                 .includeUpper(true);
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         } else if (criteria.getStartDate() != null) {
             final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .from(criteria.getStartDate().getTime())
+                .from(criteria.getStartDate().getMillis())
                 .includeLower(true);
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         } else if (criteria.getEndDate() != null) {
             final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .to(criteria.getEndDate().getTime())
+                .to(criteria.getEndDate().getMillis())
                 .includeUpper(true);
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         }

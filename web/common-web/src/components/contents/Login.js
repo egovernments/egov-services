@@ -18,7 +18,7 @@ import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 import {Redirect} from 'react-router-dom'
-import Api from '../../api/commonAPIS';
+import Api from '../../api/api';
 var axios = require('axios');
 
 const styles = {
@@ -180,6 +180,12 @@ class Login extends Component {
           errorMsg: "Please check your username and password"
         })
       });
+
+      instance.get('/localization/messages?tenantId=default&locale=en_IN').then(function(response) {
+        localStorage.setItem("lang_response", JSON.stringify(response.data.messages));
+      }).catch(function(response) {
+        throw new Error(response.data.message);
+      });
    }
 
    handleCheckBoxChange = (prevState) => {
@@ -234,10 +240,10 @@ class Login extends Component {
         mobErrorMsg: "Mobile Number / Login ID is required"
       })
 
-    else 
+    else
       self.setState({
         mobErrorMsg: ""
-      });      
+      });
 
     if(type == "link") {
 
@@ -256,7 +262,7 @@ class Login extends Component {
             })
           })
       }, function(err) {
-          
+
       });
     }
    }
@@ -334,7 +340,7 @@ class Login extends Component {
             open2: true
           });
         }, function(err) {
-            
+
         });
       }
    }
@@ -385,7 +391,7 @@ class Login extends Component {
             user.otpReference = response.otp.UUID;
             user.tenantId = localStorage.getItem("tenantId") || "default";
             Api.commonApiPost("user/citizen/_create", {}, {
-              User: user 
+              User: user
             }).then(function(response){
               self.setState({
                 open3: false,
@@ -402,7 +408,7 @@ class Login extends Component {
       }
    }
 
-   render() { 
+   render() {
       let {
         login,
         credential,
@@ -488,7 +494,7 @@ class Login extends Component {
       const isAllFields = function() {
         if(signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword) {
           return true;
-        } 
+        }
 
         return false;
       }
@@ -496,7 +502,7 @@ class Login extends Component {
         return(
           <div className="Login">
             <Grid>
-              <Row>
+             <Row>
                   <Col lg={12}>
                       <SelectField
                         floatingLabelText="Select Language"
@@ -709,7 +715,7 @@ class Login extends Component {
                     <TextField
                         floatingLabelText="Mobile Number"
                         style={styles.fullWidth}
-                        value={signUpObject.mobileNumber} 
+                        value={signUpObject.mobileNumber}
                         type="number"
                         disabled={optSent}
                         onChange={(e) => handleStateChange(e, "signUpObject.mobileNumber")}
@@ -719,7 +725,7 @@ class Login extends Component {
                     <TextField
                         floatingLabelText="Password"
                         style={styles.fullWidth}
-                        value={signUpObject.password} 
+                        value={signUpObject.password}
                         disabled={optSent}
                         type="password"
                         onChange={(e) => handleStateChange(e, "signUpObject.password")}
@@ -729,7 +735,7 @@ class Login extends Component {
                     <TextField
                         floatingLabelText="Confirm Password"
                         style={styles.fullWidth}
-                        value={signUpObject.confirmPassword} 
+                        value={signUpObject.confirmPassword}
                         disabled={optSent}
                         type="password"
                         onChange={(e) => handleStateChange(e, "signUpObject.confirmPassword")}
@@ -739,7 +745,7 @@ class Login extends Component {
                     <TextField
                         floatingLabelText="Full Name"
                         style={styles.fullWidth}
-                        value={signUpObject.name} 
+                        value={signUpObject.name}
                         disabled={optSent}
                         onChange={(e) => handleStateChange(e, "signUpObject.name")}
                     />
@@ -748,7 +754,7 @@ class Login extends Component {
                     <TextField
                         floatingLabelText="Email Address (Optional)"
                         style={styles.fullWidth}
-                        value={signUpObject.emailId} 
+                        value={signUpObject.emailId}
                         disabled={optSent}
                         onChange={(e) => handleStateChange(e, "signUpObject.emailId")}
                     />
@@ -759,7 +765,7 @@ class Login extends Component {
                         (<TextField
                           floatingLabelText="OTP"
                           style={styles.fullWidth}
-                          value={signUpObject.otp} 
+                          value={signUpObject.otp}
                           onChange={(e) => handleStateChange(e, "signUpObject.otp")}
                         />) : ""
                     }

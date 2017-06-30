@@ -27,32 +27,52 @@ public class ServiceRequestESRepository {
     private String indexName;
     private String documentType;
     private QueryFactory queryFactory;
+    private boolean isESRequestLoggingEnabled;
 
     public ServiceRequestESRepository(TransportClient esClient,
                                       @Value("${es.index.name}") String indexName,
                                       @Value("${es.document.type}") String documentType,
-                                      QueryFactory queryFactory) {
+                                      QueryFactory queryFactory,
+                                      @Value("${es.log.request}") boolean isESRequestLoggingEnabled) {
         this.esClient = esClient;
         this.indexName = indexName;
         this.documentType = documentType;
         this.queryFactory = queryFactory;
+        this.isESRequestLoggingEnabled = isESRequestLoggingEnabled;
     }
 
     public long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         final BoolQueryBuilder boolQueryBuilder = queryFactory.create(serviceRequestSearchCriteria);
-        final SearchResponse searchResponse = esClient.prepareSearch(indexName)
+        final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
             .setTypes(documentType)
             .setSize(0)
-            .setQuery(boolQueryBuilder)
+            .setQuery(boolQueryBuilder);
+        logRequest(searchRequestBuilder);
+        final SearchResponse searchResponse = searchRequestBuilder
             .execute()
             .actionGet();
+        logResponse(searchResponse);
         return searchResponse.getHits().getTotalHits();
     }
 
     public List<String> getMatchingServiceRequestIds(ServiceRequestSearchCriteria criteria) {
         final SearchRequestBuilder searchRequestBuilder = getSearchRequest(criteria);
+        logRequest(searchRequestBuilder);
         final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+        logResponse(searchResponse);
         return mapToServiceRequestIdList(searchResponse);
+    }
+
+    private void logRequest(SearchRequestBuilder searchRequestBuilder) {
+        if (isESRequestLoggingEnabled) {
+            log.info(searchRequestBuilder.toString());
+        }
+    }
+
+    private void logResponse(SearchResponse searchResponse) {
+        if (isESRequestLoggingEnabled) {
+            log.info(searchResponse.toString());
+        }
     }
 
     private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {

@@ -109,12 +109,17 @@ public class DemandValidator implements Validator {
 		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService
 				.searchBusinessServiceDetails(businessServiceDetailCriteria, demandRequest.getRequestInfo())
 				.getBusinessServiceDetails();
-		Map<String, BusinessServiceDetail> map = businessServiceDetails.stream()
-				.collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
-		for (String businessService : businessServiceSet) {
-			if (map.get(businessService) == null)
-				errors.rejectValue("Demands", "", "the given businessService value '" + businessService
-						+ "'of Demand.businessService is invalid, please give a valid businessService code");
+		if (businessServiceDetails.isEmpty())
+			errors.rejectValue("Demands", "",
+					"no businessService is found for value of Demand.businessService, please give a valid businessService code");
+		else {
+			Map<String, BusinessServiceDetail> map = businessServiceDetails.stream()
+					.collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
+			for (String businessService : businessServiceSet) {
+				if (map.get(businessService) == null)
+					errors.rejectValue("Demands", "", "the given businessService value '" + businessService
+							+ "'of Demand.businessService is invalid, please give a valid businessService code");
+			}
 		}
 	}
 
@@ -130,22 +135,27 @@ public class DemandValidator implements Validator {
 				.tenantId(demandRequest.getDemands().get(0).getTenantId()).code(codeDemandMap.keySet()).build();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService
 				.getTaxHeads(taxHeadMasterCriteria, demandRequest.getRequestInfo()).getTaxHeadMasters();
-		Map<String, List<TaxHeadMaster>> taxHeadMap = taxHeadMasters.stream()
-				.collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
+		if (taxHeadMasters.isEmpty())
+			errors.rejectValue("Demands", "",
+					"no taxheadmasters found for the given code value DemandDetail.code is invalid, please give a valid code");
+		else {
+			Map<String, List<TaxHeadMaster>> taxHeadMap = taxHeadMasters.stream()
+					.collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
 
-		for (String code : codeDemandMap.keySet()) {
-			Demand demand = codeDemandMap.get(code);
-			if (taxHeadMap.get(code) == null)
-				errors.rejectValue("Demands", "",
-						"the given code value '" + code + "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
-			else {
-				TaxHeadMaster taxHeadMaster = taxHeadMasters.stream()
-						.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0
-								&& demand.getTaxPeriodTo().compareTo(t.getValidTill()) <= 0)
-						.findAny().orElse(null);
-				if (taxHeadMaster == null)
+			for (String code : codeDemandMap.keySet()) {
+				Demand demand = codeDemandMap.get(code);
+				if (taxHeadMap.get(code) == null)
 					errors.rejectValue("Demands", "", "the given code value '" + code
 							+ "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
+				else {
+					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream()
+							.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0
+									&& demand.getTaxPeriodTo().compareTo(t.getValidTill()) <= 0)
+							.findAny().orElse(null);
+					if (taxHeadMaster == null)
+						errors.rejectValue("Demands", "", "the given code value '" + code
+								+ "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
+				}
 			}
 		}
 	}
@@ -158,13 +168,19 @@ public class DemandValidator implements Validator {
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(demandRequest.getRequestInfo())
 				.id(ownerIds).tenantId(demands.get(0).getTenantId()).build();
 		Map<Long, Long> ownerMap = new HashMap<>();
-		for (Owner owner : ownerRepository.getOwners(userSearchRequest)) {
-			ownerMap.put(owner.getId(), owner.getId());
-		}
-		for (Long rsId : ownerIds) {
-			if (ownerMap.get(rsId) == null)
-				errors.rejectValue("demands", "",
-						"the given user id value '" + rsId + "' in Owner.id is invalid, please give a valid user id");
+		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
+		if (owners.isEmpty())
+			errors.rejectValue("demands", "",
+					"no user found for the given criteria in Owner.id, please give a valid user id");
+		else {
+			for (Owner owner : owners) {
+				ownerMap.put(owner.getId(), owner.getId());
+			}
+			for (Long rsId : ownerIds) {
+				if (ownerMap.get(rsId) == null)
+					errors.rejectValue("demands", "", "the given user id value '" + rsId
+							+ "' in Owner.id is invalid, please give a valid user id");
+			}
 		}
 	}
 

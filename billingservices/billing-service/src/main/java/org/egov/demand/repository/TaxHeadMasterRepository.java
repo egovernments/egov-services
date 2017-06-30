@@ -39,37 +39,9 @@ public class TaxHeadMasterRepository {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String queryStr = taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteria, preparedStatementValues);
-		List<TaxHeadMaster> taxHeadMaster = null;
-		try {
-			log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
-			taxHeadMaster = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), taxHeadMasterRowMapper);
-			log.debug("TaxHeadRepository::" + taxHeadMaster);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			log.debug("the exception from findforcriteria : " + ex);
-		}
-		return taxHeadMaster;
+		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), taxHeadMasterRowMapper);
 	}
 	
-	public Integer getNextTaxHeadMasterId() {
-		String query = "SELECT nextval('seq_egbs_taxHeadMaster')";
-		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-		return result;
-	}
-	
-	public String getTaxHeadMasterCode() {
-		String query = "SELECT nextval('seq_egbs_taxHeadMastercode')";
-		Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-		log.debug("result:" + result);
-		StringBuilder code = null;
-		try {
-			code = new StringBuilder(String.format("%06d", result));
-		} catch (Exception ex) {
-			log.debug("the exception from seq number gen for code : " + ex);
-		}
-		return code.toString();
-	}
-
 	@Transactional
 	public List<TaxHeadMaster> create(TaxHeadMasterRequest taxHeadMasterRequest){
 		

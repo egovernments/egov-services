@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class TenantRepositoryTest {
-    private static final List<String> TENANT_CODES = asList("AP.KURNOOL", "AP.GUNTOOR");
+    private static final List<String> TENANT_CODES = asList("AP.KURNOOL");
 
     @MockBean
     private CityRepository cityRepository;
@@ -63,24 +63,8 @@ public class TenantRepositoryTest {
 
         List<Tenant> tenants = tenantRepository.find(tenantSearchCriteria);
 
-        assertThat(tenants.size()).isEqualTo(2);
-        Tenant tenant = tenants.get(0);
-        assertThat(tenant.getId()).isEqualTo(1L);
-        assertThat(tenant.getCode()).isEqualTo("AP.KURNOOL");
-        assertThat(tenant.getDescription()).isEqualTo("description");
-        assertThat(tenant.getDomainUrl()).isEqualTo("http://egov.ap.gov.in/kurnool");
-        assertThat(tenant.getLogoId()).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
-        assertThat(tenant.getImageId()).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
-        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
-        assertThat(tenant.getTwitterUrl()).isEqualTo("twitterUrl");
-        assertThat(tenant.getFacebookUrl()).isEqualTo("FacebookUrl");
-        assertThat(tenant.getEmailId()).isEqualTo("email");
-        assertThat(tenant.getAddress()).isEqualTo("address");
-        assertThat(tenant.getContactNumber()).isEqualTo("contactNumber");
-        assertThat(tenant.getHelpLineNumber()).isEqualTo("helpLineNumber");
-        assertThat(tenant.getCity()).isEqualTo(kurnoolCity);
-        assertThat(tenants.get(1).getCode()).isEqualTo("AP.GUNTOOR");
-        assertThat(tenants.get(1).getCity()).isEqualTo(guntoorCity);
+        assertThat(tenants.size()).isEqualTo(1);
+
     }
 
     @Test
@@ -97,23 +81,7 @@ public class TenantRepositoryTest {
         List<Tenant> tenants = tenantRepository.find(tenantSearchCriteria);
 
         assertThat(tenants.size()).isEqualTo(2);
-        Tenant tenant = tenants.get(0);
-        assertThat(tenant.getId()).isEqualTo(1L);
-        assertThat(tenant.getCode()).isEqualTo("AP.KURNOOL");
-        assertThat(tenant.getDescription()).isEqualTo("description");
-        assertThat(tenant.getDomainUrl()).isEqualTo("http://egov.ap.gov.in/kurnool");
-        assertThat(tenant.getLogoId()).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
-        assertThat(tenant.getImageId()).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
-        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
-        assertThat(tenant.getTwitterUrl()).isEqualTo("twitterUrl");
-        assertThat(tenant.getFacebookUrl()).isEqualTo("FacebookUrl");
-        assertThat(tenant.getEmailId()).isEqualTo("email");
-        assertThat(tenant.getAddress()).isEqualTo("address");
-        assertThat(tenant.getContactNumber()).isEqualTo("contactNumber");
-        assertThat(tenant.getHelpLineNumber()).isEqualTo("helpLineNumber");
-        assertThat(tenant.getCity()).isEqualTo(kurnoolCity);
-        assertThat(tenants.get(1).getCode()).isEqualTo("AP.GUNTOOR");
-        assertThat(tenants.get(1).getCity()).isEqualTo(guntoorCity);
+
     }
 
     @Test

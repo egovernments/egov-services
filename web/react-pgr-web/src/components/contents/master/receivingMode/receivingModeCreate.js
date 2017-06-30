@@ -109,7 +109,7 @@ class receivingModeCreate extends Component {
          description :receivingmodeSet.description,
          active :receivingmodeSet.active?receivingmodeSet.active:false,
          tenantId :localStorage.getItem("tenantId"),
-         channels :[receivingmodeSet.channel]
+         channels :receivingmodeSet.channel
        }
     }
       if(_this.props.match.params.id){
@@ -190,6 +190,7 @@ class receivingModeCreate extends Component {
                     </Col>
                     <Col xs={12} md={3}>
                      <SelectField
+                          multiple="true"
                           errorText={fieldErrors.description ? fieldErrors.description : ""}
                           value={receivingmodeSet.channel ? receivingmodeSet.channel : ""}
                           id="channel"
@@ -199,6 +200,7 @@ class receivingModeCreate extends Component {
                                  value: value
                                }
                              };
+                             console.log(value);
                              handleChange(e, "channel", true, "")}}
                           floatingLabelText="Channel*" >
                               <MenuItem value={"WEB"} primaryText="WEB"/>

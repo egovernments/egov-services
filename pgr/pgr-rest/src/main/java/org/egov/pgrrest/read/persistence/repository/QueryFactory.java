@@ -99,11 +99,21 @@ public class QueryFactory {
 
     private BoolQueryBuilder addCreatedDateRangeFilter(ServiceRequestSearchCriteria criteria,
                                                        BoolQueryBuilder boolQueryBuilder) {
-        if (criteria.getStartDate() != null) {
+        if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
             final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
                 .from(criteria.getStartDate().getTime())
                 .to(criteria.getEndDate().getTime())
                 .includeLower(true)
+                .includeUpper(true);
+            boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
+        } else if (criteria.getStartDate() != null) {
+            final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
+                .from(criteria.getStartDate().getTime())
+                .includeLower(true);
+            boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
+        } else if (criteria.getEndDate() != null) {
+            final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
+                .to(criteria.getEndDate().getTime())
                 .includeUpper(true);
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         }

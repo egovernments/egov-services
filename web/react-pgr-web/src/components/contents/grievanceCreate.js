@@ -367,7 +367,7 @@ handleError = () => {
                          : ''
                       }
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, /^[a-zA-Z]+$/)} maxLength="50" minLength="1"
                         />
                       </Col>
                       <Col xs={12} md={3}>
@@ -376,7 +376,7 @@ handleError = () => {
                     </Row>
                     <Row>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  maxLength="50" />
                       </Col>
                       <Col xs={12} md={3}>
                         <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(e) => handleChange(e, "requesterAddress", false, '')} />

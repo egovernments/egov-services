@@ -138,7 +138,7 @@ class createRouter extends Component {
         	}
 
           self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType));
-          searchTextCom = response.RouterTypRes[0].service.serviceName;
+          searchTextCom = response.RouterTypRes[0].service.serviceName || "";
           searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary[0].boundaryType) || "";
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
 
@@ -309,7 +309,7 @@ class createRouter extends Component {
                    <Col xs={12} md={8}>
                    	<AutoComplete
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.grievance.type")}
+                        floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.complaintSource}
@@ -335,7 +335,7 @@ class createRouter extends Component {
                    	<SelectField
                       disabled={readonly}
                       fullWidth={true}
-                      floatingLabelText={translate("pgr.lbl.boundarytype")}
+                      floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
                       errorText={fieldErrors.boundaryType || ""}
                       value={(routerCreateSet.boundaryType + "") || ""}
                       onChange={(e, i, val) => {
@@ -352,7 +352,7 @@ class createRouter extends Component {
                    	<AutoComplete
                    		disabled={readonly}
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.boundary")}
+                        floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.boundarySource}
@@ -377,7 +377,7 @@ class createRouter extends Component {
                    	<AutoComplete
                    		disabled={readonly}
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.position")}
+                        floatingLabelText={translate("pgr.lbl.position") + " *"}
                         fullWidth={true}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.positionSource}

@@ -373,7 +373,7 @@ class routerGeneration extends Component {
                  <Grid>
                    <Row>
                    <Col xs={12} md={8}>
-                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.grievance.category")} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.grievance.category") + " *"} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
 	                					handleChange(e, "complaintTypeCategory", true, "")}}>
@@ -385,7 +385,7 @@ class routerGeneration extends Component {
                    <Col xs={12} md={8}>
                     <SelectField 
                       fullWidth={true} 
-                      floatingLabelText={translate("pgr.lbl.grievance.type")} 
+                      floatingLabelText={translate("pgr.lbl.grievance.type") + " *"} 
                       errorText={fieldErrors.complaintTypes} 
                       value={routerCreateSet.complaintTypes} 
                       onChange={(e, i, val) => {
@@ -403,7 +403,7 @@ class routerGeneration extends Component {
                     </SelectField>
                    </Col>
                    <Col xs={12} md={8}>
-                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
 	                					handleChange(e, "boundaryType", true, "")}}>
@@ -415,7 +415,7 @@ class routerGeneration extends Component {
                    <Col xs={12} md={8}>
                     <SelectField 
                       fullWidth={true} 
-                      floatingLabelText={translate("pgr.lbl.boundary")} 
+                      floatingLabelText={translate("pgr.lbl.boundary") + " *"} 
                       errorText={fieldErrors.boundaries || ""} 
                       value={routerCreateSet.boundaries} 
                       onChange={(e, i, val) => {
@@ -437,7 +437,7 @@ class routerGeneration extends Component {
                    <Col xs={12} md={8}>
                     	<AutoComplete
                         hintText=""
-                        floatingLabelText={translate("pgr.lbl.position")}
+                        floatingLabelText={translate("pgr.lbl.position") + " *"}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
                         dataSource={this.state.positionSource}

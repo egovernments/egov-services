@@ -37,37 +37,38 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.demand.model;
+package org.egov.demand.web.validator;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.repository.BusinessServiceDetailRepository;
+import org.egov.demand.web.contract.BusinessServiceDetailRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TaxPeriod {
+@Component
+public class BusinessServiceDetailValidator {
 
-	private String id;
+    private static final Logger logger = LoggerFactory.getLogger(BusinessServiceDetailValidator.class);
 
-	@NotNull
-	private String tenantId;
+    @Autowired
+    private BusinessServiceDetailRepository businessServiceDetailRepository;
 
-	@NotNull
-	private Long fromDate;
+    public void validateBusinessServDetails(BusinessServiceDetailRequest businessServiceDetailRequest, String mode) {
+        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
+        if ("edit".equalsIgnoreCase(mode)) {
+            for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
+                if (StringUtils.isBlank(businessServiceDetail.getId()))
+                    throw new RuntimeException("Id cannot be null, Please provide the Id ");
+            }
+        }
+        boolean result = businessServiceDetailRepository.checkForDuplicates(businessServiceDetailList, mode);
+        if (result)
+            throw new RuntimeException("BusinessServiceDetail already exists for this combination of tenantId and business service ");
 
-	@NotNull
-	private Long toDate;
-
-	@NotNull
-	private String service;
-
-	@NotNull
-	private String code;
-
-	private String financialYear;
-
-	private AuditDetail auditDetail;
+    }
 }

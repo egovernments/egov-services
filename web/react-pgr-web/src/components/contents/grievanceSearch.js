@@ -17,7 +17,7 @@ import Api from '../../api/api';
 import {translate} from '../common/common';
 
 const getNameById = function(object, id, property = "") {
-  if(!object) return; 
+  if(!object) return;
   if (id == "" || id == null) {
         return "";
     }
@@ -109,7 +109,8 @@ class grievanceSearch extends Component {
   }
 
   handleNavigation(serviceId) {
-    window.open('#/viewGrievance/' + serviceId, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+    history.push('/viewGrievance/' + serviceId);
+		window.location.reload();
   }
 
   handleOpenNClose() {

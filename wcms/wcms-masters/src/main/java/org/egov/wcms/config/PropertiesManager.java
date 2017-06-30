@@ -37,51 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.model;
+package org.egov.wcms.config;
 
-import javax.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 
-import org.hibernate.validator.constraints.Length;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
-@Setter
 @ToString
-@Builder
-public class PropertyTypePipeSize {
+@Configuration
+@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+public class PropertiesManager {
 
-    public static final String SEQ_PROPERTY_PIPESIZE = "SEQ_EGWTR_PROPERTY_PIPESIZE";
+	@Value("${egov.services.pt_property.hostname}")
+	private String propertTaxServiceBasePathTopic;
 
-    @NotNull
-    private Long id;
+	@Value("${egov.services.pt_property_propertytype.searchpath}")
+	private String propertyTaxServicePropertyTypeSearchPathTopic;
 
-    @NotNull
-    private Long pipeSizeId;
+	public String getPropertTaxServiceBasePathTopic() {
+		return propertTaxServiceBasePathTopic;
+	}
 
-    @NotNull
-    private Double pipeSize;
+	public String getPropertyTaxServicePropertyTypeSearchPathTopic() {
+		return propertyTaxServicePropertyTypeSearchPathTopic;
+	}
 
-    @NotNull
-    private String propertyTypeId;
-
-    @NotNull
-    private String propertyTypeName;
-
-    private Boolean active;
-
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
-
-    private AuditDetails auditDetails;
 }

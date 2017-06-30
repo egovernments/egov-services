@@ -49,7 +49,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypePipeSize;
-import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
+import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
@@ -79,7 +79,7 @@ public class PopertyTypePipeSizeController {
     private static final Logger logger = LoggerFactory.getLogger(PopertyTypePipeSizeController.class);
 
     @Autowired
-    private PropertyTypePipeSizeTypeService propertPipeSizeService;
+    private PropertyTypePipeSizeService propertPipeSizeService;
 
     @Autowired
     private ErrorHandler errHandler;

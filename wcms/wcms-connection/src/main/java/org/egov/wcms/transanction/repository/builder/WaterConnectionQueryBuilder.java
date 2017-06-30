@@ -40,14 +40,10 @@
 
 package org.egov.wcms.transanction.repository.builder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WaterConnectionQueryBuilder {
-
-    private static final Logger logger = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT DISTINCT connection.id as conn_id ,"
             + "connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, "
@@ -75,7 +71,7 @@ public class WaterConnectionQueryBuilder {
             + " egwtr_pipesize pipesize WHERE "
             + " connection.categorytype=category.id AND connection.hscpipesizetype=pipesize.id "
             + " AND connection.sourcetype=watersource.id AND connection.supplytype=supplytype.id ";
-    
+
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
                 + "(nextval('seq_egwtr_documentowner'),?,?,?,?,?)";
@@ -107,15 +103,14 @@ public class WaterConnectionQueryBuilder {
                 + ",?,?,?,?,?"
                 + ",?,?)";
     }
-    
+
     public static String updateConnectionQuery() {
 
-        
         return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
                 + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,"
                 + "where acknowledgmentnumber = ?";
-     }
+    }
 
     public static String insertLegacyConnectionQuery() {
         return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,"
@@ -140,9 +135,8 @@ public class WaterConnectionQueryBuilder {
                 + "legacyconsumernumber,consumernumber,parentconnectionid) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
-    
-    public static String getWaterConnectionByacknowledgenumber()
-    {
-       return BASE_QUERY + " AND connection.acknowledgmentnumber = ?";
+
+    public static String getWaterConnectionByacknowledgenumber() {
+        return BASE_QUERY + " AND connection.acknowledgmentnumber = ?";
     }
 }

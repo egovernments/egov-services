@@ -152,6 +152,7 @@ class grievanceSearch extends Component {
 
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
+      
   		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {

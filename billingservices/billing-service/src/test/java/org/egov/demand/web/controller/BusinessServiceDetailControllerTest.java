@@ -102,7 +102,7 @@ public class BusinessServiceDetailControllerTest {
         when(businessServDetailService.searchBusinessServiceDetails(Matchers.any(BusinessServiceDetailCriteria.class), Matchers.any(RequestInfo.class)))
                 .thenReturn(businessServiceDetailResponse);
 
-        mockMvc.perform(post("/businessservices/_search").param("businessservice", "Test Business Service").param("tenantId", "ap.kurnool")
+        mockMvc.perform(post("/businessservices/_search").param("businessService", "Test Business Service").param("tenantId", "ap.kurnool")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

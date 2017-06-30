@@ -17,6 +17,12 @@ public class TenantTest {
                 .imageId("imageid")
                 .domainUrl("domainUrl")
                 .type(TenantType.CITY)
+                .twitterUrl("twitterUrl")
+                .facebookUrl("facebookUrl")
+                .address("address")
+                .contactNumber("contactNumber")
+                .helplineNumber("helpLineNumber")
+                .emailId("email")
                 .build();
 
         org.egov.tenant.domain.model.Tenant tenantModel = tenant.toDomain();
@@ -28,5 +34,13 @@ public class TenantTest {
         assertThat(tenantModel.getImageId()).isEqualTo("imageid");
         assertThat(tenantModel.getDomainUrl()).isEqualTo("domainUrl");
         assertThat(tenantModel.getType()).isEqualTo(TenantType.CITY);
+        assertThat(tenantModel.getTwitterUrl()).isEqualTo("twitterUrl");
+        assertThat(tenantModel.getFacebookUrl()).isEqualTo("facebookUrl");
+        assertThat(tenantModel.getEmailId()).isEqualTo("email");
+        assertThat(tenantModel.getAddress()).isEqualTo("address");
+        assertThat(tenantModel.getContactNumber()).isEqualTo("contactNumber");
+        assertThat(tenantModel.getHelpLineNumber()).isEqualTo("helpLineNumber");
+        
+        
     }
 }

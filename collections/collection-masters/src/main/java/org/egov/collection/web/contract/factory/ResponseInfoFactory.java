@@ -39,10 +39,13 @@
  */
 package org.egov.collection.web.contract.factory;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
+
+import org.egov.collection.web.contract.RequestInfo;
+import org.egov.collection.web.contract.ResponseInfo;
 import org.springframework.stereotype.Component;
 
+import lombok.EqualsAndHashCode;
+@EqualsAndHashCode
 @Component
 public class ResponseInfoFactory {
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {

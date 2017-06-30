@@ -1,6 +1,7 @@
 package org.egov.tenant.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,13 @@ public class Tenant {
     private String imageId;
     private String domainUrl;
     private String type;
+    private String twitterUrl;
+    private String facebookUrl;
+    private String emailId;
     private City city;
+    private String address;
+    private String contactNumber;
+    private String helpLineNumber;
 
     public Tenant(org.egov.tenant.domain.model.Tenant tenant, City city) {
         this.code = tenant.getCode();
@@ -26,6 +33,13 @@ public class Tenant {
         this.imageId = tenant.getImageId();
         this.domainUrl = tenant.getDomainUrl();
         this.type = tenant.getType().toString();
+        this.twitterUrl= tenant.getTwitterUrl();
+        this.facebookUrl= tenant.getFacebookUrl();
+        this.address = tenant.getAddress();
+        this.contactNumber = tenant.getContactNumber();
+        this.helpLineNumber = tenant.getHelpLineNumber();
+        this.emailId = tenant.getEmailId();
+       
         this.city = city;
     }
 
@@ -46,6 +60,12 @@ public class Tenant {
             .imageId(imageId)
             .domainUrl(domainUrl)
             .type(type)
+            .twitterUrl(twitterUrl)
+            .facebookUrl(facebookUrl)
+            .emailId(emailId)
+            .address(address)
+            .contactNumber(contactNumber)
+            .helpLineNumber(helpLineNumber)
             .city(city)
             .build();
     }

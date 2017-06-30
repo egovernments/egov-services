@@ -123,7 +123,7 @@ class grievanceView extends Component{
   }
   getReceivingCenter(){
     if(this.state.receivingCenter){
-      Api.commonApiPost("/pgr/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
+      Api.commonApiPost("/pgr-master/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
       {
         currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
         currentThis.getLocation();

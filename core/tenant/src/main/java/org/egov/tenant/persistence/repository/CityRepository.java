@@ -14,8 +14,16 @@ import static org.egov.tenant.persistence.entity.City.*;
 public class CityRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final String INSERT_QUERY = "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, ulbgrade, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
-        "VALUES (nextval('seq_city'), :name, :localname, :districtcode, :districtname, :regionname, :longitude, :latitude, :tenantcode, :ulbgrade, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate)";
+    private final String INSERT_QUERY = "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, ulbgrade, createdby, createddate, lastmodifiedby, lastmodifieddate,shapefilelocation,captcha) " +
+        "VALUES (nextval('seq_city'), :name, :localname, :districtcode, :districtname, :regionname, :longitude, :latitude, :tenantcode, :ulbgrade, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate,:shapefilelocation, :captcha)";
+    
+    private final String UPDATE_QUERY = "update city set  name =:name, localname = :localname, districtcode = :districtcode, districtname = :districtname, regionname = :regionname, longitude = :longitude, latitude =:latitude, ulbgrade = :ulbgrade, "
+    		+" lastmodifiedby =:lastmodifiedby, lastmodifieddate =:lastmodifieddate, shapefilelocation=:shapefilelocation, captcha = :captcha" 
+            +" where tenantcode = :tenantcode ";
+    
+        
+    
+    
     private final String SELECT_QUERY = "SELECT * FROM city WHERE tenantcode = :tenantcode";
 
     public CityRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -37,9 +45,34 @@ public class CityRepository {
             put(CREATED_DATE, city.getCreatedDate());
             put(LAST_MODIFIED_BY, city.getLastModifiedBy());
             put(LAST_MODIFIED_DATE, city.getLastModifiedDate());
+            put(SHAPEFILE_LOCATION,city.getShapeFileLocation());
+            put(CAPTCHA, city.getCaptcha());
         }};
 
         namedParameterJdbcTemplate.update(INSERT_QUERY, parametersMap);
+
+        return city;
+    }
+    
+    public City update(City city, String tenantCode) {
+        Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put(NAME, city.getName());
+            put(LOCAL_NAME, city.getLocalName());
+            put(DISTRICT_CODE, city.getDistrictCode());
+            put(DISTRICT_NAME, city.getDistrictName());
+            put(REGION_NAME, city.getRegionName());
+            put(LONGITUDE, city.getLongitude());
+            put(LATITUDE, city.getLatitude());
+            put(ULB_GRADE, city.getUlbGrade());
+            put(LAST_MODIFIED_BY, city.getLastModifiedBy());
+            put(LAST_MODIFIED_DATE, city.getLastModifiedDate());
+            put(SHAPEFILE_LOCATION,city.getShapeFileLocation());
+            put(CAPTCHA, city.getCaptcha());
+            put(TENANT_CODE, tenantCode);
+            
+        }};
+
+        namedParameterJdbcTemplate.update(UPDATE_QUERY, parametersMap);
 
         return city;
     }

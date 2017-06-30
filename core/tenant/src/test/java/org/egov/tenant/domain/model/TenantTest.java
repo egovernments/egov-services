@@ -34,6 +34,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
             .build();
         assertThat(tenant.isCityAbsent()).isFalse();
         tenant.validate();
@@ -48,6 +54,12 @@ public class TenantTest {
             .imageId("imageId")
             .domainUrl("domainUrl")
             .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .city(null)
             .build();
 
@@ -65,6 +77,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isCodeAbsent()).isTrue();
@@ -81,6 +99,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isCodeAbsent()).isTrue();
@@ -99,6 +123,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isCodeOfInvalidLength()).isTrue();
@@ -115,6 +145,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isLogoIdAbsent()).isTrue();
@@ -131,6 +167,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isLogoIdAbsent()).isTrue();
@@ -147,6 +189,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isImageIdAbsent()).isTrue();
@@ -163,6 +211,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("CITY")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isImageIdAbsent()).isTrue();
@@ -179,6 +233,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type(null)
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isTypeAbsent()).isTrue();
@@ -195,6 +255,12 @@ public class TenantTest {
             .domainUrl("domainUrl")
             .type("INVALID")
             .city(city)
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .emailId("email")
             .build();
 
         assertThat(tenant.isTypeInvalid()).isTrue();

@@ -79,6 +79,13 @@ public class ReceiptReqValidator {
 				errorFields.add(errorField);
 			}
 			
+			if(null == billDetails.getCollectionType() || billDetails.getCollectionType().isEmpty() ){
+				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLLECTIONTYPE_MISSING_CODE)
+						.message(CollectionServiceConstants.COLLECTIONTYPE_MISSING_MESSAGE)
+						.field(CollectionServiceConstants.COLLECTIONTYPE_MISSING_FIELD).build();
+				errorFields.add(errorField);
+			}
+			
 			if(null == billDetails.getBusinessDetailsCode() || billDetails.getBusinessDetailsCode().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BD_CODE_MISSING_CODE)
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)

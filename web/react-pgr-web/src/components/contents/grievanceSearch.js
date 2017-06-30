@@ -16,6 +16,29 @@ import Snackbar from 'material-ui/Snackbar';
 import Api from '../../api/api';
 import {translate} from '../common/common';
 
+const getNameById = function(object, id, property = "") {
+  if(!object) return; 
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 const getNameByProperty = function(object, key) {
 	if(object) {
 		for(var i=0; i<object.length; i++) {
@@ -190,7 +213,7 @@ class grievanceSearch extends Component {
     	checkCountAndCall("departmentList", []);
     });
 
-    Api.commonApiPost("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}, true).then(function(response) {
+    Api.commonApiGet("/egov-location/boundarys", {"boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
       	checkCountAndCall("boundaryList", response.Boundary);
     }, function(err) {
     	checkCountAndCall("boundaryList", []);
@@ -241,9 +264,9 @@ class grievanceSearch extends Component {
   						<td>{val.serviceRequestId}</td>
   						<td>{val.serviceName}</td>
   						<td>{val.firstName}</td>
-  						<td>{(getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameByProperty(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
+  						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
   						<td>{getNameByProperty(val.attribValues, "status")}</td>
-  						<td>{getNameByProperty(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
+  						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
   						<td>{val.requestedDatetime}</td>
   					</tr>
   				)

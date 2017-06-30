@@ -153,7 +153,7 @@ class createRouter extends Component {
     }
   }
 
-  	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
+  	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION", boundaryTypeName: "WARD"}).then(function(response) {
       	self.setState({
       		boundaryTypeList: response.BoundaryType
       	}, function(){

@@ -213,7 +213,7 @@ class routerGeneration extends Component {
     	checkCountAndCall("categoryList", []);
     });
 
-	  Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
+	  Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION", boundaryType: "WARD"}).then(function(response) {
       	checkCountAndCall("boundaryTypeList", response.BoundaryType);
     }, function(err) {
     	checkCountAndCall("boundaryTypeList", []);

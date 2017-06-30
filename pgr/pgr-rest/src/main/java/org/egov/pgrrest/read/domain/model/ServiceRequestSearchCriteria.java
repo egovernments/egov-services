@@ -24,7 +24,7 @@ public class ServiceRequestSearchCriteria {
 	private String name;
 	private String mobileNumber;
 	private String emailId;
-	private Long receivingMode;
+	private String receivingMode;
 	private Long locationId;
 	private Long childLocationId;
 	private String tenantId;

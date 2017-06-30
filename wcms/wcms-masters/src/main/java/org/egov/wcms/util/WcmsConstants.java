@@ -61,6 +61,7 @@ public class WcmsConstants {
     public static final String INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE = "PropertyPipeSize is invalid";
     public static final String INVALID_DOCTYPE_APPLICATION_TYPE_REQUEST_MESSAGE = "DocumentTypeApplicationType is invalid";
     public static final String INVALID_WATERSOURCETYPE_REQUEST_MESSAGE = "Water Source Type is invalid";
+    public static final String INVALID_PROPERTY_CATEGORY_REQUEST_MESSAGE = "PropertyCategory is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -202,8 +203,8 @@ public class WcmsConstants {
     public static final String DOCUMENTTYPE_UNQ_ERROR_MESSAGE = "Entered Document Type already exist";
 
     public static final String PROPERTY_CATEGORY_INVALID_CODE = "wcms.0034";
-    public static final String PROPERTY_CATEGORY_INVALID_FIELD_NAME = "propertyType - categoryType";
-    public static final String PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE = "Property Type - Category Type values don't match.";
+    public static final String PROPERTY_CATEGORY_INVALID_FIELD_NAME = "propertyType and categoryType";
+    public static final String PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE = "Entered PropertyTYpe and CategoryType Combination already exist.";
 
     public static final String PROPERTY_USAGE_INVALID_CODE = "wcms.0035";
     public static final String PROPERTY_USAGE_INVALID_FIELD_NAME = "propertyType - usageType";
@@ -260,7 +261,7 @@ public class WcmsConstants {
     public static final String SUPPLYTYPE_INVALID_FIELD_NAME = "supplyType.name";
     public static final String SUPPLYTYPE_INVALID_ERROR_MESSAGE = "SupplyType name doesn't Exist";
     
-    public static final String PROPERTY_PROPERTYTYPE_INVALID_CODE = "wcms.0042";
+	public static final String PROPERTY_PROPERTYTYPE_INVALID_CODE = "wcms.0042";
     public static final String PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE = "propertyType";
     public static final String PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME = "Please provide valid Property Type";
     

@@ -40,65 +40,96 @@
 
 package org.egov.wcms.service;
 
+import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
+import org.egov.wcms.web.contract.PropertyTypeResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PropertyCategoryService {
 
-    @Autowired
-    private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
+	@Autowired
+	private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
 
-    @Autowired
-    private WaterMasterProducer waterMasterProducer;
+	@Autowired
+	private WaterMasterProducer waterMasterProducer;
 
-    public static final Logger logger = LoggerFactory.getLogger(PropertyCategoryService.class);
+	@Autowired
+	private PropertiesManager propertiesManager;
 
-    public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
-            final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+	@Autowired
+	private RestPropertyTaxMasterService restPropertyTaxMasterService;
 
-        final ObjectMapper mapper = new ObjectMapper();
-        String propertyCategoryValue = null;
-        try {
-            logger.info("createPropertyCategory service::" + propertyCategoryRequest);
-            propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
-            logger.info("propertyCategoryValue::" + propertyCategoryValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, propertyCategoryValue);
-        } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
-        }
-        return propertyCategoryRequest;
-    }
+	public static final Logger logger = LoggerFactory.getLogger(PropertyCategoryService.class);
 
-    public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-        return propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest);
-    }
+	public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
+			final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 
-    public PropertyTypeCategoryTypeReq update(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-        return propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest);
-    }
+		final ObjectMapper mapper = new ObjectMapper();
+		String propertyCategoryValue = null;
+		try {
+			logger.info("createPropertyCategory service::" + propertyCategoryRequest);
+			propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
+			logger.info("propertyCategoryValue::" + propertyCategoryValue);
+		} catch (final JsonProcessingException e) {
+			logger.error("Exception Encountered : " + e);
+		}
+		try {
+			waterMasterProducer.sendMessage(topic, key, propertyCategoryValue);
+		} catch (final Exception ex) {
+			logger.error("Exception Encountered : " + ex);
+		}
+		return propertyCategoryRequest;
+	}
 
-    public PropertyTypeCategoryTypesRes getPropertyCategories(final PropertyCategoryGetRequest propertyCategoryGetRequest) {
-        return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
+	public PropertyTypeCategoryTypeReq create(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+		return propertyCategoryRepository.persistCreatePropertyCategory(propertyCategoryRequest);
+	}
 
-    }
+	public PropertyTypeCategoryTypeReq update(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+		return propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest);
+	}
 
-    public boolean checkIfMappingExists(final String propertyType, final String categoryType, final String tenantId) {
-        return propertyCategoryRepository.checkIfMappingExists(propertyType, categoryType, tenantId);
-    }
+	public PropertyTypeCategoryTypesRes getPropertyCategories(
+			final PropertyCategoryGetRequest propertyCategoryGetRequest) {
+		return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
+
+	}
+
+	public boolean checkIfMappingExists(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+
+		getPropertyTypeByName(propertyCategoryRequest);
+		return propertyCategoryRepository.checkIfMappingExists(
+				propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeId(),
+				propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName(),
+				propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
+	}
+
+	public Boolean getPropertyTypeByName(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+		Boolean isValidProperty = Boolean.FALSE;
+		String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+				+ propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+		url = url.replace("{name}", propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName());
+		url = url.replace("{tenantId}", propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
+		final PropertyTypeResponseInfo propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+		if (propertyTypes.getPropertyTypesSize()) {
+			isValidProperty = Boolean.TRUE;
+			propertyCategoryRequest.getPropertyTypeCategoryType().setPropertyTypeId(
+					propertyTypes.getPropertyTypes() != null && propertyTypes.getPropertyTypes().get(0) != null
+							? propertyTypes.getPropertyTypes().get(0).getId() : "");
+
+		}
+		return isValidProperty;
+
+	}
 
 }

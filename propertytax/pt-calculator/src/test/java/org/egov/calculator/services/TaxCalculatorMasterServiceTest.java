@@ -60,7 +60,7 @@ public class TaxCalculatorMasterServiceTest {
 		CalculationFactor calculationFactor = new CalculationFactor();
 		calculationFactor.setTenantId("default");
 		calculationFactor.setFactorCode("propertytax");
-		calculationFactor.setFactorType(CalculationFactorTypeEnum.OCCUPANCY);
+		calculationFactor.setFactorType(CalculationFactorTypeEnum.AGE);
 		calculationFactor.setFactorValue(1234.12);
 		calculationFactor.setFromDate("10/06/2007  00:00:00");
 		calculationFactor.setToDate("25/06/2017  00:00:00");
@@ -102,7 +102,7 @@ public class TaxCalculatorMasterServiceTest {
 		CalculationFactor calculationFactor = new CalculationFactor();
 		calculationFactor.setTenantId("default");
 		calculationFactor.setFactorCode("propertytax");
-		calculationFactor.setFactorType(CalculationFactorTypeEnum.USAGE);
+		calculationFactor.setFactorType(CalculationFactorTypeEnum.AGE);
 		calculationFactor.setFactorValue(1234.12);
 		calculationFactor.setFromDate("10/06/2007  00:00:00");
 		calculationFactor.setToDate("25/06/2017  00:00:00");
@@ -141,7 +141,7 @@ public class TaxCalculatorMasterServiceTest {
 	public void searchFactor() {
 
 		String tenantId = "default";
-		String factorType = "usage";
+		String factorType = "age";
 		String validDate = "16/06/2007";
 		String code = "propertytax";
 		RequestInfo requestInfo = getRequestInfoObject();

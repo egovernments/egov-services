@@ -53,7 +53,7 @@ public void test_Should_Create_Router() {
     rt = getRouter();
     pr.setRouterType(rt);	
 	assertTrue(pr
-                .equals(routerRepository.createRouter(pr)));
+                .equals(routerRepository.createRouter(pr,true)));
 
 }
 @Test
@@ -67,7 +67,7 @@ public void test_Should_Update_Router() {
     pr.setRequestInfo(requestInfo);
     pr.setRouterType(getRouter());	
 	assertTrue(pr
-                .equals(routerRepository.updateRouter(pr)));
+                .equals(routerRepository.updateRouter(pr,true)));
 
 }
 

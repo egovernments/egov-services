@@ -37,26 +37,27 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+package org.egov.wcms.service;
 
-import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.web.contract.PropertyTypeResponseInfo;
+import org.egov.wcms.web.contract.RequestInfoWrapper;
+import org.springframework.http.HttpEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-@Component
-public class PropertyCategoryRowMapper implements RowMapper<PropertyTypeCategoryType> {
-	@Override
-	public PropertyTypeCategoryType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+@Service
+public class RestPropertyTaxMasterService {
 
-		final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
-		propertyCategory.setId(rs.getLong("id"));
-		propertyCategory.setPropertyTypeId(rs.getString("propertytypeid"));
-		propertyCategory.setCategoryTypeId(rs.getLong("categorytypeid"));
-		propertyCategory.setActive(rs.getBoolean("active"));
-		propertyCategory.setTenantId(rs.getString("tenantId"));
-		return propertyCategory;
+	public PropertyTypeResponseInfo getPropertyTypes(String url) {
+		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final RestTemplate restTemplate = new RestTemplate();
+		final PropertyTypeResponseInfo propertyTypes = restTemplate.postForObject(url.toString(), request,
+				PropertyTypeResponseInfo.class);
+		return propertyTypes;
 	}
+
 }

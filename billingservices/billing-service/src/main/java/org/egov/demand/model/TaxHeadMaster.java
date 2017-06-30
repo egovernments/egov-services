@@ -1,9 +1,12 @@
 package org.egov.demand.model;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.demand.model.enums.Category;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +30,7 @@ public class TaxHeadMaster {
 
 	private String code;
 	
-	private GlCodeMaster glCodes;
+	private List<GlCodeMaster> glCodes;
 
 	private Boolean isDebit = false;
 

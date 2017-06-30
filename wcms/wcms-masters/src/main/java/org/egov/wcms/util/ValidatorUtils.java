@@ -49,6 +49,7 @@ import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.PipeSize;
+import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.model.SourceType;
@@ -58,6 +59,7 @@ import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.PipeSizeService;
+import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
@@ -107,6 +109,9 @@ public class ValidatorUtils {
 
 	@Autowired
 	private SupplyTypeService supplyTypeService;
+
+	@Autowired
+	private PropertyCategoryService propertyCategoryService;
 
 	public List<ErrorResponse> validateCategoryRequest(final CategoryTypeRequest categoryRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -470,7 +475,6 @@ public class ValidatorUtils {
 	}
 
 	private Error getError(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-		propertyPipeSizeRequest.getPropertyPipeSize();
 		final List<ErrorField> errorFields = getErrorFields(propertyPipeSizeRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(WcmsConstants.INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE).errorFields(errorFields).build();
@@ -537,29 +541,45 @@ public class ValidatorUtils {
 	}
 
 	private Error getError(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+		final List<ErrorField> errorFields = getErrorFields(propertyCategoryRequest);
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(WcmsConstants.INVALID_PROPERTY_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
+	}
+
+	private List<ErrorField> getErrorFields(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		if (propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() == null
-				|| propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName().isEmpty()) {
+		addPropertyCategoryValidationErrors(propertyCategoryRequest, errorFields);
+		addTenantIdValidationErrors(propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId(), errorFields);
+		addActiveValidationErrors(propertyCategoryRequest.getPropertyTypeCategoryType().getActive(), errorFields);
+		return errorFields;
+	}
+
+	private void addPropertyCategoryValidationErrors(final PropertyTypeCategoryTypeReq propertyCategoryRequest,
+			final List<ErrorField> errorFields) {
+		final PropertyTypeCategoryType propertyCategory = propertyCategoryRequest.getPropertyTypeCategoryType();
+		if (propertyCategory.getCategoryTypeName() == null || propertyCategory.getCategoryTypeName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
 					.message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName() == null
-				|| propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName().isEmpty()) {
+		} else if (propertyCategory.getPropertyTypeName() == null || propertyCategory.getPropertyTypeName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_TYPE_MANDATORY_CODE)
 					.message(WcmsConstants.PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.PROPERTY_TYPE_MANDATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId() == null
-				|| propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
-					.message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-					.field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+		} else if (!propertyCategoryService.getPropertyTypeByName(propertyCategoryRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
+					.field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+
+		} else if (propertyCategoryService.checkIfMappingExists(propertyCategoryRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_CATEGORY_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.PROPERTY_CATEGORY_INVALID_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 
-		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
 	public List<ErrorResponse> validateUsageTypeRequest(final PropertyTypeUsageTypeReq propUsageTypeRequest) {

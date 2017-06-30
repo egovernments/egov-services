@@ -60,13 +60,13 @@ import lombok.ToString;
 @Builder
 public class PropertyTypeCategoryType {
 
-    public static final String SEQ_PROPERTY_CATEGORY = "SEQ_EGWTR_PROPERTY_CATEGORY";
+    public static final String SEQ_PROPERTY_CATEGORY = "seq_egwtr_property_category_type";
 
     @NotNull
     private Long id;
 
     @NotNull
-    private Long propertyTypeId;
+    private String propertyTypeId;
 
     @NotNull
     private String propertyTypeName;
@@ -87,7 +87,6 @@ public class PropertyTypeCategoryType {
     @NotNull
     private String tenantId;
 
-    @Length(max = 250)
     @NotNull
     private String version;
 }

@@ -18,7 +18,17 @@ public class TaxHeadMasterQueryBuilder {
 	private ApplicationProperties applicationProperties;
 	
 
-	private static final String BASE_QUERY="select * from egbs_taxheadmaster";
+//	private static final String BASE_QUERY="select * from egbs_taxheadmaster";
+	
+	private static final String BASE_QUERY="SELECT *,taxhead.id as taxheadId, "
+			+ "taxhead.tenantid as taxheadTenantid, taxhead.service taxheadService,"
+			+ " glcode.id as glCodeId,glcode.tenantid as glCodeTenantId,glcode.service as glCodeService ,"
+			+ "taxhead.createdby as taxcreatedby, taxhead.createdtime as taxcreatedtime,taxhead.lastmodifiedby as taxlastmodifiedby,"
+			+ " taxhead.lastmodifiedtime as taxlastmodifiedtime,glcode.createdby as glcreatedby, glcode.createdtime as glcreatedtime,"
+			+ " glcode.lastmodifiedby as gllastmodifiedby, glcode.lastmodifiedtime as gllastmodifiedtime"
+			+ " FROM egbs_taxheadmaster taxhead INNER Join egbs_glcodemaster glcode "
+			+ "on taxhead.code=glcode.taxhead and taxhead.tenantid=glcode.tenantid";
+	
 	public String getQuery(final TaxHeadMasterCriteria searchTaxHead, final List<Object> preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		log.info("get query");
@@ -40,50 +50,50 @@ public class TaxHeadMasterQueryBuilder {
 		
 		if (searchTaxHead.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
+			selectQuery.append(" taxhead.tenantId = ?");
 			preparedStatementValues.add(searchTaxHead.getTenantId());
 		}
 		if (searchTaxHead.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" name like ?");
+			selectQuery.append(" taxhead.name like ?");
 			preparedStatementValues.add("%" + searchTaxHead.getName() + "%");
 		}
 		
 		if (searchTaxHead.getService() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" service = ?");
+			selectQuery.append(" taxhead.service = ?");
 			preparedStatementValues.add(searchTaxHead.getService());
 		}
 		if (searchTaxHead.getId()!=null && !searchTaxHead.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN (" + getIdQuery(searchTaxHead.getId()));
+			selectQuery.append(" taxhead.id IN (" + getIdQuery(searchTaxHead.getId()));
 		}else if(searchTaxHead.getCode()!=null && !searchTaxHead.getCode().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code IN ("+ getIdQuery(searchTaxHead.getCode()));
+			selectQuery.append(" taxhead.code IN ("+ getIdQuery(searchTaxHead.getCode()));
 			//preparedStatementValues.add("%" + searchTaxHead.getCode() + "%");
 		}
 		if (searchTaxHead.getCategory() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" category = ?");
+			selectQuery.append(" taxhead.category = ?");
 			preparedStatementValues.add("%" + searchTaxHead.getCategory() + "%");
 		}
 		if (searchTaxHead.getIsActualDemand() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" isActualDemand = ?");
+			selectQuery.append(" taxhead.isActualDemand = ?");
 			preparedStatementValues.add("%" + searchTaxHead.getIsActualDemand() + "%");
 		}
 		if (searchTaxHead.getIsDebit() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" isDebit = ?");
+			selectQuery.append(" taxhead.isDebit = ?");
 			preparedStatementValues.add("%" + searchTaxHead.getIsDebit() + "%");
 		}
 		
 		if (searchTaxHead.getValidFrom() != null && searchTaxHead.getValidTill()!=null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" validfrom >= ?");
+			selectQuery.append(" taxhead.validfrom >= ?");
 			preparedStatementValues.add(searchTaxHead.getValidFrom());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" validtill <= ?");
+			selectQuery.append(" taxhead.validtill <= ?");
 			preparedStatementValues.add(searchTaxHead.getValidTill());
 		}
 	}
@@ -111,10 +121,10 @@ public class TaxHeadMasterQueryBuilder {
 	}
 	
 	public String getUpdateQuery() {
-		return "UPDATE public.egbs_taxheadmaster SET id=?, tenantid=?, category=?, service=?,"
-				+ "name=?, code=?, glcode=?,isdebit=?, isactualdemand=?, orderno=?, validfrom=?,"
-				+ "validtill=?, createdby=?, createdtime=?, lastmodifiedby=?, lastmodifiedtime=? "
-				+ "WHERE tenantid=?";
+		return "UPDATE public.egbs_taxheadmaster SET  category=?, service=?, "
+				+ "name=?, code=?, isdebit=?, isactualdemand=?, orderno=?, validfrom=?, validtill=?, "
+				+ "lastmodifiedby=?, lastmodifiedtime=?"
+				+ " WHERE tenantid=?";
 
 	}
 	

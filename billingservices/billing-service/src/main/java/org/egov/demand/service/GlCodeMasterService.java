@@ -47,8 +47,10 @@ public class GlCodeMasterService {
 		return getGlCodeMasterResponse(glCodeMaster,requestInfo);
 	}
 
-	public void create(GlCodeMasterRequest glCodeMasterRequest) {
+	public GlCodeMasterResponse create(GlCodeMasterRequest glCodeMasterRequest) {
 		glCodeMasterRepository.create(glCodeMasterRequest);
+		
+		return getGlCodeMasterResponse(glCodeMasterRequest.getGlCodeMasters(), glCodeMasterRequest.getRequestInfo());
 	}
 	
 	public GlCodeMasterResponse createAsync(GlCodeMasterRequest glCodeMasterRequest) {

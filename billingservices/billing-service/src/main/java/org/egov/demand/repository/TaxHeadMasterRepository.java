@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.Demand;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.builder.TaxHeadMasterQueryBuilder;
@@ -73,17 +75,14 @@ public class TaxHeadMasterRepository {
 		
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
-		
 		log.debug("create requestInfo:"+ requestInfo);
 		log.debug("create taxHeadMasters:"+ taxHeadMasters);
-		
 		
 		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getInsertQuery(), new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
-
 
 				ps.setString(1, taxHeadMaster.getId());
 				ps.setString(2, taxHeadMaster.getTenantId());
@@ -110,46 +109,28 @@ public class TaxHeadMasterRepository {
 		return taxHeadMasters;
 	}
 	
-	
-	
 	public List<TaxHeadMaster> update(TaxHeadMasterRequest taxHeadMasterRequest) {
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
 		
-		/*log.debug("create requestInfo:"+ requestInfo);
-		log.debug("create taxHeadMasters:"+ taxHeadMasters);
-		
-		
-		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getUpdateQuery(), new BatchPreparedStatementSetter() {
-			
-			@Override
-			public void setValues(PreparedStatement ps, int index) throws SQLException {
-				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
+		List<Object[]> taxHeadBatchArgs = new ArrayList<>();
 
+		for (TaxHeadMaster taxHead : taxHeadMasters) {
 
-				ps.setString(1, taxHeadMaster.getId());
-				ps.setString(2, taxHeadMaster.getTenantId());
-				ps.setString(3, taxHeadMaster.getCategory().toString());
-				ps.setString(4, taxHeadMaster.getService());
-				ps.setString(5, taxHeadMaster.getName());
-				ps.setString(6, taxHeadMaster.getCode());
-				ps.setBoolean(7, taxHeadMaster.getIsDebit());
-				ps.setBoolean(8, taxHeadMaster.getIsActualDemand());
-				ps.setInt(9, taxHeadMaster.getOrder());
-				ps.setObject(10, taxHeadMaster.getValidFrom());
-				ps.setObject(11, taxHeadMaster.getValidTill());
-				ps.setString(12, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(13, new Date().getTime());
-				ps.setString(14, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(15, new Date().getTime());
-				ps.setString(16, taxHeadMaster.getTenantId());
-			}
-			
-			@Override
-			public int getBatchSize() {
-				return taxHeadMasters.size();
-			}
-		});*/
+			AuditDetail auditDetail = taxHead.getAuditDetail();
+			String taxHeadId = taxHead.getId();
+			Integer order=0;
+			if(taxHead.getOrder()!=null)
+			order=taxHead.getOrder();
+
+			Object[] taxHeadRecord = { taxHead.getCategory().toString(),
+					taxHead.getService(),taxHead.getName(),taxHead.getCode(),taxHead.getIsDebit(),taxHead.getIsActualDemand(),
+					order,taxHead.getValidFrom(),taxHead.getValidTill(),requestInfo.getUserInfo().getId().toString(),
+					new Date().getTime(),taxHead.getTenantId() };
+			taxHeadBatchArgs.add(taxHeadRecord);
+		}
+		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getUpdateQuery(), taxHeadBatchArgs);
+		
 		return taxHeadMasters;
 	}
 }

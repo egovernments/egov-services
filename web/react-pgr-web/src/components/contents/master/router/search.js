@@ -159,7 +159,7 @@ class searchRouter extends Component {
   componentDidMount() {
     var self = this;
     this.props.initForm();
-    Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
+    Api.commonApiPost("egov-location/boundarytypes/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName: "Ward", hierarchyTypeName: "Administration"}).then(function(response) {
         self.setState({
           boundaryTypeList: response.BoundaryType
         })

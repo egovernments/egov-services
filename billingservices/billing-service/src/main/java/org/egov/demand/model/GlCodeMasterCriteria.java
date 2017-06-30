@@ -28,13 +28,10 @@ public class GlCodeMasterCriteria {
 	private String service;
 	@NotNull
 	private Set<String> taxHead = new HashSet<String>();
-	
 	private Set<String> id = new HashSet<String>();
-	
+	private String glCode;
 	private Long fromDate;
-	
 	private Long toDate;
-	
 	private Long size;
 	private Long offset;
 	

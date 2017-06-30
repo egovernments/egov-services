@@ -16,6 +16,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -107,7 +108,7 @@ class ViewServiceGroup extends Component {
       return(
         <div className="viewServiceGroup">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >Service Group< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Service Group< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>
@@ -116,9 +117,9 @@ class ViewServiceGroup extends Component {
                               <CardText>
                                   <ListGroup>
                                       <ListGroupItem>ID <span style={{float:'right'}}>{viewServiceGroup.id ? viewServiceGroup.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Name <span style={{float:'right'}}>{viewServiceGroup.name ? viewServiceGroup.name : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Code <span style={{float:'right'}}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Description <span style={{float:'right'}}>{viewServiceGroup.description? viewServiceGroup.description : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("core.lbl.add.name")} <span style={{float:'right'}}>{viewServiceGroup.name ? viewServiceGroup.name : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("core.lbl.code")} <span style={{float:'right'}}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("core.lbl.description")} <span style={{float:'right'}}>{viewServiceGroup.description? viewServiceGroup.description : ''}</span></ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

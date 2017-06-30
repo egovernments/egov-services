@@ -16,6 +16,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -146,7 +147,7 @@ class ViewServiceType extends Component {
       return(
         <div className="viewServiceType">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >Service Type< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Service< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>
@@ -155,11 +156,11 @@ class ViewServiceType extends Component {
                               <CardText>
                                   <ListGroup>
                                       <ListGroupItem>ID <span style={{float:'right'}}>{viewServiceType.id ? viewServiceType.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Name <span style={{float:'right'}}>{viewServiceType.serviceName ? viewServiceType.serviceName : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Code <span style={{float:'right'}}>{viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Category <span style={{float:'right'}}>{getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("core.lbl.add.name")}<span style={{float:'right'}}>{viewServiceType.serviceName ? viewServiceType.serviceName : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("core.lbl.code")}<span style={{float:'right'}}>{viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}</span></ListGroupItem>
+                                      <ListGroupItem>Category<span style={{float:'right'}}>{getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}</span></ListGroupItem>
                                       <ListGroupItem>Active <span style={{float:'right'}}>{viewServiceType.active? 'true' : 'false'}</span></ListGroupItem>
-                                      <ListGroupItem>Description <span style={{float:'right'}}>{viewServiceType.description? viewServiceType.description : ''}</span></ListGroupItem>
+                                      <ListGroupItem>{translate("core.lbl.description")}<span style={{float:'right'}}>{viewServiceType.description? viewServiceType.description : ''}</span></ListGroupItem>
                                       <ListGroupItem>SLA Hours <span style={{float:'right'}}>{viewServiceType.slaHours? viewServiceType.slaHours : ''}</span></ListGroupItem>
                                       <ListGroupItem>Has Financial Impact <span style={{float:'right'}}>{viewServiceType.hasFinancialImpact? 'true' : 'false'}</span></ListGroupItem>
                                   </ListGroup>

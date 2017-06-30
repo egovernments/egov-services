@@ -66,6 +66,6 @@ public class PropertyTypeCategoryTypeReq {
     @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
 
-    @JsonProperty("propertyCategory")
-    public PropertyTypeCategoryType propertyTypeCategoryType;
+    @JsonProperty("PropertyCategory")
+	public PropertyTypeCategoryType propertyTypeCategoryType;
 }

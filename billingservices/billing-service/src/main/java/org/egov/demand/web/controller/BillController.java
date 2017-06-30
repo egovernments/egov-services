@@ -68,10 +68,4 @@ public class BillController {
 		
 		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
 	}
-	
-	
-	
-	
-	
-	
 }

@@ -26,9 +26,9 @@ public class Unit {
 	@JsonProperty("unitNo")
 	@NotNull
 	private Integer unitNo = null;
-	
+
 	@JsonProperty("units")
-        private List<Unit> units;
+	private List<Unit> units;
 
 	@JsonProperty("unitType")
 	@Size(min = 1, max = 16)
@@ -114,8 +114,10 @@ public class Unit {
 	@Size(min = 1, max = 64)
 	private String waterMeterNo = null;
 
+	@JsonProperty("parentid")
+	private Long parentId = null;
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
-	
-	
+
 }

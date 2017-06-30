@@ -126,6 +126,10 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "name";
 	public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
 	
+	public static final String ROUTER_COMBINATION_UNIQUE_CODE = "pgr.0013";
+	public static final String ROUTER_COMBINATION_UNIQUE_FIELD_NAME = "unique";
+	public static final String ROUTER_COMBINATION_UNIQUE_ERROR_MESSAGE = "Combination of Boundary, Service Type and Position is not unique in the request";
+
 	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);

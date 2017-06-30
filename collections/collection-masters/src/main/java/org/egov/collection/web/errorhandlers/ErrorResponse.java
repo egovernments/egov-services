@@ -2,8 +2,9 @@ package org.egov.collection.web.errorhandlers;
 
 import java.util.List;
 
+import org.egov.collection.web.contract.ResponseInfo;
 import org.egov.common.contract.response.ErrorField;
-import org.egov.common.contract.response.ResponseInfo;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

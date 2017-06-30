@@ -17,6 +17,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -80,6 +81,9 @@ class ViewEditReceivingCenter extends Component {
      initForm();
     }
 
+    handleNavigation = (type, id) => {
+      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    }
 
 
     render() {
@@ -114,9 +118,9 @@ class ViewEditReceivingCenter extends Component {
                                     <thead>
                                         <tr>
                                           <th>ID</th>
-                                          <th>Name</th>
-                                          <th>Code</th>
-                                          <th>Description</th>
+                                          <th>{translate("core.lbl.add.name")}</th>
+                                          <th>{translate("core.lbl.code")}</th>
+                                          <th>{translate("core.lbl.description")}</th>
                                           <th></th>
                                         </tr>
                                     </thead>
@@ -132,8 +136,14 @@ class ViewEditReceivingCenter extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/serviceGroup/view' && <td><Link to={`/viewServiceGroup/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/serviceGroup/edit' && <td><Link to={`/createServiceGroup/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/viewServiceGroup/", id);
+                                              }}/></td>}
+                                              {url == '/serviceGroup/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                                let id = e.id;
+                                                this.handleNavigation("#/createServiceGroup/", id);
+                                              }}/></td>}
                                             </tr>
                                           )
                                         })}

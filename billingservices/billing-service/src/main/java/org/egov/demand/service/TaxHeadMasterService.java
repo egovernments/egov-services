@@ -57,8 +57,10 @@ public class TaxHeadMasterService {
 		return getTaxHeadMasterResponse(taxHeadMaster,requestInfo);
 	}
 	
-	public void create(TaxHeadMasterRequest taxHeadMasterRequest) {
+	public TaxHeadMasterResponse create(TaxHeadMasterRequest taxHeadMasterRequest) {
 		taxHeadMasterRepository.create(taxHeadMasterRequest);
+		
+		return getTaxHeadMasterResponse(taxHeadMasterRequest.getTaxHeadMasters(), taxHeadMasterRequest.getRequestInfo());
 	}
 
 	public TaxHeadMasterResponse createAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
@@ -66,12 +68,12 @@ public class TaxHeadMasterService {
 
 		List<String> taxHeadIds = sequenceGenService.getIds(taxHeadMaster.size(),
 				applicationProperties.getTaxHeadSeqName());
-		List<String> taxHeadCodes = sequenceGenService.getIds(taxHeadMaster.size(),
-				applicationProperties.getTaxHeadCodeSeqName());
+		/*List<String> taxHeadCodes = sequenceGenService.getIds(taxHeadMaster.size(),
+				applicationProperties.getTaxHeadCodeSeqName());*/
 		int id=0;
 		for (TaxHeadMaster master: taxHeadMaster) {
 			master.setId(taxHeadIds.get(id));
-			master.setCode(taxHeadCodes.get(id++));
+//			master.setCode(taxHeadCodes.get(id++));
 		}
 		taxHeadMasterRequest.setTaxHeadMasters(taxHeadMaster);
 

@@ -51,7 +51,8 @@ public class BillingServiceConsumer {
 
 	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
-			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}"})
+			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}",
+			"${kafka.topics.create.businessservicedetail.name}", "${kafka.topics.update.businessservicedetail.name}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
@@ -73,6 +74,10 @@ public class BillingServiceConsumer {
 				taxPeriodService.update(objectMapper.convertValue(consumerRecord, TaxPeriodRequest.class));
 			else if(applicationProperties.getCreateGlCodeMasterTopicName().equals(topic))
 				glCodeMasterService.create(objectMapper.convertValue(consumerRecord, GlCodeMasterRequest.class));
+			else if(applicationProperties.getCreateBusinessServiceDetailTopicName().equals(topic))
+				businessServDetailService.create(objectMapper.convertValue(consumerRecord, BusinessServiceDetailRequest.class));
+			else if(applicationProperties.getUpdateBusinessServiceDetailTopicName().equals(topic))
+				businessServDetailService.update(objectMapper.convertValue(consumerRecord, BusinessServiceDetailRequest.class));
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);
 			throw exception;

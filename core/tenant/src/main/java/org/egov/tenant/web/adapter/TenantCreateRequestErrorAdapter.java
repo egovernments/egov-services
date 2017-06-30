@@ -45,7 +45,16 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
     private static final String TENANT_MISSING_ULB_GRADE = "core-tenant.TENANT_MISSING_ULB_GRADE";
     private static final String TENANT_FIELD_ULB_GRADE = "city.ulbGrade";
     private static final String TENANT_MISSING_ULB_GRADE_MESSAGE = "city.ulbGrade is required";
-
+    
+    
+    private static final String TENANT_CONTACTNUMBER_INVALID_LENGTH="core-tenant.TENANT_CONTACTNUMBER_LENGTH";
+    private static final String TENANT_FIELD_CONTACTNUMBER ="contactNumber";
+    private static final String TENANT_CONTACTNUMBER_INVALID_LENGTH_MESSAGE ="Tenant contactNumber should be 16 characters";
+    
+    private static final String TENANT_HELPLINENUMBER_INVALID_LENGTH="core-tenant.TENANT_HELPLINENUMBER_LENGTH";
+    private static final String TENANT_FIELD_HELPLINENUMBER ="helpLineNumber";
+    private static final String TENANT_HELPLINENUMBER_INVALID_LENGTH_MESSAGE ="Tenant HELPLINENUMBER should be 16 characters";
+    
     @Override
     public ErrorResponse adapt(Tenant tenant) {
         final Error error = getError(tenant);
@@ -72,6 +81,8 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
         addTypeMissingError(tenant, errorFields);
         addTypeInvalidError(tenant, errorFields);
         addCityMissingError(tenant, errorFields);
+        addContactNumberLengthError(tenant,errorFields);
+        addHelpLineNumberLengthError(tenant,errorFields);
         return errorFields;
     }
 
@@ -159,4 +170,26 @@ public class TenantCreateRequestErrorAdapter implements ErrorAdapter<Tenant> {
             );
         }
     }
+    
+    
+    private void addContactNumberLengthError(Tenant tenant, List<ErrorField> errorFields){
+    	
+    	 if (tenant.isContactNumberInvalidLength()) {
+             errorFields.add(
+                 ErrorField.builder()
+                     .code(TENANT_CONTACTNUMBER_INVALID_LENGTH).field(TENANT_FIELD_CONTACTNUMBER).message(TENANT_CONTACTNUMBER_INVALID_LENGTH_MESSAGE).build()
+             );
+         }
+    }
+    
+    private void addHelpLineNumberLengthError(Tenant tenant, List<ErrorField> errorFields){
+    	
+   	 if (tenant.isHelpLineNumberInvalidLength()) {
+            errorFields.add(
+                ErrorField.builder()
+                    .code(TENANT_HELPLINENUMBER_INVALID_LENGTH).field(TENANT_FIELD_HELPLINENUMBER).message(TENANT_HELPLINENUMBER_INVALID_LENGTH_MESSAGE).build()
+            );
+        }
+   }
+    
 }

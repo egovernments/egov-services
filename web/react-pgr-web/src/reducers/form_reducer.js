@@ -4,7 +4,9 @@ const defaultState = {
   form: {},
   files: [],
   msg: '',
+  toastMsg:'',
   dialogOpen: false,
+  snackbarOpen:false,
   fieldErrors: {},
   isFormValid: false,
   validationData: {},
@@ -208,6 +210,7 @@ export default(state = defaultState, action) => {
         validationData: action.validationData,
         msg: '',
         dialogOpen: false,
+        snackbarOpen: false,
         isFormValid: false,
         showTable:false,
         buttonText:"Search"
@@ -233,6 +236,12 @@ export default(state = defaultState, action) => {
         ...state,
         msg:action.msg,
         dialogOpen:action.dailogState,
+      }
+    case "TOGGLE_SNACKBAR_AND_SET_TEXT":
+      return {
+        ...state,
+        toastMsg:action.toastMsg,
+        snackbarOpen:action.snackbarState,
       }
     default:
       return state;

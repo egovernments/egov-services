@@ -88,10 +88,17 @@ public class PersisterService {
 				Integer floorId = propertyRepository.saveFloor(floor, propertyDetailsId);
 
 				for (Unit unit : floor.getUnits()) {
-					propertyRepository.saveUnit(unit, floorId);
+
+					Integer unitId = propertyRepository.saveUnit(unit, floorId);
+
+					if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+							&& unit.getUnits() != null) {
+						for (Unit room : unit.getUnits()) {
+							propertyRepository.saveRoom(room, floorId, unitId);
+						}
+					}
 
 				}
-
 				for (Document document : property.getPropertyDetail().getDocuments()) {
 
 					Integer documentId = propertyRepository.saveDocument(document, propertyDetailsId);
@@ -235,7 +242,14 @@ public class PersisterService {
 				propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
 
 				for (Unit unit : floor.getUnits()) {
+
 					propertyRepository.updateUnit(unit);
+					if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+							&& unit.getUnits() != null) {
+						for (Unit room : unit.getUnits()) {
+							propertyRepository.updateRoom(room);
+						}
+					}
 				}
 			}
 

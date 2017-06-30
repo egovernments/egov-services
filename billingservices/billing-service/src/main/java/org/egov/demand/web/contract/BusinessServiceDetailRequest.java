@@ -47,6 +47,8 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.BusinessServiceDetail;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,9 +61,11 @@ import java.util.List;
 @Builder
 public class BusinessServiceDetailRequest {
 
+    @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
+    @Valid
     @JsonProperty("BusinessServiceDetails")
     private List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
 }

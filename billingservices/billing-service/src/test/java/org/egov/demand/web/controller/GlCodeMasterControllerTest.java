@@ -1,5 +1,6 @@
 package org.egov.demand.web.controller;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -14,10 +15,15 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.service.GlCodeMasterService;
 import org.egov.demand.util.FileUtils;
+import org.egov.demand.web.contract.GlCodeMasterRequest;
 import org.egov.demand.web.contract.GlCodeMasterResponse;
+import org.egov.demand.web.contract.TaxHeadMasterRequest;
+import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.GlCodeMasterValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -47,6 +53,9 @@ public class GlCodeMasterControllerTest {
 	@MockBean
 	private GlCodeMasterService glCodeMasterService;
 	
+	@MockBean
+	private GlCodeMasterValidator  glCodeMasterValidator;
+	
 	@Test
 	public void test_Should_Search_GlCodeMaster() throws Exception {
 		List<GlCodeMaster> glCodeMaster = new ArrayList<>();
@@ -65,6 +74,24 @@ public class GlCodeMasterControllerTest {
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("glCodeMasterSearchResponse.json")));
+	}
+	
+	@Test
+	public void test_Should_Create_GlCodeMaster() throws Exception {
+
+		List<GlCodeMaster> glCodeMasters = new ArrayList<>();
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		glCodeMasters.add(glCodeMaster);
+		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();
+		glCodeMasterResponse.setGlCodeMasters(glCodeMasters);
+		glCodeMasterResponse.setResponseInfo(new ResponseInfo());
+
+		when(glCodeMasterService.createAsync(any(GlCodeMasterRequest.class))).thenReturn(glCodeMasterResponse);
+
+		mockMvc.perform(post("/glcodemasters/_create").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("glCodeMasterCreateRequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("glCodeMasterCreateResponse.json")));
 	}
 	
 	private String getFileContents(String fileName) throws IOException {

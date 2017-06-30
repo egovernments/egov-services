@@ -39,10 +39,15 @@
  */
 package org.egov.demand.repository;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.querybuilder.BusinessServDetailQueryBuilder;
 import org.egov.demand.repository.rowmapper.BusinessServDetailRowMapper;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.BusinessServiceDetailRequest;
+import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,16 +57,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class BusinessServiceDetailRepositoryTest {
 
     @InjectMocks
-    private BusinessServiceDetailRepository BusinessServiceDetailRepository;
+    private BusinessServiceDetailRepository businessServiceDetailRepository;
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -81,6 +88,50 @@ public class BusinessServiceDetailRepositoryTest {
         final List<BusinessServiceDetail> businessServiceDetailList = new ArrayList<>();
         when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), businessServDetailRowMapper))
                 .thenReturn(businessServiceDetailList);
-        assertTrue(businessServiceDetailList.equals(BusinessServiceDetailRepository.searchBusinessServiceDetails(BusinessServiceDetailCriteria)));
+        assertTrue(businessServiceDetailList.equals(businessServiceDetailRepository.searchBusinessServiceDetails(BusinessServiceDetailCriteria)));
+    }
+
+    @Test
+    public void shouldCreateBusinessServiceDetails() {
+        BusinessServiceDetailRequest businessServiceDetailRequest = new BusinessServiceDetailRequest();
+        RequestInfo requestInfo = new RequestInfo();
+        User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        businessServiceDetailRequest.setRequestInfo(requestInfo);
+        List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+        businessServiceDetails.add(getBusinessServiceDetail());
+        businessServiceDetailRequest.setBusinessServiceDetails(businessServiceDetails);
+
+        when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+        assertTrue(businessServiceDetails.equals(businessServiceDetailRepository.create(businessServiceDetailRequest)));
+    }
+
+    @Test
+    public void shouldUpdateBusinessServiceDetails() {
+        BusinessServiceDetailRequest businessServiceDetailRequest = new BusinessServiceDetailRequest();
+        RequestInfo requestInfo = new RequestInfo();
+        User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        businessServiceDetailRequest.setRequestInfo(requestInfo);
+
+        List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+        businessServiceDetails.add(getBusinessServiceDetail());
+        businessServiceDetailRequest.setBusinessServiceDetails(businessServiceDetails);
+
+        when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+        assertTrue(businessServiceDetails.equals(businessServiceDetailRepository.update(businessServiceDetailRequest)));
+    }
+
+    private BusinessServiceDetail getBusinessServiceDetail() {
+        BusinessServiceDetail businessServiceDetail = new BusinessServiceDetail();
+        businessServiceDetail.setId("1");
+        businessServiceDetail.setTenantId("ap.kurnool");
+        businessServiceDetail.setBusinessService("Test Business Service");
+        businessServiceDetail.setPartPaymentAllowed(false);
+        businessServiceDetail.setCallBackForApportioning(false);
+        businessServiceDetail.setCollectionModesNotAllowed(Collections.EMPTY_LIST);
+        return businessServiceDetail;
     }
 }

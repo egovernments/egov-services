@@ -22,6 +22,10 @@ public class City {
     private String ulbGrade;
     private Double longitude;
     private Double latitude;
+    private String shapeFileLocation;
+    private String captcha;
+    
+    
 
     public City(org.egov.tenant.domain.model.City city) {
         this.name = city.getName();
@@ -32,6 +36,8 @@ public class City {
         this.longitude = city.getLongitude();
         this.latitude = city.getLatitude();
         this.ulbGrade = city.getUlbGrade();
+        this.shapeFileLocation= city.getShapeFileLocation();
+        this.captcha = city.getCaptcha();
     }
 
     @JsonIgnore
@@ -45,6 +51,8 @@ public class City {
             .regionName(regionName)
             .longitude(longitude)
             .latitude(latitude)
+            .shapeFileLocation(shapeFileLocation)
+            .captcha(captcha)
             .build();
     }
 }

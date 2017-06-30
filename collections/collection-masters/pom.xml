@@ -164,12 +164,13 @@
 										<exclude>org.egov.collection.persistence.entity.*</exclude>
 										<exclude>org.egov.collection.domain.service.UserService</exclude>
 										<exclude>org.egov.collection.persistence.repository.UserRepository</exclude>
+										<exclude>org.egov.collection.web.errorhandlers.*</exclude>
 									</excludes>
 									<limits>
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.90</minimum>
+											<minimum>0.75</minimum>
 										</limit>
 									</limits>
 								</rule>

@@ -111,9 +111,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			RestTemplate restTemplate = new RestTemplate();
 			StringBuilder uri = new StringBuilder();
 			Map<String, String> params = new HashMap<String, String>();
-			uri.append(environment.getProperty("egov.services.property_master_service.hostname"));
-			uri.append(environment.getProperty("egov.services.property_master_service.basepath"));
-			uri.append(environment.getProperty("egov.services.property_master_service.search"));
+			uri.append(environment.getProperty("egov.services.pt_propertye.hostname"));
+			uri.append(environment.getProperty("egov.services.pt_property.basepath"));
+			uri.append(environment.getProperty("egov.services.pt_property.search"));
 			params.put("tenantId", calculationFactor.getTenantId());
 			params.put("code", calculationFactor.getFactorCode());
 

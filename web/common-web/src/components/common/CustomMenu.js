@@ -29,7 +29,8 @@ class CustomMenu extends Component {
   constructor(props) {
     super(props);
     this.state={
-      searchText:""
+      searchText:"",
+      menu:[]
     }
   }
 
@@ -38,9 +39,14 @@ class CustomMenu extends Component {
   componentDidUpdate()
   {
     let {menuItems}=this.props;
+    this.menuLeaves(menuItems.length>0?menuItems[0].items:[]);
     // console.log(menuItems);
-    let leaves=this.menuLeaves(menuItems.length>0?menuItems[0].items:[]);
-    console.log(leaves);
+    // this.setState({
+    //   menu:[...this.state.menu,
+    //       this.menuLeaves(menuItems.length>0?menuItems[0].items:[])]
+    // });
+    console.log(this.state.menu);
+    // console.log(leaves);
   }
 
   menuLeaves=(items)=>{
@@ -56,11 +62,11 @@ class CustomMenu extends Component {
         else {
           // console.log("else :");
           // console.log(items[i]);
-          menu.push(items[i]);
+           menu.push(items[i]);
+
         }
       }
     }
-
 
     return menu;
   }

@@ -41,13 +41,20 @@
 package org.egov.eis.repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.model.Movement;
 import org.egov.eis.repository.builder.MovementQueryBuilder;
 import org.egov.eis.repository.rowmapper.MovementRowMapper;
+import org.egov.eis.service.UserService;
+import org.egov.eis.service.WorkFlowService;
+import org.egov.eis.web.contract.MovementRequest;
 import org.egov.eis.web.contract.MovementSearchRequest;
+import org.egov.eis.web.contract.ProcessInstance;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -64,13 +71,47 @@ public class MovementRepository {
     @Autowired
     private MovementQueryBuilder movementQueryBuilder;
 
+    @Autowired
+    private WorkFlowService workFlowService;
+
+    @Autowired
+    private UserService userService;
+
     public List<Movement> findForCriteria(final MovementSearchRequest movementSearchRequest,
             final RequestInfo requestInfo) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
                 requestInfo);
-        final List<Movement> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+        return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 movementRowMapper);
-        return leaveApplications;
+    }
+
+    public MovementRequest saveMovement(final MovementRequest movementRequest) {
+        ProcessInstance processInstance = new ProcessInstance();
+        Long stateId = null;
+        if (StringUtils.isEmpty(movementRequest.getType()))
+            processInstance = workFlowService.start(movementRequest);
+        if (processInstance.getId() != null)
+            stateId = Long.valueOf(processInstance.getId());
+        final String movementInsertQuery = MovementQueryBuilder.insertMovementQuery();
+        final Date now = new Date();
+        final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                movementRequest.getRequestInfo());
+        for (final Movement movement : movementRequest.getMovement()) {
+            movement.setStateId(stateId);
+            final Object[] obj = new Object[] { movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
+                    movement.getCurrentAssignment(),
+                    movement.getTransferType().toString(), movement.getPromotionBasis().getId(), movement.getRemarks(),
+                    movement.getReason().getId(), movement.getEffectiveFrom(),
+                    movement.getEnquiryPassedDate(), movement.getTransferedLocation(),
+                    movement.getDepartmentAssigned(), movement.getDesignationAssigned(),
+                    movement.getPositionAssigned(), movement.getFundAssigned(), movement.getFunctionAssigned(),
+                    movement.getDocuments(), movement.getEmployeeAcceptance(),
+                    movement.getStatus(), movement.getStateId(),
+                    userResponse.getUsers().get(0).getId(), now,
+                    userResponse.getUsers().get(0).getId(), now, movement.getTenantId() };
+            jdbcTemplate.update(movementInsertQuery, obj);
+        }
+        return movementRequest;
     }
 }

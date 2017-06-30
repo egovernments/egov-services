@@ -59,10 +59,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouterRowMapper implements RowMapper<RouterType> {
 	private static final Logger logger = LoggerFactory.getLogger(RouterRowMapper.class);
-	public static Map<String, List<Value>> attribValue = new HashMap<>();
-	public static Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
-	public static Map<Long, Map< String, List<ServiceType>>> serviceMap = new HashMap<>();
-	public static Map<Long, RouterType> routerMap = new HashMap<>();
+	public Map<String, List<Value>> attribValue = new HashMap<>();
+	public Map<String, Map<String, Attribute>> serviceAttrib = new HashMap<>();
+	public Map<Long, Map< String, List<ServiceType>>> serviceMap = new HashMap<>();
+	public Map<Long, RouterType> routerMap = new HashMap<>();
 	
 	@Override
 	public RouterType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -154,11 +154,9 @@ public class RouterRowMapper implements RowMapper<RouterType> {
 			router.setId(rs.getLong("id"));
 			router.setPosition(rs.getInt("position"));
 			router.setTenantId(rs.getString("tenantid"));
-			List<BoundaryIdType> boundaryList = new ArrayList<>();
 			BoundaryIdType boundary = new BoundaryIdType();
 			boundary.setBoundaryType(rs.getInt("bndryid"));
-			boundaryList.add(boundary);
-			router.setBoundary(boundaryList);
+			router.setBoundary(boundary);
 		} catch (Exception e) {
 			logger.error("Exception Encountered : " + e);
 		}

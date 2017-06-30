@@ -256,11 +256,14 @@ public class WcmsConstants {
     public static final String SOURCETYPE_INVALID_FIELD_NAME = "sourceType.name";
     public static final String SOURCETYPE_INVALID_ERROR_MESSAGE = "SourceType name doesn't Exist";
     
-    
-    
     public static final String SUPPLYTYPE_INVALID_CODE = "wcms.0041";
     public static final String SUPPLYTYPE_INVALID_FIELD_NAME = "supplyType.name";
     public static final String SUPPLYTYPE_INVALID_ERROR_MESSAGE = "SupplyType name doesn't Exist";
+    
+    public static final String PROPERTY_PROPERTYTYPE_INVALID_CODE = "wcms.0042";
+    public static final String PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE = "propertyType";
+    public static final String PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME = "Please provide valid Property Type";
+    
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

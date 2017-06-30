@@ -143,7 +143,7 @@ public class PropertyPipeSizeRepositoryTest {
     private PropertyTypePipeSize getPropertyPipeSize() {
         final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setTenantId("default");
-        propertyPipeSize.setPipeSizeType(2d);
+        propertyPipeSize.setPipeSize(2d);
         propertyPipeSize.setPropertyTypeName("property type");
         propertyPipeSize.setActive(true);
         return propertyPipeSize;

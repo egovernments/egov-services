@@ -46,7 +46,10 @@ import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.BusinessServiceDetailRequest;
 import org.egov.demand.web.contract.BusinessServiceDetailResponse;
+import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.BusinessServiceDetailValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -63,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -78,6 +82,12 @@ public class BusinessServiceDetailControllerTest {
 
     @MockBean
     private BusinessServDetailService businessServDetailService;
+
+    @MockBean
+    private ResponseFactory responseFactory;
+
+    @MockBean
+    private BusinessServiceDetailValidator businessServiceDetailValidator;
 
     @Test
     public void shouldSearchBusinessServiceDetails() throws Exception {
@@ -97,6 +107,22 @@ public class BusinessServiceDetailControllerTest {
                 .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("businessservdetailsearchresponse.json")));
+    }
+
+    @Test
+    public void shouldCreateBusinessServiceDetails() throws Exception {
+        List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+        businessServiceDetails.add(getBusinessServiceDetail());
+        BusinessServiceDetailResponse businessServiceDetailResponse = new BusinessServiceDetailResponse();
+        businessServiceDetailResponse.setBusinessServiceDetails(businessServiceDetails);
+        businessServiceDetailResponse.setResponseInfo(new ResponseInfo());
+
+        when(businessServDetailService.createAsync(any(BusinessServiceDetailRequest.class))).thenReturn(businessServiceDetailResponse);
+
+        mockMvc.perform(post("/businessservices/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("businessservdetailcreaterequest.json"))).andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("businessservdetailcreateresponse.json")));
     }
 
     private BusinessServiceDetail getBusinessServiceDetail() {

@@ -63,6 +63,7 @@ public class MovementQueryBuilder {
             + " m.transferType AS m_transferType, m.remarks AS m_remarks,"
             + " m.promotionBasis AS m_promotionBasis, m.reason AS m_reason, "
             + " m.effectiveFrom AS m_effectiveFrom, m.departmentAssigned AS m_departmentAssigned,"
+            + " m.transferedLocation AS m_transferedLocation, m.enquiryPassedDate AS m_enquiryPassedDate,"
             + " m.designationAssigned AS m_designationAssigned, m.positionAssigned AS m_positionAssigned,"
             + " m.fundAssigned AS m_fundAssigned, m.functionAssigned AS m_functionAssigned,"
             + " m.documents AS m_documents, m.employeeAcceptance AS m_employeeAcceptance,"
@@ -169,7 +170,7 @@ public class MovementQueryBuilder {
     /**
      * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
      * handled.
-     * 
+     *
      * @param appendAndClauseFlag
      * @param queryString
      * @return boolean indicates if the next predicate should append an "AND"
@@ -189,5 +190,15 @@ public class MovementQueryBuilder {
                 query.append(", " + idList.get(i));
         }
         return query.append(")").toString();
+    }
+
+    public static String insertMovementQuery() {
+        return "INSERT INTO egeis_movement(id, employee, typeofmovement,"
+                + " currentassignment, transfertype, promotionbasis, remarks, reason,"
+                + " effectivefrom, enquiryPassedDate, transferedLocation, departmentassigned, designationassigned, positionassigned,"
+                + " fundassigned, functionassigned, documents, employeeacceptance, status,"
+                + " stateid, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid)"
+                + " VALUES (nextval('seq_egeis_movement'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+                + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 }

@@ -39,12 +39,17 @@
  */
 package org.egov.demand.service;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.*;
+import org.egov.common.contract.request.User;
+import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.BusinessServiceDetail;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.BusinessServiceDetailRepository;
-import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
-import org.egov.demand.web.contract.BusinessServiceDetailResponse;
+import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.web.contract.*;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -56,6 +61,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -71,6 +77,15 @@ public class BusinessServDetailServiceTest {
     @Mock
     private ResponseFactory responseInfoFactory;
 
+    @Mock
+    private SequenceGenService sequenceGenService;
+
+    @Mock
+    private ApplicationProperties applicationProperties;
+
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
     @Test
     public void shouldSearchBusinessServiceDetails() {
         List<BusinessServiceDetail> businessServiceDetailList = new ArrayList<>();
@@ -85,6 +100,44 @@ public class BusinessServDetailServiceTest {
         assertEquals(businessServiceDetailResponse, businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, new RequestInfo()));
     }
 
+    @Test
+    public void shouldCreateBusinessServiceDetails() {
+        List<BusinessServiceDetail> businessServiceDetailsForRequest = new ArrayList<>();
+        BusinessServiceDetail bizServDetail = getBusinessServiceDetail();
+
+        businessServiceDetailsForRequest.add(bizServDetail);
+        BusinessServiceDetailRequest businessServiceDetailRequest = new BusinessServiceDetailRequest();
+        businessServiceDetailRequest.setBusinessServiceDetails(businessServiceDetailsForRequest);
+
+        List<BusinessServiceDetail> businessServiceDetailsForResponse = new ArrayList<>();
+        businessServiceDetailsForResponse.add(bizServDetail);
+        BusinessServiceDetailResponse businessServiceDetailResponse = new BusinessServiceDetailResponse();
+        businessServiceDetailResponse.setResponseInfo(null);
+        businessServiceDetailResponse.setBusinessServiceDetails(businessServiceDetailsForResponse);
+
+        when(businessServiceDetailRepository.create(any(BusinessServiceDetailRequest.class))).thenReturn(businessServiceDetailsForRequest);
+        assertTrue(businessServiceDetailResponse.equals(businessServDetailService.create(businessServiceDetailRequest)));
+    }
+
+    @Test
+    public void shouldUpdateBusinessServiceDetails() {
+        BusinessServiceDetailRequest businessServiceDetailRequest = new BusinessServiceDetailRequest();
+        List<BusinessServiceDetail> businessServiceDetails = new ArrayList<>();
+        businessServiceDetails.add(getBusinessServiceDetail());
+        businessServiceDetailRequest.setBusinessServiceDetails(businessServiceDetails);
+        RequestInfo requestInfo = new RequestInfo();
+        User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        businessServiceDetailRequest.setRequestInfo(requestInfo);
+
+        BusinessServiceDetailResponse businessServiceDetailResponse = new BusinessServiceDetailResponse();
+        businessServiceDetailResponse.setResponseInfo(null);
+        businessServiceDetailResponse.setBusinessServiceDetails(businessServiceDetails);
+
+        assertTrue(businessServiceDetailResponse.equals(businessServDetailService.updateAsync(businessServiceDetailRequest)));
+    }
+
     private BusinessServiceDetail getBusinessServiceDetail() {
         BusinessServiceDetail businessServiceDetail = new BusinessServiceDetail();
         businessServiceDetail.setId("1");
@@ -93,6 +146,7 @@ public class BusinessServDetailServiceTest {
         businessServiceDetail.setPartPaymentAllowed(false);
         businessServiceDetail.setCallBackForApportioning(false);
         businessServiceDetail.setCollectionModesNotAllowed(Collections.EMPTY_LIST);
+        businessServiceDetail.setAuditDetail(new AuditDetail());
         return businessServiceDetail;
     }
 }

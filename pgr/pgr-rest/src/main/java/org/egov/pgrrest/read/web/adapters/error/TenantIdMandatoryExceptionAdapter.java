@@ -31,17 +31,13 @@ public class TenantIdMandatoryExceptionAdapter implements ErrorAdapter<Void> {
 
     private List<ErrorField> getErrorFields() {
         List<ErrorField> errorFields = new ArrayList<>();
-        addCRNValidationErrors(errorFields);
-        return errorFields;
-    }
-
-    private void addCRNValidationErrors(List<ErrorField> errorFields) {
         final ErrorField errorField = ErrorField.builder()
             .code(CODE)
             .message(MESSAGE)
             .field(FIELD_NAME)
             .build();
         errorFields.add(errorField);
+        return errorFields;
     }
 
 }

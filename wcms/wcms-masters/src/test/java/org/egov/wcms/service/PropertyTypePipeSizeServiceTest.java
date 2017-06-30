@@ -60,7 +60,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PropertyTypePipeSizeTypeServiceTest {
+public class PropertyTypePipeSizeServiceTest {
 
     @Mock
     private PropertyPipeSizeRepository propertyPipeSizeRepository;
@@ -72,7 +72,7 @@ public class PropertyTypePipeSizeTypeServiceTest {
     private ApplicationProperties applicationProperties;
 
     @InjectMocks
-    private PropertyTypePipeSizeTypeService propertyPipeSizeService;
+    private PropertyTypePipeSizeService propertyPipeSizeService;
 
     @Test
     public void test_Should_Search_PropertyPipeSize() {
@@ -119,7 +119,7 @@ public class PropertyTypePipeSizeTypeServiceTest {
         final PropertyTypePipeSize propertyPipeSize = new PropertyTypePipeSize();
         propertyPipeSize.setTenantId("default");
         propertyPipeSize.setPropertyTypeName("property type");
-        propertyPipeSize.setPipeSizeType(2d);
+        propertyPipeSize.setPipeSize(2d);
         propertyPipeSize.setActive(true);
         return propertyPipeSize;
     }

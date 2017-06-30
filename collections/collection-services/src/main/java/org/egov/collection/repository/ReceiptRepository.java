@@ -140,13 +140,16 @@ public class ReceiptRepository {
 	public boolean persistCreateRequest(ReceiptReq receiptReq){
 		logger.info("Insert process initiated");
 		boolean isInsertionSuccessfull = false;	
-		Receipt receiptInfo = receiptReq.getReceipt();
-		
+		Receipt receiptInfo = receiptReq.getReceipt();		
 	//	String statusCode = getStatusCode(receiptReq.getRequestInfo());
 
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		
-		for(BillDetails billdetails: receiptInfo.getBillInfo().getBillDetails()){				
+		for(BillDetails billdetails: receiptInfo.getBillInfo().getBillDetails()){	
+			
+			//TODO: Trigger Apportioning logic from billingservice if the amountPaid is less than the totalAmount
+
+			
 			final Map<String, Object> parametersMap = new HashMap<>();
 			
 			Object businessDetails = getBusinessDetails(billdetails.getBusinessDetailsCode(), receiptReq);

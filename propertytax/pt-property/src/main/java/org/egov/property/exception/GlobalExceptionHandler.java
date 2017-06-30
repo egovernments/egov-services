@@ -9,6 +9,7 @@ import java.util.Map;
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
+import org.egov.models.InvalidIDFormatException;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,15 +112,31 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			return new ErrorRes(responseInfo, errorList);
-		} else if (ex instanceof AttributeNotFoundException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), 
-					environment.getProperty("invalid.input"),
-					environment.getProperty("attribute.notfound"), 
+		} else if (ex instanceof InvalidIDFormatException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					((InvalidIDFormatException) ex).getCustomMsg(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setApiId(((AttributeNotFoundException) ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((AttributeNotFoundException) ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((AttributeNotFoundException) ex).getRequestInfo().getMsgId());
+			responseInfo.setApiId(((InvalidIDFormatException) ex)
+					.getRequestInfo().getApiId());
+			responseInfo.setVer(
+					((InvalidIDFormatException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidIDFormatException) ex)
+					.getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof IdGenerationException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), 
+					((IdGenerationException) ex).getCustomMsg(),
+					((IdGenerationException) ex).getMsgDetails(), 
+					new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((IdGenerationException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((IdGenerationException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((IdGenerationException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(ResponseStatusEnum.FAILED);
 			List<Error> errorList = new ArrayList<Error>();

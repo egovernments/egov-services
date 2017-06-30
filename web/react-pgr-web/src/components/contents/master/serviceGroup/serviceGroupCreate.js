@@ -15,6 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../api/api';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -59,7 +60,8 @@ class ServiceGroupCreate extends Component {
       super(props);
       this.state = {
           id:'',
-          data:''
+          data:'',
+          open:false
       }
     }
 
@@ -98,6 +100,7 @@ class ServiceGroupCreate extends Component {
     submitForm = (e) => {
 
       e.preventDefault()
+        var current = this;
 
       var body = {
           "ServiceGroup":{
@@ -110,15 +113,22 @@ class ServiceGroupCreate extends Component {
       }
 
       if(this.props.match.params.id){
-        console.log("hi");
+
           Api.commonApiPost("/pgr-master/serviceGroup/v1/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
               console.log(response);
+              current.setState({
+                open: true
+              });
           }).catch((error)=>{
               console.log(error);
           })
       } else {
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_create",{},body).then(function(response){
               console.log(response);
+              current.setState({
+                open: true
+              });
+              current.props.resetObject('createServiceGroup');
           }).catch((error)=>{
               console.log(error);
           })
@@ -126,6 +136,9 @@ class ServiceGroupCreate extends Component {
 
 
     }
+    handleClose = () => {
+      this.setState({open: false});
+    };
 
     render() {
 
@@ -151,14 +164,14 @@ class ServiceGroupCreate extends Component {
         <div className="createServiceGroup">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Contact Information < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Service Group' : 'Create Service Group'} < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Name"
+                                      floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                         onChange={(e) => handleChange(e, "name", true, '')}
@@ -168,7 +181,7 @@ class ServiceGroupCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Code"
+                                      floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createServiceGroup.code? createServiceGroup.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
                                       onChange={(e) => handleChange(e, "code", true, '')}
@@ -179,7 +192,7 @@ class ServiceGroupCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Description"
+                                      floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       onChange={(e) => handleChange(e, "description", false, '')}
@@ -192,14 +205,14 @@ class ServiceGroupCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? 'Update' : 'Create'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
               </div>
           </form>
           <Dialog
-               title="Data Added Successfully"
+               title={this.state.id != '' ? "Service Group Updated Successfully" : "Service Group Added Successfully"}
                actions={<FlatButton
-   				        label="Close"
+   				        label={translate("core.lbl.close")}
    				        primary={true}
    				        onTouchTap={this.handleClose}
    				      />}
@@ -207,7 +220,6 @@ class ServiceGroupCreate extends Component {
                open={this.state.open}
                onRequestClose={this.handleClose}
              >
-              Data Added Successfully
          </Dialog>
         </div>)
     }
@@ -252,6 +264,14 @@ const mapDispatchToProps = dispatch => ({
         }
       }
     });
+  },
+
+  resetObject: (object) => {
+    console.log(object);
+   dispatch({
+     type: "RESET_OBJECT",
+     object
+   })
   },
 
   handleChange: (e, property, isRequired, pattern) => {

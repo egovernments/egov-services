@@ -52,7 +52,7 @@ import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.MeterCostService;
 import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
-import org.egov.wcms.service.PropertyTypePipeSizeTypeService;
+import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.SupplyTypeService;
@@ -111,14 +111,13 @@ public class WaterMasterConsumer {
     private MeterCostService meterCostService;
 
     @Autowired
-    private PropertyTypePipeSizeTypeService propertyPipeSizeService;
+    private PropertyTypePipeSizeService propertyPipeSizeService;
 
     @Autowired
     private SourceTypeService waterSourceTypeService;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.usagetype.create.name}",
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"${kafka.topics.usagetype.create.name}",
             "${kafka.topics.usagetype.update.name}",
-
             "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
             "${kafka.topics.pipesize.create.name}", "${kafka.topics.pipesize.update.name}",
             "${kafka.topics.propertyCategory.create.name}", "${kafka.topics.propertyCategory.update.name}",

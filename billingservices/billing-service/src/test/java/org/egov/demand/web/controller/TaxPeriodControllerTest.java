@@ -126,6 +126,23 @@ public class TaxPeriodControllerTest {
                 .andExpect(content().json(getFileContents("taxperiodcreateresponse.json")));
     }
 
+    @Test
+    public void shouldUpdateTaxPeriod() throws Exception {
+        List<TaxPeriod> taxPeriods = new ArrayList<>();
+        taxPeriods.add(getTaxPeriod());
+
+        TaxPeriodResponse taxPeriodResponse = new TaxPeriodResponse();
+        taxPeriodResponse.setTaxPeriods(taxPeriods);
+        taxPeriodResponse.setResponseInfo(new ResponseInfo());
+
+        when(taxPeriodService.updateAsync(any(TaxPeriodRequest.class))).thenReturn(taxPeriodResponse);
+
+        mockMvc.perform(post("/taxperiod/_update").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("taxperiodupdaterequest.json"))).andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("taxperiodupdateresponse.json")));
+    }
+
     private TaxPeriod getTaxPeriod() {
         TaxPeriod taxPeriod = new TaxPeriod();
         taxPeriod.setId("1");

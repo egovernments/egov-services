@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +22,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErrorRes {
 	@JsonProperty("ResponseInfo")
+	@SerializedName("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
 	@JsonProperty("Errors")
+	@SerializedName("Errors")
 	private List<Error> errors = new ArrayList<Error>();
 }

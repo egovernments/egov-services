@@ -50,7 +50,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class TaxPeriod {
 
-	@NotNull
 	private String id;
 
 	@NotNull
@@ -70,6 +69,5 @@ public class TaxPeriod {
 
 	private String financialYear;
 
-	@NotNull
 	private AuditDetail auditDetail;
 }

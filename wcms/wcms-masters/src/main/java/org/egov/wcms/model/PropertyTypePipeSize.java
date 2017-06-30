@@ -69,10 +69,10 @@ public class PropertyTypePipeSize {
     private Long pipeSizeId;
 
     @NotNull
-    private Double pipeSizeType;
+    private Double pipeSize;
 
     @NotNull
-    private Long propertyTypeId;
+    private String propertyTypeId;
 
     @NotNull
     private String propertyTypeName;
@@ -83,5 +83,5 @@ public class PropertyTypePipeSize {
     @NotNull
     private String tenantId;
 
-    private AuditDetails auditDeatils;
+    private AuditDetails auditDetails;
 }

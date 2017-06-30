@@ -78,8 +78,8 @@ public class ServiceRequestController {
                                                   mobileNumber,
                                               @RequestParam(value = "emailId", required = false) String emailId,
                                               @RequestParam(value = "keyword", required = false) String keyword,
-                                              @RequestParam(value = "receivingMode", required = false) Long
-                                                  receivingMode,
+                                              @RequestParam(value = "receivingMode", required = false)
+                                                      String receivingMode,
                                               @RequestParam(value = "locationId", required = false) Long locationId,
                                               @RequestParam(value = "fromIndex", required = false) Integer fromIndex,
                                               @RequestParam(value = "sizePerPage", required = false) Integer pageSize,
@@ -136,8 +136,8 @@ public class ServiceRequestController {
                                                     mobileNumber,
                                                 @RequestParam(value = "emailId", required = false) String emailId,
                                                 @RequestParam(value = "keyword", required = false) String keyword,
-                                                @RequestParam(value = "receivingMode", required = false) Long
-                                                    receivingMode,
+                                                @RequestParam(value = "receivingMode", required = false)
+                                                        String receivingMode,
                                                 @RequestParam(value = "locationId", required = false) Long locationId,
                                                 @RequestParam(value = "childLocationId", required = false)
                                                     Long childLocationId,

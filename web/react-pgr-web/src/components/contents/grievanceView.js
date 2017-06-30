@@ -135,13 +135,18 @@ class grievanceView extends Component{
     }
   }
   getLocation(){
-    Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
-    {
-      currentThis.setState({childLocationName : response.Boundary[0].name});
-      currentThis.nextStatus();
-    },function(err) {
+    if(this.state.childLocationId)
+      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
+      {
+        currentThis.setState({childLocationName : response.Boundary[0].name});
+        currentThis.nextStatus();
+      },function(err) {
 
-    });
+      });
+    else {
+      currentThis.setState({childLocationName : ""});
+      currentThis.nextStatus();
+    }
   }
   nextStatus = () => {
     if(localStorage.getItem('type')){

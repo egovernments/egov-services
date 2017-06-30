@@ -291,12 +291,14 @@ class createRouter extends Component {
        	open,
        	readonly
   	} = this.state;
-    console.log(this.props.routerCreateSet);
+    console.log(routerCreateSet);
   	const showBtn = function() {
   		if(!readonly) {
   			return (<RaisedButton style={{margin:'15px 5px'}} type="submit" label={match.params && match.params.type == "edit" ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>);
   		}
   	}
+
+
 
   	return (
   		<div className="routerGeneration">

@@ -5,6 +5,7 @@ import ImagePreview from '../common/ImagePreview.js';
 import SimpleMap from '../common/GoogleMaps.js';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
@@ -17,6 +18,7 @@ import FlatButton from 'material-ui/FlatButton';
 import LoadingIndicator from '../common/LoadingIndicator';
 import Api from '../../api/api';
 import {translate} from '../common/common';
+
 
 const styles = {
   headerStyle : {
@@ -46,7 +48,8 @@ class grievanceCreate extends Component {
           text: 'name',
           value: 'id',
         },
-        open: false
+        open: false,
+        toastOpen: false
        }
        this.search=this.search.bind(this);
        this.loadReceivingCenter = this.loadReceivingCenter.bind(this);
@@ -235,7 +238,6 @@ class grievanceCreate extends Component {
     request['serviceRequest'] = data;
 
     var currentThis = this;
-
     //console.log(JSON.stringify(request));
 
     Api.commonApiPost("/pgr/seva/v1/_create",{},request).then(function(createresponse)
@@ -275,11 +277,32 @@ class grievanceCreate extends Component {
         }
       }
     },function(err) {
-
+          currentThis.setState({loadingstatus:'hide'});
+          currentThis.handleError();
     });
   }
 
+handleError = () => {
+ let {toggleSnackbarAndSetText} = this.props;
+  toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
+}
+
+
+  handleTouchTap = () => {
+    this.setState({
+      toastOpen: true,
+    });
+  };
+
+  handleRequestClose = () => {
+    this.setState({
+      toastOpen: false,
+    });
+  };
+
   render() {
+
+
     const actions = [
       <FlatButton
         label="Proceed to view"
@@ -600,6 +623,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 });
 

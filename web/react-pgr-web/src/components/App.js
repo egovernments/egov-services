@@ -5,8 +5,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Header from './common/Header';
 import Footer from './common/Footer';
-
 import router from "../router";
+import Snackbar from 'material-ui/Snackbar';
 var axios = require('axios');
 
 
@@ -51,7 +51,7 @@ class App extends Component {
   }
 
   render() {
-    var {toggleDailogAndSetText,isDialogOpen,msg,history}=this.props;
+    var {toggleDailogAndSetText,isDialogOpen,msg,history, toastMsg, isSnackBarOpen, toggleSnackbarAndSetText}=this.props;
     const actions = [
       <FlatButton
         label="Ok"
@@ -72,16 +72,24 @@ class App extends Component {
             >
             {msg}
           </Dialog>
+          <Snackbar
+              open={isSnackBarOpen}
+              message={toastMsg}
+              autoHideDuration={4000}
+            />
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({isDialogOpen: state.form.dialogOpen, msg: state.form.msg});
+const mapStateToProps = state => ({isDialogOpen: state.form.dialogOpen, isSnackBarOpen : state.form.snackbarOpen,msg: state.form.msg, toastMsg: state.form.toastMsg});
 
 const mapDispatchToProps = dispatch => ({
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 });
 

@@ -175,11 +175,12 @@ public class BillService {
 		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
 			String businessService = entry.getKey();
 			List<Demand> demands2 = entry.getValue();
-			log.debug("prepareBill demands2:" +demands2);
+			log.info("prepareBill demands2:" +demands2);
 			
 			List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 			
 			Map<String, List<GlCodeMaster>> glCodesMap = getGlCodes(demands2, businessService, tenantId, requestInfo);
+			log.info("prepareBill glCodesMap:" +glCodesMap);
 			
 			Demand demand3 = demands2.get(0);
 			BigDecimal totalTaxAmount = BigDecimal.ZERO;
@@ -189,6 +190,7 @@ public class BillService {
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
 				log.debug("prepareBill demandDetails:" +demandDetails);
+				log.info("prepareBill demand2:" +demand2);
 
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
 				for(DemandDetail demandDetail : demandDetails) {
@@ -202,10 +204,12 @@ public class BillService {
 							demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
-					GlCodeMaster glCodeMaster = glCodeMasters.stream().filter((t) ->
-					demand2.getTaxPeriodFrom()<=t.getFromDate() && demand2.getTaxPeriodTo()<=t.getToDate()).findAny().orElse(null);
 					
-					log.debug("prepareBill taxHeadMaster:" + taxHeadMaster);
+					log.info("prepareBill glCodeMasters:"+ glCodeMasters);
+					GlCodeMaster glCodeMaster = glCodeMasters.stream().filter((t) ->
+					demand2.getTaxPeriodFrom()>=t.getFromDate() && demand2.getTaxPeriodTo()<=t.getToDate()).findAny().orElse(null);
+					
+					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
 					//TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
 							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))

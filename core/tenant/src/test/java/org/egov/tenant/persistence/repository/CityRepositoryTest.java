@@ -45,6 +45,8 @@ public class CityRepositoryTest {
             .ulbGrade("municipality")
             .longitude(35.345)
             .latitude(75.234)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
         cityRepository.save(city, "AP.KURNOOL");
@@ -59,10 +61,12 @@ public class CityRepositoryTest {
         assertThat(row.get(DISTRICT_NAME)).isEqualTo("district");
         assertThat(row.get(REGION_NAME)).isEqualTo("region name");
         assertThat(row.get(ULB_GRADE)).isEqualTo("municipality");
+        assertThat(row.get(SHAPEFILE_LOCATION)).isEqualTo("shapeFileLocation");
+        assertThat(row.get(CAPTCHA)).isEqualTo("captcha");
     }
 
     @Test
-    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql", "/sql/insertCityData.sql"})
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql", "/sql/insertCityData.sql", "/sql/updateCityData.sql"})
     public void test_should_retrieve_city() {
         City city = cityRepository.find("AP.KURNOOL");
         Calendar calendar = Calendar.getInstance();
@@ -82,7 +86,8 @@ public class CityRepositoryTest {
         assertThat(city.getCreatedBy()).isEqualTo(1L);
         assertThat(city.getCreatedDate()).isInSameSecondAs(date);
         assertThat(city.getLastModifiedBy()).isEqualTo(1L);
-        assertThat(city.getLastModifiedDate()).isInSameSecondAs(date);
+        assertThat(city.getShapeFileLocation()).isEqualTo("shapeFileLocation");
+        assertThat(city.getCaptcha()).isEqualTo("captcha");
     }
 
     class CityResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
@@ -105,6 +110,10 @@ public class CityRepositoryTest {
                     put(CREATED_DATE, resultSet.getString(CREATED_DATE));
                     put(LAST_MODIFIED_BY, resultSet.getLong(LAST_MODIFIED_BY));
                     put(LAST_MODIFIED_DATE, resultSet.getString(LAST_MODIFIED_DATE));
+                    put(SHAPEFILE_LOCATION, resultSet.getString(SHAPEFILE_LOCATION));
+                    put(CAPTCHA,resultSet.getString(CAPTCHA));
+                   
+                    
                 }};
 
                 rows.add(row);
@@ -112,4 +121,38 @@ public class CityRepositoryTest {
             return rows;
         }
     }
+    
+    
+    @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql","/sql/insertCityData.sql"})
+    public void test_should_update_city() {
+        City city = City.builder()
+            .name("Hyderabad")
+            .localName("local name1")
+            .districtCode("AB")
+            .districtName("district")
+            .regionName("region name")
+            .ulbGrade("municipality")
+            .longitude(35.345)
+            .latitude(75.234)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
+            .build();
+
+        cityRepository.update(city, "AP.KURNOOL");
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM city", new CityResultExtractor());
+
+        Map<String, Object> row = result.get(0);
+        assertThat(row.get(ID)).isEqualTo(1L);
+        assertThat(row.get(NAME)).isEqualTo("Hyderabad");
+        assertThat(row.get(LOCAL_NAME)).isEqualTo("local name1");
+        assertThat(row.get(DISTRICT_CODE)).isEqualTo("AB");
+        assertThat(row.get(DISTRICT_NAME)).isEqualTo("district");
+        assertThat(row.get(REGION_NAME)).isEqualTo("region name");
+        assertThat(row.get(ULB_GRADE)).isEqualTo("municipality");
+        assertThat(row.get(SHAPEFILE_LOCATION)).isNotNull();
+        assertThat(row.get(CAPTCHA)).isNotNull();
+    }
+
 }

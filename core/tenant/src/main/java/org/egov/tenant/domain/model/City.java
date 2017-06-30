@@ -27,6 +27,9 @@ public class City {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
+    private String shapeFileLocation;
+    private String captcha;
+   
 
     public boolean isValid() {
         return !isNameAbsent() && !isULBGradeAbsent();

@@ -20,7 +20,16 @@ public class Tenant {
         CREATED_BY = "createdby",
         CREATED_DATE = "createddate",
         LAST_MODIFIED_BY = "lastmodifiedby",
-        LAST_MODIFIED_DATE = "lastmodifieddate";
+        LAST_MODIFIED_DATE = "lastmodifieddate",
+        TWITTER_URL = "twitterurl",
+       	FACEBOOK_URL = "facebookurl",
+        EMAILID = "emailid",
+       	ADDRESS = "address",
+        CONTACTNUMBER = "contactnumber",
+        HELPLINENUMBER="helplinenumber";
+
+       
+        
 
     private Long id;
     private String code;
@@ -33,6 +42,14 @@ public class Tenant {
     private Date createdDate;
     private Long lastModifiedBy;
     private Date lastModifiedDate;
+    private String twitterUrl;
+    private String facebookUrl;
+    private String emailId;
+    private String address;
+    private String contactNumber;
+    private String helplineNumber;
+
+
 
     public org.egov.tenant.domain.model.Tenant toDomain() {
         return org.egov.tenant.domain.model.Tenant.builder()
@@ -43,6 +60,12 @@ public class Tenant {
                 .logoId(logoId)
                 .domainUrl(domainUrl)
                 .type(type.toString())
+                .twitterUrl(twitterUrl)
+                .facebookUrl(facebookUrl)
+                .emailId(emailId)
+                .address("address")
+                .contactNumber("contactNumber")
+                .helpLineNumber("helpLineNumber")
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package org.egov.tenant.persistence.rowmapper;
 
 import org.egov.tenant.persistence.entity.City;
+import org.egov.tenant.persistence.entity.Tenant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,6 +39,9 @@ public class CityRowMapperTest {
         when(resultSet.getLong(CREATED_BY)).thenReturn(1L);
         when(resultSet.getTimestamp(LAST_MODIFIED_DATE)).thenReturn(timestamp);
         when(resultSet.getLong(LAST_MODIFIED_BY)).thenReturn(1L);
+        when(resultSet.getString(SHAPEFILE_LOCATION)).thenReturn("shapeFileLocation");
+        when(resultSet.getString(CAPTCHA)).thenReturn("captcha");
+
 
         CityRowMapper cityRowMapper = new CityRowMapper();
 
@@ -56,5 +60,7 @@ public class CityRowMapperTest {
         assertThat(city.getCreatedBy()).isEqualTo(1L);
         assertThat(city.getLastModifiedDate()).isInSameSecondAs(date);
         assertThat(city.getLastModifiedBy()).isEqualTo(1L);
+        assertThat(city.getShapeFileLocation()).isEqualTo("shapeFileLocation");
+        assertThat(city.getCaptcha()).isEqualTo("captcha");
     }
 }

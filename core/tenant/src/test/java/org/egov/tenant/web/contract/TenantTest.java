@@ -26,6 +26,8 @@ public class TenantTest {
             .regionName("regionname")
             .longitude(35.456)
             .latitude(75.443)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
         org.egov.tenant.domain.model.Tenant expectedTenantModel = org.egov.tenant.domain.model.Tenant.builder()
@@ -35,6 +37,12 @@ public class TenantTest {
             .imageId("imageId")
             .domainUrl("domainUrl")
             .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
             .city(expectedCityModel)
             .build();
 
@@ -47,6 +55,12 @@ public class TenantTest {
             .imageId("imageId")
             .domainUrl("domainUrl")
             .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
             .city(cityContract)
             .build();
 
@@ -66,6 +80,12 @@ public class TenantTest {
             .imageId("imageId")
             .domainUrl("domainUrl")
             .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
             .city(null)
             .build();
 
@@ -85,6 +105,12 @@ public class TenantTest {
             .imageId("imageId")
             .domainUrl("domainUrl")
             .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
             .city(cityModel)
             .build();
 
@@ -98,6 +124,12 @@ public class TenantTest {
         assertThat(tenantContract.getImageId()).isEqualTo("imageId");
         assertThat(tenantContract.getDomainUrl()).isEqualTo("domainUrl");
         assertThat(tenantContract.getType()).isEqualTo("CITY");
+        assertThat(tenantContract.getTwitterUrl()).isEqualTo("twitterUrl");
+        assertThat(tenantContract.getFacebookUrl()).isEqualTo("faceBookUrl");
+        assertThat(tenantContract.getEmailId()).isEqualTo("email");
+        assertThat(tenantContract.getAddress()).isEqualTo("address");
+        assertThat(tenantContract.getContactNumber()).isEqualTo("contactNumber");
+        assertThat(tenantContract.getHelpLineNumber()).isEqualTo("helpLineNumber");
         assertThat(tenantContract.getCity()).isEqualTo(city);
     }
 }

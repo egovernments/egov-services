@@ -1,5 +1,13 @@
 package org.egov.tenant.persistence.repository;
 
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.persistence.entity.Tenant;
@@ -10,19 +18,20 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.egov.tenant.persistence.entity.Tenant.*;
-
 @Repository
 public class TenantRepository {
-    private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant WHERE code in (:code) ORDER BY ID";
-    private static final String ALL_TENANT_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate from tenant ORDER BY ID";
+    private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate,twitterurl,facebookurl,emailid,address,contactnumber,helplinenumber from tenant ";
+/*    private static final String ALL_TENANT_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate, from tenant ORDER BY ID";*/
 
-    private static final String INSERT_QUERY = "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate) " +
-        "VALUES (nextval('seq_tenant'), :code, :description, :domainurl, :logoid, :imageid, :type, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate)";
+    private static final String INSERT_QUERY = "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate,twitterurl,facebookurl,emailid,address,contactnumber,helplinenumber) " +
+        "VALUES (nextval('seq_tenant'), :code, :description, :domainurl, :logoid, :imageid, :type, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :twitterurl, :facebookurl,:emailid,:address,:contactnumber,:helplinenumber)";
 
+    
+    private static final String UPDATE_QUERY = "update tenant set description = :description ,  domainurl = :domainurl, logoid = :logoid, imageid = :imageid, type = :type, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate,twitterurl = :twitterurl,facebookurl = :facebookurl ,emailid = :emailid,address = :address ,contactnumber = :contactnumber,helplinenumber=:helplinenumber " +
+            " where code = :code"; 
+
+    
+    
     private static final String COUNT_WITH_TENANT_CODE_QUERY = "SELECT COUNT(id) as count FROM tenant WHERE code = :code";
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -48,14 +57,14 @@ public class TenantRepository {
     }
 
     private List<Tenant> getAllTenants(){
-        return namedParameterJdbcTemplate.query(ALL_TENANT_QUERY, new TenantRowMapper());
+        return namedParameterJdbcTemplate.query(TENANT_BASE_QUERY, new TenantRowMapper());
     }
 
     private List<Tenant> getTenantsForGivenCodes(TenantSearchCriteria tenantSearchCriteria){
         final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("code", tenantSearchCriteria.getTenantCodes());
         }};
-        return namedParameterJdbcTemplate.query(TENANT_BASE_QUERY, parametersMap, new TenantRowMapper());
+        return namedParameterJdbcTemplate.query(TENANT_BASE_QUERY+" WHERE code in (:code) ORDER BY ID", parametersMap, new TenantRowMapper());
     }
 
     private org.egov.tenant.domain.model.Tenant getCityForTenant(org.egov.tenant.domain.model.Tenant tenant) {
@@ -67,27 +76,61 @@ public class TenantRepository {
     @Transactional
     public org.egov.tenant.domain.model.Tenant save(final org.egov.tenant.domain.model.Tenant tenant) {
         final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
-            put(CODE, tenant.getCode());
-            put(DESCRIPTION, tenant.getDescription());
-            put(DOMAIN_URL, tenant.getDomainUrl());
-            put(LOGO_ID, tenant.getLogoId());
-            put(IMAGE_ID, tenant.getImageId());
-            put(TYPE, tenant.getType().toString());
-            put(CREATED_BY, 1L);
-            put(CREATED_DATE, new Date());
-            put(LAST_MODIFIED_BY, 1L);
-            put(LAST_MODIFIED_DATE, new Date());
+            put(Tenant.CODE, tenant.getCode());
+            put(Tenant.DESCRIPTION, tenant.getDescription());
+            put(Tenant.DOMAIN_URL, tenant.getDomainUrl());
+            put(Tenant.LOGO_ID, tenant.getLogoId());
+            put(Tenant.IMAGE_ID, tenant.getImageId());
+            put(Tenant.TYPE, tenant.getType().toString());
+            put(Tenant.CREATED_BY, 1L);
+            put(Tenant.CREATED_DATE, new Date());
+            put(Tenant.LAST_MODIFIED_BY, 1L);
+            put(Tenant.LAST_MODIFIED_DATE, new Date());
+            put(Tenant.TWITTER_URL,tenant.getTwitterUrl());
+            put(Tenant.FACEBOOK_URL,tenant.getFacebookUrl());
+            put(Tenant.ADDRESS, tenant.getAddress());
+            put(Tenant.CONTACTNUMBER, tenant.getContactNumber());
+            put(Tenant.HELPLINENUMBER,tenant.getHelpLineNumber());
+            put(Tenant.EMAILID,tenant.getEmailId());
+            
         }};
 
         namedParameterJdbcTemplate.update(INSERT_QUERY, parametersMap);
         cityRepository.save(tenant.getCity(), tenant.getCode());
         return tenant;
     }
+    
+    @Transactional
+    public org.egov.tenant.domain.model.Tenant update(final org.egov.tenant.domain.model.Tenant tenant) {
+        final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+           
+        	put(Tenant.DESCRIPTION, tenant.getDescription());
+        	put(Tenant.DOMAIN_URL, tenant.getDomainUrl());
+        	put(Tenant.LOGO_ID, tenant.getLogoId());
+        	put(Tenant.IMAGE_ID, tenant.getImageId());
+        	put(Tenant.TYPE, tenant.getType().toString());
+        	put(Tenant.LAST_MODIFIED_BY, 1L);
+        	put(Tenant.LAST_MODIFIED_DATE, new Date());
+        	put(Tenant.TWITTER_URL,tenant.getTwitterUrl());
+        	put(Tenant.FACEBOOK_URL,tenant.getFacebookUrl());
+        	put(Tenant.EMAILID,tenant.getEmailId());
+        	put(Tenant.ADDRESS, tenant.getAddress());
+        	put(Tenant.CONTACTNUMBER, tenant.getContactNumber());
+        	put(Tenant.HELPLINENUMBER,tenant.getHelpLineNumber());
+        	put(Tenant.CODE, tenant.getCode());
+        }};
+
+        namedParameterJdbcTemplate.update(UPDATE_QUERY, parametersMap);
+        cityRepository.update(tenant.getCity(), tenant.getCode());
+        return tenant;
+    }
+    
+    
 
     public Long isTenantPresent(String tenantCode) {
 
         final Map<String, Object> parameterMap = new HashMap<String, Object>() {{
-            put(CODE, tenantCode);
+        	put(Tenant.CODE, tenantCode);
         }};
 
         SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(COUNT_WITH_TENANT_CODE_QUERY, parameterMap);

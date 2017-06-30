@@ -173,7 +173,7 @@ class grievanceSearch extends Component {
     });
 
     Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response) {
-      	checkCountAndCall("receiveingModeList", response.receivingModes);
+      	checkCountAndCall("receiveingModeList", response.ReceivingModeType);
     }, function(err) {
     	checkCountAndCall("receiveingModeList", []);
     });
@@ -314,7 +314,7 @@ class grievanceSearch extends Component {
         				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e) => {handleChange(e, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
         			<Col xs={12} md={3}>
-        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={"pgr.lbl.complainttype"} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
+        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, val) => {
         					var e = {target: {value: val}};
         					handleChange(e, "serviceCode", false, "")}}>
                 			{complaintTypeList.map((com, index) => (

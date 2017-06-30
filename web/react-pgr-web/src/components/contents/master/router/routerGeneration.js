@@ -245,14 +245,18 @@ class routerGeneration extends Component {
       searchSet.boundaryid = searchSet.boundaries.join(",");
       delete searchSet.boundaries;
     }
+
+    if(searchSet.complaintTypeCategory) {
+      delete searchSet.complaintTypeCategory;
+    }
+
     delete searchSet.boundaryType;
-    console.log(self.props.routerCreateSet);
   	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
   			resultList: response.RouterTypRes,
   			isSearchClicked: true
-  		})
+  		});
   	}, function(err) {
 
   	})
@@ -273,7 +277,7 @@ class routerGeneration extends Component {
   	 		position: self.props.routerCreateSet.position,
   	 		id: "",
   	 		services: [],
-  	 		boundary: [],
+  	 		boundaries: [],
   	 		tenantId: localStorage.getItem("tenantId")
   	 	};
 
@@ -284,7 +288,7 @@ class routerGeneration extends Component {
   	 	}
 
   	 	for(var i=0; i<self.props.routerCreateSet.boundaries.length; i++) {
-  	 		routerType.boundary.push({
+  	 		routerType.boundaries.push({
   	 			boundarytype: self.props.routerCreateSet.boundaries[i]
   	 		});
   	 	}
@@ -296,7 +300,8 @@ class routerGeneration extends Component {
 	  			isSearchClicked: false,
 	  			flag: 1,
 	  			positionSource: [],
-	  			boundariesList: []
+	  			boundariesList: [],
+          open2: true
 	  		});
 
 
@@ -338,7 +343,7 @@ class routerGeneration extends Component {
    } = this.state;
 
    const showSaveButton = function() {
-   		if(resultList && resultList.length) {
+   		if(isSearchClicked && isFormValid) {
    			return (
    				<div style={{textAlign: 'center'}}>
 	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={(e) => {save(e)}}/>
@@ -417,7 +422,7 @@ class routerGeneration extends Component {
 	                					handleChange(e, "complaintTypes", true, "")}} multiple>
 	                					{typeList.map((item, index) => (
 			                                <MenuItem 
-                                        value={item.serviceCode} 
+                                        value={item.id} 
                                         key={index} 
                                         insetChildren={true}
                                         primaryText={item.serviceName}

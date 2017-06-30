@@ -249,7 +249,7 @@ class createRouter extends Component {
    		services: [{
    				serviceCode: self.props.routerCreateSet.complaintType
    	    }],
-   		boundary: [{
+   		boundaries: [{
    			boundarytype: self.props.routerCreateSet.boundary
    		}],
    		tenantId: localStorage.getItem("tenantId")

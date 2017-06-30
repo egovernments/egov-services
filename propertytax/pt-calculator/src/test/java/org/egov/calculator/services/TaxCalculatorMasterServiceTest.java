@@ -192,7 +192,7 @@ public class TaxCalculatorMasterServiceTest {
 			master.setOccupancy("anil");
 			master.setValue((double) 252);
 			master.setFromDate("25/10/2016 00:00:00");
-			master.setToDate("25/10/2016 00:00:00");
+			master.setToDate("25/10/2017 00:00:00");
 
 			master.setAuditDetails(auditDetails);
 			guidanceValue.add(master);
@@ -242,7 +242,7 @@ public class TaxCalculatorMasterServiceTest {
 			master.setOccupancy("anil");
 			master.setValue((double) 252);
 			master.setFromDate("25/10/2016 00:00:00");
-			master.setToDate("25/10/2016 00:00:00");
+			master.setToDate("25/10/2017 00:00:00");
 			master.setAuditDetails(auditDetails);
 			guidanceValue.add(master);
 
@@ -274,10 +274,10 @@ public class TaxCalculatorMasterServiceTest {
 			String tenantId = "default";
 			String boundary = "b2";
 			String validDate = "15/06/2017";
-			String structure = "square";
-			String usage = "propertyuse1";
-			String subUsage = "propertyusage1";
-			String occupancy = "kumar";
+			String structure = "rectangle";
+			String usage = "propertyuse";
+			String subUsage = "propertyusage";
+			String occupancy = "anil";
 
 			GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
 					getRequestInfoObject(), tenantId, boundary, structure, usage, subUsage, occupancy, validDate);
@@ -505,7 +505,7 @@ public class TaxCalculatorMasterServiceTest {
 		String taxHead = "taxHead-UU";
 		String validDate = "04/06/2017";
 		Double validARVAmount = 1100.0;
-		String parentTaxHead = null;
+		String parentTaxHead = "dependentTaxHead-UU";
 
 		TaxRatesResponse taxRatesResponse = null;
 		try {

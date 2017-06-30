@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 public class ServiceRequestESRepository {
     private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
     private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
+    private static final String EMPTY_STRING = "";
+    private static final String NEW_LINE = "\n";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
@@ -65,14 +67,21 @@ public class ServiceRequestESRepository {
 
     private void logRequest(SearchRequestBuilder searchRequestBuilder) {
         if (isESRequestLoggingEnabled) {
-            log.info(searchRequestBuilder.toString());
+            log.info(removeNewLines(searchRequestBuilder.toString()));
         }
     }
 
     private void logResponse(SearchResponse searchResponse) {
         if (isESRequestLoggingEnabled) {
-            log.info(searchResponse.toString());
+            log.info(removeNewLines(searchResponse.toString()));
         }
+    }
+
+    private String removeNewLines(String string) {
+        if (string == null) {
+            return EMPTY_STRING;
+        }
+        return string.replaceAll(NEW_LINE, EMPTY_STRING);
     }
 
     private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {

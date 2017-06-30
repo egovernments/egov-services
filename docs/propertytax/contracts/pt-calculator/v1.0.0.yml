@@ -19,7 +19,9 @@ info:
   
   title: Property Tax Calculator
   description: |
-    APIs for Property Tax calcuation. This service handles the tax calculation and returns back the detailed tax information.
+    * APIs for Property Tax calcuation. This service handles the tax calculation and returns back the detailed tax information.
+    
+    * All middle level calculated values (MRV, depreciation etc) rounded upto 2 decimal digits and all final values (ARV and all the individual taxes) rounded to nearest one rupee.
   contact:
     name: Ramki
 host: phoenix-qa.egovernments.org
@@ -569,15 +571,15 @@ definitions:
       depreciation:
         type: number
         format: double
-        description: depreciation for age of the building.
+        description: depreciation for age of the building. Rounded to 2 decimal digits
       rebateValue:
         type: number
         format: double
-        description: The rebate has been given during the tax calculation. Rounded to nearest rupee
+        description: The rebate has been given during the tax calculation. Rounded to 2 decimal digits
       calculatedARV:
         type: number
         format: double
-        description: Annual Rental Value calcualted.  Rounded to nearest rupee
+        description: Annual Rental Value calcualted. Rounded to nearest rupee
       manualARV:
         type: number
         format: double
@@ -585,15 +587,15 @@ definitions:
       residentialARV:
         type: number
         format: double
-        description: Residential Annual Rental Value.  Rounded to nearest rupee
+        description: Residential Annual Rental Value. Rounded to nearest rupee
       nonResidentialARV:
         type: number
         format: double
-        description: Non Residential Annual Rental Value.  Rounded to nearest rupee
+        description: Non Residential Annual Rental Value. Rounded to nearest rupee
       totalTax:
         type: number
         format: double
-        description: Total tax for the unit.  Rounded to nearest rupee
+        description: Total tax for the unit. Rounded to nearest rupee
       headWiseTaxes:
         description: Head wise taxes
         type: array
@@ -684,7 +686,7 @@ definitions:
       taxValue:
         type: number
         format: double
-        description: Tax Value.  Rounded to nearest rupee
+        description: Tax Value. Rounded to nearest rupee
     required:
     - taxName
     - taxValue
@@ -727,6 +729,7 @@ definitions:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       taxes:
+        description: List of taxcalculations for each period
         type: array
         items:
           $ref: '#/definitions/TaxCalculation'
@@ -1037,4 +1040,5 @@ definitions:
         items:
           $ref: '#/definitions/TaxPeriod'
     type: object
+
 

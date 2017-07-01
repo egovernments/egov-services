@@ -54,7 +54,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PropertyTypeResponseInfo {
+public class PropertyTypeResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;

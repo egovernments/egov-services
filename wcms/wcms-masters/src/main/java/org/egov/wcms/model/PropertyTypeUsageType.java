@@ -67,13 +67,13 @@ public class PropertyTypeUsageType {
     @Length(min = 3, max = 20)
     @NotNull
     private String propertyType;
-    private long propertyTypeId;
+    private String propertyTypeId;
 
     @NotNull
     private String usageType;
-    private long usageTypeId;
+    private String usageTypeId;
 
-    private boolean active;
+    private Boolean active;
 
     @Length(max = 250)
     @NotNull

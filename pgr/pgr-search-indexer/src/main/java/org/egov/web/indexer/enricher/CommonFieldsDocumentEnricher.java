@@ -35,7 +35,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setRequesterMobile(serviceRequest.getPhone());
         document.setRequesterEmail(serviceRequest.getEmail());
         document.setRequesterId(serviceRequest.getCitizenUserId());
-        document.setServiceTypeName(serviceRequest.getServiceName());
+        document.setServiceTypeName(serviceType.getServiceName());
         document.setServiceTypeCode(serviceRequest.getServiceCode());
         document.setServiceStatusCode(serviceRequest.getDynamicSingleValue(SERVICE_STATUS));
         document.setComplaintSLADays(serviceType.getSlaHours());

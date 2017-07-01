@@ -14,6 +14,7 @@ public class ServiceType {
     private Integer slaHours;
     private Long groupId;
     private String groups;
+    private String serviceName;
 
     public boolean isComplaintType() {
         return keywords.stream().anyMatch(COMPLAINT_KEYWORD::equalsIgnoreCase);

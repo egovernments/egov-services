@@ -143,14 +143,6 @@ public class PropertyTypeCategoryTypeQueryBuilder {
 		// pageNo * pageSize
 	}
 
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 *
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
 	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
 		if (appendAndClauseFlag)
 			queryString.append(" AND");

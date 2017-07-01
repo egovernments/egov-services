@@ -131,10 +131,10 @@ public class PropertyPipeSizeRepository {
         preparedStatementValues.add(tenantId);
         final String query;
         if (id == null)
-            query = PropertyPipeSizeQueryBuilder.selectPropertyByPipeSizeQuery();
+            query = propertyPipeSizeQueryBuilder.selectPropertyByPipeSizeQuery();
         else {
             preparedStatementValues.add(id);
-            query = PropertyPipeSizeQueryBuilder.selectPropertyByPipeSizeNotInQuery();
+            query = propertyPipeSizeQueryBuilder.selectPropertyByPipeSizeNotInQuery();
         }
         final List<Map<String, Object>> propertyPipeSizes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());

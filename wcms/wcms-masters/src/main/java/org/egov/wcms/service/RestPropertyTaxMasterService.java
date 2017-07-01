@@ -41,8 +41,9 @@
 package org.egov.wcms.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.web.contract.PropertyTypeResponseInfo;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
+import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -50,14 +51,24 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class RestPropertyTaxMasterService {
 
-	public PropertyTypeResponseInfo getPropertyTypes(String url) {
+	public PropertyTypeResponse getPropertyTypes(String url) {
 		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 		final RestTemplate restTemplate = new RestTemplate();
-		final PropertyTypeResponseInfo propertyTypes = restTemplate.postForObject(url.toString(), request,
-				PropertyTypeResponseInfo.class);
+		final PropertyTypeResponse propertyTypes = restTemplate.postForObject(url.toString(), request,
+				PropertyTypeResponse.class);
 		return propertyTypes;
+	}
+
+	public UsageTypeResponse getUsageTypes(String url) {
+		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final RestTemplate restTemplate = new RestTemplate();
+		final UsageTypeResponse usageType = restTemplate.postForObject(url.toString(), request,
+				UsageTypeResponse.class);
+		return usageType;
 	}
 
 }

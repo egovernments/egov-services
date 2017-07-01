@@ -13,7 +13,6 @@ import java.util.List;
 public class ServiceRequestDocument {
 
     private static final String ES_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final String IST_TIMEZONE = "IST";
     private static final String DISPLAY_NO = "NO";
     private static final String DISPLAY_YES = "YES";
     public static final int YES = 1;
@@ -25,15 +24,15 @@ public class ServiceRequestDocument {
     @JsonProperty("crn")
     private String crn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = IST_TIMEZONE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("createdDate")
     private Date createdDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = IST_TIMEZONE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("lastModifiedDate")
     private Date lastModifiedDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = IST_TIMEZONE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("escalationDate")
     private Date escalationDate;
 

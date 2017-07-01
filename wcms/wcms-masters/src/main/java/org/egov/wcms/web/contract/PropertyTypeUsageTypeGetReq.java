@@ -60,7 +60,7 @@ public class PropertyTypeUsageTypeGetReq {
     private List<Long> id;
     private String propertyType;
     private String usageType;
-    private boolean active;
+    private Boolean active;
     private String tenantId;
 
 }

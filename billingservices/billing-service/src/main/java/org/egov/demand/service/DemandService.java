@@ -167,7 +167,8 @@ public class DemandService {
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
 		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 		List<Demand> demands = demandRepository.getDemands(demandCriteria, ownerIds);
-		demands = demandEnrichmentUtil.enrichOwners(demands, owners);
+		if (!demands.isEmpty())
+			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

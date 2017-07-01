@@ -11,6 +11,11 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 public class QueryFactory {
+
+    private static final String ES_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String CREATED_DATE = "createdDate";
+    private static final String ESCALATION_DATE = "escalationDate";
+
     public BoolQueryBuilder create(ServiceRequestSearchCriteria criteria) {
         BoolQueryBuilder boolQueryBuilder = boolQuery();
         boolQueryBuilder = addServiceRequestFilter(criteria, boolQueryBuilder);
@@ -82,9 +87,8 @@ public class QueryFactory {
     private BoolQueryBuilder addEscalationDateFilter(ServiceRequestSearchCriteria criteria,
                                                      BoolQueryBuilder boolQueryBuilder) {
         if (criteria.getEscalationDate() != null) {
-            final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .from(criteria.getEscalationDate().getTime())
-                .includeLower(true);
+            final RangeQueryBuilder rangeQueryBuilder = rangeQuery(ESCALATION_DATE)
+                .gte(criteria.getEscalationDate().toString(ES_DATE_TIME_FORMAT));
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         }
         return boolQueryBuilder;
@@ -100,21 +104,17 @@ public class QueryFactory {
     private BoolQueryBuilder addCreatedDateRangeFilter(ServiceRequestSearchCriteria criteria,
                                                        BoolQueryBuilder boolQueryBuilder) {
         if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
-            final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .from(criteria.getStartDate().getTime())
-                .to(criteria.getEndDate().getTime())
-                .includeLower(true)
-                .includeUpper(true);
+            final RangeQueryBuilder rangeQueryBuilder = rangeQuery(CREATED_DATE)
+                .gte(criteria.getStartDate().toString(ES_DATE_TIME_FORMAT))
+                .lt(criteria.getEndDate().toString(ES_DATE_TIME_FORMAT));
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         } else if (criteria.getStartDate() != null) {
-            final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .from(criteria.getStartDate().getTime())
-                .includeLower(true);
+            final RangeQueryBuilder rangeQueryBuilder = rangeQuery(CREATED_DATE)
+                .gte(criteria.getStartDate().toString(ES_DATE_TIME_FORMAT));
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         } else if (criteria.getEndDate() != null) {
-            final RangeQueryBuilder rangeQueryBuilder = rangeQuery("created")
-                .to(criteria.getEndDate().getTime())
-                .includeUpper(true);
+            final RangeQueryBuilder rangeQueryBuilder = rangeQuery(CREATED_DATE)
+                .lt(criteria.getEndDate().toString(ES_DATE_TIME_FORMAT));
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         }
         return boolQueryBuilder;

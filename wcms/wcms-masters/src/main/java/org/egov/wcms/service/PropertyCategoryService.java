@@ -46,7 +46,7 @@ import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
-import org.egov.wcms.web.contract.PropertyTypeResponseInfo;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +106,6 @@ public class PropertyCategoryService {
 	}
 
 	public boolean checkIfMappingExists(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
-
 		getPropertyTypeByName(propertyCategoryRequest);
 		return propertyCategoryRepository.checkIfMappingExists(
 				propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeId(),
@@ -120,7 +119,7 @@ public class PropertyCategoryService {
 				+ propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
 		url = url.replace("{name}", propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName());
 		url = url.replace("{tenantId}", propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
-		final PropertyTypeResponseInfo propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+		final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
 		if (propertyTypes.getPropertyTypesSize()) {
 			isValidProperty = Boolean.TRUE;
 			propertyCategoryRequest.getPropertyTypeCategoryType().setPropertyTypeId(

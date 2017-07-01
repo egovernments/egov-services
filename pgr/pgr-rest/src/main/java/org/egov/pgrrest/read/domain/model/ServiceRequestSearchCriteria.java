@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -16,11 +15,11 @@ import java.util.List;
 public class ServiceRequestSearchCriteria {
 	private String serviceRequestId;
 	private String serviceCode;
-	private Date startDate;
-	private Date endDate;
-	private Date escalationDate;
+	private DateTime startDate;
+	private DateTime endDate;
+	private DateTime escalationDate;
 	private List <String> status;
-	private Date startLastModifiedDate;
+	private DateTime startLastModifiedDate;
 	private Long userId;
 	private Long positionId;
 	private String name;
@@ -36,16 +35,16 @@ public class ServiceRequestSearchCriteria {
     private Integer pageSize;
     private boolean isAnonymous;
 
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return getNextDay(endDate);
     }
 
-    public Date getLastModifiedDate() {
+    public DateTime getLastModifiedDate() {
         return getNextDay(this.startLastModifiedDate);
     }
 
-    private Date getNextDay(Date endDate) {
-        return endDate == null ? null : DateUtils.addDays(endDate, 1);
+    private DateTime getNextDay(DateTime endDate) {
+        return endDate == null ? null : endDate.plusDays(1);
     }
 
     public boolean isPaginationCriteriaPresent() {

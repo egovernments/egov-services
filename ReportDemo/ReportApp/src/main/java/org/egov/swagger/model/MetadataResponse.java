@@ -35,12 +35,9 @@ public class MetadataResponse   {
   public ResponseInfo getRequestInfo() {
     return requestInfo;
   }
-  @JsonProperty("ResponseInfo")
-  private ResponseInfo responseInfo;
+ 
   
-  public void setResponseInfo(ResponseInfo responseInfo) {
-	this.responseInfo = responseInfo;
-}
+ 
 
 public void setRequestInfo(ResponseInfo requestInfo) {
     this.requestInfo = requestInfo;

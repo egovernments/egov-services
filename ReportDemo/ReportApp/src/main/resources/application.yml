@@ -1,3 +1,4 @@
+ReportDefinitions:
 reportName: GrievanceByType
 summary: Report grouped by Grievance Type and status - based on a date period
 version: 1.0.0

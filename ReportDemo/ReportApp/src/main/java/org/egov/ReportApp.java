@@ -1,19 +1,13 @@
 package org.egov;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.io.File;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.egov.controller.ReportController;
-import org.egov.domain.model.ReportMetaData;
+import org.egov.domain.model.ReportYamlMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -27,7 +21,7 @@ public class ReportApp {
 	
 	
 	@Autowired
-	public ReportMetaData reportMetaData;
+	public ReportYamlMetaData reportYamlMetaData;
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
@@ -45,15 +39,15 @@ public class ReportApp {
         return converter;
     }
 	 
-	  @Bean("reportMetaData")
-	  public static ReportMetaData loadYaml() {
+	  @Bean("reportYamlMetaData")
+	  public static ReportYamlMetaData loadYaml() {
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
-    	ReportMetaData reportMetaData = mapper.readValue(new File("/ws/ReportDemo/ReportApp/src/main/resources/application.yml"), ReportMetaData.class);
-        System.out.println(ReflectionToStringBuilder.toString(reportMetaData,ToStringStyle.MULTI_LINE_STYLE));
+    	ReportYamlMetaData reportYamlMetaData = mapper.readValue(new File("/ws/ReportDemo/ReportApp/src/main/resources/application.yml"), ReportYamlMetaData.class);
+        System.out.println(ReflectionToStringBuilder.toString(reportYamlMetaData,ToStringStyle.MULTI_LINE_STYLE));
         //new ReportController(reportMetaData);
         
-        return reportMetaData;
+        return reportYamlMetaData;
     } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

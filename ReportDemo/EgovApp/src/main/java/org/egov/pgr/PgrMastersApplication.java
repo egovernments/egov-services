@@ -51,6 +51,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.ReportApp;
 
 
 
@@ -90,8 +91,8 @@ public class PgrMastersApplication {
     	
     	SpringApplicationBuilder application = new SpringApplicationBuilder();
     	application.sources(PgrMastersApplication.class);
-    	/*application.sources(aClass.getName());
-    	application.sources(bClass.getName());*/
+    	 application.sources(ReportApp.class);
+    	/*application.sources(bClass.getName());*/
     	application.run(args);
     	
 

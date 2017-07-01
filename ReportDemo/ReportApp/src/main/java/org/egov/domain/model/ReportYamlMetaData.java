@@ -18,9 +18,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Component
-@ConfigurationProperties(prefix = "prefix") 
-@EnableConfigurationProperties(ReportMetaData.class)
-public class ReportMetaData {
+@ConfigurationProperties 
+@EnableConfigurationProperties(ReportYamlMetaData.class)
+public class ReportYamlMetaData {
     private String reportName;
     public String getReportName() {
 		return reportName;

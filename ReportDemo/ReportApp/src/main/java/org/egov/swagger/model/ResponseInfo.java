@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import javax.validation.constraints.*;
+
+import org.egov.common.contract.request.RequestInfo;
+
 /**
  * ResponseInfo should be used to carry metadata information about the response from the server. apiId, ver and msgId in ResponseInfo should always correspond to the same values in respective request&#39;s RequestInfo.
  */
@@ -225,5 +228,6 @@ public class ResponseInfo   {
     }
     return o.toString().replace("\n", "\n    ");
   }
+ 
 }
 

@@ -139,9 +139,6 @@ public class PropertyTypeCategoryTypeRepository {
 
 		}
 
-		// Similar api call for fetching property id to enable search based on
-		// property name.
-
 		final String queryStr = propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues);
 		final String categoryNameQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryTypeName();
 		final List<PropertyTypeCategoryType> propertyCategories = jdbcTemplate.query(queryStr,
@@ -149,6 +146,7 @@ public class PropertyTypeCategoryTypeRepository {
 		for (final PropertyTypeCategoryType propertyTypeCategoryType : propertyCategories)
 			propertyTypeCategoryType.setCategoryTypeName(jdbcTemplate.queryForObject(categoryNameQuery,
 					new Object[] { propertyTypeCategoryType.getCategoryTypeId() }, String.class));
+		
 		LOGGER.info("PropertyCategoryList: " + propertyCategories.toString());
 		final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
 		propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);

@@ -41,13 +41,15 @@
 package org.egov.wcms.service;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
+import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,64 +61,96 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class PropertyUsageTypeService {
 
-    public static final Logger logger = LoggerFactory.getLogger(PropertyUsageTypeService.class);
+	public static final Logger logger = LoggerFactory.getLogger(PropertyUsageTypeService.class);
 
-    @Autowired
-    private PropertyUsageTypeRepository propUsageTypeRepository;
+	@Autowired
+	private PropertyUsageTypeRepository propUsageTypeRepository;
 
-    @Autowired
-    private WaterMasterProducer waterMasterProducer;
+	@Autowired
+	private WaterMasterProducer waterMasterProducer;
 
-    public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
-    }
+	@Autowired
+	private PropertiesManager propertiesManager;
 
-    public PropertyTypeUsageTypeReq update(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        return propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest);
-    }
+	@Autowired
+	private RestPropertyTaxMasterService restPropertyTaxMasterService;
 
-    public PropertyTypeUsageType createPropertyUsageType(final String topic, final String key,
-            final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
-        String propUsageTypeValue = null;
-        try {
-            logger.info("createPropertyUsageType service::" + propUsageTypeRequest);
-            propUsageTypeValue = mapper.writeValueAsString(getIdForRequestCodes(propUsageTypeRequest));
-            logger.info("propUsageTypeValue::" + propUsageTypeValue);
-        } catch (final JsonProcessingException e) {
-            logger.error(e.getMessage());
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, propUsageTypeValue);
-        } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
-        }
-        return propUsageTypeRequest.getPropertyTypeUsageType();
-    }
+	public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
+	}
 
-    public List<PropertyTypeUsageType> getPropertyUsageTypes(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
-        return propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest);
-    }
+	public PropertyTypeUsageTypeReq update(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		return propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest);
+	}
 
-    public boolean checkPropertyUsageTypeExists(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        // Get IDs for Property Type and Usage Type
-        getIdForRequestCodes(propUsageTypeRequest);
-        final List<PropertyTypeUsageType> propUsageTypes = propUsageTypeRepository.checkPropertyUsageTypeExists(
-                propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
-                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
-        if (propUsageTypes.size() > 0)
-            return true;
-        return false;
-    }
+	public PropertyTypeUsageType createPropertyUsageType(final String topic, final String key,
+			final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		final ObjectMapper mapper = new ObjectMapper();
+		String propUsageTypeValue = null;
+		try {
+			logger.info("createPropertyUsageType service::" + propUsageTypeRequest);
+			propUsageTypeValue = mapper.writeValueAsString(propUsageTypeRequest);
+			logger.info("propUsageTypeValue::" + propUsageTypeValue);
+		} catch (final JsonProcessingException e) {
+			logger.error(e.getMessage());
+		}
+		try {
+			waterMasterProducer.sendMessage(topic, key, propUsageTypeValue);
+		} catch (final Exception ex) {
+			logger.error("Exception Encountered : " + ex);
+		}
+		return propUsageTypeRequest.getPropertyTypeUsageType();
+	}
 
-    private PropertyTypeUsageTypeReq getIdForRequestCodes(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(1L);
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        propUsageTypeRequest.getPropertyTypeUsageType().setUsageTypeId(1L);
+	public List<PropertyTypeUsageType> getPropertyUsageTypes(
+			final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
+		return propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest);
+	}
 
-        return propUsageTypeRequest;
-    }
+	public boolean checkPropertyUsageTypeExists(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		getPropertyTypeByName(propUsageTypeRequest);
+		getUsageTypeByName(propUsageTypeRequest);
+		return propUsageTypeRepository.checkPropertyUsageTypeExists(
+				propUsageTypeRequest.getPropertyTypeUsageType().getId(),
+				propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
+				propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
+				propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
+	}
+
+	public Boolean getPropertyTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		Boolean isValidProperty = Boolean.FALSE;
+		String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+				+ propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+		url = url.replace("{name}", propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType());
+		url = url.replace("{tenantId}", propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
+		final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyTypes(url);
+		if (propertyType.getPropertyTypesSize()) {
+			isValidProperty = Boolean.TRUE;
+			propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(
+					propertyType.getPropertyTypes() != null && propertyType.getPropertyTypes().get(0) != null
+							? propertyType.getPropertyTypes().get(0).getId() : "");
+
+		}
+		return isValidProperty;
+
+	}
+
+	public Boolean getUsageTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		Boolean isValidUsage = Boolean.FALSE;
+		String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+				+ propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
+		url = url.replace("{name}", propUsageTypeRequest.getPropertyTypeUsageType().getUsageType());
+		url = url.replace("{tenantId}", propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
+		final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
+		if (usageType.getUsageTypesSize()) {
+			isValidUsage = Boolean.TRUE;
+			propUsageTypeRequest.getPropertyTypeUsageType()
+					.setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
+							? usageType.getUsageMasters().get(0).getId() : "");
+
+		}
+		return isValidUsage;
+
+	}
 
 }

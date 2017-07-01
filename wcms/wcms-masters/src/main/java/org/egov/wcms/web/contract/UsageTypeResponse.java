@@ -41,31 +41,28 @@ package org.egov.wcms.web.contract;
 
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode
-public class PropertyCategoryGetRequest {
+public class UsageTypeResponse {
 
-    private List<Long> id;
-    private String propertyType;
-    private String categoryType;
-    private String propertyTypeId;
-    private Long categoryTypeId;
-    private Boolean active;
-    private String tenantId;
-    private String sortBy;
-    private String sortOrder;
-    private Short pageSize;
-    private Short pageNumber;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+	@JsonProperty("usageMasters")
+	private List<PropertyTaxResponseInfo> usageMasters;
+
+	public boolean getUsageTypesSize() {
+		return this.usageMasters.size() > 0;
+	}
 
 }

@@ -47,7 +47,7 @@ import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
-import org.egov.wcms.web.contract.PropertyTypeResponseInfo;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +116,7 @@ public class PropertyTypePipeSizeService {
 				+ propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
 		url = url.replace("{name}", propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName());
 		url = url.replace("{tenantId}", propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
-		final PropertyTypeResponseInfo propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+		final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
 		if (propertyTypes.getPropertyTypesSize()) {
 			isValidProperty = Boolean.TRUE;
 			propertyPipeSizeRequest.getPropertyPipeSize().setPropertyTypeId(

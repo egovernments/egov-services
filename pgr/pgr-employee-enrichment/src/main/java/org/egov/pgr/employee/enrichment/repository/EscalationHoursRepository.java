@@ -29,6 +29,6 @@ public class EscalationHoursRepository {
         uriVariables.put("designationId", designationId);
         final EscalationHoursResponse escalationHoursResponse = this.restTemplate
             .postForObject(this.url, request, EscalationHoursResponse.class, uriVariables);
-        return Math.toIntExact(escalationHoursResponse.getHours());
+        return Math.toIntExact(escalationHoursResponse.getEscalationTimeTypes().get(0).getHours());
     }
 }

@@ -1,3 +1,15 @@
 {
-  "noOfHours": 3
+    "RequestInfo": {
+        "apiId": "org.egov",
+        "ver": "1.0",
+        "ts": "Fri Mar 31 19:31:01 UTC 2017",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+    "EscalationTimeType": [
+        {
+            "noOfHours": 3
+        }
+    ]
 }

@@ -19,6 +19,7 @@ public class ComplaintEscalatedFromEmployeeEmailMessageStrategy implements Email
     @Override
     public boolean matches(NotificationContext context) {
         return context.getServiceType().isComplaintType()
+            && context.getSevaRequest().isEscalated()
             && isNotEmpty(context.getPreviousEmployee().getEmail())
             && context.getSevaRequest().isCreate();
     }

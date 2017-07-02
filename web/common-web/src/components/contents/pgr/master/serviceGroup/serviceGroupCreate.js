@@ -119,9 +119,10 @@ class ServiceGroupCreate extends Component {
               current.setState({
                 open: true
               });
-          }).catch((error)=>{
-              console.log(error);
-          })
+          }, function(err) {
+            current.props.toggleSnackbarAndSetText(true, err.message);
+            current.props.setLoadingStatus('hide');
+        	})
       } else {
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_create",{},body).then(function(response){
               console.log(response);
@@ -129,9 +130,10 @@ class ServiceGroupCreate extends Component {
                 open: true
               });
               current.props.resetObject('createServiceGroup');
-          }).catch((error)=>{
-              console.log(error);
-          })
+          }, function(err) {
+            current.props.toggleSnackbarAndSetText(true, err.message);
+            current.props.setLoadingStatus('hide');
+        	})
       }
 
 
@@ -284,7 +286,9 @@ const mapDispatchToProps = dispatch => ({
       pattern
     });
   },
-
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }

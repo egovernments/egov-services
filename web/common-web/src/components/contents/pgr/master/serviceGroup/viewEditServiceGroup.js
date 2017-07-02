@@ -136,13 +136,13 @@ class ViewEditReceivingCenter extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                              {url == '/pgr/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
                                                 let id = e.id;
-                                                this.handleNavigation("#/viewServiceGroup/", id);
+                                                this.handleNavigation("/pgr/viewServiceGroup/", id);
                                               }}/></td>}
-                                              {url == '/serviceGroup/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                              {url == '/pgr/serviceGroup/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
                                                 let id = e.id;
-                                                this.handleNavigation("#/createServiceGroup/", id);
+                                                this.handleNavigation("/pgr/createServiceGroup/", id);
                                               }}/></td>}
                                             </tr>
                                           )

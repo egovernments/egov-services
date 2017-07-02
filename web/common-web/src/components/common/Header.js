@@ -295,7 +295,7 @@ class Header extends Component {
       id:9,
       name:'Create Router',
       displayName:"Create Router",
-      url:"/createRouter",
+      url:"/pgr/createRouter",
       enabled:"true",
       orderNumber:1,
       queryParams:"",

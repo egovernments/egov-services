@@ -141,7 +141,6 @@ class createRouter extends Component {
           searchTextCom = response.RouterTypRes[0].service.serviceName || "";
           searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType) || "";
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
-
           setForm(routerType);
           if(type == "view")
             self.setState({
@@ -256,7 +255,7 @@ class createRouter extends Component {
   	};
 
   	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
-  		self.props.initForm();
+  		//self.props.initForm();
   		self.setState({
   			open: true
   		});

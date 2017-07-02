@@ -159,7 +159,7 @@ class searchRouter extends Component {
   componentDidMount() {
     var self = this;
     this.props.initForm();
-    Api.commonApiPost("egov-location/boundarytypes/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName: "Ward", hierarchyTypeName: "Administration"}).then(function(response) {
+    Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
         self.setState({
           boundaryTypeList: response.BoundaryType
         })
@@ -201,7 +201,7 @@ class searchRouter extends Component {
 
   loadBoundaries(value) {
      var self = this;
-     Api.commonApiGet("/egov-location/boundarys", {"Boundary.id": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+     Api.commonApiGet("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
        self.setState({boundarySource : response.Boundary});
      },function(err) {
 

@@ -407,9 +407,9 @@ class grievanceSearch extends Component {
 	                				}}/>
 	                			</Col>
 	                			<Col xs={12} md={3}>
-	                				<DatePicker floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.toDate} onChange={(e, dat) => {
+	                				<DatePicker floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate} onChange={(e, dat) => {
 	                					var e = {target: {value: dat}};
-	                					handleChange(e, "toDate", false, "");
+	                					handleChange(e, "endDate", false, "");
 	                				}}/>
 	                			</Col>
 	                		</Row>

@@ -123,6 +123,10 @@ public class ServiceGroupService {
 		return categoryRepository.getAllServiceGroup(serviceGroupGetRequest);
 	}
 	
+	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) { 
+		return categoryRepository.verifyRequestUniqueness(serviceGroupRequest);
+	}
+	
 	private List<org.egov.pgr.web.contract.ServiceGroup> convertModelToContract(List<ServiceGroup> modelList) {
 		List<org.egov.pgr.web.contract.ServiceGroup> contractList = new ArrayList<>();
 		for (int i = 0; i < modelList.size(); i++) {

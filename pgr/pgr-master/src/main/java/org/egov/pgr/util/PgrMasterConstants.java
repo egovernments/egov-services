@@ -154,16 +154,20 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE = "Channel should be WEB or MOBILE.";
 	
 	public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0012";
-	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "channel";
-	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "Channel is required.";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "Channel is required.";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "channe;";
 	
 	public static final String FROMPOSITION_MANDATORY_CODE = "pgr.0013";
-	public static final String FROMPOSITION_MANADATORY_ERROR_MESSAGE = "fromPosition";
-	public static final String FROMPOSITION_MANADATORY_FIELD_NAME = "From Position is required.";
+	public static final String FROMPOSITION_MANADATORY_ERROR_MESSAGE = "From Position is required.";
+	public static final String FROMPOSITION_MANADATORY_FIELD_NAME = "fromPosition";
 	
 	public static final String TOPOSITION_MANDATORY_CODE = "pgr.0014";
-	public static final String TOPOSITION_MANADATORY_ERROR_MESSAGE = "toPosition";
-	public static final String TOPOSITION_MANADATORY_FIELD_NAME = "To Position is required.";
+	public static final String TOPOSITION_MANADATORY_ERROR_MESSAGE = "To Position is required.";
+	public static final String TOPOSITION_MANADATORY_FIELD_NAME = "toPosition";
+	
+	public static final String SERVICEGROUP_CODENAME_UNIQUE_CODE = "pgr.0015";
+	public static final String SERVICEGROUP_CODENAME_ERROR_MESSAGE = "Service Group Code or Name already exists";
+	public static final String SERVICEGROUP_CODENAME_FIELD_NAME = "name";
 	
 	
 	public String getErrorMessage(final String property) {

@@ -104,6 +104,35 @@ public class ServiceGroupRepository {
 		return serviceGroupTypes;
 	}
 	
+	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) {
+		String checkQuery = serviceGroupQueryBuilder.checkIfAvailable();
+		List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getCode());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+		
+		final List<Integer> availableCount = jdbcTemplate.queryForList(checkQuery,
+				preparedStatementValues.toArray(), Integer.class);
+		if(availableCount.size()>0) {
+			if(availableCount.get(0) > 0){
+				return true;
+			} else {
+				preparedStatementValues = new ArrayList<>();
+				preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
+				preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+				checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
+				final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
+						preparedStatementValues.toArray(), Integer.class);
+				if(count.size()>0){
+					if(count.get(0) > 0){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	
 
 }

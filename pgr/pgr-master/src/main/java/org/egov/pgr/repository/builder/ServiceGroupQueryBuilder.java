@@ -125,5 +125,13 @@ public class ServiceGroupQueryBuilder {
 		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?, createdby = ?, lastmodifiedby = ?, "
 				+ "createddate = ?, lastmodifieddate = ?, tenantid = ? where code = ?";
 	}
+	
+	public static String checkIfAvailable() { 
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE code = ? AND name = ? AND tenantid = ? ";
+	}
+	
+	public static String checkIfNameTenantIdAvailable() { 
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE name = ? AND tenantid = ? " ;
+	}
 
 }

@@ -114,9 +114,10 @@ public class ReceivingCenterTypeRepository {
 		// preparedStatementValues.add(id);
 		preparedStatementValues.add(tenantId);
 		String query = "";
-		if (code != null && code != "") {
+		if ((code != null && code != "") && (name != null && name != "")) {
 
 			preparedStatementValues.add(code);
+			preparedStatementValues.add(name);
 			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();
 
 		}

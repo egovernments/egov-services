@@ -125,14 +125,16 @@ class createRouter extends Component {
     } = this.state;
 
   	this.props.initForm();
+    self.props.setLoadingStatus('loading');
     const checkIfUpdateOrView = function() {
       if(type === "edit" || type === "view") {
         var id=self.props.match.params.id;
         Api.commonApiPost("/workflow/router/v1/_search", {id}).then(function(response) {
+          self.props.setLoadingStatus('hide');
           var routerType = {
             id: response.RouterTypRes[0].id,
             position: response.RouterTypRes[0].position,
-         		complaintType: response.RouterTypRes[0].service.serviceCode,
+         		complaintType: response.RouterTypRes[0].service.id,
          		boundary: response.RouterTypRes[0].boundary.boundaryType,
             boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType)
         	}
@@ -147,9 +149,11 @@ class createRouter extends Component {
               readonly: true
             });
         }, function(err) {
-
+          self.props.setLoadingStatus('hide');
         })
-    }
+      } else {
+        self.props.setLoadingStatus('hide');
+      }
   }
 
   	Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
@@ -246,7 +250,7 @@ class createRouter extends Component {
   		position: self.props.routerCreateSet.position,
    		id: self.props.routerCreateSet.id || "",
    		services: [{
-   				serviceCode: self.props.routerCreateSet.complaintType
+   				id: self.props.routerCreateSet.complaintType
    	    }],
    		boundaries: [{
    			boundarytype: self.props.routerCreateSet.boundary
@@ -254,13 +258,16 @@ class createRouter extends Component {
    		tenantId: localStorage.getItem("tenantId")
   	};
 
+    self.props.setLoadingStatus('loading');
   	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
   		//self.props.initForm();
   		self.setState({
   			open: true
   		});
+      self.props.setLoadingStatus('hide');
   	}, function(err) {
-
+      self.props.toggleSnackbarAndSetText(true, err.message);
+      self.props.setLoadingStatus('hide');
   	})
   }
 
@@ -472,6 +479,12 @@ const mapDispatchToProps = dispatch => ({
         }
       }
     });
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
   }
 });
 

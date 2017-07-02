@@ -40,7 +40,7 @@ import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serv
 
 
 const Main = () => (
-  <main>
+  <main style={{"marginBottom": "50px"}}>
     <Switch>
       <Route path='/propertyTaxSearch' component={PropertyTaxSearch}/>
       <Route exact path='/' component={Login}/>

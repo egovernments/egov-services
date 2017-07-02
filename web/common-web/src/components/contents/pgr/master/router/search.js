@@ -117,6 +117,11 @@ class searchRouter extends Component {
       this.loadBoundaries = this.loadBoundaries.bind(this);
       this.search = this.search.bind(this);
       this.handleNavigation = this.handleNavigation.bind(this);
+      this.setInitialState = this.setInitialState.bind(this);
+  }
+
+  setInitialState(_state) {
+    this.setState(_state);
   }
 
   componentWillUpdate() {
@@ -157,51 +162,45 @@ class searchRouter extends Component {
   }
 
   componentDidMount() {
-    var self = this;
+    var self = this, count = 4, _state = {};
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0) {
+        self.setInitialState(_state);
+        self.props.setLoadingStatus("hide");
+      }
+    }
+
     this.props.initForm();
+    self.props.setLoadingStatus("loading");
     Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
-        self.setState({
-          boundaryTypeList: response.BoundaryType
-        })
+        checkCountAndCall("boundaryTypeList", response.BoundaryType);
     }, function(err) {
-        self.setState({
-          boundaryTypeList: []
-        })
+        checkCountAndCall("boundaryTypeList", []);
     });
 
     Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
-        self.setState({
-          boundaryInitialList: response.Boundary
-        })
+        checkCountAndCall("boundaryInitialList", response.Boundary);
     }, function(err) {
-        self.setState({
-          boundaryInitialList: []
-        })
+        checkCountAndCall("boundaryInitialList", []);
     });
     Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
-      self.setState({
-        positionSource: response.Position
-      })
+      checkCountAndCall("positionSource", response.Position);
     }, function(err) {
-        self.setState({
-          positionSource: []
-        })
+        checkCountAndCall("positionSource", []);
     });
 
     Api.commonApiPost("/pgr/services/v1/_search", {type:'all'}).then(function(response) {
-       self.setState({
-        complaintSource : response.complaintTypes
-       });
+       checkCountAndCall("complaintSource", response.complaintTypes);
     },function(err) {
-       self.setState({
-        complaintSource : []
-       });
+       checkCountAndCall("complaintSource", []);
     });
   }
 
   loadBoundaries(value) {
      var self = this;
-     Api.commonApiGet("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
+     Api.commonApiPost("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
        self.setState({boundarySource : response.Boundary});
      },function(err) {
 
@@ -212,19 +211,22 @@ class searchRouter extends Component {
     e.preventDefault();
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
+    self.props.setLoadingStatus("loading");
     Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.RouterTypRes,
         isSearchClicked: true
-      })
+      });
+      self.props.setLoadingStatus("hide");
     }, function(err) {
-
+      self.props.toggleSnackbarAndSetText(true, err.message);
+      self.props.setLoadingStatus("hide");
     })
   }
 
   handleNavigation(id) {
-    window.open("#/createRouter/" + this.props.match.params.type + "/" + id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    this.props.history.push("/pgr/createRouter/" + this.props.match.params.type + "/" + id);
   }
 
   render() {
@@ -392,6 +394,12 @@ const mapDispatchToProps = dispatch => ({
   handleAutoCompleteKeyUp : (e, type) => {
       var self = _this;
       dispatch({type: "HANDLE_CHANGE", property: type, value: '', isRequired : true, pattern: ''});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
   }
 });
 

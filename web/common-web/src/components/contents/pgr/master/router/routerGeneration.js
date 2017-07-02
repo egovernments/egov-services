@@ -199,11 +199,13 @@ class routerGeneration extends Component {
   componentDidMount() {
   	var self = this, count = 4, _state = {};
   	self.props.initForm();
+    self.props.setLoadingStatus("loading");
   	const checkCountAndCall = function(key, res) {
   		_state[key] = res;
   		count--;
   		if(count == 0) {
   			self.setInitialState(_state);
+        self.props.setLoadingStatus("hide");
   		}
   	}
 
@@ -251,14 +253,18 @@ class routerGeneration extends Component {
     }
 
     delete searchSet.boundaryType;
+    self.props.setLoadingStatus("loading");
   	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
   		self.setState({
   			resultList: response.RouterTypRes,
   			isSearchClicked: true
   		});
+      self.props.setLoadingStatus("hide");
   	}, function(err) {
-
+      console.log("HERE1");
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message);
   	})
   }
 
@@ -283,7 +289,7 @@ class routerGeneration extends Component {
 
   	 	for(var i=0; i<self.props.routerCreateSet.complaintTypes.length; i++) {
   	 		routerType.services.push({
-  	 			serviceCode: self.props.routerCreateSet.complaintTypes[i]
+  	 			id: self.props.routerCreateSet.complaintTypes[i]
   	 		});
   	 	}
 
@@ -293,6 +299,7 @@ class routerGeneration extends Component {
   	 		});
   	 	}
 
+      self.props.setLoadingStatus("loading");
   	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {routertype: routerType}).then(function(response) {
 	  		self.props.initForm();
 	  		self.setState({
@@ -303,10 +310,11 @@ class routerGeneration extends Component {
 	  			boundariesList: [],
           open2: true
 	  		});
-
-
+        self.props.setLoadingStatus("hide");
 		  }, function(err) {
-
+        console.log("HERE2");
+        self.props.setLoadingStatus("hide");
+        self.props.toggleSnackbarAndSetText(true, err.message);
 		  })
 	   });
     }
@@ -559,7 +567,13 @@ const mapDispatchToProps = dispatch => ({
 	handleAutoCompleteKeyUp : (e) => {
 	    var self = _this;
 	    dispatch({type: "HANDLE_CHANGE", property: 'position', value: '', isRequired : true, pattern: ''});
-	}
+	},
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+  }
 });
 
 

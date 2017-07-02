@@ -14,8 +14,8 @@ import Header from './common/Header';
 import Footer from './common/Footer';
 // import PropertyTaxSearch from "./contents/PropertyTaxSearch";
 import Snackbar from 'material-ui/Snackbar';
+import LoadingIndicator from './common/LoadingIndicator';
 import router from "../router";
-
 //api import
 // import api from "../api/commonAPIS"
 
@@ -83,13 +83,11 @@ class App extends Component {
   componentDidMount()
   {
 
-
   }
 
   render() {
-    // console.log(this);
 
-    var {toggleDailogAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg} = this.props;
+    var {toggleDailogAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
 
     const actions = [
       <FlatButton
@@ -117,6 +115,7 @@ class App extends Component {
               message={toastMsg}
               autoHideDuration={6000}
             />
+          <LoadingIndicator status={loadingStatus || "hide"}/>
       </div>
     );
   }
@@ -134,7 +133,8 @@ const mapStateToProps = state => ({
     isDialogOpen: state.form.dialogOpen,
     msg: state.form.msg,
     isSnackBarOpen : state.form.snackbarOpen,
-    toastMsg: state.form.toastMsg
+    toastMsg: state.form.toastMsg,
+    loadingStatus: state.form.loadingStatus
 });
 
 // this.props.appLoaded
@@ -165,6 +165,9 @@ const mapDispatchToProps = dispatch => ({
     },
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    },
+    setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     }
 });
 

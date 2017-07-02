@@ -109,7 +109,7 @@ class grievanceSearch extends Component {
   }
 
   handleNavigation(serviceId) {
-    this.props.history.push('/viewGrievance/' + serviceId);
+    this.props.history.push('/pgr/viewGrievance/' + serviceId);
 		window.location.reload();
   }
 
@@ -152,7 +152,7 @@ class grievanceSearch extends Component {
 
   		searchSet.sizePerPage = 10;
   		searchSet.fromIndex = self.state.fromIndex;
-
+      self.props.setLoadingStatus("loading");
   		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
@@ -161,17 +161,21 @@ class grievanceSearch extends Component {
 		      			isSearchClicked: true,
 		      			pageCount: Math.ceil(response.count / 10)
 		      		});
+              self.props.setLoadingStatus("hide");
 			    }, function(err) {
-
+            self.props.setLoadingStatus("hide");
+            self.props.toggleSnackbarAndSetText(true, err.message);
 			    });
   			} else {
+          self.props.setLoadingStatus("hide");
           self.setState({
             open1: true,
             resultList: []
           })
         }
   		}, function(err) {
-
+        self.props.setLoadingStatus("hide");
+        self.props.toggleSnackbarAndSetText(true, err.message);
 	    });
   	}
   }
@@ -183,11 +187,13 @@ class grievanceSearch extends Component {
   componentDidMount() {
   	var self = this, count = 6, _state = {};
   	self.props.initForm();
+    self.props.setLoadingStatus("loading");
   	const checkCountAndCall = function(key, res) {
   		_state[key] = res;
   		count--;
   		if(count == 0) {
   			self.setInitialState(_state);
+        self.props.setLoadingStatus("hide");
   		}
   	}
 
@@ -479,7 +485,13 @@ const mapDispatchToProps = dispatch => ({
     },
     changeButtonText:(text) => {
     	dispatch({type: "BUTTON_TEXT", text});
-  	}
+  	},
+    setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    },
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    }
 });
 
 

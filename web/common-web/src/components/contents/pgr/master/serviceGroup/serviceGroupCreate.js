@@ -63,7 +63,17 @@ class ServiceGroupCreate extends Component {
           data:'',
           open:false
       }
+      this.handleOpenNClose=this.handleOpenNClose.bind(this);
     }
+
+    handleOpenNClose() {
+      this.setState({
+      	open: !this.state.open
+      });
+
+      let {initForm}=this.props;
+      initForm();
+    };
 
     componentWillMount() {
 
@@ -79,9 +89,10 @@ class ServiceGroupCreate extends Component {
                   console.log("response object",response.ServiceGroups[0]);
                 current.setState({data:response.ServiceGroups})
                 setForm(response.ServiceGroups[0])
-            }).catch((error)=>{
-                console.log(error);
-            })
+            }, function(err) {
+              current.props.toggleSnackbarAndSetText(true, err.message);
+              current.props.setLoadingStatus('hide');
+          	})
         } else {
           let {initForm}=this.props;
           initForm();
@@ -94,6 +105,10 @@ class ServiceGroupCreate extends Component {
 
     componentDidUpdate() {
 
+
+    }
+    close(){
+      window.close();
 
     }
 
@@ -158,7 +173,7 @@ class ServiceGroupCreate extends Component {
         buttonText
       } = this.props;
 
-      let {submitForm} = this;
+      let {submitForm,handleOpenNClose} = this;
 
       console.log(isFormValid);
 
@@ -208,7 +223,7 @@ class ServiceGroupCreate extends Component {
               </Card>
               <div style={{textAlign:'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
+                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")} onClick={(e)=>{this.close()}}/>
               </div>
           </form>
           <Dialog
@@ -216,11 +231,11 @@ class ServiceGroupCreate extends Component {
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
-   				        onTouchTap={this.handleClose}
+   				        onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose}
    				      />}
                modal={false}
                open={this.state.open}
-               onRequestClose={this.handleClose}
+              onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
          </Dialog>
         </div>)

@@ -141,6 +141,7 @@ export default(state = defaultState, action) => {
           validationData: validationData.validationData,
           isFormValid: validationData.isFormValid
         }
+
     case "HANDLE_CHANGE_NEXT_TWO":
       let validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.propertyTwo, action.value, state.validationData);
@@ -178,6 +179,34 @@ export default(state = defaultState, action) => {
         ...state
       }
     }
+
+    case "PUSH_ONE_ARRAY" :
+
+    if (!state.form.hasOwnProperty(action.formObject)) {
+          state.form[action.formObject] = {};
+          state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject]) { alert('Boom2');
+      state.form[action.formObject] = {};
+      state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject][action.formArray]) {
+      state.form[action.formObject][action.formArray] = [];
+      console.log(state.form[action.formObject]);
+    }
+
+    return {
+      ...state,
+      form: {
+        ...state.form,
+        [action.formObject]: {
+          ...state.form[action.formObject],
+             [action.formArray]:[
+               ...state.form[action.formObject][action.formArray],
+               state.form[action.formData]
+             ]
+        }
+      }
+    }
+
 
     case "REMOVE_MANDATORY":
     var obj = state.validationData;

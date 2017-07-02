@@ -172,13 +172,13 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>
                                               <td>{e.hasFinancialImpact?"True":"False"}</td>
-                                              {url == '/viewOrUpdateServiceType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                              {url == '/pgr/viewOrUpdateServiceType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
                                                 let id = e.id;
-                                                this.handleNavigation("#/viewServiceType/view/", id);
+                                                this.handleNavigation("/pgr/viewServiceType/view/", id);
                                               }}/></td>}
-                                              {url == '/viewOrUpdateServiceType/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                              {url == '/pgr/viewOrUpdateServiceType/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
                                                 let id = e.id;
-                                                this.handleNavigation("#/serviceTypeCreate/edit/", id);
+                                                this.handleNavigation("/pgr/serviceTypeCreate/edit/", id);
                                               }}/></td>}
                                             </tr>
                                           )

@@ -67,12 +67,24 @@ class ServiceTypeCreate extends Component {
           category:[],
           isCustomFormVisible:false,
           assetFieldsDefination: [],
-          open:false
+          open:false,
+          editIndex: -1,
+          isDataType: false
       }
       this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
       this.addAsset = this.addAsset.bind(this);
       this.renderDelEvent = this.renderDelEvent.bind(this);
+      this.handleOpenNClose=this.handleOpenNClose.bind(this);
     }
+
+    handleOpenNClose() {
+      this.setState({
+        open: !this.state.open
+      });
+
+      let {initForm}=this.props;
+      initForm();
+    };
 
     componentWillMount() {
 
@@ -88,9 +100,10 @@ class ServiceTypeCreate extends Component {
                   console.log("response object",response.Service[0]);
                 current.setState({data:response.Service})
                 setForm(response.Service[0])
-            }).catch((error)=>{
-                console.log(error);
-            })
+            }, function(err) {
+              current.props.toggleSnackbarAndSetText(true, err.message);
+              current.props.setLoadingStatus('hide');
+          	})
         } else {
           let {initForm}=this.props;
           initForm();
@@ -247,18 +260,20 @@ class ServiceTypeCreate extends Component {
               current.setState({
                 open: true
               });
-          }).catch((error)=>{
-              console.log(error);
-          })
+          }, function(err) {
+            current.props.toggleSnackbarAndSetText(true, err.message);
+            current.props.setLoadingStatus('hide');
+        	})
       } else {
           Api.commonApiPost("/pgr-master/service/v1/_create",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
               });
-          }).catch((error)=>{
-              console.log(error);
-          })
+          }, function(err) {
+            current.props.toggleSnackbarAndSetText(true, err.message);
+            current.props.setLoadingStatus('hide');
+        	})
       }
 
 
@@ -294,6 +309,8 @@ class ServiceTypeCreate extends Component {
 
     render() {
 
+      var _this = this;
+
       let {
         createServiceType ,
         fieldErrors,
@@ -308,9 +325,65 @@ class ServiceTypeCreate extends Component {
         buttonText
       } = this.props;
 
-      let {submitForm,showCustomFieldForm,renderDelEvent,addAsset} = this;
-      let {nomineeFieldsDefination,isCustomFormVisible,showMsg,customField,assetFieldsDefination} = this.state;
+      let {submitForm,showCustomFieldForm,renderDelEvent,addAsset,handleOpenNClose} = this;
+      let {nomineeFieldsDefination,isCustomFormVisible,showMsg,customField,assetFieldsDefination,isDataType, editIndex} = this.state;
 
+
+      const viewTypes = function() {
+        console.log("createServiceType",createServiceType);
+          if( (createServiceType.dataType!=2) && (createServiceType.dataType!=undefined))
+          return (
+<div>
+                <div className="clearfix"></div>
+                  <Row>
+                    <Col xs={12} md={3} sm={6}>
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="Key"
+                            value={createServiceType.dataTypes ? createServiceType.dataTypes.attributesKey : ""}
+                            errorText={fieldErrors.dataTypes ? fieldErrors.dataTypes.attributesKey : ""}
+                              onChange={(e) => handleChangeNextOne(e,"dataTypes" ,"attributesKey", false, "")}
+                            id="attributesKey"
+                        />
+                    </Col>
+                    <Col xs={12} md={3} sm={6}>
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="Name"
+                            value={createServiceType.dataTypes ? createServiceType.dataTypes.attributesName : ""}
+                            errorText={fieldErrors.dataTypes ? fieldErrors.dataTypes.attributesName : ""}
+                              onChange={(e) => handleChangeNextOne(e,"dataTypes" ,"attributesName", false, "")}
+                            id="attributesName"
+                        />
+                    </Col>
+                    <Col xs={12}  md={3} sm={6} style={{textAlign:"center"}}>
+                      {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.add")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        _this.props.addNestedFormDataTwo("attributes","attributes",'dataTypes');
+                        _this.props.resetObject("dataTypes");
+                      }}/>}
+                      {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        //updateEscalation();
+                      }}/>}
+                    </Col>
+                  </Row>
+
+
+              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+                <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+                  <tr>
+                    <th>No.</th>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderBody()}
+                </tbody>
+              </Table>
+        </div>
+      )
+      }
 
     const addDropdown = function() {
         if(createServiceType.dataType==1) {
@@ -568,7 +641,7 @@ class ServiceTypeCreate extends Component {
 
                       </SelectField>
                   </Col>
-                    {addDropdown()}
+                    {viewTypes()}
           <div className="clearfix"></div>
                   <div className="text-center">
                     <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}} >Add/Edit</button>
@@ -779,11 +852,11 @@ class ServiceTypeCreate extends Component {
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
-   				        onTouchTap={this.handleClose}
+   				        onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose}
    				      />}
                modal={false}
                open={this.state.open}
-               onRequestClose={this.handleClose}
+               onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
          </Dialog>
         </div>)
@@ -832,6 +905,25 @@ const mapDispatchToProps = dispatch => ({
     });
   },
 
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
+  },
+
+
+    handleChangeNextOne: (e, property, propertyOne, isRequired, pattern) => {
+      dispatch({
+        type: "HANDLE_CHANGE_NEXT_ONE",
+        property,
+        propertyOne,
+        value: e.target.value,
+        isRequired,
+        pattern
+      })
+    },
+
   handleChange: (e, property, isRequired, pattern) => {
     console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
@@ -841,7 +933,23 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
-  }
+  },
+
+
+    addNestedFormDataTwo: (formObject, formArray, formData) => {
+      dispatch({
+        type: "PUSH_ONE_ARRAY",
+        formObject,
+        formArray,
+        formData
+      })
+    },
+    resetObject: (object) => {
+      dispatch({
+        type: "RESET_OBJECT",
+        object
+      })
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceTypeCreate);

@@ -188,7 +188,7 @@ class DefineEscalationTime extends Component {
         grievancetype:{
           id: this.props.defineEscalationTime.serviceType.id
         },
-        noOfHours:this.props.defineEscalationTime.numberOfHours,
+        noOfHours:this.props.defineEscalationTime.noOfHours,
         designation:this.props.defineEscalationTime.designation.id,
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 
@@ -223,7 +223,7 @@ class DefineEscalationTime extends Component {
         grievancetype:{
           id: this.props.defineEscalationTime.serviceType.id
         },
-        noOfHours:this.props.defineEscalationTime.numberOfHours,
+        noOfHours:this.props.defineEscalationTime.noOfHours,
         designation:this.props.defineEscalationTime.designation.id,
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
       }
@@ -286,7 +286,7 @@ class DefineEscalationTime extends Component {
       				<tr key={i}>
                 <td>{i+1}</td>
       					<td>{val.designation.name}</td>
-                <td>{val.numberOfHours}</td>
+                <td>{val.noOfHours}</td>
                 <td>
                 <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
                     editObject(i);
@@ -329,12 +329,12 @@ class DefineEscalationTime extends Component {
                         <TextField
                             fullWidth={true}
                             floatingLabelText={translate("pgr.noof.hours")}
-                            value={defineEscalationTime.numberOfHours ? defineEscalationTime.numberOfHours : ""}
-                            errorText={fieldErrors.numberOfHours ? fieldErrors.numberOfHours : ""}
+                            value={defineEscalationTime.noOfHours ? defineEscalationTime.noOfHours : ""}
+                            errorText={fieldErrors.noOfHours ? fieldErrors.noOfHours : ""}
                             onChange={(e) => {
-                              handleChange(e, "numberOfHours", true, /^\d+$/)
+                              handleChange(e, "noOfHours", true, /^\d+$/)
                             }}
-                            id="numberOfHours"
+                            id="noOfHours"
                         />
                     </Col>
                     <div className="clearfix"></div>
@@ -396,7 +396,7 @@ class DefineEscalationTime extends Component {
                   	                            value: chosenRequest
                   	                          }
                   	                        };
-                  	                        handleChange(e, "serviceType", true, "");
+                  	                        handleChange(e, "serviceType", false, "");
                   	                       }}
                                         />
                                   </Col>
@@ -441,11 +441,11 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["designation", "numberOfHours"]
+          required: ["designation", "noOfHours"]
         },
         pattern: {
           current: [],
-          required: [ "numberOfHours"]
+          required: [ "noOfHours"]
         }
       }
     });
@@ -459,12 +459,12 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["designation", "numberOfHours"],
-          required: ["designation", "numberOfHours"]
+          current: ["designation", "noOfHours"],
+          required: ["designation", "noOfHours"]
         },
         pattern: {
-          current: ["numberOfHours"],
-          required: [ "numberOfHours"]
+          current: ["noOfHours"],
+          required: [ "noOfHours"]
         }
       }
     });

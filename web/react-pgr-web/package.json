@@ -8,10 +8,9 @@
     "intl-locales-supported": "^1.0.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
-    "material-design-icons": "^3.0.1",
     "material-ui": "^0.18.1",
     "material-ui-upload": "^1.1.2",
-    "proptypes": "^1.1.0",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-burger-menu": "^2.0.2",
@@ -22,8 +21,8 @@
     "react-paginate": "^4.4.3",
     "react-rating": "^0.8.0",
     "react-redux": "^5.0.4",
-    "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-swipeable-views": "^0.12.3",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
@@ -38,6 +37,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://egov-micro-dev.egovernments.org",
-  "homepage": "."
+  "proxy": "http://egov-micro-dev.egovernments.org/"
 }

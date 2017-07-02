@@ -243,6 +243,11 @@ export default(state = defaultState, action) => {
         toastMsg:action.toastMsg,
         snackbarOpen:action.snackbarState,
       }
+    case "SET_LOADING_STATUS":
+      return {
+        ...state,
+        loadingStatus: action.loadingStatus
+      }
     default:
       return state;
   }

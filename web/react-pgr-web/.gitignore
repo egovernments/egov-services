@@ -2,14 +2,14 @@
 
 # dependencies
 /node_modules
+/functions/node_modules
+
 
 # testing
 /coverage
 
-# firebase
-.firebaserc
-firebase-debug.log
-firebase.json
+# production
+/build
 
 # misc
 .DS_Store

@@ -119,9 +119,11 @@ class ServiceGroupCreate extends Component {
               current.setState({
                 open: true
               });
-          }).catch((error)=>{
-              console.log(error);
-          })
+          }, function(err) {
+            console.log(err);
+            current.props.toggleSnackbarAndSetText(true, err.message);
+            current.props.setLoadingStatus('hide');
+        	})
       } else {
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_create",{},body).then(function(response){
               console.log(response);
@@ -283,6 +285,12 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 })
 

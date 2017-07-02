@@ -128,18 +128,31 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 		jdbcTemplate.update(routerUpdate, obj);
 		return routerReq;
 	}
-public PersistRouter ValidateRouter(final PersistRouterReq routerReq) {
-		
-		
-		final String validateQuery = RouterQueryBuilder.validateRouter();
+
+	public PersistRouter ValidateRouter(final PersistRouterReq routerReq, boolean status) {
+		String validateQuery = "";
 		PersistRouter persistRouter = new PersistRouter();
-		try{
-		persistRouter = jdbcTemplate.queryForObject(
-				validateQuery, new Object[] { routerReq.getRouterType().getService(),routerReq.getRouterType().getBoundary(),routerReq.getRouterType().getTenantId()}, new PersistRouteRowMapper());
-		LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
-		}
-		catch (EmptyResultDataAccessException e) {
-			return null;
+		if (status) {
+			validateQuery = RouterQueryBuilder.validateRouter();
+			try {
+				persistRouter = jdbcTemplate.queryForObject(
+						validateQuery, new Object[] { routerReq.getRouterType().getService(),
+								routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId() },
+						new PersistRouteRowMapper());
+				LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
+			} catch (EmptyResultDataAccessException e) {
+				return null;
+			}
+		} else {
+			validateQuery = RouterQueryBuilder.validateRouterWithoutService();
+			try {
+				persistRouter = jdbcTemplate.queryForObject(
+						validateQuery, new Object[] { routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId() },
+						new PersistRouteRowMapper());
+				LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
+			} catch (EmptyResultDataAccessException e) {
+				return null;
+			}
 		}
 		return persistRouter;
 	}

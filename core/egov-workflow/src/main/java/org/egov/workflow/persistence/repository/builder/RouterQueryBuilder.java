@@ -32,6 +32,8 @@ public class RouterQueryBuilder {
 	
 	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ? and tenantid=?";
 	
+	private static final String CHECK_DUPLICATE_WITHOUT_SERVICE = "select * from egpgr_router where complainttypeid IS NULL and bndryid = ? and tenantid=?";
+	
 	private static final String OFFSET = "99999";
 	
 	public static String insertRouter() {
@@ -44,6 +46,10 @@ public class RouterQueryBuilder {
 
 	public static String validateRouter() {
 		return CHECK_DUPLICATE;
+	}
+	
+	public static String validateRouterWithoutService() {
+		return CHECK_DUPLICATE_WITHOUT_SERVICE;
 	}
 
 	public static String updateRouter() {

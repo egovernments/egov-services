@@ -137,7 +137,7 @@ public class RouterService {
 				pr.setService(serviceID);
 				pr.setBoundary(boundaryID);
 				prq.setRouterType(pr);
-				if (!verifyUniquenessOfRequest(routerRequests)) {
+				if (checkforDuplicate(prq, true)) {
 					routerRepository.createRouter(prq, true);
 					logger.info("Creating the Router Entry");
 				} else {
@@ -148,7 +148,7 @@ public class RouterService {
 			if (flag == 0) {
 				pr.setBoundary(boundaryID);
 				prq.setRouterType(pr);
-				if (!verifyUniquenessOfRequest(routerRequests)) {
+				if (checkforDuplicate(prq, false)) {
 					routerRepository.createRouter(prq, false);
 					logger.info("Creating the Router Entry");
 				} else {
@@ -163,18 +163,15 @@ public class RouterService {
 
 	}
 	
-	public boolean checkforDuplicate(PersistRouterReq persistRouterReq){
+	public boolean checkforDuplicate(PersistRouterReq persistRouterReq, boolean action){
 		PersistRouter pr = new PersistRouter();
+		pr = routerRepository.ValidateRouter(persistRouterReq, action);
 		if (pr != null){
-			pr = routerRepository.ValidateRouter(persistRouterReq);
 			return false;
 		}
 			else {
 				return true;
-			}
-		
-		
-		
+		}
 	}
 	
 	public boolean verifyUniquenessOfRequest(RouterTypeReq routerTypeReq) {

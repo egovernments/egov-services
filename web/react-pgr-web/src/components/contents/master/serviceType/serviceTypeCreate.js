@@ -233,7 +233,7 @@ class ServiceTypeCreate extends Component {
            "group" :this.props.createServiceType.group,
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
-           "attributes" :this.props.createServiceType.attributes,
+           "metaData" :this.props.createServiceType.metaData,
            "slaHours" : this.props.createServiceType.slaHours,
            "tenantId":"default"
           }
@@ -441,7 +441,7 @@ class ServiceTypeCreate extends Component {
 
 
       const  promotionFunc =function() {
-          if(createServiceType.attributes=="true"||createServiceType.attributes==true){
+          if(createServiceType.metaData=="true"||createServiceType.metaData==true){
             console.log("hi");
             return (
               <div className="form-section">
@@ -745,21 +745,21 @@ class ServiceTypeCreate extends Component {
                                   />
                               </Col>
                                <Col xs={12} md={3} sm={6}>
-                              {console.log(createServiceType.attributes)}
+                              {console.log(createServiceType.metaData)}
                                   <Checkbox
                                     label="Attributes"
-                                    style={styles.attributes}
-                                    checked = {createServiceType.attributes || false}
-                                    onCheck = {(e, i, v) => { console.log(createServiceType.attributes, i);
+                                    style={styles.metaData}
+                                    checked = {createServiceType.metaData || false}
+                                    onCheck = {(e, i, v) => { console.log(createServiceType.metaData, i);
 
                                       var e = {
                                         target: {
                                           value:i
                                         }
                                       }
-                                      handleChange(e, "attributes", false, '')
+                                      handleChange(e, "metaData", false, '')
                                     }}
-                                    id="attributes"
+                                    id="metaData"
                                   />
                               </Col>
                               <div className="clearfix"></div>

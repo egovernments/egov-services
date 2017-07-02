@@ -78,6 +78,10 @@ class App extends Component {
       // this.props.onLoad(!currentUser
       //     ? agent.Auth.login((this.props.auth.userName || "9999999999"), (this.props.auth.password || "demo"))
       //     : {UserRequest: currentUser}, token);
+
+      if(localStorage.getItem("token") && localStorage.getItem("userRequest")) {
+        this.props.onLoad({UserRequest: JSON.parse(localStorage.getItem("userRequest"))}, localStorage.getItem("token"));
+      }
   }
 
   componentDidMount()
@@ -141,7 +145,7 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
-    // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
+    onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     onRedirect: () => dispatch({type: 'REDIRECT'}),
     // setLabels: payload => dispatch({type: 'LABELS', payload}),
     // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),

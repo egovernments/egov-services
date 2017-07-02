@@ -93,9 +93,11 @@ class Header extends Component {
     };
   }
 
-  handleToggle = () => this.setState({
-    open: !this.state.open
-  });
+  handleToggle = () => {
+    this.setState({
+     open: !this.state.open
+    })
+  };
 
   componentDidMount()
   {
@@ -505,11 +507,13 @@ class Header extends Component {
   }
 
   render() {
-    // console.log(this);
 
     return (
       <div className="Header">
-        <AppBar title={< div ><Logo/> eGov < /div>} onLeftIconButtonTouchTap={this.handleToggle} iconElementLeft={this.props.token && this.props.currentUser.type!="CITIZEN"?<IconButton><i className="material-icons">menu</i></IconButton>:<div></div>} iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>
+        <AppBar title={<div><Logo/> eGov </div>} 
+                onLeftIconButtonTouchTap={this.handleToggle} 
+                iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>} 
+                iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>
 
         <Drawer containerClassName="side-bar" open={this.state.open}>
           {/*<div id="menu"></div>*/}

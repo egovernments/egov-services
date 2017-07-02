@@ -173,7 +173,7 @@ class Login extends Component {
 
       instance.post('/user/oauth/token', params).then(function(response) {
         localStorage.setItem("token", response.data.access_token);
-        localStorage.setItem("", response.data.UserRequest);
+        localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
         props.login(false, response.data.access_token, response.data.UserRequest);
       }).catch(function(response) {
         self.setState({

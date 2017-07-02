@@ -168,7 +168,7 @@ class receivingModeCreate extends Component {
                         id="name"
                         errorText={fieldErrors.name ? fieldErrors.name : ""}
                         value={receivingmodeSet.name ? receivingmodeSet.name : "" }
-                        onChange={(e) => {handleChange(e, "name", true, "")}}/>
+                        onChange={(e) => {handleChange(e, "name", true, /^[a-zA-Z]+$/)}}/>
                     </Col>
                     <Col xs={12} md={3}>
                      <TextField
@@ -177,7 +177,7 @@ class receivingModeCreate extends Component {
                         id="code"
                         errorText={fieldErrors.code ? fieldErrors.code : ""}
                         value={receivingmodeSet.code ? receivingmodeSet.code : ""}
-                        onChange={(e) => {handleChange(e, "code", true, "")}} disabled={this.state.id ? true : false }/>
+                        onChange={(e) => {handleChange(e, "code", true, /^[a-zA-Z]+$/)}} disabled={this.state.id ? true : false }/>
                     </Col>
                     <Col xs={12} md={3}>
                      <TextField
@@ -186,7 +186,7 @@ class receivingModeCreate extends Component {
                         id="description"
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
-                        onChange={(e) => {handleChange(e, "description", true, "")}}/>
+                        onChange={(e) => {handleChange(e, "description", true, /^[a-zA-Z]+$/)}}/>
                     </Col>
                     <Col xs={12} md={3}>
                      <SelectField
@@ -262,7 +262,7 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       },
       pattern: {
          current: [],
-         required: []
+         required: ["name","code","description"]
        }
       }
     });

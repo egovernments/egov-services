@@ -129,10 +129,10 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
-                                              <td>{e.channel}</td>
+                                              <td>{e.channels}</td>
                                               <td>{e.active?"True":"False"}</td>
-                                              {url == '/viewOrUpdateReceivingMode/view' && <td><Link to={`/viewReceivingMode/${this.props.match.params.type}/${e.id}`} target="_blank"><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/receivingModeCreate/${this.props.match.params.type}/${e.id}`} target="_blank"><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/pgr/viewOrUpdateReceivingMode/view' && <td><Link to={`/pgr/viewReceivingMode/${this.props.match.params.type}/${e.id}`} target="_blank"><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
+                                              {url == '/pgr/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`} target="_blank"><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
                                             </tr>
                                           )
                                         })}

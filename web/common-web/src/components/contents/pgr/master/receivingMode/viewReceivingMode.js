@@ -99,6 +99,8 @@ class viewReceivingSet extends Component {
         buttonText
       } = this.props;
 
+      console.log(viewReceivingSet);
+
       let {submitForm} = this;
 
       return(
@@ -117,7 +119,7 @@ class viewReceivingSet extends Component {
                                       <ListGroupItem>Code <span style={{float:'right'}}>{viewReceivingSet.code ? viewReceivingSet.code : ''}</span></ListGroupItem>
                                       <ListGroupItem>Description <span style={{float:'right'}}>{viewReceivingSet.description? viewReceivingSet.description : ''}</span></ListGroupItem>
                                       <ListGroupItem>Active <span style={{float:'right'}}>{viewReceivingSet.active? "True" : "False"}</span></ListGroupItem>
-                                      <ListGroupItem>Channel<span style={{float:'right'}}>{viewReceivingSet.channel ? viewReceivingSet.channel : ''}</span></ListGroupItem>
+                                      <ListGroupItem>Channel<span style={{float:'right'}}>{viewReceivingSet.channels ? viewReceivingSet.channels : ''}</span></ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

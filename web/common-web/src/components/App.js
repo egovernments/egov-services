@@ -40,11 +40,11 @@ class App extends Component {
     let {history}=this.props;
     // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
     // console.log(commonState);
-    if (window.localStorage.getItem("token")) {
+  /*  if (window.localStorage.getItem("token")) {
         history.push("/dashboard");
     } else {
         history.push("/");
-    }
+    }*/
 
       // this.props.setLabels(agent.labels.getLabels());
       // const token = window.localStorage.getItem('jwt');
@@ -87,7 +87,7 @@ class App extends Component {
 
   render() {
 
-    var {toggleDailogAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
+    var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
 
     const actions = [
       <FlatButton
@@ -106,7 +106,7 @@ class App extends Component {
             actions={actions}
             modal={false}
             open={isDialogOpen}
-            onRequestClose={toggleDailogAndSetText(false,"")}
+            onRequestClose={()=>toggleDailogAndSetText(false,"")}
             >
             {msg}
           </Dialog>
@@ -114,6 +114,7 @@ class App extends Component {
               open={isSnackBarOpen}
               message={toastMsg}
               autoHideDuration={6000}
+              onRequestClose={()=>toggleSnackbarAndSetText(false,"")}
             />
           <LoadingIndicator status={loadingStatus || "hide"}/>
       </div>

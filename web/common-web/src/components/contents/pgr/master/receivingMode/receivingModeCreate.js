@@ -66,6 +66,9 @@ class receivingModeCreate extends Component {
      this.setState({
      	open: !this.state.open
      });
+
+     let {initForm}=this.props;
+     initForm();
    };
 
 
@@ -121,7 +124,8 @@ class receivingModeCreate extends Component {
           		});
               _this.props.resetObject('receivingmodeSet');
           }, function(err) {
-
+            _this.props.toggleSnackbarAndSetText(true, err.message);
+            _this.props.setLoadingStatus('hide');
         	})
       } else {
           Api.commonApiPost("pgr-master/receivingmode/v1/_create", {},body).then(function(response) {
@@ -130,7 +134,8 @@ class receivingModeCreate extends Component {
             });
             _this.props.resetObject('receivingmodeSet');
         }, function(err) {
-
+          _this.props.toggleSnackbarAndSetText(true, err.message);
+          _this.props.setLoadingStatus('hide');
       	})
       }
 
@@ -168,7 +173,7 @@ class receivingModeCreate extends Component {
                         id="name"
                         errorText={fieldErrors.name ? fieldErrors.name : ""}
                         value={receivingmodeSet.name ? receivingmodeSet.name : "" }
-                        onChange={(e) => {handleChange(e, "name", true, "")}}/>
+                        onChange={(e) => {handleChange(e, "name", true, /^[a-zA-Z]+$/)}}/>
                     </Col>
                     <Col xs={12} md={3}>
                      <TextField
@@ -177,7 +182,8 @@ class receivingModeCreate extends Component {
                         id="code"
                         errorText={fieldErrors.code ? fieldErrors.code : ""}
                         value={receivingmodeSet.code ? receivingmodeSet.code : ""}
-                        onChange={(e) => {handleChange(e, "code", true, "")}} disabled={this.state.id ? true : false }/>
+                        onChange={(e) => {handleChange(e, "code", true, /^[a-zA-Z]+$/)}}
+                        disabled={this.state.id ? true : false }/>
                     </Col>
                     <Col xs={12} md={3}>
                      <TextField
@@ -186,7 +192,7 @@ class receivingModeCreate extends Component {
                         id="description"
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
-                        onChange={(e) => {handleChange(e, "description", true, "")}}/>
+                        onChange={(e) => {handleChange(e, "description", true, /^[a-zA-Z]+$/)}}/>
                     </Col>
                     <Col xs={12} md={3}>
                      <SelectField
@@ -262,7 +268,7 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
       },
       pattern: {
          current: [],
-         required: []
+         required: ["name","code","description"]
        }
       }
     });
@@ -301,9 +307,13 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
        isRequired, pattern
      });
    },
-   changeButtonText:(text) => {
-     dispatch({type: "BUTTON_TEXT", text});
-   }});
+   setLoadingStatus: (loadingStatus) => {
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
+   });
 
 
 

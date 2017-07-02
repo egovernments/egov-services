@@ -80,6 +80,7 @@ class App extends Component {
               open={isSnackBarOpen}
               message={toastMsg}
               autoHideDuration={4000}
+              onRequestClose={()=> {toggleSnackbarAndSetText(false, "")}}
             />
       </div>
     );

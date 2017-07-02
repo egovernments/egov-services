@@ -75,106 +75,106 @@ class Dashboard extends Component {
               />
 
 
-              <CardText>
-              <Grid>
-                <Row>
-
-                  <Col xs={12} md={3}>
-                   <Card>
-                       <CardHeader
-                        title="URL Avatar"
-                        subtitle="Subtitle"
-                        avatar="images/jsa-128.jpg"
-                       />
-                       <CardMedia
-                        overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                       >
-                        <img src="images/nature-600-337.jpg" alt="" />
-                       </CardMedia>
-                       <CardTitle title="Card title" subtitle="Card subtitle" />
-                       <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                        Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                        Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                       </CardText>
-
-                       </Card>
-                   </Col>
-
-                   <Col xs={12} md={3}>
-                    <Card>
-                        <CardHeader
-                         title="URL Avatar"
-                         subtitle="Subtitle"
-                         avatar="images/jsa-128.jpg"
-                        />
-                        <CardMedia
-                         overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                        >
-                         <img src="images/nature-600-337.jpg" alt="" />
-                        </CardMedia>
-                        <CardTitle title="Card title" subtitle="Card subtitle" />
-                        <CardText>
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                         Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                         Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                        </CardText>
-
-                        </Card>
-                    </Col>
-
-                    <Col xs={12} md={3}>
-                     <Card>
-                         <CardHeader
-                          title="URL Avatar"
-                          subtitle="Subtitle"
-                          avatar="images/jsa-128.jpg"
-                         />
-                         <CardMedia
-                          overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                         >
-                          <img src="images/nature-600-337.jpg" alt="" />
-                         </CardMedia>
-                         <CardTitle title="Card title" subtitle="Card subtitle" />
-                         <CardText>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                          Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                          Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                         </CardText>
-
-                         </Card>
-                     </Col>
-
-                     <Col xs={12} md={3}>
-                      <Card>
-                          <CardHeader
-                           title="URL Avatar"
-                           subtitle="Subtitle"
-                           avatar="images/jsa-128.jpg"
-                          />
-                          <CardMedia
-                           overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-                          >
-                           <img src="images/nature-600-337.jpg" alt="" />
-                          </CardMedia>
-                          <CardTitle title="Card title" subtitle="Card subtitle" />
-                          <CardText>
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                           Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                           Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                           Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                          </CardText>
-
-                          </Card>
-                      </Col>
-
-
-                </Row>
-                </Grid>
-              </CardText>
+              {/*<CardText>
+                            <Grid>
+                              <Row>
+              
+                                <Col xs={12} md={3}>
+                                 <Card>
+                                     <CardHeader
+                                      title="URL Avatar"
+                                      subtitle="Subtitle"
+                                      avatar="images/jsa-128.jpg"
+                                     />
+                                     <CardMedia
+                                      overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
+                                     >
+                                      <img src="images/nature-600-337.jpg" alt="" />
+                                     </CardMedia>
+                                     <CardTitle title="Card title" subtitle="Card subtitle" />
+                                     <CardText>
+                                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                      Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                                      Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                                     </CardText>
+              
+                                     </Card>
+                                 </Col>
+              
+                                 <Col xs={12} md={3}>
+                                  <Card>
+                                      <CardHeader
+                                       title="URL Avatar"
+                                       subtitle="Subtitle"
+                                       avatar="images/jsa-128.jpg"
+                                      />
+                                      <CardMedia
+                                       overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
+                                      >
+                                       <img src="images/nature-600-337.jpg" alt="" />
+                                      </CardMedia>
+                                      <CardTitle title="Card title" subtitle="Card subtitle" />
+                                      <CardText>
+                                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                       Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                                       Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                                       Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                                      </CardText>
+              
+                                      </Card>
+                                  </Col>
+              
+                                  <Col xs={12} md={3}>
+                                   <Card>
+                                       <CardHeader
+                                        title="URL Avatar"
+                                        subtitle="Subtitle"
+                                        avatar="images/jsa-128.jpg"
+                                       />
+                                       <CardMedia
+                                        overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
+                                       >
+                                        <img src="images/nature-600-337.jpg" alt="" />
+                                       </CardMedia>
+                                       <CardTitle title="Card title" subtitle="Card subtitle" />
+                                       <CardText>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                                        Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                                        Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                                       </CardText>
+              
+                                       </Card>
+                                   </Col>
+              
+                                   <Col xs={12} md={3}>
+                                    <Card>
+                                        <CardHeader
+                                         title="URL Avatar"
+                                         subtitle="Subtitle"
+                                         avatar="images/jsa-128.jpg"
+                                        />
+                                        <CardMedia
+                                         overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
+                                        >
+                                         <img src="images/nature-600-337.jpg" alt="" />
+                                        </CardMedia>
+                                        <CardTitle title="Card title" subtitle="Card subtitle" />
+                                        <CardText>
+                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                         Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                                         Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                                         Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                                        </CardText>
+              
+                                        </Card>
+                                    </Col>
+              
+              
+                              </Row>
+                              </Grid>
+                            </CardText>*/}
             </Card>
       }
 

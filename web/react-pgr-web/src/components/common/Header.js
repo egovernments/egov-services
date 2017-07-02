@@ -94,9 +94,8 @@ class Header extends Component {
   }
 
   handleToggle = () => {
-    this.setState({
-     open: !this.state.open
-    })
+    var self = this;
+    self.props.handleToggle(!self.props.showMenu);
   };
 
   componentDidMount()
@@ -507,7 +506,6 @@ class Header extends Component {
   }
 
   render() {
-
     return (
       <div className="Header">
         <AppBar title={<div><Logo/> eGov </div>} 
@@ -515,7 +513,7 @@ class Header extends Component {
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>} 
                 iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>
 
-        <Drawer containerClassName="side-bar" open={this.state.open}>
+        <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
           {/*<div id="menu"></div>*/}
           <CustomMenu menuItems={this.state.menuItems}/>
         </Drawer>
@@ -551,12 +549,14 @@ const mapStateToProps = state => ({
     token:state.common.token,
     pleaseWait: state.common.pleaseWait,
     // isDialogOpen: state.form.dialogOpen,
-    // msg: state.form.msg
+    // msg: state.form.msg,
+    showMenu: state.common.showMenu
 });
 
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
+    handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     setLabels: payload => dispatch({type: 'LABELS', payload}),

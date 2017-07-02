@@ -47,7 +47,7 @@ module.exports = {
     return instance.post(url, body).then(function(response) {
       return response.data;
     }).catch(function(response) {
-      throw new Error(response.data.message);
+      return (response);
     });
   },
   commonApiGet: (context, queryObject = {}, doNotOverride = false) => {
@@ -64,7 +64,7 @@ module.exports = {
     return instance.get(url).then(function(response) {
       return response.data;
     }).catch(function(response) {
-      throw new Error(response.data.message);
+      return (response);
     });
   },
   getAll: (arrayOfRequest) => {

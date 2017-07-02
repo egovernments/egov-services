@@ -13,7 +13,7 @@ import { withRouter } from 'react-router'
 import Header from './common/Header';
 import Footer from './common/Footer';
 // import PropertyTaxSearch from "./contents/PropertyTaxSearch";
-
+import Snackbar from 'material-ui/Snackbar';
 import router from "../router";
 
 //api import
@@ -89,7 +89,7 @@ class App extends Component {
   render() {
     // console.log(this);
 
-    var {toggleDailogAndSetText,isDialogOpen,msg,token,history}=this.props;
+    var {toggleDailogAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg} = this.props;
 
     const actions = [
       <FlatButton
@@ -112,10 +112,11 @@ class App extends Component {
             >
             {msg}
           </Dialog>
-
-
-
-
+          <Snackbar
+              open={isSnackBarOpen}
+              message={toastMsg}
+              autoHideDuration={6000}
+            />
       </div>
     );
   }
@@ -131,7 +132,9 @@ const mapStateToProps = state => ({
     // pleaseWait: state.common.pleaseWait,
     // token:state.common.token,
     isDialogOpen: state.form.dialogOpen,
-    msg: state.form.msg
+    msg: state.form.msg,
+    isSnackBarOpen : state.form.snackbarOpen,
+    toastMsg: state.form.toastMsg
 });
 
 // this.props.appLoaded
@@ -157,9 +160,12 @@ const mapDispatchToProps = dispatch => ({
     //         type: 'PLEASE_WAIT',
     //         pleaseWait
     //     }),
-   toggleDailogAndSetText: (dailogState,msg) => {
-          dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
-        }
+    toggleDailogAndSetText: (dailogState,msg) => {
+      dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
+    },
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    }
 });
 
 

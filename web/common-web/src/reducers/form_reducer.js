@@ -191,6 +191,12 @@ export default(state = defaultState, action) => {
         msg:action.msg,
         dialogOpen:action.dailogState,
       }
+    case "TOGGLE_SNACKBAR_AND_SET_TEXT":
+      return {
+        ...state,
+        toastMsg:action.toastMsg,
+        snackbarOpen:action.snackbarState,
+      }
     default:
       return state;
   }

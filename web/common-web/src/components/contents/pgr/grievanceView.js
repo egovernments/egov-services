@@ -135,13 +135,18 @@ class grievanceView extends Component{
     }
   }
   getLocation(){
-    Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
-    {
-      currentThis.setState({childLocationName : response.Boundary[0].name});
-      currentThis.nextStatus();
-    },function(err) {
+    if(this.state.childLocationId)
+      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.childLocationId}).then(function(response)
+      {
+        currentThis.setState({childLocationName : response.Boundary[0].name});
+        currentThis.nextStatus();
+      },function(err) {
 
-    });
+      });
+    else {
+      currentThis.setState({childLocationName : ""});
+      currentThis.nextStatus();
+    }
   }
   nextStatus = () => {
     if(localStorage.getItem('type')){
@@ -264,16 +269,16 @@ class grievanceView extends Component{
 
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
-  		if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
-  			req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'positionId'){
-  				req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
-  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'locationId'){
-  				req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
-  		}else if(req_obj.serviceRequest.attribValues[i]['key'] == 'childLocationId'){
-  				req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.childLocationId ? currentThis.props.grievanceView.childLocationId : currentThis.state.childLocationId;
-  		}
-  	}
+      if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
+        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] == 'positionId'){
+          req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] == 'locationId'){
+          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] == 'childLocationId'){
+          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.childLocationId ? currentThis.props.grievanceView.childLocationId : currentThis.state.childLocationId;
+      }
+    }
 
     //change serviceCode in serviceRequests
     req_obj.serviceRequest.serviceCode = currentThis.props.grievanceView.serviceCode ? currentThis.props.grievanceView.serviceCode :  currentThis.state.serviceCode;
@@ -295,10 +300,10 @@ class grievanceView extends Component{
         Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
         {
           var obj = {
-    				key: 'employeeDocs_'+currentThis.props.files[i]['name'],
-    				name: response.files[0].fileStoreId
-    			}
-  			  req_obj.serviceRequest.attribValues.push(obj);
+            key: 'employeeDocs_'+currentThis.props.files[i]['name'],
+            name: response.files[0].fileStoreId
+          }
+          req_obj.serviceRequest.attribValues.push(obj);
           currentThis.updateSeva(req_obj);
         },function(err) {
 
@@ -312,22 +317,22 @@ class grievanceView extends Component{
   chckkey = (key, req_obj) =>{
     //chck approval comments exists in attribvalues
     var result = req_obj.serviceRequest.attribValues.filter(function( obj ) {
-  	  return obj.key == key;
-  	});
+      return obj.key == key;
+    });
 
-  	if(result.length > 0){
-  		for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
-  			if(req_obj.serviceRequest.attribValues[i]['key'] == key){
-  				req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView[key];
-  			}
-  		}
-  	}else{
-  		var finobj = {
-  		    key: key,
-  		    name: currentThis.props.grievanceView[key]
-  		};
-  		req_obj.serviceRequest.attribValues.push(finobj);
-  	}
+    if(result.length > 0){
+      for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
+        if(req_obj.serviceRequest.attribValues[i]['key'] == key){
+          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView[key];
+        }
+      }
+    }else{
+      var finobj = {
+          key: key,
+          name: currentThis.props.grievanceView[key]
+      };
+      req_obj.serviceRequest.attribValues.push(finobj);
+    }
   }
   updateSeva = (req_obj) =>{
     //console.log('Before Submit',JSON.stringify(req_obj));
@@ -360,7 +365,7 @@ class grievanceView extends Component{
                   />
                 </Col>
               )
-						}
+            }
         })
       });
     }

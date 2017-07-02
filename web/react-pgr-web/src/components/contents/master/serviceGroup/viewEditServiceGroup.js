@@ -189,6 +189,9 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 })
 

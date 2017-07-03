@@ -148,9 +148,9 @@ public class TaxCalculatorMasterServiceTest {
 		String validDate = "16/06/2007";
 		String code = "propertytax";
 		RequestInfo requestInfo = getRequestInfoObject();
-
+/*
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
+		requestInfoWrapper.setRequestInfo(requestInfo);*/
 
 		try {
 			CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.getFactor(requestInfo,
@@ -162,7 +162,10 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
+			LOGGER.info("Requestinfo"+ requestInfo + " AND  search reuestinfo "+requestInfo + " tenatId = "+tenantId + " factorType ="+factorType
+					+"valid date = "+validDate+" code = "+code);
 			e.printStackTrace();
+		
 			System.out.println(e.getMessage());
 			LOGGER.error(e.getMessage());
 			assertTrue(false);

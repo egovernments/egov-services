@@ -129,10 +129,10 @@ public class TaxCalculatorMasterServiceTest {
 			CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.updateFactor(tenantId,
 					calculationFactorRequest);
 
-			if (calculationFactorResponse.getCalculationFactors().size() == 0)
-				assertTrue(false);
-
-			assertTrue(true);
+			if (calculationFactorResponse.getCalculationFactors().size() >0 && calculationFactorRequest.getCalculationFactors().equals(calculationFactorResponse.getCalculationFactors()))
+				assertTrue(true);
+			else
+			assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -257,10 +257,10 @@ public class TaxCalculatorMasterServiceTest {
 
 			GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.updateGuidanceValue(tenantId,
 					guidanceValueRequest);
-			if (guidanceValueResponse.getGuidanceValues().size() == 0) {
-				assertTrue(false);
-			}
-			assertTrue(true);
+			if (guidanceValueResponse.getGuidanceValues().size() > 0 && guidanceValueRequest.getGuidanceValues().equals(guidanceValueResponse.getGuidanceValues())) 
+				assertTrue(true);
+			else
+			assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -376,10 +376,10 @@ public class TaxCalculatorMasterServiceTest {
 		try {
 			taxPeriodResponse = taxCalculatorMasterService.updateTaxPeriod(tenantId, taxPeriodRequest);
 
-			if (taxPeriodResponse.getTaxPeriods().size() == 0)
-				assertTrue(false);
-
-			assertTrue(true);
+			if (taxPeriodResponse.getTaxPeriods().size() > 0 && taxPeriodResponse.getTaxPeriods().equals( taxPeriodRequest.getTaxPeriods()) )
+				assertTrue(true);
+			else
+			assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -495,10 +495,10 @@ public class TaxCalculatorMasterServiceTest {
 		try {
 			TaxRatesResponse taxRatesResponse = taxCalculatorMasterService.updateTaxRate(tenantId, taxRatesRequest);
 
-			if (taxRatesResponse.getTaxRates().size() == 0)
-				assertTrue(false);
-
-			assertTrue(true);
+			if (taxRatesResponse.getTaxRates().size() > 0 &&  taxRatesRequest.getTaxRates().equals(taxRatesResponse.getTaxRates()))
+				assertTrue(true);
+			else
+			assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);

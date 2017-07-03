@@ -41,6 +41,7 @@
 
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,8 +93,8 @@ public class Asset {
 	private String length;
 	private String width;
 	private String totalArea;
-	private Double grossValue;
-	private Double accumulatedDepreciation;
+	private BigDecimal grossValue;
+	private BigDecimal accumulatedDepreciation;
 	private Long assetReference = null;
 	private String version;
 	private List<Attributes> assetAttributes = new ArrayList<>();

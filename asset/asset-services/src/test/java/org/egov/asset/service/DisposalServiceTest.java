@@ -8,6 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,8 +166,8 @@ public class DisposalServiceTest {
 		disposal.setDisposalReason("disposalReason");
 		disposal.setPanCardNumber("baq1234567");
 		disposal.setAadharCardNumber("12345678123456");
-		disposal.setAssetCurrentValue(Double.valueOf("100.0"));
-		disposal.setSaleValue(Double.valueOf("200.0"));
+		disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+		disposal.setSaleValue(new BigDecimal("200.0"));
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("15"));
 
@@ -191,8 +192,8 @@ public class DisposalServiceTest {
 		disposal.setDisposalReason("disposalReason");
 		disposal.setPanCardNumber("baq1234567");
 		disposal.setAadharCardNumber("12345678123456");
-		disposal.setAssetCurrentValue(Double.valueOf("100.0"));
-		disposal.setSaleValue(Double.valueOf("200.0"));
+		disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+		disposal.setSaleValue(new BigDecimal("200.0"));
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("15"));
 		disposal.setVoucherReference(Long.valueOf("6"));

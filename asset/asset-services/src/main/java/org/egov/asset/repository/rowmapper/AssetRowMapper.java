@@ -42,6 +42,7 @@
 package org.egov.asset.repository.rowmapper;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -92,13 +93,13 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			if (accumulatedDepreciation == 0)
 				asset.setAccumulatedDepreciation(null);
 			else
-				asset.setAccumulatedDepreciation(accumulatedDepreciation);
+				asset.setAccumulatedDepreciation(BigDecimal.valueOf(accumulatedDepreciation));
 
 			final Double grossValue = rs.getDouble("grossvalue");
 			if (grossValue == 0)
 				asset.setGrossValue(null);
 			else
-				asset.setGrossValue(grossValue);
+				asset.setGrossValue(BigDecimal.valueOf(grossValue));
 			asset.setAssetReference((Long) rs.getObject("assetreference"));
 			asset.setVersion(rs.getString("version"));
 

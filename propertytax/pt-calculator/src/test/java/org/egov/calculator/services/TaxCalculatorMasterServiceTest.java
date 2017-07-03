@@ -155,12 +155,14 @@ public class TaxCalculatorMasterServiceTest {
 		try {
 			CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.getFactor(requestInfo,
 					tenantId, factorType, validDate, code);
-			if (calculationFactorResponse.getCalculationFactors().size() == 0)
+			if (calculationFactorResponse.getCalculationFactors().size() == 0){
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 			LOGGER.error(e.getMessage());
 			assertTrue(false);
@@ -292,6 +294,7 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 			LOGGER.error(e.getMessage());
 			assertTrue(false);
@@ -403,10 +406,12 @@ public class TaxCalculatorMasterServiceTest {
 			taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(), tenantId, validDate,
 					code);
 
-			if (taxPeriodResponse.getTaxPeriods().size() == 0)
+			if (taxPeriodResponse.getTaxPeriods().size() == 0){
 				assertTrue(false);
+			}
 			assertTrue(true);
 		} catch (Exception e) {
+			e.printStackTrace();
 			assertTrue(false);
 		}
 
@@ -519,11 +524,13 @@ public class TaxCalculatorMasterServiceTest {
 			taxRatesResponse = taxCalculatorMasterService.getTaxRate(getRequestInfoObject(), tenantId, taxHead,
 					validDate, validARVAmount, parentTaxHead);
 
-			if (taxRatesResponse.getTaxRates().size() == 0)
+			if (taxRatesResponse.getTaxRates().size() == 0){
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 		} catch (Exception e) {
+			e.printStackTrace();
 			assertTrue(false);
 		}
 

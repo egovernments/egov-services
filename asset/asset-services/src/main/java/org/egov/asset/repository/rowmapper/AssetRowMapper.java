@@ -42,6 +42,7 @@
 package org.egov.asset.repository.rowmapper;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -52,7 +53,6 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -73,8 +72,8 @@ public class AssetRowMapper implements RowMapper<Asset> {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public Asset mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Asset asset = new Asset();
+	public Asset mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+		final Asset asset = new Asset();
 
 		try {
 			asset.setId((Long) rs.getObject("assetId"));
@@ -83,39 +82,39 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			asset.setAssetDetails(rs.getString("assetDetails"));
 			asset.setTenantId(rs.getString("tenantId"));
 			asset.setModeOfAcquisition(ModeOfAcquisition.fromValue(rs.getString("modeofacquisition")));
-			asset.setStatus(Status.fromValue(rs.getString("status")));
+			asset.setStatus(rs.getString("status"));
 			asset.setDescription(rs.getString("description"));
 			asset.setDateOfCreation(rs.getDate("dateOfCreation"));
 			asset.setRemarks(rs.getString("remarks"));
 			asset.setLength(rs.getString("length"));
 			asset.setWidth(rs.getString("width"));
 			asset.setTotalArea(rs.getString("totalArea"));
-			Double accumulatedDepreciation = rs.getDouble("accumulateddepreciation");
+			final Double accumulatedDepreciation = rs.getDouble("accumulateddepreciation");
 			if (accumulatedDepreciation == 0)
 				asset.setAccumulatedDepreciation(null);
 			else
-				asset.setAccumulatedDepreciation(accumulatedDepreciation);
+				asset.setAccumulatedDepreciation(BigDecimal.valueOf(accumulatedDepreciation));
 
-			Double grossValue = rs.getDouble("grossvalue");
+			final Double grossValue = rs.getDouble("grossvalue");
 			if (grossValue == 0)
 				asset.setGrossValue(null);
 			else
-				asset.setGrossValue(grossValue);
+				asset.setGrossValue(BigDecimal.valueOf(grossValue));
 			asset.setAssetReference((Long) rs.getObject("assetreference"));
 			asset.setVersion(rs.getString("version"));
 
-			String properties = rs.getString("properties");
+			final String properties = rs.getString("properties");
 			Asset asset2 = null;
 
 			asset2 = objectMapper.readValue(properties, Asset.class);
 
 			asset.setAssetAttributes(asset2.getAssetAttributes());
 
-			Department department = new Department();
+			final Department department = new Department();
 			department.setId((Long) rs.getObject("department"));
 			asset.setDepartment(department);
 
-			Location location = new Location();
+			final Location location = new Location();
 			location.setBlock((Long) rs.getObject("block"));
 			location.setLocality((Long) rs.getObject("locality"));
 			location.setDoorNo(rs.getString("doorNo"));
@@ -126,7 +125,7 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			location.setStreet((Long) rs.getObject("street"));
 			asset.setLocationDetails(location);
 
-			AssetCategory assetCategory = new AssetCategory();
+			final AssetCategory assetCategory = new AssetCategory();
 			assetCategory.setId((Long) rs.getObject("assetcategoryId"));
 			assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
 			assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
@@ -143,13 +142,13 @@ public class AssetRowMapper implements RowMapper<Asset> {
 			asset.setAssetCategory(assetCategory);
 
 			logger.info("AssetRowMapper asset:: " + asset);
-		} catch (JsonParseException e) {
+		} catch (final JsonParseException e) {
 			logger.info("the exception thrown in rwomapper Deserialization : " + e);
-		} catch (JsonMappingException e) {
+		} catch (final JsonMappingException e) {
 			logger.info("the exception thrown in rwomapper Deserialization : " + e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			logger.info("the exception thrown in rwomapper Deserialization : " + e);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			logger.info("the exception thrown in rwomapper : " + ex);
 		}
 		return asset;

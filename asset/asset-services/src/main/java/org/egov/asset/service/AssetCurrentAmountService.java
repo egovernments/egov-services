@@ -1,5 +1,6 @@
 package org.egov.asset.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class AssetCurrentAmountService {
 	public AssetCurrentValueResponse getCurrentAmount(final Long assetId, final String tenantId,
 			final RequestInfo requestInfo) {
 
-		Double currentValue = null;
+		BigDecimal currentValue = null;
 		final Asset asset = getAsset(assetId, tenantId, requestInfo);
 		final Revaluation revaluation = getRevaluateAsset(assetId, tenantId);
 		currentValue = asset.getGrossValue();
@@ -41,9 +41,9 @@ public class AssetCurrentAmountService {
 		if (revaluation != null) {
 			currentValue = revaluation.getCurrentCapitalizedValue();
 			if (revaluation.getTypeOfChange().toString().equals(TypeOfChangeEnum.INCREASED.toString()))
-				currentValue = currentValue + revaluation.getRevaluationAmount();
+				currentValue = currentValue.add(revaluation.getRevaluationAmount());
 			else if (revaluation.getTypeOfChange().toString().equals(TypeOfChangeEnum.DECREASED.toString()))
-				currentValue = currentValue - revaluation.getRevaluationAmount();
+				currentValue = currentValue.subtract(revaluation.getRevaluationAmount());
 		}
 
 		return getResponse(currentValue, tenantId, assetId);
@@ -76,8 +76,9 @@ public class AssetCurrentAmountService {
 
 		final List<Long> assetIds = new ArrayList<Long>();
 		assetIds.add(assetId);
+
 		final RevaluationCriteria revaluationCriteria = RevaluationCriteria.builder().assetId(assetIds)
-				.tenantId(tenantId).status(RevaluationStatus.ACTIVE).build();
+				.tenantId(tenantId).status("ACTIVE").build();
 
 		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
 
@@ -93,7 +94,8 @@ public class AssetCurrentAmountService {
 
 	}
 
-	public AssetCurrentValueResponse getResponse(final Double currentValue, final String tenantId, final Long assetId) {
+	public AssetCurrentValueResponse getResponse(final BigDecimal currentValue, final String tenantId,
+			final Long assetId) {
 
 		final AssetCurrentValue assetCurrentValue = new AssetCurrentValue(tenantId, assetId, currentValue);
 		final AssetCurrentValueResponse assetCurrentValueResponse = new AssetCurrentValueResponse();

@@ -1,18 +1,14 @@
 package org.egov.asset.service;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.web.client.RestTemplate;
-
-import static org.powermock.api.mockito.PowerMockito.when;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +25,6 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.DisposalRepository;
@@ -42,6 +37,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(PowerMockRunner.class)
@@ -88,15 +88,15 @@ public class DisposalServiceTest {
 
 	@Test
 	public void testSearch() {
-		List<Disposal> disposal = new ArrayList<>();
+		final List<Disposal> disposal = new ArrayList<>();
 		disposal.add(getDisposalForSearch());
 
-		DisposalResponse disposalResponse = new DisposalResponse();
+		final DisposalResponse disposalResponse = new DisposalResponse();
 		disposalResponse.setDisposals(disposal);
 
-		RequestInfo requestInfo = new RequestInfo();
+		final RequestInfo requestInfo = new RequestInfo();
 		when(disposalRepository.search(any(DisposalCriteria.class))).thenReturn(disposal);
-		DisposalResponse expectedDisposalResponse = disposalService.search(Matchers.any(DisposalCriteria.class),
+		final DisposalResponse expectedDisposalResponse = disposalService.search(Matchers.any(DisposalCriteria.class),
 				requestInfo);
 
 		assertEquals(disposalResponse.toString(), expectedDisposalResponse.toString());
@@ -105,10 +105,10 @@ public class DisposalServiceTest {
 	@Test
 	public void testCreateAsync() throws NumberFormatException, Exception {
 
-		DisposalService mock = PowerMockito.mock(DisposalService.class);
+		final DisposalService mock = PowerMockito.mock(DisposalService.class);
 		PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForDisposal", any(DisposalRequest.class));
 
-		DisposalRequest disposalRequest = new DisposalRequest();
+		final DisposalRequest disposalRequest = new DisposalRequest();
 		disposalRequest.setDisposal(getDisposalForCreateAsync());
 		disposalRequest.getDisposal().setVoucherReference(Long.valueOf("6"));
 
@@ -117,7 +117,7 @@ public class DisposalServiceTest {
 		DisposalResponse disposalResponse = null;
 		try {
 			disposalResponse = getDisposal("disposal/disposalServiceResponse.disposal1.json");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -140,11 +140,11 @@ public class DisposalServiceTest {
 		DisposalResponse disposalResponse = null;
 		try {
 			disposalResponse = getDisposal("disposal/disposalServiceResponse.disposal1.json");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			fail();
 		}
-		DisposalRequest disposalRequest = new DisposalRequest();
+		final DisposalRequest disposalRequest = new DisposalRequest();
 		disposalRequest.setDisposal(getDisposalForCreateAsync());
 		disposalRequest.getDisposal().setId(Long.valueOf("15"));
 		disposalRequest.getDisposal().setVoucherReference(Long.valueOf("6"));
@@ -156,7 +156,7 @@ public class DisposalServiceTest {
 
 	private Disposal getDisposalForSearch() {
 
-		Disposal disposal = new Disposal();
+		final Disposal disposal = new Disposal();
 		disposal.setTenantId("ap.kurnool");
 		disposal.setId(Long.valueOf("15"));
 		disposal.setAssetId(Long.valueOf("31"));
@@ -166,12 +166,12 @@ public class DisposalServiceTest {
 		disposal.setDisposalReason("disposalReason");
 		disposal.setPanCardNumber("baq1234567");
 		disposal.setAadharCardNumber("12345678123456");
-		disposal.setAssetCurrentValue(Double.valueOf("100.0"));
-		disposal.setSaleValue(Double.valueOf("200.0"));
+		disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+		disposal.setSaleValue(new BigDecimal("200.0"));
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("15"));
 
-		AuditDetails auditDetails = new AuditDetails();
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy("2");
 		auditDetails.setCreatedDate(Long.valueOf("1496746205544"));
 		auditDetails.setLastModifiedBy("2");
@@ -183,7 +183,7 @@ public class DisposalServiceTest {
 
 	private Disposal getDisposalForCreateAsync() {
 
-		Disposal disposal = new Disposal();
+		final Disposal disposal = new Disposal();
 		disposal.setTenantId("ap.kurnool");
 		disposal.setAssetId(Long.valueOf("31"));
 		disposal.setBuyerName("Abhi");
@@ -192,13 +192,13 @@ public class DisposalServiceTest {
 		disposal.setDisposalReason("disposalReason");
 		disposal.setPanCardNumber("baq1234567");
 		disposal.setAadharCardNumber("12345678123456");
-		disposal.setAssetCurrentValue(Double.valueOf("100.0"));
-		disposal.setSaleValue(Double.valueOf("200.0"));
+		disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+		disposal.setSaleValue(new BigDecimal("200.0"));
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("15"));
 		disposal.setVoucherReference(Long.valueOf("6"));
 
-		AuditDetails auditDetails = new AuditDetails();
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy("2");
 		auditDetails.setCreatedDate(Long.valueOf("1496746205544"));
 		auditDetails.setLastModifiedBy("2");
@@ -209,14 +209,14 @@ public class DisposalServiceTest {
 	}
 
 	private Asset get_Asset() {
-		Asset asset = new Asset();
+		final Asset asset = new Asset();
 		asset.setTenantId("ap.kurnool");
 		asset.setId(Long.valueOf("31"));
 		asset.setName("asset name");
-		asset.setStatus(Status.CREATED);
+		asset.setStatus("CREATED");
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
-		Location location = new Location();
+		final Location location = new Location();
 		location.setLocality(4l);
 		location.setDoorNo("door no");
 
@@ -242,8 +242,8 @@ public class DisposalServiceTest {
 		return asset;
 	}
 
-	private DisposalResponse getDisposal(String filePath) throws IOException {
-		String empJson = new FileUtils().getFileContents(filePath);
+	private DisposalResponse getDisposal(final String filePath) throws IOException {
+		final String empJson = new FileUtils().getFileContents(filePath);
 		return new ObjectMapper().readValue(empJson, DisposalResponse.class);
 	}
 }

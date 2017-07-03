@@ -9,7 +9,6 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
-import org.egov.asset.model.enums.Status;
 import org.egov.asset.service.AssetService;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
@@ -71,7 +70,7 @@ public class AssetValidator {
 		assetCriteria.setId(assetIds);
 		final AssetResponse assetResponse = assetService.getAssets(assetCriteria, new RequestInfo());
 		if (!assetResponse.getAssets().isEmpty()
-				&& Status.CAPITALIZED.compareTo(assetResponse.getAssets().get(0).getStatus()) == -1)
+				&& "CAPITALIZED".equalsIgnoreCase(assetResponse.getAssets().get(0).getStatus()))
 			throw new RuntimeException(
 					"Asset Status Should be Captalized for Reevaluation, Depreciation and Disposal/sale");
 	}

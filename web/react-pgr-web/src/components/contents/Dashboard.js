@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {Link, Route} from 'react-router-dom';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
 import SwipeableViews from 'react-swipeable-views';
@@ -18,6 +20,15 @@ const styles = {
   slide: {
     padding: 10,
   },
+  status:{
+    fontSize:14,
+    background:"rgb(53, 79, 87)",
+    display:"inline-block",
+    padding:"4px 8px",
+    borderRadius:4,
+    color:"#fff"
+
+  }
 };
 
 
@@ -26,16 +37,24 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       slideIndex: 0,
+      serviceRequests: []
     };
 }
   componentWillMount() {
+
+    let current = this;
     let {currentUser}=this.props;
     console.log(currentUser);
-
-    Api.commonApiPost("/pgr/seva/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
+    Api.commonApiPost("/pgr/seva/v1/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
         console.log(response);
+        current.setState({
+          serviceRequests: response
+        });
     }).catch((error)=>{
         console.log(error);
+        current.setState({
+          serviceRequests: []
+        });
     })
   };
 
@@ -69,14 +88,50 @@ class Dashboard extends Component {
               onChangeIndex={this.handleChange}
             >
               <div>
-                <h2 style={styles.headline}>Tabs with slide effect</h2>
-                Swipe to see the next slide.<br />
+                  <Grid>
+                    <Row>
+                      {this.state.serviceRequests && this.state.serviceRequests.map((e,i)=>{
+                        return(
+                          <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
+                             <Card>
+                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
+                                  title={e.serviceName}
+                                  subtitle={e.attribValues && e.attribValues.map((item,index)=>{
+                                      if(item.key =="status"){
+                                        return(item.value)
+                                      }
+                                  })}
+                                 />
+
+                                 <CardHeader  titleStyle={{fontSize:18}}
+                                   title={e.serviceRequestId}
+                                   subtitle={e.requestedDatetime}
+                                 />
+                                 <CardText>
+                                    Service No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                        if(item.key =="status"){
+                                          return(item.value)
+                                        }
+                                    })} status.
+                                 </CardText>
+                             </Card>
+                          </Col>
+                        )
+                      }) }
+                    </Row>
+                  </Grid>
               </div>
               <div style={styles.slide}>
                 slide n°2
               </div>
               <div style={styles.slide}>
-                slide n°3
+                  <Grid>
+                    <Row>
+                      <Col>
+                          <Link to={`/pgr/createGrievance`} target="_blank"><RaisedButton label="Create Grievance" secondary={true} /></Link>
+                      </Col>
+                    </Row>
+                  </Grid>
               </div>
             </SwipeableViews>
           </div>:  <Card>

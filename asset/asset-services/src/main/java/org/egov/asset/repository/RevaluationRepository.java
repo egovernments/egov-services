@@ -40,7 +40,7 @@ public class RevaluationRepository {
 
 		String status = null;
 		if (revaluation.getStatus() != null)
-			status = revaluation.getStatus().toString();
+			status = revaluation.getStatus();
 
 		final Object[] obj = new Object[] { revaluation.getId(), revaluation.getTenantId(), revaluation.getAssetId(),
 				revaluation.getCurrentCapitalizedValue(), revaluation.getTypeOfChange().toString(),

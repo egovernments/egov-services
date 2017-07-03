@@ -1,11 +1,8 @@
 
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
-import PropertyTaxSearch from './components/contents/PropertyTaxSearch';
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
-
-import PropertyTaxCreate from './components/contents/CruProperty';
 import ProfileEdit from './components/contents/settings/profileEdit';
 
 //PGR
@@ -36,19 +33,15 @@ import DefineEscalationTime from './components/contents/pgr/master/escalationTim
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
 
-
-
 const base = "/pgr-web/v2";
 
 const Main = () => {
-    console.log("IN MAIN");
     return (
   <main style={{"marginBottom": "50px"}}>
     <Switch>
-      <Route path={base + '/propertyTaxSearch'} component={PropertyTaxSearch}/>
       <Route exact path= {base + '/'} component={Login}/>
-      <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-      <Route exact path={base + '/dashboard'} component={Dashboard}/>
+      <Route exact path='/profileEdit' component={ProfileEdit}/>
+      <Route exact path='/dashboard' component={Dashboard}/>
 
         {/*
         pgr
@@ -85,6 +78,7 @@ const Main = () => {
         <Route exact path={base + '/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base + '/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base + '/report/:reportName'} component={Report}/>
+
 
     </Switch>
   </main>

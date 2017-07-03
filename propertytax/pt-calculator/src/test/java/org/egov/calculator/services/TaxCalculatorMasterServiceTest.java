@@ -96,7 +96,7 @@ public class TaxCalculatorMasterServiceTest {
 
 	}
 
-	@Test
+	/*@Test
 	public void modifyFactor() {
 		String tenantId = "default";
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -138,7 +138,7 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(false);
 		}
 
-	}
+	}*/
 
 	@Test
 	public void searchFactor() {
@@ -223,7 +223,7 @@ public class TaxCalculatorMasterServiceTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+/*	@Test
 	public void modityGuidanceValue() throws Exception {
 		try {
 
@@ -265,7 +265,7 @@ public class TaxCalculatorMasterServiceTest {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-	}
+	}*/
 
 	/**
 	 * Description: Test case for guidance value search
@@ -344,7 +344,7 @@ public class TaxCalculatorMasterServiceTest {
 	/**
 	 * This will test whether the tax period will update successfully or not
 	 */
-	@Test
+	/*@Test
 	public void modifyTaxPeriod() {
 
 		List<TaxPeriod> taxPeriods = new ArrayList<>();
@@ -385,7 +385,7 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(false);
 		}
 
-	}
+	}*/
 
 	/**
 	 * This will test whether the search will be successful or not for tax
@@ -458,7 +458,7 @@ public class TaxCalculatorMasterServiceTest {
 		}
 	}
 
-	@Test
+	/*@Test
 	public void modifyTaxRateServiceTest() {
 
 		String tenantId = "default";
@@ -503,7 +503,7 @@ public class TaxCalculatorMasterServiceTest {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-	}
+	}*/
 
 	@Test
 	public void searchTaxRateServiceTest() {

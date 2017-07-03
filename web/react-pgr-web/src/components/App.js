@@ -90,7 +90,7 @@ class App extends Component {
   }
 
   render() {
-
+    console.log("IN APP");
     var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
 
     const actions = [

@@ -39,7 +39,9 @@ import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serv
 
 
 
-const Main = () => (
+const Main = () => {
+    console.log("IN MAIN");
+    return (
   <main style={{"marginBottom": "50px"}}>
     <Switch>
       <Route path='/propertyTaxSearch' component={PropertyTaxSearch}/>
@@ -84,7 +86,7 @@ const Main = () => (
 
     </Switch>
   </main>
-)
+)}
 
 
 export default(

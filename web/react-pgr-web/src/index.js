@@ -45,4 +45,4 @@ ReactDOM.render(
     </BrowserRouter>
   </MuiThemeProvider>
 </Provider>, document.getElementById('root'));
-//registerServiceWorker();
+registerServiceWorker();

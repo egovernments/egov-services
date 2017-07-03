@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
+import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.domain.model.ReportYamlMetaData.searchParams;
 import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
@@ -35,11 +36,12 @@ public class ReportController {
 	private static final String UTF_8 = "UTF-8";
 	
 	
-	public ReportYamlMetaData reportYamlMetaData;
+	
+	public ReportDefinitions reportDefinitions;
 	@Autowired
-	public ReportController(ReportYamlMetaData reportYamlMetaData) {
+	public ReportController(ReportDefinitions reportDefinitions) {
 		// TODO Auto-generated constructor stub
-		this.reportYamlMetaData = reportYamlMetaData;
+		this.reportDefinitions = reportDefinitions;
 	}
 
 	@Autowired
@@ -51,8 +53,9 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
-		MetadataResponse mdr = getMetaData();
+		MetadataResponse mdr = getMetaData(metaDataRequest.getReportName());
 		return getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
+		
 	}
 	
 	@PostMapping("/report/generateSQL")
@@ -199,8 +202,15 @@ public class ReportController {
 
 	}	
 	
-	public MetadataResponse getMetaData(){
+	public MetadataResponse getMetaData(String reportName){
 		MetadataResponse metadataResponse = new MetadataResponse();
+		ReportYamlMetaData reportYamlMetaData = new ReportYamlMetaData();
+		for(ReportYamlMetaData reportYaml : reportDefinitions.getReportDefinitions()) {
+			if(reportYaml.getReportName().equals(reportName)){
+				reportYamlMetaData = reportYaml;
+			}
+		}
+		
 		
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportYamlMetaData.getReportName());

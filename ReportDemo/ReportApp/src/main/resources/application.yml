@@ -1,7 +1,20 @@
-reportName: GrievanceByType
-summary: Report grouped by Grievance Type and status - based on a date period
-version: 1.0.0
-sourceColumns:
+ReportDefinitions:
+#
+#Grievance Type Report:
+#Grouping the count based on the status with from date and to date:
+#select egct.name,count(*),status from submission seva 
+#join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= '2017-06-01' and seva.createddate <= '2017-06-29' group by seva.status,egct.name order by egct.name asc;
+
+#Grouping the count based on the status and grievance type with from date and to date:
+#select egct.name,count(*),status from submission seva 
+#join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= '2017-06-01' and seva.createddate <= '2017-06-29' and egct.code = 'BRKNB' group by seva.status,egct.name;
+
+# Both above reports can be achived by creating the report for second case and making status as non mandatory seacrh parameter (Refer revised reportdef yaml)
+  - reportName: GrievanceByType
+    summary: Report grouped by Grievance Type and status - based on a date period
+    version: 1.0.0
+    
+    sourceColumns:
       - name: name 
         label: reports.pgr.complainttype.name
         type: string
@@ -21,8 +34,9 @@ sourceColumns:
       - name: total
         label: reports.pgr.withinsla
         type: number
-        source: seva
-searchParams:
+        source: seva 
+        
+    searchParams:
       - name: fromDate
         label: reports.pgr.datefrom
         type: epoch
@@ -39,5 +53,8 @@ searchParams:
         label: reports.pgr.status
         type: singlevaluelist
         source: seva
-        
-query: select egct.name as {name}, status as {status}, count(case when (now() - dateclosed) <= 4 THEN 1 ELSE 0)) as {withinSLA},  count(case when (now() - dateclosed) > 4 THEN 1 ELSE 0)) as {outsideSLA}, count(*) as {total} from submission seva join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= {fromDate} and seva.createddate <= {toDate} and egct.code = {complainttype} group by {complainttype}, {status}; //alternate query also possible using inner query to save 2 case whens
+
+    query: select egct.name as {name}, status as {status}, count(case when (now() - dateclosed) <= 4 THEN 1 ELSE 0)) as {withinSLA},  count(case when (now() - dateclosed) > 4 THEN 1 ELSE 0)) as {outsideSLA}, count(*) as {total} from submission seva join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= {fromDate} and seva.createddate <= {toDate} and egct.code = {complainttype} group by {complainttype}, {status}; //alternate query also possible using inner query to save 2 case whens
+    
+  - reportName: nextReport
+    summary: next report summary

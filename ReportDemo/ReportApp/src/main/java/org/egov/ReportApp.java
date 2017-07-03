@@ -3,7 +3,7 @@ import java.io.File;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.egov.domain.model.ReportYamlMetaData;
+import org.egov.domain.model.ReportDefinitions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,8 +22,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 public class ReportApp {
 	
 	
+	
 	@Autowired
-	public ReportYamlMetaData reportYamlMetaData;
+	public ReportDefinitions reportDefintions;
+	
 	@Autowired
 	public static ResourceLoader resourceLoader;
 
@@ -34,8 +36,6 @@ public class ReportApp {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
-		 
-	        
 	}
 	
 	@Bean
@@ -43,23 +43,19 @@ public class ReportApp {
         final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         final ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        // mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
         converter.setObjectMapper(mapper);
         return converter;
     }
 	 
-	  @Bean("reportYamlMetaData")
-	  public static ReportYamlMetaData loadYaml() {
-	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+	  
+	  @Bean("reportDefintions")
+	  public static ReportDefinitions loadYaml() {
+	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
     	Resource resource = resourceLoader.getResource("classpath:application.yml");
         File yamlFile = resource.getFile();
-
-    	ReportYamlMetaData reportYamlMetaData = mapper.readValue(yamlFile, ReportYamlMetaData.class);
-        System.out.println(ReflectionToStringBuilder.toString(reportYamlMetaData,ToStringStyle.MULTI_LINE_STYLE));
-        
-        
-        return reportYamlMetaData;
+        ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
+        return reportDefinitions;
     } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

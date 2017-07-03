@@ -17,10 +17,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Component
+/*@Component
 @ConfigurationProperties 
-@EnableConfigurationProperties(ReportYamlMetaData.class)
+@EnableConfigurationProperties(ReportYamlMetaData.class)*/
+
 public class ReportYamlMetaData {
+	
     private String reportName;
     public String getReportName() {
 		return reportName;
@@ -143,7 +145,7 @@ public class ReportYamlMetaData {
     private String query;
     @Override
     public String toString() {
-        return "ReportDefinition{" +
+        return "{" +
                 "reportName='" + reportName + '\'' +
                 ", summary=" + summary +
                 ", version=" + version +

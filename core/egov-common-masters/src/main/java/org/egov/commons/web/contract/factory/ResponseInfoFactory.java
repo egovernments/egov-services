@@ -40,15 +40,14 @@
 
 package org.egov.commons.web.contract.factory;
 
-import org.egov.commons.web.contract.RequestInfo;
-import org.egov.commons.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseInfoFactory {
 
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
-
 		String apiId = null;
 		String ver = null;
 		String ts = null;

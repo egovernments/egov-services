@@ -38,34 +38,17 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.web.contract;
+package org.egov.commons.consumers;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class ResponseInfo {
+import java.util.HashMap;
 
-	private String apiId;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-	private String ver;
+@SuppressWarnings("rawtypes")
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-	private String ts;
-
-	private String resMsgId;
-
-	private String msgId;
-
-	private String status;
+    public HashMapDeserializer() {
+        super(HashMap.class);
+    }
 
 }

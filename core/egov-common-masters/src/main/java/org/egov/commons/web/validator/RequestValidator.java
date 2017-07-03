@@ -40,7 +40,7 @@
 
 package org.egov.commons.web.validator;
 
-import org.egov.commons.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +62,7 @@ public class RequestValidator {
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> validateSearchRequest(RequestInfo requestInfo, BindingResult modelAttributeBindingResult,
-			BindingResult requestBodyBindingResult) {
+												   BindingResult requestBodyBindingResult) {
 		// validate input params
 		if (modelAttributeBindingResult != null && modelAttributeBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);

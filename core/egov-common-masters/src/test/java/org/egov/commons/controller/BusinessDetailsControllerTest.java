@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessAccountDetails;
 import org.egov.commons.model.BusinessAccountSubLedgerDetails;
@@ -20,9 +23,6 @@ import org.egov.commons.model.BusinessDetailsCommonModel;
 import org.egov.commons.model.BusinessDetailsCriteria;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
-import org.egov.commons.web.contract.RequestInfo;
-import org.egov.commons.web.contract.ResponseInfo;
-import org.egov.commons.web.contract.UserInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.controller.BusinessDetailsController;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
@@ -254,7 +254,7 @@ public class BusinessDetailsControllerTest {
 	}
 
 	private RequestInfo getRequestInfo() {
-		UserInfo userInfo = UserInfo.builder().id(1L).build();
+		User userInfo = User.builder().id(1L).build();
 		return RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST").did("4354648646").key("xyz")
 				.msgId("654654").requesterId("61").authToken("aceb9362-4147-40ff-936a-34497f83d740").userInfo(userInfo)
 				.build();

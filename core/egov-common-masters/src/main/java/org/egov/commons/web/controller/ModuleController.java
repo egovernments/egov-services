@@ -44,13 +44,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.Module;
 import org.egov.commons.service.ModuleService;
 import org.egov.commons.web.contract.ModuleGetRequest;
 import org.egov.commons.web.contract.ModuleResponse;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;

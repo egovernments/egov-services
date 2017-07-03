@@ -10,13 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.service.BusinessCategoryService;
-import org.egov.commons.web.contract.RequestInfo;
-import org.egov.commons.web.contract.ResponseInfo;
-import org.egov.commons.web.contract.UserInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.controller.BusinessCategoryController;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
@@ -108,7 +108,7 @@ public class BusinessCategoryControllerTest {
 	}
 
 	private RequestInfo getRequestInfo() {
-		UserInfo userInfo = UserInfo.builder().id(1L).name("ram").emailId("ram@gmail.com").mobileNumber("73878921")
+		User userInfo = User.builder().id(1L).name("ram").emailId("ram@gmail.com").mobileNumber("73878921")
 				.build();
 		return RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST").did("4354648646").key("xyz")
 				.msgId("654654").requesterId("61").authToken("345678f").userInfo(userInfo).build();

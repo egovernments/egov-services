@@ -40,31 +40,30 @@
 
 package org.egov.commons.service;
 
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.commons.model.Holiday;
-import org.egov.commons.producers.HolidayProducer;
 import org.egov.commons.repository.HolidayRepository;
 import org.egov.commons.web.contract.HolidayGetRequest;
 import org.egov.commons.web.contract.HolidayRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class HolidayService {
-	public static final Logger logger = LoggerFactory.getLogger(HolidayService.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(HolidayService.class);
 
 	@Autowired
 	private HolidayRepository holidayRepository;
 
 	@Autowired
-	private HolidayProducer holidayProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -74,19 +73,7 @@ public class HolidayService {
 	}
 
 	public Holiday createHoliday(final HolidayRequest holidayRequest) {
-		String holidayValue = null;
-		try {
-			logger.info("createHoliday service::" + holidayRequest);
-			holidayValue = objectMapper.writeValueAsString(holidayRequest);
-			logger.info("holidayValue::" + holidayValue);
-		} catch (final JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		try {
-			holidayProducer.sendMessage("egov-common-holiday", "save-holiday", holidayValue);
-		} catch (final Exception ex) {
-			ex.printStackTrace();
-		}
+		kafkaTemplate.send("egov-common-holiday", holidayRequest);
 		return holidayRequest.getHoliday();
 	}
 

@@ -158,6 +158,7 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			assertTrue(false);
 		}
 
@@ -287,6 +288,7 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			assertTrue(false);
 		}
 	}
@@ -388,7 +390,7 @@ public class TaxCalculatorMasterServiceTest {
 	public void searchTaxPeriod() {
 
 		String tenantId = "1234";
-		String validDate = "03/02/2017";
+		String validDate = "03/02/2017 00:00:00";
 		String code = "YEAR";
 
 		TaxPeriodResponse taxPeriodResponse = null;
@@ -503,7 +505,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		String tenantId = "default";
 		String taxHead = "taxHead-UU";
-		String validDate = "04/06/2017";
+		String validDate = "04/06/2017 00:00:00";
 		Double validARVAmount = 1100.0;
 		String parentTaxHead = "dependentTaxHead-UU";
 
@@ -517,7 +519,6 @@ public class TaxCalculatorMasterServiceTest {
 
 			assertTrue(true);
 		} catch (Exception e) {
-
 			assertTrue(false);
 		}
 

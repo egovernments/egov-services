@@ -150,7 +150,7 @@ public class AssetRepository {
 			modeOfAcquisition = asset.getModeOfAcquisition().toString();
 
 		if (asset.getStatus() != null)
-			status = asset.getStatus().toString();
+			status = asset.getStatus();
 
 		final Location location = asset.getLocationDetails();
 

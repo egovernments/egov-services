@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;

@@ -96,10 +96,18 @@ class CustomMenu extends Component {
   }
 
   changeLevel=(level)=>{
+    let {searchText}=this.state;
+    let {setRoute}=this.props;
     this.setState({
       level,
-      parentLevel:level-1
+      parentLevel:level-1,
+      searchText:!level?"":searchText
     })
+
+    if (!level) {
+      console.log("level 0");
+      setRoute("/dashboard");
+    }
   }
 
 
@@ -135,8 +143,8 @@ class CustomMenu extends Component {
     //
     //   return menu;
     // }
-    console.log(menuItems);
-    console.log(parentLevel);
+    // console.log(menuItems);
+    // console.log(parentLevel);
     const showMenu=()=>{
 
       if(searchText.length==0)
@@ -196,21 +204,39 @@ class CustomMenu extends Component {
         // )
       }
       else {
-        return (
-            <span>Searching</span>
-        )
+
+          return menuItems.map((item,index)=>{
+                if (item.url && item.name.toLowerCase().startsWith(searchText.toLowerCase())) {
+                  return(
+                    <Link   key={index} to={item.url} >
+                      <MenuItem
+                           onTouchTap={()=>{handleToggle(false)}}
+                           leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+                           primaryText={item.name}
+                        />
+                    </Link>
+                  )
+                }
+                // else {
+                //   return(
+                //     <span>Not found</span>
+                //   )
+                // }
+          })
+
+
       }
     }
     // console.log(constructMenu(menuItems.length>0?menuItems[0].items:[]));
     return (
       <div className="custom-menu" style={style}>
-          {/*
+          {
             <TextField
                hintText="Quick Find"
                onChange={this.handleChange}
                value={searchText}
              />
-            */}
+          }
 
 
 
@@ -218,8 +244,8 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true} width={320}>
-        {level>1 &&    <FloatingActionButton onTouchTap={()=>{changeLevel(0)}}  mini={true} style={style}>
-              <i className="material-icons">dashboard</i>
+        {(level>0 || searchText) &&    <FloatingActionButton onTouchTap={()=>{changeLevel(0)}}  mini={true} style={style}>
+              <i className="material-icons">home</i>
           </FloatingActionButton>}
         { level>0 &&   <FloatingActionButton onTouchTap={()=>{changeLevel(parentLevel)}} mini={true} style={style}>
               <i className="material-icons">fast_rewind</i>
@@ -279,6 +305,7 @@ class CustomMenu extends Component {
 
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
-  handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu})
+  handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 })
 export default connect(mapStateToProps,mapDispatchToProps)(CustomMenu);

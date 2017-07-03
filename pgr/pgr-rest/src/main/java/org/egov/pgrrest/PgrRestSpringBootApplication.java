@@ -6,7 +6,7 @@ import org.egov.pgr.common.repository.ComplaintConfigurationRepository;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
-import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;

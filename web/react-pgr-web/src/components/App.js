@@ -30,7 +30,7 @@ class App extends Component {
   // }
 
   componentWillReceiveProps(nextProps) {
-      if (nextProps.redirectTo) {
+        if (nextProps.redirectTo) {
           this.props.history.replace(nextProps.redirectTo);
           this.props.onRedirect();
       }
@@ -103,6 +103,7 @@ class App extends Component {
     return (
       <div className="App">
           <Header/>
+              
               {router}
           <Footer/>
 
@@ -131,6 +132,7 @@ const mapStateToProps = state => ({
     // appLoaded: state.common.appLoaded,
     // appName: state.common.appName,
     // currentUser: state.common.currentUser,
+    // route:state.common.route,
     redirectTo: state.common.redirectTo,
     token:state.common.token,
     // pleaseWait: state.common.pleaseWait,

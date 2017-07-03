@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.egov.pgr.common.model.OtpValidationRequest;
-import org.egov.pgrrest.common.model.AttributeEntry;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.common.domain.model.AttributeEntry;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
 
 import java.util.Collections;
 import java.util.Date;

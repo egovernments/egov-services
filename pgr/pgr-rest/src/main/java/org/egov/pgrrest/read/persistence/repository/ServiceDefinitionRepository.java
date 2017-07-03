@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.entity.*;
-import org.egov.pgrrest.common.repository.*;
+import org.egov.pgrrest.common.persistence.entity.*;
+import org.egov.pgrrest.common.persistence.repository.*;
 import org.egov.pgrrest.read.domain.exception.ServiceDefinitionNotFoundException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class ServiceDefinitionRepository {
         this.attributeActionsDefinitionJpaRepository = attributeActionsDefinitionJpaRepository;
     }
 
-    public org.egov.pgrrest.common.model.ServiceDefinition find(ServiceDefinitionSearchCriteria searchCriteria) {
+    public org.egov.pgrrest.common.domain.model.ServiceDefinition find(ServiceDefinitionSearchCriteria searchCriteria) {
         final ServiceDefinition serviceDefinition =
             serviceDefinitionJpaRepository.findOne(new ServiceDefinitionKey(searchCriteria));
         if (serviceDefinition == null) {
@@ -44,13 +44,13 @@ public class ServiceDefinitionRepository {
             getAttributeRolesDefinitions(attributeDefinitions,searchCriteria.getTenantId());
         final Map<String, List<AttributeActionsDefinition>> attributeActionsDefinitions =
             getAttributeActionsDefinitions(attributeDefinitions,searchCriteria.getTenantId());
-        final List<org.egov.pgrrest.common.model.AttributeDefinition> domainAttributes =
+        final List<org.egov.pgrrest.common.domain.model.AttributeDefinition> domainAttributes =
             mapToDomainAttributeDefinitions(attributeDefinitions, valueDefinitions,attributeRolesDefinitions,attributeActionsDefinitions);
 
         return serviceDefinition.toDomain(domainAttributes);
     }
 
-    private List<org.egov.pgrrest.common.model.AttributeDefinition> mapToDomainAttributeDefinitions(
+    private List<org.egov.pgrrest.common.domain.model.AttributeDefinition> mapToDomainAttributeDefinitions(
         List<AttributeDefinition> attributeDefinitions, Map<String, List<ValueDefinition>> attributeCodeToValueMap,
               Map<String, List<AttributeRolesDefinition>> attributeCodeToAttributeRolesMap,
               Map<String, List<AttributeActionsDefinition>> attributeCodeToAttributeActionsMap) {
@@ -63,21 +63,21 @@ public class ServiceDefinitionRepository {
             .collect(Collectors.toList());
     }
 
-    private org.egov.pgrrest.common.model.AttributeDefinition mapToDomainAttribute(
+    private org.egov.pgrrest.common.domain.model.AttributeDefinition mapToDomainAttribute(
         AttributeDefinition attributeDefinition, Map<String, List<ValueDefinition>> attributeCodeToValueMap,
         Map<String, List<AttributeRolesDefinition>> attributeCodeToAttributeRolesMap,
         Map<String, List<AttributeActionsDefinition>> attributeCodeToAttributeActionsMap) {
-        final List<org.egov.pgrrest.common.model.ValueDefinition> domainValues = getDomainValueDefinitions
+        final List<org.egov.pgrrest.common.domain.model.ValueDefinition> domainValues = getDomainValueDefinitions
             (attributeCodeToValueMap, attributeDefinition.getCode());
-        final List<org.egov.pgrrest.common.model.AttributeRolesDefinition> domainAttributeRoles = getDomainAttributeRolesDefinitions
+        final List<org.egov.pgrrest.common.domain.model.AttributeRolesDefinition> domainAttributeRoles = getDomainAttributeRolesDefinitions
             (attributeCodeToAttributeRolesMap, attributeDefinition.getCode());
-        final List<org.egov.pgrrest.common.model.AttributeActionsDefinition> domainAttributeActions = getDomainAttributeActionsDefinitions
+        final List<org.egov.pgrrest.common.domain.model.AttributeActionsDefinition> domainAttributeActions = getDomainAttributeActionsDefinitions
             (attributeCodeToAttributeActionsMap, attributeDefinition.getCode());
 
         return attributeDefinition.toDomain(domainValues, domainAttributeRoles, domainAttributeActions);
     }
 
-    private List<org.egov.pgrrest.common.model.ValueDefinition> getDomainValueDefinitions(
+    private List<org.egov.pgrrest.common.domain.model.ValueDefinition> getDomainValueDefinitions(
         Map<String, List<ValueDefinition>> attributeCodeToValueDefinitionsMap, String attributeCode) {
         final List<ValueDefinition> entityValues = attributeCodeToValueDefinitionsMap
             .getOrDefault(attributeCode, new ArrayList<>());
@@ -86,7 +86,7 @@ public class ServiceDefinitionRepository {
             .collect(Collectors.toList());
     }
 
-    private List<org.egov.pgrrest.common.model.AttributeRolesDefinition> getDomainAttributeRolesDefinitions(
+    private List<org.egov.pgrrest.common.domain.model.AttributeRolesDefinition> getDomainAttributeRolesDefinitions(
         Map<String, List<AttributeRolesDefinition>> attributeCodeToAttributeRolesMap, String attributeCode){
         final List<AttributeRolesDefinition> entityAttributeRolesDefinition = attributeCodeToAttributeRolesMap
             .getOrDefault(attributeCode, new ArrayList<>());
@@ -95,7 +95,7 @@ public class ServiceDefinitionRepository {
             .collect(Collectors.toList());
     }
 
-    private List<org.egov.pgrrest.common.model.AttributeActionsDefinition> getDomainAttributeActionsDefinitions(
+    private List<org.egov.pgrrest.common.domain.model.AttributeActionsDefinition> getDomainAttributeActionsDefinitions(
         Map<String, List<AttributeActionsDefinition>> attributeCodeToAttributeActionsMap, String attributeCode){
         final List<AttributeActionsDefinition> entityAttributeActionsDefinition = attributeCodeToAttributeActionsMap
             .getOrDefault(attributeCode, new ArrayList<>());

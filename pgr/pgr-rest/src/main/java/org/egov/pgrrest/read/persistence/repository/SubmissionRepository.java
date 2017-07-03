@@ -1,11 +1,11 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.entity.ServiceType;
-import org.egov.pgrrest.common.entity.Submission;
-import org.egov.pgrrest.common.entity.SubmissionAttribute;
-import org.egov.pgrrest.common.repository.ServiceRequestTypeJpaRepository;
-import org.egov.pgrrest.common.repository.SubmissionAttributeJpaRepository;
-import org.egov.pgrrest.common.repository.SubmissionJpaRepository;
+import org.egov.pgrrest.common.persistence.entity.ServiceType;
+import org.egov.pgrrest.common.persistence.entity.Submission;
+import org.egov.pgrrest.common.persistence.entity.SubmissionAttribute;
+import org.egov.pgrrest.common.persistence.repository.ServiceRequestTypeJpaRepository;
+import org.egov.pgrrest.common.persistence.repository.SubmissionAttributeJpaRepository;
+import org.egov.pgrrest.common.persistence.repository.SubmissionJpaRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

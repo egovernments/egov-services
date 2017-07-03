@@ -1,11 +1,17 @@
 package org.egov.egf;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 
 import org.egov.egf.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.egf.web.interceptor.CorrelationIdInterceptor;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,21 +29,36 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 public class FinancialsApplication {
-	
+
+	private static final String CLUSTER_NAME = "cluster.name";
+
 	@Value("${app.timezone}")
- 	private String timeZone;
+	private String timeZone;
+
+	@Value("${es.host}")
+	private String elasticSearchHost;
+
+	@Value("${es.transport.port}")
+	private Integer elasticSearchTransportPort;
+
+	@Value("${es.cluster.name}")
+	private String elasticSearchClusterName;
+
+	private TransportClient client;
+
+	@PostConstruct
+	public void init() throws UnknownHostException {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+		Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
+		final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
+		final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
+				elasticSearchTransportPort);
+		client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(FinancialsApplication.class, args);
 	}
-		
-
-		@PostConstruct
-		public void initialize() {
-			TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-		}
-		 
-
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
@@ -70,5 +91,10 @@ public class FinancialsApplication {
 				registry.addInterceptor(new CorrelationIdInterceptor());
 			}
 		};
+	}
+
+	@Bean
+	public TransportClient getTransportClient() {
+		return client;
 	}
 }

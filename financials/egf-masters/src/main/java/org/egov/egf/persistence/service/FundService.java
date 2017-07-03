@@ -11,17 +11,21 @@ import javax.persistence.PersistenceContext;
 import org.egov.egf.domain.exception.InvalidDataException;
 import org.egov.egf.json.ObjectMapperFactory;
 import org.egov.egf.persistence.entity.Fund;
+import org.egov.egf.persistence.entity.FundSearchCriteria;
 import org.egov.egf.persistence.queue.contract.FundContract;
 import org.egov.egf.persistence.queue.contract.FundContractRequest;
 import org.egov.egf.persistence.queue.contract.FundContractResponse;
 import org.egov.egf.persistence.queue.contract.RequestInfo;
 import org.egov.egf.persistence.queue.contract.ResponseInfo;
+import org.egov.egf.persistence.repository.FundESRepository;
 import org.egov.egf.persistence.repository.FundJpaRepository;
 import org.egov.egf.persistence.repository.FundQueueRepository;
 import org.egov.egf.persistence.specification.FundSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,22 +42,26 @@ public class FundService {
 
 	private final FundJpaRepository fundJpaRepository;
 	private final FundQueueRepository fundQueueRepository;
+	private final FundESRepository fundESRepository;
+	private final String fetchDataFrom;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Autowired
 	private SmartValidator validator;
-	
+
 	@Autowired
 	private FundService fundService;
-	
+
 	@Autowired
-	public FundService(final FundJpaRepository fundJpaRepository, final FundQueueRepository fundQueueRepository) {
+	public FundService(final FundJpaRepository fundJpaRepository, final FundQueueRepository fundQueueRepository,
+			final FundESRepository fundESRepository, @Value("${fetch_data_from}") String fetchDataFrom) {
 		this.fundJpaRepository = fundJpaRepository;
 		this.fundQueueRepository = fundQueueRepository;
+		this.fundESRepository = fundESRepository;
+		this.fetchDataFrom = fetchDataFrom;
 	}
-
 
 	public void push(final FundContractRequest financialYearContractRequest) {
 		fundQueueRepository.push(financialYearContractRequest);
@@ -82,7 +90,7 @@ public class FundService {
 		fundContractResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
 		return fundContractResponse;
 	}
-	
+
 	@Transactional
 	public FundContractResponse updateAll(HashMap<String, Object> financialContractRequestMap) {
 		final FundContractRequest fundContractRequest = ObjectMapperFactory.create()
@@ -102,8 +110,6 @@ public class FundService {
 		fundContractResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
 		return fundContractResponse;
 	}
-	
-	
 
 	@Transactional
 	public FundContractResponse update(HashMap<String, Object> financialContractRequestMap) {
@@ -120,7 +126,6 @@ public class FundService {
 		return fundContractResponse;
 	}
 
-	
 	@Transactional
 	public Fund create(final Fund fund) {
 		setFund(fund);
@@ -160,6 +165,15 @@ public class FundService {
 	}
 
 	public Page<Fund> search(FundContractRequest fundContractRequest) {
+		if (fetchDataFrom != null && !fetchDataFrom.isEmpty() && fetchDataFrom.equalsIgnoreCase("es")) {
+			FundSearchCriteria fundSearchCriteria = new FundSearchCriteria();
+			List<Fund> funds = fundESRepository.getMatchingFunds(fundSearchCriteria);
+			PageRequest pageable = new PageRequest(fundContractRequest.getPage().getCurrentPage(),
+					fundContractRequest.getPage().getPageSize());
+			int start = fundContractRequest.getPage().getOffSet();
+			int end = (start + pageable.getPageSize()) > funds.size() ? funds.size() : (start + pageable.getPageSize());
+			return new PageImpl<Fund>(funds.subList(start, end), pageable, funds.size());
+		}
 		final FundSpecification specification = new FundSpecification(fundContractRequest.getFund());
 		Pageable page = new PageRequest(fundContractRequest.getPage().getOffSet(),
 				fundContractRequest.getPage().getPageSize());
@@ -220,7 +234,7 @@ public class FundService {
 		}
 		return fundContractRequest;
 	}
-	
+
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		new ResponseInfo();
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())

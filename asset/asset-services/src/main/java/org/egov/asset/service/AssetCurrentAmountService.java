@@ -11,7 +11,6 @@ import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
@@ -76,8 +75,9 @@ public class AssetCurrentAmountService {
 
 		final List<Long> assetIds = new ArrayList<Long>();
 		assetIds.add(assetId);
+
 		final RevaluationCriteria revaluationCriteria = RevaluationCriteria.builder().assetId(assetIds)
-				.tenantId(tenantId).status(RevaluationStatus.ACTIVE).build();
+				.tenantId(tenantId).status("ACTIVE").build();
 
 		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
 

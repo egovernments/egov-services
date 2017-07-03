@@ -44,7 +44,9 @@ export default (state = defaultState, action) => {
     case 'SET_ROUTE':
       return {
         ...state,
-        route: action.route
+        route: action.route,
+        redirectTo: action.route,
+
       }
     case 'GET_LENGTH':
       return {

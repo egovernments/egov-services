@@ -9,7 +9,7 @@ public class ServiceTypeCategory {
     private String description;
     private String tenantId;
 
-    public ServiceTypeCategory(org.egov.pgrrest.common.entity.ServiceTypeCategory entityServiceTypeCategory) {
+    public ServiceTypeCategory(org.egov.pgrrest.common.persistence.entity.ServiceTypeCategory entityServiceTypeCategory) {
         this.id = entityServiceTypeCategory.getId();
         this.name = entityServiceTypeCategory.getName();
         this.description = entityServiceTypeCategory.getDescription();

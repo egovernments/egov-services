@@ -268,8 +268,7 @@ public class ValidatorUtils {
 	private void addDocumentTypeValidationErrors(final DocumentTypeApplicationType docTypeAppType,
 			final List<ErrorField> errorFields) {
 
-		if (docTypeAppType.getDocumentTypeId() == 0) {
-
+		if (docTypeAppType.getDocumentType() == null) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCTYPE_MANDATORY_CODE)
 					.message(WcmsConstants.DOCTYPE_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.DOCTYPE_MANADATORY_FIELD_NAME).build();
@@ -303,8 +302,8 @@ public class ValidatorUtils {
 	private void addDocumentApplicationTypeUniqueValidation(final DocumentTypeApplicationType docTypeAppType,
 			final List<ErrorField> errorFields) {
 
-		if (!documentApplicationService.checkDocumentTypeApplicationTypeExist(docTypeAppType.getApplicationType(),
-				docTypeAppType.getDocumentTypeId(), docTypeAppType.getTenantId())) {
+		if (!documentApplicationService.checkDocumentTypeApplicationTypeExist(docTypeAppType.getId(),docTypeAppType.getApplicationType(),
+				docTypeAppType.getDocumentType(), docTypeAppType.getTenantId())) {
 
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE)
 					.message(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE)

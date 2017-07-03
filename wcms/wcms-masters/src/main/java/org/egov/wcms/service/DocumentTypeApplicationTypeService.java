@@ -72,7 +72,6 @@ public class DocumentTypeApplicationTypeService {
 
     public DocumentTypeApplicationType sendMessage(final String topic, final String key,
             final DocumentTypeApplicationTypeReq docNameRequest) {
-        // docNameRequest.getDocumentName().setCode(codeGeneratorService.generate(usageTypeRequest.getUsageType().SEQ_USAGETYPE));
         final ObjectMapper mapper = new ObjectMapper();
         String docTypeApplTypeValue = null;
         try {
@@ -100,10 +99,10 @@ public class DocumentTypeApplicationTypeService {
 
     }
 
-    public boolean checkDocumentTypeApplicationTypeExist(final String applicationType, final long documentType,
+    public boolean checkDocumentTypeApplicationTypeExist(final Long id,final String applicationType, final String documentType,
             final String tenantid) {
 
-        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(documentType, applicationType, tenantid);
+        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(id,applicationType,documentType, tenantid);
     }
 
 }

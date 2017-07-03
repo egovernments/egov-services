@@ -57,11 +57,6 @@ public class DocumentTypeApplicationTypeQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeQueryBuilder.class);
 
-    /*
-     * private static final String BASE_QUERY =
-     * "SELECT doc.id , doc.applicationtype , doc.documenttypeid,doc.mandatory,doc.active,doc.createddate," +
-     * "doc.lastmodifieddate,doc.createdby,doc.lastmodifiedby,doc.tenantid from egwtr_documenttype_applicationtype doc";
-     */
 
     private static final String BASE_QUERY = "SELECT docapp.id AS id ,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
             + " docapp.lastmodifieddate,docapp.createdby,docapp.lastmodifiedby,docapp.tenantid from egwtr_documenttype_applicationtype docapp"
@@ -88,12 +83,30 @@ public class DocumentTypeApplicationTypeQueryBuilder {
         return "UPDATE egwtr_documenttype_applicationtype SET applicationtype = ?,documenttypeid = ?,mandatory=?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
     }
+    
+    public static String getDocumentTypeIdQuery() {
+        return " select id FROM egwtr_document_type  where name= ? and tenantId = ? ";
+    }
+
+    public static String getDocumentName() {
+        return "SELECT name FROM egwtr_document_type  WHERE id = ? and tenantId = ? ";
+    }
+    
+    public static String selectDocumentApplicationIdQuery() {
+        return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ?";
+    }
+
+    public static String selectDocumentApplicationIdNotInQuery() {
+    	 return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ? and id! =? ";
+        
+    }
+    
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
 
-        if (docNameGetRequest.getId() == null && docNameGetRequest.getApplicationType() == null
+        if (docNameGetRequest.getId() == null && docNameGetRequest.getApplicationType() == null && docNameGetRequest.getDocumentType()==null
                 && docNameGetRequest.getActive() == null && docNameGetRequest.getTenantId() == null)
             return;
 
@@ -115,6 +128,13 @@ public class DocumentTypeApplicationTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" docapp.applicationtype = ?");
             preparedStatementValues.add(docNameGetRequest.getApplicationType());
+        }
+        
+
+        if (docNameGetRequest.getDocumentType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" docapp.documenttypeid = ?");
+            preparedStatementValues.add(docNameGetRequest.getDocumentTypeId());
         }
 
         if (docNameGetRequest.getActive() != null) {

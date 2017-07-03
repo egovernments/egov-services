@@ -102,10 +102,7 @@ public class PipeSizeRepository {
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)
-            
-            
-            
-            query = PipeSizeQueryBuilder.selectPipeSizeInmmAndCodeQuery();
+             query = PipeSizeQueryBuilder.selectPipeSizeInmmAndCodeQuery();
         else {
             preparedStatementValues.add(code);
             query = PipeSizeQueryBuilder.selectPipeSizeInmmAndCodeNotInQuery();

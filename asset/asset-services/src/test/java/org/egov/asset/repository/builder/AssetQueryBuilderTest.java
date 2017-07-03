@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCriteria;
-import org.egov.asset.model.enums.Status;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,14 +38,14 @@ public class AssetQueryBuilderTest {
 
 	@Test
 	public void getQueryWithTenantIdTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").build();
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
 		assertEquals(queryWithTenantId,
 				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(Long.valueOf("500"));
 		expectedPreparedStatementValues.add(Long.valueOf("0"));
@@ -55,15 +54,15 @@ public class AssetQueryBuilderTest {
 
 	@Test
 	public void getQueryWithTenantId_GrossValueTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
 				.grossValue(Double.valueOf("15.0")).build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
 		assertEquals(queryWithTenantId,
 				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(Double.valueOf("15.0"));
 		expectedPreparedStatementValues.add(Long.valueOf("500"));
@@ -73,15 +72,15 @@ public class AssetQueryBuilderTest {
 
 	@Test
 	public void getQueryWithTenantId_ToCapitalizedValueTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
 				.toCapitalizedValue(Double.valueOf("15.0")).build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN 1 AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN 1 AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
 		assertEquals(queryWithTenantId,
 				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(Double.valueOf("15.0"));
 		expectedPreparedStatementValues.add(Long.valueOf("500"));
@@ -91,15 +90,15 @@ public class AssetQueryBuilderTest {
 
 	@Test
 	public void getQueryWithTenantId_FromCapitalizedValueAndToCapitalizedValueTest() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
 				.fromCapitalizedValue(Double.valueOf("15")).toCapitalizedValue(Double.valueOf("150")).build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN ? AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.grossvalue BETWEEN ? AND ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
 		assertEquals(queryWithTenantId,
 				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add(Double.valueOf("15"));
 		expectedPreparedStatementValues.add(Double.valueOf("150"));
@@ -107,23 +106,23 @@ public class AssetQueryBuilderTest {
 		expectedPreparedStatementValues.add(Long.valueOf("0"));
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
 	}
-	
+
 	@Test
 	public void getQueryWithParametersSet1Test() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		List<Long> ids = new ArrayList<>();
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final List<Long> ids = new ArrayList<>();
 		ids.add(Long.valueOf(10));
 		ids.add(Long.valueOf(20));
 		ids.add(Long.valueOf(30));
 
-		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").id(ids)
+		final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").id(ids)
 				.block(Long.valueOf(20)).code(String.valueOf(560042)).department(Long.valueOf(30))
 				.description(String.valueOf(123)).build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.id IN (10,20,30) AND ASSET.code like ? AND ASSET.department = ? AND ASSET.block = ? AND ASSET.description ilike ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.id IN (10,20,30) AND ASSET.code like ? AND ASSET.department = ? AND ASSET.block = ? AND ASSET.description ilike ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
 		assertEquals(queryWithTenantId,
 				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add("%560042%");
 		expectedPreparedStatementValues.add(30L);
@@ -136,17 +135,17 @@ public class AssetQueryBuilderTest {
 
 	@Test
 	public void getQueryWithParametersSet2Test() {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").doorNo("10")
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").doorNo("10")
 				.electionWard(Long.valueOf(20)).grossValue(Double.valueOf(30)).locality(Long.valueOf(40)).name("Land")
 				.offset(Long.valueOf(50)).pinCode(Long.valueOf(60)).revenueWard(Long.valueOf(70)).size(Long.valueOf(80))
-				.status(Status.CREATED).street(Long.valueOf(90)).zone(Long.valueOf(100)).build();
+				.status("CREATED").street(Long.valueOf(90)).zone(Long.valueOf(100)).build();
 		Mockito.doReturn("80").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.name ilike ? AND ASSET.status = ? AND ASSET.locality = ? AND ASSET.zone = ? AND ASSET.revenueWard = ? AND ASSET.street = ? AND ASSET.electionWard = ? AND ASSET.pinCode = ? AND ASSET.doorno = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
+		final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode FROM egasset_asset asset INNER JOIN egasset_assetcategory assetcategory ON asset.assetcategory = assetcategory.id  WHERE ASSET.tenantId = ? AND ASSET.name ilike ? AND ASSET.status = ? AND ASSET.locality = ? AND ASSET.zone = ? AND ASSET.revenueWard = ? AND ASSET.street = ? AND ASSET.electionWard = ? AND ASSET.pinCode = ? AND ASSET.doorno = ? AND ASSET.grossvalue = ? ORDER BY asset.name LIMIT ? OFFSET ?"; // put
 		assertEquals(queryWithTenantId,
 				assetQueryBuilder.getQuery(assetCriteriaQueryWithTenantId, preparedStatementValues));
 		System.out.println(preparedStatementValues);
-		List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
 		expectedPreparedStatementValues.add("ap.kurnool");
 		expectedPreparedStatementValues.add("%Land%");
 		expectedPreparedStatementValues.add("CREATED");
@@ -165,13 +164,13 @@ public class AssetQueryBuilderTest {
 
 	@Test
 	public void getInsertQuery() {
-		String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		assertEquals(queryWithTenantId, assetQueryBuilder.getInsertQuery());
 	}
 
 	@Test
 	public void getUpdateQuery() {
-		String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=? WHERE code=? and tenantid=?";
+		final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=? WHERE code=? and tenantid=?";
 		assertEquals(queryWithTenantId, assetQueryBuilder.getUpdateQuery());
 	}
 

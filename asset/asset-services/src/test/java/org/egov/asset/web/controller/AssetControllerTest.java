@@ -17,7 +17,6 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
-import org.egov.asset.exception.Error;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
@@ -28,8 +27,6 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.RevaluationStatus;
-import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.service.AssetCurrentAmountService;
@@ -77,10 +74,10 @@ public class AssetControllerTest {
 
 	@Test
 	public void test_Should_Search_Asset() throws Exception {
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(getAsset());
 
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(new ResponseInfo());
 
@@ -96,10 +93,10 @@ public class AssetControllerTest {
 
 	@Test
 	public void test_Should_ThrowException_OnSearchAsset() throws Exception {
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(getAsset());
 
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(new ResponseInfo());
 
@@ -116,10 +113,10 @@ public class AssetControllerTest {
 	@Test
 	public void test_Should_Create_Asset() throws Exception {
 
-		List<Asset> assets = new ArrayList<>();
-		Asset asset = getAsset();
+		final List<Asset> assets = new ArrayList<>();
+		final Asset asset = getAsset();
 		assets.add(asset);
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(new ResponseInfo());
 
@@ -134,11 +131,11 @@ public class AssetControllerTest {
 	@Test
 	public void test_Should_Update_Asset() throws Exception {
 
-		List<Asset> assets = new ArrayList<>();
-		Asset asset = getAsset();
+		final List<Asset> assets = new ArrayList<>();
+		final Asset asset = getAsset();
 		asset.setCode("13");
 		assets.add(asset);
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(new ResponseInfo());
 
@@ -152,9 +149,9 @@ public class AssetControllerTest {
 
 	@Test
 	public void test_should_create_revaluate() throws IOException, Exception {
-		List<Revaluation> revaluations = new ArrayList<>();
+		final List<Revaluation> revaluations = new ArrayList<>();
 		revaluations.add(getRevaluation());
-		RevaluationResponse revaluationResponse = new RevaluationResponse();
+		final RevaluationResponse revaluationResponse = new RevaluationResponse();
 		revaluationResponse.setResposneInfo(null);
 		revaluationResponse.setRevaluations(revaluations);
 		when(revaluationService.createAsync(any(RevaluationRequest.class))).thenReturn(revaluationResponse);
@@ -166,9 +163,9 @@ public class AssetControllerTest {
 
 	@Test
 	public void test_should_search_revaluate() throws IOException, Exception {
-		List<Revaluation> revaluations = new ArrayList<>();
+		final List<Revaluation> revaluations = new ArrayList<>();
 		revaluations.add(getRevaluation());
-		RevaluationResponse revaluationResponse = new RevaluationResponse();
+		final RevaluationResponse revaluationResponse = new RevaluationResponse();
 		revaluationResponse.setResposneInfo(null);
 		revaluationResponse.setRevaluations(revaluations);
 		when(revaluationService.search(any(RevaluationCriteria.class))).thenReturn(revaluationResponse);
@@ -180,9 +177,9 @@ public class AssetControllerTest {
 
 	@Test
 	public void test_should_create_disposal() throws IOException, Exception {
-		List<Disposal> disposals = new ArrayList<>();
+		final List<Disposal> disposals = new ArrayList<>();
 		disposals.add(getDisposals());
-		DisposalResponse disposalResponse = new DisposalResponse();
+		final DisposalResponse disposalResponse = new DisposalResponse();
 		disposalResponse.setResponseInfo(null);
 		disposalResponse.setDisposals(disposals);
 		when(disposalService.createAsync(any(DisposalRequest.class))).thenReturn(disposalResponse);
@@ -194,9 +191,9 @@ public class AssetControllerTest {
 
 	@Test
 	public void test_should_search_disposal() throws IOException, Exception {
-		List<Disposal> disposal = new ArrayList<>();
+		final List<Disposal> disposal = new ArrayList<>();
 		disposal.add(getDisposals());
-		DisposalResponse disposalResponse = new DisposalResponse();
+		final DisposalResponse disposalResponse = new DisposalResponse();
 		disposalResponse.setResponseInfo(null);
 		disposalResponse.setDisposals(disposal);
 		when(disposalService.search(any(DisposalCriteria.class), any(RequestInfo.class))).thenReturn(disposalResponse);
@@ -206,30 +203,30 @@ public class AssetControllerTest {
 				.andExpect(content().json(getFileContents("disposal/disposesearchresponse.json")));
 	}
 
-	private String getFileContents(String fileName) throws IOException {
+	private String getFileContents(final String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);
 	}
 
 	private Asset getAsset() {
-		Asset asset = new Asset();
+		final Asset asset = new Asset();
 		asset.setTenantId("ap.kurnool");
 		asset.setId(2L);
 		asset.setName("asset name");
 		asset.setCode("000013");
 		asset.setDepartment(null);
 
-		AssetCategory assetCategory = new AssetCategory();
+		final AssetCategory assetCategory = new AssetCategory();
 		assetCategory.setId(1l);
 		assetCategory.setName("category name");
 		asset.setAssetCategory(assetCategory);
 
 		asset.setAssetDetails(null);
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-		asset.setStatus(Status.CREATED);
+		asset.setStatus("CREATED");
 		asset.setDescription(null);
 		asset.setDateOfCreation(null);
 
-		Location location = new Location();
+		final Location location = new Location();
 		location.setLocality(4l);
 		location.setDoorNo("door no");
 		asset.setLocationDetails(location);
@@ -248,7 +245,7 @@ public class AssetControllerTest {
 	}
 
 	private Revaluation getRevaluation() {
-		Revaluation revaluation = new Revaluation();
+		final Revaluation revaluation = new Revaluation();
 		revaluation.setTenantId("ap.kurnool");
 		revaluation.setId(Long.valueOf("15"));
 		revaluation.setAssetId(Long.valueOf("31"));
@@ -265,9 +262,9 @@ public class AssetControllerTest {
 		revaluation.setScheme(Long.valueOf("4"));
 		revaluation.setSubScheme(Long.valueOf("5"));
 		revaluation.setComments("coments");
-		revaluation.setStatus(RevaluationStatus.ACTIVE);
+		revaluation.setStatus("ACTIVE");
 
-		AuditDetails auditDetails = new AuditDetails();
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(String.valueOf("5"));
 		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
 		auditDetails.setLastModifiedBy(String.valueOf("5"));
@@ -278,7 +275,7 @@ public class AssetControllerTest {
 	}
 
 	public Disposal getDisposals() {
-		Disposal disposal = new Disposal();
+		final Disposal disposal = new Disposal();
 		disposal.setTenantId("ap.kurnool");
 		disposal.setId(Long.valueOf("15"));
 		disposal.setAssetId(Long.valueOf("31"));
@@ -293,7 +290,7 @@ public class AssetControllerTest {
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("6"));
 
-		AuditDetails auditDetails = new AuditDetails();
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(String.valueOf("5"));
 		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
 		auditDetails.setLastModifiedBy(String.valueOf("5"));

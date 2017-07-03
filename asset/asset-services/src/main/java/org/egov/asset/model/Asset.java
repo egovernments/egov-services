@@ -49,7 +49,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -82,7 +81,7 @@ public class Asset {
 	private ModeOfAcquisition modeOfAcquisition;
 
 	@NotNull
-	private Status status;
+	private String status;
 	private String description;
 
 	private Date dateOfCreation;

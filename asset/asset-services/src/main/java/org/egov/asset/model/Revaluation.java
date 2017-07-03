@@ -1,6 +1,5 @@
 package org.egov.asset.model;
 
-import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -73,7 +72,7 @@ public class Revaluation {
 	private String comments = null;
 
 	@JsonProperty("status")
-	private RevaluationStatus status = null;
+	private String status = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

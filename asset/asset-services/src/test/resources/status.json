@@ -1,5 +1,28 @@
 {
-  "CAPITALIZED": "CAPITALIZED",
-  "CANCELLED": "CANCELLED",
-  "CREATED": "CREATED"
+    "ResponseInfo": {
+        "apiId": null,
+        "ver": null,
+        "ts": null,
+        "resMsgId": null,
+        "msgId": null,
+        "status": null
+    },
+    "AssetStatus": [
+        {
+            "tenantId": "default",
+            "objectName": "Asset Status",
+            "statusValues": [
+                {
+                    "code": "CAPITALIZED",
+                    "description": "Asset is Capitalized"
+                }
+            ],
+            "auditDetails": {
+                "createdBy": "1",
+                "createdDate": 1499061748794,
+                "lastModifiedBy": "1",
+                "lastModifiedDate": 1499061748794
+            }
+        }
+    ]
 }

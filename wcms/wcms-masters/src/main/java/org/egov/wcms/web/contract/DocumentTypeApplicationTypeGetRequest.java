@@ -63,27 +63,29 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class DocumentTypeApplicationTypeGetRequest {
 
-    private List<Long> id;
+	private List<Long> id;
 
-    @Length(min = 3, max = 100)
-    private String documentType;
+	@Length(min = 3, max = 100)
+	private String documentType;
 
-    @Length(min = 3, max = 20)
-    private String applicationType;
+	private Long documentTypeId;
 
-    private Boolean active;
+	@Length(min = 3, max = 20)
+	private String applicationType;
 
-    @NotNull
-    private String tenantId;
+	private Boolean active;
 
-    private String sortBy;
+	@NotNull
+	private String tenantId;
 
-    private String sortOrder;
+	private String sortBy;
 
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
+	private String sortOrder;
 
-    private Short pageNumber;
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
 
 }

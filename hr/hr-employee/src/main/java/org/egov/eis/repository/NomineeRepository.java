@@ -77,7 +77,7 @@ public class NomineeRepository {
             " = (?,?,?,?,?,?,?,?,?,?,?,?,?) WHERE id = ? AND tenantId = ?";
 
     public static final String RECORD_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM $table"
-            + " WHERE $column = ? AND tenantId = ?)";
+            + " WHERE id = ? AND tenantId = ? $checkNominatorIfUpdate)";
 
     public static final String UNICITY_CHECK_QUERY = "SELECT NOT exists(SELECT id FROM egeis_nominee"
             + " WHERE employeeId = ? AND name = ? AND gender = ? AND dateOfBirth = ? AND relationship = ?"
@@ -187,7 +187,13 @@ public class NomineeRepository {
 
     public boolean ifExists(String table, Long id, String tenantId) {
         return jdbcTemplate.queryForObject(RECORD_EXISTENCE_CHECK_QUERY.replace("$table", table)
-                .replace("$column", "id"), new Object[]{id, tenantId}, Boolean.class);
+                .replace(" $checkNominatorIfUpdate", ""), new Object[]{id, tenantId}, Boolean.class);
+    }
+
+    public boolean ifNominatorSame(String table, Long nomineeId, Long nominatorId, String tenantId) {
+        return jdbcTemplate.queryForObject(RECORD_EXISTENCE_CHECK_QUERY.replace("$table", table)
+                .replace(" $checkNominatorIfUpdate", " AND employeeId = ?"),
+                new Object[]{ nomineeId, tenantId, nominatorId }, Boolean.class);
     }
 
     public boolean checkIfUnique(Nominee nominee, Boolean isUpdate) {

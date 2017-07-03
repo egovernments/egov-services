@@ -47,6 +47,7 @@ import org.egov.eis.model.Nominee;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

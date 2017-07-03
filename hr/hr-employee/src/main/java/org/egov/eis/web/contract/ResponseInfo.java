@@ -42,6 +42,7 @@ package org.egov.eis.web.contract;
 
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

@@ -351,7 +351,6 @@ public class EmployeeService {
         EmployeeCriteria employeeCriteria = new EmployeeCriteria();
         employeeCriteria.setUserName(userInfo.getUserName());
         employeeCriteria.setTenantId(userInfo.getTenantId());
-        employeeCriteria.setActive(true);
 
         List<User> users = userService.getUsers(employeeCriteria, requestInfo);
         List<Long> userIds = users.stream().map(user -> user.getId()).collect(Collectors.toList());

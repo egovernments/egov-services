@@ -77,6 +77,7 @@ public class DataIntegrityValidatorForUpdateNominee extends NomineeValidator imp
 		validateNominees(nominees, true, errors);
 		validateNomineeIds(nominees, errors);
 		validateNomineesNominatingEmployees(nominees, errors);
+		validateNominatingEmployee(nominees, errors);
 	}
 
 	/**
@@ -96,6 +97,24 @@ public class DataIntegrityValidatorForUpdateNominee extends NomineeValidator imp
 			if(!nomineeRepository.ifExists(EntityType.NOMINEE.getDbTable(), nominees.get(i).getId(), nominees.get(i).getTenantId())) {
 				errors.rejectValue("nominees[" + i + "].id", "invalid",
 						"Nominee Id " + nominees.get(i).getId() + " Doesn't Exist In System. Please Enter Correct Id");
+			}
+		}
+	}
+
+	/**
+	 * Validates whether nominating employee is same or not
+	 *
+	 * @param nominees
+	 * @param errors
+	 * @return void
+	 */
+	private void validateNominatingEmployee(List<Nominee> nominees, Errors errors) {
+		for(int i = 0; i < nominees.size(); i++) {
+			if(!nomineeRepository.ifNominatorSame(EntityType.NOMINEE.getDbTable(), nominees.get(i).getId(),
+					nominees.get(i).getEmployee().getId(), nominees.get(i).getTenantId())) {
+				errors.rejectValue("nominees[" + i + "]", "invalid",
+						"Nominator Can't Be Changed. Please Enter Correct Nominator Id For Nominee- "
+								+ nominees.get(i).getName());
 			}
 		}
 	}

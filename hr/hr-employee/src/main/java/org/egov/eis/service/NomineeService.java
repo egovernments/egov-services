@@ -107,7 +107,7 @@ public class NomineeService {
                 .id(ids).tenantId(nomineeGetRequest.getTenantId()).build();
         List<User> users = userService.getUsers(employeeCriteria, requestInfo);
         LOGGER.debug("userService: " + users);
-        nominees = nomineeNominatingEmployeeMapper.mapNominatingEmployeesWithNominees(nominees, users);
+        nomineeNominatingEmployeeMapper.mapNominatingEmployeesWithNominees(nominees, users);
         nominees.forEach(nominee -> {
             List<EmployeeDocument> docs = documentsService.getDocumentsForReferenceType(nominee.getEmployee().getId(),
                     nominee.getId(), EntityType.NOMINEE.toString(), nominee.getTenantId());
@@ -131,19 +131,6 @@ public class NomineeService {
         return nomineeRequest.getNominees();
     }
 
-    private void populateDataForSave(List<Nominee> nominees, RequestInfo requestInfo) {
-        UserInfo requester = requestInfo.getUserInfo();
-        List<Long> sequences = nomineeRepository.generateSequences(nominees.size());
-        for (int i = 0; i < nominees.size(); i++) {
-            nominees.get(i).setId(sequences.get(i));
-            nominees.get(i).setTenantId(nominees.get(i).getTenantId());
-            nominees.get(i).setCreatedBy(requester.getId());
-            nominees.get(i).setCreatedDate(new Date().getTime());
-            nominees.get(i).setLastModifiedBy(requester.getId());
-            nominees.get(i).setLastModifiedDate(new Date().getTime());
-        }
-    }
-
     @Transactional
     public void create(NomineeRequest nomineeRequest) {
         List<Nominee> nominees = nomineeRequest.getNominees();
@@ -162,17 +149,30 @@ public class NomineeService {
         return nomineeRequest.getNominees();
     }
 
+    @Transactional
+    public void update(NomineeRequest nomineeRequest) {
+        nomineeRepository.update(nomineeRequest.getNominees());
+        documentsService.updateDocumentsForNominee(nomineeRequest.getNominees());
+    }
+
+    private void populateDataForSave(List<Nominee> nominees, RequestInfo requestInfo) {
+        UserInfo requester = requestInfo.getUserInfo();
+        List<Long> sequences = nomineeRepository.generateSequences(nominees.size());
+        for (int i = 0; i < nominees.size(); i++) {
+            nominees.get(i).setId(sequences.get(i));
+            nominees.get(i).setTenantId(nominees.get(i).getTenantId());
+            nominees.get(i).setCreatedBy(requester.getId());
+            nominees.get(i).setCreatedDate(new Date().getTime());
+            nominees.get(i).setLastModifiedBy(requester.getId());
+            nominees.get(i).setLastModifiedDate(new Date().getTime());
+        }
+    }
+
     private void populateDataForUpdate(List<Nominee> nominees, RequestInfo requestInfo) {
         nominees.forEach(nominee -> {
             nominee.setLastModifiedBy(requestInfo.getUserInfo().getId());
             nominee.setLastModifiedDate(new Date().getTime());
         });
-    }
-
-    @Transactional
-    public void update(NomineeRequest nomineeRequest) {
-        nomineeRepository.update(nomineeRequest.getNominees());
-        documentsService.updateDocumentsForNominee(nomineeRequest.getNominees());
     }
 
 }

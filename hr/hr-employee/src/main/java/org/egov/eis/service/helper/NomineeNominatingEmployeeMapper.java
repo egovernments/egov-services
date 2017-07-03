@@ -52,21 +52,20 @@ import java.util.Map;
 @Component
 public class NomineeNominatingEmployeeMapper {
 
-	public List<Nominee> mapNominatingEmployeesWithNominees(List<Nominee> nomineeList, List<User> userList) {
-		Map<Long, User> usersMap = new HashMap<>();
-		List<Nominee> finalNomineeList = new ArrayList<>();
-		if (userList != null)
-			for (User user : userList) {
-				usersMap.put(user.getId(), user);
-			}
-		if (nomineeList != null)
-			for (Nominee nominee : nomineeList) {
-				if (usersMap.containsKey(nominee.getEmployee().getId())) {
-					User user = usersMap.get(nominee.getEmployee().getId());
-					nominee.getEmployee().setName(user.getName());
-					finalNomineeList.add(nominee);
-				}
-			}
-		return finalNomineeList;
-	}
+    public void mapNominatingEmployeesWithNominees(List<Nominee> nomineeList, List<User> userList) {
+        Map<Long, User> usersMap = new HashMap<>();
+        List<Nominee> finalNomineeList = new ArrayList<>();
+        if (userList != null)
+            for (User user : userList) {
+                usersMap.put(user.getId(), user);
+            }
+        if (nomineeList != null)
+            for (Nominee nominee : nomineeList) {
+                if (usersMap.containsKey(nominee.getEmployee().getId())) {
+                    User user = usersMap.get(nominee.getEmployee().getId());
+                    nominee.getEmployee().setName(user.getName());
+                    finalNomineeList.add(nominee);
+                }
+            }
+    }
 }

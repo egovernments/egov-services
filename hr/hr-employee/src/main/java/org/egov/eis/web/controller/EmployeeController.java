@@ -92,9 +92,6 @@ public class EmployeeController {
     @Autowired
     private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
 
-    @Autowired
-    private UserSearchURLHelper userSearchURLHelper;
-
     /**
      * Maps Post Requests for _search & returns ResponseEntity of either
      * EmployeeResponse type or ErrorResponse type

@@ -44,6 +44,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.eis.web.contract.ResponseInfo;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

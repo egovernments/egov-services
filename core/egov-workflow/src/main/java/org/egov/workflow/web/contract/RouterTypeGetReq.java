@@ -63,7 +63,7 @@ public class RouterTypeGetReq {
 
     private Long serviceid;
     
-    private Long designationid;
+    private Long position;
 
     @NotNull
     private String tenantId;

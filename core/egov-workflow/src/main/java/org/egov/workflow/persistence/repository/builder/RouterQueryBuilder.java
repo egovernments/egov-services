@@ -78,7 +78,7 @@ public class RouterQueryBuilder {
 
 		if (routerTypeRequest.getId() == null && routerTypeRequest.getBoundaryid() == null
 				&& routerTypeRequest.getServiceid() == null && routerTypeRequest.getTenantId() == null && 
-				routerTypeRequest.getDesignationid() == null)
+				routerTypeRequest.getPosition() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -108,10 +108,10 @@ public class RouterQueryBuilder {
 			preparedStatementValues.add(routerTypeRequest.getBoundaryid());
 		}
 
-		if (routerTypeRequest.getDesignationid() != null) {
+		if (routerTypeRequest.getPosition() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" router.position = ?");
-			preparedStatementValues.add(routerTypeRequest.getDesignationid());
+			preparedStatementValues.add(routerTypeRequest.getPosition());
 		}
 		
 		

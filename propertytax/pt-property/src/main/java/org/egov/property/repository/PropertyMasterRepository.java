@@ -426,6 +426,7 @@ public class PropertyMasterRepository {
 
 		long updatedTime = new Date().getTime();
 		String updateFloorTypeSql = FloorTypeBuilder.UPDATE_FLOOR_QUERY;
+		String selectFloorCreateTime = FloorTypeBuilder.SELECT_FLOOR_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -437,15 +438,19 @@ public class PropertyMasterRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
-				ps.setString(4, floorType.getAuditDetails().getCreatedBy());
-				ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, floorType.getAuditDetails().getCreatedTime());
-				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setLong(8, floorType.getId());
+				ps.setString(4, floorType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, updatedTime);
+				ps.setLong(6, floorType.getId());
 
 				return ps;
 			}
 		};
+
+		Long createdTime = jdbcTemplate.queryForObject(selectFloorCreateTime, new Object[] { floorType.getId() },
+				Long.class);
+
+		floorType.getAuditDetails().setCreatedTime(createdTime);
+		floorType.getAuditDetails().setLastModifiedTime(updatedTime);
 
 		jdbcTemplate.update(psc);
 
@@ -650,6 +655,7 @@ public class PropertyMasterRepository {
 
 		long updatedTime = new Date().getTime();
 		String updateWoodTypeSql = WoodTypeBuilder.UPDATE_WOOD_QUERY;
+		String selectWoodCreateTime = WoodTypeBuilder.SELECT_WOOD_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -661,17 +667,19 @@ public class PropertyMasterRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
-				ps.setString(4, woodType.getAuditDetails().getCreatedBy());
-				ps.setString(5, woodType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, woodType.getAuditDetails().getCreatedTime());
-				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setLong(8, woodType.getId());
+				ps.setString(4, woodType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, updatedTime);
+				ps.setLong(6, woodType.getId());
 
 				return ps;
 			}
 		};
 
+		Long createdTime = jdbcTemplate.queryForObject(selectWoodCreateTime, new Object[] { woodType.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		woodType.getAuditDetails().setCreatedTime(createdTime);
+		woodType.getAuditDetails().setLastModifiedTime(updatedTime);
 
 	}
 
@@ -734,10 +742,10 @@ public class PropertyMasterRepository {
 		for (WallType wallType : wallTypes) {
 			WallType wallData = gson.fromJson(wallType.getData(), WallType.class);
 			wallType.setCode(wallData.getCode());
+			wallType.setNameLocal(wallData.getNameLocal());
 			wallType.setAuditDetails(wallData.getAuditDetails());
 			wallType.setDescription(wallData.getDescription());
 			wallType.setName(wallData.getName());
-			wallType.setNameLocal(wallType.getNameLocal());
 		}
 		return wallTypes;
 	}

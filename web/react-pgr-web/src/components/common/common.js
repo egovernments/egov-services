@@ -1,6 +1,5 @@
 export function translate(locale_text){
-  if(locale_text){
-
+  if(locale_text && localStorage.getItem("lang_response")){
 		var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
 		  return obj.code == locale_text;
 		});

@@ -65,61 +65,61 @@ import lombok.ToString;
 @Builder
 public class Donation {
 
-    public static final String SEQ_CATEGORY = "SEQ_EGWTR_DONATION";
+	public static final String SEQ_CATEGORY = "SEQ_EGWTR_DONATION";
 
-    @NotNull
-    private Long id;
+	@NotNull
+	private Long id;
 
-    @NotNull
-    @Length(min = 1, max = 100)
-    private String propertyType;
+	@NotNull
+	@Length(min = 1, max = 100)
+	private String propertyType;
 
-    private long propertyTypeId;
+	private String propertyTypeId;
 
-    @NotNull
-    @Length(min = 1, max = 100)
-    private String category;
+	@NotNull
+	@Length(min = 1, max = 100)
+	private String category;
 
-    private long categoryTypeId;
+	private Long categoryTypeId;
 
-    @NotNull
-    @Length(min = 1, max = 100)
-    private String usageType;
+	@NotNull
+	@Length(min = 1, max = 100)
+	private String usageType;
 
-    private long usageTypeId;
+	private String usageTypeId;
 
-    @NotNull
-    @Length(min = 1, max = 100)
-    private String maxHSCPipeSize;
+	@NotNull
+	@Length(min = 1, max = 100)
+	private Double maxPipeSize;
 
-    private long maxHSCPipeSizeId;
+	private Long maxPipeSizeId;
 
-    @NotNull
-    @Length(min = 1, max = 100)
-    private String minHSCPipeSize;
+	@NotNull
+	@Length(min = 1, max = 100)
+	private Double minPipeSize;
 
-    private long minHSCPipeSizeId;
+	private Long minPipeSizeId;
 
-    @NotNull
-    @Length(min = 1, max = 100)
-    private String donationAmount;
+	@NotNull
+	@Length(min = 1, max = 100)
+	private Double donationAmount;
 
-    @NotNull
-    @JsonIgnore
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
+	@NotNull
+	@JsonIgnore
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date fromDate;
 
-    @NotNull
-    @JsonIgnore
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
+	@NotNull
+	@JsonIgnore
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date toDate;
 
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
+	@Length(max = 250)
+	@NotNull
+	private String tenantId;
 
-    @NotNull
-    private boolean active;
+	@NotNull
+	private Boolean active;
 
-    private AuditDetails auditDetails;
+	private AuditDetails auditDetails;
 }

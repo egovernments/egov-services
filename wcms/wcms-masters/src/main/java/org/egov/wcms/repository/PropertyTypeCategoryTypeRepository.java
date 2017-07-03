@@ -82,7 +82,7 @@ public class PropertyTypeCategoryTypeRepository {
 		Long categoryId = 0L;
 		try {
 			categoryId = jdbcTemplate.queryForObject(categoryQuery,
-					new Object[] { propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() },
+					new Object[] { propertyCategory.getCategoryTypeName(),propertyCategory.getTenantId() },
 					Long.class);
 			LOGGER.info("Category Id: " + categoryId);
 		} catch (final EmptyResultDataAccessException e) {
@@ -110,7 +110,7 @@ public class PropertyTypeCategoryTypeRepository {
 		Long categoryId = 0L;
 		try {
 			categoryId = jdbcTemplate.queryForObject(categoryQuery,
-					new Object[] { propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() },
+					new Object[] { propertyCategory.getCategoryTypeName(),propertyCategory.getTenantId() },
 					Long.class);
 			LOGGER.info("Category Id: " + categoryId);
 		} catch (final EmptyResultDataAccessException e) {
@@ -157,9 +157,6 @@ public class PropertyTypeCategoryTypeRepository {
 		boolean isMappingPresent = false;
 		Long result = 0L;
 		LOGGER.info("Incoming values - Property Type : " + propertyTypeId + "Category Type : " + categoryType);
-		// hit property tax api to obtain property id for the given property
-		// name.
-		// final long propertyId = 1L;
 		final long categoryId = jdbcTemplate.queryForObject(PropertyTypeCategoryTypeQueryBuilder.getCategoryId(),
 				new Object[] { categoryType }, Long.class);
 		final String query = PropertyTypeCategoryTypeQueryBuilder.getCheckQuery();

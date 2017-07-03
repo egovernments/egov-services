@@ -265,6 +265,14 @@ public class WcmsConstants {
     public static final String PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE = "usageType";
     public static final String PROPERTY_USAGETYPE_INVALID_FIELD_NAME = "Please provide valid Usage Type";
     
+    public static final String DONATION_PIPESIZE_MAX_INVALID_CODE = "wcms.0044";
+    public static final String DONATION_PIPESIZE_MAX_INVALID_FIELD_NAME = "maxPipeSize";
+    public static final String DONATION_PIPESIZE_MAX_INVALID_ERROR_MESSAGE = "Please provide valid Max Pipe Size(mm)";
+    
+    public static final String DONATION_PIPESIZE_MIN_INVALID_CODE = "wcms.0045";
+    public static final String DONATION_PIPESIZE_MIN_INVALID_FIELD_NAME = "minPipeSize";
+    public static final String DONATION_PIPESIZE_MIN_INVALID_ERROR_MESSAGE = "Please provide valid Min Pipe Size(mm)";
+    
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

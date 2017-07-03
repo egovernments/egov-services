@@ -172,11 +172,11 @@ public class PropertyTypeCategoryTypeQueryBuilder {
 	}
 
 	public static String getCategoryId() {
-		return "SELECT id FROM egwtr_category WHERE name = ?";
+		return "SELECT id FROM egwtr_category WHERE name = ? ";
 	}
 
 	public static String getCategoryTypeName() {
-		return "SELECT name FROM egwtr_category WHERE id = ?";
+		return "SELECT name FROM egwtr_category WHERE id = ? ";
 	}
 
 	public static String getCheckQuery() {

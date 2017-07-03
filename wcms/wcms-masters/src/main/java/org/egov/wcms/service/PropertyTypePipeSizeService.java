@@ -99,9 +99,10 @@ public class PropertyTypePipeSizeService {
 		return propertyPipeSizeRequest.getPropertyPipeSize();
 	}
 
-	public boolean checkPropertyByPipeSize(final Long id, final String propertyTypeId, final Long pipeSizeId,
-			final String tenantId) {
-		return propertyPipeSizeRepository.checkPropertyByPipeSize(id, propertyTypeId, pipeSizeId, tenantId);
+	public boolean checkPropertyByPipeSize(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
+		getPropertyTypeByName(propertyPipeSizeRequest);
+		return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyPipeSize().getId(),
+				propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeId(),propertyPipeSizeRequest.getPropertyPipeSize().getPipeSizeId(),propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
 	}
 
 	public List<PropertyTypePipeSize> getPropertyPipeSizes(

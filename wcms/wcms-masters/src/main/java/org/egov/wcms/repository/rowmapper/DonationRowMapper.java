@@ -55,15 +55,16 @@ public class DonationRowMapper implements RowMapper<Donation> {
         new SimpleDateFormat("dd/MM/yyyy");
 
         final Donation donation = new Donation();
-        donation.setPropertyTypeId(rs.getLong("property_type"));
-        donation.setUsageTypeId(rs.getLong("usage_type"));
-        donation.setCategoryTypeId(rs.getLong("category"));
-        donation.setMaxHSCPipeSizeId(rs.getLong("hsc_pipesize_max"));
-        donation.setMinHSCPipeSizeId(rs.getLong("hsc_pipesize_max"));
-        donation.setFromDate(rs.getDate("from_date"));
-        donation.setToDate(rs.getDate("to_date"));
-        donation.setActive(rs.getBoolean("active"));
-        donation.setDonationAmount(rs.getString("donation_amount"));
+        donation.setId(rs.getLong("donation_id"));
+        donation.setPropertyTypeId(rs.getString("donation_propertytypeId"));
+        donation.setUsageTypeId(rs.getString("donation_usagetypeId"));
+        donation.setCategoryTypeId(rs.getLong("donation_categorytypeId"));
+        donation.setMaxPipeSizeId(rs.getLong("donation_maxpipesizId"));
+        donation.setMinPipeSizeId(rs.getLong("donation_minpipesizeId"));
+        donation.setFromDate(rs.getDate("donation_fromDate"));
+        donation.setToDate(rs.getDate("donation_toDate"));
+        donation.setActive(rs.getBoolean("donation_active"));
+        donation.setDonationAmount(rs.getDouble("donation_amount"));
         return donation;
     }
 

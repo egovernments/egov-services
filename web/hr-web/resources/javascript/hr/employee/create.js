@@ -1024,7 +1024,7 @@ function checkIfNoDup(employee, objectType, subObject) {
 }
 
 function validateDates(employee, objectType, subObject) {
-    if (objectType == "assignments" && subObject.isPrimary) {
+    if (objectType == "assignments" && (subObject.isPrimary == "true" || subObject.isPrimary == true)) {
         for (let i = 0; i < employee[objectType].length; i++) {
             if (employee[objectType][i].isPrimary && (editIndex == -1 || (editIndex > -1 && i != editIndex))) {
                 var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();

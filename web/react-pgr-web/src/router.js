@@ -44,45 +44,45 @@ const Main = () => {
     return (
   <main style={{"marginBottom": "50px"}}>
     <Switch>
-      <Route path={base + '/propertyTaxSearch'} component={PropertyTaxSearch}/>
+      <Route path={'/propertyTaxSearch'} component={PropertyTaxSearch}/>
       <Route exact path= {base + '/'} component={Login}/>
-      <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
+      <Route exact path={'/profileEdit'} component={ProfileEdit}/>
       <Route exact path={'/dashboard'} component={Dashboard}/>
 
       {/*
         pgr
         */}
-        <Route exact path={base + '/pgr/createGrievance'} component={grievanceCreate}/>
-        <Route exact path={base + '/pgr/viewGrievance/:srn'} component={grievanceView}/>
-        <Route exact path={base + '/pgr/searchGrievance'} component={grievanceSearch}/>
-        <Route exact name="createReceivingCenter" path={base + '/pgr/createReceivingCenter/:id?'} component={ReceivingCenterCreate}/>
-        <Route exact path={base + '/pgr/createReceivingCenter'} component={ReceivingCenterCreate}/>
-        <Route exact path={base + '/pgr/receivingCenter/view'} component={ViewEditReceivingCenter}/>
-        <Route exact path={base + '/pgr/receivingCenter/edit'} component={ViewEditReceivingCenter}/>
-        <Route exact path={base + '/pgr/viewReceivingCenter/:id'} component={ViewReceivingCenter}/>
-        <Route exact path={base + '/pgr/createRouter/:type/:id'} component={createRouter}/>
-        <Route exact path={base + '/pgr/createRouter'} component={createRouter}/>
-        <Route exact path={base + '/pgr/routerGeneration'} component={routerGeneration}/>
-        <Route exact path={base + '/pgr/searchRouter/:type'} component={searchRouter}/>
-        <Route exact path={base + '/pgr/receivingModeCreate'} component={receivingModeCreate}/>
-        <Route exact name='receivingModeCreate' path={base + '/pgr/receivingModeCreate/:type/:id'} component={receivingModeCreate}/>
-        <Route exact path={base + '/pgr/viewOrUpdateReceivingMode/:type'} component={viewOrUpdateReceivingMode}/>
-        <Route exact path={base + '/pgr/viewReceivingMode/:type/:id'} component={viewReceivingMode}/>
-        <Route exact name="createServiceGroup" path={base + '/pgr/createServiceGroup/:id?'} component={ServiceGroupCreate}/>
-        <Route exact path={base + '/pgr/createServiceGroup'} component={ServiceGroupCreate}/>
-        <Route exact path={base + '/pgr/serviceGroup/view'} component={ViewEditServiceGroup}/>
-        <Route exact path={base + '/pgr/serviceGroup/edit'} component={ViewEditServiceGroup}/>
-        <Route exact path={base + '/pgr/bulkEscalationGeneration'} component={BulkEscalationGeneration}/>
-        <Route exact path={base + '/pgr/serviceTypeCreate'} component={serviceTypeCreate}/>
-        <Route exact name="serviceTypeCreate" path={base + '/pgr/serviceTypeCreate/:type/:id'} component={serviceTypeCreate}/>
-        <Route exact path={base + '/pgr/viewOrUpdateServiceType/:type'} component={viewOrUpdateServiceType}/>
-        <Route exact path={base + '/pgr/viewServiceType/:type/:id'} component={viewServiceType}/>
-        <Route exact path={base + '/pgr/viewServiceGroup/:id'} component={ViewServiceGroup}/>
-        <Route exact path={base + '/pgr/viewEscalation'} component={ViewEscalation}/>
-        <Route exact path={base + '/pgr/defineEscalation'} component={DefineEscalation}/>
-        <Route exact path={base + '/pgr/searchEscalationTime'} component={SearchEscalation}/>
-        <Route exact path={base + '/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
-        <Route exact path={base + '/pgr/createServiceType'} component={ServiceTypeCreate}/>
+        <Route exact path={'/pgr/createGrievance'} component={grievanceCreate}/>
+        <Route exact path={'/pgr/viewGrievance/:srn'} component={grievanceView}/>
+        <Route exact path={'/pgr/searchGrievance'} component={grievanceSearch}/>
+        <Route exact name="createReceivingCenter" path={'/pgr/createReceivingCenter/:id?'} component={ReceivingCenterCreate}/>
+        <Route exact path={'/pgr/createReceivingCenter'} component={ReceivingCenterCreate}/>
+        <Route exact path={'/pgr/receivingCenter/view'} component={ViewEditReceivingCenter}/>
+        <Route exact path={'/pgr/receivingCenter/edit'} component={ViewEditReceivingCenter}/>
+        <Route exact path={'/pgr/viewReceivingCenter/:id'} component={ViewReceivingCenter}/>
+        <Route exact path={'/pgr/createRouter/:type/:id'} component={createRouter}/>
+        <Route exact path={'/pgr/createRouter'} component={createRouter}/>
+        <Route exact path={'/pgr/routerGeneration'} component={routerGeneration}/>
+        <Route exact path={'/pgr/searchRouter/:type'} component={searchRouter}/>
+        <Route exact path={'/pgr/receivingModeCreate'} component={receivingModeCreate}/>
+        <Route exact name='receivingModeCreate' path={'/pgr/receivingModeCreate/:type/:id'} component={receivingModeCreate}/>
+        <Route exact path={'/pgr/viewOrUpdateReceivingMode/:type'} component={viewOrUpdateReceivingMode}/>
+        <Route exact path={'/pgr/viewReceivingMode/:type/:id'} component={viewReceivingMode}/>
+        <Route exact name="createServiceGroup" path={'/pgr/createServiceGroup/:id?'} component={ServiceGroupCreate}/>
+        <Route exact path={'/pgr/createServiceGroup'} component={ServiceGroupCreate}/>
+        <Route exact path={'/pgr/serviceGroup/view'} component={ViewEditServiceGroup}/>
+        <Route exact path={'/pgr/serviceGroup/edit'} component={ViewEditServiceGroup}/>
+        <Route exact path={'/pgr/bulkEscalationGeneration'} component={BulkEscalationGeneration}/>
+        <Route exact path={'/pgr/serviceTypeCreate'} component={serviceTypeCreate}/>
+        <Route exact name="serviceTypeCreate" path={'/pgr/serviceTypeCreate/:type/:id'} component={serviceTypeCreate}/>
+        <Route exact path={'/pgr/viewOrUpdateServiceType/:type'} component={viewOrUpdateServiceType}/>
+        <Route exact path={'/pgr/viewServiceType/:type/:id'} component={viewServiceType}/>
+        <Route exact path={'/pgr/viewServiceGroup/:id'} component={ViewServiceGroup}/>
+        <Route exact path={'/pgr/viewEscalation'} component={ViewEscalation}/>
+        <Route exact path={'/pgr/defineEscalation'} component={DefineEscalation}/>
+        <Route exact path={'/pgr/searchEscalationTime'} component={SearchEscalation}/>
+        <Route exact path={'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
+        <Route exact path={'/pgr/createServiceType'} component={ServiceTypeCreate}/>
 
     </Switch>
   </main>

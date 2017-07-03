@@ -30,7 +30,6 @@ class Dashboard extends Component {
 }
   componentWillMount() {
     let {currentUser}=this.props;
-    alert("boom");
     console.log(currentUser);
 
     Api.commonApiPost("/pgr/seva/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){

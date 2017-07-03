@@ -51,7 +51,7 @@ public class ReportController {
 	
 	@PostMapping("/report/generateSQL")
 	@ResponseBody
-	public void generateSQL(@RequestBody @Valid  ReportRequest reportRequest, 
+	public String generateSQL(@RequestBody @Valid  ReportRequest reportRequest, 
 			final BindingResult errors) {
 		
 		String query = reportYamlMetaData.getQuery();
@@ -81,9 +81,7 @@ public class ReportController {
 			}
 		}
 		String queryAfterReplacing = splitQueries[0] + splitQueries[1];
-		System.out.println(queryAfterReplacing); // Printing Query after replacing the Query Params 
-		
-		
+		return queryAfterReplacing;
 	}
 	
 	private ResponseEntity<?> getSuccessResponse(final MetadataResponse metadataResponse, final RequestInfo requestInfo,String tenantID) {

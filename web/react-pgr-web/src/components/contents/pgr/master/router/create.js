@@ -248,6 +248,7 @@ class createRouter extends Component {
   	var self = this;
   	var routerType = {
   		position: self.props.routerCreateSet.position,
+      active: true,
    		id: self.props.routerCreateSet.id || "",
    		services: [{
    				id: self.props.routerCreateSet.complaintType

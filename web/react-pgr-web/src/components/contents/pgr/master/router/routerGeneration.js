@@ -281,6 +281,7 @@ class routerGeneration extends Component {
   	 }, function() {
   	 	var routerType = {
   	 		position: self.props.routerCreateSet.position,
+        active: true,
   	 		id: "",
   	 		services: [],
   	 		boundaries: [],

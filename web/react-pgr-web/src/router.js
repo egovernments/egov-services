@@ -45,7 +45,7 @@ const Main = () => {
   <main style={{"marginBottom": "50px"}}>
     <Switch>
       <Route path='/propertyTaxSearch' component={PropertyTaxSearch}/>
-      <Route exact path='/' component={Login}/>
+      <Route exact path='/pgr-web/v2' component={Login}/>
       <Route exact path='/profileEdit' component={ProfileEdit}/>
       <Route exact path='/dashboard' component={Dashboard}/>
 

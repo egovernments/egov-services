@@ -37,7 +37,7 @@ import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serv
 
 
 
-const base = "/pgr/v2";
+const base = "/pgr-web/v2";
 
 const Main = () => {
     console.log("IN MAIN");

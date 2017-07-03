@@ -87,7 +87,7 @@ public class EscalationTimeTypeService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return escalationTimeTypeReq.getEscalationTimeType();
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return escalationTimeTypeReq.getEscalationTimeType();
 	}
 	
@@ -118,7 +118,7 @@ public class EscalationTimeTypeService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return escalationTimeTypeReq.getEscalationTimeType();
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return escalationTimeTypeReq.getEscalationTimeType();
 	}
 	

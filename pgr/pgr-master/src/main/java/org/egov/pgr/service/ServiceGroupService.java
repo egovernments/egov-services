@@ -115,7 +115,7 @@ public class ServiceGroupService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return serviceGroupRequest.getServiceGroup();
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return serviceGroupRequest.getServiceGroup();
 	}
 	

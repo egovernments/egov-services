@@ -213,11 +213,11 @@ public class ReceivingCenterTypeController {
 					.field(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} 
-		else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
+		else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
-                    .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
+                    .code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
+                    .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
         } else
 			return;

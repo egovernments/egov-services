@@ -84,7 +84,7 @@ public class EscalationHierarchyService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return new EscalationHierarchy();
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return new EscalationHierarchy();
 	}
 	
@@ -105,7 +105,7 @@ public class EscalationHierarchyService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return new EscalationHierarchy();
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return new EscalationHierarchy();
 	}
 	

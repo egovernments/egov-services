@@ -81,7 +81,7 @@ public class OTPConfigService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return otpConfig;
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return otpConfig;
 	}
 	
@@ -102,7 +102,7 @@ public class OTPConfigService {
 			logger.error("Exception while posting to kafka Queue : " + e);
 			return otpConfig;
 		}
-		logger.error("Producer successfully posted the request to Queue");
+		logger.info("Producer successfully posted the request to Queue");
 		return otpConfig;
 	}
 	

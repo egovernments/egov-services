@@ -127,10 +127,10 @@ public class PgrMasterConstants {
 	
 	public static final String RECEIVINGMODE_CODE_UNIQUE_CODE ="pgr.0011";
 	public static final String RECEIVINGMODE_UNQ_ERROR_MESSAGE="Entered ReceivingMode Code Already Exist.";
-	public static final String RECEIVINGMODE_CODE_UNQ_FIELD_NAME="name";
+	public static final String RECEIVINGMODE_CODE_UNQ_FIELD_NAME="code";
 	
 	public static final String RECEIVINGMODE_CODE_MANDATORY_CODE = "pgr.0012";
-	public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "name";
+	public static final String RECEIVINGMODE_CODE_MANADATORY_FIELD_NAME = "code";
 	public static final String RECEIVINGMODE_CODE_MANADATORY_ERROR_MESSAGE = "ReceivingMode Code is required";
 	
 	public static final String ATTRIBUTE_DETAILS_MANDATORY_CODE = "pgr.0013";
@@ -142,7 +142,7 @@ public class PgrMasterConstants {
 	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Combination of Code and TenantID already exisits. Even the name has to be unique";
 	
 	public static final String CATEGORY_ID_MANDATORY_CODE = "pgr.0015";
-	public static final String CATEGORY_ID_MANDATORY_FIELD_NAME = "category";
+	public static final String CATEGORY_ID_MANDATORY_FIELD_NAME = "code";
 	public static final String CATEGORY_ID_MANDATORY_ERROR_MESSAGE = "Category Code is mandatory";
 	
 	public static final String SLA_HOURS_MANDATORY_CODE = "pgr.0015";
@@ -150,12 +150,12 @@ public class PgrMasterConstants {
 	public static final String SLA_HOURS_MANDATORY_ERROR_MESSAGE = "SLA Hours is mandatory";
 
 	public static final String RECEIVINGMODE_CHANNEL_VALID_CODE = "pgr.0012";
-	public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channel";
-	public static final String RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE = "Channel should be WEB or MOBILE.";
+	public static final String RECEIVINGMODE_CHANNEL_VALID__FIELD_NAME = "channels";
+	public static final String RECEIVINGMODE_CHANNEL_VALID_ERROR_MESSAGE = "Channels should be WEB or MOBILE.";
 	
 	public static final String RECEIVINGMODE_CHANNEL_MANDATORY_CODE = "pgr.0012";
-	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "Channel is required.";
-	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "channe;";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_ERROR_MESSAGE = "Channels Are Required.";
+	public static final String RECEIVINGMODE_CHANNEL_MANADATORY_FIELD_NAME = "channels;";
 	
 	public static final String FROMPOSITION_MANDATORY_CODE = "pgr.0013";
 	public static final String FROMPOSITION_MANADATORY_ERROR_MESSAGE = "From Position is required.";

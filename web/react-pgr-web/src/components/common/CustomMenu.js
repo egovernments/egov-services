@@ -135,8 +135,8 @@ class CustomMenu extends Component {
     //
     //   return menu;
     // }
-    console.log(menuItems);
-    console.log(parentLevel);
+    // console.log(menuItems);
+    // console.log(parentLevel);
     const showMenu=()=>{
 
       if(searchText.length==0)

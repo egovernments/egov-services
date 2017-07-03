@@ -83,7 +83,6 @@ const Main = () => {
         <Route exact path={'/pgr/searchEscalationTime'} component={SearchEscalation}/>
         <Route exact path={'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={'/pgr/createServiceType'} component={ServiceTypeCreate}/>
-
     </Switch>
   </main>
 )}

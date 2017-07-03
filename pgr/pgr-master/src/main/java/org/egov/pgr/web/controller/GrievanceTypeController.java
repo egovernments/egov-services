@@ -101,7 +101,7 @@ public class GrievanceTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Grievance Type Request::" + serviceTypeRequest);
+        logger.info("Service Create : Request::" + serviceTypeRequest);
 
         final List<ErrorResponse> errorResponses = validateServiceRequest(serviceTypeRequest);
         if (!errorResponses.isEmpty())
@@ -122,7 +122,7 @@ public class GrievanceTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Service Request::" + serviceTypeRequest);	
+        logger.info("Service Update : Request::" + serviceTypeRequest);	
         if(code==null || code.equals("")){
         	final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);

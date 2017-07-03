@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -22,6 +24,13 @@ public class ReportApp {
 	
 	@Autowired
 	public ReportYamlMetaData reportYamlMetaData;
+	@Autowired
+	public static ResourceLoader resourceLoader;
+
+	
+    public ReportApp(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
@@ -43,9 +52,12 @@ public class ReportApp {
 	  public static ReportYamlMetaData loadYaml() {
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
-    	ReportYamlMetaData reportYamlMetaData = mapper.readValue(new File("/ws/ReportDemo/ReportApp/src/main/resources/application.yml"), ReportYamlMetaData.class);
+    	Resource resource = resourceLoader.getResource("classpath:application.yml");
+        File yamlFile = resource.getFile();
+
+    	ReportYamlMetaData reportYamlMetaData = mapper.readValue(yamlFile, ReportYamlMetaData.class);
         System.out.println(ReflectionToStringBuilder.toString(reportYamlMetaData,ToStringStyle.MULTI_LINE_STYLE));
-        //new ReportController(reportMetaData);
+        
         
         return reportYamlMetaData;
     } catch (Exception e) {

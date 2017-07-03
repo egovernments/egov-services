@@ -13,8 +13,6 @@ var instance = axios.create({
 
 var authToken = localStorage.getItem("token");
 
-console.log(authToken);
-
 //request info from cookies
 var requestInfo = {
     "apiId": "org.egov.pt",
@@ -43,6 +41,8 @@ module.exports = {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
+        if(!requestInfo.authToken)
+            requestInfo.authToken = localStorage.getItem("token");
         body["RequestInfo"] = requestInfo;
         return instance.post(url, body).then(function(response) {
             return response.data;

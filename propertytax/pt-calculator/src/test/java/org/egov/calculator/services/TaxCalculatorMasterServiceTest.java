@@ -145,7 +145,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		String tenantId = "default";
 		String factorType = "age";
-		String validDate = "16/06/2007";
+		String validDate = "16-06-2007";
 		String code = "propertytax";
 		RequestInfo requestInfo = getRequestInfoObject();
 /*

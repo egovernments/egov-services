@@ -1,8 +1,8 @@
 package org.egov.pgrrest.read.persistence.repository;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgrrest.common.contract.ServiceRequest;
-import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.contract.web.ServiceRequest;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

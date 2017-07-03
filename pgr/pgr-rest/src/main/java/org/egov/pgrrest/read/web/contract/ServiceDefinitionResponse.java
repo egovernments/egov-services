@@ -2,7 +2,7 @@ package org.egov.pgrrest.read.web.contract;
 
 import lombok.Getter;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.common.model.ServiceDefinition;
+import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class ServiceDefinitionResponse {
     }
 
     private List<AttributeDefinition> mapAttributes(
-        List<org.egov.pgrrest.common.model.AttributeDefinition> attributes) {
+        List<org.egov.pgrrest.common.domain.model.AttributeDefinition> attributes) {
         if (attributes == null) {
             return Collections.emptyList();
         }

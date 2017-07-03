@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.web.contract;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.common.contract.ServiceRequest;
+import org.egov.pgrrest.common.contract.web.ServiceRequest;
 
 import java.util.List;
 

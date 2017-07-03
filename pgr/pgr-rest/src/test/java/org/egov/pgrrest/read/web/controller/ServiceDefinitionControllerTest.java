@@ -2,7 +2,7 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.common.model.*;
+import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.read.domain.exception.ServiceDefinitionNotFoundException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceDefinitionService;
@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

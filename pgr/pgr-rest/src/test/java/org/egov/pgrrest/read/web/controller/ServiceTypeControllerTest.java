@@ -1,8 +1,8 @@
 package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
-import org.egov.pgrrest.common.entity.ServiceType;
-import org.egov.pgrrest.common.entity.ServiceTypeCategory;
+import org.egov.pgrrest.common.persistence.entity.ServiceType;
+import org.egov.pgrrest.common.persistence.entity.ServiceTypeCategory;
 import org.egov.pgrrest.read.domain.model.ServiceTypeSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestTypeService;
 import org.junit.Test;

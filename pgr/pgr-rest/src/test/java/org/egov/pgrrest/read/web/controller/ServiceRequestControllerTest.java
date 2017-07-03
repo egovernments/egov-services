@@ -2,11 +2,11 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
+import org.egov.pgrrest.common.domain.model.UserType;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException;
 import org.egov.pgrrest.read.domain.exception.ServiceRequestIdMandatoryException;
 import org.egov.pgrrest.read.domain.exception.TenantIdMandatoryException;
@@ -14,7 +14,6 @@ import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedExce
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.domain.service.UpdateServiceRequestEligibilityService;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

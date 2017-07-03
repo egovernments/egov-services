@@ -277,8 +277,8 @@ public class TaxCalculatorMasterServiceTest {
 		try {
 
 			String tenantId = "default";
-			String boundary = "b2";
-			String validDate = "15/06/2017";
+			String boundary = "b1";
+			String validDate = "25/11/2016";
 			String structure = "rectangle";
 			String usage = "propertyuse";
 			String subUsage = "propertyusage";
@@ -396,7 +396,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		String tenantId = "1234";
 		String validDate = "03/02/2017 00:00:00";
-		String code = "YEAR";
+		String code = "MON";
 
 		TaxPeriodResponse taxPeriodResponse = null;
 		try {
@@ -509,10 +509,10 @@ public class TaxCalculatorMasterServiceTest {
 	public void searchTaxRateServiceTest() {
 
 		String tenantId = "default";
-		String taxHead = "taxHead-UU";
+		String taxHead = "taxHead-C";
 		String validDate = "04/06/2017 00:00:00";
 		Double validARVAmount = 1100.0;
-		String parentTaxHead = "dependentTaxHead-UU";
+		String parentTaxHead = "dependentTaxHead-C";
 
 		TaxRatesResponse taxRatesResponse = null;
 		try {

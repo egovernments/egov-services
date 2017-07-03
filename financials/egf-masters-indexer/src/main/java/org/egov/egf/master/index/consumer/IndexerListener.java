@@ -1,5 +1,6 @@
 package org.egov.egf.master.index.consumer;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import org.egov.egf.master.index.domain.model.RequestContext;
@@ -69,6 +70,7 @@ public class IndexerListener {
 	private static final String SCHEME_OBJECT_TYPE = "scheme";
 	private static final String SUBSCHEME_OBJECT_TYPE = "subscheme";
 	private static final String SUPPLIER_OBJECT_TYPE = "supplier";
+	private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
 	@Autowired
 	private ElasticSearchRepository elasticSearchRepository;
@@ -89,13 +91,13 @@ public class IndexerListener {
 						.getAccountCodePurposes()) {
 					RequestContext.setId("" + accountCodePurposeContract);
 					elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
-							accountCodePurposeContract.getTenantId() + "" + accountCodePurposeContract.getName(),
+							accountCodePurposeContract.getTenantId() + "-" + accountCodePurposeContract.getName(),
 							accountCodePurposeContract);
 				}
 			} else if (accountCodePurposeContractResponse.getAccountCodePurpose() != null) {
 				RequestContext.setId("" + accountCodePurposeContractResponse.getAccountCodePurpose());
 				elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
-						accountCodePurposeContractResponse.getAccountCodePurpose().getTenantId() + ""
+						accountCodePurposeContractResponse.getAccountCodePurpose().getTenantId() + "-"
 								+ accountCodePurposeContractResponse.getAccountCodePurpose().getName(),
 						accountCodePurposeContractResponse.getAccountCodePurpose());
 			}
@@ -112,12 +114,12 @@ public class IndexerListener {
 				for (BankContract bankContract : bankContractResponse.getBanks()) {
 					RequestContext.setId("" + bankContract);
 					elasticSearchRepository.index(BANK_OBJECT_TYPE,
-							bankContract.getTenantId() + "" + bankContract.getCode(), bankContract);
+							bankContract.getTenantId() + "-" + bankContract.getCode(), bankContract);
 				}
 			} else if (bankContractResponse.getBank() != null) {
 				RequestContext.setId("" + bankContractResponse.getBank());
 				elasticSearchRepository.index(BANK_OBJECT_TYPE,
-						bankContractResponse.getBank().getTenantId() + "" + bankContractResponse.getBank().getCode(),
+						bankContractResponse.getBank().getTenantId() + "-" + bankContractResponse.getBank().getCode(),
 						bankContractResponse.getBank());
 			}
 		}
@@ -134,12 +136,12 @@ public class IndexerListener {
 				for (BankBranchContract bankBranchContract : bankBranchContractResponse.getBankBranches()) {
 					RequestContext.setId("" + bankBranchContract);
 					elasticSearchRepository.index(BANKBRANCH_OBJECT_TYPE,
-							bankBranchContract.getTenantId() + "" + bankBranchContract.getCode(), bankBranchContract);
+							bankBranchContract.getTenantId() + "-" + bankBranchContract.getCode(), bankBranchContract);
 				}
 			} else if (bankBranchContractResponse.getBankBranch() != null) {
 				RequestContext.setId("" + bankBranchContractResponse.getBankBranch());
 				elasticSearchRepository.index(BANKBRANCH_OBJECT_TYPE,
-						bankBranchContractResponse.getBankBranch().getTenantId() + ""
+						bankBranchContractResponse.getBankBranch().getTenantId() + "-"
 								+ bankBranchContractResponse.getBankBranch().getCode(),
 						bankBranchContractResponse.getBankBranch());
 			}
@@ -157,13 +159,13 @@ public class IndexerListener {
 				for (BankAccountContract bankAccountContract : bankAccountContractResponse.getBankAccounts()) {
 					RequestContext.setId("" + bankAccountContract);
 					elasticSearchRepository.index(BANKACCOUNT_OBJECT_TYPE,
-							bankAccountContract.getTenantId() + "" + bankAccountContract.getAccountNumber(),
+							bankAccountContract.getTenantId() + "-" + bankAccountContract.getAccountNumber(),
 							bankAccountContract);
 				}
 			} else if (bankAccountContractResponse.getBankAccount() != null) {
 				RequestContext.setId("" + bankAccountContractResponse.getBankAccount());
 				elasticSearchRepository.index(BANKACCOUNT_OBJECT_TYPE,
-						bankAccountContractResponse.getBankAccount().getTenantId() + ""
+						bankAccountContractResponse.getBankAccount().getTenantId() + "-"
 								+ bankAccountContractResponse.getBankAccount().getAccountNumber(),
 						bankAccountContractResponse.getBankAccount());
 			}
@@ -182,13 +184,13 @@ public class IndexerListener {
 						.getAccountDetailKeys()) {
 					RequestContext.setId("" + accountDetailKeyContract);
 					elasticSearchRepository.index(ACCOUNTDETAILKEY_OBJECT_TYPE,
-							accountDetailKeyContract.getTenantId() + "" + accountDetailKeyContract.getKey(),
+							accountDetailKeyContract.getTenantId() + "-" + accountDetailKeyContract.getKey(),
 							accountDetailKeyContract);
 				}
 			} else if (accountDetailKeyContractResponse.getAccountDetailKey() != null) {
 				RequestContext.setId("" + accountDetailKeyContractResponse.getAccountDetailKey());
 				elasticSearchRepository.index(ACCOUNTDETAILKEY_OBJECT_TYPE,
-						accountDetailKeyContractResponse.getAccountDetailKey().getTenantId() + ""
+						accountDetailKeyContractResponse.getAccountDetailKey().getTenantId() + "-"
 								+ accountDetailKeyContractResponse.getAccountDetailKey().getKey(),
 						accountDetailKeyContractResponse.getAccountDetailKey());
 			}
@@ -207,13 +209,13 @@ public class IndexerListener {
 						.getAccountDetailTypes()) {
 					RequestContext.setId("" + accountDetailTypeContract);
 					elasticSearchRepository.index(ACCOUNTDETAILTYPE_OBJECT_TYPE,
-							accountDetailTypeContract.getTenantId() + "" + accountDetailTypeContract.getName(),
+							accountDetailTypeContract.getTenantId() + "-" + accountDetailTypeContract.getName(),
 							accountDetailTypeContract);
 				}
 			} else if (accountDetailTypeContractResponse.getAccountDetailType() != null) {
 				RequestContext.setId("" + accountDetailTypeContractResponse.getAccountDetailType());
 				elasticSearchRepository.index(ACCOUNTDETAILTYPE_OBJECT_TYPE,
-						accountDetailTypeContractResponse.getAccountDetailType().getTenantId() + ""
+						accountDetailTypeContractResponse.getAccountDetailType().getTenantId() + "-"
 								+ accountDetailTypeContractResponse.getAccountDetailType().getName(),
 						accountDetailTypeContractResponse.getAccountDetailType());
 			}
@@ -231,13 +233,13 @@ public class IndexerListener {
 				for (AccountEntityContract accountEntityContract : accountEntityContractResponse.getAccountEntities()) {
 					RequestContext.setId("" + accountEntityContract);
 					elasticSearchRepository.index(ACCOUNTENTITY_OBJECT_TYPE,
-							accountEntityContract.getTenantId() + "" + accountEntityContract.getName(),
+							accountEntityContract.getTenantId() + "-" + accountEntityContract.getName(),
 							accountEntityContract);
 				}
 			} else if (accountEntityContractResponse.getAccountEntity() != null) {
 				RequestContext.setId("" + accountEntityContractResponse.getAccountEntity());
 				elasticSearchRepository.index(ACCOUNTENTITY_OBJECT_TYPE,
-						accountEntityContractResponse.getAccountEntity().getTenantId() + ""
+						accountEntityContractResponse.getAccountEntity().getTenantId() + "-"
 								+ accountEntityContractResponse.getAccountEntity().getName(),
 						accountEntityContractResponse.getAccountEntity());
 			}
@@ -255,13 +257,13 @@ public class IndexerListener {
 				for (BudgetGroupContract budgetGroupContract : budgetGroupContractResponse.getBudgetGroups()) {
 					RequestContext.setId("" + budgetGroupContract);
 					elasticSearchRepository.index(BUDGETGROUP_OBJECT_TYPE,
-							budgetGroupContract.getTenantId() + "" + budgetGroupContract.getName(),
+							budgetGroupContract.getTenantId() + "-" + budgetGroupContract.getName(),
 							budgetGroupContract);
 				}
 			} else if (budgetGroupContractResponse.getBudgetGroup() != null) {
 				RequestContext.setId("" + budgetGroupContractResponse.getBudgetGroup());
 				elasticSearchRepository.index(BUDGETGROUP_OBJECT_TYPE,
-						budgetGroupContractResponse.getBudgetGroup().getTenantId() + ""
+						budgetGroupContractResponse.getBudgetGroup().getTenantId() + "-"
 								+ budgetGroupContractResponse.getBudgetGroup().getName(),
 						budgetGroupContractResponse.getBudgetGroup());
 			}
@@ -280,13 +282,13 @@ public class IndexerListener {
 						.getChartOfAccounts()) {
 					RequestContext.setId("" + chartOfAccountContract);
 					elasticSearchRepository.index(CHARTOFACCOUNT_OBJECT_TYPE,
-							chartOfAccountContract.getTenantId() + "" + chartOfAccountContract.getName(),
+							chartOfAccountContract.getTenantId() + "-" + chartOfAccountContract.getName(),
 							chartOfAccountContract);
 				}
 			} else if (chartOfAccountContractResponse.getChartOfAccount() != null) {
 				RequestContext.setId("" + chartOfAccountContractResponse.getChartOfAccount());
 				elasticSearchRepository.index(CHARTOFACCOUNT_OBJECT_TYPE,
-						chartOfAccountContractResponse.getChartOfAccount().getTenantId() + ""
+						chartOfAccountContractResponse.getChartOfAccount().getTenantId() + "-"
 								+ chartOfAccountContractResponse.getChartOfAccount().getName(),
 						chartOfAccountContractResponse.getChartOfAccount());
 			}
@@ -306,7 +308,7 @@ public class IndexerListener {
 						.getChartOfAccountDetails()) {
 					RequestContext.setId("" + chartOfAccountDetailContract);
 					elasticSearchRepository.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
-							chartOfAccountDetailContract.getTenantId() + ""
+							chartOfAccountDetailContract.getTenantId() + "-"
 									+ chartOfAccountDetailContract.getChartOfAccount().getGlcode(),
 							chartOfAccountDetailContract);
 				}
@@ -314,7 +316,7 @@ public class IndexerListener {
 				RequestContext.setId("" + chartOfAccountDetailContractResponse.getChartOfAccountDetail());
 				elasticSearchRepository
 						.index(CHARTOFACCOUNTDETAIL_OBJECT_TYPE,
-								chartOfAccountDetailContractResponse.getChartOfAccountDetail().getTenantId() + ""
+								chartOfAccountDetailContractResponse.getChartOfAccountDetail().getTenantId() + "-"
 										+ chartOfAccountDetailContractResponse.getChartOfAccountDetail()
 												.getChartOfAccount().getGlcode(),
 								chartOfAccountDetailContractResponse.getChartOfAccountDetail());
@@ -333,13 +335,13 @@ public class IndexerListener {
 				for (FinancialYearContract financialYearContract : financialYearContractResponse.getFinancialYears()) {
 					RequestContext.setId("" + financialYearContract);
 					elasticSearchRepository.index(FINANCIALYEAR_OBJECT_TYPE,
-							financialYearContract.getTenantId() + "" + financialYearContract.getFinYearRange(),
+							financialYearContract.getTenantId() + "-" + financialYearContract.getFinYearRange(),
 							financialYearContract);
 				}
 			} else if (financialYearContractResponse.getFinancialYear() != null) {
 				RequestContext.setId("" + financialYearContractResponse.getFinancialYear());
 				elasticSearchRepository.index(FINANCIALYEAR_OBJECT_TYPE,
-						financialYearContractResponse.getFinancialYear().getTenantId() + ""
+						financialYearContractResponse.getFinancialYear().getTenantId() + "-"
 								+ financialYearContractResponse.getFinancialYear().getFinYearRange(),
 						financialYearContractResponse.getFinancialYear());
 			}
@@ -356,15 +358,15 @@ public class IndexerListener {
 					&& !fiscalPeriodContractResponse.getFiscalPeriods().isEmpty()) {
 				for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractResponse.getFiscalPeriods()) {
 					RequestContext.setId("" + fiscalPeriodContract);
-					elasticSearchRepository.index(FISCALPERIOD_OBJECT_TYPE, fiscalPeriodContract.getTenantId() + ""
+					elasticSearchRepository.index(FISCALPERIOD_OBJECT_TYPE, fiscalPeriodContract.getTenantId() + "-"
 							+ fiscalPeriodContract.getStartingDate() + "" + fiscalPeriodContract.getEndingDate(),
 							fiscalPeriodContract);
 				}
 			} else if (fiscalPeriodContractResponse.getFiscalPeriod() != null) {
 				RequestContext.setId("" + fiscalPeriodContractResponse.getFiscalPeriod());
 				elasticSearchRepository.index(FISCALPERIOD_OBJECT_TYPE,
-						fiscalPeriodContractResponse.getFiscalPeriod().getTenantId() + ""
-								+ fiscalPeriodContractResponse.getFiscalPeriod().getStartingDate() + ""
+						fiscalPeriodContractResponse.getFiscalPeriod().getTenantId() + "-"
+								+ fiscalPeriodContractResponse.getFiscalPeriod().getStartingDate() + "-"
 								+ fiscalPeriodContractResponse.getFiscalPeriod().getEndingDate(),
 						fiscalPeriodContractResponse.getFiscalPeriod());
 			}
@@ -382,13 +384,13 @@ public class IndexerListener {
 				for (FunctionaryContract functionaryContract : functionaryContractResponse.getFunctionaries()) {
 					RequestContext.setId("" + functionaryContract);
 					elasticSearchRepository.index(FUNCTIONARY_OBJECT_TYPE,
-							functionaryContract.getTenantId() + "" + functionaryContract.getName(),
+							functionaryContract.getTenantId() + "-" + functionaryContract.getName(),
 							functionaryContract);
 				}
 			} else if (functionaryContractResponse.getFunctionary() != null) {
 				RequestContext.setId("" + functionaryContractResponse.getFunctionary());
 				elasticSearchRepository.index(FUNCTIONARY_OBJECT_TYPE,
-						functionaryContractResponse.getFunctionary().getTenantId() + ""
+						functionaryContractResponse.getFunctionary().getTenantId() + "-"
 								+ functionaryContractResponse.getFunctionary().getName(),
 						functionaryContractResponse.getFunctionary());
 			}
@@ -405,12 +407,12 @@ public class IndexerListener {
 				for (FunctionContract functionContract : functionContractResponse.getFunctions()) {
 					RequestContext.setId("" + functionContract);
 					elasticSearchRepository.index(FUNCTION_OBJECT_TYPE,
-							functionContract.getTenantId() + "" + functionContract.getName(), functionContract);
+							functionContract.getTenantId() + "-" + functionContract.getName(), functionContract);
 				}
 			} else if (functionContractResponse.getFunction() != null) {
 				RequestContext.setId("" + functionContractResponse.getFunction());
 				elasticSearchRepository.index(FUNCTION_OBJECT_TYPE,
-						functionContractResponse.getFunction().getTenantId() + ""
+						functionContractResponse.getFunction().getTenantId() + "-"
 								+ functionContractResponse.getFunction().getName(),
 						functionContractResponse.getFunction());
 			}
@@ -425,14 +427,16 @@ public class IndexerListener {
 
 			if (fundContractResponse.getFunds() != null && !fundContractResponse.getFunds().isEmpty()) {
 				for (FundContract fundContract : fundContractResponse.getFunds()) {
+					HashMap<String, Object> indexObj = getFundIndexObject(fundContract);
 					RequestContext.setId("" + fundContract);
 					elasticSearchRepository.index(FUND_OBJECT_TYPE,
-							fundContract.getTenantId() + "" + fundContract.getName(), fundContract);
+							fundContract.getTenantId() + "-" + fundContract.getName(), indexObj);
 				}
 			} else if (fundContractResponse.getFund() != null) {
 				RequestContext.setId("" + fundContractResponse.getFund());
+
 				elasticSearchRepository.index(FUND_OBJECT_TYPE,
-						fundContractResponse.getFund().getTenantId() + "" + fundContractResponse.getFund().getName(),
+						fundContractResponse.getFund().getTenantId() + "-" + fundContractResponse.getFund().getName(),
 						fundContractResponse.getFund());
 			}
 		}
@@ -449,12 +453,12 @@ public class IndexerListener {
 				for (FundsourceContract fundsourceContract : fundsourceContractResponse.getFundsources()) {
 					RequestContext.setId("" + fundsourceContract);
 					elasticSearchRepository.index(FUNDSOURCE_OBJECT_TYPE,
-							fundsourceContract.getTenantId() + "" + fundsourceContract.getName(), fundsourceContract);
+							fundsourceContract.getTenantId() + "-" + fundsourceContract.getName(), fundsourceContract);
 				}
 			} else if (fundsourceContractResponse.getFundsource() != null) {
 				RequestContext.setId("" + fundsourceContractResponse.getFundsource());
 				elasticSearchRepository.index(FUNDSOURCE_OBJECT_TYPE,
-						fundsourceContractResponse.getFundsource().getTenantId() + ""
+						fundsourceContractResponse.getFundsource().getTenantId() + "-"
 								+ fundsourceContractResponse.getFundsource().getName(),
 						fundsourceContractResponse.getFundsource());
 			}
@@ -471,13 +475,13 @@ public class IndexerListener {
 				for (SchemeContract schemeContract : schemeContractResponse.getSchemes()) {
 					RequestContext.setId("" + schemeContract);
 					elasticSearchRepository.index(SCHEME_OBJECT_TYPE,
-							schemeContract.getTenantId() + "" + schemeContract.getName(), schemeContract);
+							schemeContract.getTenantId() + "-" + schemeContract.getName(), schemeContract);
 				}
 			} else if (schemeContractResponse.getScheme() != null) {
 				RequestContext.setId("" + schemeContractResponse.getScheme());
 				elasticSearchRepository
 						.index(SCHEME_OBJECT_TYPE,
-								schemeContractResponse.getScheme().getTenantId() + ""
+								schemeContractResponse.getScheme().getTenantId() + "-"
 										+ schemeContractResponse.getScheme().getName(),
 								schemeContractResponse.getScheme());
 			}
@@ -495,12 +499,12 @@ public class IndexerListener {
 				for (SubSchemeContract subSchemeContract : subSchemeContractResponse.getSubSchemes()) {
 					RequestContext.setId("" + subSchemeContract);
 					elasticSearchRepository.index(SUBSCHEME_OBJECT_TYPE,
-							subSchemeContract.getTenantId() + "" + subSchemeContract.getName(), subSchemeContract);
+							subSchemeContract.getTenantId() + "-" + subSchemeContract.getName(), subSchemeContract);
 				}
 			} else if (subSchemeContractResponse.getSubScheme() != null) {
 				RequestContext.setId("" + subSchemeContractResponse.getSubScheme());
 				elasticSearchRepository.index(SUBSCHEME_OBJECT_TYPE,
-						subSchemeContractResponse.getSubScheme().getTenantId() + ""
+						subSchemeContractResponse.getSubScheme().getTenantId() + "-"
 								+ subSchemeContractResponse.getSubScheme().getName(),
 						subSchemeContractResponse.getSubScheme());
 			}
@@ -517,17 +521,44 @@ public class IndexerListener {
 				for (SupplierContract supplierContract : supplierContractResponse.getSuppliers()) {
 					RequestContext.setId("" + supplierContract);
 					elasticSearchRepository.index(SUPPLIER_OBJECT_TYPE,
-							supplierContract.getTenantId() + "" + supplierContract.getName(), supplierContract);
+							supplierContract.getTenantId() + "-" + supplierContract.getName(), supplierContract);
 				}
 			} else if (supplierContractResponse.getSupplier() != null) {
 				RequestContext.setId("" + supplierContractResponse.getSupplier());
 				elasticSearchRepository.index(SUPPLIER_OBJECT_TYPE,
-						supplierContractResponse.getSupplier().getTenantId() + ""
+						supplierContractResponse.getSupplier().getTenantId() + "-"
 								+ supplierContractResponse.getSupplier().getName(),
 						supplierContractResponse.getSupplier());
 			}
 		}
 
+	}
+
+	private HashMap<String, Object> getFundIndexObject(FundContract fundContract) {
+
+		HashMap<String, Object> indexObj = new HashMap<String, Object>();
+		indexObj.put("id", fundContract.getId());
+		indexObj.put("name", fundContract.getName());
+		indexObj.put("code", fundContract.getCode());
+		indexObj.put("active", fundContract.getActive());
+		indexObj.put("createdBy", fundContract.getCreatedBy());
+		indexObj.put("identifier", fundContract.getIdentifier());
+		indexObj.put("isParent", fundContract.getIsParent());
+		indexObj.put("lastModifiedBy", fundContract.getLastModifiedBy());
+		indexObj.put("level", fundContract.getLevel());
+		indexObj.put("parentId", fundContract.getParentId());
+		indexObj.put("tenantId", fundContract.getTenantId());
+
+		if (fundContract.getCreatedDate() != null)
+			indexObj.put("createdDate", formatter.format(fundContract.getCreatedDate()));
+		else
+			indexObj.put("createdDate", null);
+		if (fundContract.getCreatedDate() != null)
+			indexObj.put("lastModifiedDate", formatter.format(fundContract.getLastModifiedDate()));
+		else
+			indexObj.put("lastModifiedDate", null);
+
+		return indexObj;
 	}
 
 }

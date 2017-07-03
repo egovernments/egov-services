@@ -34,6 +34,7 @@ import DefineEscalation from './components/contents/pgr/master/escalation/define
 import SearchEscalation from './components/contents/pgr/master/escalationTime/searchEscalation';
 import DefineEscalationTime from './components/contents/pgr/master/escalationTime/defineEscalationTime';
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
+import Report from './components/contents/reports/report';
 
 
 
@@ -49,7 +50,7 @@ const Main = () => {
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
       <Route exact path={base + '/dashboard'} component={Dashboard}/>
 
-      {/*
+        {/*
         pgr
         */}
         <Route exact path={base + '/pgr/createGrievance'} component={grievanceCreate}/>
@@ -83,6 +84,7 @@ const Main = () => {
         <Route exact path={base + '/pgr/searchEscalationTime'} component={SearchEscalation}/>
         <Route exact path={base + '/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base + '/pgr/createServiceType'} component={ServiceTypeCreate}/>
+        <Route exact path={base + '/report/:reportName'} component={Report}/>
 
     </Switch>
   </main>

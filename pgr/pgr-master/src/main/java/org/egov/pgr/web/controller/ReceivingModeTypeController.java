@@ -41,7 +41,6 @@ package org.egov.pgr.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -102,7 +101,7 @@ public class ReceivingModeTypeController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Receiving ModeType Request::" + ModeTypeRequest);
+		logger.info("ReceivingModeType Create : Request::" + ModeTypeRequest);
 
 		final List<ErrorResponse> errorResponses = validateReceivingModeRequest(ModeTypeRequest, true);
 		if (!errorResponses.isEmpty())
@@ -125,7 +124,7 @@ public class ReceivingModeTypeController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("ReceivingCenterTypeRequest::" + modeTypeRequest);
+		logger.info("ReceivingCenterType Update : Request::" + modeTypeRequest);
 		modeTypeRequest.getModeType().setCode(code);
 
 		final List<ErrorResponse> errorResponses = validateReceivingModeRequest(modeTypeRequest, false);

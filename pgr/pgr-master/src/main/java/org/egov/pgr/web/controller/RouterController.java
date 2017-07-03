@@ -102,7 +102,7 @@ public class RouterController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Router Request:" + routerTypeReq);
+		logger.info("Router Create : Request::" + routerTypeReq);
 
 		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
 		if (!errorResponses.isEmpty())
@@ -125,7 +125,7 @@ public class RouterController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Router Request:" + routerTypeReq);
+		logger.info("Router Update : Request::" + routerTypeReq);
 
 		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
 		if (!errorResponses.isEmpty())

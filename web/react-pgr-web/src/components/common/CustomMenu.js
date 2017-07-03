@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-
+import {connect} from 'react-redux';
 import TextField from 'material-ui/TextField';
 
 // import MenuItem from 'material-ui/MenuItem';
@@ -88,12 +88,11 @@ class CustomMenu extends Component {
       })
   }
 
-  menuChange=(nextLevel,parentLevel)=>
-  {
+  menuChange=(nextLevel, parentLevel) => {
     this.setState({
       level:nextLevel,
       parentLevel
-    })
+    });
   }
 
   changeLevel=(level)=>{
@@ -108,7 +107,7 @@ class CustomMenu extends Component {
 
   render() {
     // console.log(this.state.searchText);
-    let {menuItems}=this.props;
+    let {menuItems, handleToggle}=this.props;
     let {searchText,filterMenu,level,parentLevel}=this.state;
     let {menuChange,changeLevel}=this;
     // console.log(menuItems.length>0?menuItems[0].title:"");
@@ -148,7 +147,7 @@ class CustomMenu extends Component {
                 return(
                   <Link   key={index} to={item.url} >
                     <MenuItem
-
+                         onTouchTap={()=>{handleToggle(false)}}
                          leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                          primaryText={item.name}
                       />
@@ -164,7 +163,7 @@ class CustomMenu extends Component {
                            leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                            primaryText={item.name}
                            rightIcon={<i className="material-icons">{item.rightIcon}</i>}
-                           onTouchTap={()=>{menuChange(item.nextLevel,item.level)}}
+                           onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
                         />
                     )
               }
@@ -277,4 +276,9 @@ class CustomMenu extends Component {
   }
 }
 
-export default CustomMenu;
+
+const mapStateToProps = state => ({});
+const mapDispatchToProps = dispatch => ({
+  handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu})
+})
+export default connect(mapStateToProps,mapDispatchToProps)(CustomMenu);

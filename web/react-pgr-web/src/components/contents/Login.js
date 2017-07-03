@@ -409,6 +409,7 @@ class Login extends Component {
    }
 
    render() {
+      console.log("IN LOGIN");
       let {
         login,
         credential,

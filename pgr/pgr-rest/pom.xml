@@ -150,13 +150,13 @@
                                 <rule>
                                     <element>CLASS</element>
                                     <excludes>
-                                        <exclude>org.egov.pgrrest.common.entity.*</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.AuthenticatedUser</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.AttributeEntry</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.AttributeDefinition</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.ServiceDefinition</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.ValueDefinition</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.Requester</exclude>
+                                        <exclude>org.egov.pgrrest.common.persistence.entity.*</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.AuthenticatedUser</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.AttributeEntry</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.AttributeDefinition</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.ServiceDefinition</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.ValueDefinition</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.Requester</exclude>
                                         <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.InvalidOtpRequestException</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.exception.OtpValidationNotCompleteException</exclude>
@@ -169,8 +169,8 @@
                                         <exclude>org.egov.pgrrest.read.web.controller.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.service.*</exclude>
                                         <exclude>org.egov.pgrrest.read.domain.model.*</exclude>
-                                        <exclude>org.egov.pgrrest.write.contracts.*</exclude>
-                                        <exclude>org.egov.pgrrest.write.repository.ServiceRequestWriteRepository</exclude>
+                                        <exclude>org.egov.pgrrest.write.consumer.contracts.*</exclude>
+                                        <exclude>org.egov.pgrrest.write.persistence.repository.ServiceRequestWriteRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
                                         <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidOtpValidationRequestExceptionAdapter</exclude>
@@ -186,13 +186,13 @@
                                         </exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestTypeRepository
                                         </exclude>
-                                        <exclude>org.egov.pgrrest.common.repository.UserRepository</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.Role</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.Role.RoleBuilder</exclude>
+                                        <exclude>org.egov.pgrrest.common.persistence.repository.UserRepository</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.Role</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.Role.RoleBuilder</exclude>
                                         <exclude>org.egov.pgrrest.write.consumer.HashMapDeserializer</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.ReceivingMode</exclude>
-                                        <exclude>org.egov.pgrrest.common.model.ReceivingCenter</exclude>
-                                        <exclude>org.egov.pgrrest.write.model.ServiceRequestRecord</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.ReceivingMode</exclude>
+                                        <exclude>org.egov.pgrrest.common.domain.model.ReceivingCenter</exclude>
+                                        <exclude>org.egov.pgrrest.write.domain.model.ServiceRequestRecord</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceDefinitionRepository</exclude>
                                     </excludes>
                                     <limits>

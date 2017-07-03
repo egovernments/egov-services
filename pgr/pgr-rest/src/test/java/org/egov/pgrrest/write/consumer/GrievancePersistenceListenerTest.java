@@ -1,8 +1,8 @@
 package org.egov.pgrrest.write.consumer;
 
-import org.egov.pgrrest.write.contracts.grievance.SevaRequestMapFactory;
-import org.egov.pgrrest.write.model.ServiceRequestRecord;
-import org.egov.pgrrest.write.service.ServiceRequestWriteService;
+import org.egov.pgrrest.write.consumer.contracts.request.SevaRequestMapFactory;
+import org.egov.pgrrest.write.domain.model.ServiceRequestRecord;
+import org.egov.pgrrest.write.domain.service.ServiceRequestWriteService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

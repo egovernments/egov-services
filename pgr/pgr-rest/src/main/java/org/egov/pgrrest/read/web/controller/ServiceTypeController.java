@@ -46,12 +46,12 @@ public class ServiceTypeController {
                                                @RequestParam(value = "tenantId", defaultValue = "default")
                                                    String tenantId,
                                                @RequestBody RequestInfoBody requestInfo) {
-        org.egov.pgrrest.common.entity.ServiceType complaintType = serviceRequestTypeService
+        org.egov.pgrrest.common.persistence.entity.ServiceType complaintType = serviceRequestTypeService
             .getComplaintType(complaintTypeCode, tenantId);
         return new ServiceTypeResponse(null, getComplaintType(complaintType));
     }
 
-    private List<ServiceType> getComplaintType(org.egov.pgrrest.common.entity.ServiceType complaintType) {
+    private List<ServiceType> getComplaintType(org.egov.pgrrest.common.persistence.entity.ServiceType complaintType) {
         if (complaintType == null)
             return Collections.emptyList();
         else

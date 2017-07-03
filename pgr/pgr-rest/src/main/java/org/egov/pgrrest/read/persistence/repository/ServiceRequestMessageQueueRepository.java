@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.contract.SevaRequest;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

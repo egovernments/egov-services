@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgrrest.common.model.ValueDefinition;
+import org.egov.pgrrest.common.domain.model.ValueDefinition;
 
 @Getter
 @AllArgsConstructor

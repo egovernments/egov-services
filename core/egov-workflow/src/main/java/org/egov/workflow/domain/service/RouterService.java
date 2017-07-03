@@ -126,6 +126,7 @@ public class RouterService {
 		pr.setPosition(routerRequests.getRouterType().getPosition());
 		pr.setId(routerRequests.getRouterType().getId());
 		pr.setTenantId(routerRequests.getRouterType().getTenantId());
+		pr.setActive(routerRequests.getRouterType().getActive());
 
 		for (int i = 0; i < boundaries.size(); i++) {
 			int boundaryID = boundaries.get(i).getBoundaryType();

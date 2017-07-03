@@ -73,6 +73,8 @@ public class RouterType {
 	
 	private BoundaryIdType boundary;
 	
+	private Boolean active; 
+	
 	@NotNull
 	private Integer position;
 	

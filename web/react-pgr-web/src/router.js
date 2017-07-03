@@ -47,7 +47,7 @@ const Main = () => {
       <Route path={base + '/propertyTaxSearch'} component={PropertyTaxSearch}/>
       <Route exact path= {base + '/'} component={Login}/>
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-      <Route exact path={base + '/dashboard'} component={Dashboard}/>
+      <Route exact path={'/dashboard'} component={Dashboard}/>
 
       {/*
         pgr

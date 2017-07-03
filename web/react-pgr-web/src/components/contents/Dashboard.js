@@ -7,7 +7,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
 import SwipeableViews from 'react-swipeable-views';
 //api import
-import api from "../../api/api";
+import Api from "../../api/api";
 const styles = {
   headline: {
     fontSize: 24,
@@ -27,7 +27,18 @@ class Dashboard extends Component {
     this.state = {
       slideIndex: 0,
     };
-  }
+}
+  componentWillMount() {
+    let {currentUser}=this.props;
+    alert("boom");
+    console.log(currentUser);
+
+    Api.commonApiPost("/pgr/seva/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
+        console.log(response);
+    }).catch((error)=>{
+        console.log(error);
+    })
+  };
 
   handleChange = (value) => {
     this.setState({
@@ -78,7 +89,7 @@ class Dashboard extends Component {
               {/*<CardText>
                             <Grid>
                               <Row>
-              
+
                                 <Col xs={12} md={3}>
                                  <Card>
                                      <CardHeader
@@ -98,10 +109,10 @@ class Dashboard extends Component {
                                       Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                                       Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
                                      </CardText>
-              
+
                                      </Card>
                                  </Col>
-              
+
                                  <Col xs={12} md={3}>
                                   <Card>
                                       <CardHeader
@@ -121,10 +132,10 @@ class Dashboard extends Component {
                                        Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                                        Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
                                       </CardText>
-              
+
                                       </Card>
                                   </Col>
-              
+
                                   <Col xs={12} md={3}>
                                    <Card>
                                        <CardHeader
@@ -144,10 +155,10 @@ class Dashboard extends Component {
                                         Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                                         Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
                                        </CardText>
-              
+
                                        </Card>
                                    </Col>
-              
+
                                    <Col xs={12} md={3}>
                                     <Card>
                                         <CardHeader
@@ -167,11 +178,11 @@ class Dashboard extends Component {
                                          Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                                          Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
                                         </CardText>
-              
+
                                         </Card>
                                     </Col>
-              
-              
+
+
                               </Row>
                               </Grid>
                             </CardText>*/}

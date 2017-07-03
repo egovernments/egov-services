@@ -3,7 +3,7 @@ package org.egov.pgrrest.read.web.contract;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgrrest.common.model.ValueDefinition;
+import org.egov.pgrrest.common.domain.model.ValueDefinition;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +25,7 @@ public class AttributeDefinition {
     private List<String> actions;
     private List<AttributeValueDefinition> attribValues;
 
-    public AttributeDefinition(org.egov.pgrrest.common.model.AttributeDefinition attributeDefinition) {
+    public AttributeDefinition(org.egov.pgrrest.common.domain.model.AttributeDefinition attributeDefinition) {
         this.variable = !attributeDefinition.isReadOnly();
         this.code = attributeDefinition.getCode();
         this.dataType = attributeDefinition.getDataType();

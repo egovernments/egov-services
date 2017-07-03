@@ -2,8 +2,8 @@ package org.egov.pgrrest.read.domain.service;
 
 import org.egov.pgr.common.model.Employee;
 import org.egov.pgr.common.repository.EmployeeRepository;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.junit.Test;

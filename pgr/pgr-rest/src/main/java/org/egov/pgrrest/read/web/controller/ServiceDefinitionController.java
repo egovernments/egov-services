@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.web.controller;
 
-import org.egov.pgrrest.common.model.ServiceDefinition;
+import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceDefinitionService;
 import org.egov.pgrrest.read.web.contract.ServiceDefinitionRequest;

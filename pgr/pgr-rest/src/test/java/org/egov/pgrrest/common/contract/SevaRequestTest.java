@@ -1,9 +1,10 @@
 package org.egov.pgrrest.common.contract;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
+import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.read.domain.model.*;
 import org.junit.Test;
 
@@ -52,7 +53,8 @@ public class SevaRequestTest {
 
     private SevaRequest getSevaRequest() {
         final RequestInfo requestInfo = new RequestInfo();
-        final ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.ServiceRequest.builder().build();
+        final org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .web.ServiceRequest.builder().build();
         return new SevaRequest(requestInfo, serviceRequest);
     }
 

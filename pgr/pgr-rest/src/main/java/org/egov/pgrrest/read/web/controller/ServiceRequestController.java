@@ -2,8 +2,8 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
@@ -53,8 +53,7 @@ public class ServiceRequestController {
         final ServiceRequest complaint = request.toDomainForUpdateRequest();
         serviceRequestService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
-        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract
-            .ServiceRequest(complaint)));
+        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract.web.ServiceRequest(complaint)));
     }
 
     @PostMapping(value = "/v1/_search")
@@ -187,8 +186,8 @@ public class ServiceRequestController {
     }
 
     private ServiceResponse createResponse(List<ServiceRequest> submissions) {
-        final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = submissions.stream()
-            .map(org.egov.pgrrest.common.contract.ServiceRequest::new)
+        final List<org.egov.pgrrest.common.contract.web.ServiceRequest> serviceRequests = submissions.stream()
+            .map(org.egov.pgrrest.common.contract.web.ServiceRequest::new)
             .collect(Collectors.toList());
         return new ServiceResponse(null, serviceRequests);
     }

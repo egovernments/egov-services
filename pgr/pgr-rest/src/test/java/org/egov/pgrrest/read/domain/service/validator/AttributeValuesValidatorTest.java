@@ -1,9 +1,9 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.pgrrest.common.model.AttributeEntry;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.common.domain.model.AttributeEntry;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
 import org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;

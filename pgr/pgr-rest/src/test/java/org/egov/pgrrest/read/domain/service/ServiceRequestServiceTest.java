@@ -3,12 +3,13 @@ package org.egov.pgrrest.read.domain.service;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.model.Employee;
 import org.egov.pgr.common.repository.EmployeeRepository;
-import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
+import org.egov.pgrrest.common.domain.model.UserType;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.*;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.persistence.repository.SubmissionRepository;
 import org.egov.pgrrest.read.web.contract.User;
@@ -149,7 +150,7 @@ public class ServiceRequestServiceTest {
     @Test
     public void testShouldPersistSevaRequestOnSave() {
         final ServiceRequest complaint = getComplaint();
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = getServiceRequest();
+        final org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = getServiceRequest();
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(sevaNumberGeneratorService.generate()).thenReturn(CRN);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
@@ -161,7 +162,7 @@ public class ServiceRequestServiceTest {
     @Test
     public void testShouldPersistSevaRequestOnUpdate() {
         final ServiceRequest complaint = getComplaint();
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = getServiceRequest();
+        final org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = getServiceRequest();
         final SevaRequest sevaRequest = new SevaRequest(new RequestInfo(), serviceRequest);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
@@ -216,13 +217,13 @@ public class ServiceRequestServiceTest {
     }
 
     private SevaRequest getSevaRequest() {
-        final org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
-            .ServiceRequest.builder().tenantId("tenantId").build();
+        final org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+            .web.ServiceRequest.builder().tenantId("tenantId").build();
         return new SevaRequest(new RequestInfo(), serviceRequest);
     }
 
-    private org.egov.pgrrest.common.contract.ServiceRequest getServiceRequest() {
-        return org.egov.pgrrest.common.contract.ServiceRequest.builder()
+    private org.egov.pgrrest.common.contract.web.ServiceRequest getServiceRequest() {
+        return org.egov.pgrrest.common.contract.web.ServiceRequest.builder()
             .tenantId("tenantId")
             .attribValues(new ArrayList<>())
             .build();

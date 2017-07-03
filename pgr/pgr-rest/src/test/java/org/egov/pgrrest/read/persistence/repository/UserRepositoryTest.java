@@ -7,9 +7,9 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import org.egov.pgrrest.common.repository.UserRepository;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.contract.GetUserByIdResponse;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.contract.web.GetUserByIdResponse;
 import org.egov.pgrrest.read.web.contract.User;
 import org.junit.Before;
 import org.junit.Test;

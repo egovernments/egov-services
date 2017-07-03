@@ -1,18 +1,10 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.model.AttributeDefinition;
-import org.egov.pgrrest.common.model.ServiceDefinition;
-import org.egov.pgrrest.common.model.ValueDefinition;
-import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 

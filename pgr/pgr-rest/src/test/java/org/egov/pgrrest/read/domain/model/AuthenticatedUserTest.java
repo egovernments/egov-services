@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.model;
 
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 import org.junit.Test;
 

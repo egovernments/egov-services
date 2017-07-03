@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.web.contract;
 
 import lombok.*;
-import org.egov.pgrrest.common.model.Role;
+import org.egov.pgrrest.common.domain.model.Role;
 
 import java.util.Set;
 

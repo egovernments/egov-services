@@ -26,17 +26,24 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       slideIndex: 0,
+      serviceRequests: []
     };
 }
   componentWillMount() {
-    let {currentUser}=this.props;
-    alert("boom");
-    console.log(currentUser);
 
-    Api.commonApiPost("/pgr/seva/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
+    let current = this;
+    let {currentUser}=this.props;
+    console.log(currentUser);
+    Api.commonApiPost("/pgr/seva/v1/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
         console.log(response);
+        current.setState({
+          serviceRequests: response
+        });
     }).catch((error)=>{
         console.log(error);
+        current.setState({
+          serviceRequests: []
+        });
     })
   };
 
@@ -70,8 +77,18 @@ class Dashboard extends Component {
               onChangeIndex={this.handleChange}
             >
               <div>
-                <h2 style={styles.headline}>Tabs with slide effect</h2>
-                Swipe to see the next slide.<br />
+                  {this.state.serviceRequests && this.state.serviceRequests.map(()=>{
+                    //return()
+                  }) }
+
+                       <Card xs={12} md={4}>
+                           <CardHeader
+                             title="URL Avatar"
+                             subtitle="Subtitle"
+                           />
+                           <CardText>Boom</CardText>
+                       </Card>
+
               </div>
               <div style={styles.slide}>
                 slide n°2

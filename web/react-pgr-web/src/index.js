@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 // import {blue500} from 'material-ui/styles/colors';
@@ -40,9 +40,9 @@ const muiTheme = getMuiTheme({
 ReactDOM.render(
 <Provider store={store}>
   <MuiThemeProvider muiTheme={muiTheme}>
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </MuiThemeProvider>
 </Provider>, document.getElementById('root'));
 registerServiceWorker();

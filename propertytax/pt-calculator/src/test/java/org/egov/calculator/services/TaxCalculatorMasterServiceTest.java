@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.egov.calculator.PtCalculatorApplication;
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.models.AuditDetails;
@@ -39,6 +40,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration(classes = { PtCalculatorApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TaxCalculatorMasterServiceTest {
+	
+	private final static Logger LOGGER = Logger.getLogger(TaxCalculatorMasterServiceTest.class.getName());
 
 	@Autowired
 	TaxCalculatorMasterService taxCalculatorMasterService;
@@ -159,6 +162,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			LOGGER.error(e.getMessage());
 			assertTrue(false);
 		}
 
@@ -289,6 +293,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			LOGGER.error(e.getMessage());
 			assertTrue(false);
 		}
 	}

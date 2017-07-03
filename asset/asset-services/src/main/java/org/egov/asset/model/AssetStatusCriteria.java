@@ -1,6 +1,6 @@
 package org.egov.asset.model;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,13 +15,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RevaluationCriteria {
-
+public class AssetStatusCriteria {
+	
+	@NotNull
 	private String tenantId;
-	private List<Long> id;
-	private List<Long> assetId;
-	private String status;
-	private Long size;
-	private Long offset;
-
+	private String objectName;
+	private String code;
 }

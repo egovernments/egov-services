@@ -1,11 +1,8 @@
 package org.egov.asset.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,9 +10,7 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.RevaluationRequest;
-import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
-import org.egov.asset.model.AccountDetailKey;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Department;
@@ -24,10 +19,8 @@ import org.egov.asset.model.Fund;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
-import org.egov.asset.model.enums.RevaluationStatus;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.model.enums.VoucherType;
-import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,25 +52,25 @@ public class VoucherServiceTest {
 	@Test
 	public void test_shuould_create_VoucherRequest_For_Reevalaution() {
 
-		RevaluationRequest revaluationRequest = getRevaluationRequest();
+		final RevaluationRequest revaluationRequest = getRevaluationRequest();
 		revaluationRequest.getRevaluation().setFund(Long.valueOf("3"));
 
-		Asset asset = get_Asset();
-		List<VouchercreateAccountCodeDetails> accountCodeDetails = getVouchercreateAccountCodeDetails();
+		final Asset asset = get_Asset();
+		final List<VouchercreateAccountCodeDetails> accountCodeDetails = getVouchercreateAccountCodeDetails();
 
 		when(applicationProperties.getReevaluationVoucherName()).thenReturn("Asset Reevaluation Voucher");
 		when(applicationProperties.getReevaluationVoucherDescription())
 				.thenReturn("Creating Voucher for Asset Reevaluation");
 
-		VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequestForReevalaution(revaluationRequest,
-				asset, accountCodeDetails);
+		final VoucherRequest generatedVoucherRequest = voucherService
+				.createVoucherRequestForReevalaution(revaluationRequest, asset, accountCodeDetails);
 
-		Fund fund = get_Fund(revaluationRequest);
-		Voucher voucher = getVoucher(asset, fund);
-		List<Voucher> vouchers = new ArrayList<>();
+		final Fund fund = get_Fund(revaluationRequest);
+		final Voucher voucher = getVoucher(asset, fund);
+		final List<Voucher> vouchers = new ArrayList<>();
 		vouchers.add(voucher);
 
-		VoucherRequest expectedVoucherRequest = new VoucherRequest();
+		final VoucherRequest expectedVoucherRequest = new VoucherRequest();
 		expectedVoucherRequest.setRequestInfo(new RequestInfo());
 		expectedVoucherRequest.setVouchers(vouchers);
 
@@ -88,10 +81,10 @@ public class VoucherServiceTest {
 
 	}
 
-	private Voucher getVoucher(Asset asset, Fund fund) {
+	private Voucher getVoucher(final Asset asset, final Fund fund) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		Voucher voucher = new Voucher();
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		final Voucher voucher = new Voucher();
 		voucher.setType(VoucherType.JOURNALVOUCHER.toString());
 		voucher.setVoucherDate(sdf.format(new Date()));
 		voucher.setLedgers(getVouchercreateAccountCodeDetails());
@@ -104,41 +97,41 @@ public class VoucherServiceTest {
 	}
 
 	private List<VouchercreateAccountCodeDetails> getVouchercreateAccountCodeDetails() {
-		VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails = new VouchercreateAccountCodeDetails();
+		final VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails = new VouchercreateAccountCodeDetails();
 
 		vouchercreateAccountCodeDetails.setCreditAmount(Double.valueOf("0"));
 		vouchercreateAccountCodeDetails.setDebitAmount(Double.valueOf("10"));
 		vouchercreateAccountCodeDetails.setGlcode("generalLedger6Code");
-		Function function = new Function();
+		final Function function = new Function();
 		function.setId(Long.valueOf("124"));
 
 		vouchercreateAccountCodeDetails.setFunction(function);
 
-		List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<>();
+		final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<>();
 		accountCodeDetails.add(vouchercreateAccountCodeDetails);
 
 		return accountCodeDetails;
 	}
 
-	private Fund get_Fund(RevaluationRequest revaluationRequest) {
-		Fund fund = new Fund();
+	private Fund get_Fund(final RevaluationRequest revaluationRequest) {
+		final Fund fund = new Fund();
 		fund.setId(revaluationRequest.getRevaluation().getFund());
 		return fund;
 	}
 
 	private Asset get_Asset() {
-		Asset asset = new Asset();
+		final Asset asset = new Asset();
 		asset.setId(Long.valueOf("12"));
-		Department department = new Department();
+		final Department department = new Department();
 		department.setId(Long.valueOf("2"));
 		asset.setDepartment(department);
 		return asset;
 	}
 
 	private RevaluationRequest getRevaluationRequest() {
-		RevaluationRequest revaluationRequest = new RevaluationRequest();
+		final RevaluationRequest revaluationRequest = new RevaluationRequest();
 		revaluationRequest.setRequestInfo(new RequestInfo());
-		Revaluation revaluation = new Revaluation();
+		final Revaluation revaluation = new Revaluation();
 		revaluation.setTenantId("ap.kurnool");
 		revaluation.setAssetId(Long.valueOf("12"));
 		revaluation.setCurrentCapitalizedValue(Double.valueOf("100.58"));
@@ -154,9 +147,9 @@ public class VoucherServiceTest {
 		revaluation.setScheme(Long.valueOf("4"));
 		revaluation.setSubScheme(Long.valueOf("5"));
 		revaluation.setComments("coments");
-		revaluation.setStatus(RevaluationStatus.ACTIVE);
+		revaluation.setStatus("ACTIVE");
 
-		AuditDetails auditDetails = new AuditDetails();
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy("5");
 		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
 		auditDetails.setLastModifiedBy("5");
@@ -167,10 +160,5 @@ public class VoucherServiceTest {
 		return revaluationRequest;
 
 	}
-	// private RevaluationResponse getRevaluation(String filePath) throws
-	// IOException {
-	// String empJson = new FileUtils().getFileContents(filePath);
-	// return new ObjectMapper().readValue(empJson, RevaluationResponse.class);
-	// }
 
 }

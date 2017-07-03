@@ -16,7 +16,6 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
@@ -52,12 +51,12 @@ public class AssetServiceTest {
 
 	@Test
 	public void testSearch() {
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(getAsset());
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 
-		AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
+		final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
 		when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
 		System.err.println(assetResponse);
 		System.err.println(assetService.getAssets(assetCriteria, new RequestInfo()));
@@ -67,13 +66,13 @@ public class AssetServiceTest {
 	@Test
 	public void testCreate() {
 
-		Asset asset = getAsset();
-		AssetRequest assetRequest = new AssetRequest();
+		final Asset asset = getAsset();
+		final AssetRequest assetRequest = new AssetRequest();
 		assetRequest.setAsset(asset);
 
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setResponseInfo(null);
 		assetResponse.setAssets(assets);
 
@@ -85,13 +84,13 @@ public class AssetServiceTest {
 	@Test
 	public void testCreateAsync() {
 
-		Asset asset = getAsset();
-		AssetRequest assetRequest = new AssetRequest();
+		final Asset asset = getAsset();
+		final AssetRequest assetRequest = new AssetRequest();
 		assetRequest.setAsset(asset);
 
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setResponseInfo(null);
 		assetResponse.setAssets(assets);
 
@@ -101,13 +100,13 @@ public class AssetServiceTest {
 	@Test
 	public void testUpdate() {
 
-		Asset asset = getAsset();
-		AssetRequest assetRequest = new AssetRequest();
+		final Asset asset = getAsset();
+		final AssetRequest assetRequest = new AssetRequest();
 		assetRequest.setAsset(asset);
 
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setResponseInfo(null);
 		assetResponse.setAssets(assets);
 
@@ -119,13 +118,13 @@ public class AssetServiceTest {
 	@Test
 	public void testUpdateAsync() {
 
-		Asset asset = getAsset();
-		AssetRequest assetRequest = new AssetRequest();
+		final Asset asset = getAsset();
+		final AssetRequest assetRequest = new AssetRequest();
 		assetRequest.setAsset(asset);
 
-		List<Asset> assets = new ArrayList<>();
+		final List<Asset> assets = new ArrayList<>();
 		assets.add(asset);
-		AssetResponse assetResponse = new AssetResponse();
+		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setResponseInfo(null);
 		assetResponse.setAssets(assets);
 
@@ -133,18 +132,18 @@ public class AssetServiceTest {
 	}
 
 	private Asset getAsset() {
-		Asset asset = new Asset();
+		final Asset asset = new Asset();
 		asset.setTenantId("ap.kurnool");
 		asset.setId(null);
 		asset.setName("asset name");
-		asset.setStatus(Status.CREATED);
+		asset.setStatus("CREATED");
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
-		Location location = new Location();
+		final Location location = new Location();
 		location.setLocality(4l);
 		location.setDoorNo("door no");
 
-		AssetCategory assetCategory = new AssetCategory();
+		final AssetCategory assetCategory = new AssetCategory();
 		assetCategory.setId(1l);
 		assetCategory.setName("category name");
 

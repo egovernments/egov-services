@@ -118,11 +118,11 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="_blank">{e.serviceRequestId}</Link>}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>
-                                    Service No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
                                         if(item.key =="status"){
                                           return(item.value)
                                         }

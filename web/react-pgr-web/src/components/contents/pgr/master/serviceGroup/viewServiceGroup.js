@@ -21,7 +21,6 @@ import {translate} from '../../../../common/common';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -50,6 +49,9 @@ const styles = {
   },
   checkbox: {
     marginTop: 37
+  },
+  bold: {
+    fontWeight: "bolder"
   }
 };
 
@@ -116,10 +118,46 @@ class ViewServiceGroup extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewServiceGroup.id ? viewServiceGroup.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.add.name")} <span style={{float:'right'}}>{viewServiceGroup.name ? viewServiceGroup.name : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.code")} <span style={{float:'right'}}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.description")} <span style={{float:'right'}}>{viewServiceGroup.description? viewServiceGroup.description : ''}</span></ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               ID
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceGroup.id ? viewServiceGroup.id : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.add.name")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceGroup.name ? viewServiceGroup.name : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.code")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceGroup.code ? viewServiceGroup.code : ''}
+                                          </Col>
+                                        </Row>
+                                        </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.description")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceGroup.description? viewServiceGroup.description : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

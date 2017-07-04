@@ -30,7 +30,6 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{

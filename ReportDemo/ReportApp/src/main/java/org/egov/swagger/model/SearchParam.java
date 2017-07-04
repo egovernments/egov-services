@@ -1,10 +1,8 @@
 package org.egov.swagger.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import javax.validation.constraints.NotNull;
 
-import javax.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * SearchParam
  */
@@ -12,7 +10,7 @@ import javax.validation.constraints.*;
 
 public class SearchParam extends ColumnDef  {
   @JsonProperty("value")
-  private String value = null;
+  private Object value = null;
 
   public SearchParam value(String value) {
     this.value = value;
@@ -25,52 +23,13 @@ public class SearchParam extends ColumnDef  {
   **/
   
   @NotNull
-  public String getValue() {
+  public Object getValue() {
     return value;
   }
 
-  public void setValue(String value) {
+  public void setValue(Object value) {
     this.value = value;
   }
 
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SearchParam searchParam = (SearchParam) o;
-    return Objects.equals(this.value, searchParam.value) &&
-        super.equals(o);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(value, super.hashCode());
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SearchParam {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    value: ").append(toIndentedString(value)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 }
 

@@ -12,11 +12,13 @@ import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.domain.model.ReportYamlMetaData.searchParams;
 import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
 import org.egov.domain.model.Response;
+import org.egov.report.service.ReportService;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportMetadata;
 import org.egov.swagger.model.ReportRequest;
+import org.egov.swagger.model.ReportResponse;
 import org.egov.swagger.model.SearchParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,8 @@ public class ReportController {
 	@Autowired
 	private Response responseInfoFactory;
 	
-
+	@Autowired
+	private ReportService reportService;
 
 	@PostMapping("/report/metadata/_get")
 	@ResponseBody
@@ -49,6 +52,15 @@ public class ReportController {
 		MetadataResponse mdr = getMetaData(metaDataRequest.getReportName());
 		return getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		
+	}
+	
+	@PostMapping("/report/_get")
+	@ResponseBody
+	public ResponseEntity<?> getReportData(@RequestBody @Valid final ReportRequest reportRequest,
+			final BindingResult errors) {
+		
+		ReportResponse reportResponse = reportService.getReportData(reportRequest);
+		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 	}
 	
 	@PostMapping("/report/generateSQL")
@@ -77,7 +89,11 @@ public class ReportController {
 				for(int j = 0 ; j < listFromRequest.size() ; j++) {
 					if(nameToFind.equals(listFromRequest.get(j).getName())){
 						String replaceString = "\\{"+nameToFind+"\\}";
-						splitQueries[1] = splitQueries[1].replaceAll(replaceString, listFromRequest.get(j).getValue());
+
+						//splitQueries[1] = splitQueries[1].replaceAll(replaceString, listFromRequest.get(j).getValue());
+
+					//	query = query.replaceAll(replaceString, listFromRequest.get(j).getValue());
+
 					}
 				}
 			}

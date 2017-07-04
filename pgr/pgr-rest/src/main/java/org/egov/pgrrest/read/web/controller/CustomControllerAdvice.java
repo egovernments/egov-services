@@ -1,9 +1,9 @@
 package org.egov.pgrrest.read.web.controller;
 
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.pgr.common.model.exception.InvalidOtpValidationRequestException;
 import org.egov.pgrrest.read.domain.exception.*;
 import org.egov.pgrrest.read.web.adapters.error.*;
-import org.egov.pgrrest.read.web.contract.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

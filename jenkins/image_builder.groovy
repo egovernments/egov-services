@@ -25,7 +25,6 @@ def publish(service_name, commit_id){
 def clean(service_name, commit_id){
     stage("Clean docker image") {
         sh "docker images | grep egovio/${service_name} | awk '{b=\$1\":\"\$2; print b}' | while read x; do docker rmi \$x; done"
-        sh "docker volume rm $(docker volume ls -f dangling=true -q)"
     }
 }
 

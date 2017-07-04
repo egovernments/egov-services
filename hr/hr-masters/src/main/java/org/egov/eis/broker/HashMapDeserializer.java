@@ -38,34 +38,17 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.broker;
+package org.egov.commons.consumers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import java.util.HashMap;
 
-@Service
-public class DesignationProducer {
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+@SuppressWarnings("rawtypes")
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-	public void sendMessage(String topic, String key, Object message) {
+    public HashMapDeserializer() {
+        super(HashMap.class);
+    }
 
-		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-
-		// Handle success or failure of sending
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(SendResult<String, Object> stringTSendResult) {
-			}
-
-			@Override
-			public void onFailure(Throwable throwable) {
-			}
-		});
-	}
 }

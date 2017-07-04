@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,6 +41,9 @@ import org.springframework.test.web.servlet.MockMvc;
 public class BusinessDetailsControllerTest {
 	@MockBean
 	private BusinessCategoryService businessCategoryService;
+
+	@MockBean
+	private KafkaTemplate<?,?> kafkaTemplate;
 
 	@MockBean
 	private BusinessDetailsService businessDetailsService;
@@ -256,7 +260,7 @@ public class BusinessDetailsControllerTest {
 	private RequestInfo getRequestInfo() {
 		User userInfo = User.builder().id(1L).build();
 		return RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST").did("4354648646").key("xyz")
-				.msgId("654654").requesterId("61").authToken("aceb9362-4147-40ff-936a-34497f83d740").userInfo(userInfo)
+				.msgId("654654").authToken("aceb9362-4147-40ff-936a-34497f83d740").userInfo(userInfo)
 				.build();
 	}
 

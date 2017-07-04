@@ -40,7 +40,6 @@
 
 package org.egov.commons.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.commons.model.Holiday;
 import org.egov.commons.repository.HolidayRepository;

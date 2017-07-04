@@ -21,9 +21,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AgreementDetails {
+public class AgreementDetailsEs {
 
 	private String agreementNumber;
+	private String tenantId;
 	private String agreementId;
 	private String ackNumber;
 	private String cityGrade;
@@ -31,6 +32,7 @@ public class AgreementDetails {
 	private String districtName;
 	private String cityCode;
 	private String regionName;
+	private String action;
 
 	private String adminWardName;
 	private String adminWard;
@@ -68,7 +70,7 @@ public class AgreementDetails {
 	Double securityDeposit;
 	private Date securityDepositDate;
 	private String natureOfAllotment;
-	Double registrationFeetype;
+	Double registrationFee;
 	private String caseNumber;
 	private Date commencementDate;
 	private Date expiryDate;
@@ -84,13 +86,19 @@ public class AgreementDetails {
 	private String solvencyCertificateNo;
 	private Date solvencyCertificateDate;
 	private String tinNumber;
+	private String createdBy;
+	private Date createdDate;
+	private String lastModifiedBy;
+	private Date lastModifiedDate;
 	private String workFlowState;
 
 	public void setAgreement(Agreement agreement) {
 
 		this.agreementNumber = agreement.getAgreementNumber();
+		this.tenantId = agreement.getTenantId();
 		this.ackNumber = agreement.getAcknowledgementNumber();
 		this.agreementDate = agreement.getAgreementDate();
+	    this.action = agreement.getAction().toString();
 		this.tenderNumber = agreement.getTenderNumber();
 		this.tenderDate = agreement.getTenderDate();
 		this.councilNumber = agreement.getCouncilNumber();
@@ -101,7 +109,7 @@ public class AgreementDetails {
 		this.securityDepositDate = agreement.getSecurityDepositDate();
 		this.status = agreement.getStatus().toString();
 		this.natureOfAllotment = agreement.getNatureOfAllotment().toString();
-		this.registrationFeetype = agreement.getRegistrationFee();
+		this.registrationFee = agreement.getRegistrationFee();
 		this.caseNumber = agreement.getCaseNo();
 		this.commencementDate = agreement.getCommencementDate();
 		this.expiryDate = agreement.getExpiryDate();
@@ -117,6 +125,10 @@ public class AgreementDetails {
 		this.solvencyCertificateNo = agreement.getSolvencyCertificateNo();
 		this.solvencyCertificateDate = agreement.getSolvencyCertificateDate();
 		this.tinNumber = agreement.getTinNumber();
+		this.createdBy = agreement.getCreatedBy();
+		this.createdDate = agreement.getCreatedDate();
+		this.lastModifiedBy = agreement.getLastmodifiedBy();
+		this.lastModifiedDate = agreement.getLastmodifiedDate();
 	}
 
 	public void setAsset(Asset asset) {

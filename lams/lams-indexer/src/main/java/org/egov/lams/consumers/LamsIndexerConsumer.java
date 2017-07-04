@@ -3,7 +3,8 @@ package org.egov.lams.consumers;
 import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AgreementDetails;
+import org.egov.lams.contract.AgreementDetailsEs;
+import org.egov.lams.contract.AgreementIndex;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.repository.ElasticSearchRepository;
 import org.egov.lams.service.AgreementAdaptorService;
@@ -41,14 +42,14 @@ public class LamsIndexerConsumer {
 			LOGGER.info(e.getMessage(), e);
 		}
 		
-		AgreementDetails agreementDetails = agreementAdapter.indexOnCreate(agreementRequest);
-		System.err.println(agreementDetails);
+		AgreementIndex agreementIndex = agreementAdapter.indexOnCreate(agreementRequest);
+		System.err.println(agreementIndex);
 
 		if (record.topic().equals(PropertiesManager.getKafkaSaveAgreementTopic())) {
-				elasticSearchRepository.saveAgreement(agreementDetails);
+				elasticSearchRepository.saveAgreement(agreementIndex);
 		}
 		else if (record.topic().equals(PropertiesManager.getKafkaUpdateAgreementTopic())) {
-			elasticSearchRepository.updateAgreement(agreementDetails);
+			elasticSearchRepository.updateAgreement(agreementIndex);
 		}
 
 	}

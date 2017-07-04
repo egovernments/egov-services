@@ -29,10 +29,8 @@ public class ResponseInfo {
 
 	private String tenantId = null;
 
-	
-	public ResponseInfo getResponseInfo(RequestInfo requestInfo)
-	{
-	return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
-			.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 }

@@ -43,8 +43,6 @@ package org.egov.egf.master.web.contract;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.domain.model.Fund;
-import org.egov.egf.master.persistence.entity.FundEntity;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -60,7 +58,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(exclude = { "parent" }, callSuper = false)
 @Builder
-public class FundContract  extends AuditableContract{
+public class FundContract extends AuditableContract {
 
 	private static final long serialVersionUID = 7977534010758407945L;
 
@@ -86,38 +84,24 @@ public class FundContract  extends AuditableContract{
 	@NotNull
 	protected Boolean active;
 
-	/*public Fund toDomain() {
-		
-		Fund parent=null;
-		if(this.getParent()!=null && this.parent.getId()!=null)
-		parent=	Fund.builder().id(this.getParent().getId()).build();
-		Fund fund= Fund.builder()
-		 .id(this.id)
-		 .name(name)
-		 .code(code)
-		 .active(active)
-		 .identifier(identifier)
-		 .parent(parent)
-		 .build();
-		super.toDomain(fund);
-		return fund;
-		 
-	}
-	*/
+	/*
+	 * public Fund toDomain() {
+	 *
+	 * Fund parent=null; if(this.getParent()!=null && this.parent.getId()!=null)
+	 * parent= Fund.builder().id(this.getParent().getId()).build(); Fund fund=
+	 * Fund.builder() .id(this.id) .name(name) .code(code) .active(active)
+	 * .identifier(identifier) .parent(parent) .build(); super.toDomain(fund);
+	 * return fund;
+	 *
+	 * }
+	 */
 
-	/*public FundEntity toEntity() {
-		return FundEntity.builder()
-		 .id(id)
-		 .name(name)
-		 .code(code)
-		 .active(active)
-		 .identifier(identifier)
-		 .parentId(parent.getId())
-		 .isParent(isParent)
-		 .build();
-		 
-	}
-*/
+	/*
+	 * public FundEntity toEntity() { return FundEntity.builder() .id(id)
+	 * .name(name) .code(code) .active(active) .identifier(identifier)
+	 * .parentId(parent.getId()) .isParent(isParent) .build();
+	 *
+	 * }
+	 */
 
-	
 }

@@ -22,8 +22,9 @@ public class MastersQueueRepository {
 	public void add(CommonRequest<?> request) {
 		String masterName = "";
 		HashMap<String, CommonRequest<?>> topicMap = new HashMap<String, CommonRequest<?>>();
-		if (!request.getData().isEmpty())
+		if (!request.getData().isEmpty()) {
 			masterName = request.getData().get(0).getClass().getSimpleName();
+		}
 
 		System.out.println("got insert for " + masterName);
 

@@ -5,10 +5,10 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.exception.UnauthorizedAccessException;
-import org.egov.common.web.contract.ErrorResponse;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.common.web.contract.Error;
+import org.egov.common.web.contract.ErrorResponse;
 import org.egov.common.web.contract.FieldError;
+import org.egov.common.web.contract.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -41,8 +41,9 @@ public class CustomControllerAdvice {
 			error.setMessage(errors.getGlobalError().getObjectName());
 			error.setDescription(errors.getGlobalError().getDefaultMessage());
 		} else {
-			if (errors.getFieldErrorCount() > 0)
+			if (errors.getFieldErrorCount() > 0) {
 				error.setDescription("Missing fields");
+			}
 		}
 		if (errors.hasFieldErrors()) {
 			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();

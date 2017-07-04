@@ -7,11 +7,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
+
 @Data
 @JsonInclude(value = Include.NON_NULL)
 public class CommonResponse<T> {
 	private ResponseInfo responseInfo;
-	private List<T> data=new ArrayList<T>();
+	private List<T> data = new ArrayList<T>();
 	private PaginationContract page;
 
 }

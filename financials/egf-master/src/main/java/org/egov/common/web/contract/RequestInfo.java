@@ -7,9 +7,10 @@ import org.egov.common.domain.model.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
+
 @Data
 public class RequestInfo {
-	
+
 	private String apiId;
 
 	private String ver;
@@ -30,6 +31,6 @@ public class RequestInfo {
 	private String authToken;
 
 	private String tenantId;
-	
+
 	private User userInfo;
 }

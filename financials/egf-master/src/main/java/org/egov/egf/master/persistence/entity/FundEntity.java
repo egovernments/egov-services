@@ -51,12 +51,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class FundEntity extends AuditableEntity  {
+public class FundEntity extends AuditableEntity {
 
 	public static final String TABLE_NAME = "egf_fund";
 	public static final String ALIAS = "fund";
@@ -82,39 +83,21 @@ public class FundEntity extends AuditableEntity  {
 
 	@NotNull
 	protected Boolean active;
-	
+
 	protected String parentId;
-	
-	public Fund toDomain()
-	{
-		
-		Fund parent=Fund.builder().id(parentId).build();
-		return Fund.builder()
-		.id(id)
-		.active(active)
-		.code(code)
-		.name(name)
-		.identifier(identifier)
-		.parent(parent)
-		.build();
-	}
-	
-	
-  public FundEntity toEntity(Fund fund)
-	{
-		
-	 return this.builder().id(fund.getId())
-	  .active(fund.getActive())
-	  .name(fund.getName())
-	  .code(fund.getCode())
-	  .identifier(fund.getIdentifier())
-	  .active(fund.getActive())
-	  .level(Long.valueOf(1))
-	  .parentId(fund.getParent()!=null?fund.getParent().getId():null).build();
-	 
+
+	public Fund toDomain() {
+
+		Fund parent = Fund.builder().id(parentId).build();
+		return Fund.builder().id(id).active(active).code(code).name(name).identifier(identifier).parent(parent).build();
 	}
 
-	 
+	public FundEntity toEntity(Fund fund) {
 
+		return FundEntity.builder().id(fund.getId()).active(fund.getActive()).name(fund.getName()).code(fund.getCode())
+				.identifier(fund.getIdentifier()).active(fund.getActive()).level(Long.valueOf(1))
+				.parentId(fund.getParent() != null ? fund.getParent().getId() : null).build();
+
+	}
 
 }

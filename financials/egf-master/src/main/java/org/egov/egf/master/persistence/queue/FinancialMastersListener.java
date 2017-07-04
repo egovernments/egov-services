@@ -28,8 +28,6 @@ public class FinancialMastersListener {
 	@Autowired
 	ApplicationContext applicationContext;
 
-
-
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -44,20 +42,20 @@ public class FinancialMastersListener {
 	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
 	public void process(HashMap<String, CommonRequest<?>> mastersMap) {
 
-		//CommonRequest request =(CommonRequest) mastersMap.values().toArray()[0];
-		System.out.println("consuming topic"+mastersMap);
+		// CommonRequest request =(CommonRequest)
+		// mastersMap.values().toArray()[0];
+		System.out.println("consuming topic" + mastersMap);
 
 		if (mastersMap.get("fundcontract__create") != null) {
 
-
-			CommonRequest<FundContract> request=	objectMapper.convertValue(mastersMap.get("fundcontract__create"), new TypeReference<CommonRequest<FundContract>>(){ });
-
+			CommonRequest<FundContract> request = objectMapper.convertValue(mastersMap.get("fundcontract__create"),
+					new TypeReference<CommonRequest<FundContract>>() {
+					});
 
 			System.out.println(request.getRequestInfo().getAction());
 
-			ModelMapper mapper=new ModelMapper();
-			for(FundContract fundContract:request.getData())
-			{
+			ModelMapper mapper = new ModelMapper();
+			for (FundContract fundContract : request.getData()) {
 				Fund domain = mapper.map(fundContract, Fund.class);
 				fundRepository.save(domain);
 			}
@@ -68,15 +66,14 @@ public class FinancialMastersListener {
 		}
 		if (mastersMap.get("bankcontract__create") != null) {
 
-
-			CommonRequest<BankContract> request=	objectMapper.convertValue(mastersMap.get("bankcontract__create"), new TypeReference<CommonRequest<BankContract>>(){ });
-
+			CommonRequest<BankContract> request = objectMapper.convertValue(mastersMap.get("bankcontract__create"),
+					new TypeReference<CommonRequest<BankContract>>() {
+					});
 
 			System.out.println(request.getRequestInfo().getAction());
 
-			ModelMapper mapper=new ModelMapper();
-			for(BankContract bankContract:request.getData())
-			{
+			ModelMapper mapper = new ModelMapper();
+			for (BankContract bankContract : request.getData()) {
 				Bank domain = mapper.map(bankContract, Bank.class);
 				bankRepository.save(domain);
 			}

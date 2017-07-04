@@ -46,7 +46,7 @@ import org.egov.common.domain.model.Pagination;
 import lombok.Data;
 
 @Data
-public class PaginationContract{
+public class PaginationContract {
 
 	public static int DEFAULT_PAGE_SIZE = 500;
 	public static int DEFAULT_PAGE_OFFSET = 0;
@@ -56,20 +56,19 @@ public class PaginationContract{
 	private Integer totalPages;
 
 	@Max(500l)
-	private Integer pageSize ;
+	private Integer pageSize;
 
 	private Integer currentPage;
 
 	private Integer offSet;
-	
- public	PaginationContract(Pagination<?> page)
-	{
-		this.pageSize=page.getPageSize();
-		this.currentPage=page.getCurrentPage();
-		this.offSet=page.getOffSet();
-		this.totalPages=page.getTotalPages();
-		this.totalResults=page.getTotalResults();
-		   
+
+	public PaginationContract(Pagination<?> page) {
+		this.pageSize = page.getPageSize();
+		this.currentPage = page.getCurrentPage();
+		this.offSet = page.getOffSet();
+		this.totalPages = page.getTotalPages();
+		this.totalResults = page.getTotalResults();
+
 	}
 
 }

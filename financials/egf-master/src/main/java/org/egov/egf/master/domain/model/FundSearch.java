@@ -3,7 +3,6 @@ package org.egov.egf.master.domain.model;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

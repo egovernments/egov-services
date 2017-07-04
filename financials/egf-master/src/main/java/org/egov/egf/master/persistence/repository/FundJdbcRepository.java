@@ -12,7 +12,6 @@ import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.persistence.entity.FundEntity;
 import org.egov.egf.master.persistence.entity.FundSearchEntity;
-import org.hibernate.validator.internal.util.privilegedactions.GetConstraintValidatorList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -55,21 +54,8 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		
-		//implement jdbc specfic search  
-		if (fundSearchEntity.getName() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("name=:name");
-			paramValues.put("name", fundSearchEntity.getName());
-		}
-
-		if (fundSearchEntity.getCode() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("code=:code");
-			paramValues.put("code", fundSearchEntity.getCode());
-		}
+		// implement jdbc specfic search
+		 
 
 		Pagination<Fund> page = new Pagination<>();
 		page.setOffSet(fundSearchEntity.getOffset());
@@ -113,14 +99,16 @@ public class FundJdbcRepository extends JdbcRepository {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity,s), entity));
+			preparedStatementValues.add(getValue(getField(entity, s), entity));
 		}
 
 		List<FundEntity> funds = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
 				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FundEntity>());
-		if(funds.isEmpty()) return null ;
-		else
+		if (funds.isEmpty()) {
+			return null;
+		} else {
 			return funds.get(0);
+		}
 
 	}
 

@@ -22,7 +22,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,39 +41,39 @@ public class FundController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommonResponse<FundContract> create(@RequestBody @Valid CommonRequest<FundContract> fundContractRequest,
 			BindingResult errors) {
-		ModelMapper model = new ModelMapper();
-		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
-		fundContractRequest.getRequestInfo().setAction("create");
-		List<Fund> funds = new ArrayList<>();
-		Fund fund = null;
-
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
-		for (FundContract fundContract : fundContractRequest.getData()) {
+		ModelMapper model = new ModelMapper();
+		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
+		List<Fund> funds = new ArrayList<>();
+		Fund fund = null;
+		List<FundContract> fundContracts = new ArrayList<FundContract>();
+		FundContract contract = null;
 
+		fundContractRequest.getRequestInfo().setAction("create");
+
+		for (FundContract fundContract : fundContractRequest.getData()) {
 			fund = new Fund();
 			model.map(fundContract, fund);
 			fund.setCreatedBy(fundContractRequest.getRequestInfo().getUserInfo());
 			fund.setLastModifiedBy(fundContractRequest.getRequestInfo().getUserInfo());
 			funds.add(fund);
-
 		}
 
 		funds = fundService.add(funds, errors);
-		FundContract contract = null;
 
-		List<FundContract> fundContracts = new ArrayList<FundContract>();
-		for (Fund fundDomain : funds) {
-
+		for (Fund f : funds) {
 			contract = new FundContract();
-			model.map(fundDomain, contract);
+			model.map(f, contract);
 			fundContracts.add(contract);
 		}
+
 		fundContractRequest.setData(fundContracts);
 		fundService.addToQue(fundContractRequest);
 		fundResponse.setData(fundContracts);
+
 		return fundResponse;
 	}
 
@@ -82,36 +81,37 @@ public class FundController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommonResponse<FundContract> update(@RequestBody @Valid CommonRequest<FundContract> fundContractRequest,
 			BindingResult errors) {
-		ModelMapper model = new ModelMapper();
-		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
-		List<Fund> funds = new ArrayList<>();
-		Fund fund = null;
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
-		for (FundContract fundContract : fundContractRequest.getData()) {
+		ModelMapper model = new ModelMapper();
+		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
+		List<Fund> funds = new ArrayList<>();
+		Fund fund = null;
+		FundContract contract = null;
+		List<FundContract> fundContracts = new ArrayList<FundContract>();
 
+		for (FundContract fundContract : fundContractRequest.getData()) {
 			fund = new Fund();
 			model.map(fundContract, fund);
 			fund.setLastModifiedBy(fundContractRequest.getRequestInfo().getUserInfo());
 			funds.add(fund);
-
 		}
+
 		funds = fundService.update(funds, errors);
-		FundContract contract = null;
 
-		List<FundContract> fundContracts = new ArrayList<FundContract>();
 		for (Fund fundObj : funds) {
-
 			contract = new FundContract();
 			model.map(fundObj, contract);
 			fundContracts.add(contract);
 		}
+
 		fundContractRequest.setData(fundContracts);
 		fundService.addToQue(fundContractRequest);
 		fundResponse.setData(fundContracts);
+
 		return fundResponse;
 	}
 
@@ -124,18 +124,13 @@ public class FundController {
 		ModelMapper mapper = new ModelMapper();
 		FundSearch domain = new FundSearch();
 		mapper.map(fundSearchContract, domain);
-
-		Pagination<Fund> funds = fundService.search(domain);
-		int i = 0;
-		errors.addError(new ObjectError("hellow", "hollow"));
-		if (i == 0)
-			throw new CustomBindException(errors);
-
 		FundContract contract = null;
 		ModelMapper model = new ModelMapper();
 		List<FundContract> fundContracts = new ArrayList<FundContract>();
-		for (Fund fund : funds.getPagedData()) {
 
+		Pagination<Fund> funds = fundService.search(domain);
+
+		for (Fund fund : funds.getPagedData()) {
 			contract = new FundContract();
 			model.map(fund, contract);
 			fundContracts.add(contract);
@@ -145,6 +140,7 @@ public class FundController {
 		response.setData(fundContracts);
 		response.setPage(new PaginationContract(funds));
 		response.setResponseInfo(getResponseInfo(requestInfo));
+
 		return response;
 
 	}

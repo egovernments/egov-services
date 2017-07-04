@@ -31,7 +31,7 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any user of the program
+ *      3) This license does not grant any rights to any Long of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
@@ -41,38 +41,29 @@
 package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
-public class EgfStatus extends Auditable {
+@EqualsAndHashCode(exclude = { "chartOfAccount", "accountDetailType" }, callSuper = false)
 
-	private static final long serialVersionUID = -8641767461447916679L;
+public class ChartOfAccountDetail extends Auditable {
 
-	@NotNull
 	private String id;
 
 	@NotNull
-	@Size(min = 3, max = 50)
-	private String moduleType;
+	private ChartOfAccount chartOfAccount;
 
 	@NotNull
-	@Size(min = 3, max = 20)
-	private String code;
-
-	@NotNull
-	@Size(min = 3, max = 250)
-	private String description;
+	private AccountDetailType accountDetailType;
 
 }

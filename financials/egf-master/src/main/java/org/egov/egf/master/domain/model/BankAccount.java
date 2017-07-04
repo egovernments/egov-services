@@ -31,7 +31,7 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any user of the program
+ *         3) This license does not grant any rights to any Long of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
@@ -42,9 +42,11 @@ package org.egov.egf.master.domain.model;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.domain.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,28 +55,35 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = { "bankBranch", "chartOfAccount", "fund", "type" }, callSuper = false)
 
-public class AccountEntity extends Auditable {
-
-	private static final long serialVersionUID = 1L;
+public class BankAccount extends Auditable {
 
 	private String id;
 
-	@NotNull
-	private AccountDetailType accountDetailType;
+	private BankBranch bankBranch;
+
+	private ChartOfAccount chartOfAccount;
+
+	private Fund fund;
 
 	@NotNull
-	@Length(max = 25, min = 1)
-	private String code;
+	@Length(max = 25)
+	private String accountNumber;
 
-	@NotNull
-	@Length(max = 350, min = 1)
-	private String name;
+	// is this required ?
+	private String accountType;
+
+	@Length(max = 256)
+	private String description;
 
 	@NotNull
 	private Boolean active;
 
-	@Length(max = 256)
-	private String description;
+	@Length(max = 100)
+	private String payTo;
+
+	@NotNull
+	private BankAccountType type;
 
 }

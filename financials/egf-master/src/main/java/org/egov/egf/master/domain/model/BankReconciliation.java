@@ -39,51 +39,32 @@
  */
 package org.egov.egf.master.domain.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 import org.egov.common.domain.model.Auditable;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
-public class Bank extends Auditable {
+@EqualsAndHashCode(exclude = { "bankAccount" }, callSuper = false)
 
-	private static final long serialVersionUID = -2839424467289504649L;
+public class BankReconciliation extends Auditable {
 
-
-	
 	private String id;
 
-	@NotNull
-	@Size(max = 50, min = 1)
-	private String code;
+	private BankAccount bankAccount;
 
-	@NotNull
-	@Size(max = 100, min = 2)
-	private String name;
+	private BigDecimal amount;
 
-	@Size(max = 250)
-	private String description;
+	private String transactionType;
 
-	@NotNull
-	private Boolean active;
-	
-	@NotNull
-	@Size(max = 50)
-	private String type;
-	
-	private Fund fund;  
+	private String instrumentHeaderId;
 
-	
-	
 }

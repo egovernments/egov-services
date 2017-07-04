@@ -31,19 +31,22 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.egf.master.domain.model;
 
-import java.math.BigDecimal;
-
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.domain.enums.BudgetAccountType;
+import org.egov.egf.master.domain.enums.BudgetingType;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,20 +56,28 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bankAccount" }, callSuper = false)
-
-public class BankReconciliation extends Auditable {
-
-	private static final long serialVersionUID = 1L;
+@Builder
+@EqualsAndHashCode(exclude = { "majorCode", "maxCode", "minCode", "accountType", "budgetingType" }, callSuper = false)
+public class BudgetGroup extends Auditable {
 
 	private String id;
 
-	private BankAccount bankAccount;
+	@Length(max = 250, min = 1)
+	private String name;
 
-	private BigDecimal amount;
+	@Length(max = 250, message = "Max 250 characters are allowed for description")
+	private String description;
 
-	private String transactionType;
+	private ChartOfAccount majorCode;
 
-	private String instrumentHeaderId;
+	private ChartOfAccount maxCode;
+
+	private ChartOfAccount minCode;
+
+	private BudgetAccountType accountType;
+
+	private BudgetingType budgetingType;
+
+	private Boolean active;
 
 }

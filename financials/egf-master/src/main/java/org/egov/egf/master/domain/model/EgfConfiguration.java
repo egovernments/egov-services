@@ -31,7 +31,7 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any Long of the program
+ *      3) This license does not grant any rights to any user of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
@@ -41,6 +41,7 @@
 package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
 
@@ -48,21 +49,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
+public class EgfConfiguration extends Auditable {
 
-public class AccountDetailKey extends Auditable {
-
-	private static final long serialVersionUID = 1L;
-
+	@NotNull
 	private String id;
-	@NotNull
-	private Long key;
 
 	@NotNull
-	private AccountDetailType accountDetailType;
+	@Size(min = 3, max = 50)
+	private String keyName;
+
+	@NotNull
+	@Size(min = 3, max = 250)
+	private String description;
 
 }

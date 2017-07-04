@@ -1536,7 +1536,8 @@ function getPositions(_this, cb) {
                     tenantId,
                     departmentId: $("#assignments\\.department").val(),
                     designationId: $("#assignments\\.designation").val(),
-                    asOnDate: _date
+                    asOnDate: _date,
+                    pageSize: 100
                 }, function(err, res) {
                     if (res) {
                         commonObject["assignments_position"] = res.Position;
@@ -1552,7 +1553,8 @@ function getPositions(_this, cb) {
             commonApiPost("hr-masters", "positions", "_search", {
                 tenantId,
                 departmentId: $("#assignments\\.department").val(),
-                designationId: $("#assignments\\.designation").val()
+                designationId: $("#assignments\\.designation").val(),
+                pageSize: 100
             }, function(err, res) {
                 if (res) {
                     commonObject["assignments_position"] = res.Position;

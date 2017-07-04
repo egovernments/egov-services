@@ -137,14 +137,8 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/receivingCenter/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("#/viewReceivingCenter/", id);
-                                              }}/></td>}
-                                              {url == '/receivingCenter/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("#/createReceivingCenter/", id);
-                                              }}/></td>}
+                                              {url == '/pgr/receivingCenter/view' && <td><Link to={`/pgr/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")}/></Link></td>}
+                                              {url == '/pgr/receivingCenter/edit' && <td><Link to={`/pgr/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")}/></Link></td>}
                                             </tr>
                                           )
                                         })}

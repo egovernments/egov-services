@@ -16,6 +16,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import {translate} from '../../../../common/common';
 
 
 var flag = 0;
@@ -131,8 +132,8 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.channels}</td>
                                               <td>{e.active?"True":"False"}</td>
-                                              {url == '/pgr/viewOrUpdateReceivingMode/view' && <td><Link to={`/pgr/viewReceivingMode/${this.props.match.params.type}/${e.id}`} target=""><RaisedButton style={{margin:'0 3px'}} label="View"/></Link></td>}
-                                              {url == '/pgr/viewOrUpdateReceivingMode/edit' && <td><Link  to={`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`} target=""><RaisedButton style={{margin:'0 3px'}} label="Edit"/></Link></td>}
+                                              {url == '/pgr/viewOrUpdateReceivingMode/view' && <td><Link to={`/pgr/viewReceivingMode/${this.props.match.params.type}/${e.id}`} target=""><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")}/></Link></td>}
+                                              {url == '/pgr/viewOrUpdateReceivingMode/update' && <td><Link  to={`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`} target=""><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")}/></Link></td>}
                                             </tr>
                                           )
                                         })}

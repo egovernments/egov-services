@@ -5,6 +5,7 @@ import {Link, Route} from 'react-router-dom';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
 import SwipeableViews from 'react-swipeable-views';
@@ -37,7 +38,8 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       slideIndex: 0,
-      serviceRequests: []
+      serviceRequests: [],
+	  localArray:[]
     };
 }
   componentWillMount() {
@@ -49,29 +51,42 @@ class Dashboard extends Component {
       Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
           console.log(response);
           current.setState({
-            serviceRequests: response.serviceRequests
+            serviceRequests: response.serviceRequests,
+			 localArray:response.serviceRequests
           });
       }).catch((error)=>{
           console.log(error);
           current.setState({
-            serviceRequests: []
+            serviceRequests: [],
+			localArray:[]
           });
       })
     } else {
         Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:currentUser.id},{}).then(function(response){
             console.log(response);
             current.setState({
-              serviceRequests: response.serviceRequests
+              serviceRequests: response.serviceRequests,
+			   localArray:response.serviceRequests
             });
         }).catch((error)=>{
             console.log(error);
             current.setState({
-              serviceRequests: []
+              serviceRequests: [],
+			  localArray:[]
             });
         })
     }
 
   };
+  
+  localHandleChange = (string) => {
+	 var b = this.state.serviceRequests.filter(function(item, index, array){
+		  if(JSON.stringify(item).toLowerCase().match(string.toLowerCase())){
+			  return item;
+		  }
+	  })
+	  this.setState({localArray:b});
+  }
 
   handleChange = (value) => {
     this.setState({
@@ -82,7 +97,7 @@ class Dashboard extends Component {
 
   render() {
 
-    // console.log(this);
+    //console.log(this.state.localArray);
     var {currentUser}=this.props;
     // console.log(currentUser);
     return (
@@ -104,12 +119,20 @@ class Dashboard extends Component {
               <div>
                   <Grid>
                     <Row>
-                      {this.state.serviceRequests && this.state.serviceRequests.map((e,i)=>{
+						<Col xs={12} md={12}>
+							<TextField
+								hintText="Search"
+								floatingLabelText="Search"
+								fullWidth="true"
+								onChange={(e, value) =>this.localHandleChange(value)}
+							/>
+						</Col>
+                      {this.state.localArray && this.state.localArray.map((e,i)=>{
 						  						  
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
                              <Card>
-                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
+                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700,minHeight:320}} subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="status"){
@@ -151,10 +174,18 @@ class Dashboard extends Component {
 				<CardText>
 						 <Grid>
                     <Row>
-                      {this.state.serviceRequests && this.state.serviceRequests.map((e,i)=>{
+					<Col xs={12} md={12}>
+							<TextField
+								hintText="Search"
+								floatingLabelText="Search"
+								fullWidth="true"
+								onChange={(e, value) =>this.localHandleChange(value)}
+							/>
+						</Col>
+                      {this.state.localArray && this.state.localArray.map((e,i)=>{
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
-                             <Card>
+                             <Card style={{minHeight:320}}>
                                  <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{

@@ -10,6 +10,8 @@ import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class ReportService {
 	
 	@Autowired
 	private ReportRepository reportRepository;
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
 	public ReportResponse getReportData(ReportRequest reportRequest){
 		List<ReportYamlMetaData> reportYamlMetaDatas = reportDefinitions.getReportDefinitions();
@@ -28,7 +32,8 @@ public class ReportService {
 				filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportYamlMetaData);
 		List<sourceColumns> columns = reportYamlMetaData.getSourceColumns();
-		System.out.println("columns::"+columns);
+		LOGGER.info("columns::"+columns);
+		LOGGER.info("maps::"+maps);
 		return populateData(columns, maps);
 	}
 	
@@ -41,9 +46,7 @@ public class ReportService {
 		for(int i=0; i<maps.size(); i++){
 			List<Object> objects = new ArrayList<>();
 			Map<String, Object> map = maps.get(i);
-			System.out.println("map:"+map);
 			for(sourceColumns sourceColm : columns){
-				System.out.println("sourceColm:"+sourceColm);
 				objects.add(map.get(sourceColm.getName()));
 			}
 			lists.add(objects);

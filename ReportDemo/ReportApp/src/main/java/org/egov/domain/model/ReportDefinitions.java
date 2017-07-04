@@ -29,10 +29,12 @@ public class ReportDefinitions {
 		this.reportDefinitions = reportDefinitions;
 	}
 
-	
-
-	
+	@Override
+	public String toString() {
+		return "ReportDefinitions [reportDefinitions=" + reportDefinitions + "]";
+	}
     
+	
 }
 
 

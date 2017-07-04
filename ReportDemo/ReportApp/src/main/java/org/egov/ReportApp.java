@@ -1,9 +1,9 @@
 package org.egov;
 import java.io.File;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.egov.domain.model.ReportDefinitions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +21,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 @SpringBootApplication
 public class ReportApp {
 	
-	
+	public static final Logger LOGGER = LoggerFactory
+			.getLogger(ReportApp.class);
 	
 	@Autowired
 	public ReportDefinitions reportDefintions;
@@ -55,6 +56,7 @@ public class ReportApp {
     	Resource resource = resourceLoader.getResource("classpath:application.yml");
         File yamlFile = resource.getFile();
         ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
+        LOGGER.info("reportDefinitions::"+reportDefinitions);
         return reportDefinitions;
     } catch (Exception e) {
         // TODO Auto-generated catch block

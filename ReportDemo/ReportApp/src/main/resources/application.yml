@@ -1,7 +1,20 @@
-reportName: GrievanceByType
-summary: Report grouped by Grievance Type and status - based on a date period
-version: 1.0.0
-sourceColumns:
+ReportDefinitions:
+#
+#Grievance Type Report:
+#Grouping the count based on the status with from date and to date:
+#select egct.name,count(*),status from submission seva 
+#join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= '2017-06-01' and seva.createddate <= '2017-06-29' group by seva.status,egct.name order by egct.name asc;
+
+#Grouping the count based on the status and grievance type with from date and to date:
+#select egct.name,count(*),status from submission seva 
+#join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= '2017-06-01' and seva.createddate <= '2017-06-29' and egct.code = 'BRKNB' group by seva.status,egct.name;
+
+# Both above reports can be achived by creating the report for second case and making status as non mandatory seacrh parameter (Refer revised reportdef yaml)
+  - reportName: GrievanceByType
+    summary: Report grouped by Grievance Type and status - based on a date period
+    version: 1.0.0
+    
+    sourceColumns:
       - name: id 
         label: reports.pgr.complainttype.name
         type: string
@@ -30,7 +43,8 @@ sourceColumns:
         label: reports.pgr.withinsla
         type: number
         source: seva
-searchParams:
+        
+    searchParams:
       - name: fromDate
         label: reports.pgr.datefrom
         type: epoch
@@ -47,5 +61,8 @@ searchParams:
         label: reports.pgr.status
         type: singlevaluelist
         source: seva
-        
-query: select demand.id, consumercode,consumertype,businessservice,owner,collectionamount,demandid FROM egbs_demand demand INNER JOIN egbs_demanddetail demanddetail ON demand.id=demanddetail.demandid AND demand.tenantid=demanddetail.tenantid WHERE demand.tenantid= $tenantid AND demand.id = $id AND demand.owner = $owner;
+
+    query: select demand.id, consumercode,consumertype,businessservice,owner,collectionamount,demandid FROM egbs_demand demand INNER JOIN egbs_demanddetail demanddetail ON demand.id=demanddetail.demandid AND demand.tenantid=demanddetail.tenantid WHERE demand.tenantid= $tenantid AND demand.id = $id AND demand.owner = $owner;
+    
+  - reportName: nextReport
+    summary: next report summary

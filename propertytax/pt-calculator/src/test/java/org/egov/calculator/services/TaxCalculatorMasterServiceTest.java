@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.egov.calculator.PtCalculatorApplication;
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.models.AuditDetails;
@@ -18,7 +17,6 @@ import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
@@ -40,8 +38,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration(classes = { PtCalculatorApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TaxCalculatorMasterServiceTest {
-	
-	private final static Logger LOGGER = Logger.getLogger(TaxCalculatorMasterServiceTest.class.getName());
 
 	@Autowired
 	TaxCalculatorMasterService taxCalculatorMasterService;
@@ -96,7 +92,7 @@ public class TaxCalculatorMasterServiceTest {
 
 	}
 
-	/*@Test
+	@Test
 	public void modifyFactor() {
 		String tenantId = "default";
 		RequestInfo requestInfo = getRequestInfoObject();
@@ -129,40 +125,37 @@ public class TaxCalculatorMasterServiceTest {
 			CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.updateFactor(tenantId,
 					calculationFactorRequest);
 
-			if (calculationFactorResponse.getCalculationFactors().size() >0 && calculationFactorRequest.getCalculationFactors().equals(calculationFactorResponse.getCalculationFactors()))
+			if (calculationFactorResponse.getCalculationFactors().size() > 0 && calculationFactorRequest
+					.getCalculationFactors().equals(calculationFactorResponse.getCalculationFactors()))
 				assertTrue(true);
 			else
-			assertTrue(false);
+				assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
 		}
 
-	}*/
+	}
 
 	@Test
 	public void searchFactor() {
 
 		String tenantId = "default";
 		String factorType = "age";
-		String validDate = "16/06/2007";
+		String validDate = "2007-06-16";
 		String code = "propertytax";
 		RequestInfo requestInfo = getRequestInfoObject();
-
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
 			CalculationFactorResponse calculationFactorResponse = taxCalculatorMasterService.getFactor(requestInfo,
 					tenantId, factorType, validDate, code);
-			if (calculationFactorResponse.getCalculationFactors().size() == 0)
+			if (calculationFactorResponse.getCalculationFactors().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			LOGGER.error(e.getMessage());
 			assertTrue(false);
 		}
 
@@ -223,7 +216,7 @@ public class TaxCalculatorMasterServiceTest {
 	 * 
 	 * @throws Exception
 	 */
-/*	@Test
+	@Test
 	public void modityGuidanceValue() throws Exception {
 		try {
 
@@ -257,15 +250,16 @@ public class TaxCalculatorMasterServiceTest {
 
 			GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.updateGuidanceValue(tenantId,
 					guidanceValueRequest);
-			if (guidanceValueResponse.getGuidanceValues().size() > 0 && guidanceValueRequest.getGuidanceValues().equals(guidanceValueResponse.getGuidanceValues())) 
+			if (guidanceValueResponse.getGuidanceValues().size() > 0
+					&& guidanceValueRequest.getGuidanceValues().equals(guidanceValueResponse.getGuidanceValues()))
 				assertTrue(true);
 			else
-			assertTrue(false);
+				assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-	}*/
+	}
 
 	/**
 	 * Description: Test case for guidance value search
@@ -278,7 +272,7 @@ public class TaxCalculatorMasterServiceTest {
 
 			String tenantId = "default";
 			String boundary = "b2";
-			String validDate = "15/06/2017";
+			String validDate = "2016-11-25";
 			String structure = "rectangle";
 			String usage = "propertyuse";
 			String subUsage = "propertyusage";
@@ -292,8 +286,6 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			LOGGER.error(e.getMessage());
 			assertTrue(false);
 		}
 	}
@@ -344,7 +336,7 @@ public class TaxCalculatorMasterServiceTest {
 	/**
 	 * This will test whether the tax period will update successfully or not
 	 */
-	/*@Test
+	@Test
 	public void modifyTaxPeriod() {
 
 		List<TaxPeriod> taxPeriods = new ArrayList<>();
@@ -376,16 +368,17 @@ public class TaxCalculatorMasterServiceTest {
 		try {
 			taxPeriodResponse = taxCalculatorMasterService.updateTaxPeriod(tenantId, taxPeriodRequest);
 
-			if (taxPeriodResponse.getTaxPeriods().size() > 0 && taxPeriodResponse.getTaxPeriods().equals( taxPeriodRequest.getTaxPeriods()) )
+			if (taxPeriodResponse.getTaxPeriods().size() > 0
+					&& taxPeriodResponse.getTaxPeriods().equals(taxPeriodRequest.getTaxPeriods()))
 				assertTrue(true);
 			else
-			assertTrue(false);
+				assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
 		}
 
-	}*/
+	}
 
 	/**
 	 * This will test whether the search will be successful or not for tax
@@ -395,7 +388,7 @@ public class TaxCalculatorMasterServiceTest {
 	public void searchTaxPeriod() {
 
 		String tenantId = "1234";
-		String validDate = "03/02/2017 00:00:00";
+		String validDate = "2017-02-03";
 		String code = "YEAR";
 
 		TaxPeriodResponse taxPeriodResponse = null;
@@ -403,8 +396,9 @@ public class TaxCalculatorMasterServiceTest {
 			taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(), tenantId, validDate,
 					code);
 
-			if (taxPeriodResponse.getTaxPeriods().size() == 0)
+			if (taxPeriodResponse.getTaxPeriods().size() == 0) {
 				assertTrue(false);
+			}
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(false);
@@ -458,7 +452,7 @@ public class TaxCalculatorMasterServiceTest {
 		}
 	}
 
-	/*@Test
+	@Test
 	public void modifyTaxRateServiceTest() {
 
 		String tenantId = "default";
@@ -495,22 +489,23 @@ public class TaxCalculatorMasterServiceTest {
 		try {
 			TaxRatesResponse taxRatesResponse = taxCalculatorMasterService.updateTaxRate(tenantId, taxRatesRequest);
 
-			if (taxRatesResponse.getTaxRates().size() > 0 &&  taxRatesRequest.getTaxRates().equals(taxRatesResponse.getTaxRates()))
+			if (taxRatesResponse.getTaxRates().size() > 0
+					&& taxRatesRequest.getTaxRates().equals(taxRatesResponse.getTaxRates()))
 				assertTrue(true);
 			else
-			assertTrue(false);
+				assertTrue(false);
 
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-	}*/
+	}
 
 	@Test
 	public void searchTaxRateServiceTest() {
 
 		String tenantId = "default";
 		String taxHead = "taxHead-UU";
-		String validDate = "04/06/2017 00:00:00";
+		String validDate = "2017-06-04";
 		Double validARVAmount = 1100.0;
 		String parentTaxHead = "dependentTaxHead-UU";
 
@@ -519,8 +514,9 @@ public class TaxCalculatorMasterServiceTest {
 			taxRatesResponse = taxCalculatorMasterService.getTaxRate(getRequestInfoObject(), tenantId, taxHead,
 					validDate, validARVAmount, parentTaxHead);
 
-			if (taxRatesResponse.getTaxRates().size() == 0)
+			if (taxRatesResponse.getTaxRates().size() == 0) {
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 		} catch (Exception e) {

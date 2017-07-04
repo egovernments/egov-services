@@ -1,9 +1,9 @@
 package org.egov.pgrrest.read.web.adapters.error;
 
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.web.contract.Error;
-import org.egov.pgrrest.read.web.contract.ErrorField;
-import org.egov.pgrrest.read.web.contract.ErrorResponse;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;

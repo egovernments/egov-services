@@ -99,7 +99,8 @@ class createRouter extends Component {
        	boundaryTypeList: [],
         boundaryInitialList: [],
        	open: false,
-       	readonly: false
+       	readonly: false,
+        updateonly: false
        }
        this.loadBoundaries = this.loadBoundaries.bind(this);
        this.create = this.create.bind(this);
@@ -148,6 +149,11 @@ class createRouter extends Component {
             self.setState({
               readonly: true
             });
+          else {
+            self.setState({
+              updateonly: true
+            });
+          }
         }, function(err) {
           self.props.setLoadingStatus('hide');
         })
@@ -296,7 +302,8 @@ class createRouter extends Component {
        	boundaryTypeList,
         boundaryInitialList,
        	open,
-       	readonly
+       	readonly,
+        updateonly
   	} = this.state;
     console.log(routerCreateSet);
   	const showBtn = function() {
@@ -324,7 +331,7 @@ class createRouter extends Component {
                         dataSource={this.state.complaintSource}
                         dataSourceConfig={this.state.complaintSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        disabled={readonly}
+                        disabled={readonly || updateonly}
                         errorText={fieldErrors.complaintType || ""}
                         searchText={searchTextCom}
                         value={routerCreateSet.complaintType || ""}
@@ -342,7 +349,7 @@ class createRouter extends Component {
                    </Col>
                    <Col xs={12} md={8}>
                    	<SelectField
-                      disabled={readonly}
+                      disabled={readonly || updateonly}
                       fullWidth={true}
                       floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
                       errorText={fieldErrors.boundaryType || ""}
@@ -359,7 +366,7 @@ class createRouter extends Component {
                    </Col>
                    <Col xs={12} md={8}>
                    	<AutoComplete
-                   		disabled={readonly}
+                   		disabled={readonly || updateonly}
                         hintText=""
                         floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                         fullWidth={true}

@@ -9,7 +9,6 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
-// import Api from '../../api/financialsApi';
 import AutoComplete from 'material-ui/AutoComplete';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -19,6 +18,7 @@ import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 import {Redirect} from 'react-router-dom'
 import Api from '../../api/api';
+import {translate} from '../common/common';
 var axios = require('axios');
 
 const styles = {
@@ -82,6 +82,7 @@ class Login extends Component {
            isActive: {
              checked: false
            },
+           locale: localStorage.getItem('locale') ? localStorage.getItem('locale') : 'en_IN',
            dataSource: [],
            errorMsg: "",
            open: false,
@@ -114,7 +115,6 @@ class Login extends Component {
        this.handleClose = this.handleClose.bind(this);
        this.handleStateChange = this.handleStateChange.bind(this);
        this.sendRecovery = this.sendRecovery.bind(this);
-       this.searchGrievance = this.searchGrievance.bind(this);
        this.validateOTP = this.validateOTP.bind(this);
        this.generatePassword = this.generatePassword.bind(this);
        this.handleSignUpModalOpen = this.handleSignUpModalOpen.bind(this);
@@ -130,6 +130,9 @@ class Login extends Component {
    componentDidMount() {
      let {initForm} = this.props;
      initForm();
+
+     this.handleLocaleChange(this.state.locale);
+
 
     //  Api.commonApiPost("egf-masters", "functionaries", "_search").then(function(response)
     //  {
@@ -149,6 +152,18 @@ class Login extends Component {
 
    componentDidUpdate(prevProps, prevState) {
 
+   }
+
+   handleLocaleChange = (value) => {
+     var self = this;
+     Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
+     {
+       self.setState({'locale':value});
+       localStorage.setItem("locale", value);
+       localStorage.setItem("lang_response", JSON.stringify(response.messages));
+     },function(err) {
+        self.props.toggleSnackbarAndSetText(true, err.message);
+     });
    }
 
    loginRequest () {
@@ -174,18 +189,18 @@ class Login extends Component {
       instance.post('/user/oauth/token', params).then(function(response) {
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
+        localStorage.setItem("auth", response.data.access_token);
+				localStorage.setItem("type", response.data.UserRequest.type);
+				localStorage.setItem("id", response.data.UserRequest.id);
+				localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
         props.login(false, response.data.access_token, response.data.UserRequest);
+
       }).catch(function(response) {
         self.setState({
           errorMsg: "Please check your username and password"
-        })
+        });
       });
 
-      instance.get('/localization/messages?tenantId=default&locale=en_IN').then(function(response) {
-        localStorage.setItem("lang_response", JSON.stringify(response.data.messages));
-      }).catch(function(response) {
-        throw new Error(response.data.message);
-      });
    }
 
    handleCheckBoxChange = (prevState) => {
@@ -237,7 +252,7 @@ class Login extends Component {
     var self = this;
     if(!self.state.mobNo)
       return self.setState({
-        mobErrorMsg: "Mobile Number / Login ID is required"
+        mobErrorMsg: translate('Mobile Number / Login ID is required')
       })
 
     else
@@ -262,22 +277,21 @@ class Login extends Component {
             })
           })
       }, function(err) {
-
+        self.props.toggleSnackbarAndSetText(true, err.message);
       });
     }
    }
 
-   searchGrievance(e) {
-      if(this.state.srn) {
-        window.open("/searchGrievance?srn=" + this.state.srn, '_blank');
-      }
+   searchGrievance = (e) => {
+     let {history} = this.props;
+     history.push("/viewGrievance/"+this.state.srn);
    }
 
    validateOTP() {
       var self = this;
       if(!self.state.otp) {
         return self.setState({
-          otpErrorMsg: "OTP is required."
+          otpErrorMsg: translate('OTP is required')
         })
       } else {
         self.setState({
@@ -296,7 +310,7 @@ class Login extends Component {
             uuid: response.otp.UUID
           })
       }, function(err) {
-
+        self.props.toggleSnackbarAndSetText(true, err.message);
       });
    }
 
@@ -311,7 +325,7 @@ class Login extends Component {
       var self = this;
       if(!self.state.pwd || !self.state.newPwd) {
         return self.setState({
-          pwdErrorMsg: "Password field is required."
+          pwdErrorMsg: translate('Password field is required.')
         })
       } else {
         self.setState({
@@ -321,7 +335,7 @@ class Login extends Component {
 
       if(self.state.pwd != self.state.newPwd) {
         return self.setState({
-          pwdErrorMsg: "Passwords do not match."
+          pwdErrorMsg: translate('core.error.password.confirmpassword.same')
         })
       } else {
         var rqst = {
@@ -340,7 +354,7 @@ class Login extends Component {
             open2: true
           });
         }, function(err) {
-
+          self.props.toggleSnackbarAndSetText(true, err.message);
         });
       }
    }
@@ -349,11 +363,11 @@ class Login extends Component {
       var self = this;
       if(self.state.signUpObject.mobileNumber.length != 10) {
         self.setState({
-          signUpErrorMsg: "Mobile number should be 10 digits"
+          signUpErrorMsg: translate('core.lbl.enter.mobilenumber')
         })
       } else if (self.state.signUpObject.password != self.state.signUpObject.confirmPassword) {
         self.setState({
-          signUpErrorMsg: "Passwords do not match"
+          signUpErrorMsg: translate('core.error.password.confirmpassword.same')
         })
       } else {
         var signUpObject = Object.assign({}, self.state.signUpObject);
@@ -366,7 +380,7 @@ class Login extends Component {
             optSent: true
           })
         }, function (err){
-
+          self.props.toggleSnackbarAndSetText(true, err.message);
         })
       }
    }
@@ -375,7 +389,7 @@ class Login extends Component {
       var self = this;
       if(!self.state.signUpObject.otp) {
         self.setState({
-          signUpErrorMsg: "OTP is required"
+          signUpErrorMsg: translate("OTP is required")
         })
       } else {
         Api.commonApiPost("otp/v1/_validate", {}, {
@@ -400,16 +414,16 @@ class Login extends Component {
                 open4: true
               })
             }, function(err) {
-
+              self.props.toggleSnackbarAndSetText(true, err.message);
             })
         }, function(err) {
-
+          self.props.toggleSnackbarAndSetText(true, err.message);
         })
       }
    }
 
    render() {
-      console.log("IN LOGIN");
+      //console.log("IN LOGIN");
       let {
         login,
         credential,
@@ -465,7 +479,7 @@ class Login extends Component {
         if(!hideOtp) {
           return (
             <TextField
-                  floatingLabelText="Enter OTP"
+                  floatingLabelText={translate('core.lbl.enter.OTP')}
                   style={styles.fullWidth}
                   errorText={otpErrorMsg} id="otp" value={otp} onChange={(e) => handleStateChange(e, "otp")}
               />
@@ -506,13 +520,13 @@ class Login extends Component {
              <Row>
                   <Col lg={12}>
                       <SelectField
-                        floatingLabelText="Select Language"
-                        value={this.state.value}
-                        onChange={this.handleChange}
+                        floatingLabelText={translate('core.lbl.setlanguage')}
+                        value={this.state.locale}
+                        onChange={(event, key, payload) => this.handleLocaleChange(payload)}
                         className="pull-right"
                       >
-                        <MenuItem value={1} primaryText="Engilish" />
-                        <MenuItem value={2} primaryText="Hindi" />
+                        <MenuItem value={"en_IN"} primaryText="English" />
+                        <MenuItem value={"mr_IN"} primaryText="Marathi" />
                       </SelectField>
                   </Col>
               </Row>
@@ -522,10 +536,10 @@ class Login extends Component {
                       <CardText>
                           <Row>
                               <Col lg={12}>
-                              <h4>Sign In</h4>
+                              <h4>{translate('core.lbl.signin')}</h4>
                                 <Col lg={12}>
                                 <TextField
-                                    floatingLabelText="Mobile Number / Login ID"
+                                    floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                                     style={styles.fullWidth}
                                     errorText={fieldErrors.username
                                       ? fieldErrors.username
@@ -534,7 +548,7 @@ class Login extends Component {
                                 </Col>
                                 <Col lg={12}>
                                 <TextField
-                                    floatingLabelText="Password"
+                                    floatingLabelText={translate('core.lbl.password')}
                                     type="password"
                                     style={styles.fullWidth}
                                     errorText={fieldErrors.password
@@ -546,10 +560,10 @@ class Login extends Component {
                                   {showError()}
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid}  label="Sign in" style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
+                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
                                     loginRequest()
                                   }}/>
-                                  <FlatButton label="Forgot Password ?" style={styles.buttonTopMargin} onClick={showPasswordModal}/>
+                                  <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
                                 </Col>
                               </Col>
                           </Row>
@@ -563,8 +577,8 @@ class Login extends Component {
                             <i className="material-icons">person</i>
                         </FloatingActionButton>
                         <div style={{"float": "left", "cursor": "pointer"}} onClick={handleSignUpModalOpen}>
-                          <h4>Create an account</h4>
-                          <p>Create an account to avail our services</p>
+                          <h4>{translate('pgr.title.create.account')}</h4>
+                          <p>{translate('pgr.msg.creategrievance.avail.onlineservices')}</p>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -572,8 +586,8 @@ class Login extends Component {
                             <i className="material-icons">mode_edit</i>
                         </FloatingActionButton>
                         <div style={styles.floatLeft}>
-                          <h4>Register a grievance</h4>
-                          <p>Register your grievance</p>
+                          <h4>{translate('pgr.lbl.register.grievance')}</h4>
+                          <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -581,13 +595,13 @@ class Login extends Component {
                             <i className="material-icons">search</i>
                         </FloatingActionButton>
                         <div style={styles.floatLeft}>
-                          <h4>Check your grievance status</h4>
+                          <h4>{translate('pgr.msg.complaintstatus.anytime')}</h4>
                           <TextField
-                            hintText="Search Text"
+                            hintText={translate('pgr.lbl.complaintnumber')}
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label="Search" backgroundColor={"#354f57"} labelColor={white} onClick={(e)=>{searchGrievance(e)}}/>
+                          <RaisedButton label={translate('core.lbl.search')} backgroundColor={"#354f57"} labelColor={white} onClick={(e)=>{searchGrievance(e)}}/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -595,8 +609,8 @@ class Login extends Component {
                             <i className="material-icons">phone</i>
                         </FloatingActionButton>
                         <div style={styles.floatLeft}>
-                          <h4>Register via grievance cell</h4>
-                          <p>Call 1800-425-9766 to register your grievance</p>
+                          <h4>{translate('Register via grievance cell')}</h4>
+                          <p>{translate('Call 1800-425-9766 to register your grievance')}</p>
                         </div>
                       </Col>
                     </Row>
@@ -631,15 +645,15 @@ class Login extends Component {
               </Row>
             </Grid>
             <Dialog
-              title="Recover Password"
+              title={translate('Recover Password')}
               actions={[
                 <FlatButton
-                  label="Cancel"
+                  label={translate('core.lbl.cancel')}
                   primary={false}
                   onTouchTap={() => {handleClose("open")}}
                 />,
                 <FlatButton
-                  label="Send Recovery OTP"
+                  label={translate('Send Recovery OTP')}
                   secondary={true}
                   onTouchTap={(e)=>{sendRecovery("otp")}}
                 />
@@ -649,24 +663,24 @@ class Login extends Component {
               onRequestClose={(e) => {handleClose("open")}}
             >
               <TextField
-                  floatingLabelText="Mobile Number/Login ID"
+                  floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                   style={styles.fullWidth}
                   errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e, "mobNo")}
               />
               <div style={{textAlign: "right", fontSize: "12px"}}>
-                Recovery link or OTP will be sent to your registered email / mobile
+                {translate('Recovery link or OTP will be sent to your registered email / mobile')}
               </div>
             </Dialog>
             <Dialog
-              title={!hideOtp ? "Enter OTP Sent To Your Mobile Number" : "New Password"}
+              title={!hideOtp ? translate('Enter OTP Sent To Your Mobile Number') : translate('core.lbl.new.password')}
               actions={[
                 <FlatButton
-                  label="Cancel"
+                  label={translate('core.lbl.cancel')}
                   primary={false}
                   onTouchTap={(e) => {handleClose("open1")}}
                 />,
                 <FlatButton
-                  label={!hideOtp ? "Verify" : "Submit"}
+                  label={!hideOtp ? translate('Verify') : translate('core.lbl.submit')}
                   secondary={true}
                   onTouchTap={(e)=>{!hideOtp ? validateOTP() : generatePassword()}}
                 />
@@ -680,27 +694,27 @@ class Login extends Component {
             </Dialog>
             <Snackbar
               open={this.state.open2}
-              message="Password changed successfully."
+              message={translate('core.msg.success.password.updated')}
               style={{"textAlign": "center"}}
               autoHideDuration={4000}
             />
             <Snackbar
               open={this.state.open4}
-              message="Account created successfully."
+              message={translate('core.account.created.successfully')}
               style={{"textAlign": "center"}}
               autoHideDuration={4000}
             />
             <Dialog
-              title="Create An Account"
+              title={translate('pgr.title.create.account')}
               autoScrollBodyContent="true"
               actions={[
                 <FlatButton
-                  label="Cancel"
+                  label={translate('core.lbl.cancel')}
                   primary={false}
                   onTouchTap={(e) => {handleClose("open3")}}
                 />,
                 <FlatButton
-                  label={!optSent ? "Generate OTP" : "Sign Up"}
+                  label={!optSent ? translate('pgr.lbl.generate.otp') : translate('core.lbl.signup')}
                   secondary={true}
                   disabled={!isAllFields()}
                   onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
@@ -714,7 +728,7 @@ class Login extends Component {
                 <Row>
                   <Col xs={12} md={12}>
                     <TextField
-                        floatingLabelText="Mobile Number"
+                        floatingLabelText={translate('core.lbl.mobilenumber')}
                         style={styles.fullWidth}
                         value={signUpObject.mobileNumber}
                         type="number"
@@ -724,7 +738,7 @@ class Login extends Component {
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
-                        floatingLabelText="Password"
+                        floatingLabelText={translate('core.lbl.password')}
                         style={styles.fullWidth}
                         value={signUpObject.password}
                         disabled={optSent}
@@ -734,7 +748,7 @@ class Login extends Component {
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
-                        floatingLabelText="Confirm Password"
+                        floatingLabelText={translate('core.lbl.confirm.password')}
                         style={styles.fullWidth}
                         value={signUpObject.confirmPassword}
                         disabled={optSent}
@@ -744,7 +758,7 @@ class Login extends Component {
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
-                        floatingLabelText="Full Name"
+                        floatingLabelText={translate('core.lbl.fullname')}
                         style={styles.fullWidth}
                         value={signUpObject.name}
                         disabled={optSent}
@@ -753,7 +767,7 @@ class Login extends Component {
                   </Col>
                   <Col xs={12} md={12}>
                     <TextField
-                        floatingLabelText="Email Address (Optional)"
+                        floatingLabelText={translate('core.lbl.email')}
                         style={styles.fullWidth}
                         value={signUpObject.emailId}
                         disabled={optSent}
@@ -764,7 +778,7 @@ class Login extends Component {
                     {
                       (optSent) ?
                         (<TextField
-                          floatingLabelText="OTP"
+                          floatingLabelText={translate('core.lbl.otp')}
                           style={styles.fullWidth}
                           value={signUpObject.otp}
                           onChange={(e) => handleStateChange(e, "signUpObject.otp")}
@@ -807,10 +821,10 @@ const mapDispatchToProps = dispatch => ({
       "access_token": token, "UserRequest": userRequest
     };
     dispatch({type: "LOGIN", error, payload})
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
   }
-
-
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

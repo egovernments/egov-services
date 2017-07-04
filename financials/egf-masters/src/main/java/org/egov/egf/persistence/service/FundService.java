@@ -43,7 +43,7 @@ public class FundService {
 	private final FundJpaRepository fundJpaRepository;
 	private final FundQueueRepository fundQueueRepository;
 	private final FundESRepository fundESRepository;
-	private final String loadDataFrom;
+	private final String fetchDataFrom;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -56,11 +56,11 @@ public class FundService {
 
 	@Autowired
 	public FundService(final FundJpaRepository fundJpaRepository, final FundQueueRepository fundQueueRepository,
-			final FundESRepository fundESRepository, @Value("${financial_load_data_from}") String loadDataFrom) {
+			final FundESRepository fundESRepository, @Value("${fetch_data_from}") String fetchDataFrom) {
 		this.fundJpaRepository = fundJpaRepository;
 		this.fundQueueRepository = fundQueueRepository;
 		this.fundESRepository = fundESRepository;
-		this.loadDataFrom = loadDataFrom;
+		this.fetchDataFrom = fetchDataFrom;
 	}
 
 	public void push(final FundContractRequest financialYearContractRequest) {
@@ -165,7 +165,7 @@ public class FundService {
 	}
 
 	public Page<Fund> search(FundContractRequest fundContractRequest) {
-		if (loadDataFrom != null && !loadDataFrom.isEmpty() && loadDataFrom.equalsIgnoreCase("es")) {
+		if (fetchDataFrom != null && !fetchDataFrom.isEmpty() && fetchDataFrom.equalsIgnoreCase("es")) {
 			FundSearchCriteria fundSearchCriteria = new FundSearchCriteria();
 			List<Fund> funds = fundESRepository.getMatchingFunds(fundSearchCriteria);
 			PageRequest pageable = new PageRequest(fundContractRequest.getPage().getCurrentPage(),

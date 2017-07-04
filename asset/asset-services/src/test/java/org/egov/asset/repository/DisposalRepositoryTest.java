@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +42,8 @@ public class DisposalRepositoryTest {
 	@Test
 	public void test_should_search_Disposals() {
 
-		List<Disposal> disposals = new ArrayList<>();
-		Disposal disposal = getDisposalFromDB();
+		final List<Disposal> disposals = new ArrayList<>();
+		final Disposal disposal = getDisposalFromDB();
 		disposals.add(disposal);
 		when(disposalQueryBuilder.getQuery(any(DisposalCriteria.class), any(List.class))).thenReturn("");
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(DisposalRowMapper.class)))
@@ -52,12 +53,12 @@ public class DisposalRepositoryTest {
 
 	@Test
 	public void testCreateDisposal() {
-		RequestInfo requestInfo = new RequestInfo();
-		User user = new User();
+		final RequestInfo requestInfo = new RequestInfo();
+		final User user = new User();
 		user.setId(1l);
 		requestInfo.setUserInfo(user);
-		Disposal disposal = getDisposalFromDB();
-		DisposalRequest disposalRequest = new DisposalRequest();
+		final Disposal disposal = getDisposalFromDB();
+		final DisposalRequest disposalRequest = new DisposalRequest();
 		disposalRequest.setRequestInfo(requestInfo);
 		disposalRequest.setDisposal(disposal);
 		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
@@ -66,7 +67,7 @@ public class DisposalRepositoryTest {
 
 	private Disposal getDisposalFromDB() {
 
-		Disposal disposal = new Disposal();
+		final Disposal disposal = new Disposal();
 		disposal.setTenantId("ap.kurnool");
 		disposal.setId(Long.valueOf("15"));
 		disposal.setAssetId(Long.valueOf("31"));
@@ -76,12 +77,12 @@ public class DisposalRepositoryTest {
 		disposal.setDisposalDate(Long.valueOf("1496564536178"));
 		disposal.setPanCardNumber("baq1234567");
 		disposal.setAadharCardNumber("12345678123456");
-		disposal.setAssetCurrentValue(Double.valueOf("100.0"));
-		disposal.setSaleValue(Double.valueOf("200.0"));
+		disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+		disposal.setSaleValue(new BigDecimal("200.0"));
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("15"));
 
-		AuditDetails auditDetails = new AuditDetails();
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy("2");
 		auditDetails.setCreatedDate(Long.valueOf("1496746205544"));
 		auditDetails.setLastModifiedBy("2");

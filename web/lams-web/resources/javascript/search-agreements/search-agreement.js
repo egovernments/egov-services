@@ -54,6 +54,19 @@ class AgreementSearch extends React.Component {
       //call api call
       var agreements = commonApiPost("lams-services", "agreements", "_search", searchSet).responseJSON["Agreements"] ||[];
       flag = 1;
+      if(agreements && agreements.length) {
+        agreements.sort(function(d1, d2) {
+          var date1 = d1.createdDate.split("/");
+          var date2 = d2.createdDate.split("/");
+          if(new Date(date1[2], date1[1]-1, date1[0]).getTime() < new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
+            return -1;
+          } else if(new Date(date1[2], date1[1]-1, date1[0]).getTime() > new Date(date2[2], date2[1]-1, date2[0]).getTime()) {
+            return 1;
+          } else 
+            return 0;
+        })
+      }
+
       _this.setState({
         isSearchClicked: true,
         agreements,
@@ -385,6 +398,7 @@ class AgreementSearch extends React.Component {
     const renderBody=function()
     {
       if (agreements.length>0) {
+
         return agreements.map((item,index)=>
         { var category_name = getValueByName("name",item.asset.assetCategory.id);
               return (<tr key={index}>

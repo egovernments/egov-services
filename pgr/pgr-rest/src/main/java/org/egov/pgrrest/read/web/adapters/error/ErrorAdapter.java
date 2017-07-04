@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.web.adapters.error;
 
-import org.egov.pgrrest.read.web.contract.ErrorResponse;
+import org.egov.common.contract.response.ErrorResponse;
 
 /**
  * This is to transform the model errors to web channel specific errors

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -249,10 +250,10 @@ public class AssetControllerTest {
 		revaluation.setTenantId("ap.kurnool");
 		revaluation.setId(Long.valueOf("15"));
 		revaluation.setAssetId(Long.valueOf("31"));
-		revaluation.setCurrentCapitalizedValue(Double.valueOf("100.68"));
+		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
 		revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
-		revaluation.setRevaluationAmount(Double.valueOf("10.0"));
-		revaluation.setValueAfterRevaluation(Double.valueOf("90.68"));
+		revaluation.setRevaluationAmount(new BigDecimal("10.0"));
+		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
 		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
 		revaluation.setReevaluatedBy("5");
 		revaluation.setReasonForRevaluation("reasonForRevaluation");
@@ -285,8 +286,8 @@ public class AssetControllerTest {
 		disposal.setDisposalDate(Long.valueOf("1496564536178"));
 		disposal.setPanCardNumber("baq1234567");
 		disposal.setAadharCardNumber("12345678123456");
-		disposal.setAssetCurrentValue(Double.valueOf("100.0"));
-		disposal.setSaleValue(Double.valueOf("200.0"));
+		disposal.setAssetCurrentValue(new BigDecimal("100.0"));
+		disposal.setSaleValue(new BigDecimal("200.0"));
 		disposal.setTransactionType(TransactionType.SALE);
 		disposal.setAssetSaleAccount(Long.valueOf("6"));
 

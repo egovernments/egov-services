@@ -1,5 +1,7 @@
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -24,5 +26,5 @@ public class LedgerDetail {
 	private AccountDetailKey accountDetailKey;
 
 	@NotNull
-	private Double amount;
+	private BigDecimal amount;
 }

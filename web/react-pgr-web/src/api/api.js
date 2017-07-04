@@ -11,9 +11,7 @@ var instance = axios.create({
 
 //document.cookie = "SESSIONID=75dedd21-1145-4745-a8aa-1790a737b7c5; JSESSIONID=Nw2kKeNF6Eu42vtXypb3kP4fER1ghjXNMNISiIF5.ip-10-0-0-100; Authorization=Basic Og==";
 
-var authToken = localStorage.getItem("auth");
-
-console.log(authToken);
+var authToken = localStorage.getItem("token");
 
 //request info from cookies
 var requestInfo = {
@@ -43,6 +41,8 @@ module.exports = {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
+        if(!requestInfo.authToken)
+            requestInfo.authToken = localStorage.getItem("token");
         body["RequestInfo"] = requestInfo;
         return instance.post(url, body).then(function(response) {
             return response.data;

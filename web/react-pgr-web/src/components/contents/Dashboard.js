@@ -146,10 +146,41 @@ class Dashboard extends Component {
               </div>
             </SwipeableViews>
           </div>:  <Card>
-              <CardHeader
-               title="Work list"
-              />
+              <CardHeader title="Work list" />
+				<CardText>
+						 <Grid>
+                    <Row>
+                      {this.state.serviceRequests && this.state.serviceRequests.map((e,i)=>{
+                        return(
+                          <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
+                             <Card>
+                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
+                                  title={e.serviceName}
+                                  subtitle={e.attribValues && e.attribValues.map((item,index)=>{
+                                      if(item.key =="status"){
+                                        return(item.value)
+                                      }
+                                  })}
+                                 />
 
+                                 <CardHeader  titleStyle={{fontSize:18}}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   subtitle={e.requestedDatetime}
+                                 />
+                                 <CardText>
+                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                        if(item.key =="status"){
+                                          return(item.value)
+                                        }
+                                    })} status.
+                                 </CardText>
+                             </Card>
+                          </Col>
+                        )
+                      }) }
+                    </Row>
+                  </Grid>
+				</CardText>
 
               {/*<CardText>
                             <Grid>

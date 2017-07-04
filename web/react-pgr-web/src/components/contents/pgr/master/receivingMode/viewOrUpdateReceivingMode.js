@@ -21,7 +21,6 @@ import Api from '../../../../../api/api';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{

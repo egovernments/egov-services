@@ -54,7 +54,6 @@ const getNameByProperty = function(object, key) {
 
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{

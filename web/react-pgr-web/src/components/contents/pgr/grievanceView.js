@@ -20,7 +20,6 @@ var Rating = require('react-rating');
 
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   addBorderBottom:{

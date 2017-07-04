@@ -21,7 +21,6 @@ import {translate} from '../../../../common/common';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -50,6 +49,9 @@ const styles = {
   },
   checkbox: {
     marginTop: 37
+  },
+  bold: {
+    fontWeight: "bolder"
   }
 };
 
@@ -116,14 +118,86 @@ class ViewReceivingCenter extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewReceivingCenter.id ? viewReceivingCenter.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.add.name")} <span style={{float:'right'}}>{viewReceivingCenter.name ? viewReceivingCenter.name : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.code")} <span style={{float:'right'}}>{viewReceivingCenter.code ? viewReceivingCenter.code : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.description")}<span style={{float:'right'}}>{viewReceivingCenter.description? viewReceivingCenter.description : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("pgr.lbl.active")} <span style={{float:'right'}}>{viewReceivingCenter.active? "true": 'false'}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("pgr.lblauditdetails")}<span style={{float:'right'}}>{viewReceivingCenter.auditdetails ? viewReceivingCenter.auditdetails : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("pgr.lbl.crn")} <span style={{float:'right'}}>{viewReceivingCenter.iscrnrequired ? viewReceivingCenter.iscrnrequired : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("pgr.lbl.order.no")}<span style={{float:'right'}}>{viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}</span></ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               ID
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.id ? viewReceivingCenter.id : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.add.name")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.name ? viewReceivingCenter.name : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.code")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.code ? viewReceivingCenter.code : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.description")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.description? viewReceivingCenter.description : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("pgr.lbl.active")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.active? "true": 'false'}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("pgr.lblauditdetails")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.auditdetails ? viewReceivingCenter.auditdetails : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("pgr.lbl.crn")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.iscrnrequired ? viewReceivingCenter.iscrnrequired : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("pgr.lbl.order.no")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

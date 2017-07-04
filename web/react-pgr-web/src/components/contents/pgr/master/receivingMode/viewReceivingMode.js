@@ -20,7 +20,6 @@ import Api from '../../../../../api/api';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -49,6 +48,9 @@ const styles = {
   },
   checkbox: {
     marginTop: 37
+  },
+  bold: {
+    fontWeight: "bolder"
   }
 };
 
@@ -114,12 +116,66 @@ class viewReceivingSet extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewReceivingSet.id ? viewReceivingSet.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Name <span style={{float:'right'}}>{viewReceivingSet.name ? viewReceivingSet.name : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Code <span style={{float:'right'}}>{viewReceivingSet.code ? viewReceivingSet.code : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Description <span style={{float:'right'}}>{viewReceivingSet.description? viewReceivingSet.description : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Active <span style={{float:'right'}}>{viewReceivingSet.active? "True" : "False"}</span></ListGroupItem>
-                                      <ListGroupItem>Channel<span style={{float:'right'}}>{viewReceivingSet.channels ? viewReceivingSet.channels : ''}</span></ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               ID
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.id ? viewReceivingSet.id : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Name
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.name ? viewReceivingSet.name : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Code
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.code ? viewReceivingSet.code : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Description
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.description? viewReceivingSet.description : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Active
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.active? "True" : "False"}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Channel
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.channels ? viewReceivingSet.channels : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

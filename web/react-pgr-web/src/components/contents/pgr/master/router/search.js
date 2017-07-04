@@ -64,7 +64,6 @@ const getNameByBoundary = function(object, id) {
 
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{

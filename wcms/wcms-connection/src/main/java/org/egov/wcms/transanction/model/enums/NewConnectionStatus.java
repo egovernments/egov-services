@@ -41,11 +41,27 @@ package org.egov.wcms.transanction.model.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
-public enum ConnectionStatus {
-    INPROGRESS, ACTIVE, DISCONNECTED, HOLDING, CLOSED, INACTIVE;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+public enum NewConnectionStatus {
+    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved");
+
+    
+    private String name;
+    
+    NewConnectionStatus(final String name) {
+        this.name = name;
+    }
+    
     @Override
+    @JsonValue
     public String toString() {
         return StringUtils.capitalize(name());
     }
+
+    public String getName() {
+        return name;
+    }
+
+    
 }

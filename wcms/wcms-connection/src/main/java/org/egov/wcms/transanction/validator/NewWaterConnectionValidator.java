@@ -196,16 +196,6 @@ public class NewWaterConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        //TODO: need to  enalbe once PTIS Integration done
-        /*isRequestValid = restConnectionService.validatePropertyUsageTypeMapping(waterConnectionRequest);
-
-        if (!isRequestValid) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_CODE)
-                    .message(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }*/
 
         isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
         if (!isRequestValid) {
@@ -216,6 +206,16 @@ public class NewWaterConnectionValidator {
                     .field(WcmsTranasanctionConstants.PROPERTY_CATEGORY_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
+        isRequestValid = restConnectionService.validatePropertyUsageTypeMapping(waterConnectionRequest);
+
+        if (!isRequestValid) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_CODE)
+                    .message(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+
         /*
          * if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) { isRequestValid =
          * validateDocumentApplicationType(waterConnectionRequest); if (!isRequestValid) { final ErrorField errorField =
@@ -294,7 +294,7 @@ public class NewWaterConnectionValidator {
     public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if (restConnectionService.getCategoryTypeByName(waterConnectionRequest) == null) {
+        if (restConnectionService.getCategoryTypeByName(waterConnectionRequest).getCategory().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.CATEGORY_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.CATEGORY_INVALID_FIELD_NAME)
@@ -302,7 +302,7 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        if (restConnectionService.getPipesizeTypeByCode(waterConnectionRequest) == null) {
+        if (restConnectionService.getPipesizeTypeByCode(waterConnectionRequest).getPipeSize().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.PIPESIZE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.PIPESIZE_INVALID_FIELD_NAME)
@@ -310,7 +310,7 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        if (restConnectionService.getSourceTypeByName(waterConnectionRequest) == null) {
+        if (restConnectionService.getSourceTypeByName(waterConnectionRequest).getWaterSourceType().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.SOURCETYPE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.SOURCETYPE_INVALID_FIELD_NAME)
@@ -318,7 +318,7 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        if (restConnectionService.getSupplyTypeByName(waterConnectionRequest) == null) {
+        if (restConnectionService.getSupplyTypeByName(waterConnectionRequest) .getSupplytypes().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.SUPPLYTYPE_INVALID_FIELD_NAME)

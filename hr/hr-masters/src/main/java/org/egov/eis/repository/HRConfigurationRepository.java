@@ -40,16 +40,16 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.repository.builder.HRConfigurationQueryBuilder;
 import org.egov.eis.repository.rowmapper.HRConfigurationKeyValuesRowMapper;
 import org.egov.eis.web.contract.HRConfigurationGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class HRConfigurationRepository {

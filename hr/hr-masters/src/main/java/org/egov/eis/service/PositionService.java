@@ -40,17 +40,16 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
-import org.egov.eis.broker.PositionProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.PositionRepository;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionRequest;
 import org.egov.eis.web.contract.PositionResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +58,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Service
 public class PositionService {
@@ -70,14 +68,8 @@ public class PositionService {
 	@Value("${kafka.topics.position.create.name}")
 	private String positionCreateTopic;
 
-	@Value("${kafka.topics.position.create.key}")
-	private String positionCreateKey;
-
 	@Value("${kafka.topics.position.update.name}")
 	private String positionUpdateTopic;
-
-	@Value("${kafka.topics.position.update.key}")
-	private String positionUpdateKey;
 
 	@Autowired
 	private PositionRepository positionRepository;
@@ -86,7 +78,7 @@ public class PositionService {
 	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
-	private PositionProducer positionProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -97,39 +89,13 @@ public class PositionService {
 
 	public ResponseEntity<?> createPosition(PositionRequest positionRequest) {
 		List<Position> positions = positionRequest.getPosition();
-		String positionJson = null;
-		try {
-			positionJson = objectMapper.writeValueAsString(positionRequest);
-			LOGGER.info("positionJson::" + positionJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting position to JSON", e);
-			e.printStackTrace();
-		}
-		try {
-			positionProducer.sendMessage(positionCreateTopic, positionCreateKey, positionJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		kafkaTemplate.send(positionCreateTopic, positionRequest);
 		return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
 	}
 
 	public ResponseEntity<?> updatePosition(PositionRequest positionRequest) {
 		List<Position> positions = positionRequest.getPosition();
-		String positionRequestJson = null;
-		try {
-			positionRequestJson = objectMapper.writeValueAsString(positionRequest);
-			LOGGER.info("positionRequestJson::" + positionRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON", e);
-			e.printStackTrace();
-		}
-		try {
-			positionProducer.sendMessage(positionUpdateTopic, positionUpdateKey, positionRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		kafkaTemplate.send(positionUpdateTopic, positionRequest);
 		return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
 	}
 
@@ -137,9 +103,8 @@ public class PositionService {
 	 * Populate PositionResponse object & returns ResponseEntity of type
 	 * PositionResponse containing ResponseInfo & array of Position objects
 	 * 
-	 * @param Position
+	 * @param positionList
 	 * @param requestInfo
-	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> getSuccessResponseForCreate(List<Position> positionList, RequestInfo requestInfo) {

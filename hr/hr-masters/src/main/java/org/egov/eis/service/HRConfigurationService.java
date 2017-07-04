@@ -40,13 +40,13 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.repository.HRConfigurationRepository;
 import org.egov.eis.web.contract.HRConfigurationGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class HRConfigurationService {

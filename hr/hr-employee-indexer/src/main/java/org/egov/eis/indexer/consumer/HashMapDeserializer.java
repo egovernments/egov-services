@@ -38,28 +38,17 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.commons.consumers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.eis.model.EmployeeType;
+import java.util.HashMap;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class EmployeeTypeResponse {
+@SuppressWarnings("rawtypes")
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-
-	@JsonProperty("EmployeeType")
-	private List<EmployeeType> employeeType = new ArrayList<EmployeeType>();
+    public HashMapDeserializer() {
+        super(HashMap.class);
+    }
 
 }

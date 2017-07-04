@@ -40,9 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.RecruitmentQuota;
 import org.egov.eis.repository.builder.RecruitmentQuotaQueryBuilder;
 import org.egov.eis.repository.rowmapper.RecruitmentQuotaRowMapper;
@@ -50,6 +47,9 @@ import org.egov.eis.web.contract.RecruitmentQuotaGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class RecruitmentQuotaRepository {

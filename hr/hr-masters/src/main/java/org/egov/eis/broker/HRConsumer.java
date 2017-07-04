@@ -40,9 +40,7 @@
 
 package org.egov.eis.broker;
 
-import java.io.IOException;
-
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.service.DesignationService;
 import org.egov.eis.service.PositionService;
 import org.egov.eis.web.contract.DesignationRequest;
@@ -52,51 +50,49 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
+@Service
 public class HRConsumer {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(HRConsumer.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(HRConsumer.class);
 
-	@Value("${kafka.topics.designation.create.name}")
-	private String designationCreateTopic;
+    @Value("${kafka.topics.designation.create.name}")
+    private String designationCreateTopic;
 
-	@Value("${kafka.topics.designation.update.name}")
-	private String designationUpdateTopic;
+    @Value("${kafka.topics.designation.update.name}")
+    private String designationUpdateTopic;
 
-	@Value("${kafka.topics.position.create.name}")
-	private String positionCreateTopic;
+    @Value("${kafka.topics.position.create.name}")
+    private String positionCreateTopic;
 
-	@Value("${kafka.topics.position.update.name}")
-	private String positionUpdateTopic;
+    @Value("${kafka.topics.position.update.name}")
+    private String positionUpdateTopic;
 
-	@Autowired
-	private DesignationService designationService;
+    @Autowired
+    private DesignationService designationService;
 
-	@Autowired
-	private PositionService positionService;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private PositionService positionService;
 
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-			"${kafka.topics.designation.create.name}", "${kafka.topics.designation.update.name}",
-			"${kafka.topics.position.create.name}", "${kafka.topics.position.update.name}" })
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	public void listen(final ConsumerRecord<String, String> record) {
-		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-		try {
-			if (record.topic().equalsIgnoreCase(designationCreateTopic))
-				designationService.create(objectMapper.readValue(record.value(), DesignationRequest.class));
-			else if (record.topic().equalsIgnoreCase(designationUpdateTopic))
-				designationService.update(objectMapper.readValue(record.value(), DesignationRequest.class));
-			else if (record.topic().equalsIgnoreCase(positionCreateTopic))
-				positionService.create(objectMapper.readValue(record.value(), PositionRequest.class));
-			else if (record.topic().equalsIgnoreCase(positionUpdateTopic))
-				positionService.update(objectMapper.readValue(record.value(), PositionRequest.class));
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @KafkaListener(topics = {"${kafka.topics.designation.create.name}", "${kafka.topics.designation.update.name}",
+            "${kafka.topics.position.create.name}", "${kafka.topics.position.update.name}"})
+    public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        LOGGER.info("record :: " + record);
+        if (topic.equalsIgnoreCase(designationCreateTopic))
+            designationService.create(objectMapper.convertValue(record, DesignationRequest.class));
+        else if (topic.equalsIgnoreCase(designationUpdateTopic))
+            designationService.update(objectMapper.convertValue(record, DesignationRequest.class));
+        else if (topic.equalsIgnoreCase(positionCreateTopic))
+            positionService.create(objectMapper.convertValue(record, PositionRequest.class));
+        else if (topic.equalsIgnoreCase(positionUpdateTopic))
+            positionService.update(objectMapper.convertValue(record, PositionRequest.class));
+    }
 }

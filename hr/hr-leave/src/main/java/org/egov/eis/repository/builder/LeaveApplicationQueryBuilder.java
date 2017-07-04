@@ -40,16 +40,16 @@
 
 package org.egov.eis.repository.builder;
 
-import java.util.List;
-
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.service.HRStatusService;
 import org.egov.eis.web.contract.LeaveApplicationGetRequest;
-import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class LeaveApplicationQueryBuilder {

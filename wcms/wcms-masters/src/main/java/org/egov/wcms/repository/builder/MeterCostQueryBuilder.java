@@ -40,14 +40,10 @@
 
 package org.egov.wcms.repository.builder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MeterCostQueryBuilder {
-
-    private static final Logger logger = LoggerFactory.getLogger(MeterCostQueryBuilder.class);
 
     public static String insertMeterCostQuery() {
         return "INSERT INTO egwtr_metercost(id,pipesize,metermake,amount,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "

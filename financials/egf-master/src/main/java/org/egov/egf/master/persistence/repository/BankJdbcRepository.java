@@ -12,7 +12,6 @@ import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.persistence.entity.BankEntity;
 import org.egov.egf.master.persistence.entity.BankSearchEntity;
-import org.hibernate.validator.internal.util.privilegedactions.GetConstraintValidatorList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -57,52 +56,60 @@ public class BankJdbcRepository extends JdbcRepository {
 
 		// implement jdbc specfic search
 		if (bankSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =: id");
 			paramValues.put("id", bankSearchEntity.getId());
 		}
 		if (bankSearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =: code");
 			paramValues.put("code", bankSearchEntity.getCode());
 		}
 		if (bankSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =: name");
 			paramValues.put("name", bankSearchEntity.getName());
 		}
 		if (bankSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("description =: description");
 			paramValues.put("description", bankSearchEntity.getDescription());
 		}
 		if (bankSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =: active");
 			paramValues.put("active", bankSearchEntity.getActive());
 		}
 		if (bankSearchEntity.getType() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("type =: type");
 			paramValues.put("type", bankSearchEntity.getType());
 		}
 
 		if (bankSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name=:name");
 			paramValues.put("name", bankSearchEntity.getName());
 		}
 
 		if (bankSearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code=:code");
 			paramValues.put("code", bankSearchEntity.getCode());
 		}
@@ -154,10 +161,11 @@ public class BankJdbcRepository extends JdbcRepository {
 
 		List<BankEntity> banks = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
 				preparedStatementValues.toArray(), new BeanPropertyRowMapper<BankEntity>());
-		if (banks.isEmpty())
+		if (banks.isEmpty()) {
 			return null;
-		else
+		} else {
 			return banks.get(0);
+		}
 
 	}
 

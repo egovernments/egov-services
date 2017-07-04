@@ -356,8 +356,7 @@ class routerGeneration extends Component {
    			return (
    				<div style={{textAlign: 'center'}}>
 	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={(e) => {save(e)}}/>
-	   				<RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
-   				</div>
+	   			</div>
    			)
    		}
    }

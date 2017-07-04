@@ -95,12 +95,12 @@ public class DemandQueryBuilder {
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?);";
 
 	// FIX ME REMOVE CREATED BY FROM UPDATE
-	public static final String DEMAND_UPDATE_QUERY = "UPDATE TABLE egbs_demand SET "
+	public static final String DEMAND_UPDATE_QUERY = "UPDATE egbs_demand SET "
 			+ "id=?,consumerCode=?,consumerType=?,businessService=?,owner=?,taxPeriodFrom=?,"
-			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?) "
-			+ "WHERE id=? AND tenantid=?;";
+			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?"
+			+ " WHERE id=? AND tenantid=?;";
 
-	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE TABLE egbs_demanddetail SET "
+	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET "
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?,tenantid=? WHERE id=? AND tenantid=?;";
 
@@ -148,7 +148,7 @@ public class DemandQueryBuilder {
 		addOrderByClause(demandQueryBuilder, DEMAND_QUERY_ORDER_BY_CLAUSE);
 		addPagingClause(demandQueryBuilder, preparedStatementValues);
 
-		log.debug("the query String for demand : " + demandQueryBuilder.toString());
+		log.info("the query String for demand : " + demandQueryBuilder.toString());
 		return demandQueryBuilder.toString();
 	}
 
@@ -181,7 +181,7 @@ public class DemandQueryBuilder {
 		}*/
 		addOrderByClause(demandQueryBuilder, BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE);
 		addPagingClause(demandQueryBuilder, preparedStatementValues);
-		log.debug("the query String for demand detail: " + demandQueryBuilder.toString());
+		log.info("the query String for demand detail: " + demandQueryBuilder.toString());
 		return demandQueryBuilder.toString();
 	}
 

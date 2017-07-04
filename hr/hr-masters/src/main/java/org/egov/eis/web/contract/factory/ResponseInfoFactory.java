@@ -40,8 +40,8 @@
 
 package org.egov.eis.web.contract.factory;
 
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
 
 @Component

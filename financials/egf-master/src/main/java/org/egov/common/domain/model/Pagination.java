@@ -49,7 +49,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.Data;
 
 @Data
-public class Pagination<T>{
+public class Pagination<T> {
 
 	public static int DEFAULT_PAGE_SIZE = 500;
 	public static int DEFAULT_PAGE_OFFSET = 0;
@@ -59,13 +59,13 @@ public class Pagination<T>{
 	private Integer totalPages;
 
 	@Max(500l)
-	private Integer pageSize ;
+	private Integer pageSize;
 
 	private Integer currentPage;
 
-	private Integer offSet ;
-	
-	@JsonProperty(access=Access.WRITE_ONLY)
+	private Integer offSet;
+
+	@JsonProperty(access = Access.WRITE_ONLY)
 	List<T> pagedData;
 
 }

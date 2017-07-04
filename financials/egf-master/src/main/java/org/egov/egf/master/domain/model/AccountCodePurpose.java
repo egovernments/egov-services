@@ -41,6 +41,7 @@ package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -58,7 +59,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class AccountCodePurpose {
+public class AccountCodePurpose extends Auditable {
 
 	private String id;
 

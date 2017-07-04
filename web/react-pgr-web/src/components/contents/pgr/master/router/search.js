@@ -360,7 +360,6 @@ class searchRouter extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
-             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
            </div>
          </form>
          {viewTable()}

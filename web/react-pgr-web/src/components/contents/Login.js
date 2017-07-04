@@ -82,6 +82,7 @@ class Login extends Component {
            isActive: {
              checked: false
            },
+           localeready : false,
            locale: localStorage.getItem('locale') ? localStorage.getItem('locale') : 'en_IN',
            dataSource: [],
            errorMsg: "",
@@ -123,23 +124,12 @@ class Login extends Component {
    }
 
    componentWillMount() {
-    //  console.log(this);
-     //call boundary service fetch wards,location,zone data
+     this.handleLocaleChange(this.state.locale);
    }
 
    componentDidMount() {
      let {initForm} = this.props;
      initForm();
-
-     this.handleLocaleChange(this.state.locale);
-
-
-    //  Api.commonApiPost("egf-masters", "functionaries", "_search").then(function(response)
-    //  {
-    //  console.log(response);
-    //  },function(err) {
-    //  console.log(err);
-    //  });
    }
 
    componentWillUnmount() {
@@ -155,10 +145,12 @@ class Login extends Component {
    }
 
    handleLocaleChange = (value) => {
+     //console.log(value);
      var self = this;
      Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
      {
        self.setState({'locale':value});
+       self.setState({'localeready':true});
        localStorage.setItem("locale", value);
        localStorage.setItem("lang_response", JSON.stringify(response.messages));
      },function(err) {
@@ -284,7 +276,8 @@ class Login extends Component {
 
    searchGrievance = (e) => {
      let {history} = this.props;
-     history.push("/viewGrievance/"+this.state.srn);
+     if(this.state.srn)
+      history.push("/pgr/viewGrievance/"+this.state.srn);
    }
 
    validateOTP() {
@@ -469,6 +462,7 @@ class Login extends Component {
       //       <Redirect to="/dashboard"/>
       //     )
       // } else {
+
       const showError = function() {
         if(errorMsg) {
           return (<p className="text-danger">{errorMsg}</p>)
@@ -515,6 +509,8 @@ class Login extends Component {
       }
 
         return(
+          <div>
+          {this.state.localeready ?
           <div className="Login">
             <Grid>
              <Row>
@@ -792,6 +788,8 @@ class Login extends Component {
                   </Col>
                 </Row>
             </Dialog>
+          </div>
+          : ""}
           </div>
         )
       // }

@@ -40,20 +40,18 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
-import org.egov.eis.broker.LeaveTypeProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.repository.LeaveTypeRepository;
 import org.egov.eis.web.contract.LeaveTypeGetRequest;
 import org.egov.eis.web.contract.LeaveTypeRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Service
 public class LeaveTypeService {
@@ -63,7 +61,7 @@ public class LeaveTypeService {
 	private LeaveTypeRepository leaveTypeRepository;
 
 	@Autowired
-	private LeaveTypeProducer leaveTypeProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -81,19 +79,7 @@ public class LeaveTypeService {
 	}
 
 	public List<LeaveType> createLeaveType(final LeaveTypeRequest leaveTypeRequest) {
-		String leaveTypeValue = null;
-		try {
-			logger.info("createLeaveType service::" + leaveTypeRequest);
-			leaveTypeValue = objectMapper.writeValueAsString(leaveTypeRequest);
-			logger.info("leaveTypeValue::" + leaveTypeValue);
-		} catch (final JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		try {
-			leaveTypeProducer.sendMessage("egov-hr-leavetype", "save-leavetype", leaveTypeValue);
-		} catch (final Exception ex) {
-			ex.printStackTrace();
-		}
+		kafkaTemplate.send("egov-hr-leavetype", leaveTypeRequest);
 		return leaveTypeRequest.getLeaveType();
 	}
 

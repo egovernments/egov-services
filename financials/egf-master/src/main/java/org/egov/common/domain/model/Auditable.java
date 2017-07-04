@@ -3,7 +3,6 @@ package org.egov.common.domain.model;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Auditable  {
+public class Auditable {
 	protected String tenantId;
 	protected User createdBy;
 	protected User lastModifiedBy;
@@ -20,5 +19,3 @@ public class Auditable  {
 	protected Date lastModifiedDate;
 
 }
-
- 

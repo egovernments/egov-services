@@ -4,7 +4,6 @@ import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +17,7 @@ public class BankSearchEntity extends BankEntity {
 	private Integer pageSize;
 	private Integer offset;
 
+	@Override
 	public Bank toDomain() {
 		Bank bank = new Bank();
 		super.toDomain(bank);
@@ -25,7 +25,7 @@ public class BankSearchEntity extends BankEntity {
 	}
 
 	public BankSearchEntity toEntity(BankSearch bankSearch) {
-		super.toEntity((Bank) bankSearch);
+		super.toEntity(bankSearch);
 		this.pageSize = bankSearch.getPageSize();
 		this.offset = bankSearch.getOffset();
 		return this;

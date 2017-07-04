@@ -49,8 +49,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.CategoryType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.CategoryTypeRepository;
 import org.egov.wcms.web.contract.CategoryTypeGetRequest;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public class CategoryTypeServiceTest {
     private CategoryTypeRepository categoryRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private CodeGeneratorService codeGeneratorService;

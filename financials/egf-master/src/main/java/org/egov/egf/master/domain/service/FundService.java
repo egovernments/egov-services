@@ -3,7 +3,6 @@ package org.egov.egf.master.domain.service;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Fund;
@@ -33,7 +32,7 @@ public class FundService {
 
 	@Autowired
 	private SmartValidator validator;
-	 
+
 	public BindingResult validate(List<Fund> funds, String method, BindingResult errors) {
 
 		try {
@@ -63,34 +62,28 @@ public class FundService {
 
 	}
 
-	
-	
-	
 	public List<Fund> fetchRelated(List<Fund> funds) {
 		for (Fund fund : funds) {
 			// fetch related items
-			}
-	
+		}
 
 		return funds;
 	}
 
 	public List<Fund> add(List<Fund> funds, BindingResult errors) {
-		funds=fetchRelated(funds);
+		funds = fetchRelated(funds);
 		validate(funds, ACTION_CREATE, errors);
-		if(errors.hasErrors())
-		{
+		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return funds;
 
 	}
-	
+
 	public List<Fund> update(List<Fund> funds, BindingResult errors) {
-		funds=fetchRelated(funds);
+		funds = fetchRelated(funds);
 		validate(funds, ACTION_UPDATE, errors);
-		if(errors.hasErrors())
-		{
+		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return funds;
@@ -102,7 +95,7 @@ public class FundService {
 	}
 
 	public Pagination<Fund> search(FundSearch fundSearch) {
-		return fundRepository.search(fundSearch);  
+		return fundRepository.search(fundSearch);
 	}
 
 }

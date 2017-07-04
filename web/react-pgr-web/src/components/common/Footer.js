@@ -39,7 +39,7 @@ class Footer extends Component {
           <Row>
               <Col xs={12} sm={5}>Copyright &#169; 2017 eGovernments Foundation.<sup>&#174;</sup></Col>
               <Col xs={12} sm={7}>
-                <div style={styles.floatRight}>eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</div>
+                <div style={styles.floatRight}></div>
               </Col>
           </Row>
           </Col>

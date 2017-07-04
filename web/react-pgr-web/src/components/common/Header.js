@@ -9,7 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // import PropTypes from 'prop-types'
 import { withRouter } from 'react-router';
-
+import Api from '../../api/api';
 // import {history} from 'react-router-dom'
 
 // import {Grid, Row, Col} from 'react-bootstrap';
@@ -67,11 +67,19 @@ const RightIcon = (props) => {
             <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
             */}
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
-              var locale = localStorage.getItem('locale');
-              localStorage.clear();
-              localStorage.setItem('locale',locale);
-              props.logout();
-                // props.history.push("/");
+                //  Api.commonApiPost("/user/_logout", {access_token: localStorage.getItem('auth')}).then(function(response)
+                //  {
+                //    var locale = localStorage.getItem('locale');
+                //    localStorage.clear();
+                //    localStorage.setItem('locale',locale);
+                //    props.logout();
+                //  },function(err) {
+                //    console.log(err);
+                // });
+                var locale = localStorage.getItem('locale');
+                localStorage.clear();
+                localStorage.setItem('locale',locale);
+                props.logout();
             }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
 

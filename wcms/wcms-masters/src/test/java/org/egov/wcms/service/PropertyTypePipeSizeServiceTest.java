@@ -46,9 +46,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypePipeSize;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
@@ -66,7 +66,7 @@ public class PropertyTypePipeSizeServiceTest {
     private PropertyPipeSizeRepository propertyPipeSizeRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private ApplicationProperties applicationProperties;

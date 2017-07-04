@@ -60,15 +60,16 @@ public class SupplyTypeRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private SupplyTypeQueryBuilder  supplyTypeQueryBuilder;
-    
+    private SupplyTypeQueryBuilder supplyTypeQueryBuilder;
+
     @Autowired
     private SupplyTypeRowMapper supplyTypeRowMapper;
-    
+
     public SupplyTypeRequest persistSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         final String insertQuery = SupplyTypeQueryBuilder.insertSupplyTypeQuery();
         final SupplyType supplyType = supplyTypeRequest.getSupplyType();
-        final Object[] obj = new Object[] { Long.valueOf(supplyType.getCode()), supplyType.getCode(),supplyType.getName(), supplyType.getDescription(),supplyType.getActive(),
+        final Object[] obj = new Object[] { Long.valueOf(supplyType.getCode()), supplyType.getCode(), supplyType.getName(),
+                supplyType.getDescription(), supplyType.getActive(),
                 Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
@@ -76,7 +77,7 @@ public class SupplyTypeRepository {
         jdbcTemplate.update(insertQuery, obj);
         return supplyTypeRequest;
     }
-    
+
     public SupplyTypeRequest upateSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         final String supplytypevalue = SupplyTypeQueryBuilder.updateSupplyTypeQuery();
         final SupplyType supply = supplyTypeRequest.getSupplyType();
@@ -87,7 +88,6 @@ public class SupplyTypeRepository {
         return supplyTypeRequest;
 
     }
-    
 
     public boolean checkSupplyTypeByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();

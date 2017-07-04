@@ -40,13 +40,18 @@ public class BankController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankContract> create(@RequestBody  @Valid CommonRequest<BankContract> bankContractRequest,
+	public CommonResponse<BankContract> create(@RequestBody @Valid CommonRequest<BankContract> bankContractRequest,
 			BindingResult errors) {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BankContract> bankResponse = new CommonResponse<>();
 		bankContractRequest.getRequestInfo().setAction("create");
 		List<Bank> banks = new ArrayList<>();
 		Bank bank = null;
+
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+
 		for (BankContract bankContract : bankContractRequest.getData()) {
 
 			bank = new Bank();
@@ -56,9 +61,7 @@ public class BankController {
 			banks.add(bank);
 
 		}
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
+
 		banks = bankService.add(banks, errors);
 		BankContract contract = null;
 
@@ -83,6 +86,11 @@ public class BankController {
 		CommonResponse<BankContract> bankResponse = new CommonResponse<>();
 		List<Bank> banks = new ArrayList<>();
 		Bank bank = null;
+
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors);
+		}
+
 		for (BankContract bankContract : bankContractRequest.getData()) {
 
 			bank = new Bank();
@@ -90,9 +98,6 @@ public class BankController {
 			bank.setLastModifiedBy(bankContractRequest.getRequestInfo().getUserInfo());
 			banks.add(bank);
 
-		}
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
 		}
 		banks = bankService.update(banks, errors);
 		BankContract contract = null;
@@ -123,8 +128,9 @@ public class BankController {
 		Pagination<Bank> banks = bankService.search(domain);
 		int i = 0;
 		errors.addError(new ObjectError("hellow", "hollow"));
-		if (i == 0)
+		if (i == 0) {
 			throw new CustomBindException(errors);
+		}
 
 		BankContract contract = null;
 		ModelMapper model = new ModelMapper();

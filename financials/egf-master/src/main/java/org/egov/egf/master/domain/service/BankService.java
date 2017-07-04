@@ -35,7 +35,8 @@ public class BankService {
 
 	@Autowired
 	private SmartValidator validator;
- 
+	@Autowired
+	private FundRepository fundRepository;
 
 	public BindingResult validate(List<Bank> banks, String method, BindingResult errors) {
 
@@ -69,7 +70,13 @@ public class BankService {
 	public List<Bank> fetchRelated(List<Bank> banks) {
 		for (Bank bank : banks) {
 			// fetch related items
-			 
+			if (bank.getFund() != null) {
+				Fund fund = fundRepository.findById(bank.getFund());
+				if (fund == null) {
+					throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
+				}
+				bank.setFund(fund);
+			}
 
 		}
 
@@ -79,8 +86,7 @@ public class BankService {
 	public List<Bank> add(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
 		validate(banks, ACTION_CREATE, errors);
-		if(errors.hasErrors())
-		{
+		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return banks;
@@ -90,8 +96,7 @@ public class BankService {
 	public List<Bank> update(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
 		validate(banks, ACTION_UPDATE, errors);
-		if(errors.hasErrors())
-		{
+		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return banks;

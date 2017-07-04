@@ -52,9 +52,9 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.Donation;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
@@ -72,8 +72,8 @@ public class DonationServiceTest {
 	@Mock
 	private DonationRepository donationRepository;
 
-	@Mock
-	private WaterMasterProducer waterMasterProducer;
+	 @Mock
+	    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Mock
 	private CodeGeneratorService codeGeneratorService;

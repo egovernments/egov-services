@@ -7,7 +7,6 @@ import ProfileEdit from './components/contents/settings/profileEdit';
 
 //PGR
 import grievanceCreate from './components/contents/pgr/grievanceCreate';
-import grievanceCreateSD from './components/contents/pgr/grievanceCreateSD';
 import grievanceView from './components/contents/pgr/grievanceView';
 import grievanceSearch from './components/contents/pgr/grievanceSearch';
 import ReceivingCenterCreate from './components/contents/pgr/master/receivingCenter/receivingCenterCreate';

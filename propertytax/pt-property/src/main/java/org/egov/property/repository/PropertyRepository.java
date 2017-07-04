@@ -78,6 +78,7 @@ public class PropertyRepository {
 				ps.setString(4, property.getVltUpicNumber());
 				ps.setString(5, property.getCreationReason().toString());
 
+				//TODO - AssessmentDate is non mandatory, this might give NullPointerException. Add null check. For the same usecases, add check across the code.
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(property.getAssessmentDate()));
 
 				ps.setObject(7, TimeStampUtil.getTimeStamp(property.getOccupancyDate()));

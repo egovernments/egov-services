@@ -104,10 +104,8 @@ public class WaterConnectionController {
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
-        // Call to service.
         
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(newWaterConnectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
+        waterConnectionRequest.getConnection().setAcknowledgementNumber("2BL21321HHH23");
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);

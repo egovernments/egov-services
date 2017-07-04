@@ -420,7 +420,6 @@ class createRouter extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              {showBtn()}
-             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")} onClick={close}/>
            </div>
          </form>
          <Dialog

@@ -127,8 +127,7 @@ class viewReceivingSet extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                   <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={(e)=>{this.close()}}/>
-                 </div>
+              </div>
         </div>)
     }
 }

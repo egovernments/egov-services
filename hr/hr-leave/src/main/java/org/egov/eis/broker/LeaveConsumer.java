@@ -40,28 +40,26 @@
 
 package org.egov.eis.broker;
 
-import java.io.IOException;
-
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.repository.ElasticSearchRepository;
 import org.egov.eis.service.LeaveAllotmentService;
 import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.service.LeaveOpeningBalanceService;
 import org.egov.eis.service.LeaveTypeService;
-import org.egov.eis.web.contract.LeaveAllotmentRequest;
-import org.egov.eis.web.contract.LeaveApplicationRequest;
-import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
-import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
-import org.egov.eis.web.contract.LeaveTypeRequest;
+import org.egov.eis.web.contract.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
+@Service
 public class LeaveConsumer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(LeaveConsumer.class);
@@ -103,43 +101,37 @@ public class LeaveConsumer {
 
     @Autowired
     private LeaveApplicationService leaveApplicationService;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-            "${kafka.topics.leaveopeningbalance.create.name}", "${kafka.topics.leaveopeningbalance.update.name}",
-            "${kafka.topics.leavetype.name}", "${kafka.topics.leaveallotment.create.name}",
-            "${kafka.topics.leaveallotment.update.name}", "${kafka.topics.leaveapplication.create.name}",
-            "${kafka.topics.leaveapplication.update.name}" })
-
-    public void listen(final ConsumerRecord<String, String> record) {
-        LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-        try {
-            if (record.topic().equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
-                leaveOpeningBalanceService
-                        .create(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
-            else if (record.topic().equalsIgnoreCase(leaveOpeningBalanceUpdateTopic))
-                leaveOpeningBalanceService
-                        .update(objectMapper.readValue(record.value(), LeaveOpeningBalanceRequest.class));
-            else if (record.topic().equalsIgnoreCase(leaveTypeTopic)) {
-                LOGGER.info("SaveLeaveTypeConsumer egov-hr-leavetype leaveTypeService:" + leaveTypeService);
-                final LeaveTypeRequest leaveTypeRequest = leaveTypeService
-                        .create(objectMapper.readValue(record.value(), LeaveTypeRequest.class));
-                for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
-                    // TODO : leavetype index id should be changed
-                    elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
-                            leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
-            } else if (record.topic().equalsIgnoreCase(leaveAllotmentCreateTopic))
-                leaveAllotmentService.create(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
-            else if (record.topic().equalsIgnoreCase(leaveAllotmentUpdateTopic))
-                leaveAllotmentService.update(objectMapper.readValue(record.value(), LeaveAllotmentRequest.class));
-            else if (record.topic().equalsIgnoreCase(leaveApplicationCreateTopic))
-                leaveApplicationService.create(objectMapper.readValue(record.value(), LeaveApplicationRequest.class));
-            else if (record.topic().equalsIgnoreCase(leaveApplicationUpdateTopic))
-                leaveApplicationService.update(objectMapper.readValue(record.value(), LeaveApplicationSingleRequest.class));
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+    @KafkaListener(topics = {"${kafka.topics.leaveopeningbalance.create.name}",
+            "${kafka.topics.leaveopeningbalance.update.name}", "${kafka.topics.leavetype.name}",
+            "${kafka.topics.leaveallotment.create.name}", "${kafka.topics.leaveallotment.update.name}",
+            "${kafka.topics.leaveapplication.create.name}", "${kafka.topics.leaveapplication.update.name}"})
+    public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        LOGGER.info("record :: " + record);
+        if (topic.equalsIgnoreCase(leaveOpeningBalanceCreateTopic))
+            leaveOpeningBalanceService
+                    .create(objectMapper.convertValue(record, LeaveOpeningBalanceRequest.class));
+        else if (topic.equalsIgnoreCase(leaveOpeningBalanceUpdateTopic))
+            leaveOpeningBalanceService
+                    .update(objectMapper.convertValue(record, LeaveOpeningBalanceRequest.class));
+        else if (topic.equalsIgnoreCase(leaveTypeTopic)) {
+            LOGGER.info("SaveLeaveTypeConsumer egov-hr-leavetype leaveTypeService:" + leaveTypeService);
+            final LeaveTypeRequest leaveTypeRequest = leaveTypeService
+                    .create(objectMapper.convertValue(record, LeaveTypeRequest.class));
+            for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
+                // TODO : leavetype index id should be changed
+                elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
+                        leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
+        } else if (topic.equalsIgnoreCase(leaveAllotmentCreateTopic))
+            leaveAllotmentService.create(objectMapper.convertValue(record, LeaveAllotmentRequest.class));
+        else if (topic.equalsIgnoreCase(leaveAllotmentUpdateTopic))
+            leaveAllotmentService.update(objectMapper.convertValue(record, LeaveAllotmentRequest.class));
+        else if (topic.equalsIgnoreCase(leaveApplicationCreateTopic))
+            leaveApplicationService.create(objectMapper.convertValue(record, LeaveApplicationRequest.class));
+        else if (topic.equalsIgnoreCase(leaveApplicationUpdateTopic))
+            leaveApplicationService.update(objectMapper.convertValue(record, LeaveApplicationSingleRequest.class));
     }
 }

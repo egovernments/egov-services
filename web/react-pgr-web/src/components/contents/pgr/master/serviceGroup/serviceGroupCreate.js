@@ -223,7 +223,6 @@ class ServiceGroupCreate extends Component {
               </Card>
               <div style={{textAlign:'center'}}>
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")} onClick={(e)=>{this.close()}}/>
               </div>
           </form>
           <Dialog

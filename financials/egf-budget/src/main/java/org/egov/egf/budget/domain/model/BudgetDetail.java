@@ -44,6 +44,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.domain.model.BudgetGroup;
+import org.egov.egf.master.web.contract.BudgetGroupContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,7 +73,7 @@ public class BudgetDetail extends Auditable {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
-	private String budgetGroup;
+	private BudgetGroupContract budgetGroup;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure

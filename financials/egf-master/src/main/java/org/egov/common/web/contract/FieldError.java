@@ -51,6 +51,5 @@ import lombok.NoArgsConstructor;
 public @Data class FieldError {
 	private String code;
 	private String description;
-	
 
 }

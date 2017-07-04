@@ -5,7 +5,7 @@ package org.egov.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import org.egov.swagger.model.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,15 +19,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @EnableConfigurationProperties(ReportDefinitions.class)
 public class ReportDefinitions {
 	@JsonProperty("ReportDefinitions")
-    public List<ReportYamlMetaData> reportDefinitions = new ArrayList<>();
+    public List<ReportDefinition> reportDefinitions = new ArrayList<>();
 
-	public List<ReportYamlMetaData> getReportDefinitions() {
+	
+
+	public List<ReportDefinition> getReportDefinitions() {
 		return reportDefinitions;
 	}
 
-	public void setReportDefinitions(List<ReportYamlMetaData> reportDefinitions) {
+
+
+	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
 	}
+
+
 
 	@Override
 	public String toString() {

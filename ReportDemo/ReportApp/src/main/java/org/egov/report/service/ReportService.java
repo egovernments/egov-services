@@ -14,13 +14,18 @@ import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.MetadataResponse;
+import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.ReportMetadata;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
+import org.egov.swagger.model.SearchColumn;
+import org.egov.swagger.model.SearchParam;
+import org.egov.swagger.model.SourceColumn;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,34 +43,38 @@ public class ReportService {
 	@Autowired
 	private Response responseInfoFactory;
 	
+	
 public MetadataResponse getMetaData(String reportName){
 		MetadataResponse metadataResponse = new MetadataResponse();
-		ReportYamlMetaData reportYamlMetaData = new ReportYamlMetaData();
+		ReportDefinition reportDefinition = new ReportDefinition();
+		
+		
 		System.out.println("Report Definition is" +reportDefinitions.getReportDefinitions());
-		for(ReportYamlMetaData reportYaml : reportDefinitions.getReportDefinitions()) {
-			if(reportYaml.getReportName().equals(reportName)){
+		for(ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
+			if(rDefinition.getReportName().equals(reportName)){
 			
-				reportYamlMetaData = reportYaml;
+				reportDefinition = rDefinition;
 			}
 		}
 		ReportMetadata rmt = new ReportMetadata();
-		rmt.setReportName(reportYamlMetaData.getReportName());
+		rmt.setReportName(reportDefinition.getReportName());
+		
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
 		List<ColumnDetail> searchParams = new ArrayList<>();
-		for(sourceColumns cd : reportYamlMetaData.getSourceColumns()){
+		for(SourceColumn cd : reportDefinition.getSourceColumns()){
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
 			reportheader.setName(cd.getName());
-			TypeEnum te = getType(cd.getType());
+			TypeEnum te = getType(cd.getType().toString());
 			reportheader.setType(te);
 			reportHeaders.add(reportheader);
 
 		}
-		for(searchParams cd : reportYamlMetaData.getSearchParams()){
+		for(SearchColumn cd : reportDefinition.getSearchParams()){
 			ColumnDetail searchParam = new ColumnDetail();
 			searchParam.setLabel(cd.getLabel());
 			searchParam.setName(cd.getName());
-			TypeEnum te = getType(cd.getType());
+			TypeEnum te = getType(cd.getType().toString());
 			searchParam.setType(te);
 			searchParams.add(searchParam);
 
@@ -107,7 +116,8 @@ public MetadataResponse getMetaData(String reportName){
 
 
 	public ReportResponse getReportData(ReportRequest reportRequest){
-		List<ReportYamlMetaData> reportYamlMetaDatas = reportDefinitions.getReportDefinitions();
+		/*List<ReportYamlMetaData> reportYamlMetaDatas = reportDefinitions.getReportDefinitions();*/
+		List<ReportYamlMetaData> reportYamlMetaDatas = new ArrayList<>();
 		ReportYamlMetaData reportYamlMetaData = reportYamlMetaDatas.stream().
 				filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportYamlMetaData);

@@ -118,7 +118,14 @@ public class ApplicationProperties {
     
 	@Value("${kafka.topics.escalationtimetype.update.key}")
     private String updateEscalationTimeTypeKey;
+	@Value("${report.yaml.path}")
+    private String yamlPath;
+	
     
+	public String getYamlPath() {
+		return yamlPath;
+	}
+
 	public String getUpdateEscalationTimeTypeName() {
 		return updateEscalationTimeTypeName;
 	}

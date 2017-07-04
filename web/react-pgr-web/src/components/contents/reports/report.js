@@ -90,8 +90,8 @@ class Report extends Component {
   componentWillMount()
   {
     let {setMetaData}=this.props;
-    //Call api
 
+    //Call api
     setMetaData(metaData);
     // let response=Api.commonApiPost("egf-masters", "functions", "_search").then(function(response)
     // {
@@ -108,7 +108,7 @@ class Report extends Component {
     {
       return (
           <ReportResult />
-      )
+        )
     }
     return (
       <div className="Report">
@@ -123,8 +123,8 @@ class Report extends Component {
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
-  setMetaData:(metadata)=>{
-    dispatch({type:"SET_META_DATA",metadata})
+  setMetaData:(metaData)=>{
+    dispatch({type:"SET_META_DATA",metaData})
   }
 });
 

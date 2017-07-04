@@ -43,11 +43,22 @@ class ShowForm extends Component {
        this.search=this.search.bind(this);
    }
 
-  componentWillMount()
-  {
 
-    //call boundary service fetch wards,location,zone data
-  }
+  // handleFormFields = () => {
+  //   var currentThis = this;
+  //   let FormFields = this.props.data.filter(function (el) {
+  //     return (el.code != 'CHECKLIST' && el.code != 'DOCUMENTS') ;
+  //   });
+  //
+  //   if(FormFields.length > 0){
+  //     return FormFields.map((item,index) =>
+  //     {
+  //       return (
+  //         <Fields key={index} obj={item} handler={(e, property, isRequired, pattern) => { currentThis.props.handleChange(e, property, isRequired, pattern)}}/>
+  //       );
+  //     })
+  //   }
+  // }
 
   componentDidMount()
   {
@@ -86,6 +97,18 @@ class ShowForm extends Component {
         <form onSubmit={(e) => {
           search(e)
         }}>
+
+        <Card style={styles.marginStyle}>
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Application Details < /div>}/>
+          <CardText style={{padding:0}}>
+          <Grid>
+            <Row>
+              {/*this.handleFormFields()*/}
+            </Row>
+          </Grid>
+          </CardText>
+        </Card>
+
           <Card>
             <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Search Property < /strong>}/>
 

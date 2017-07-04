@@ -1244,7 +1244,7 @@ function updateTable(tableName, modalName, object) {
                                         ${assignments_position.length>0?assignments_position[0]["name"]:""}
                                     </td>`)
                 $(tableName).append(`<td data-label=${"isPrimary"}>
-                                        ${employee[object][i]["isPrimary"] || ""}
+                                        ${(employee[object][i]["isPrimary"] ? ([true, "true"].indexOf(employee[object][i]["isPrimary"]) > -1 ? "Yes" : "No") : ("No"))}
                                     </td>`)
                 $(tableName).append(`<td data-label=${"fund"}>
                                         ${getNameById("fund",employee[object][i]["fund"],"") || ""}

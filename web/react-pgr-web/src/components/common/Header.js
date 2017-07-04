@@ -8,15 +8,16 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // import PropTypes from 'prop-types'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router';
 
 // import {history} from 'react-router-dom'
 
 // import {Grid, Row, Col} from 'react-bootstrap';
 
 
-
 import CustomMenu from './CustomMenu';
+
+var base='/react-pgr-web/';
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -163,7 +164,7 @@ class Header extends Component {
       id:4,
       name:'Search Grievance',
       displayName:"Search Grievance",
-      url:"/pgr/searchGrievance",
+      url:base + "pgr/searchGrievance",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -177,7 +178,7 @@ class Header extends Component {
       id:4,
       name:'My Pending Grievance',
       displayName:"My Pending Grievance",
-      url:"/pgr/viewGrievance",
+      url:base + "pgr/viewGrievance",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -190,7 +191,7 @@ class Header extends Component {
       id:5,
       name:'Officials Register Grievance',
       displayName:"Officials Register Grievance",
-      url:"/pgr/createGrievance",
+      url:base + "pgr/createGrievance",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -298,7 +299,7 @@ class Header extends Component {
       id:9,
       name:'Create Router',
       displayName:"Create Router",
-      url:"/pgr/createRouter",
+      url:base + "pgr/createRouter",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -311,7 +312,7 @@ class Header extends Component {
       id:10,
       name:'View Router',
       displayName:"View Router",
-      url:"/pgr/searchRouter/view",
+      url:base + "pgr/searchRouter/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -324,7 +325,7 @@ class Header extends Component {
       id:11,
       name:'Update Router',
       displayName:"Update Router",
-      url:"/pgr/searchRouter/edit",
+      url:base + "pgr/searchRouter/edit",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -337,7 +338,7 @@ class Header extends Component {
       id:12,
       name:'Bulk Router Genaration',
       displayName:"Bulk Router Genaration",
-      url:"/pgr/routerGeneration",
+      url:base + "pgr/routerGeneration",
       enabled:"true",
       orderNumber:4,
       queryParams:"",
@@ -350,7 +351,7 @@ class Header extends Component {
       id:13,
       name:'Create Escalation Time',
       displayName:"Create Escalation Time",
-      url:"/pgr/defineEscalationTime",
+      url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -363,7 +364,7 @@ class Header extends Component {
       id:14,
       name:'View Escalation Time',
       displayName:"View Escalation Time",
-      url:"/pgr/defineEscalationTime",
+      url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -376,7 +377,7 @@ class Header extends Component {
       id:15,
       name:'Update Escalation Time',
       displayName:"Update Escalation Time",
-      url:"/pgr/defineEscalationTime",
+      url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -389,7 +390,7 @@ class Header extends Component {
       id:16,
       name:'Create Escalation',
       displayName:"Create Escalation",
-      url:"/pgr/defineEscalation",
+      url:base + "pgr/defineEscalation",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -402,7 +403,7 @@ class Header extends Component {
       id:17,
       name:'View Escalation',
       displayName:"View Escalation",
-      url:"/pgr/viewEscalation",
+      url:base + "pgr/viewEscalation",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -428,7 +429,7 @@ class Header extends Component {
       id:19,
       name:'Bulk Escalation',
       displayName:"Bulk Escalation",
-      url:"/pgr/bulkEscalationGeneration",
+      url:base + "pgr/bulkEscalationGeneration",
       enabled:"true",
       orderNumber:4,
       queryParams:"",
@@ -469,7 +470,7 @@ class Header extends Component {
       id:22,
       name:'Create Receiving Center',
       displayName:"Create Receiving Center",
-      url:"/pgr/createReceivingCenter",
+      url:base + "pgr/createReceivingCenter",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -482,7 +483,7 @@ class Header extends Component {
       id:23,
       name:'View Receiving Center',
       displayName:"View Receiving Center",
-      url:"/pgr/receivingCenter/view",
+      url:base + "pgr/receivingCenter/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -495,7 +496,7 @@ class Header extends Component {
       id:24,
       name:'Update Receiving Center',
       displayName:"Update Receiving Center",
-      url:"/pgr/receivingCenter/edit",
+      url:base + "pgr/receivingCenter/edit",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -508,7 +509,7 @@ class Header extends Component {
       id:25,
       name:'Create Receiving Mode',
       displayName:"Create Receiving Mode",
-      url:"/pgr/receivingModeCreate",
+      url:base + "pgr/receivingModeCreate",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -521,7 +522,7 @@ class Header extends Component {
       id:26,
       name:'View Receiving Mode',
       displayName:"View Receiving Mode",
-      url:"/pgr/viewOrUpdateReceivingMode/view",
+      url:base + "pgr/viewOrUpdateReceivingMode/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -534,7 +535,7 @@ class Header extends Component {
       id:27,
       name:'Update Receiving Mode',
       displayName:"Update Receiving Mode",
-      url:"/pgr/viewOrUpdateReceivingMode/update",
+      url:base + "pgr/viewOrUpdateReceivingMode/update",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -560,7 +561,7 @@ class Header extends Component {
       id:29,
       name:'Aging Report',
       displayName:"Aging Report",
-      url:"/report/agingReport",
+      url:base + "report/agingReport",
       enabled:"true",
       orderNumber:1,
       queryParams:"",

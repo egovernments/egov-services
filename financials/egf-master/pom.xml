@@ -83,6 +83,14 @@
 		</dependency>
 
 	</dependencies>
+	
+	 <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
 	<build>
 		<plugins>
@@ -90,12 +98,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			 <plugin>
+	 <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
         <executions>
           <execution>
+           <id>client-jar</id>
             <phase>package</phase>
             <goals>
               <goal>jar</goal>
@@ -103,11 +111,29 @@
             <configuration>
               <classifier>client</classifier>
               <includes>
-                <include>**/contract/*</include>
+                <include>**/master/web/contract/*</include>
               </includes>
-              <excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
+        <executions>
+          <execution>
+          <id>common-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>common</classifier>
+              <includes>
                 <include>**/common/*</include>
-              </excludes>
+              </includes>
             </configuration>
           </execution>
         </executions>

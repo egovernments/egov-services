@@ -69,8 +69,33 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+            <groupId>org.egov</groupId>
+            <artifactId>egf-master</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <classifier>common</classifier>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.egov</groupId>
+            <artifactId>egf-master</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <classifier>client</classifier>
+        </dependency>
+        
+
+      
 
 	</dependencies>
+
+ <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
 	<build>
 		<plugins>

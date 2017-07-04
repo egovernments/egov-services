@@ -39,10 +39,9 @@
  */
 package org.egov.egf.master.domain.model;
 
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 import org.egov.common.domain.model.Auditable;
-import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,48 +53,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
-public class Supplier extends Auditable {
+@EqualsAndHashCode(exclude = { "bankAccount" }, callSuper = false)
+
+public class BankReconciliation extends Auditable {
+
+	private static final long serialVersionUID = 1L;
 
 	private String id;
 
-	@NotNull
-	@Length(max = 50, min = 1)
-	private String code;
-
-	@NotNull
-	@Length(max = 50, min = 1)
-	private String name;
-
-	@Length(max = 300)
-	private String address;
-
-	@Length(max = 10)
-	private String mobile;
-
-	@Length(max = 25)
-	private String email;
-
-	@Length(max = 250)
-	private String description;
-	@NotNull
-	private Boolean active;
-
-	@Length(max = 10)
-	private String panNo;
-
-	@Length(max = 20)
-	private String tinNo;
-
-	@Length(max = 25)
-	private String registationNo;
-
-	@Length(max = 25)
 	private BankAccount bankAccount;
 
-	@Length(max = 12)
-	private String ifscCode;
+	private BigDecimal amount;
 
-	private Bank bank;
+	private String transactionType;
+
+	private String instrumentHeaderId;
 
 }

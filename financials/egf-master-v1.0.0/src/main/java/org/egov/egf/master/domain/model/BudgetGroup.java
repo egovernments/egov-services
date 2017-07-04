@@ -31,20 +31,22 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.egf.master.domain.model;
 
-import javax.validation.constraints.NotNull;
-
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.domain.enums.BudgetAccountType;
+import org.egov.egf.master.domain.enums.BudgetingType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,48 +56,30 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
-public class Supplier extends Auditable {
+@Builder
+@EqualsAndHashCode(exclude = { "majorCode", "maxCode", "minCode", "accountType", "budgetingType" }, callSuper = false)
+public class BudgetGroup extends Auditable {
 
+	private static final long serialVersionUID = 8907540544512153346L;
 	private String id;
 
-	@NotNull
-	@Length(max = 50, min = 1)
-	private String code;
-
-	@NotNull
-	@Length(max = 50, min = 1)
+	@Length(max = 250, min = 1)
 	private String name;
 
-	@Length(max = 300)
-	private String address;
-
-	@Length(max = 10)
-	private String mobile;
-
-	@Length(max = 25)
-	private String email;
-
-	@Length(max = 250)
+	@Length(max = 250, message = "Max 250 characters are allowed for description")
 	private String description;
-	@NotNull
+
+	private Long majorCode;
+
+	private Long maxCode;
+
+	private Long minCode;
+
+	private BudgetAccountType accountType;
+
+	private BudgetingType budgetingType;
+
 	private Boolean active;
 
-	@Length(max = 10)
-	private String panNo;
-
-	@Length(max = 20)
-	private String tinNo;
-
-	@Length(max = 25)
-	private String registationNo;
-
-	@Length(max = 25)
-	private BankAccount bankAccount;
-
-	@Length(max = 12)
-	private String ifscCode;
-
-	private Bank bank;
 
 }

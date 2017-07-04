@@ -31,7 +31,7 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
@@ -41,7 +41,6 @@ package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -49,53 +48,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
 @Setter
-@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
-public class Supplier extends Auditable {
+@ToString
+public class AccountCodePurpose {
 
 	private String id;
 
 	@NotNull
-	@Length(max = 50, min = 1)
-	private String code;
-
-	@NotNull
-	@Length(max = 50, min = 1)
+	@Length(max = 256, min = 3)
 	private String name;
-
-	@Length(max = 300)
-	private String address;
-
-	@Length(max = 10)
-	private String mobile;
-
-	@Length(max = 25)
-	private String email;
-
-	@Length(max = 250)
-	private String description;
-	@NotNull
-	private Boolean active;
-
-	@Length(max = 10)
-	private String panNo;
-
-	@Length(max = 20)
-	private String tinNo;
-
-	@Length(max = 25)
-	private String registationNo;
-
-	@Length(max = 25)
-	private BankAccount bankAccount;
-
-	@Length(max = 12)
-	private String ifscCode;
-
-	private Bank bank;
-
 }

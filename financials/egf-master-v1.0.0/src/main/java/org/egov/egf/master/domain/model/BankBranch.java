@@ -40,6 +40,7 @@
 package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
@@ -49,15 +50,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
-public class Supplier extends Auditable {
+public class BankBranch extends Auditable {
 
 	private String id;
+
+	@NotNull
+	private Bank bank;
 
 	@NotNull
 	@Length(max = 50, min = 1)
@@ -65,37 +71,41 @@ public class Supplier extends Auditable {
 
 	@NotNull
 	@Length(max = 50, min = 1)
+	@Pattern(regexp = "^[a-zA-Z0-9_]*$")
 	private String name;
 
-	@Length(max = 300)
+	@NotNull
+	@Length(max = 50, min = 1)
 	private String address;
 
-	@Length(max = 10)
-	private String mobile;
+	@Length(max = 50)
+	private String address2;
 
-	@Length(max = 25)
-	private String email;
+	@Length(max = 50)
+	private String city;
 
-	@Length(max = 250)
-	private String description;
+	@Length(max = 50)
+	private String state;
+
+	@Length(max = 50)
+	private String pincode;
+
+	@Length(max = 15)
+	private String phone;
+
+	@Length(max = 15)
+	private String fax;
+
+	@Length(max = 50)
+	private String contactPerson;
+
 	@NotNull
 	private Boolean active;
 
-	@Length(max = 10)
-	private String panNo;
+	@Length(max = 256)
+	private String description;
 
-	@Length(max = 20)
-	private String tinNo;
-
-	@Length(max = 25)
-	private String registationNo;
-
-	@Length(max = 25)
-	private BankAccount bankAccount;
-
-	@Length(max = 12)
-	private String ifscCode;
-
-	private Bank bank;
+	@Length(max = 50)
+	private String micr;
 
 }

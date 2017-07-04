@@ -39,63 +39,93 @@
  */
 package org.egov.egf.master.domain.model;
 
-import javax.validation.constraints.NotNull;
+/**
+ * This interface is used to get the subledger(entity) information for the
+ * implementing classes.
+ * 
+ * @author eGov
+ */
+public interface EntityType {
 
-import org.egov.common.domain.model.Auditable;
-import org.hibernate.validator.constraints.Length;
+	/**
+	 * To get the bank name for the entity. it's required to generate the bank
+	 * advice for Contractor/supplier/employee
+	 * 
+	 * @return
+	 */
+	public String getBankname();
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+	/**
+	 * To get the bank account no. for the entity. it's required to generate the
+	 * bank advice for Contractor/supplier/employee.
+	 * 
+	 * @return
+	 */
+	public String getBankaccount();
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
-public class Supplier extends Auditable {
+	/**
+	 * To get the Pan no. for the entity. it's required to generate the bank
+	 * advice for Contractor/supplier/employee.
+	 * 
+	 * @return
+	 */
+	public String getPanno();
 
-	private String id;
+	/**
+	 * To get the Tin no. for the entity. it's required to generate the bank
+	 * advice
+	 * 
+	 * @return
+	 */
+	public String getTinno();
 
-	@NotNull
-	@Length(max = 50, min = 1)
-	private String code;
+	/**
+	 * To get the IFSC code for the entity. it's required to generate the bank
+	 * advice
+	 * 
+	 * @return
+	 */
+	public String getIfsccode();
 
-	@NotNull
-	@Length(max = 50, min = 1)
-	private String name;
+	/**
+	 * To get the subledger party name.
+	 * 
+	 * @return
+	 */
+	public String getName();
 
-	@Length(max = 300)
-	private String address;
+	/**
+	 * To get the mode of payment, to make a payment for the entity possible
+	 * value, Cheque, Cash or RTGS
+	 * 
+	 * @return
+	 */
+	public String getModeofpay();
 
-	@Length(max = 10)
-	private String mobile;
+	/**
+	 * To get the code for the entity
+	 * 
+	 * @return
+	 */
+	public String getCode();
 
-	@Length(max = 25)
-	private String email;
+	/**
+	 * To get The id/detailKeyd for the entity
+	 * 
+	 * @return
+	 */
+	public Integer getEntityId();
 
-	@Length(max = 250)
-	private String description;
-	@NotNull
-	private Boolean active;
+	/**
+	 * 
+	 * @return data to be displayed in reports
+	 */
+	public String getEntityDescription();
 
-	@Length(max = 10)
-	private String panNo;
-
-	@Length(max = 20)
-	private String tinNo;
-
-	@Length(max = 25)
-	private String registationNo;
-
-	@Length(max = 25)
-	private BankAccount bankAccount;
-
-	@Length(max = 12)
-	private String ifscCode;
-
-	private Bank bank;
+	/**
+	 *
+	 * @return status of Entity^M
+	 */
+	public EgfStatus getEgwStatus();
 
 }

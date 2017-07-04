@@ -42,6 +42,7 @@ package org.egov.egf.master.domain.model;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.domain.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -54,48 +55,43 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
-public class Supplier extends Auditable {
+@EqualsAndHashCode(exclude = { "bankBranch", "chartOfAccount", "fund", "type" }, callSuper = false)
+
+public class BankAccount extends Auditable{
+
+
+	private static final long serialVersionUID = 1L;
 
 	private String id;
 
-	@NotNull
-	@Length(max = 50, min = 1)
-	private String code;
+	private BankBranch bankBranch;
+
+	// @JsonProperty(access = Access.WRITE_ONLY)
+	// @ManyToOne
+	// @JoinColumn(name = "glcodeid")
+	private ChartOfAccount chartOfAccount;
+
+	// @JsonProperty(access = Access.WRITE_ONLY)
+	// @ManyToOne
+	private Fund fund;
 
 	@NotNull
-	@Length(max = 50, min = 1)
-	private String name;
-
-	@Length(max = 300)
-	private String address;
-
-	@Length(max = 10)
-	private String mobile;
-
 	@Length(max = 25)
-	private String email;
+	private String accountNumber;
 
-	@Length(max = 250)
+	// is this required ?
+	private String accountType;
+	@Length(max = 256)
 	private String description;
+
 	@NotNull
 	private Boolean active;
 
-	@Length(max = 10)
-	private String panNo;
+	@Length(max = 100)
+	private String payTo;
 
-	@Length(max = 20)
-	private String tinNo;
+	@NotNull
+	private BankAccountType type;
 
-	@Length(max = 25)
-	private String registationNo;
-
-	@Length(max = 25)
-	private BankAccount bankAccount;
-
-	@Length(max = 12)
-	private String ifscCode;
-
-	private Bank bank;
 
 }

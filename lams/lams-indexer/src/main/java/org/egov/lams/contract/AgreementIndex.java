@@ -14,6 +14,6 @@ public class AgreementIndex {
 
 	private AgreementDetailsEs agreementDetails;
 		
-	private List<DemandDetailsEs> demandDetailsEs = new ArrayList<>();
+	private List<DemandDetailsEs> demandDetails = new ArrayList<>();
 	
 }

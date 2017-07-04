@@ -40,17 +40,16 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
-import org.egov.eis.broker.LeaveAllotmentProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.repository.LeaveAllotmentRepository;
 import org.egov.eis.web.contract.LeaveAllotmentGetRequest;
 import org.egov.eis.web.contract.LeaveAllotmentRequest;
 import org.egov.eis.web.contract.LeaveAllotmentResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +58,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Service
 public class LeaveAllotmentService {
@@ -73,17 +71,11 @@ public class LeaveAllotmentService {
 	@Value("${kafka.topics.leaveallotment.create.name}")
 	private String leaveAllotmentCreateTopic;
 
-	@Value("${kafka.topics.leaveallotment.create.key}")
-	private String leaveAllotmentCreateKey;
-
 	@Value("${kafka.topics.leaveallotment.update.name}")
 	private String leaveAllotmentUpdateTopic;
 
-	@Value("${kafka.topics.leaveallotment.update.key}")
-	private String leaveAllotmentUpdateKey;
-
 	@Autowired
-	private LeaveAllotmentProducer leaveAllotmentProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -97,41 +89,13 @@ public class LeaveAllotmentService {
 
 	public ResponseEntity<?> createLeaveAllotment(LeaveAllotmentRequest leaveAllotmentRequest) {
 		List<LeaveAllotment> leaveAllotment = leaveAllotmentRequest.getLeaveAllotment();
-		String leaveAllotmentRequestJson = null;
-		try {
-			leaveAllotmentRequestJson = objectMapper.writeValueAsString(leaveAllotmentRequest);
-			LOGGER.info("leaveAllotmentRequestJson::" + leaveAllotmentRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON", e);
-			e.printStackTrace();
-		}
-		try {
-			leaveAllotmentProducer.sendMessage(leaveAllotmentCreateTopic, leaveAllotmentCreateKey,
-					leaveAllotmentRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		kafkaTemplate.send(leaveAllotmentCreateTopic, leaveAllotmentRequest);
 		return getSuccessResponseForCreate(leaveAllotment, leaveAllotmentRequest.getRequestInfo());
 	}
 
 	public ResponseEntity<?> updateLeaveAllotment(LeaveAllotmentRequest leaveAllotmentRequest) {
 		List<LeaveAllotment> leaveAllotment = leaveAllotmentRequest.getLeaveAllotment();
-		String leaveAllotmentRequestJson = null;
-		try {
-			leaveAllotmentRequestJson = objectMapper.writeValueAsString(leaveAllotmentRequest);
-			LOGGER.info("leaveAllotmentRequestJson::" + leaveAllotmentRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON", e);
-			e.printStackTrace();
-		}
-		try {
-			leaveAllotmentProducer.sendMessage(leaveAllotmentUpdateTopic, leaveAllotmentUpdateKey,
-					leaveAllotmentRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		kafkaTemplate.send(leaveAllotmentUpdateTopic, leaveAllotmentRequest);
 		return getSuccessResponseForCreate(leaveAllotment, leaveAllotmentRequest.getRequestInfo());
 	}
 
@@ -142,7 +106,6 @@ public class LeaveAllotmentService {
 	 * 
 	 * @param leaveAllotment
 	 * @param requestInfo
-	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> getSuccessResponseForCreate(List<LeaveAllotment> leaveAllotment, RequestInfo requestInfo) {

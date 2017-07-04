@@ -48,6 +48,7 @@ import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.model.DocumentOwner;
 import org.egov.wcms.transanction.model.MeterReading;
 import org.egov.wcms.transanction.model.enums.BillingType;
+import org.egov.wcms.transanction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transanction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transanction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
@@ -115,8 +116,14 @@ public class WaterConnectionRepository {
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
                 statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatment());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
-                statement.setInt(26, 1);
-                statement.setInt(27, 1);
+                if(waterConnectionRequest.getConnection().getId() == 0){
+                statement.setString(26, NewConnectionStatus.CREATED.name()); 
+                }
+                else{
+                    statement.setString(26, NewConnectionStatus.VERIFIED.name()); 
+                }
+                    //status
+                statement.setInt(27, 1); //state_id
                 if (waterConnectionRequest.getConnection().getIsLegacy()  || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
                     statement.setString(28, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
                     statement.setString(29, waterConnectionRequest.getConnection().getConsumerNumber());

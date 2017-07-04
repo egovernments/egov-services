@@ -40,9 +40,6 @@
 
 package org.egov.eis.service;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.VacantPositionsRepository;
@@ -52,6 +49,9 @@ import org.egov.eis.web.contract.VacantPositionsGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Service
 public class VacantPositionsService {

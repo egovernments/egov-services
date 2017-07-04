@@ -49,143 +49,142 @@ import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class DonationRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private DonationRowMapper donationRowMapper;
 
-	@Autowired
-	private DonationRowMapper donationRowMapper;
+    @Autowired
+    private DonationQueryBuilder donationQueryBuilder;
 
-	@Autowired
-	private DonationQueryBuilder donationQueryBuilder;
+    public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
+        log.info("Donation Request::" + donationRequest);
 
-	public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
-		LOGGER.info("Donation Request::" + donationRequest);
+        final String donationInsert = DonationQueryBuilder.donationInsertQuery();
+        final Donation donation = donationRequest.getDonation();
 
-		final String donationInsert = DonationQueryBuilder.donationInsertQuery();
-		final Donation donation = donationRequest.getDonation();
+        final String categoryQuery = DonationQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
+            log.info("Category Id: " + categoryId);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null)
+            log.info("Invalid input.");
 
-		final String categoryQuery = DonationQueryBuilder.getCategoryId();
-		Long categoryId = 0L;
-		try {
-			categoryId = jdbcTemplate.queryForObject(categoryQuery,
-					new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
-			LOGGER.info("Category Id: " + categoryId);
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
-		}
-		if (categoryId == null)
-			LOGGER.info("Invalid input.");
+        final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
+        Long maxPipeSizeId = 0L;
+        try {
+            maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMaxPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (maxPipeSizeId == null)
+            log.info("Invalid input for MaxPipeSize.");
 
-		final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
-		Long maxPipeSizeId = 0L;
-		try {
-			maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
-					new Object[] { donation.getMaxPipeSize(), donation.getTenantId() }, Long.class);
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
-		}
-		if (maxPipeSizeId == null)
-			LOGGER.info("Invalid input for MaxPipeSize.");
+        Long minPipeSizeId = 0L;
+        try {
+            minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMinPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (minPipeSizeId == null)
+            log.info("Invalid input for MinPipeSize");
 
-		Long minPipeSizeId = 0L;
-		try {
-			minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
-					new Object[] { donation.getMinPipeSize(), donation.getTenantId() }, Long.class);
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
-		}
-		if (minPipeSizeId == null)
-			LOGGER.info("Invalid input for MinPipeSize");
+        final Object[] obj = new Object[] { donation.getPropertyTypeId(), donation.getUsageTypeId(), categoryId,
+                maxPipeSizeId, minPipeSizeId, donation.getFromDate(), donation.getToDate(),
+                donation.getDonationAmount(), donation.getActive(), donation.getTenantId(),
+                Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), };
+        jdbcTemplate.update(donationInsert, obj);
+        return donationRequest;
+    }
 
-		final Object[] obj = new Object[] { donation.getPropertyTypeId(), donation.getUsageTypeId(), categoryId,
-				maxPipeSizeId, minPipeSizeId, donation.getFromDate(), donation.getToDate(),
-				donation.getDonationAmount(), donation.getActive(), donation.getTenantId(),
-				Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), };
-		jdbcTemplate.update(donationInsert, obj);
-		return donationRequest;
-	}
+    public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
+        log.info("Donation update Request::" + donationRequest);
+        final String donationInsert = DonationQueryBuilder.donationUpdateQuery();
+        final Donation donation = donationRequest.getDonation();
+        final String categoryQuery = DonationQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
+            log.info("Category Id: " + categoryId);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null)
+            log.info("Invalid input.");
 
-	public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
-		LOGGER.info("Donation update Request::" + donationRequest);
-		final String donationInsert = DonationQueryBuilder.donationUpdateQuery();
-		final Donation donation = donationRequest.getDonation();
-		final String categoryQuery = DonationQueryBuilder.getCategoryId();
-		Long categoryId = 0L;
-		try {
-			categoryId = jdbcTemplate.queryForObject(categoryQuery,
-					new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
-			LOGGER.info("Category Id: " + categoryId);
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
-		}
-		if (categoryId == null)
-			LOGGER.info("Invalid input.");
+        final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
+        Long maxPipeSizeId = 0L;
+        try {
+            maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMaxPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for max pipesize");
+        }
+        if (maxPipeSizeId == null)
+            log.info("Invalid input for MaxPipeSize.");
 
-		final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
-		Long maxPipeSizeId = 0L;
-		try {
-			maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
-					new Object[] { donation.getMaxPipeSize(), donation.getTenantId() }, Long.class);
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
-		}
-		if (maxPipeSizeId == null)
-			LOGGER.info("Invalid input for MaxPipeSize.");
+        Long minPipeSizeId = 0L;
+        try {
+            minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMinPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for min pipesize");
+        }
+        if (minPipeSizeId == null)
+            log.info("Invalid input for MinPipeSize");
 
-		Long minPipeSizeId = 0L;
-		try {
-			minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
-					new Object[] { donation.getMinPipeSize(), donation.getTenantId() }, Long.class);
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
-		}
-		if (minPipeSizeId == null)
-			LOGGER.info("Invalid input for MinPipeSize");
+        final Object[] obj = new Object[] { donation.getPropertyTypeId(), donation.getUsageTypeId(), categoryId,
+                maxPipeSizeId, minPipeSizeId, donation.getFromDate(), donation.getToDate(),
+                donation.getDonationAmount(), donation.getActive(),
+                Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), donation.getId() };
+        jdbcTemplate.update(donationInsert, obj);
+        return donationRequest;
+    }
 
-		final Object[] obj = new Object[] { donation.getPropertyTypeId(), donation.getUsageTypeId(), categoryId,
-				maxPipeSizeId, minPipeSizeId, donation.getFromDate(), donation.getToDate(),
-				donation.getDonationAmount(), donation.getActive(),
-				Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), donation.getId() };
-		jdbcTemplate.update(donationInsert, obj);
-		return donationRequest;
-	}
+    public List<Donation> findForCriteria(final DonationGetRequest donation) {
 
-	public List<Donation> findForCriteria(final DonationGetRequest donation) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        try {
+            if (donation.getCategoryType() != null)
+                donation.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
+                        new Object[] { donation.getCategoryType() }, Long.class));
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty set for category type.");
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		try {
-			if (donation.getCategoryType() != null)
-				donation.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
-						new Object[] { donation.getCategoryType() }, Long.class));
-		} catch (final EmptyResultDataAccessException e) {
-			LOGGER.info("EmptyResultDataAccessException: Query returned empty RS.");
+        }
 
-		}
+        final String queryStr = donationQueryBuilder.getQuery(donation, preparedStatementValues);
+        final String categoryNameQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryTypeName();
+        final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                donationRowMapper);
+        for (final Donation donations : donationList) {
+            donations.setCategory(jdbcTemplate.queryForObject(categoryNameQuery,
+                    new Object[] { donations.getCategoryTypeId() }, String.class));
+        }
+        return donationList;
 
-		final String queryStr = donationQueryBuilder.getQuery(donation, preparedStatementValues);
-		final String categoryNameQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryTypeName();
-		final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				donationRowMapper);
-		for (final Donation donations : donationList) {
-			donations.setCategory(jdbcTemplate.queryForObject(categoryNameQuery,
-					new Object[] { donations.getCategoryTypeId() }, String.class));
-		}
-		return donationList;
-
-	}
+    }
 }

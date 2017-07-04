@@ -44,11 +44,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.UOM;
 import org.egov.commons.service.UOMService;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.UOMGetRequest;
 import org.egov.commons.web.contract.UOMResponse;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;

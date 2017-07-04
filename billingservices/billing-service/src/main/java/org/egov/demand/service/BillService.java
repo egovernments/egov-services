@@ -157,7 +157,7 @@ public class BillService {
 
 	private List<Bill> prepareBill(List<Demand> demands,String tenantId,RequestInfo requestInfo){
 
-		List<Bill> bills = new ArrayList<Bill>();
+		List<Bill> bills = new ArrayList<>();
 
 		Map<String, List<TaxHeadMaster>> taxHeadCodes = getTaxHeadMaster(demands, tenantId, requestInfo);
 
@@ -228,8 +228,11 @@ public class BillService {
 			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
 			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
 
-			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).
-					billAccountDetails(billAccountDetails).billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
+			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
+			
+			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService())
+					.billDescription(description).displayMessage(description).billAccountDetails(billAccountDetails)
+					.billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
 					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
 					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).

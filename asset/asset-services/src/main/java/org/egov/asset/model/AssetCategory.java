@@ -56,7 +56,7 @@ public class AssetCategory {
 
 	private String version;
 
-	private List<DepreciationMetaData> depreciationRate;
+	private Double depreciationRate;
 
 	private List<AttributeDefination> assetFieldsDefination;
 }

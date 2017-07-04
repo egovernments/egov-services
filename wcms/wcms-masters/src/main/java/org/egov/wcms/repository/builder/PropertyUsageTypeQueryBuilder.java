@@ -42,14 +42,14 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class PropertyUsageTypeQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertyUsageTypeQueryBuilder.class);
     private static final String BASE_QUERY = "SELECT * FROM egwtr_property_usage_type proUseType";
 
     public String getPersistQuery() {
@@ -62,12 +62,13 @@ public class PropertyUsageTypeQueryBuilder {
     }
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest, final List preparedStatementValues) {
+    public String getQuery(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest,
+            final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, propUsageTypeGetRequest);
 
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -107,7 +108,6 @@ public class PropertyUsageTypeQueryBuilder {
         return query.append(")").toString();
     }
 
-
     public static String selectPropertyByUsageTypeQuery() {
         return " select id FROM egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ?";
     }
@@ -115,6 +115,5 @@ public class PropertyUsageTypeQueryBuilder {
     public static String selectPropertyByUsageTypeNotInQuery() {
         return " select id from egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ? and id != ? ";
     }
-
 
 }

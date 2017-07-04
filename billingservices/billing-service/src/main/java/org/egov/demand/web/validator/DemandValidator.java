@@ -39,6 +39,7 @@
  */
 package org.egov.demand.web.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,14 +91,42 @@ public class DemandValidator implements Validator {
 			demandRequest = (DemandRequest) target;
 		else
 			throw new RuntimeException("Invalid Object type for Demand validator");
-		validateOwner(demandRequest, errors);
+		validateDemand(demandRequest, errors);
 		validateTaxHeadMaster(demandRequest, errors);
 		validateBusinessService(demandRequest, errors);
 		validateTaxPeriod(demandRequest, errors);
+		validateOwner(demandRequest, errors);
+	}
+
+	private void validateDemand(DemandRequest demandRequest, Errors errors) {
+		
+		for(Demand demand : demandRequest.getDemands())
+			for(DemandDetail demandDetail : demand.getDemandDetails()){
+				
+				BigDecimal tax = demandDetail.getTaxAmount();
+				BigDecimal collection = demandDetail.getCollectionAmount();
+				int i = tax.compareTo(collection);
+				if(i < 0)
+					errors.rejectValue("Demands", "",
+							"collectionAmount : "+collection+" should not be greater than taxAmount : "+tax+" for demandDetail");
+			}
+		/*demandDetails.stream().filter(demandDetail -> {
+			
+			BigDecimal tax = demandDetail.getTaxAmount();
+			BigDecimal collection = demandDetail.getCollectionAmount();
+			int i = tax.compareTo(collection);
+			System.err.println("compare to value" + i);
+			if(i < 0)
+				errors.rejectValue("Demands", "",
+						"collectionAmount : "+collection+" should not be greater than taxAmount : "+tax+" for demandDetail");
+			else
+				System.err.println("hi");
+			return true;
+		});*/
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {
-
+		
 	}
 
 	private void validateBusinessService(DemandRequest demandRequest, Errors errors) {
@@ -141,7 +170,6 @@ public class DemandValidator implements Validator {
 		else {
 			Map<String, List<TaxHeadMaster>> taxHeadMap = taxHeadMasters.stream()
 					.collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
-
 			for (String code : codeDemandMap.keySet()) {
 				Demand demand = codeDemandMap.get(code);
 				if (taxHeadMap.get(code) == null)

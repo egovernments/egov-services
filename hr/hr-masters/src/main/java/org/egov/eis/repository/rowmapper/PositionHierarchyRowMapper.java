@@ -40,7 +40,9 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.eis.model.*;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,13 +50,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.eis.model.DepartmentDesignation;
-import org.egov.eis.model.Designation;
-import org.egov.eis.model.ObjectType;
-import org.egov.eis.model.Position;
-import org.egov.eis.model.PositionHierarchy;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class PositionHierarchyRowMapper implements RowMapper<PositionHierarchy> {

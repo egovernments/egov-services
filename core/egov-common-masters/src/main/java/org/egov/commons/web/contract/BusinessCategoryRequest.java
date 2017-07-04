@@ -40,6 +40,8 @@
 
 package org.egov.commons.web.contract;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.commons.model.AuthenticatedUser;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -57,7 +59,7 @@ public class BusinessCategoryRequest {
 	private BusinessCategory businessCategoryInfo;
 
 	public AuthenticatedUser toDomain() {
-		UserInfo userInfo = requestInfo.getUserInfo();
+		User userInfo = requestInfo.getUserInfo();
 		return AuthenticatedUser.builder().id(userInfo.getId()).anonymousUser(false).emailId(userInfo.getEmailId())
 				.mobileNumber(userInfo.getMobileNumber()).name(userInfo.getName()).build();
 

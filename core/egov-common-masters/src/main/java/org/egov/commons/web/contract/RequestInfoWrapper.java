@@ -48,6 +48,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.egov.common.contract.request.RequestInfo;
 
 @Getter
 @Setter

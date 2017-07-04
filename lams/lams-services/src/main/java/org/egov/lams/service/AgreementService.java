@@ -118,6 +118,9 @@ public class AgreementService {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
 			agreement.setStatus(Status.WORKFLOW);
 			setInitiatorPosition(agreementRequest);
+			agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+     		agreement.setId(agreementRepository.getAgreementID());
+
 		} else if(agreement.getAction().equals(Action.CREATE) || agreement.getAction().equals(Action.RENEWAL)){
 
 		Calendar calendar = Calendar.getInstance();

@@ -40,9 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.EmployeeType;
 import org.egov.eis.repository.builder.EmployeeTypeQueryBuilder;
 import org.egov.eis.repository.rowmapper.EmployeeTypeRowMapper;
@@ -50,6 +47,9 @@ import org.egov.eis.web.contract.EmployeeTypeGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class EmployeeTypeRepository {

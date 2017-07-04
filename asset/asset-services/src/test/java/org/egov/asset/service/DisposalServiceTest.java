@@ -137,6 +137,7 @@ public class DisposalServiceTest {
 
 	@Test
 	public void testCreate() {
+		final DisposalService mock = PowerMockito.mock(DisposalService.class);
 		DisposalResponse disposalResponse = null;
 		try {
 			disposalResponse = getDisposal("disposal/disposalServiceResponse.disposal1.json");
@@ -150,7 +151,7 @@ public class DisposalServiceTest {
 		disposalRequest.getDisposal().setVoucherReference(Long.valueOf("6"));
 
 		doNothing().when(disposalRepository).create(disposalRequest);
-		disposalService.create(Matchers.any(DisposalRequest.class));
+		mock.create(disposalRequest);
 		assertEquals(disposalResponse.getDisposals().get(0).toString(), disposalRequest.getDisposal().toString());
 	}
 

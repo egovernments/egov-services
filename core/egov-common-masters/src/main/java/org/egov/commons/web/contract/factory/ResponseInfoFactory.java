@@ -40,15 +40,16 @@
 
 package org.egov.commons.web.contract.factory;
 
-import org.egov.commons.web.contract.RequestInfo;
-import org.egov.commons.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class ResponseInfoFactory {
 
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
-
 		String apiId = null;
 		String ver = null;
 		String ts = null;
@@ -57,7 +58,7 @@ public class ResponseInfoFactory {
 		if (requestInfo != null) {
 			apiId = requestInfo.getApiId();
 			ver = requestInfo.getVer();
-			ts = requestInfo.getTs().toString();
+			ts = isEmpty(requestInfo.getTs()) ? null : requestInfo.getTs().toString();
 			msgId = requestInfo.getMsgId();
 		}
 		String responseStatus = success ? "successful" : "failed";

@@ -40,9 +40,7 @@
 
 package org.egov.commons.consumers;
 
-import java.io.IOException;
-
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.commons.repository.ElasticSearchRepository;
 import org.egov.commons.service.HolidayService;
 import org.egov.commons.web.contract.HolidayRequest;
@@ -50,39 +48,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
+@Service
 public class HolidayConsumers {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(HolidayConsumers.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(HolidayConsumers.class);
 
-	private static final String OBJECT_TYPE_HOLIDAY = "holiday";
+    private static final String OBJECT_TYPE_HOLIDAY = "holiday";
 
-	@Autowired
-	private HolidayService holidayService;
+    @Autowired
+    private HolidayService holidayService;
 
-	@Autowired
-	private ElasticSearchRepository elasticSearchRepository;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ElasticSearchRepository elasticSearchRepository;
 
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "egov-common-holiday")
-	public void listen(final ConsumerRecord<String, String> record) {
-		LOGGER.info("key:" + record.key() + ":" + "value:" + record.value() + "thread:" + Thread.currentThread());
-		if (record.topic().equals("egov-common-holiday")) {
-			try {
-				LOGGER.info("SaveHolidayConsumer egov-common-holiday holidayService:" + holidayService);
-				final HolidayRequest holidayRequest = holidayService
-						.create(objectMapper.readValue(record.value(), HolidayRequest.class));
-                //TODO : holiday index id should be changed
-				elasticSearchRepository.index(OBJECT_TYPE_HOLIDAY, holidayRequest.getHoliday().getApplicableOn().toString(),
-						holidayRequest.getHoliday());
+    @Autowired
+    private ObjectMapper objectMapper;
 
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @KafkaListener(topics = "egov-common-holiday")
+    public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        LOGGER.info("record:" + record);
+        if (topic.equals("egov-common-holiday")) {
+            LOGGER.info("SaveHolidayConsumer egov-common-holiday holidayService:" + holidayService);
+            final HolidayRequest holidayRequest = holidayService
+                    .create(objectMapper.convertValue(record, HolidayRequest.class));
+            //TODO : holiday index id should be changed
+            elasticSearchRepository.index(OBJECT_TYPE_HOLIDAY, holidayRequest.getHoliday().getApplicableOn().toString(),
+                    holidayRequest.getHoliday());
+        }
+    }
 }

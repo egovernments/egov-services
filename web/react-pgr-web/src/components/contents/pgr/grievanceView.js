@@ -51,7 +51,8 @@ class grievanceView extends Component{
       open: false,
       loadingstatus:'loading'
     });
-    this.loadSRN();
+    //this.loadSRN();
+    window.location.reload();
   };
 
   componentDidMount(){
@@ -68,7 +69,7 @@ class grievanceView extends Component{
     {
       currentThis.setState({SD : response.attributes})
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
     });
 
     Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
@@ -100,16 +101,16 @@ class grievanceView extends Component{
           currentThis.getDepartmentById();
 
         },function(err) {
-
+          currentThis.setState({loadingstatus:'hide'});
         });
 
 
       },function(err) {
-
+        currentThis.setState({loadingstatus:'hide'});
       });
 
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
     });
   }
   getDepartmentById = () => {
@@ -118,17 +119,17 @@ class grievanceView extends Component{
       currentThis.setState({departmentName : response.Department[0].name});
       currentThis.getReceivingCenter();
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
     });
   }
   getReceivingCenter(){
     if(this.state.receivingCenter){
       Api.commonApiPost("/pgr-master/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
       {
-        currentThis.setState({receivingCenterName : response.receivingCenters[0].name});
+        currentThis.setState({receivingCenterName : response.ReceivingCenterType[0].name});
         currentThis.getLocation();
       },function(err) {
-
+        currentThis.setState({loadingstatus:'hide'});
       });
     }else {
       currentThis.getLocation();
@@ -141,7 +142,7 @@ class grievanceView extends Component{
         currentThis.setState({childLocationName : response.Boundary[0].name});
         currentThis.nextStatus();
       },function(err) {
-
+        currentThis.setState({loadingstatus:'hide'});
       });
     else {
       currentThis.setState({childLocationName : ""});
@@ -155,7 +156,7 @@ class grievanceView extends Component{
         currentThis.setState({nextStatus : response.statuses});
         currentThis.allServices();
       },function(err) {
-
+        currentThis.setState({loadingstatus:'hide'});
       });
     }else {
       currentThis.setState({loadingstatus:'hide'});
@@ -166,13 +167,23 @@ class grievanceView extends Component{
       Api.commonApiPost("/pgr/services/v1/_search", {type:'ALL'}).then(function(response)
       {
         currentThis.setState({complaintTypes : response.complaintTypes});
-        currentThis.getWard();
+        //check update is enabled?
+        currentThis.checkUpdateEnabled();
       },function(err) {
-
+        currentThis.setState({loadingstatus:'hide'});
       });
     }else{
       currentThis.setState({loadingstatus:'hide'});
     }
+  }
+  checkUpdateEnabled = () => {
+    Api.commonApiPost("/pgr/seva/v1/_get",{crn : currentThis.props.match.params.srn}).then(function(response)
+    {
+      currentThis.setState({isUpdateAllowed : response.isUpdateAllowed});
+      currentThis.getWard();
+    },function(err) {
+      currentThis.setState({loadingstatus:'hide'});
+    });
   }
   getWard = () => {
     Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName", {boundaryTypeName:'Ward',hierarchyTypeName:'Administration'}).then(function(response)
@@ -180,7 +191,7 @@ class grievanceView extends Component{
       currentThis.setState({ward : response.Boundary});
       currentThis.getLocality();
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
     });
   }
   getLocality = () => {
@@ -189,7 +200,7 @@ class grievanceView extends Component{
       currentThis.setState({locality : response.Boundary});
       currentThis.getDepartment();
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
     });
   }
   getDepartment = () => {
@@ -198,7 +209,7 @@ class grievanceView extends Component{
       currentThis.setState({department : response.Department});
       currentThis.setState({loadingstatus:'hide'});
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
     });
   }
   renderWorkflow = () =>{
@@ -335,10 +346,10 @@ class grievanceView extends Component{
     }
   }
   updateSeva = (req_obj) =>{
-    //console.log('Before Submit',JSON.stringify(req_obj));
+    // console.log('Before Submit',JSON.stringify(req_obj));
     Api.commonApiPost("/pgr/seva/v1/_update",{},req_obj).then(function(updateResponse)
     {
-      //console.log('After submit',JSON.stringify(updateResponse));
+      // console.log('After submit',JSON.stringify(updateResponse));
       currentThis.setState({loadingstatus:'hide'});
       {currentThis.handleOpen()}
     },function(err) {
@@ -664,7 +675,7 @@ class grievanceView extends Component{
             </Row> : ''}
             <Row>
               <Col xs={12} md={12}>
-                <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4}value={grievanceView.approvalComments} onChange={(event, newValue) => {
+                <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.approvalComments ? grievanceView.approvalComments : ''} onChange={(event, newValue) => {
                   handleChange(newValue, "approvalComments", true, "") }} errorText={fieldErrors.approvalComments ? fieldErrors.approvalComments : ""}/>
               </Col>
             </Row>
@@ -680,11 +691,12 @@ class grievanceView extends Component{
                 </div>
               </Col>
             </Row> : ""}
-            <Row>
-              <div style={{textAlign: 'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
-              </div>
-            </Row>
+            {this.state.isUpdateAllowed ?
+              <Row>
+                <div style={{textAlign: 'center'}}>
+                  <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                </div>
+              </Row>: ''}
           </CardText>
         </Card>
       </Grid>

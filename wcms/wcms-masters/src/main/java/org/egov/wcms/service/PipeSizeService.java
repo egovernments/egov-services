@@ -41,29 +41,25 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.PipeSize;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PipeSizeRepository;
 import org.egov.wcms.web.contract.PipeSizeGetRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PipeSizeService {
-
-    public static final Logger logger = LoggerFactory.getLogger(PipeSizeService.class);
 
     @Autowired
     private PipeSizeRepository pipeSizeRepository;
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
@@ -80,39 +76,21 @@ public class PipeSizeService {
         pipeSizeRequest.getPipeSize().setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
-        final ObjectMapper mapper = new ObjectMapper();
-        String pipeSizeValue = null;
         try {
-            logger.info("createPipeSize service::" + pipeSizeRequest);
-            pipeSizeValue = mapper.writeValueAsString(pipeSizeRequest);
-            logger.info("pipeSizeValue::" + pipeSizeValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, pipeSizeValue);
+            kafkaTemplate.send(topic, key, pipeSizeRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return pipeSizeRequest.getPipeSize();
     }
 
     public PipeSize updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
         final double pipeSizeininch = pipeSizeRequest.getPipeSize().getSizeInMilimeter() * 0.039370;
         pipeSizeRequest.getPipeSize().setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
-        String pipeSizeValue = null;
         try {
-            logger.info("updatePipeSize service::" + pipeSizeRequest);
-            pipeSizeValue = mapper.writeValueAsString(pipeSizeRequest);
-            logger.info("pipeSizeValue::" + pipeSizeValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, pipeSizeValue);
+            kafkaTemplate.send(topic, key, pipeSizeRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return pipeSizeRequest.getPipeSize();
     }

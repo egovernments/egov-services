@@ -1,6 +1,6 @@
 package org.egov.eis.service;
 
-import org.egov.eis.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.web.contract.UserGetRequest;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class UserService {
-
 	private RestTemplate restTemplate;
 	private String userHost;
 	private String userServiceUrl;

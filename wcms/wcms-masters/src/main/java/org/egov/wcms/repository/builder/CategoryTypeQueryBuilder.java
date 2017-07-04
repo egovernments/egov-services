@@ -43,18 +43,17 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.CategoryTypeGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CategoryTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT category.id as category_id, category.code as category_code,"
             + " category.name as category_name, category.description as category_description,category.active as category_active, category.tenantId as category_tenantId "
@@ -66,7 +65,7 @@ public class CategoryTypeQueryBuilder {
         addWhereClause(selectQuery, preparedStatementValues, categoryGetRequest);
         addOrderByClause(selectQuery, categoryGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, categoryGetRequest);
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -74,8 +73,8 @@ public class CategoryTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final CategoryTypeGetRequest categoryGetRequest) {
 
-        if (categoryGetRequest.getId() == null && categoryGetRequest.getName() == null && categoryGetRequest.getActive() == null
-                && categoryGetRequest.getTenantId() == null)
+        if (categoryGetRequest.getId() == null && categoryGetRequest.getName() == null
+                && categoryGetRequest.getActive() == null && categoryGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -175,7 +174,7 @@ public class CategoryTypeQueryBuilder {
     public static String selectCategoryByNameAndCodeQuery() {
         return " select code FROM egwtr_category where name = ? and tenantId = ?";
     }
-    
+
     public static String selectCategoryByNameQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         selectQuery.append(" Where category.name = ?");

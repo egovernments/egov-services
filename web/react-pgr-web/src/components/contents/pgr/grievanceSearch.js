@@ -434,7 +434,7 @@ class grievanceSearch extends Component {
 	            	</CardText>
 	          </Card>
 	          <div style={{textAlign: 'center'}}>
-		          <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")}/>
+		          <RaisedButton style={{margin:'15px 5px'}} type="submit" primary={true} label={translate("core.lbl.search")}/>
               </div>
 	        </form>
 	        {displayTableCard()}

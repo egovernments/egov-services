@@ -17,7 +17,7 @@ import Api from '../../api/api';
 
 import CustomMenu from './CustomMenu';
 
-var base='';
+var base='/';
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -182,19 +182,19 @@ class Header extends Component {
       level:3,
 
     },
-    {
-      id:4,
-      name:'My Pending Grievance',
-      displayName:"My Pending Grievance",
-      url:base + "pgr/viewGrievance",
-      enabled:"true",
-      orderNumber:2,
-      queryParams:"",
-      leftIcon:'view_module',
-      rightIcon:'',
-      parentModule:2,
-      level:3,
-    },
+    // {
+    //   id:4,
+    //   name:'My Pending Grievance',
+    //   displayName:"My Pending Grievance",
+    //   url:base + "pgr/viewGrievance",
+    //   enabled:"true",
+    //   orderNumber:2,
+    //   queryParams:"",
+    //   leftIcon:'view_module',
+    //   rightIcon:'',
+    //   parentModule:2,
+    //   level:3,
+    // },
     {
       id:5,
       name:'Officials Register Grievance',
@@ -250,30 +250,29 @@ class Header extends Component {
       level:4,
       nextLevel:7,
     },
-    {
-      id:8,
-      name:'Escalation',
-      displayName:"Escalation",
-      url:"",
-      enabled:"true",
-      orderNumber:4,
-      queryParams:"",
-      leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
-      parentModule:2,
-      level:4,
-      nextLevel:8,
-    },
+    // {
+    //   id:8,
+    //   name:'Escalation',
+    //   displayName:"Escalation",
+    //   url:"",
+    //   enabled:"true",
+    //   orderNumber:4,
+    //   queryParams:"",
+    //   leftIcon:'view_module',
+    //   rightIcon:'keyboard_arrow_right',
+    //   parentModule:2,
+    //   level:4,
+    //   nextLevel:8,
+    // },
     {
       id:9,
       name:'Create Grievance Type',
       displayName:"Create Grievance Type",
-      url:"",
+      url:base + "pgr/createServiceType",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
       parentModule:4,
       level:5,
     },
@@ -281,12 +280,11 @@ class Header extends Component {
       id:10,
       name:'View Grievance Type',
       displayName:"View Grievance Type",
-      url:"",
+      url:base + "pgr/viewOrUpdateServiceType/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
       parentModule:4,
       level:5,
     },
@@ -294,7 +292,7 @@ class Header extends Component {
       id:11,
       name:'Update Grievance Type',
       displayName:"Update Grievance Type",
-      url:"",
+      url:base + "pgr/viewOrUpdateServiceType/update",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -733,3 +731,8 @@ export default connect(mapStateToProps,mapDispatchToProps)(Header);
 // import MenuItem from 'material-ui/MenuItem';
 // import IconButton from 'material-ui/IconButton';
 // import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
+
+
+// WEBPACK FOOTER //
+// ./src/components/common/Header.js

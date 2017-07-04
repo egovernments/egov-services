@@ -498,7 +498,6 @@ class routerGeneration extends Component {
            </Card>
            <div style={{textAlign: 'center'}}>
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} primary={true}/>
-             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
            </div>
            {viewTable()}
            {showSaveButton()}

@@ -23,14 +23,23 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 public class ReportApp{
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportApp.class);
+
 	
     @Autowired
-    public ResourceLoader resourceLoader;
+    public static ResourceLoader resourceLoader;
     
    
     @Autowired
     private Environment env;
     
+
+	/*@Autowired
+	public ReportDefinitions reportDefintions;
+	*/
+    
+  
+
+
     public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
@@ -50,18 +59,14 @@ public class ReportApp{
 	 
 	  
 	  @Bean("reportDefinitions")
-	  public  ReportDefinitions loadYaml() {
+	  public static ReportDefinitions loadYaml() {
 	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
         /*ReportDefinitions reportDefinitions = mapper.readValue(new File("/home/senthilkumar/application.yml"), ReportDefinitions.class);*/
-        
-        
     	Resource resource = resourceLoader.getResource("file:/home/senthilkumar/application.yml");
     	//Resource resource = resourceLoader.getResource("file:"+env.getProperty("report.yaml.path"));
         File yamlFile = resource.getFile();
         ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
-        
-        
         LOGGER.info(reportDefinitions.toString());
         return reportDefinitions;
     } catch (Exception e) {

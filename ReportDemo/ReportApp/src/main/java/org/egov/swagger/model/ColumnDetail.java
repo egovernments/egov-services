@@ -16,7 +16,23 @@ public class ColumnDetail extends ColumnDef  {
   @JsonProperty("label")
   private String label = null;
 
-  /**
+  
+  
+  public ColumnDetail(String label, TypeEnum type) {
+	super();
+	this.label = label;
+	this.type = type;
+  }
+  
+  public ColumnDetail(String label, String name, TypeEnum type) {
+		super();
+		this.label = label;
+		this.name(name);
+		this.type = type;
+	  }
+  public ColumnDetail() {}
+
+/**
    * column type to help the consumer. EPOCH means time being carried over in epoch format, while date means time in given display format URL - will be used to indicate taht the column value is basically a URL to some other resource 
    */
   public enum TypeEnum {

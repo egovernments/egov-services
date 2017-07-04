@@ -1,4 +1,4 @@
 tenantIds = {
-	"Bheemili": "ap.gvmcbpm",
-	"Anakapalli": "ap.gvmcakp"
+	"gvmcbpm": "ap.bheemili",
+	"gvmcakp": "ap.anakapalli"
 };

@@ -1,11 +1,11 @@
 package org.egov.eis.web.contract;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Data;
+import org.egov.common.contract.response.ResponseInfo;
+
+import java.util.List;
 
 @JsonInclude(value = Include.NON_NULL)
 public @Data class TaskResponse {

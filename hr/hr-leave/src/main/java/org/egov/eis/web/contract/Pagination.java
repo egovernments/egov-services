@@ -1,10 +1,9 @@
 package org.egov.eis.web.contract;
 
-import javax.validation.constraints.Max;
-
+import lombok.Data;
 import org.springframework.data.domain.Page;
 
-import lombok.Data;
+import javax.validation.constraints.Max;
 
 @Data
 public class Pagination {
@@ -28,7 +27,6 @@ public class Pagination {
         setTotalPages(page.getTotalPages());
         setPageSize(page.getSize());
         setTotalResults(page.getNumberOfElements());
-
     }
 
 }

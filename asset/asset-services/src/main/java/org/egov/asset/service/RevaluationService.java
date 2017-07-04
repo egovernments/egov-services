@@ -54,6 +54,10 @@ public class RevaluationService {
 		revaluationRequest.getRevaluation()
 				.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
 
+		if (revaluationRequest.getRevaluation().getAuditDetails() == null)
+			revaluationRequest.getRevaluation()
+					.setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
+
 		try {
 			final Long voucherId = createVoucherForReevaluation(revaluationRequest);
 			if (voucherId != null)

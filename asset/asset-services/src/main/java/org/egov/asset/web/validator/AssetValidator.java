@@ -1,16 +1,13 @@
 package org.egov.asset.web.validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.asset.contract.AssetRequest;
-import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetService;
-import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,9 @@ public class AssetValidator {
 
 	@Autowired
 	private AssetService assetService;
+
+	@Autowired
+	private AssetCurrentAmountService assetCurrentAmountService;
 
 	public void validateAsset(final AssetRequest assetRequest) {
 		findAssetCategory(assetRequest);
@@ -59,20 +59,21 @@ public class AssetValidator {
 	}
 
 	public void validateDisposal(final DisposalRequest disposalRequest) {
-		validateAssetForCapitalizedStatus(disposalRequest.getDisposal().getTenantId(),
-				disposalRequest.getDisposal().getAssetId());
+		final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
+				disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
+		validateAssetForDisposedStatus(asset);
+		validateAssetForCapitalizedStatus(asset);
 	}
 
-	public void validateAssetForCapitalizedStatus(final String tenantId, final Long assetId) {
-		final List<Long> assetIds = new ArrayList<Long>();
-		assetIds.add(assetId);
-		final AssetCriteria assetCriteria = new AssetCriteria();
-		assetCriteria.setId(assetIds);
-		final AssetResponse assetResponse = assetService.getAssets(assetCriteria, new RequestInfo());
-		if (!assetResponse.getAssets().isEmpty()
-				&& "CAPITALIZED".equalsIgnoreCase(assetResponse.getAssets().get(0).getStatus()))
-			throw new RuntimeException(
-					"Asset Status Should be Captalized for Reevaluation, Depreciation and Disposal/sale");
+	private void validateAssetForCapitalizedStatus(final Asset asset) {
+		if (!"CAPITALIZED".equalsIgnoreCase(asset.getStatus()))
+			throw new RuntimeException("Status of Asset " + asset.getName()
+					+ " Should be Captalized for Reevaluation, Depreciation and Disposal/sale");
+	}
+
+	private void validateAssetForDisposedStatus(final Asset asset) {
+		if ("DISPOSED".equalsIgnoreCase(asset.getStatus()))
+			throw new RuntimeException("Asset " + asset.getName() + " is already Disposed");
 	}
 
 }

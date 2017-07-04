@@ -2,6 +2,7 @@ package org.egov.asset.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.contract.AssetCurrentValueResponse;
@@ -10,6 +11,7 @@ import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
+import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
@@ -103,6 +105,19 @@ public class AssetCurrentAmountService {
 		assetCurrentValueResponse.setAssetCurrentValue(assetCurrentValue);
 
 		return assetCurrentValueResponse;
+	}
+
+	public AuditDetails getAuditDetails(final RequestInfo requestInfo) {
+		final String userId = requestInfo.getUserInfo().getId().toString();
+		final Long currEpochDate = new Date().getTime();
+
+		final AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy(userId);
+		auditDetails.setCreatedDate(currEpochDate);
+		auditDetails.setLastModifiedBy(userId);
+		auditDetails.setLastModifiedDate(currEpochDate);
+
+		return auditDetails;
 	}
 
 }

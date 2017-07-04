@@ -1,4 +1,4 @@
-package org.egov.egf.master.persistence.queue;
+package org.egov.egf.budget.persistence.queue;
 
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class FinancialMastersListener {
+public class FinancialBudgetListener {
 
 	@Value("${kafka.topics.egf.masters.completed.topic}")
 	private String completedTopic;

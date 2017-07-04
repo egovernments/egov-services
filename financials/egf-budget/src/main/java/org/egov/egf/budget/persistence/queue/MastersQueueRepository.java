@@ -1,4 +1,4 @@
-package org.egov.egf.master.persistence.queue;
+package org.egov.egf.budget.persistence.queue;
 
 import java.util.HashMap;
 

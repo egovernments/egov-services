@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.master.domain.model;
+package org.egov.egf.budget.domain.model;
 
 import java.math.BigDecimal;
 import java.util.Date;

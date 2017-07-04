@@ -1,4 +1,4 @@
-package org.egov.egf.master.domain.repository;
+package org.egov.egf.budget.domain.repository;
 
 public interface CommonDbRepository<T> {
 

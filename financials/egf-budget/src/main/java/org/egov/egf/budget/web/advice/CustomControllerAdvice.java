@@ -1,4 +1,4 @@
-package org.egov.egf.master.web.advice;
+package org.egov.egf.budget.web.advice;
 
 import java.util.List;
 

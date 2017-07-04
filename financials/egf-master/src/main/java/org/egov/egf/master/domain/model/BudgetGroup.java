@@ -58,6 +58,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @EqualsAndHashCode(exclude = { "majorCode", "maxCode", "minCode", "accountType", "budgetingType" }, callSuper = false)
+
 public class BudgetGroup extends Auditable {
 
 	private String id;

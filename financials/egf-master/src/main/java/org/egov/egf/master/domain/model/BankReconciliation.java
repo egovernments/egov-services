@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import org.egov.common.domain.model.Auditable;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,6 +54,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(exclude = { "bankAccount" }, callSuper = false)
 
 public class BankReconciliation extends Auditable {

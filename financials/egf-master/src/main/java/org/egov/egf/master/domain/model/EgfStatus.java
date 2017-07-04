@@ -46,6 +46,7 @@ import javax.validation.constraints.Size;
 import org.egov.common.domain.model.Auditable;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,6 +57,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Builder
 public class EgfStatus extends Auditable {
 
 	@NotNull

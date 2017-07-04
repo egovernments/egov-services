@@ -45,6 +45,7 @@ import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,7 +55,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bank" }, callSuper = false)
+@Builder
+@EqualsAndHashCode(exclude = { "bank", "bankAccount" }, callSuper = false)
 public class Supplier extends Auditable {
 
 	private String id;

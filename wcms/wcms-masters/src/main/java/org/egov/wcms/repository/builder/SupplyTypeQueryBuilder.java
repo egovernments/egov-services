@@ -47,12 +47,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 @Component
 public class SupplyTypeQueryBuilder {
-    
+
     @Autowired
     private ApplicationProperties applicationProperties;
-    
+
     private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT supplytype.id as supplytype_id, supplytype.code as supplytype_code,"
@@ -140,9 +141,8 @@ public class SupplyTypeQueryBuilder {
         }
         return query.append(")").toString();
     }
-    
-    public static String insertSupplyTypeQuery()
-    {
+
+    public static String insertSupplyTypeQuery() {
         return "INSERT INTO egwtr_supply_type(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
                 + "(?,?,?,?,?,?,?,?,?,?)";
     }
@@ -152,6 +152,7 @@ public class SupplyTypeQueryBuilder {
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? "
                 + "where code = ?";
     }
+
     public static String selectSupplyTypeByNameAndCodeQuery() {
         return " select code FROM egwtr_supply_type where name = ?"
                 + " and tenantId = ?";
@@ -161,11 +162,12 @@ public class SupplyTypeQueryBuilder {
         return " select code from egwtr_supply_type where name = ? and"
                 + " tenantId = ? and code != ? ";
     }
+
     public static String selectSupplytypeByNameQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         selectQuery.append(" Where supplytype.name = ?");
         selectQuery.append(" AND supplytype.tenantId = ?");
         return selectQuery.toString();
     }
-    
+
 }

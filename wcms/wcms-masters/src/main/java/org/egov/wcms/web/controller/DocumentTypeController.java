@@ -59,8 +59,6 @@ import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,11 +71,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/documenttype")
 public class DocumentTypeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(DocumentTypeController.class);
 
     @Autowired
     private DocumentTypeService documentTypeService;
@@ -102,14 +101,14 @@ public class DocumentTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("documentTypeRequest::" + documentTypeReq);
+        log.info("documentTypeRequest::" + documentTypeReq);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentType documentType = documentTypeService.sendMessage(applicationProperties.getCreateDocumentTypeTopicName(),
-                "documenttype-create", documentTypeReq);
+        final DocumentType documentType = documentTypeService.sendMessage(
+                applicationProperties.getCreateDocumentTypeTopicName(), "documenttype-create", documentTypeReq);
         final List<DocumentType> documentTypes = new ArrayList<>();
         documentTypes.add(documentType);
         return getSuccessResponse(documentTypes, null, documentTypeReq.getRequestInfo());
@@ -118,21 +117,21 @@ public class DocumentTypeController {
 
     @PostMapping(value = "/{code}/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeReq documentTypeReq, final BindingResult errors,
-            @PathVariable("code") final String code) {
+    public ResponseEntity<?> update(@RequestBody @Valid final DocumentTypeReq documentTypeReq,
+            final BindingResult errors, @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("documentTypeRequest::" + documentTypeReq);
+        log.info("documentTypeRequest::" + documentTypeReq);
         documentTypeReq.getDocumentType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentType documentType = documentTypeService.sendMessage(applicationProperties.getUpdateDocumentTypeTopicName(),
-                "documenttype-update", documentTypeReq);
+        final DocumentType documentType = documentTypeService.sendMessage(
+                applicationProperties.getUpdateDocumentTypeTopicName(), "documenttype-update", documentTypeReq);
         final List<DocumentType> documentTypes = new ArrayList<>();
         documentTypes.add(documentType);
         return getSuccessResponse(documentTypes, null, documentTypeReq.getRequestInfo());
@@ -141,7 +140,8 @@ public class DocumentTypeController {
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final DocumentTypeGetReq documentTypeGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -158,7 +158,7 @@ public class DocumentTypeController {
         try {
             documentTypeList = documentTypeService.getDocumentTypes(documentTypeGetRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + documentTypeGetRequest, exception);
+            log.error("Error while processing request " + documentTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
@@ -171,7 +171,7 @@ public class DocumentTypeController {
         final DocumentTypeRes documentTypeRes = new DocumentTypeRes();
         documentTypeRes.setDocumentTypes(documnetTypeList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        if(StringUtils.isNotBlank(mode))
+        if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());
         else
             responseInfo.setStatus(HttpStatus.OK.toString());

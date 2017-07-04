@@ -59,8 +59,6 @@ import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,11 +71,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/propertytype-usagetype")
 public class PropertyTypeUsageTypeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(PropertyTypeUsageTypeController.class);
 
     @Autowired
     private PropertyUsageTypeService propUsageTypeService;
@@ -102,7 +101,7 @@ public class PropertyTypeUsageTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Property Usage Type Request::" + propUsageTypeRequest);
+        log.info("Property Usage Type Request::" + propUsageTypeRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest);
         if (!errorResponses.isEmpty())
@@ -118,13 +117,12 @@ public class PropertyTypeUsageTypeController {
     @PostMapping(value = "/{propertyUsageId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeUsageTypeReq propUsageTypeRequest,
-            final BindingResult errors,
-            @PathVariable("propertyUsageId") final Long propertyUsageId) {
+            final BindingResult errors, @PathVariable("propertyUsageId") final Long propertyUsageId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Property Usage Type Request::" + propUsageTypeRequest);
+        log.info("Property Usage Type Request::" + propUsageTypeRequest);
         propUsageTypeRequest.getPropertyTypeUsageType().setId(propertyUsageId);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(propUsageTypeRequest);
@@ -141,7 +139,8 @@ public class PropertyTypeUsageTypeController {
     @PostMapping(value = "/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final PropertyTypeUsageTypeGetReq propUsageTypeRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -158,7 +157,7 @@ public class PropertyTypeUsageTypeController {
         try {
             propUsageTypes = propUsageTypeService.getPropertyUsageTypes(propUsageTypeRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + propUsageTypeRequest, exception);
+            log.error("Error while processing request " + propUsageTypeRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 

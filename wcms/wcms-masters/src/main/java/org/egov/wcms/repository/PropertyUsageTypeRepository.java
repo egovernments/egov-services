@@ -49,17 +49,17 @@ import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class PropertyUsageTypeRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(PropertyUsageTypeRepository.class);
-
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -70,7 +70,7 @@ public class PropertyUsageTypeRepository {
 	private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
 
 	public PropertyTypeUsageTypeReq persistCreateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-		LOGGER.info("Property Usage Type Request::" + propUsageTypeRequest);
+		log.info("Property Usage Type Request::" + propUsageTypeRequest);
 		final String propUsageTypeInsert = propUsageTypeQueryBuilder.getPersistQuery();
 		final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
 				propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
@@ -84,7 +84,7 @@ public class PropertyUsageTypeRepository {
 	}
 
 	public PropertyTypeUsageTypeReq persistUpdateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-		LOGGER.info("Property Usage Type Request::" + propUsageTypeRequest);
+		log.info("Property Usage Type Request::" + propUsageTypeRequest);
 		final String propUsageTypeUpdate = PropertyUsageTypeQueryBuilder.updatePropertyUsageQuery();
 		final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
 				propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),

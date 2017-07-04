@@ -43,18 +43,17 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.SourceTypeGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class SourceTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(SourceTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT watersource.id as watersource_id, watersource.code as watersource_code,"
             + " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId "
@@ -66,7 +65,7 @@ public class SourceTypeQueryBuilder {
         addWhereClause(selectQuery, preparedStatementValues, waterSourceTypeGetRequest);
         addOrderByClause(selectQuery, waterSourceTypeGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, waterSourceTypeGetRequest);
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -173,6 +172,7 @@ public class SourceTypeQueryBuilder {
     public static String selectWaterSourceByNameAndCodeNotInQuery() {
         return " select code from egwtr_water_source_type where name = ? and tenantId = ? and code != ? ";
     }
+
     public static String selectSourceTypeByNameQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         selectQuery.append(" Where watersource.name = ?");

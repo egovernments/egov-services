@@ -51,9 +51,9 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.DocumentType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeGetReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
@@ -72,7 +72,7 @@ public class DocumentTypeServiceTest {
     private DocumentTypeRepository documentRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private CodeGeneratorService codeGeneratorService;

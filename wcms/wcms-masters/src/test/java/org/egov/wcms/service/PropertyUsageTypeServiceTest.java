@@ -47,9 +47,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeUsageType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
@@ -68,7 +68,7 @@ public class PropertyUsageTypeServiceTest {
     private PropertyUsageTypeRepository propUsageTypeRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private ApplicationProperties applicationProperties;

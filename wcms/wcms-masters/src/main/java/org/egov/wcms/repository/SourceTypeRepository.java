@@ -49,15 +49,15 @@ import org.egov.wcms.repository.builder.SourceTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.SourceTypeRowMapper;
 import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.egov.wcms.web.contract.SourceTypeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class SourceTypeRepository {
-    public static final Logger LOGGER = LoggerFactory.getLogger(SourceTypeRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -69,11 +69,11 @@ public class SourceTypeRepository {
     private SourceTypeRowMapper waterSourceTypeRowMapper;
 
     public SourceTypeRequest persistCreateWaterSourceType(final SourceTypeRequest waterSourceTypeRequest) {
-        LOGGER.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
+        log.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
         final String waterSourceInsert = SourceTypeQueryBuilder.insertWaterSourceTypeQuery();
         final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
-        final Object[] obj = new Object[] { Long.valueOf(waterSource.getCode()), waterSource.getCode(), waterSource.getName(),
-                waterSource.getDescription(), waterSource.getActive(),
+        final Object[] obj = new Object[] { Long.valueOf(waterSource.getCode()), waterSource.getCode(),
+                waterSource.getName(), waterSource.getDescription(), waterSource.getActive(),
                 Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
@@ -83,11 +83,11 @@ public class SourceTypeRepository {
     }
 
     public SourceTypeRequest persistModifyWaterSourceType(final SourceTypeRequest waterSourceTypeRequest) {
-        LOGGER.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
+        log.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
         final String waterSourceUpdate = SourceTypeQueryBuilder.updateWaterSourceTypeQuery();
         final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
-        final Object[] obj = new Object[] { waterSource.getName(), waterSource.getDescription(), waterSource.getActive(),
-                Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
+        final Object[] obj = new Object[] { waterSource.getName(), waterSource.getDescription(),
+                waterSource.getActive(), Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), waterSource.getCode() };
         jdbcTemplate.update(waterSourceUpdate, obj);
         return waterSourceTypeRequest;

@@ -49,17 +49,16 @@ import org.egov.wcms.repository.builder.DocumentTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeRowMapper;
 import org.egov.wcms.web.contract.DocumentTypeGetReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class DocumentTypeRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(DocumentTypeRepository.class);
+@Repository
+@Slf4j
+public class DocumentTypeRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -71,25 +70,27 @@ public class DocumentTypeRepository {
     private DocumentTypeRowMapper documentTypeRowMapper;
 
     public DocumentTypeReq persistCreateDocumentType(final DocumentTypeReq documentTypeReq) {
-        LOGGER.info("DocumentTypeRequest::" + documentTypeReq);
+        log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
         final DocumentType documentType = documentTypeReq.getDocumentType();
-        final Object[] obj = new Object[] { documentType.getCode(), documentType.getName(), documentType.getDescription(),
-                documentType.getActive(), Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()), documentType.getTenantId() };
+        final Object[] obj = new Object[] { documentType.getCode(), documentType.getName(),
+                documentType.getDescription(), documentType.getActive(),
+                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                documentType.getTenantId() };
 
         jdbcTemplate.update(documentTypeInsert, obj);
         return documentTypeReq;
     }
 
     public DocumentTypeReq persistModifyDocumentType(final DocumentTypeReq documentTypeReq) {
-        LOGGER.info("DocumentTypeRequest::" + documentTypeReq);
+        log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
         final DocumentType documentType = documentTypeReq.getDocumentType();
-        final Object[] obj = new Object[] { documentType.getName(), documentType.getDescription(), documentType.getActive(),
-                Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
-                documentType.getCode() };
+        final Object[] obj = new Object[] { documentType.getName(), documentType.getDescription(),
+                documentType.getActive(), Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), documentType.getCode() };
         jdbcTemplate.update(documentTypeUpdate, obj);
         return documentTypeReq;
 
@@ -98,7 +99,6 @@ public class DocumentTypeRepository {
     public boolean checkDocumentTypeByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
-        // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)
@@ -126,12 +126,12 @@ public class DocumentTypeRepository {
     public List<Long> getMandatoryocs(final String applicationType) {
         List<Long> mandatoryDocs = new ArrayList<>();
         final String query = DocumentTypeQueryBuilder.getMandatoryDocsQuery();
-        LOGGER.info("Mandatory Doc Query: " + query.toString());
+        log.info("Mandatory Doc Query: " + query.toString());
 
         mandatoryDocs = jdbcTemplate.query(query, new Object[] { applicationType },
                 (RowMapper<Long>) (rs, rowNum) -> rs.getLong("id"));
 
-        LOGGER.info("Mandatory Doc List: " + mandatoryDocs.toString());
+        log.info("Mandatory Doc List: " + mandatoryDocs.toString());
 
         return mandatoryDocs;
 

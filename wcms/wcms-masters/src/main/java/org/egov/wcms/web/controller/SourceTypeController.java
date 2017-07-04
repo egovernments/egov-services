@@ -58,8 +58,6 @@ import org.egov.wcms.web.contract.SourceTypeResponse;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,11 +70,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/sourcetype")
 public class SourceTypeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(SourceTypeController.class);
 
     @Autowired
     private SourceTypeService waterSourceTypeService;
@@ -101,15 +100,14 @@ public class SourceTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("WaterSourceTypeRequest::" + waterSourceRequest);
+        log.info("WaterSourceTypeRequest::" + waterSourceRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final SourceType waterSource = waterSourceTypeService.createWaterSource(
-                applicationProperties.getCreateSourceTypeTopicName(),
-                "sourcetype-create", waterSourceRequest);
+                applicationProperties.getCreateSourceTypeTopicName(), "sourcetype-create", waterSourceRequest);
         final List<SourceType> waterSourceTypes = new ArrayList<>();
         waterSourceTypes.add(waterSource);
         return getSuccessResponse(waterSourceTypes, "created", waterSourceRequest.getRequestInfo());
@@ -124,7 +122,7 @@ public class SourceTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("waterSourceRequest::" + waterSourceRequest);
+        log.info("waterSourceRequest::" + waterSourceRequest);
         waterSourceRequest.getWaterSourceType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest);
@@ -132,8 +130,7 @@ public class SourceTypeController {
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final SourceType waterSource = waterSourceTypeService.updateWaterSource(
-                applicationProperties.getUpdateSourceTypeTopicName(),
-                "sourcetype-update", waterSourceRequest);
+                applicationProperties.getUpdateSourceTypeTopicName(), "sourcetype-update", waterSourceRequest);
         final List<SourceType> waterSourceTypes = new ArrayList<>();
         waterSourceTypes.add(waterSource);
         return getSuccessResponse(waterSourceTypes, null, waterSourceRequest.getRequestInfo());
@@ -142,7 +139,8 @@ public class SourceTypeController {
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final SourceTypeGetRequest waterSourceTypeGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -159,7 +157,7 @@ public class SourceTypeController {
         try {
             waterSourceList = waterSourceTypeService.getWaterSourceTypes(waterSourceTypeGetRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + waterSourceTypeGetRequest, exception);
+            log.error("Error while processing request " + waterSourceTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 

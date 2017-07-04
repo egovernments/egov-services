@@ -37,34 +37,18 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.producers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+package org.egov.wcms.consumers;
 
-@Service
-public class WaterMasterProducer {
+import java.util.HashMap;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-    public void sendMessage(final String topic, final String key, final Object message) {
-        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
+@SuppressWarnings("rawtypes")
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-            }
-
-            @Override
-            public void onFailure(final Throwable throwable) {
-
-            }
-        });
-    }
+	public HashMapDeserializer() {
+		super(HashMap.class);
+	}
 
 }

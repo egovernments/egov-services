@@ -42,8 +42,8 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.DocumentTypeApplicationType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeApplicationTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
@@ -52,19 +52,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class DocumentTypeApplicationTypeService {
 
     public static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeService.class);
 
     @Autowired
-    private DocumentTypeApplicationTypeRepository docTypeApplTypeRepository;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private WaterMasterProducer mastertProducer;
+    private DocumentTypeApplicationTypeRepository docTypeApplTypeRepository;
 
     public DocumentTypeApplicationTypeReq create(final DocumentTypeApplicationTypeReq docNameRequest) {
         return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
@@ -72,19 +72,10 @@ public class DocumentTypeApplicationTypeService {
 
     public DocumentTypeApplicationType sendMessage(final String topic, final String key,
             final DocumentTypeApplicationTypeReq docNameRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
-        String docTypeApplTypeValue = null;
         try {
-            logger.info("createDocumentTypeApplicationType service::" + docNameRequest);
-            docTypeApplTypeValue = mapper.writeValueAsString(docNameRequest);
-            logger.info("DocumentTypeApplicationTypeValue::" + docTypeApplTypeValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            mastertProducer.sendMessage(topic, key, docTypeApplTypeValue);
+            kafkaTemplate.send(topic, key, docNameRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return docNameRequest.getDocumentTypeApplicationType();
     }
@@ -99,10 +90,11 @@ public class DocumentTypeApplicationTypeService {
 
     }
 
-    public boolean checkDocumentTypeApplicationTypeExist(final Long id,final String applicationType, final String documentType,
-            final String tenantid) {
+    public boolean checkDocumentTypeApplicationTypeExist(final Long id, final String applicationType,
+            final String documentType, final String tenantid) {
 
-        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(id,applicationType,documentType, tenantid);
+        return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(id, applicationType, documentType,
+                tenantid);
     }
 
 }

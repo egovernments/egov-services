@@ -43,29 +43,25 @@ package org.egov.wcms.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.DocumentType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DocumentTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeGetReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class DocumentTypeService {
-
-    public static final Logger logger = LoggerFactory.getLogger(DocumentTypeService.class);
 
     @Autowired
     private DocumentTypeRepository documentTypeRepository;
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
@@ -82,23 +78,12 @@ public class DocumentTypeService {
 
         if (key.equalsIgnoreCase("documenttype-create")) {
             documentTypeReq.getDocumentType();
-            documentTypeReq.getDocumentType()
-                    .setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
-        }
-
-        final ObjectMapper mapper = new ObjectMapper();
-        String documentTypeValue = null;
-        try {
-            logger.info("createDocumentType service::" + documentTypeReq);
-            documentTypeValue = mapper.writeValueAsString(documentTypeReq);
-            logger.info("documentTypeValue::" + documentTypeValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
+            documentTypeReq.getDocumentType().setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
         }
         try {
-            waterMasterProducer.sendMessage(topic, key, documentTypeValue);
+            kafkaTemplate.send(topic, key, documentTypeReq);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return documentTypeReq.getDocumentType();
     }
@@ -117,7 +102,7 @@ public class DocumentTypeService {
         try {
             mandatoryDocs = documentTypeRepository.getMandatoryocs(applicationType);
         } catch (final Exception e) {
-            logger.error("There are no mandatory docs for this application type", e.getMessage());
+            log.error("There are no mandatory docs for this application type", e.getMessage());
             return mandatoryDocs;
         }
         return mandatoryDocs;

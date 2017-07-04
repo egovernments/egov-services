@@ -46,9 +46,10 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.SupplyType;
-import org.egov.wcms.producers.WaterMasterProducer;
+
 import org.egov.wcms.repository.SupplyTypeRepository;
 import org.egov.wcms.web.contract.SupplyTypeGetRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
@@ -69,7 +70,7 @@ public class SupplyTypeServiceTest {
     private SupplyTypeRepository supplyTypeRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private ApplicationProperties applicationProperties;

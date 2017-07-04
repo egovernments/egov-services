@@ -359,7 +359,6 @@ class DefineEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
                       <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
-                      <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>

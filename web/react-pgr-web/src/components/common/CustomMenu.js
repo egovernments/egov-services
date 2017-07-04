@@ -24,7 +24,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const style = {
   display: 'inline-block',
-  margin: '16px 32px 16px 0',
+  margin: '14px 32px 16px 0',
 };
 
 
@@ -77,9 +77,6 @@ class CustomMenu extends Component {
   //
   //   return menu;
   // }
-
-
-
 
   handleChange=(e)=>
   {
@@ -244,10 +241,10 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true} width={320}>
-        {(level>0 || searchText) &&    <FloatingActionButton onTouchTap={()=>{changeLevel(0)}}  mini={true} style={style}>
+        {(level>0 || searchText) && <FloatingActionButton iconStyle={{height: 35, width: 35, fontSize:19, lineHeight:'35px'}} onTouchTap={()=>{changeLevel(0)}}  mini={true} style={{margin:"0px 13px 13px 19px", fontSize:11}}>
               <i className="material-icons">home</i>
           </FloatingActionButton>}
-        { level>0 &&   <FloatingActionButton onTouchTap={()=>{changeLevel(parentLevel)}} mini={true} style={style}>
+        { level>0 &&  <FloatingActionButton iconStyle={{height: 35, width: 35,  fontSize:19, lineHeight:'35px'}} onTouchTap={()=>{changeLevel(parentLevel)}} mini={true} style={{margin:"0 0 13px",fontSize:11}}>
               <i className="material-icons">fast_rewind</i>
           </FloatingActionButton>}
 

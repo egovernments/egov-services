@@ -52,7 +52,7 @@ const RightIcon = (props) => {
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
 
       <IconMenu
-            iconButtonElement={<IconButton style={{backgroundColor:"white"}}><MoreVertIcon /></IconButton>}
+            iconButtonElement={<IconButton style={{color:"white"}}><i className="material-icons">more_vert</i></IconButton>}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >

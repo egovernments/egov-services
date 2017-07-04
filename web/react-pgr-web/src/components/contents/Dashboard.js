@@ -44,18 +44,33 @@ class Dashboard extends Component {
 
     let current = this;
     let {currentUser}=this.props;
-    console.log(currentUser);
-    Api.commonApiPost("/pgr/seva/v1/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
-        console.log(response);
-        current.setState({
-          serviceRequests: response
-        });
-    }).catch((error)=>{
-        console.log(error);
-        current.setState({
-          serviceRequests: []
-        });
-    })
+
+    if(currentUser.type=="CITIZEN") {
+      Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
+          console.log(response);
+          current.setState({
+            serviceRequests: response.serviceRequests
+          });
+      }).catch((error)=>{
+          console.log(error);
+          current.setState({
+            serviceRequests: []
+          });
+      })
+    } else {
+        Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:currentUser.id},{}).then(function(response){
+            console.log(response);
+            current.setState({
+              serviceRequests: response.serviceRequests
+            });
+        }).catch((error)=>{
+            console.log(error);
+            current.setState({
+              serviceRequests: []
+            });
+        })
+    }
+
   };
 
   handleChange = (value) => {
@@ -80,8 +95,7 @@ class Dashboard extends Component {
               value={this.state.slideIndex}
             >
               <Tab label="My Request" value={0} />
-              <Tab label="New Services" value={1} />
-              <Tab label="New Grievances" value={2} />
+              <Tab label="New Grievances" value={1} />
             </Tabs>
             <SwipeableViews
               index={this.state.slideIndex}
@@ -104,7 +118,7 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={e.serviceRequestId}
+                                   title={<Link to={`/pgr/viewGrievance/srn=${e.serviceRequestId}`} target="_blank">e.serviceRequestId</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>
@@ -120,9 +134,6 @@ class Dashboard extends Component {
                       }) }
                     </Row>
                   </Grid>
-              </div>
-              <div style={styles.slide}>
-                slide n°2
               </div>
               <div style={styles.slide}>
                   <Grid>

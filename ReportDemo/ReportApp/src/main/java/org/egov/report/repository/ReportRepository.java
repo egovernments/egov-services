@@ -33,10 +33,10 @@ public class ReportRepository {
 		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportYamlMetaData);
 		Long startTime = new Date().getTime();
 		LOGGER.info("final query:"+query);
-		LOGGER.info("startTime:"+startTime);
 		List<Map<String, Object>> maps = jdbcTemplate.queryForList(query);
 		Long endTime = new Date().getTime();
-		LOGGER.info("endTime:"+endTime);
+		Long totalExecutionTime = endTime-startTime;
+		LOGGER.info("total query execution time taken in millisecount:"+totalExecutionTime);
 		if(endTime-startTime>maxExecutionTime)
 			LOGGER.error("Sql query is taking time query:"+query);
 			

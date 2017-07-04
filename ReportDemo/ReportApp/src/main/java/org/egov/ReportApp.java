@@ -20,9 +20,11 @@ public class ReportApp {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportApp.class);
 	@Autowired
 	public ReportDefinitions reportDefintions;
+	
     @Autowired
     public static ResourceLoader resourceLoader;
-    
+  
+
     public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
@@ -41,12 +43,16 @@ public class ReportApp {
     }
 	 
 	  
-	  @Bean("reportDefintions")
+	  @Bean("reportDefinitions")
 	  public static ReportDefinitions loadYaml() {
 	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
+
         /*ReportDefinitions reportDefinitions = mapper.readValue(new File("/ws/pgrwstest/egov-services/ReportDemo/ReportApp/src/main/resources/application.yml"), ReportDefinitions.class);*/
     	Resource resource = resourceLoader.getResource("classpath:application.yml");
+
+    	//Resource resource = resourceLoader.getResource("file:/home/lenovo/Desktop/application.yml");
+
         File yamlFile = resource.getFile();
         ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
         LOGGER.info("Report Definition is" +reportDefinitions.getReportDefinitions());

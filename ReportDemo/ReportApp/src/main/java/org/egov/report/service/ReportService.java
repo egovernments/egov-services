@@ -3,21 +3,22 @@ package org.egov.report.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.ReportYamlMetaData;
-import org.egov.domain.model.Response;
 import org.egov.domain.model.ReportYamlMetaData.searchParams;
 import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
+import org.egov.domain.model.Response;
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ColumnDetail;
+import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportMetadata;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
-import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,17 +111,21 @@ public MetadataResponse getMetaData(String reportName){
 		List<ReportYamlMetaData> reportYamlMetaDatas = reportDefinitions.getReportDefinitions();
 		ReportYamlMetaData reportYamlMetaData = reportYamlMetaDatas.stream().
 				filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);
+		LOGGER.info("reportYamlMetaData::"+reportYamlMetaData);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportYamlMetaData);
 		List<sourceColumns> columns = reportYamlMetaData.getSourceColumns();
 		LOGGER.info("columns::"+columns);
 		LOGGER.info("maps::"+maps);
-		return populateData(columns, maps);
-	}
-	
-	private ReportResponse populateData(List<sourceColumns> columns, List<Map<String, Object>> maps){
 		
 		ReportResponse reportResponse = new ReportResponse();
-		//reportResponse.setReportHeader(reportHeader);
+		populateData(columns, maps, reportResponse);
+		populateReportHeader(reportYamlMetaData, reportResponse);
+		
+		return reportResponse;
+	}
+	
+	private void populateData(List<sourceColumns> columns, List<Map<String, Object>> maps, ReportResponse reportResponse){
+		
 		List<List<Object>> lists = new ArrayList<>();
 		
 		for(int i=0; i<maps.size(); i++){
@@ -132,7 +137,11 @@ public MetadataResponse getMetaData(String reportName){
 			lists.add(objects);
 		}
 		reportResponse.setReportData(lists);
-		
-		return reportResponse;
+	}
+	
+	private void populateReportHeader(ReportYamlMetaData reportYamlMetaData, ReportResponse reportResponse){
+		List<sourceColumns>  columns = reportYamlMetaData.getSourceColumns();
+		List<ColumnDetail> columnDetails = columns.stream().map(p -> new ColumnDetail(p.getLabel(), p.getName(), TypeEnum.fromValue(p.getType()))).collect(Collectors.toList());
+		reportResponse.setReportHeader(columnDetails);
 	}
 }

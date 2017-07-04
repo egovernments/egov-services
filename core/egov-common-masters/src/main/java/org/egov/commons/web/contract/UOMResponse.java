@@ -42,6 +42,7 @@ package org.egov.commons.web.contract;
 
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.UOM;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

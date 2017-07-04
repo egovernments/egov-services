@@ -40,8 +40,8 @@
 
 package org.egov.commons.web.errorhandlers;
 
-import org.egov.commons.web.contract.RequestInfo;
-import org.egov.commons.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

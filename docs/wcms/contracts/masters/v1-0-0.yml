@@ -9,7 +9,7 @@
       APIs available for WCMS Masters and mapping between two masters
         - Create, Update and Search for CategoryType
         - Create, Update and Search for PipeSize
-        - Create, Update and Search for DonationType (NOT SUPPORTED YET)
+        - Create, Update and Search for Donation
         - Create, Update and Search for DocumentType
         - Create, Update and Search for SourceType
         - Create, Update and Search for SupplyType
@@ -478,8 +478,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeCode"
-          - $ref: "#/parameters/categoryTypeCode"
+          - $ref: "#/parameters/propertyTypeName"
+          - $ref: "#/parameters/categoryTypeName"
         responses:
           200: 
             description: Successful response
@@ -548,8 +548,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeCode"
-          - $ref: "#/parameters/pipeSizeCode"
+          - $ref: "#/parameters/propertyTypeName"
+          - $ref: "#/parameters/pipeSizeInMM"
         responses:
           200: 
             description: Successful response
@@ -618,13 +618,85 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeCode"
-          - $ref: "#/parameters/usageTypeCode"
+          - $ref: "#/parameters/propertyTypeName"
+          - $ref: "#/parameters/usageTypeName"
         responses:
           200: 
             description: Successful response
             schema:
               $ref: '#/definitions/PropertyTypeUsageTypesRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    # Donation  API
+    /donation/_create:
+      post:
+        summary: Create new donation .
+        description: API to create new donation.
+        tags:
+          - Donation
+        parameters:
+          - name: Donation
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/DonationReq'
+        responses:
+          '201':
+            description: Donation created sucessfully.
+            schema:
+              $ref: "#/definitions/DonationRes"
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          
+    /donation/{id}/_update:
+      parameters:
+       - $ref: "#/parameters/updateId"
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - Donation
+        parameters:
+          - name: Donation
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/DonationRes'
+        responses:
+          '200':
+            description: Donation updated successfully.
+            schema:
+              $ref: "#/definitions/DonationRes"
+          '400':
+            description: Update Donation failed.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /donation/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Donation
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/propertyTypeName"
+          - $ref: "#/parameters/usageTypeName"
+          - $ref: "#/parameters/categoryTypeName"
+          - $ref: "#/parameters/pipeSizeInMM"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/DonationRes'
           400:
             description: Invalid input
             schema:
@@ -753,31 +825,31 @@
       description: Unique H.S.C pipe size in milli-meters.
   
       
-    propertyTypeCode:
-      name: propertyTypeCode
+    propertyTypeName:
+      name: propertyTypeName
       in: query
-      description: unique code of property type
+      description: unique name of property type
       required: false
       type: string
 
-    categoryTypeCode:
-      name: categoryTypeCode
+    categoryTypeName:
+      name: categoryTypeName
       in: query
-      description: unique code of category type
+      description: unique name of category type
       required: false
       type: string
       
-    pipeSizeCode:
-      name: pipeSizeTypeCode
+    pipeSizeInMM:
+      name: pipeSizeInMM
       in: query
-      description: unique code of pipe size type
+      description: unique sizeInMM of pipe size type
       required: false
-      type: string
+      type: number
       
-    usageTypeCode:
-      name: usageTypeCode
+    usageTypeName:
+      name: usageTypeName
       in: query
-      description: unique code of usage type
+      description: unique name of usage type
       required: false
       type: string
     
@@ -1301,7 +1373,90 @@
         - code
         - sizeInMilimeter
         - tenantId
+        
+ # Donation definitions
+    DonationRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Donation:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/Donation'
+            
+    DonationReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Donation:
+          $ref: '#/definitions/Donation'
+      required:
+        - RequestInfo
+        - Donation
+      
+    Donation:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the donation, typically defined by system.
+        propertyTypeId:
+          type: integer
+          format: int64
+          description: Unique identifier of property type object
+        usageTypeId:
+          type: integer
+          format: int64
+          description: unique identifier of property usage type object
+        maxPipeSizeId:
+          type: integer
+          format: int64
+          description: unique identifier of maximum pipe size type object
+        minPipeSizeId:
+          type: integer
+          format: int64
+          description: unique identifier of minimum pipe size type object
+        categoryTypeId:
+          type: integer
+          format: int64
+          description: unique identifier of category type object
+        donationAmount:
+          type: number
+          description: donation amount.
+        fromDate:
+          type: string
+          format: date
+          description: from Date.
+        toDate:
+          type: string
+          format: date
+          description: to Date.
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant   
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+        - propertyTypeId
+        - usageTypeId
+        - maxPipeSizeId
+        - minPipeSizeId
+        - categoryTypeId
+        - donationAmount
+        - fromDate
+        - toDate
+        - tenantId  
+    
 
+        
   # Category Type definitions
     CategoryTypeReq:
       type: object

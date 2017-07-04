@@ -40,6 +40,8 @@
 
 package org.egov.commons.web.controller;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.enums.BloodGroup;
 import org.egov.commons.model.enums.Gender;
 import org.egov.commons.model.enums.MaritalStatus;

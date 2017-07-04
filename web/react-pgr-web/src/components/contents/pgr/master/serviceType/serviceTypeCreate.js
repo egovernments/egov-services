@@ -357,11 +357,11 @@ class ServiceTypeCreate extends Component {
                         />
                     </Col>
                     <Col xs={12}  md={3} sm={6} style={{textAlign:"center"}}>
-                      {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.add")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                      {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.add")} onClick={() => {
                         _this.props.addNestedFormDataTwo("attributes","attributes",'dataTypes');
                         _this.props.resetObject("dataTypes");
                       }}/>}
-                      {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                      {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.update")} onClick={() => {
                         //updateEscalation();
                       }}/>}
                     </Col>
@@ -843,7 +843,7 @@ class ServiceTypeCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
               </div>
           </form>
           <Dialog

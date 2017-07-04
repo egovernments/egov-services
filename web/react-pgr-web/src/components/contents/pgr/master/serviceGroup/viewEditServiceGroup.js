@@ -82,7 +82,7 @@ class ViewEditReceivingCenter extends Component {
     }
 
     handleNavigation = (type, id) => {
-      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+      this.props.history.push(type+id);
     }
 
 

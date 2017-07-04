@@ -498,7 +498,6 @@ handleError = () => {
           </Card>
           <div style={{textAlign: 'center'}}>
             <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
-            <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
           </div>
         </form>
         <div>

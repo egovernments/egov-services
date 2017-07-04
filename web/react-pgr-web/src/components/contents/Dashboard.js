@@ -140,7 +140,7 @@ class Dashboard extends Component {
                   <Grid>
                     <Row>
                       <Col>
-                          <Link to={`/pgr/createGrievance`} target="_blank"><RaisedButton label="Create Grievance" secondary={true} /></Link>
+                          <Link to={`/pgr/createGrievance`} target=""><RaisedButton label="Create Grievance" secondary={true} /></Link>
                       </Col>
                     </Row>
                   </Grid>

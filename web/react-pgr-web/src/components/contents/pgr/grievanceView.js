@@ -703,7 +703,7 @@ class grievanceView extends Component{
       : ''
       }
       <div style={{textAlign: 'center'}}>
-        <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+        
       </div>
       </form>
       <Dialog

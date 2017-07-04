@@ -355,7 +355,7 @@ class routerGeneration extends Component {
    		if(isSearchClicked && isFormValid) {
    			return (
    				<div style={{textAlign: 'center'}}>
-	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={(e) => {save(e)}}/>
+	   				<RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.save")} primary={true} onClick={(e) => {save(e)}}/>
 	   			</div>
    			)
    		}
@@ -497,7 +497,7 @@ class routerGeneration extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} backgroundColor={"#5a3e1b"} labelColor={white}/>
+             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} primary={true}/>
              <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
            </div>
            {viewTable()}

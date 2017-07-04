@@ -288,11 +288,11 @@ class DefineEscalationTime extends Component {
       					<td>{val.designation.name}</td>
                 <td>{val.noOfHours}</td>
                 <td>
-                <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
                     editObject(i);
                     current.setState({editIndex:i})
                 }}/>
-                {false && <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.delete")} disabled={editIndex<0?false:true} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                {false && <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.delete")} disabled={editIndex<0?false:true} primary={true} onClick={() => {
                     deleteObject(i);
                 }}/>}</td>
       				</tr>
@@ -339,10 +339,10 @@ class DefineEscalationTime extends Component {
                     </Col>
                     <div className="clearfix"></div>
                     <Col xs={12} md={12} style={{textAlign:"center"}}>
-                        {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.add")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.add")} primary={true} onClick={() => {
                           addEscalation();
                         }}/>}
-                        {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
                           updateEscalation();
                         }}/>}
                     </Col>
@@ -405,13 +405,13 @@ class DefineEscalationTime extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.serviceType ? false : true} label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.serviceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
                       <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} >{translate("pgr.lbl.escdetail")}</strong>}/>
                       <CardText>
-                          <RaisedButton style={{margin:'10px 0'}} label={translate("pgr.lbl.addesc")} backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                          <RaisedButton style={{margin:'10px 0'}} label={translate("pgr.lbl.addesc")} primary={true} onClick={() => {
                             this.setState({
                               isSearchClicked: true,
                               noData:false

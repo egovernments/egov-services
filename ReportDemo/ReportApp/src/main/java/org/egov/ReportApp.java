@@ -1,38 +1,19 @@
 package org.egov;
 import java.io.File;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.egov.domain.model.ReportDefinitions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-
-
 @SpringBootApplication
 public class ReportApp {
-	
-	
-	
 	@Autowired
 	public ReportDefinitions reportDefintions;
-	
-	@Autowired
-	public static ResourceLoader resourceLoader;
-
-	
-    public ReportApp(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
@@ -52,10 +33,7 @@ public class ReportApp {
 	  public static ReportDefinitions loadYaml() {
 	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
-    	
-        
-        ReportDefinitions reportDefinitions = mapper.readValue(new File("/ws/pgrreports.yml"), ReportDefinitions.class);
-        
+        ReportDefinitions reportDefinitions = mapper.readValue(new File("/ws/pgrwstest/egov-services/ReportDemo/ReportApp/src/main/resources/application.yml"), ReportDefinitions.class);
         System.out.println("Report Definition is" +reportDefinitions.getReportDefinitions());
         return reportDefinitions;
     } catch (Exception e) {

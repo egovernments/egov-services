@@ -43,6 +43,7 @@ package org.egov.egf.master.domain.model;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,18 +55,44 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "chartOfAccount", "accountDetailType" }, callSuper = false)
-
-public class ChartOfAccountDetail extends Auditable {
-
-	private static final long serialVersionUID = -8517026729631829413L;
+@EqualsAndHashCode(exclude = { "accountCodePurpose" }, callSuper = false)
+public class ChartOfAccount extends Auditable {
 
 	private String id;
 
 	@NotNull
-	private ChartOfAccount chartOfAccount;
+	@Length(max = 16, min = 1)
+	private String glcode;
 
 	@NotNull
-	private AccountDetailType accountDetailType;
+	@Length(max = 128, min = 5)
+	private String name;
+
+	private AccountCodePurpose accountCodePurpose;
+
+	@Length(max = 256)
+	private String description;
+
+	@NotNull
+	private Boolean isActiveForPosting;
+
+	private ChartOfAccount parentId;
+
+	@NotNull
+	private Character type;
+
+	@NotNull
+	private Long classification;
+
+	@NotNull
+	private Boolean functionRequired;
+
+	@NotNull
+	private Boolean budgetCheckRequired;
+
+	@Length(max = 16)
+	private String majorCode;
+
+	private Boolean isSubLedger;
 
 }

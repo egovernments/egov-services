@@ -31,7 +31,7 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any Long of the program
+ *      3) This license does not grant any rights to any user of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
@@ -40,42 +40,40 @@
 
 package org.egov.egf.master.domain.model;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
-import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
+public class EgfConfigurationValues extends Auditable {
 
-public class AccountDetailType extends Auditable {
-
-	private static final long serialVersionUID = 3499589983886551123L;
-
+	@NotNull
 	private String id;
 
 	@NotNull
-	@Length(max = 50, min = 1)
-	private String name;
+	private Long keyId;
 
 	@NotNull
-	@Length(max = 50, min = 1)
-	private String description;
-
-	@Length(max = 25)
-	private String tableName;
+	@Size(min = 1, max = 1000)
+	private String value;
 
 	@NotNull
-	private Boolean active;
-
-	@Length(max = 250, min = 1)
-	private String fullyQualifiedName;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date effectiveFrom;
 
 }

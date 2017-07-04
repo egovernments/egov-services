@@ -31,7 +31,7 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
@@ -42,11 +42,9 @@ package org.egov.egf.master.domain.model;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
-import org.egov.egf.master.domain.enums.BankAccountType;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -55,43 +53,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "bankBranch", "chartOfAccount", "fund", "type" }, callSuper = false)
 
-public class BankAccount extends Auditable{
-
-
-	private static final long serialVersionUID = 1L;
+public class AccountEntity extends Auditable {
 
 	private String id;
 
-	private BankBranch bankBranch;
-
-	// @JsonProperty(access = Access.WRITE_ONLY)
-	// @ManyToOne
-	// @JoinColumn(name = "glcodeid")
-	private ChartOfAccount chartOfAccount;
-
-	// @JsonProperty(access = Access.WRITE_ONLY)
-	// @ManyToOne
-	private Fund fund;
+	@NotNull
+	private AccountDetailType accountDetailType;
 
 	@NotNull
-	@Length(max = 25)
-	private String accountNumber;
+	@Length(max = 25, min = 1)
+	private String code;
 
-	// is this required ?
-	private String accountType;
-	@Length(max = 256)
-	private String description;
+	@NotNull
+	@Length(max = 350, min = 1)
+	private String name;
 
 	@NotNull
 	private Boolean active;
 
-	@Length(max = 100)
-	private String payTo;
-
-	@NotNull
-	private BankAccountType type;
-
+	@Length(max = 256)
+	private String description;
 
 }

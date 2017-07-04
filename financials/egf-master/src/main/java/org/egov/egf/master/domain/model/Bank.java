@@ -31,55 +31,55 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any user of the program
+ *         3) This license does not grant any rights to any Long of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-
 package org.egov.egf.master.domain.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.egov.common.domain.model.Auditable;
-import org.egov.egf.master.domain.enums.BudgetAccountType;
-import org.egov.egf.master.domain.enums.BudgetingType;
-import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "majorCode", "maxCode", "minCode", "accountType", "budgetingType" }, callSuper = false)
-public class BudgetGroup extends Auditable {
+public class Bank extends Auditable {
 
-	private static final long serialVersionUID = 8907540544512153346L;
 	private String id;
 
-	@Length(max = 250, min = 1)
+	@NotNull
+	@Size(max = 50, min = 1)
+	private String code;
+
+	@NotNull
+	@Size(max = 100, min = 2)
 	private String name;
 
-	@Length(max = 250, message = "Max 250 characters are allowed for description")
+	@Size(max = 250)
 	private String description;
 
-	private Long majorCode;
-
-	private Long maxCode;
-
-	private Long minCode;
-
-	private BudgetAccountType accountType;
-
-	private BudgetingType budgetingType;
-
+	@NotNull
 	private Boolean active;
+	
+	@NotNull
+	@Size(max = 50)
+	private String type;
+	
+	private Fund fund;  
 
-
+	
+	
 }

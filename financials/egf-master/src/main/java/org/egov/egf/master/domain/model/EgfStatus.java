@@ -31,7 +31,7 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any Long of the program
+ *      3) This license does not grant any rights to any user of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
@@ -41,57 +41,36 @@
 package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
-import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "accountCodePurpose", "chartOfAccountDetails" }, callSuper = false)
-public class ChartOfAccount extends Auditable {
+@ToString
+public class EgfStatus extends Auditable {
 
-	private static final long serialVersionUID = 61219209022946300L;
-
-
+	@NotNull
 	private String id;
 
 	@NotNull
-	@Length(max = 16, min = 1)
-	private String glcode;
+	@Size(min = 3, max = 50)
+	private String moduleType;
+
 	@NotNull
-	@Length(max = 128, min = 5)
-	private String name;
+	@Size(min = 3, max = 20)
+	private String code;
 
-	private AccountCodePurpose accountCodePurpose;
-
-	@Length(max = 256)
+	@NotNull
+	@Size(min = 3, max = 250)
 	private String description;
-
-	@NotNull
-	private Boolean isActiveForPosting;
-
-	private ChartOfAccount parentId;
-	@NotNull
-	private Character type;
-	@NotNull
-	private Long classification;
-	@NotNull
-	private Boolean functionRequired;
-	@NotNull
-	private Boolean budgetCheckRequired;
-
-	@Length(max = 16)
-	private String majorCode;
-
-	private Boolean isSubLedger;
-
 
 }

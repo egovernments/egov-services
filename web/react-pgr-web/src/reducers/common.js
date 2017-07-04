@@ -21,18 +21,18 @@ export default (state = defaultState, action) => {
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':
-      return { ...state, redirectTo: '/react-pgr-web', token: null, currentUser: null, showMenu: false };
+      return { ...state, redirectTo: '/', token: null, currentUser: null, showMenu: false };
     case 'SETTINGS_SAVED':
       return {
         ...state,
-        redirectTo: action.error ? null : '/react-pgr-web/dashboard',
+        redirectTo: action.error ? null : '/dashboard',
         currentUser: action.error ? null : action.payload.UserRequest
       };
     case 'LOGIN':
     case 'REGISTER':
       return {
         ...state,
-        redirectTo: action.error ? null : '/react-pgr-web/dashboard',
+        redirectTo: action.error ? null : '/dashboard',
         token: action.error ? null : action.payload.access_token,
         currentUser: action.error ? null : action.payload.UserRequest
       };

@@ -17,7 +17,7 @@ import { withRouter } from 'react-router';
 
 import CustomMenu from './CustomMenu';
 
-var base='/react-pgr-web/';
+var base='';
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'

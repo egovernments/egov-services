@@ -33,7 +33,7 @@ import DefineEscalationTime from './components/contents/pgr/master/escalationTim
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
 
-const base = "/react-pgr-web";
+const base = "";
 
 const Main = () => {
     return (

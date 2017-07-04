@@ -118,7 +118,7 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/srn=${e.serviceRequestId}`} target="_blank">e.serviceRequestId</Link>}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="_blank">{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>

@@ -284,7 +284,8 @@ class Login extends Component {
 
    searchGrievance = (e) => {
      let {history} = this.props;
-     history.push("/viewGrievance/"+this.state.srn);
+     if(this.state.srn)
+      history.push("/pgr/viewGrievance/"+this.state.srn);
    }
 
    validateOTP() {

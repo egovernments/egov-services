@@ -71,7 +71,7 @@ class grievanceCreate extends Component {
     let {initForm, history} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    history.push("/viewGrievance/"+this.state.serviceRequestId);
+    history.push("/pgr/viewGrievance/"+this.state.serviceRequestId);
     window.location.reload();
   };
 
@@ -357,7 +357,7 @@ handleError = () => {
                             handleChange(e, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
                             {this.state.receivingModes !== undefined ?
                             this.state.receivingModes.map((receivingmode, index) => (
-                                <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} />
+                                receivingmode.active ? <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} /> : ''
                             )) : ''}
                           </SelectField>
                         </Col> : ''
@@ -562,7 +562,7 @@ const mapDispatchToProps = dispatch => ({
           };
           _this.props.handleChange(e, "receivingCenter", true, "")}} errorText={_this.props.fieldErrors.receivingCenter ? _this.props.fieldErrors.receivingCenter : ""} >
           {_this.state.receivingCenter.map((receivingcenter, index) => (
-              <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} />
+              receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
           ))}
         </SelectField>
       </Col>

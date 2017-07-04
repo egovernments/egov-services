@@ -52,9 +52,11 @@ public class ReportApp {
 	  public static ReportDefinitions loadYaml() {
 	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
-    	Resource resource = resourceLoader.getResource("classpath:application.yml");
-        File yamlFile = resource.getFile();
-        ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
+    	
+        
+        ReportDefinitions reportDefinitions = mapper.readValue(new File("/ws/pgrreports.yml"), ReportDefinitions.class);
+        
+        System.out.println("Report Definition is" +reportDefinitions.getReportDefinitions());
         return reportDefinitions;
     } catch (Exception e) {
         // TODO Auto-generated catch block

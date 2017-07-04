@@ -35,12 +35,14 @@ public class ReportController {
 	public ReportDefinitions reportDefinitions;
 	public ReportYamlMetaData reportYamlMetaData;
 	@Autowired
+	private Response responseInfoFactory;
+	
+	@Autowired
 	public ReportController(ReportDefinitions reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
 	}
-
-	@Autowired
-	private Response responseInfoFactory;
+  
+	
 	
 	@Autowired
 	private ReportService reportService;
@@ -49,6 +51,7 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
+		System.out.println("Coming in to the service");
 		MetadataResponse mdr = getMetaData(metaDataRequest.getReportName());
 		return getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		
@@ -63,61 +66,16 @@ public class ReportController {
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 	}
 	
-	@PostMapping("/report/generateSQL")
-	@ResponseBody
-	public String generateSQL(@RequestBody @Valid  ReportRequest reportRequest, 
-			final BindingResult errors) {
-		
-		String query = reportYamlMetaData.getQuery();
-		String[] splitQueries = query.split("where"); 
-		
-		
-		
-		//Appending Source Columns as Comma Separated Values using String Builder Class
-		if(reportYamlMetaData.getSourceColumns().size() > 0 ){
-			for(int i =0 ; i < reportYamlMetaData.getSourceColumns().size() ; i ++ ){
-				String nameToFind = reportYamlMetaData.getSourceColumns().get(i).getName();
-				nameToFind = "\\{" + nameToFind + "\\}"; 
-				splitQueries[0] = splitQueries[0].replaceAll(nameToFind, reportYamlMetaData.getSourceColumns().get(i).getName());
-			}
-		}
-		
-		List<SearchParam> listFromRequest = reportRequest.getSearchParams();
-		if(reportYamlMetaData.getSearchParams().size() == listFromRequest.size()){
-			for(int i = 0 ; i < reportYamlMetaData.getSearchParams().size() ; i++) {
-				String nameToFind = reportYamlMetaData.getSearchParams().get(i).getName();
-				for(int j = 0 ; j < listFromRequest.size() ; j++) {
-					if(nameToFind.equals(listFromRequest.get(j).getName())){
-						String replaceString = "\\{"+nameToFind+"\\}";
 
-						//splitQueries[1] = splitQueries[1].replaceAll(replaceString, listFromRequest.get(j).getValue());
-
-					//	query = query.replaceAll(replaceString, listFromRequest.get(j).getValue());
-
-					}
-				}
-			}
-		}
-		String queryAfterReplacing = splitQueries[0] + splitQueries[1];
-		return queryAfterReplacing;
-	}
-	
-	private ResponseEntity<?> getSuccessResponse(final MetadataResponse metadataResponse, final RequestInfo requestInfo,String tenantID) {
-		final MetadataResponse metadataResponses = new MetadataResponse();
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		metadataResponses.setRequestInfo(responseInfo);
-		metadataResponses.setTenantId(tenantID);
-		metadataResponses.setReportDetails(metadataResponse.getReportDetails());
-		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
-
-	}	
-	
 	public MetadataResponse getMetaData(String reportName){
+		
+		System.out.println("The Report Name is "+reportDefinitions.getReportDefinitions());
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportYamlMetaData reportYamlMetaData = new ReportYamlMetaData();
 		for(ReportYamlMetaData reportYaml : reportDefinitions.getReportDefinitions()) {
+			System.out.println("Report Yaml is "+reportYaml);
 			if(reportYaml.getReportName().equals(reportName)){
+			
 				reportYamlMetaData = reportYaml;
 			}
 		}
@@ -167,5 +125,18 @@ public class ReportController {
         
 		return null;
 	}
+	public ResponseEntity<?> getSuccessResponse(final MetadataResponse metadataResponse, final RequestInfo requestInfo,String tenantID) {
+		final MetadataResponse metadataResponses = new MetadataResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		metadataResponses.setRequestInfo(responseInfo);
+		metadataResponses.setTenantId(tenantID);
+		metadataResponses.setReportDetails(metadataResponse.getReportDetails());
+		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
+
+	}	
+	
+	
+	
 	
 }

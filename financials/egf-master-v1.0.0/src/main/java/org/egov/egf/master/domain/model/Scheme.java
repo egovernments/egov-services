@@ -81,6 +81,6 @@ public class Scheme extends Auditable {
 	@Length(max = 256)
 	private String description;
 
-	private Long boundary;
+	private String boundary;
 
 }

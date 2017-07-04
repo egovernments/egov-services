@@ -82,6 +82,6 @@ public class SubScheme extends Auditable {
 	@NotNull
 	private Boolean active;
 
-	private Long departmentId;
+	private String departmentId;
 
 }

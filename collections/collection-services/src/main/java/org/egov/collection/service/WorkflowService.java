@@ -44,7 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.collection.model.Department;
+import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteria;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.repository.WorkflowRepository;
@@ -66,10 +68,10 @@ public class WorkflowService {
 	@Autowired
 	private WorkflowRepository workflowRepository;
 	
-	public List<Department> getDepartments(RequestInfo requestInfo){
-		logger.info("RequestInfo:"+requestInfo.toString());
+	public List<Department> getDepartments(DepartmentSearchCriteria departmentSearchCriteria){
+		logger.info("DepartmentSearchCriteria:"+departmentSearchCriteria.toString());
 		List<Department> departments = new ArrayList<>();
-		Object response = workflowRepository.getDepartments(requestInfo);
+		Object response = workflowRepository.getDepartments(departmentSearchCriteria);
 		try{
 			departments.addAll(JsonPath.read(response, "$.Department"));
 		}catch(Exception e){
@@ -82,7 +84,7 @@ public class WorkflowService {
 		return departments;
 	}
 	
-	public List<Department> getDesignations(RequestInfo requestInfo){
+/*	public List<Department> getDesignations(RequestInfo requestInfo){
 		List<Department> departments = new ArrayList<>();
 		Object response = workflowRepository.getDepartments(requestInfo);
 		try{
@@ -95,7 +97,7 @@ public class WorkflowService {
 		logger.info("Departments received: "+departments.toString());
 
 		return departments;
-	}
+	} */
 
 	public List<EmployeeInfo> getUsers(UserSearchCriteriaWrapper userSeachCriteriaWrapper){
 		logger.info("UserSearchCriteria:"+userSeachCriteriaWrapper.toString());
@@ -111,6 +113,22 @@ public class WorkflowService {
 		logger.info("Users received: "+users.toString());
 
 		return users;
+	}
+	
+	public String getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
+		logger.info("PositionSearchCriteria:"+positionSearchCriteriaWrapper.toString());
+
+		String position = null;
+		Object response = workflowRepository.getPositionForUser(positionSearchCriteriaWrapper);
+		try{
+			position = JsonPath.read(response, "$.Position[0].name");
+		}catch(Exception e){
+			logger.error("No position returned from the service: "+e.getCause());
+			position = null;
+			return position;
+		}
+		logger.info("Position fetched is: "+position);
+		return position;
 	}
 }
 

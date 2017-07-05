@@ -46,6 +46,7 @@ import javax.validation.Valid;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.Department;
+import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
 import org.egov.collection.model.UserSearchCriteria;
@@ -87,13 +88,22 @@ public class WorkflowController {
 	@PostMapping("/departments/_search")
 	@ResponseBody
 	public ResponseEntity<?> getDepartments(
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, BindingResult errors) {
+			@RequestBody @Valid final DepartmentSearchCriteria departmentSearchCriteria, BindingResult errors) {
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}						
-		List<Department> departments = workflowService.getDepartments(requestInfoWrapper.getRequestInfo());
+		}	
+		if(!validateTenantId(departmentSearchCriteria.getTenantId())){
+			LOGGER.info("Invalid TenantId");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		List<Department> departments = workflowService.getDepartments(departmentSearchCriteria);
 				
 		if(null == departments){
 			LOGGER.info("Service returned null");
@@ -106,10 +116,10 @@ public class WorkflowController {
 			
 		}
 				
-		return getDeptSuccessResponse(departments, requestInfoWrapper.getRequestInfo());
+		return getDeptSuccessResponse(departments, departmentSearchCriteria.getRequestInfo());
 	}
 	
-	@PostMapping("/designations/_search")
+/*	@PostMapping("/designations/_search")
 	@ResponseBody
 	public ResponseEntity<?> getDesignations(
 			@RequestBody @Valid final DesignationSearchCriteria designationSearchCriteria, BindingResult errors) {
@@ -117,7 +127,8 @@ public class WorkflowController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}						
+		}	
+		
 		List<Department> departments = workflowService.getDepartments(designationSearchCriteria.getRequestInfo());
 				
 		if(null == departments){
@@ -132,7 +143,7 @@ public class WorkflowController {
 		}
 				
 		return getDeptSuccessResponse(departments, designationSearchCriteria.getRequestInfo());
-	}
+	} */
 	
 	
 	@PostMapping("/users/_search")
@@ -143,7 +154,16 @@ public class WorkflowController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}						
+		}				
+		if(!validateTenantId(userSeachCriteriaWrapper.getUserSearchCriteria().getTenantId())){
+			LOGGER.info("Invalid TenantId");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
 		List<EmployeeInfo> users = workflowService.getUsers(userSeachCriteriaWrapper);
 				
 		if(null == users){
@@ -196,5 +216,12 @@ public class WorkflowController {
 		}
 		errRes.setError(error);
 		return errRes;
+	}
+	
+	private boolean validateTenantId(String tenantId){
+		boolean isTenantValid = true;
+		if(null == tenantId || tenantId.isEmpty())
+			isTenantValid = false;
+		return isTenantValid;
 	}
 }

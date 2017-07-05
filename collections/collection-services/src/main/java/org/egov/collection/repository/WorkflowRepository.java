@@ -41,7 +41,9 @@
 package org.egov.collection.repository;
 
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.DesignationSearchCriteria;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteria;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -72,15 +74,15 @@ public class WorkflowRepository {
 	private RestTemplate restTemplate;
 	
 	
-	public Object getDepartments(RequestInfo requestInfo){
+	public Object getDepartments(DepartmentSearchCriteria departmentSearchCriteria){
 		StringBuilder builder = new StringBuilder();
 		String baseUri = CollectionServiceConstants.GET_DEPT_URI;
-		String searchCriteria="?tenantId=default";
+		String searchCriteria="?tenantId="+departmentSearchCriteria.getTenantId();
 		
 		builder.append(baseUri).append(searchCriteria);
 		
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
+		requestInfoWrapper.setRequestInfo(departmentSearchCriteria.getRequestInfo());
 
 		Object response = null;
 		try{
@@ -140,6 +142,34 @@ public class WorkflowRepository {
 			logger.error("Couldn't fetch departments. Exception!"+e.getCause());
 		}
 		return response;
+	}
+	
+	public Object getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
+		StringBuilder builder = new StringBuilder();
+		String baseUri = CollectionServiceConstants.GET_POSITION_URI;
+		String uriAppend = CollectionServiceConstants.GET_POSITION_URI_APPEND;
+		String searchCriteria="?tenantId="+positionSearchCriteriaWrapper.getPositionSearchCriteria().getTenantId();
+		
+		builder.append(baseUri)
+			   .append(positionSearchCriteriaWrapper.getPositionSearchCriteria().getEmployeeId())
+			   .append(uriAppend)
+			   .append(searchCriteria);
+				
+				
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(positionSearchCriteriaWrapper.getRequestInfo());
+		
+		logger.info("URI: "+builder.toString());
+		
+		Object response = null;
+		try{
+			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper, Object.class);
+		}catch(Exception e){
+			logger.error("Couldn't fetch departments. Exception!"+e.getCause());
+		}
+		
+		return response;
+
 	}
 
 }

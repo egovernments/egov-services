@@ -197,8 +197,11 @@ public class PropertyRepository {
 				ps.setString(30, propertyDetails.getAuditDetails().getLastModifiedBy());
 				ps.setLong(31, createdTime);
 				ps.setLong(32, createdTime);
-				ps.setString(33, propertyDetails.getTaxCalculations());
-				ps.setInt(34, propertyId);
+				ps.setInt(33, propertyId);
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(propertyDetails.getTaxCalculations());
+				ps.setObject(34, jsonObject);
 				return ps;
 			}
 		};
@@ -620,14 +623,17 @@ public class PropertyRepository {
 
 	}
 
-	public void updatePropertyDetail(PropertyDetail propertyDetails, Long proertyId) {
+	public void updatePropertyDetail(PropertyDetail propertyDetails, Long proertyId) throws Exception {
 
 		Long updatedTime = new Date().getTime();
 
 		String propertyDetailsUpdate = PropertyDetailBuilder.updatePropertyDetailQuery();
 
-		Object[] propertyDetailsArgs = { propertyDetails.getSource().toString(),
-				propertyDetails.getRegdDocNo(),
+		PGobject jsonObject = new PGobject();
+		jsonObject.setType("jsonb");
+		jsonObject.setValue(propertyDetails.getTaxCalculations());
+
+		Object[] propertyDetailsArgs = { propertyDetails.getSource().toString(), propertyDetails.getRegdDocNo(),
 				TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocDate()), propertyDetails.getReason(),
 				propertyDetails.getStatus().toString(), propertyDetails.getIsVerified(),
 				TimeStampUtil.getTimeStamp(propertyDetails.getVerificationDate()), propertyDetails.getIsExempted(),
@@ -638,8 +644,8 @@ public class PropertyRepository {
 				propertyDetails.getNoOfFloors(), propertyDetails.getIsSuperStructure(), propertyDetails.getLandOwner(),
 				propertyDetails.getFloorType(), propertyDetails.getWoodType(), propertyDetails.getRoofType(),
 				propertyDetails.getWallType(), propertyDetails.getStateId(), propertyDetails.getApplicationNo(),
-				propertyDetails.getAuditDetails().getLastModifiedBy(), updatedTime,
-				propertyDetails.getTaxCalculations(), proertyId, propertyDetails.getId() };
+				propertyDetails.getAuditDetails().getLastModifiedBy(), updatedTime, proertyId, jsonObject,
+				propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}

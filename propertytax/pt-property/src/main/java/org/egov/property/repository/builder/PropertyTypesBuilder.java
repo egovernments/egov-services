@@ -7,7 +7,8 @@ public class PropertyTypesBuilder {
 			+ "VALUES( ?, ?, ?, ?, ?, ?,?)";
 
 	public static final String UPDATE_PROPERTYTYPES_QUERY = "UPDATE egpt_mstr_propertytype SET tenantid = "
-			+ "? ,code = ?, data=?, lastModifiedBy =? ,"
-			+ "lastModifiedtime= ? WHERE id = ?";
+			+ "? ,code = ?, data=?, lastModifiedBy =? ," + "lastModifiedtime= ? WHERE id = ?";
+
+	public static final String SELECT_PROPERTYTYPES_CREATETIME = "SELECT createdTime  From egpt_mstr_propertytype WHERE id = ?";
 
 }

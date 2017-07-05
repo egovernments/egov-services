@@ -35,12 +35,15 @@ export default(state = defaultState, action) => {
             }
           }
 
-    case "RESET_OBJECT":
+      case "RESET_OBJECT":
 
-        return {
-          ...state,
-          form: {}
-        }
+              return {
+                ...state,
+                form: {
+                  ...state.form,
+                  [action.object]:null
+                }
+              }
 
     case "UPDATE_OBJECT":
 

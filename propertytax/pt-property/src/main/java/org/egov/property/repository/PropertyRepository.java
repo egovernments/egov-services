@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.egov.models.Address;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
@@ -34,13 +35,18 @@ import org.egov.property.repository.builder.UnitBuilder;
 import org.egov.property.repository.builder.UserBuilder;
 import org.egov.property.repository.builder.VacantLandDetailBuilder;
 import org.egov.property.util.TimeStampUtil;
+import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
@@ -57,17 +63,26 @@ public class PropertyRepository {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	Environment environment;
+
 	/**
 	 * property query formation
 	 * 
 	 * @param property
 	 * @return holder key
+	 * @throws JsonProcessingException
 	 */
 
-	public Integer saveProperty(Property property) {
+	public Integer saveProperty(Property property) throws Exception {
 		Long createdTime = new Date().getTime();
 
+		ObjectMapper obj = new ObjectMapper();
+
+		String demands = obj.writeValueAsString(property.getDemands());
+
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 				final PreparedStatement ps = connection.prepareStatement(PropertyBuilder.INSERT_PROPERTY_QUERY,
@@ -78,7 +93,9 @@ public class PropertyRepository {
 				ps.setString(4, property.getVltUpicNumber());
 				ps.setString(5, property.getCreationReason().toString());
 
-				//TODO - AssessmentDate is non mandatory, this might give NullPointerException. Add null check. For the same usecases, add check across the code.
+				// TODO - AssessmentDate is non mandatory, this might give
+				// NullPointerException. Add null check. For the same usecases,
+				// add check across the code.
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(property.getAssessmentDate()));
 
 				ps.setObject(7, TimeStampUtil.getTimeStamp(property.getOccupancyDate()));
@@ -91,6 +108,12 @@ public class PropertyRepository {
 				ps.setString(13, property.getAuditDetails().getLastModifiedBy());
 				ps.setLong(14, createdTime);
 				ps.setLong(15, createdTime);
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(demands);
+
+				ps.setObject(16, property.getDemands());
 				return ps;
 			}
 		};
@@ -143,7 +166,7 @@ public class PropertyRepository {
 				final PreparedStatement ps = connection
 						.prepareStatement(PropertyDetailBuilder.INSERT_PROPERTYDETAILS_QUERY, new String[] { "id" });
 				ps.setString(1, propertyDetails.getSource().toString());
-				ps.setString(2, propertyDetails.getRegdDocNo());
+				ps.setObject(2, TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocNo()));
 				ps.setObject(3, TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocDate()));
 				ps.setString(4, propertyDetails.getReason());
 				ps.setString(5, propertyDetails.getStatus().toString());
@@ -174,7 +197,8 @@ public class PropertyRepository {
 				ps.setString(30, propertyDetails.getAuditDetails().getLastModifiedBy());
 				ps.setLong(31, createdTime);
 				ps.setLong(32, createdTime);
-				ps.setInt(33, propertyId);
+				ps.setString(33, propertyDetails.getTaxCalculations());
+				ps.setInt(34, propertyId);
 				return ps;
 			}
 		};
@@ -556,18 +580,25 @@ public class PropertyRepository {
 
 	}
 
-	public void updateProperty(Property property) {
+	public void updateProperty(Property property) throws Exception {
 
 		Long updatedTime = new Date().getTime();
 
 		String propertyUpdate = PropertyBuilder.updatePropertyQuery();
+
+		ObjectMapper obj = new ObjectMapper();
+
+		String demands = obj.writeValueAsString(property.getDemands());
+		PGobject jsonObject = new PGobject();
+		jsonObject.setType("jsonb");
+		jsonObject.setValue(demands);
 
 		Object[] propertyArgs = { property.getTenantId(), property.getUpicNumber(), property.getOldUpicNumber(),
 				property.getVltUpicNumber(), property.getCreationReason().name(),
 				TimeStampUtil.getTimeStamp(property.getAssessmentDate()),
 				TimeStampUtil.getTimeStamp(property.getOccupancyDate()), property.getGisRefNo(),
 				property.getIsAuthorised(), property.getIsUnderWorkflow(), property.getChannel().name(),
-				property.getAuditDetails().getLastModifiedBy(), updatedTime, property.getId() };
+				property.getAuditDetails().getLastModifiedBy(), updatedTime, jsonObject, property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -595,7 +626,8 @@ public class PropertyRepository {
 
 		String propertyDetailsUpdate = PropertyDetailBuilder.updatePropertyDetailQuery();
 
-		Object[] propertyDetailsArgs = { propertyDetails.getSource().toString(), propertyDetails.getRegdDocNo(),
+		Object[] propertyDetailsArgs = { propertyDetails.getSource().toString(),
+				TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocNo()),
 				TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocDate()), propertyDetails.getReason(),
 				propertyDetails.getStatus().toString(), propertyDetails.getIsVerified(),
 				TimeStampUtil.getTimeStamp(propertyDetails.getVerificationDate()), propertyDetails.getIsExempted(),
@@ -606,8 +638,8 @@ public class PropertyRepository {
 				propertyDetails.getNoOfFloors(), propertyDetails.getIsSuperStructure(), propertyDetails.getLandOwner(),
 				propertyDetails.getFloorType(), propertyDetails.getWoodType(), propertyDetails.getRoofType(),
 				propertyDetails.getWallType(), propertyDetails.getStateId(), propertyDetails.getApplicationNo(),
-				propertyDetails.getAuditDetails().getLastModifiedBy(), updatedTime, proertyId,
-				propertyDetails.getId() };
+				propertyDetails.getAuditDetails().getLastModifiedBy(), updatedTime,
+				propertyDetails.getTaxCalculations(), proertyId, propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}
@@ -641,7 +673,8 @@ public class PropertyRepository {
 	}
 
 	/**
-	 * Description: updating unit  
+	 * Description: updating unit
+	 * 
 	 * @param unit
 	 */
 	public void updateUnit(Unit unit) {
@@ -657,14 +690,15 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
-				updatedTime, unit.getParentId(),unit.getId() };
+				updatedTime, unit.getParentId(), unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
 	}
-	
+
 	/**
 	 * Description: updating room
+	 * 
 	 * @param unit
 	 */
 	public void updateRoom(Unit unit) {

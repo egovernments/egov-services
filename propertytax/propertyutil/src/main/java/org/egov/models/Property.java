@@ -95,5 +95,8 @@ public class Property {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+	@JsonProperty("demands")
+	private List<Demand> demands = null;
 
 }

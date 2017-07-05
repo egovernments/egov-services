@@ -99,6 +99,9 @@ public class CollectionServiceConstants {
 	public static final String GET_DEPT_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/departments/_search";
 	public static final String GET_DESIG_URI = "http://egov-micro-dev.egovernments.org/egov-hr-masters/designations/_search";
 	public static final String GET_USERS_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/_search";
+	public static final String GET_POSITION_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/";
+	public static final String GET_POSITION_URI_APPEND = "/positions/_search";
+
 
 
 

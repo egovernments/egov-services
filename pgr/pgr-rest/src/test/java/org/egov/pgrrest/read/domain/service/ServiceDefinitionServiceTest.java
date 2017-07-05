@@ -32,4 +32,5 @@ public class ServiceDefinitionServiceTest {
 
         assertEquals(expectedServiceDefinition, actualServiceDefinition);
     }
+
 }

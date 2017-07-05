@@ -38,97 +38,42 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.service;
 
-import java.util.Date;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.eis.model.Movement;
+import org.egov.eis.service.helper.PositionSearchURLHelper;
+import org.egov.eis.web.contract.NonVacantPositionsResponse;
+import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import org.egov.eis.model.enums.TransferType;
-import org.egov.eis.model.enums.TypeOfMovement;
+@Service
+public class PositionService {
+    @Autowired
+    private PositionSearchURLHelper positionSearchURLHelper;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+    public List<Long> getPositions(final Movement movement, final RequestInfo requestInfo) {
+        final String url = positionSearchURLHelper.searchURL(movement.getEffectiveFrom(),
+                movement.getDepartmentAssigned(),
+                movement.getDesignationAssigned(),
+                movement.getTenantId());
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Movement {
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
-    private Long id;
+        final NonVacantPositionsResponse nonVacantPositionsResponse = restTemplate.postForObject(url, request,
+                NonVacantPositionsResponse.class);
 
-    @NotNull
-    private Long employeeId;
-
-    @NotNull
-    private TypeOfMovement typeOfMovement;
-
-    @NotNull
-    private Long currentAssignment;
-
-    private TransferType transferType;
-
-    private PromotionBasis promotionBasis;
-
-    private String remarks;
-
-    private TransferReason reason;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date effectiveFrom;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date enquiryPassedDate;
-
-    private Long transferedLocation;
-
-    @NotNull
-    private Long departmentAssigned;
-
-    @NotNull
-    private Long designationAssigned;
-
-    @NotNull
-    private Long positionAssigned;
-
-    private Long fundAssigned;
-
-    private Long functionAssigned;
-
-    private String documents;
-
-    private Boolean employeeAcceptance;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    @NotNull
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
+        return nonVacantPositionsResponse.getPositions();
+    }
 }

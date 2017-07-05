@@ -92,6 +92,9 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_employee_service.employees.basepath}")
     private String hrEmployeeServiceEmployeesBasePath;
+    
+    @Value("${egov.services.hr_employee_service.vacantpositions.basepath}")
+    private String hrEmployeeServiceVacantPositionsBasePath;
 
     @Value("${egov.services.hr_employee_service.employees.searchpath}")
     private String hrEmployeeServiceEmployeesSearchPath;

@@ -92,44 +92,4 @@ public class EducationalQualification {
 
     private String tenantId;
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final EducationalQualification other = (EducationalQualification) obj;
-        /*
-         * if (documents == null) { if (other.documents != null) return false; } else if (!documents.equals(other.documents))
-         * return false;
-         */
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (majorSubject == null) {
-            if (other.majorSubject != null)
-                return false;
-        } else if (!majorSubject.equals(other.majorSubject))
-            return false;
-        if (qualification == null) {
-            if (other.qualification != null)
-                return false;
-        } else if (!qualification.equals(other.qualification))
-            return false;
-        if (university == null) {
-            if (other.university != null)
-                return false;
-        } else if (!university.equals(other.university))
-            return false;
-        if (yearOfPassing == null) {
-            if (other.yearOfPassing != null)
-                return false;
-        } else if (!yearOfPassing.equals(other.yearOfPassing))
-            return false;
-        return true;
-    }
 }

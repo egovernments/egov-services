@@ -230,7 +230,7 @@ class receivingModeCreate extends Component {
            </Card>
            <div style={{textAlign:'center'}}>
 
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} primary={true}/>
 
               </div>
          </form>

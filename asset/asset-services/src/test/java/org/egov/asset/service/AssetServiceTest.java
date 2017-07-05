@@ -138,6 +138,7 @@ public class AssetServiceTest {
 		asset.setName("asset name");
 		asset.setStatus("CREATED");
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+		asset.setEnableYearWiseDepreciation(true);
 
 		final Location location = new Location();
 		location.setLocality(4l);

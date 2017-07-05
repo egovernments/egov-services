@@ -100,5 +100,5 @@ public class Asset {
 	private List<Attributes> assetAttributes = new ArrayList<>();
 
 	private Boolean enableYearWiseDepreciation;
-	private Double depreciationRate;
+	private List<YearWiseDepreciation> depreciationRate = new ArrayList<>();
 }

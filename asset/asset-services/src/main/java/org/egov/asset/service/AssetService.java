@@ -48,6 +48,7 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
@@ -101,7 +102,17 @@ public class AssetService {
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 
 		assetRequest.getAsset().setCode(assetRepository.getAssetCode());
-		assetRequest.getAsset().setId(Long.valueOf(assetRepository.getNextAssetId().longValue()));
+		Long assetId = Long.valueOf(assetRepository.getNextAssetId().longValue());
+		assetRequest.getAsset().setId(assetId);
+
+		List<YearWiseDepreciation> yearWiseDepreciation = assetRequest.getAsset().getDepreciationRate();
+		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
+			if (yearWiseDepreciation != null) {
+				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {
+					depreciationRate.setAssetId(assetId);
+				}
+			}
+		}
 
 		// TODO validate assetcategory for an asset
 		logger.info("assetRequest createAsync::" + assetRequest);

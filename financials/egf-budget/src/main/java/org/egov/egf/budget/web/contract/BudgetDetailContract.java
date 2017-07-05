@@ -37,35 +37,37 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.budget.domain.model;
-
+package org.egov.egf.budget.web.contract;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.master.web.contract.BoundaryContract;
 import org.egov.common.master.web.contract.DepartmentContract;
+import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
-@EqualsAndHashCode(exclude = { "budget", "status" }, callSuper = false)
-public class BudgetDetail extends Auditable {
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","budgetGroup","budget","originalAmount","approvedAmount","budgetAvailable","anticipatoryAmount","usingDepartment","executingDepartment","function","scheme","fund","subScheme","functionary","boundary","materializedPath","budgetReAppropriations","documentNumber","uniqueNo","planningPercent","status"})
+public class BudgetDetailContract extends AuditableContract {
 
 	/*
 	 * id of the budgetDeatil representing the unique value of each record
@@ -78,13 +80,13 @@ public class BudgetDetail extends Auditable {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
-	private BudgetGroupContract budgetGroup;
+	private BudgetGroupContract  budgetGroup;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure
 	 * defined.
 	 */
-	private Budget budget;
+	private BudgetContract budget;
 
 	/*
 	 * originalAmount is the budget amount for the given combination of budget
@@ -111,7 +113,7 @@ public class BudgetDetail extends Auditable {
 	 * usingDepartment is the department for which the budget line item is
 	 * actually budgeted for.
 	 */
-	private DepartmentContract usingDepartment;
+	private DepartmentContract  usingDepartment;
 
 	/*
 	 * executingDepartment is the department which uses the budget to execute
@@ -191,6 +193,6 @@ public class BudgetDetail extends Auditable {
 	/*
 	 * status gives the current status of the budget line item. (detailed level)
 	 */
-	private EgfStatus status;
+	private EgfStatusContract status;
 
 }

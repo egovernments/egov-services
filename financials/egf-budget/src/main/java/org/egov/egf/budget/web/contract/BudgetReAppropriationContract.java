@@ -37,7 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.common.master.web.contract;
+package org.egov.egf.budget.web.contract;
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.master.web.contract.EgfStatusContract;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -46,19 +51,65 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id", "name" })
-public class DepartmentContract {
+@JsonPropertyOrder({ "id","budgetDetail","additionAmount","deductionAmount","originalAdditionAmount","originalDeductionAmount","anticipatoryAmount","status","asOnDate"})
+public class BudgetReAppropriationContract extends AuditableContract {
 
+	/**
+	 * id of the BudgetReAppropriationContract representing the unique value of each
+	 * record getting saved.
+	 */
 	private String id;
 
-	private String name;
+	/*
+	 * budgetDetail is the reference given for budget re appropriation to
+	 * identify for witch budget line item this appropriation is doing.
+	 */
+	private BudgetDetailContract budgetDetail;
 
-	private String code;
+	/*
+	 * additionAmount is the proposed extra amount to add for the given budget
+	 * detail
+	 */
+	private BigDecimal additionAmount = new BigDecimal("0.0");
+
+	/*
+	 * deductionAmount is the proposed amount to deduct for the given budget
+	 * detail
+	 */
+	private BigDecimal deductionAmount = new BigDecimal("0.0");
+
+	/*
+	 * originalAdditionAmount is the extra amount to add for the given budget
+	 * detail
+	 */
+	private BigDecimal originalAdditionAmount = new BigDecimal("0.0");
+
+	/*
+	 * originalAdditionAmount is the amount to deduct for the given budget
+	 * detail
+	 */
+	private BigDecimal originalDeductionAmount = new BigDecimal("0.0");
+
+	/*
+	 * anticipatoryAmount is the anticipated amount while processing the
+	 * re-appropriations.
+	 */
+	private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
+
+	/*
+	 * status gives the current status of the budget re appropriation line item.
+	 */
+	private EgfStatusContract status;
+
+	/*
+	 * asOnDate is the date on witch date the current appropriation is done.
+	 */
+	private Date asOnDate;
+
 }

@@ -102,6 +102,7 @@ public class EscalationTimeTypeQueryBuilder {
 		}
 
 		if (null != escalationRequest.getGrievanceType()) {
+			logger.info("Grievance Type is available : " + escalationRequest.getGrievanceType());
 			if (0 != escalationRequest.getGrievanceType()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.complaint_type_id = ? ");
@@ -111,6 +112,7 @@ public class EscalationTimeTypeQueryBuilder {
 		}
 
 		if (null != escalationRequest.getDesignation()) {
+			logger.info("Designation is available : " + escalationRequest.getDesignation());
 			if (0 != escalationRequest.getDesignation()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.designation_id = ?");

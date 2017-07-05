@@ -171,6 +171,22 @@ public class FinancialMastersListener {
 			mastersMap.put("FundContract_Completed", request);
 			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
 		}
+		if (mastersMap.get("fundcontract_update") != null) {
+
+			CommonRequest<FundContract> request = objectMapper.convertValue(mastersMap.get("fundcontract_update"),
+					new TypeReference<CommonRequest<FundContract>>() {
+					});
+
+			ModelMapper mapper = new ModelMapper();
+			for (FundContract fundContract : request.getData()) {
+				Fund domain = mapper.map(fundContract, Fund.class);
+				fundRepository.update(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("FundContract_Completed", request);
+			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+		}
 
 		if (mastersMap.get("bankcontract_create") != null) {
 

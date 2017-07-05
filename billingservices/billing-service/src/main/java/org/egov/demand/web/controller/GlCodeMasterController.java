@@ -65,8 +65,22 @@ public class GlCodeMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		glCodeMasterValidator.validateGlCodeMaster(glCodeMasterRequest);
+		System.out.println(":calling glcode validator::::");
+		glCodeMasterValidator.validateGlCodeMaster(glCodeMasterRequest,bindingResult);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
 		final GlCodeMasterResponse glCodeMasterRponse = glCodeMasterService.createAsync(glCodeMasterRequest);
 		return new ResponseEntity<>(glCodeMasterRponse, HttpStatus.CREATED);
+	}
+	@PostMapping("_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid GlCodeMasterRequest request
+			,BindingResult bindingResult){
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, request.getRequestInfo());
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(glCodeMasterService.updateAsync(request), HttpStatus.CREATED);
 	}
 }

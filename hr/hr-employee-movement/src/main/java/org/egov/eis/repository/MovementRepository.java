@@ -153,13 +153,15 @@ public class MovementRepository {
         jdbcTemplate.update(movementInsertQuery, obj);
         if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
                 .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
-                        movementRequest.getRequestInfo()).get(0).getId()))
+                        movementRequest.getRequestInfo()).get(0).getId())
+                && movement.getEmployeeAcceptance())
             promoteEmployee(movementRequest);
-        else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER)
-                || movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION)) && movement.getStatus()
-                        .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
-                                movementRequest.getRequestInfo()).get(0).getId()))
-            transferEmployee(movementRequest);
+//        else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER)
+//                || movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION)) && movement.getStatus()
+//                        .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+//                                movementRequest.getRequestInfo()).get(0).getId())
+//                && movement.getEmployeeAcceptance())
+//            transferEmployee(movementRequest);
         return movement;
     }
 
@@ -188,11 +190,6 @@ public class MovementRepository {
         employee.getAssignments().add(assignment);
         employeeService.updateEmployee(employee, movement.getTenantId(),
                 movementRequest.getRequestInfo());
-    }
-
-    private void transferEmployee(final MovementRequest movementRequest) {
-        // TODO Auto-generated method stub
-
     }
 
     private void movementStatusChange(final Movement movement, final RequestInfo requestInfo) {

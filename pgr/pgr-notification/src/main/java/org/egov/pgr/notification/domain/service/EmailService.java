@@ -1,15 +1,14 @@
 package org.egov.pgr.notification.domain.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.pgr.notification.domain.model.*;
+import org.egov.pgr.notification.domain.model.EmailMessageContext;
+import org.egov.pgr.notification.domain.model.EmailRequest;
+import org.egov.pgr.notification.domain.model.NotificationContext;
 import org.egov.pgr.notification.domain.service.emailstrategy.EmailMessageStrategy;
-import org.egov.pgr.notification.domain.service.emailstrategy.UndefinedEmailMessageStrategy;
 import org.egov.pgr.notification.persistence.queue.MessageQueueRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,13 +62,8 @@ public class EmailService {
     }
 
     private List<EmailMessageStrategy> getEmailMessageStrategy(NotificationContext context) {
-        final List<EmailMessageStrategy> strategyList = emailMessageStrategyList.stream()
+        return emailMessageStrategyList.stream()
             .filter(strategy -> strategy.matches(context))
             .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(strategyList)) {
-            return Collections.singletonList(new UndefinedEmailMessageStrategy());
-        } else {
-            return strategyList;
-        }
     }
 }

@@ -38,51 +38,25 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.service;
+package org.egov.collection.model;
 
-import java.util.List;
+import org.egov.common.contract.request.RequestInfo;
 
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Service
-public class ReceiptService {
-
-	public static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
-
+@Getter
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
+public class DesignationSearchCriteria {
 	
-	@Autowired
-	private ReceiptRepository receiptRepository;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 	
-
-	public List<ReceiptHeader> getReceipts
-	(ReceiptSearchCriteria receiptSearchCriteria) {
-		return receiptRepository.find(receiptSearchCriteria);
-	}
-	
-	public Receipt pushToQueue(ReceiptReq receiptReq){
-		logger.info("Pushing recieptdetail to kafka queue");
-		return receiptRepository.pushToQueue(receiptReq);
-	}
-	
-	public Receipt create(ReceiptReq receiptReq){
-		logger.info("Persisting recieptdetail");
-		try{
-			receiptRepository.persistCreateRequest(receiptReq);
-		}catch(Exception e){
-			logger.error("Exception caused at the Repository layer: "+e.getCause());
-		}
-
-		return receiptReq.getReceipt();
-	}
-	
+    private Long departmentId;
 }
-	

@@ -49,6 +49,7 @@ import java.util.Map;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.CommonDataModel;
 import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
@@ -370,7 +371,7 @@ public class ReceiptRepository {
 		idGenReq.setKey(receiptRequest.getRequestInfo().getKey());
 		idGenReq.setMsgId(receiptRequest.getRequestInfo().getMsgId());
 		idGenReq.setRequesterId(receiptRequest.getRequestInfo().getRequesterId());
-		idGenReq.setTs(receiptRequest.getRequestInfo().getTs().getTime());
+		idGenReq.setTs(receiptRequest.getRequestInfo().getTs().getTime()); // this is the difference.
 		idGenReq.setUserInfo(receiptRequest.getRequestInfo().getUserInfo());
 		idGenReq.setVer(receiptRequest.getRequestInfo().getVer());
 		

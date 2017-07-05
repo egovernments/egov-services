@@ -40,49 +40,77 @@
 
 package org.egov.collection.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.model.Department;
+import org.egov.collection.model.EmployeeInfo;
+import org.egov.collection.model.UserSearchCriteria;
+import org.egov.collection.model.UserSearchCriteriaWrapper;
+import org.egov.collection.repository.WorkflowRepository;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jayway.jsonpath.JsonPath;
+
 
 @Service
-public class ReceiptService {
+public class WorkflowService {
 
 	public static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
 
 	
 	@Autowired
-	private ReceiptRepository receiptRepository;
+	private WorkflowRepository workflowRepository;
 	
-
-	public List<ReceiptHeader> getReceipts
-	(ReceiptSearchCriteria receiptSearchCriteria) {
-		return receiptRepository.find(receiptSearchCriteria);
-	}
-	
-	public Receipt pushToQueue(ReceiptReq receiptReq){
-		logger.info("Pushing recieptdetail to kafka queue");
-		return receiptRepository.pushToQueue(receiptReq);
-	}
-	
-	public Receipt create(ReceiptReq receiptReq){
-		logger.info("Persisting recieptdetail");
+	public List<Department> getDepartments(RequestInfo requestInfo){
+		logger.info("RequestInfo:"+requestInfo.toString());
+		List<Department> departments = new ArrayList<>();
+		Object response = workflowRepository.getDepartments(requestInfo);
 		try{
-			receiptRepository.persistCreateRequest(receiptReq);
+			departments.addAll(JsonPath.read(response, "$.Department"));
 		}catch(Exception e){
-			logger.error("Exception caused at the Repository layer: "+e.getCause());
+			logger.error("Zero departments returned from the service: "+e.getCause());
+			departments = null;
+			return departments;
 		}
+		logger.info("Departments received: "+departments.toString());
 
-		return receiptReq.getReceipt();
+		return departments;
 	}
 	
+	public List<Department> getDesignations(RequestInfo requestInfo){
+		List<Department> departments = new ArrayList<>();
+		Object response = workflowRepository.getDepartments(requestInfo);
+		try{
+			departments.addAll(JsonPath.read(response, "$.Department"));
+		}catch(Exception e){
+			logger.error("Zero departments returned from the service: "+e.getCause());
+			departments = null;
+			return departments;
+		}
+		logger.info("Departments received: "+departments.toString());
+
+		return departments;
+	}
+
+	public List<EmployeeInfo> getUsers(UserSearchCriteriaWrapper userSeachCriteriaWrapper){
+		logger.info("UserSearchCriteria:"+userSeachCriteriaWrapper.toString());
+		List<EmployeeInfo> users = new ArrayList<>();
+		Object response = workflowRepository.getUsers(userSeachCriteriaWrapper);
+		try{
+			users.addAll(JsonPath.read(response, "$.Employee"));
+		}catch(Exception e){
+			logger.error("Zero users returned from the service: "+e.getCause());
+			users = null;
+			return users;
+		}
+		logger.info("Users received: "+users.toString());
+
+		return users;
+	}
 }
-	
+

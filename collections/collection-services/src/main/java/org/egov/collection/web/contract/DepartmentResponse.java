@@ -38,51 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.service;
+package org.egov.collection.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.egov.collection.model.Department;
+import org.egov.common.contract.response.ResponseInfo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Service
-public class ReceiptService {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	public static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class DepartmentResponse {
 
-	
-	@Autowired
-	private ReceiptRepository receiptRepository;
-	
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	public List<ReceiptHeader> getReceipts
-	(ReceiptSearchCriteria receiptSearchCriteria) {
-		return receiptRepository.find(receiptSearchCriteria);
-	}
-	
-	public Receipt pushToQueue(ReceiptReq receiptReq){
-		logger.info("Pushing recieptdetail to kafka queue");
-		return receiptRepository.pushToQueue(receiptReq);
-	}
-	
-	public Receipt create(ReceiptReq receiptReq){
-		logger.info("Persisting recieptdetail");
-		try{
-			receiptRepository.persistCreateRequest(receiptReq);
-		}catch(Exception e){
-			logger.error("Exception caused at the Repository layer: "+e.getCause());
-		}
+	@JsonProperty("Department")
+	private List<Department> department = new ArrayList<Department>();
 
-		return receiptReq.getReceipt();
-	}
-	
 }
-	

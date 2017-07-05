@@ -38,51 +38,67 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.service;
+package org.egov.collection.model;
 
+import lombok.*;
+
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EmployeeInfo {
+
+	private Long id;
+
+	@Size(min=1, max=256)
+	private String code;
+
+	@Size(max=5)
+	private String salutation;
+
+	@Size(min=3, max=100)
+	private String name;
+
+	@Size(min=1, max=64)
+	private String userName;
 
 
-@Service
-public class ReceiptService {
+	@Size(max=10)
+	private String mobileNumber;
 
-	public static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
+	@Size(min=5, max=128)
+	private String emailId;
 
+	@Size(max=10)
+	private String pan;
+
+	@Size(max=12)
+	private String aadhaarNumber;
+
+	private Boolean active;
 	
-	@Autowired
-	private ReceiptRepository receiptRepository;
-	
+	private Long employeeStatus;
 
-	public List<ReceiptHeader> getReceipts
-	(ReceiptSearchCriteria receiptSearchCriteria) {
-		return receiptRepository.find(receiptSearchCriteria);
-	}
-	
-	public Receipt pushToQueue(ReceiptReq receiptReq){
-		logger.info("Pushing recieptdetail to kafka queue");
-		return receiptRepository.pushToQueue(receiptReq);
-	}
-	
-	public Receipt create(ReceiptReq receiptReq){
-		logger.info("Persisting recieptdetail");
-		try{
-			receiptRepository.persistCreateRequest(receiptReq);
-		}catch(Exception e){
-			logger.error("Exception caused at the Repository layer: "+e.getCause());
-		}
+	private Long employeeType;
 
-		return receiptReq.getReceipt();
-	}
-	
+	private List<Long> jurisdictions = new ArrayList<Long>();
+
+	private Long bank;
+
+	private Long bankBranch;
+
+	@Size(max=20)
+	private String bankAccount;
+
+	private List<String> documents = new ArrayList<String>();
+
+	private String tenantId;
+
 }
-	

@@ -145,11 +145,10 @@ public class ReportService {
 		}
 		reportResponse.setReportData(lists);
 	}
-
 	private void populateReportHeader(ReportDefinition reportDefinition, ReportResponse reportResponse) {
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
 		List<ColumnDetail> columnDetails = columns.stream()
-				.map(p -> new ColumnDetail(p.getLabel(), p.getName(), p.getType()))
+				.map(p -> new ColumnDetail(p.getLabel(),p.getPattern(), p.getType(),p.getName()))
 				.collect(Collectors.toList());
 		
 		reportResponse.setReportHeader(columnDetails);

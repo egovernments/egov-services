@@ -1,12 +1,8 @@
 package org.egov.swagger.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-
-
-import javax.validation.constraints.*;
 /**
  * ColumnDetail
  */
@@ -16,26 +12,55 @@ public class ColumnDetail extends ColumnDef  {
   @JsonProperty("label")
   private String label = null;
 
+  @JsonProperty("pattern")
+  private String pattern;
+  
+  @JsonProperty("type")
+  private TypeEnum type = null;
   
   
-  public ColumnDetail(String label, TypeEnum type) {
+  public ColumnDetail() {
+		
+	}
+  
+  public ColumnDetail(String label, String pattern, TypeEnum type, String name) {
 	super();
 	this.label = label;
+	this.pattern = pattern;
 	this.type = type;
-  }
-  
-  public ColumnDetail(String label, String name, TypeEnum type) {
+	this.name(name);
+}
+  public ColumnDetail(String label, String pattern, TypeEnum type) {
 		super();
 		this.label = label;
-		this.name(name);
+		this.pattern = pattern;
 		this.type = type;
-	  }
-  public ColumnDetail() {}
+	}
+public String getLabel() {
+	return label;
+}
+public void setLabel(String label) {
+	this.label = label;
+}
 
-/**
-   * column type to help the consumer. EPOCH means time being carried over in epoch format, while date means time in given display format URL - will be used to indicate taht the column value is basically a URL to some other resource 
-   */
-  public enum TypeEnum {
+public String getPattern() {
+	return pattern;
+}
+
+public void setPattern(String pattern) {
+	this.pattern = pattern;
+}
+
+public TypeEnum getType() {
+	return type;
+}
+
+public void setType(TypeEnum type) {
+	this.type = type;
+}
+
+
+public enum TypeEnum {
     NUMBER("number"),
     
     STRING("string"),
@@ -53,6 +78,7 @@ public class ColumnDetail extends ColumnDef  {
     MULTIVALUELIST("multivaluelist");
 
     private String value;
+    
 
     TypeEnum(String value) {
       this.value = value;
@@ -75,86 +101,8 @@ public class ColumnDetail extends ColumnDef  {
     }
   }
 
-  @JsonProperty("type")
-  private TypeEnum type = null;
-
-  public ColumnDetail label(String label) {
-    this.label = label;
-    return this;
-  }
-
-   /**
-   * localization label for the column. In case label is not provided, name would be used as a label.
-   * @return label
-  **/
-  
-  public String getLabel() {
-    return label;
-  }
-
-  public void setLabel(String label) {
-    this.label = label;
-  }
-
-  public ColumnDetail type(TypeEnum type) {
-    this.type = type;
-    return this;
-  }
-
-   /**
-   * column type to help the consumer. EPOCH means time being carried over in epoch format, while date means time in given display format URL - will be used to indicate taht the column value is basically a URL to some other resource 
-   * @return type
-  **/
-  
-  @NotNull
-  public TypeEnum getType() {
-    return type;
-  }
-
-  public void setType(TypeEnum type) {
-    this.type = type;
-  }
 
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ColumnDetail columnDetail = (ColumnDetail) o;
-    return Objects.equals(this.label, columnDetail.label) &&
-        Objects.equals(this.type, columnDetail.type) &&
-        super.equals(o);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(label, type, super.hashCode());
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ColumnDetail {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    label: ").append(toIndentedString(label)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 }
 

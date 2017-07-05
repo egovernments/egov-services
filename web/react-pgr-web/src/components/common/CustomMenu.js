@@ -152,7 +152,7 @@ class CustomMenu extends Component {
                 return(
                   <Link   key={index} to={item.url} >
                     <MenuItem
-                         onTouchTap={()=>{handleToggle(false)}}
+                         onTouchTap={()=>{document.title=item.name; handleToggle(false)}}
                          leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                          primaryText={item.name}
                       />

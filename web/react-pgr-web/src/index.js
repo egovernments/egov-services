@@ -25,7 +25,7 @@ import './styles/buttons.dataTables.min.css';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-
+document.title="Egovernments";
 
 
 const muiTheme = getMuiTheme({

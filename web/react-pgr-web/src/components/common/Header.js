@@ -76,6 +76,7 @@ const RightIcon = (props) => {
                 //  },function(err) {
                 //    console.log(err);
                 // });
+                document.title = "Egovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale',locale);

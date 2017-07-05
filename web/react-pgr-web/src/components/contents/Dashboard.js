@@ -112,8 +112,8 @@ class Dashboard extends Component {
               onChange={this.handleChange}
               value={this.state.slideIndex}
             >
-              <Tab label="My Request" value={0} />
-              <Tab label="New Grievances" value={1} />
+              <Tab label="My Request" value={0}/>
+              <Tab label="New Grievances" value={1}  onClick={()=>{this.props.history.push("/pgr/createGrievance")}}/>
             </Tabs>
             <SwipeableViews
               index={this.state.slideIndex}

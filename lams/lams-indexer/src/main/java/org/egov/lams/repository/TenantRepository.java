@@ -23,11 +23,11 @@ public class TenantRepository {
 	public City fetchTenantByCode(String tenant) {
         String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenant;
 
-        final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
+        /*final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
 
-        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);*/
 
-        TenantResponse tr = restTemplate.postForObject(url, request, TenantResponse.class);
+        TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
         if (!CollectionUtils.isEmpty(tr.getTenant()))
             return tr.getTenant().get(0).getCity();
         else

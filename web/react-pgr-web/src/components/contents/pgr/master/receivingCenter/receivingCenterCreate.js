@@ -87,9 +87,14 @@ class CreateReceivingCenter extends Component {
 
 
 
-    componentDidUpdate() {
-
+     componentWillUpdate() {
+    if(window.urlCheck) {
+      let {initForm}=this.props;
+      initForm();
+      this.setState({id:undefined});
+      window.urlCheck = false;
     }
+  }
 
     submitForm = (e) => {
 

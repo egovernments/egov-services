@@ -141,7 +141,21 @@ class CustomMenu extends Component {
     //   return menu;
     // }
     // console.log(menuItems);
-    // console.log(parentLevel);
+    // console.log(parentLevel); 
+    const checkUrl = function(item) {
+      console.log("HERE: " + item.url);
+      console.log("THERE: " + window.location.href.indexOf("/pgr/receivingModeCreate/update"));
+      if(item.url == '/pgr/createReceivingCenter' && window.location.href.indexOf("/pgr/createReceivingCenter")>-1) {
+          console.log("OK!!!!!!")
+          window.urlCheck = true;
+      }
+
+      if(item.url == '/pgr/receivingModeCreate' && window.location.href.indexOf("/pgr/receivingModeCreate/update")>-1) {
+          console.log("OK!!!!!!")
+          window.urlCheck = true;
+      }
+    }
+
     const showMenu=()=>{
 
       if(searchText.length==0)
@@ -152,7 +166,7 @@ class CustomMenu extends Component {
                 return(
                   <Link   key={index} to={item.url} >
                     <MenuItem
-                         onTouchTap={()=>{handleToggle(false)}}
+                         onTouchTap={()=>{checkUrl(item); handleToggle(false)}}
                          leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                          primaryText={item.name}
                       />

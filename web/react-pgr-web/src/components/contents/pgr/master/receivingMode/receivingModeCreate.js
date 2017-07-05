@@ -51,6 +51,8 @@ const styles = {
 
 var _this;
 
+var urlChanged=false;
+
 class receivingModeCreate extends Component {
   constructor(props) {
        super(props);
@@ -82,7 +84,7 @@ class receivingModeCreate extends Component {
 
              Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{id:this.props.match.params.id},body).then(function(response){
 
-                 _this.setState({data:response.ReceivingModeType})
+                 _this.setState({data:response.ReceivingModeType[0]})
                  setForm(response.ReceivingModeType[0])
              }).catch((error)=>{
                  console.log(error);
@@ -99,6 +101,15 @@ class receivingModeCreate extends Component {
   }
 
 
+  componentWillUpdate() {
+    if(window.urlCheck) {
+      let {initForm}=this.props;
+      initForm();
+      this.setState({id:undefined});
+      window.urlCheck = false;
+    }
+  }
+
   addOrUpdate(e) {
     e.preventDefault();
     var _this = this;
@@ -111,7 +122,7 @@ class receivingModeCreate extends Component {
          description :receivingmodeSet.description,
          active :receivingmodeSet.active?receivingmodeSet.active:false,
          tenantId :localStorage.getItem("tenantId"),
-         channels :receivingmodeSet.channel
+         channels :receivingmodeSet.channels
        }
     }
       if(_this.props.match.params.id){
@@ -143,6 +154,7 @@ class receivingModeCreate extends Component {
 
 
   render() {
+   // this.callOnRender()
   let url = this.props.location.pathname;
   var _this = this;
    let {addOrUpdate,handleOpenNClose} = this;
@@ -156,6 +168,7 @@ class receivingModeCreate extends Component {
      receivingmodeSet,
      fieldErrors,isDialogOpen,msg} = this.props;
 
+     console.log(this.props)
 
    return (
     <div className="receivingModeCreate">
@@ -196,8 +209,8 @@ class receivingModeCreate extends Component {
                     <Col xs={12} md={3}>
                      <SelectField
                           multiple="true"
-                          errorText={fieldErrors.description ? fieldErrors.description : ""}
-                          value={receivingmodeSet.channel ? receivingmodeSet.channel : ""}
+                          errorText={fieldErrors.channels ? fieldErrors.channels : ""}
+                          value={receivingmodeSet.channels ? receivingmodeSet.channels : ""}
                           id="channel"
                           onChange={(e, index, value) => {
                              var e = {
@@ -206,7 +219,7 @@ class receivingModeCreate extends Component {
                                }
                              };
                              console.log(value);
-                             handleChange(e, "channel", true, "")}}
+                             handleChange(e, "channels", true, "")}}
                           floatingLabelText="Channel*" >
                               <MenuItem value={"WEB"} primaryText="WEB"/>
                               <MenuItem value={"MOBILE"} primaryText="MOBILE"/>
@@ -271,6 +284,12 @@ const mapDispatchToProps = dispatch => ({  initForm: (type) => {
          required: ["name","code","description"]
        }
       }
+    });
+  },
+
+   resetObject: (type, object) => {
+  dispatch({
+    type: "RESET_OBJECT"
     });
   },
 

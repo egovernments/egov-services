@@ -36,10 +36,11 @@ export default(state = defaultState, action) => {
           }
 
     case "RESET_OBJECT":
-
+        console.log([action.object]);
         return {
           ...state,
-          form: {}
+              [action.object]:{}
+          
         }
 
     case "UPDATE_OBJECT":

@@ -19,7 +19,7 @@ import router from "../router";
 //api import
 // import api from "../api/commonAPIS"
 
-
+window.urlCheck = false;
 class App extends Component {
 
   // constructor(props) {

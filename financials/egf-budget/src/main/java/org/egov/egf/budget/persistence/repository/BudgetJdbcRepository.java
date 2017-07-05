@@ -55,68 +55,78 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( budgetSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,budgetSearchEntity.getId());} 
-if( budgetSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,budgetSearchEntity.getName());} 
-if( budgetSearchEntity.getFinancialYearId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "financialYear =: financialYear");
-paramValues.put("financialYear" ,budgetSearchEntity.getFinancialYearId());} 
-if( budgetSearchEntity.getEstimationType()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "estimationType =: estimationType");
-paramValues.put("estimationType" ,budgetSearchEntity.getEstimationType());} 
-if( budgetSearchEntity.getParentId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "parent =: parent");
-paramValues.put("parent" ,budgetSearchEntity.getParentId());} 
-if( budgetSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,budgetSearchEntity.getDescription());} 
-if( budgetSearchEntity.getIsActiveBudget()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isActiveBudget =: isActiveBudget");
-paramValues.put("isActiveBudget" ,budgetSearchEntity.getIsActiveBudget());} 
-if( budgetSearchEntity.getIsPrimaryBudget()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isPrimaryBudget =: isPrimaryBudget");
-paramValues.put("isPrimaryBudget" ,budgetSearchEntity.getIsPrimaryBudget());} 
-if( budgetSearchEntity.getMaterializedPath()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "materializedPath =: materializedPath");
-paramValues.put("materializedPath" ,budgetSearchEntity.getMaterializedPath());} 
-if( budgetSearchEntity.getReferenceBudgetId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "referenceBudget =: referenceBudget");
-paramValues.put("referenceBudget" ,budgetSearchEntity.getReferenceBudgetId());} 
-if( budgetSearchEntity.getDocumentNumber()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "documentNumber =: documentNumber");
-paramValues.put("documentNumber" ,budgetSearchEntity.getDocumentNumber());} 
-if( budgetSearchEntity.getStatusId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "status =: status");
-paramValues.put("status" ,budgetSearchEntity.getStatusId());} 
-
-		 
+		if (budgetSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =: id");
+			paramValues.put("id", budgetSearchEntity.getId());
+		}
+		if (budgetSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =: name");
+			paramValues.put("name", budgetSearchEntity.getName());
+		}
+		if (budgetSearchEntity.getFinancialYearId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("financialYear =: financialYear");
+			paramValues.put("financialYear", budgetSearchEntity.getFinancialYearId());
+		}
+		if (budgetSearchEntity.getEstimationType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("estimationType =: estimationType");
+			paramValues.put("estimationType", budgetSearchEntity.getEstimationType());
+		}
+		if (budgetSearchEntity.getParentId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("parent =: parent");
+			paramValues.put("parent", budgetSearchEntity.getParentId());
+		}
+		if (budgetSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =: description");
+			paramValues.put("description", budgetSearchEntity.getDescription());
+		}
+		if (budgetSearchEntity.getIsActiveBudget() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isActiveBudget =: isActiveBudget");
+			paramValues.put("isActiveBudget", budgetSearchEntity.getIsActiveBudget());
+		}
+		if (budgetSearchEntity.getIsPrimaryBudget() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isPrimaryBudget =: isPrimaryBudget");
+			paramValues.put("isPrimaryBudget", budgetSearchEntity.getIsPrimaryBudget());
+		}
+		if (budgetSearchEntity.getMaterializedPath() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("materializedPath =: materializedPath");
+			paramValues.put("materializedPath", budgetSearchEntity.getMaterializedPath());
+		}
+		if (budgetSearchEntity.getReferenceBudgetId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("referenceBudget =: referenceBudget");
+			paramValues.put("referenceBudget", budgetSearchEntity.getReferenceBudgetId());
+		}
+		if (budgetSearchEntity.getDocumentNumber() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("documentNumber =: documentNumber");
+			paramValues.put("documentNumber", budgetSearchEntity.getDocumentNumber());
+		}
+		if (budgetSearchEntity.getStatusId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("status =: status");
+			paramValues.put("status", budgetSearchEntity.getStatusId());
+		}
 
 		Pagination<Budget> page = new Pagination<>();
 		page.setOffSet(budgetSearchEntity.getOffset());
@@ -132,7 +142,7 @@ paramValues.put("status" ,budgetSearchEntity.getStatusId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page);
+		page = getPagination(searchQuery, page,paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + budgetSearchEntity.getPageSize() + " offset "

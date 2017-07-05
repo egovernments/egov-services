@@ -52,9 +52,14 @@ module.exports = {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
                         _err += "\n " + response.response.data[0].error.errorFields[i].message + " ";
                     }
-                    console.log(_err);
                     throw new Error(_err);
                 }
+            } else if(response && response.response && !response.response.data && response.response.status == 400) {
+                document.title = "Egovernments";
+                var locale = localStorage.getItem('locale');
+                localStorage.clear();
+                localStorage.setItem('locale', locale);
+                window.location.href = "/";
             } else {
                 throw new Error("Something went wrong, please try again later.");
             }
@@ -80,7 +85,6 @@ module.exports = {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
                         _err += "\n " + response.response.data[0].error.errorFields[i].message + " ";
                     }
-                    console.log(_err);
                     throw new Error(_err);
                 }
             } else {

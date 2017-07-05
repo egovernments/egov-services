@@ -97,7 +97,7 @@ public class RouterQueryBuilder {
 		
 		if (routerTypeRequest.getServiceid() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" comp.id = ?  ");
+			selectQuery.append(" comp.id IN " + getIdQuery(routerTypeRequest.getServiceid()));
 			preparedStatementValues.add(routerTypeRequest.getServiceid());
 			
 		}

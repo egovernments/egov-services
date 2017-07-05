@@ -35,14 +35,14 @@ public class BudgetEntity extends AuditableEntity {
 		super.toDomain(budget);
 		budget.setId(this.id);
 		budget.setName(this.name);
-		budget.setFinancialYear(FinancialYearContract.builder().id(financialYearId).build());
+		budget.setFinancialYearId(FinancialYearContract.builder().id(financialYearId).build());
 		budget.setEstimationType(this.estimationType);
-		budget.setParent(Budget.builder().id(parentId).build());
+		budget.setParentId(Budget.builder().id(parentId).build());
 		budget.setDescription(this.description);
 		budget.setIsActiveBudget(this.isActiveBudget);
 		budget.setIsPrimaryBudget(this.isPrimaryBudget);
 		budget.setMaterializedPath(this.materializedPath);
-		budget.setReferenceBudget(Budget.builder().id(referenceBudgetId).build());
+		budget.setReferenceBudgetId(Budget.builder().id(referenceBudgetId).build());
 		budget.setDocumentNumber(this.documentNumber);
 		// budget.setStatus(EgfStatus.builder().id(statusId).build());
 		return budget;
@@ -52,16 +52,16 @@ public class BudgetEntity extends AuditableEntity {
 		super.toEntity(budget);
 		this.id = budget.getId();
 		this.name = budget.getName();
-		this.financialYearId = budget.getFinancialYear() != null ? budget.getFinancialYear().getId() : null;
+		this.financialYearId = budget.getFinancialYearId() != null ? budget.getFinancialYearId().getId() : null;
 		this.estimationType = budget.getEstimationType();
-		this.parentId = budget.getParent() != null ? budget.getParent().getId() : null;
+		this.parentId = budget.getParentId() != null ? budget.getParentId().getId() : null;
 		this.description = budget.getDescription();
 		this.isActiveBudget = budget.getIsActiveBudget();
 		this.isPrimaryBudget = budget.getIsPrimaryBudget();
 		this.materializedPath = budget.getMaterializedPath();
-		this.referenceBudgetId = budget.getReferenceBudget() != null ? budget.getReferenceBudget().getId() : null;
+		this.referenceBudgetId = budget.getReferenceBudgetId() != null ? budget.getReferenceBudgetId().getId() : null;
 		this.documentNumber = budget.getDocumentNumber();
-		this.statusId = budget.getStatus() != null ? budget.getStatus().getId() : null;
+		this.statusId = budget.getStatusId() != null ? budget.getStatusId().getId() : null;
 		return this;
 	}
 

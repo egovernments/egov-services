@@ -1,17 +1,17 @@
 
 Create table egf_BudgetDetail( 
   id varchar(50),
-  budgetGroup varchar(50),
-  budget varchar(50),
-  usingDepartment varchar(50),
-  executingDepartment varchar(50),
-  function varchar(50),
-  scheme varchar(50),
-  fund varchar(50),
-  subScheme varchar(50),
-  functionary varchar(50),
-  boundary varchar(50),
-  status varchar(50),
+  budgetGroupId varchar(50),
+  budgetId varchar(50),
+  usingDepartmentId varchar(50),
+  executingDepartmentId varchar(50),
+  functionId varchar(50),
+  schemeId varchar(50),
+  fundId varchar(50),
+  subSchemeId varchar(50),
+  functionaryId varchar(50),
+  boundaryId varchar(50),
+  statusId varchar(50),
   originalAmount numeric (13,2),
   approvedAmount numeric (13,2),
   budgetAvailable numeric (13,2),
@@ -24,6 +24,7 @@ Create table egf_BudgetDetail(
   createddate timestamp without time zone,
   lastmodifiedby varchar(50),
   lastmodifieddate timestamp without time zone,
+  tenantId varchar(250),
   version bigint
 );
 alter table egf_BudgetDetail add constraint pk_egf_BudgetDetail primary key (id);

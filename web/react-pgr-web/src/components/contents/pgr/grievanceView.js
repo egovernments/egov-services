@@ -291,6 +291,15 @@ class grievanceView extends Component{
     var date = dat.split("/").join("-");
     req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
 
+    let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
+    if(checkStatus === 'FORWARDED'){
+      if(currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId == undefined){
+        currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError('Select position to whom it is forwarded');
+        return false;
+      }
+    }
+
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
       if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
@@ -429,6 +438,7 @@ class grievanceView extends Component{
       handleWard,
       handleLocality,
       handleDesignation,
+      handleStatusChange,
       handlePosition,
       grievanceView,
       files,
@@ -604,7 +614,8 @@ class grievanceView extends Component{
           </CardText>
         </Card>
       </Grid>
-      { (localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
+      {this.state.isUpdateAllowed ?
+      (localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED' && this.state.status !== 'FORWARDED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
@@ -614,7 +625,7 @@ class grievanceView extends Component{
             <Row>
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
-                  handleChange(value, "status", false, "")
+                  handleStatusChange(value, "status", false, "")
                 }}>
                   {this.state.nextStatus !== undefined ?
                   this.state.nextStatus.map((status, index) => (
@@ -718,18 +729,15 @@ class grievanceView extends Component{
                 </div>
               </Col>
             </Row> : ""}
-
-            {this.state.isUpdateAllowed ?
               <Row>
                 <div style={{textAlign: 'center'}}>
                   <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
                 </div>
-              </Row>: ''}
-
+              </Row>
           </CardText>
         </Card>
       </Grid>
-      : ''
+      : '' : ''
       }
       </form>
       <Dialog
@@ -771,6 +779,13 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "ADD_MANDATORY", property: "rating", value: '', isRequired : true, pattern: ''})
   },
   handleChange: (value, property, isRequired, pattern) => {
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  },
+  handleStatusChange: (value, property, isRequired, pattern) => {
+    if(value !== 'FORWARDED'){
+      dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
+      dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
+    }
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleWard : (value, property, isRequired, pattern) => {

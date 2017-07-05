@@ -27,13 +27,14 @@ public class AgreementDetailsEs {
 	private String tenantId;
 	private String agreementId;
 	private String ackNumber;
+    private String action;
+
 	private String cityGrade;
 	private String cityName;
 	private String districtName;
 	private String cityCode;
 	private String regionName;
-	private String action;
-
+	
 	private String adminWardName;
 	private String adminWard;
 

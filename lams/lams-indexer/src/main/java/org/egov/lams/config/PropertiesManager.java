@@ -41,6 +41,9 @@ public class PropertiesManager {
 	 @Value("${egov.services.demand_reason_service.searchpath}")
 	 private String demandSearchServicepath;
 	 
+	 @Value("${egov.services.tenant.host}")
+	 private String tenantServiceHostName;
+	 
 	 
 	 @Value("${egov.services.lams.indexer.host}")
 	 private String indexServiceHostUrl;

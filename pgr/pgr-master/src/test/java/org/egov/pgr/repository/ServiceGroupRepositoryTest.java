@@ -42,12 +42,19 @@ package org.egov.pgr.repository;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.pgr.model.ServiceGroup;
 import org.egov.pgr.repository.builder.ServiceGroupQueryBuilder;
+import org.egov.pgr.repository.rowmapper.ServiceGroupRowMapper;
+import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,6 +91,15 @@ public class ServiceGroupRepositoryTest {
     	assertTrue(serviceGroupRequest.equals(serviceGroupRepository.persistUpdateServiceGroup(serviceGroupRequest))); 
     }
     
+    @Test 
+    public void test_should_fetch_all_service_groups() { 
+    	when(serviceGroupQueryBuilder.getQuery(any(ServiceGroupGetRequest.class), anyListOf(Object.class))).thenReturn("Query");
+    	List<ServiceGroup> serviceGroupList = getServiceGroupTypes() ; 
+    	when(jdbcTemplate.query(any(String.class),anyListOf(Object.class).toArray(), any(ServiceGroupRowMapper.class))).thenReturn(serviceGroupList);
+    	assertTrue(serviceGroupList.equals(serviceGroupRepository.getAllServiceGroup(prepareServiceGroupGetReq())));
+    	verify(jdbcTemplate, times(1)).query(any(String.class),anyListOf(Object.class).toArray(), any(ServiceGroupRowMapper.class));
+    }    	
+    
     private ServiceGroupRequest prepareServiceGroupRequest() { 
     	RequestInfo rInfo = new RequestInfo();
     	User user = new User();
@@ -98,6 +114,29 @@ public class ServiceGroupRepositoryTest {
     	serviceGroupRequest.setRequestInfo(rInfo);
     	serviceGroupRequest.setServiceGroup(serviceGroup);
     	return serviceGroupRequest;
+    }
+    
+    private List<ServiceGroup> getServiceGroupTypes() { 
+    	ServiceGroup serviceGroupOne = new ServiceGroup();
+    	serviceGroupOne.setCode("SG01");
+    	serviceGroupOne.setName("ServiceGroupOne");
+    	serviceGroupOne.setTenantId("default");
+    	serviceGroupOne.setDescription("1st Service Group");
+    	ServiceGroup serviceGroupTwo = new ServiceGroup();
+    	serviceGroupTwo.setCode("SG02");
+    	serviceGroupTwo.setName("ServiceGroupTwo");
+    	serviceGroupTwo.setTenantId("default");
+    	serviceGroupTwo.setDescription("2nd Service Group");
+    	List<ServiceGroup> serviceGroupList = new ArrayList<>();
+    	serviceGroupList.add(serviceGroupOne);
+    	serviceGroupList.add(serviceGroupTwo);
+    	return serviceGroupList;
+    }
+    
+    private ServiceGroupGetRequest prepareServiceGroupGetReq() {
+    	ServiceGroupGetRequest serviceGroupGetReq = new ServiceGroupGetRequest();
+    	serviceGroupGetReq.setTenantId("default");
+    	return serviceGroupGetReq;
     }
 
 }

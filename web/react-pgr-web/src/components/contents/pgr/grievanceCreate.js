@@ -83,7 +83,11 @@ class grievanceCreate extends Component {
        },function(err) {
          currentThis.handleError(err.message);
        });
+       //ADD_MANDATORY
+       this.props.ADD_MANDATORY();
      }else{
+       //REMOVE_MANDATORY
+       this.props.REMOVE_MANDATORY();
        //currentThis.setState({receivingCenter : []});
      }
    }
@@ -205,6 +209,11 @@ class grievanceCreate extends Component {
       finobj = {
         key: 'receivingCenter',
         name: this.props.grievanceCreate.receivingCenter ? this.props.grievanceCreate.receivingCenter : ''
+      };
+      data['attribValues'].push(finobj);
+      finobj = {
+        key: 'externalCRN',
+        name: this.props.grievanceCreate.externalCRN ? this.props.grievanceCreate.externalCRN : ''
       };
       data['attribValues'].push(finobj);
     }
@@ -364,6 +373,8 @@ class grievanceCreate extends Component {
                         loadReceivingCenterDD('receivingCenter')
                          : ''
                       }
+                    </Row>
+                    <Row>
                       <Col xs={12} md={3}>
                         <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
                         />
@@ -371,8 +382,6 @@ class grievanceCreate extends Component {
                       <Col xs={12} md={3}>
                         <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
                       </Col>
-                    </Row>
-                    <Row>
                       <Col xs={12} md={3}>
                         <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
                       </Col>
@@ -547,9 +556,19 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  ADD_MANDATORY : () => {
+     dispatch({type: "ADD_MANDATORY", property: 'receivingCenter', value: '', isRequired : false, pattern: ''});
+     dispatch({type: "ADD_MANDATORY", property: 'externalCRN', value: '', isRequired : false, pattern: ''});
+  },
+  REMOVE_MANDATORY : () => {
+     dispatch({type: "REMOVE_MANDATORY", property: 'receivingCenter', value: '', isRequired : false, pattern: ''});
+     dispatch({type: "REMOVE_MANDATORY", property: 'externalCRN', value: '', isRequired : false, pattern: ''});
+  },
   loadReceivingCenterDD: (name) => {
     dispatch({type: "ADD_MANDATORY", property: name, value: '', isRequired : true, pattern: ''});
+    dispatch({type: "ADD_MANDATORY", property: 'externalCRN', value: '', isRequired : true, pattern: ''});
     return (
+      <div>
       <Col xs={12} md={3}>
         <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
           var e = {
@@ -563,6 +582,10 @@ const mapDispatchToProps = dispatch => ({
           ))}
         </SelectField>
       </Col>
+      <Col xs={12} md={3}>
+        <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={_this.props.fieldErrors.externalCRN ? _this.props.fieldErrors.externalCRN : ""} value={_this.props.grievanceCreate.externalCRN?_this.props.grievanceCreate.externalCRN:""} onChange={(e) => _this.props.handleChange(e, "externalCRN", true, '')}/>
+      </Col>
+      </div>
     );
   },
   handleAutoCompleteKeyUp : (e) => {
@@ -615,7 +638,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
-    if(property == 'addressId'){
+    if(property === 'addressId'){
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '0.0', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '0.0', isRequired : false, pattern: ''});
     }

@@ -37,7 +37,7 @@
           <dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>report</artifactId>
-			<version>1.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

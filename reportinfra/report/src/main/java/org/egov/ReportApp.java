@@ -52,9 +52,8 @@ public class ReportApp{
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		try {
 
-			/*Resource resource = resourceLoader.getResource("file:/home/senthilkumar/application.yml");*/
-			Resource resource = resourceLoader.getResource("file:"+env.getProperty("report.yaml.path"));
-
+			
+			Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
 			File yamlFile = resource.getFile();
 			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
 			LOGGER.info(reportDefinitions.toString());

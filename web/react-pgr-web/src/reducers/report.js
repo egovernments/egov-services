@@ -2,7 +2,8 @@ import _ from 'lodash';
 
 const defaultState = {
   showTable: false,
-  metaData:{}
+  metaData:{},
+  reportResult:[]
 };
 
 export default(state = defaultState, action) => {
@@ -12,6 +13,14 @@ export default(state = defaultState, action) => {
         ...state,
         metaData:action.metaData
       }
+
+  case "SET_REPORT_RESULT":
+        return {
+          ...state,
+          reportResult:action.reportResult
+        }
+
+    
 
     case "SHOW_TABLE":
       return {

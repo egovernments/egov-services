@@ -78,13 +78,13 @@ public class BudgetDetail extends Auditable {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
-	private BudgetGroupContract budgetGroup;
+	private BudgetGroupContract budgetGroupId;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure
 	 * defined.
 	 */
-	private Budget budget;
+	private Budget budgetId;
 
 	/*
 	 * originalAmount is the budget amount for the given combination of budget
@@ -111,49 +111,49 @@ public class BudgetDetail extends Auditable {
 	 * usingDepartment is the department for which the budget line item is
 	 * actually budgeted for.
 	 */
-	private DepartmentContract usingDepartment;
+	private DepartmentContract usingDepartmentId;
 
 	/*
 	 * executingDepartment is the department which uses the budget to execute
 	 * the work which is defined in the budget of using department.
 	 */
-	private DepartmentContract executingDepartment;
+	private DepartmentContract executingDepartmentId;
 
 	/*
 	 * function is the MIS or financial transaction attribute which contributes
 	 * the budget details definition.
 	 */
-	private FunctionContract function;
+	private FunctionContract functionId;
 
 	/*
 	 * scheme is the MIS or financial transaction attribute which contributes
 	 * the budget details definition. Scheme can be optional
 	 */
-	private SchemeContract scheme;
+	private SchemeContract schemeId;
 
 	/*
 	 * fund is the MIS or financial transaction attribute which contributes the
 	 * budget details definition
 	 */
-	private FundContract fund;
+	private FundContract fundId;
 
 	/*
 	 * subScheme is the MIS or financial transaction attribute which contributes
 	 * the budget details definition. sub Scheme can be optional
 	 */
-	private SubSchemeContract subScheme;
+	private SubSchemeContract subSchemeId;
 
 	/*
 	 * functionary is the MIS or financial transaction attribute which
 	 * contributes the budget details definition
 	 */
-	private FunctionContract functionary;
+	private FunctionContract functionaryId;
 
 	/*
 	 * boundary is also the MIS attribute which is used incase the budget need
 	 * to be defined and idetified by boundaries of the organization.
 	 */
-	private BoundaryContract boundary;
+	private BoundaryContract boundaryId;
 
 	/**
 	 * materializedPath is unique data by hierarchy level.This data is created
@@ -193,6 +193,6 @@ public class BudgetDetail extends Auditable {
 	/*
 	 * status gives the current status of the budget line item. (detailed level)
 	 */
-	private EgfStatus status;
+	private EgfStatus statusId;
 
 }

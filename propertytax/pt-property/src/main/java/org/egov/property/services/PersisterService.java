@@ -228,7 +228,7 @@ public class PersisterService {
 	 **/
 
 	@Transactional
-	public void updateProperty(List<Property> properties) throws SQLException {
+	public void updateProperty(List<Property> properties) throws Exception {
 
 		for (Property property : properties) {
 

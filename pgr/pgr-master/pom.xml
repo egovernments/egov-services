@@ -37,7 +37,7 @@
           <dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>report</artifactId>
-			<version>1.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -109,6 +109,11 @@
 			<id>repo.egovernments.org</id>
 			<name>eGov ERP Releases Repository</name>
 			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>repo.egovernments.org.snapshots</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 

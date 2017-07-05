@@ -8,10 +8,15 @@ import java.time.format.DateTimeFormatter;
 public class TimeStampUtil {
 
 	public static Timestamp getTimeStamp(String date) {
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter).atStartOfDay());
-		Timestamp timestamp = Timestamp.valueOf(time);
-		return timestamp;
+		Timestamp timestamp;
+		if (date == null) {
+			return null;
+		} else {
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter).atStartOfDay());
+			timestamp = Timestamp.valueOf(time);
+		}
 
+		return timestamp;
 	}
 }

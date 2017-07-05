@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.egov.workflow.config.ApplicationProperties;
 import org.egov.workflow.domain.model.EscalationHoursSearchCriteria;
 import org.egov.workflow.domain.model.EscalationTimeType;
+import org.egov.workflow.domain.model.ServiceType;
 import org.egov.workflow.persistence.QueryBuilder.EscalationTimeTypeQueryBuilder;
 import org.egov.workflow.persistence.repository.rowmapper.EscalationTimeTypeRowMapper;
 import org.egov.workflow.web.contract.EscalationTimeTypeGetReq;
@@ -34,6 +36,9 @@ public class EscalationRepository {
     
     @Autowired
     private EscalationTimeTypeQueryBuilder escalationTimeTypeQueryBuilder;
+    
+    @Autowired
+    private ApplicationProperties applicationProp; 
 
     public EscalationRepository(@Value("${defaults.escalationHours}") int defaultEscalationHours,
                                 EscalationJpaRepository escalationJpaRepository) {
@@ -80,6 +85,18 @@ public class EscalationRepository {
 		final String queryStr = escalationTimeTypeQueryBuilder.getQuery(escalationGetRequest, preparedStatementValues);
 		final List<EscalationTimeType> escalationTypes = jdbcTemplate.query(queryStr,
 				preparedStatementValues.toArray(), escalationRowMapper);
+		if(escalationTypes.size() <= 0){ 
+			EscalationTimeType escalationTimeType = new EscalationTimeType(); 
+			escalationTimeType.setNoOfHours(Long.parseLong(applicationProp.getDefaultEscalationHours()));
+			escalationTimeType.setTenantId(escalationGetRequest.getTenantId());
+			escalationTimeType.setDesignation(escalationGetRequest.getDesignation());
+			if(null != escalationGetRequest.getGrievanceType()) { 
+				ServiceType serviceType = new ServiceType();
+				serviceType.setId(escalationGetRequest.getGrievanceType());
+				escalationTimeType.setGrievanceType(serviceType);
+			}
+			escalationTypes.add(escalationTimeType);
+		}
 		return escalationTypes;
 	}
     

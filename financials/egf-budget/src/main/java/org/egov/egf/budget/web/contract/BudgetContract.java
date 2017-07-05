@@ -113,13 +113,13 @@ public class BudgetContract extends AuditableContract {
 	 * or not. i.e all the detail budget defined under this tree will not be
 	 * accessible in transaction.
 	 */
-	private Boolean isActiveBudgetContract;
+	private Boolean isActiveBudget;
 
 	/*
 	 * isPrimaryBudgetContract is the flag that identifies the root budget.
 	 * (which has no parent).
 	 */
-	private Boolean isPrimaryBudgetContract;
+	private Boolean isPrimaryBudget;
 
 	/*
 	 * materializedPath is unique data by hierarchy level.
@@ -132,7 +132,7 @@ public class BudgetContract extends AuditableContract {
 	 * reference is mapped to the BE of current year or for the year for which
 	 * BE is created.
 	 */
-	private BudgetContract referenceBudgetContract;
+	private BudgetContract referenceBudget;
 
 	/*
 	 * documentNumber is the reference number to identify the attachments made

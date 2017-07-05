@@ -9,4 +9,6 @@ public class DepartmentQueryBuilder {
             + "? ,code = ?, data=?,lastModifiedBy =? ,"
             + "lastModifiedtime= ? WHERE id = ?";
 	
+	public static final String SELECT_DEPARTMENT_CREATETIME = "SELECT  createdTime From egpt_mstr_department WHERE id = ?";
+	
 }

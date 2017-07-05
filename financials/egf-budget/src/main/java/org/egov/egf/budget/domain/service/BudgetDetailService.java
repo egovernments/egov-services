@@ -33,8 +33,8 @@ public class BudgetDetailService {
 	@Autowired
 	private SmartValidator validator;
 
-	@Autowired
 	/*
+	 * @Autowired
 	 * private SchemeContractRepository schemeContractRepository;
 	 * 
 	 * @Autowired private FunctionContractRepository functionContractRepository;

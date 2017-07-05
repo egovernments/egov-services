@@ -19,7 +19,7 @@ public class ResponseInfoFactory {
 			ts = requestInfo.getTs().toString();
 		String resMsgId = "uief87324"; // FIXME : Hard-coded
 		String msgId = requestInfo.getMsgId();
-		ResponseStatusEnum responseStatus = success ? ResponseStatusEnum.SUCCESSFUL : ResponseStatusEnum.FAILED;
+		String responseStatus = success ? "SUCCESSFUL" : "FAILED";
 		return new ResponseInfo(apiId, ver, Long.valueOf(ts), resMsgId, msgId, responseStatus);
 	}
 }

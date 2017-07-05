@@ -105,6 +105,7 @@ class grievanceSearch extends Component {
        this.resetAndSearch = this.resetAndSearch.bind(this);
        this.handlePageClick = this.handlePageClick.bind(this);
        this.handleNavigation = this.handleNavigation.bind(this);
+       this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   handleNavigation(serviceId) {
@@ -239,6 +240,12 @@ class grievanceSearch extends Component {
     let offset = Math.ceil(selected * 10), self = this;
     self.setState({fromIndex: offset}, () => {
       self.search(true);
+    });
+  };
+
+  handleRequestClose() {
+    this.setState({
+      open1: false,
     });
   };
 
@@ -385,6 +392,7 @@ class grievanceSearch extends Component {
   			)
   		}
   	}
+
   	return (
   		<div className="grievanceCreate">
 	        <form autoComplete="off" onSubmit={(e) => {resetAndSearch(e)}}>
@@ -453,6 +461,7 @@ class grievanceSearch extends Component {
             message={translate("pgr.lbl.noresult")}
             autoHideDuration={4000}
             style={{"textAlign": "center"}}
+            onRequestClose={this.handleRequestClose}
           />
         </div>
   	);

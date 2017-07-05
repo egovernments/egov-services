@@ -73,12 +73,12 @@ public class BudgetReAppropriationService {
 	public List<BudgetReAppropriation> fetchRelated(List<BudgetReAppropriation> budgetreappropriations) {
 		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
 			// fetch related items
-			if (budgetReAppropriation.getBudgetDetail() != null) {
-				BudgetDetail budgetDetail = budgetDetailRepository.findById(budgetReAppropriation.getBudgetDetail());
+			if (budgetReAppropriation.getBudgetDetailId() != null) {
+				BudgetDetail budgetDetail = budgetDetailRepository.findById(budgetReAppropriation.getBudgetDetailId());
 				if (budgetDetail == null) {
 					throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
 				}
-				budgetReAppropriation.setBudgetDetail(budgetDetail);
+				budgetReAppropriation.setBudgetDetailId(budgetDetail);
 			}
 
 		}

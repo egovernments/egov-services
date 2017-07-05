@@ -1,8 +1,8 @@
 
 Create table egf_BudgetReAppropriation( 
   id varchar(50),
-  budgetDetail varchar(50),
-  status varchar(50),
+  budgetDetailId varchar(50),
+  statusId varchar(50),
   additionAmount numeric (13,2),
   deductionAmount numeric (13,2),
   originalAdditionAmount numeric (13,2),
@@ -13,6 +13,7 @@ Create table egf_BudgetReAppropriation(
   createddate timestamp without time zone,
   lastmodifiedby varchar(50),
   lastmodifieddate timestamp without time zone,
+  tenantId varchar(250),
   version bigint
 );
 alter table egf_BudgetReAppropriation add constraint pk_egf_BudgetReAppropriation primary key (id);

@@ -70,7 +70,7 @@ public class EgfStatus extends Auditable {
 	private String code;
 
 	@NotNull
-	@Size(min = 3, max = 250)
+	@Size(min = 3, max = 250) 
 	private String description;
 
 }

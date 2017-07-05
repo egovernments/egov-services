@@ -53,20 +53,20 @@ public class BudgetDetailEntity extends AuditableEntity {
 		BudgetDetail budgetDetail = new BudgetDetail();
 		super.toDomain(budgetDetail);
 		budgetDetail.setId(this.id);
-		budgetDetail.setBudgetGroup(BudgetGroupContract.builder().id(budgetGroupId).build());
-		budgetDetail.setBudget(Budget.builder().id(budgetId).build());
+		budgetDetail.setBudgetGroupId(BudgetGroupContract.builder().id(budgetGroupId).build());
+		budgetDetail.setBudgetId(Budget.builder().id(budgetId).build());
 		budgetDetail.setOriginalAmount(this.originalAmount);
 		budgetDetail.setApprovedAmount(this.approvedAmount);
 		budgetDetail.setBudgetAvailable(this.budgetAvailable);
 		budgetDetail.setAnticipatoryAmount(this.anticipatoryAmount);
-		budgetDetail.setUsingDepartment(DepartmentContract.builder().id(usingDepartmentId).build());
-		budgetDetail.setExecutingDepartment(DepartmentContract.builder().id(executingDepartmentId).build());
-		budgetDetail.setFunction(FunctionContract.builder().id(functionId).build());
-		budgetDetail.setScheme(SchemeContract.builder().id(schemeId).build());
-		budgetDetail.setFund(FundContract.builder().id(fundId).build());
-		budgetDetail.setSubScheme(SubSchemeContract.builder().id(subSchemeId).build());
-		budgetDetail.setFunctionary(FunctionContract.builder().id(functionaryId).build());
-		budgetDetail.setBoundary(BoundaryContract.builder().id(boundaryId).build());
+		budgetDetail.setUsingDepartmentId(DepartmentContract.builder().id(usingDepartmentId).build());
+		budgetDetail.setExecutingDepartmentId(DepartmentContract.builder().id(executingDepartmentId).build());
+		budgetDetail.setFunctionId(FunctionContract.builder().id(functionId).build());
+		budgetDetail.setSchemeId(SchemeContract.builder().id(schemeId).build());
+		budgetDetail.setFundId(FundContract.builder().id(fundId).build());
+		budgetDetail.setSubSchemeId(SubSchemeContract.builder().id(subSchemeId).build());
+		budgetDetail.setFunctionaryId(FunctionContract.builder().id(functionaryId).build());
+		budgetDetail.setBoundaryId(BoundaryContract.builder().id(boundaryId).build());
 		budgetDetail.setMaterializedPath(this.materializedPath);
 		budgetDetail.setDocumentNumber(this.documentNumber);
 		budgetDetail.setUniqueNo(this.uniqueNo);
@@ -78,27 +78,27 @@ public class BudgetDetailEntity extends AuditableEntity {
 	public BudgetDetailEntity toEntity(BudgetDetail budgetDetail) {
 		super.toEntity(budgetDetail);
 		this.id = budgetDetail.getId();
-		this.budgetGroupId = budgetDetail.getBudgetGroup() != null ? budgetDetail.getBudgetGroup().getId() : null;
-		this.budgetId = budgetDetail.getBudget() != null ? budgetDetail.getBudget().getId() : null;
+		this.budgetGroupId = budgetDetail.getBudgetGroupId() != null ? budgetDetail.getBudgetGroupId().getId() : null;
+		this.budgetId = budgetDetail.getBudgetId() != null ? budgetDetail.getBudgetId().getId() : null;
 		this.originalAmount = budgetDetail.getOriginalAmount();
 		this.approvedAmount = budgetDetail.getApprovedAmount();
 		this.budgetAvailable = budgetDetail.getBudgetAvailable();
 		this.anticipatoryAmount = budgetDetail.getAnticipatoryAmount();
-		this.usingDepartmentId = budgetDetail.getUsingDepartment() != null ? budgetDetail.getUsingDepartment().getId()
+		this.usingDepartmentId = budgetDetail.getUsingDepartmentId() != null ? budgetDetail.getUsingDepartmentId().getId()
 				: null;
-		this.executingDepartmentId = budgetDetail.getExecutingDepartment() != null
-				? budgetDetail.getExecutingDepartment().getId() : null;
-		this.functionId = budgetDetail.getFunction() != null ? budgetDetail.getFunction().getId() : null;
-		this.schemeId = budgetDetail.getScheme() != null ? budgetDetail.getScheme().getId() : null;
-		this.fundId = budgetDetail.getFund() != null ? budgetDetail.getFund().getId() : null;
-		this.subSchemeId = budgetDetail.getSubScheme() != null ? budgetDetail.getSubScheme().getId() : null;
-		this.functionaryId = budgetDetail.getFunctionary() != null ? budgetDetail.getFunctionary().getId() : null;
-		this.boundaryId = budgetDetail.getBoundary() != null ? budgetDetail.getBoundary().getId() : null;
+		this.executingDepartmentId = budgetDetail.getExecutingDepartmentId() != null
+				? budgetDetail.getExecutingDepartmentId().getId() : null;
+		this.functionId = budgetDetail.getFunctionId() != null ? budgetDetail.getFunctionId().getId() : null;
+		this.schemeId = budgetDetail.getSchemeId() != null ? budgetDetail.getSchemeId().getId() : null;
+		this.fundId = budgetDetail.getFundId() != null ? budgetDetail.getFundId().getId() : null;
+		this.subSchemeId = budgetDetail.getSubSchemeId() != null ? budgetDetail.getSubSchemeId().getId() : null;
+		this.functionaryId = budgetDetail.getFunctionaryId() != null ? budgetDetail.getFunctionaryId().getId() : null;
+		this.boundaryId = budgetDetail.getBoundaryId() != null ? budgetDetail.getBoundaryId().getId() : null;
 		this.materializedPath = budgetDetail.getMaterializedPath();
 		this.documentNumber = budgetDetail.getDocumentNumber();
 		this.uniqueNo = budgetDetail.getUniqueNo();
 		this.planningPercent = budgetDetail.getPlanningPercent();
-		this.statusId = budgetDetail.getStatus() != null ? budgetDetail.getStatus().getId() : null;
+		this.statusId = budgetDetail.getStatusId() != null ? budgetDetail.getStatusId().getId() : null;
 		return this;
 	}
 

@@ -34,7 +34,7 @@ public class BudgetReAppropriationEntity extends AuditableEntity {
 		BudgetReAppropriation budgetReAppropriation = new BudgetReAppropriation();
 		super.toDomain(budgetReAppropriation);
 		budgetReAppropriation.setId(this.id);
-		budgetReAppropriation.setBudgetDetail(BudgetDetail.builder().id(budgetDetailId).build());
+		budgetReAppropriation.setBudgetDetailId(BudgetDetail.builder().id(budgetDetailId).build());
 		budgetReAppropriation.setAdditionAmount(this.additionAmount);
 		budgetReAppropriation.setDeductionAmount(this.deductionAmount);
 		budgetReAppropriation.setOriginalAdditionAmount(this.originalAdditionAmount);
@@ -48,14 +48,14 @@ public class BudgetReAppropriationEntity extends AuditableEntity {
 	public BudgetReAppropriationEntity toEntity(BudgetReAppropriation budgetReAppropriation) {
 		super.toEntity(budgetReAppropriation);
 		this.id = budgetReAppropriation.getId();
-		this.budgetDetailId = budgetReAppropriation.getBudgetDetail() != null
-				? budgetReAppropriation.getBudgetDetail().getId() : null;
+		this.budgetDetailId = budgetReAppropriation.getBudgetDetailId() != null
+				? budgetReAppropriation.getBudgetDetailId().getId() : null;
 		this.additionAmount = budgetReAppropriation.getAdditionAmount();
 		this.deductionAmount = budgetReAppropriation.getDeductionAmount();
 		this.originalAdditionAmount = budgetReAppropriation.getOriginalAdditionAmount();
 		this.originalDeductionAmount = budgetReAppropriation.getOriginalDeductionAmount();
 		this.anticipatoryAmount = budgetReAppropriation.getAnticipatoryAmount();
-		this.statusId = budgetReAppropriation.getStatus() != null ? budgetReAppropriation.getStatus().getId() : null;
+		this.statusId = budgetReAppropriation.getStatusId() != null ? budgetReAppropriation.getStatusId().getId() : null;
 		this.asOnDate = budgetReAppropriation.getAsOnDate();
 		return this;
 	}

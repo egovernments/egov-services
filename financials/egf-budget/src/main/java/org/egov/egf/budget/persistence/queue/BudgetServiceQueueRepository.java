@@ -30,11 +30,11 @@ public class BudgetServiceQueueRepository {
 		switch (request.getRequestInfo().getAction().toLowerCase()) {
 
 		case "create":
-			topicMap.put(masterName.toLowerCase() + "__create", request);
+			topicMap.put(masterName.toLowerCase() + "_create", request);
 			System.out.println("push create topic" + request);
 			break;
 		case "update":
-			topicMap.put(masterName + "_update", request);
+			topicMap.put(masterName.toLowerCase() + "_update", request);
 			break;
 
 		}

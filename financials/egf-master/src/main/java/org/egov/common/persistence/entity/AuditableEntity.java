@@ -30,8 +30,8 @@ public class AuditableEntity {
 	}
 
 	protected void toEntity(Auditable domain) {
-		this.setCreatedBy(domain.getCreatedBy().getId());
-		this.setLastModifiedBy(domain.getLastModifiedBy().getId());
+		this.setCreatedBy(domain.getCreatedBy() != null ? domain.getCreatedBy().getId() : null);
+		this.setLastModifiedBy(domain.getLastModifiedBy() != null ? domain.getLastModifiedBy().getId() : null);
 		this.setCreatedDate(domain.getCreatedDate());
 		this.setLastModifiedDate(domain.getLastModifiedDate());
 		this.setTenantId(domain.getTenantId());

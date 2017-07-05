@@ -24,7 +24,7 @@ public class FundsourceEntity extends AuditableEntity {
 	private String code;
 	private String name;
 	private String type;
-	private String fundSourceId;
+	private String parentId;
 	private BigDecimal llevel;
 	private Boolean active;
 	private Boolean isParent;
@@ -36,7 +36,7 @@ public class FundsourceEntity extends AuditableEntity {
 		fundsource.setCode(this.code);
 		fundsource.setName(this.name);
 		fundsource.setType(this.type);
-		fundsource.setFundSource(Fundsource.builder().id(fundSourceId).build());
+		fundsource.setFundSource(Fundsource.builder().id(parentId).build());
 		fundsource.setLlevel(this.llevel);
 		fundsource.setActive(this.active);
 		fundsource.setIsParent(this.isParent);
@@ -49,7 +49,7 @@ public class FundsourceEntity extends AuditableEntity {
 		this.code = fundsource.getCode();
 		this.name = fundsource.getName();
 		this.type = fundsource.getType();
-		this.fundSourceId = fundsource.getFundSource() != null ? fundsource.getFundSource().getId() : null;
+		this.parentId = fundsource.getFundSource() != null ? fundsource.getFundSource().getId() : null;
 		this.llevel = fundsource.getLlevel();
 		this.active = fundsource.getActive();
 		this.isParent = fundsource.getIsParent();

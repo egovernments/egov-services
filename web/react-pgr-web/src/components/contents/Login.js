@@ -124,12 +124,14 @@ class Login extends Component {
    }
 
    componentWillMount() {
-     this.handleLocaleChange(this.state.locale);
+
    }
 
    componentDidMount() {
-     let {initForm} = this.props;
+     let {initForm, setLoadingStatus} = this.props;
      initForm();
+     setLoadingStatus("loading");
+     this.handleLocaleChange(this.state.locale);
    }
 
    componentWillUnmount() {
@@ -146,6 +148,7 @@ class Login extends Component {
 
    handleLocaleChange = (value) => {
      //console.log(value);
+     let {setLoadingStatus} = this.props;
      var self = this;
      Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
      {
@@ -153,6 +156,7 @@ class Login extends Component {
        self.setState({'localeready':true});
        localStorage.setItem("locale", value);
        localStorage.setItem("lang_response", JSON.stringify(response.messages));
+       setLoadingStatus("hide");
      },function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message);
      });
@@ -826,6 +830,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 });
 

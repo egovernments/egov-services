@@ -1,0 +1,317 @@
+    /budgets/_search:
+      post:
+        summary: Get the list of budgets
+        description: budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: |
+              name given for budget in the tree structure. Generally Tree structure
+              consist of 3 levels : 1. Root level : which is basically defined as
+              RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+              year. 2. Account type level : which is defined under root level which
+              will be combination of root level and account type - Revenue and Capital.
+              Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+              type level which will be combination of root level, account type and
+              department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+              department level.
+              
+          - name: financialYear
+            type: integer
+            format: int64
+            in: query
+            description: |
+              financialYear is the attribute to identify to which year the Budget
+              belongs is tagged.
+              
+          - name: estimationType
+            type: string
+            in: query
+            description: |
+              estimationType is type of the budget definition - which signifies budget
+              type i.e New budget (BE) or the Revised budget (RE)
+              
+          - name: parent
+            type: integer
+            format: int64
+            in: query
+            description: |
+              parent is the node used to define in the budget hierarchy tree structure
+              definition. The root node will not have any parent. The lowest node is
+              the budget under which the details are defined.
+              
+          - name: description
+            type: string
+            in: query
+            description: |
+              description provides more information on budget line item and this is
+              combination of department name, estimation type,budget type and financial
+              year. example description
+              "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+              department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+              
+          - name: isActiveBudget
+            type: boolean
+            in: query
+            description: |
+              isActiveBudget provides flag denotes whether the budget is active or not.
+              i.e all the detail budget defined under this tree will not be accessible
+              in transaction.
+              
+          - name: isPrimaryBudget
+            type: boolean
+            in: query
+            description: |
+              isPrimaryBudget is the flag that identifies the root budget. (which has
+              no parent).
+              
+          - name: materializedPath
+            type: string
+            in: query
+            description: |
+              materializedPath is unique data by hierarchy level.
+              
+          - name: referenceBudget
+            type: integer
+            format: int64
+            in: query
+            description: |
+              referenceBudget is the previous year budget tree id reference to refer
+              previous year budget. When the BE is created, the previous year RE
+              reference is mapped to the BE of current year or for the year for which
+              BE is created.
+              
+          - name: documentNumber
+            type: integer
+            format: int64
+            in: query
+            description: |
+              documentNumber is the reference number to identify the attachments made
+              to the budget definition.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget Node. i.e collective status
+              of the details. However the status at budget detail also exist.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Budget retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/_create:
+      post:
+        summary: Create  new  budgets
+        description: Create  new budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          201:
+            description: Budget created Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/{id}/_update:
+      post:
+        summary: Update any of the budgets
+        description: Update any of the budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Budget
+            required: true
+            type: integer
+            format: int64
+          - name: budgetRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          200:
+            description: Budget updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+definitions:
+    Budget:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the budget representing the unique value of each record getting
+            saved.
+            
+        name:
+          type: string
+          description: |
+            name given for budget in the tree structure. Generally Tree structure
+            consist of 3 levels : 1. Root level : which is basically defined as
+            RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+            year. 2. Account type level : which is defined under root level which
+            will be combination of root level and account type - Revenue and Capital.
+            Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+            type level which will be combination of root level, account type and
+            department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+            department level.
+            
+        financialYear:
+          $ref: "#/definitions/FinancialYearContract"
+        estimationType:
+          type: string
+          description: |
+            estimationType is type of the budget definition - which signifies budget
+            type i.e New budget (BE) or the Revised budget (RE)
+            
+        parent:
+          type: integer
+          format: int64
+          description: |
+            parent is the node used to define in the budget hierarchy tree structure
+            definition. The root node will not have any parent. The lowest node is
+            the budget under which the details are defined.
+            
+        description:
+          type: string
+          description: |
+            description provides more information on budget line item and this is
+            combination of department name, estimation type,budget type and financial
+            year. example description
+            "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+            department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+            
+        isActiveBudget:
+          type: boolean
+          description: |
+            isActiveBudget provides flag denotes whether the budget is active or not.
+            i.e all the detail budget defined under this tree will not be accessible
+            in transaction.
+            
+        isPrimaryBudget:
+          type: boolean
+          description: |
+            isPrimaryBudget is the flag that identifies the root budget. (which has
+            no parent).
+            
+        materializedPath:
+          type: string
+          description: |
+            materializedPath is unique data by hierarchy level.
+            
+        referenceBudget:
+          type: integer
+          format: int64
+          description: |
+            referenceBudget is the previous year budget tree id reference to refer
+            previous year budget. When the BE is created, the previous year RE
+            reference is mapped to the BE of current year or for the year for which
+            BE is created.
+            
+        documentNumber:
+          type: integer
+          format: int64
+          description: |
+            documentNumber is the reference number to identify the attachments made
+            to the budget definition.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+    BudgetRequest:
+      description: Contract class to receive request. Array of Budget items  are used in case of create . Where as single Budget item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+    BudgetResponse:
+      description: Contract class to send response. Array of Budget items  are used in case of search results or response for create. Where as single Budget item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+        page:
+          $ref: '#/definitions/Page'

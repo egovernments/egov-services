@@ -152,13 +152,14 @@ class grievanceCreate extends Component {
         userArray.push(localStorage.getItem('id'));
         userRequest['id']=userArray;
         userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
-        let userInfo = Api.commonApiPost("/user/_search",{},userRequest).then(function(userResponse)
+        let userInfo = Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse)
         {
           var userName = userResponse.user[0].name;
   				var userMobile = userResponse.user[0].mobileNumber;
   				var userEmail = userResponse.user[0].emailId;
           _this.createGrievance(userName,userMobile,userEmail);
         },function(err) {
+          _this.setState({loadingstatus:'hide'});
           _this.handleError(err.message);
         });
       }else if(type == 'EMPLOYEE'){

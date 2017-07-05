@@ -310,7 +310,7 @@ class grievanceView extends Component{
     currentThis.chckkey('approvalComments', req_obj);
     if(localStorage.getItem('type') == 'EMPLOYEE'){
       currentThis.chckkey('PRIORITY', req_obj);
-      currentThis.chckkey('priorityColor', req_obj);
+      //currentThis.chckkey('priorityColor', req_obj);
     }else if(localStorage.getItem('type') == 'CITIZEN'){
         currentThis.chckkey('rating', req_obj);
     }
@@ -351,11 +351,26 @@ class grievanceView extends Component{
         }
       }
     }else{
-      var finobj = {
-          key: key,
-          name: currentThis.props.grievanceView[key]
-      };
-      req_obj.serviceRequest.attribValues.push(finobj);
+      var priorityarray = [{key:'PRIORITY-1',color:'#F44336'},{key:'PRIORITY-2',color:'#4CAF50'},{key:'PRIORITY-3',color:'#FFEB3B'}]
+      if(currentThis.props.grievanceView[key]){
+        var finobj;
+        if(key === 'PRIORITY'){
+          priorityarray.forEach(function(item, index){
+            if(item['key'] === currentThis.props.grievanceView[key]){
+              finobj = {
+                  key: key,
+                  name: item['color']
+              };
+            }
+          });
+        }else{
+          finobj = {
+              key: key,
+              name: currentThis.props.grievanceView[key]
+          };
+        }
+        req_obj.serviceRequest.attribValues.push(finobj);
+      }
     }
   }
   updateSeva = (req_obj) =>{
@@ -412,6 +427,7 @@ class grievanceView extends Component{
     let{
       handleChange,
       handleWard,
+      handleLocality,
       handleDesignation,
       handlePosition,
       grievanceView,
@@ -629,7 +645,7 @@ class grievanceView extends Component{
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
-                  handleChange(value, "childLocationId", true, "")}}>
+                  handleLocality(value, "childLocationId", true, "")}}>
                   {this.state.locality !== undefined ?
                   this.state.locality.map((locality, index) => (
                       <MenuItem value={locality.id} key={index} primaryText={locality.name} />
@@ -676,14 +692,6 @@ class grievanceView extends Component{
             { localStorage.getItem('type') == 'EMPLOYEE' ?
             <Row>
               {loadServiceDefinition()}
-              <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Priority Color *" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
-                  handleChange(value, "priorityColor", true, ""); }} errorText={fieldErrors.priorityColor ? fieldErrors.priorityColor : ""}>
-                  <MenuItem value="#F44336" primaryText="Red" />
-                  <MenuItem value="#4CAF50" primaryText="Green" />
-                  <MenuItem value="#FFEB3B" primaryText="Yellow" />
-                </SelectField>
-              </Col>
             </Row> : ''}
             { localStorage.getItem('type') == 'CITIZEN' && (this.state.status == 'COMPLETED' || currentThis.state.status == 'REJECTED') ?
             <Row>
@@ -777,6 +785,10 @@ const mapDispatchToProps = dispatch => ({
       currentThis.handleError(err.message);
     });
   },
+  handleLocality : (value, property, isRequired, pattern) => {
+    dispatch({type: "ADD_MANDATORY", property: "childLocationId", value: '', isRequired : true, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  },
   handleDesignation: (value, property, isRequired, pattern) => {
     if(property == 'departmentId' && value == 0)
     {
@@ -820,10 +832,10 @@ const mapDispatchToProps = dispatch => ({
 
   },
   loadServiceDefinition: () => {
-    if(currentThis.state.SD != undefined && localStorage.getItem('type') == 'EMPLOYEE'){
-      dispatch({type: "ADD_MANDATORY", property: "priorityColor", value: '', isRequired : true, pattern: ''})
+    if(currentThis.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
+      //dispatch({type: "ADD_MANDATORY", property: "priorityColor", value: '', isRequired : true, pattern: ''})
       let FormFields = currentThis.state.SD.filter(function (el) {
-        return (el.code != 'CHECKLIST' && el.code != 'DOCUMENTS') ;
+        return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
       });
       if(FormFields.length > 0){
         return FormFields.map((item,index) =>

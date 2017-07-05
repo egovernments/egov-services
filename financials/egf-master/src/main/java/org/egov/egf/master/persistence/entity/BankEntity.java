@@ -23,7 +23,6 @@ public class BankEntity extends AuditableEntity {
 	private String description;
 	private Boolean active;
 	private String type;
-	private String fundId;
 
 	public Bank toDomain() {
 		Bank bank = new Bank();
@@ -34,7 +33,6 @@ public class BankEntity extends AuditableEntity {
 		bank.setDescription(this.description);
 		bank.setActive(this.active);
 		bank.setType(this.type);
-		// bank.setFund(this.fund)
 		return bank;
 	}
 

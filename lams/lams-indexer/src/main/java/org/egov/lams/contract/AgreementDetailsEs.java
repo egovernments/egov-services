@@ -96,6 +96,7 @@ public class AgreementDetailsEs {
 	public void setAgreement(Agreement agreement) {
 
 		this.agreementNumber = agreement.getAgreementNumber();
+		this.agreementId = agreement.getId().toString();
 		this.tenantId = agreement.getTenantId();
 		this.ackNumber = agreement.getAcknowledgementNumber();
 		this.agreementDate = agreement.getAgreementDate();

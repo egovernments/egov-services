@@ -67,7 +67,7 @@ import lombok.Setter;
 @EqualsAndHashCode(exclude = { "budget", "status" }, callSuper = false)
 public class BudgetDetail extends Auditable {
 
-	/**
+	/*
 	 * id of the budgetDeatil representing the unique value of each record
 	 * getting saved.
 	 */
@@ -156,7 +156,7 @@ public class BudgetDetail extends Auditable {
 	private BoundaryContract boundary;
 
 	/**
-	 * materializedPath is unique data by hierarchy level.
+	 * materializedPath is unique data by hierarchy level.This data is created internally
 	 */
 	private String materializedPath;
 
@@ -175,7 +175,7 @@ public class BudgetDetail extends Auditable {
 	/*
 	 * unique number is unique ref number to identify the budget line item. ie
 	 * the combination of MIS attributes used for defining budget and budget
-	 * group. Ex - Fund, Function, dept and Group
+	 * group. Ex - Fund, Function, dept and Group. This data is internal to the system.
 	 */
 	private String uniqueNo;
 

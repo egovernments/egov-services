@@ -104,7 +104,7 @@ class viewOrUpdateReceivingMode extends Component {
       return(
         <div className="receivingModeCreate">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Receiving Mode</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate("pgr.lbl.receivingmode")}</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>
@@ -112,13 +112,13 @@ class viewOrUpdateReceivingMode extends Component {
                                 <Table>
                                     <thead>
                                         <tr>
-                                          <th>Sl No</th>
-                                          <th>Name</th>
-                                          <th>Code</th>
-                                          <th>Description</th>
+                                          <th>#</th>
+                                          <th>{translate("core.lbl.add.name")}</th>
+                                          <th>{translate("core.lbl.code")}</th>
+                                          <th>{translate("core.lbl.description")}</th>
                                           <th>Channel</th>
-                                          <th>Active</th>
-                                          <th>Action</th>
+                                          <th>{translate("pgr.lbl.active")}</th>
+                                          <th>{translate("pgr.lbl.actions")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>

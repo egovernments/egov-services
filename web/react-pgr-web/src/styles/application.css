@@ -344,7 +344,7 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 .table-cont{padding: 0; text-align: center; margin: 39px 0; font-size: 0.9em;}
 .table-cont th{
 	text-align: center;
-	background: #f2851f;
+
 	font-weight: normal!important;
 	color: #fff;
 	font-size: 12px;
@@ -449,7 +449,7 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 .view-table table th,
 .view-table-simple table th,
 .land-table table th {
-    background: #f2851f;
+
     font-size: 12px;
     color: #fff;
     font-weight: normal!important;
@@ -524,7 +524,7 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 	font-size: 12px;
 	border-right: #ddd 1px solid;
 }
-.verticle-table table tr td:nth-child(1){background: #f2851f; color: #fff; width: 99px;}
+.verticle-table table tr td:nth-child(1){ color: #fff; width: 99px;}
 .view-ui .label-text{margin-bottom: 0;}
 .view-ui .label-text label{color: #888;}
 .view-ui .label-view-text{margin-bottom: 0;}
@@ -547,6 +547,8 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 
 	.view-table table thead, .land-table table thead {
 	  display: none;
+		background-color: "#607b84";
+		color:"white";
 	}
 
 	.view-table table tr, .land-table table tr {
@@ -598,7 +600,7 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 	  position: absolute;
 	  left: 0;
 	  top: 0.5em;
-	  background: #f2851f;
+
 	  width: 100%;
 	  padding: 0.5em;
 	  text-align: left;

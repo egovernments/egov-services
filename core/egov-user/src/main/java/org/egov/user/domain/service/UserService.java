@@ -46,6 +46,7 @@ public class UserService {
 
 	public User createCitizen(User user) {
 		user.setRoleToCitizen();
+		user.setActive(true);
 		user.validateNewUser();
 		validateOtp(user.getOtpValidationRequest());
 		validateDuplicateUserName(user);

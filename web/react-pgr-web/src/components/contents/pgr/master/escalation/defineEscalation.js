@@ -204,7 +204,7 @@ class DefineEscalation extends Component {
       					<td>{val.department}</td>
       					<td>{val.designation}</td>
                 <td>{val.toPosition}</td>
-                <td><RaisedButton style={{margin:'15px 5px'}} label="Delete" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                <td><RaisedButton style={{margin:'15px 5px'}} label="Delete" labelColor={white} onClick={() => {
                     }}/></td>
       				</tr>
       			)
@@ -296,7 +296,7 @@ class DefineEscalation extends Component {
                     </Col>
                     <div className="clearfix"></div>
                     <Col xs={12} md={12} style={{textAlign:"center"}}>
-                        <RaisedButton style={{margin:'0 3px'}} label="Update" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                        <RaisedButton style={{margin:'0 3px'}} label="Update" labelColor={white} onClick={() => {
                           addEscalation();
                         }}/>
                     </Col>
@@ -304,7 +304,7 @@ class DefineEscalation extends Component {
               </CardText>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-   		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+   		          <thead >
    		            <tr>
    		              <th>From Position</th>
    		              <th>Grievance Type</th>
@@ -358,13 +358,15 @@ class DefineEscalation extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
+
                       <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
+
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
                       <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
                       <CardText>
-                          <RaisedButton style={{margin:'10px 0'}} label="Add Escalation Details" backgroundColor={"#5a3e1b"} labelColor={white} onClick={() => {
+                          <RaisedButton style={{margin:'10px 0'}} label="Add Escalation Details" labelColor={white} onClick={() => {
                             this.setState({
                               isSearchClicked: true,
                               noData:false

@@ -175,5 +175,9 @@ public class User {
 			passwordExpiryDate = DateUtils.addDays(new Date(), expiryInDays);
 		}
 	}
+
+	public void setActive(boolean isActive) {
+		active = isActive;
+	}
 }
 

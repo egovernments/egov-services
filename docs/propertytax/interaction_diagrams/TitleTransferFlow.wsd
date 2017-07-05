@@ -1,0 +1,50 @@
+title Title Transfer Flow
+
+Client->+PropertySvc: Title Transfer Request
+note over Client,PropertySvc
+    municipal employee, CSC center
+    posts a create new property request 
+    using admin console
+end note
+PropertySvc->PropertySvc: validate Request Format
+note over PropertySvc
+    Validate existence of th eproperty and 
+    all request format validations like 
+    email, phone, string and number fields
+end note
+PropertySvc->PropertySvc: business Validations
+note over PropertySvc
+    Busniess validations e.g. application
+    could not be accepted due to some 
+    business reason like Transfer not allowed
+    if there are dues for a given property
+end note
+PropertySvc->IDGenSvc: Generate acknowledgment Number
+PropertySvc->+KafkaQSvc: Queue for further processing
+PropertySvc->-Client: Title Transfer Response
+opt ifUserNotFound
+    note over KafkaQSvc, UserSvc
+        Need to rethink whether we should mandate
+        the user to be present rather than auto 
+        creating user
+    end note over
+    KafkaQSvc->UserSvc: create New User
+end
+KafkaQSvc->TaxCalcSvc: calculate Transfer Fee
+note over KafkaQSvc
+    This should be configurable, some clients
+    will not have a calculation rules direct
+    values given in UI, some clients will have
+    tax calculation rules.
+end note
+KafkaQSvc->DemandSvc: generateDemand
+KafkaQSvc->WorkflowSvc: initiateWorkflow
+KafkaQSvc->PropertySvc: persistProperty
+KafkaQSvc->ESSvc: createElasticSearchIndex
+KafkaQSvc->NotificationSvc: sendNotification
+PropertySvc->CollectionSvc: Collect Title Transfer fee
+note over PropertySvc
+    The collection is going to happen during
+    the workflow.
+end note
+

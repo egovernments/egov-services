@@ -127,5 +127,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_META_DATA",metaData})
   }
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

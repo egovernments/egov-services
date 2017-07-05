@@ -229,13 +229,15 @@ class receivingModeCreate extends Component {
               </CardText>
            </Card>
            <div style={{textAlign:'center'}}>
+
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'}/>
+
               </div>
          </form>
          <Dialog
-          title="Success"
+          title={translate("pgr.lbl.success")}
           actions={[<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={handleOpenNClose}
 				      />]}

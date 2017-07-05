@@ -37,34 +37,30 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.workflow.web.contract;
+package org.egov.common.master.web.contract;
 
-import java.util.List;
+import org.egov.common.domain.model.Auditable;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
+@Builder
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class RouterTypeGetReq {
-	private List<Long> id;
+@NoArgsConstructor
 
-    private Long boundaryid;
+@JsonPropertyOrder({ "id", "name" })
+public class DepartmentContract {
 
-    private List<Long> serviceid;
-    
-    private Long position;
+	private String id;
 
-    @NotNull
-    private String tenantId;
+	private String name;
+
+	private String code;
 }

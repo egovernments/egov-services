@@ -1,9 +1,6 @@
 package org.egov.lams.repository;
 
 
-
-import java.util.Date;
-
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.DemandResponse;
 import org.egov.lams.contract.RequestInfo;
@@ -13,15 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
-
 @Repository
 public class DemandRepository {
-
-	@Autowired
-	private ObjectMapper objectMapper;
 	
 	@Autowired
 	private RestTemplate restTemplate;

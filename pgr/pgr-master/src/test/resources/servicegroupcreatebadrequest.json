@@ -1,0 +1,19 @@
+{
+  "ServiceGroup": {
+    "name": "ServiceGroup01",
+    "code": "",
+    "description": "ServiceGroupOne",
+    "tenantId": "default"
+  },
+  "RequestInfo": {
+    "apiId": "",
+    "ver": "",
+    "ts": "",
+    "action": "",
+    "did": "",
+    "key": "",
+    "msgId": "",
+    "requesterId": "",
+    "authToken": ""
+  }
+}

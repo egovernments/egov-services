@@ -187,7 +187,7 @@ class ViewEscalation extends Component {
    	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-   		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+   		         <thead>
    		            <tr>
                     <th>Grievance Type</th>
                     <th>From Position</th>
@@ -259,7 +259,9 @@ class ViewEscalation extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
+
                       <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" primary={true}/>
+
                   </div>
                   {viewTable()}
               </CardText>

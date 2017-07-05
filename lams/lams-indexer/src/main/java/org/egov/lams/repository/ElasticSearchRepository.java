@@ -3,7 +3,6 @@ package org.egov.lams.repository;
 import java.util.Map;
 
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AgreementDetailsEs;
 import org.egov.lams.contract.AgreementIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

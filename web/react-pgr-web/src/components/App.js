@@ -89,6 +89,10 @@ class App extends Component {
 
   }
 
+  handleClose = () => {
+    this.props.toggleDailogAndSetText(false, '');
+  }
+
   render() {
     var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
 
@@ -102,13 +106,13 @@ class App extends Component {
     return (
       <div className="App">
           <Header/>
-              
+
               {router}
           <Footer/>
 
           <Dialog
             actions={actions}
-            modal={false}
+            modal={true}
             open={isDialogOpen}
             onRequestClose={()=>toggleDailogAndSetText(false,"")}
             >

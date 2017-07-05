@@ -81,7 +81,7 @@ class grievanceCreate extends Component {
        {
          currentThis.setState({receivingCenter : response.ReceivingCenterType});
        },function(err) {
-
+         currentThis.handleError(err.message);
        });
      }else{
        //currentThis.setState({receivingCenter : []});
@@ -94,7 +94,7 @@ class grievanceCreate extends Component {
      {
        currentThis.setState({grievanceType : response.complaintTypes});
      },function(err) {
-
+       currentThis.handleError(err.message);
      });
    }
 
@@ -104,8 +104,6 @@ class grievanceCreate extends Component {
     let {initForm} = this.props;
     initForm(localStorage.getItem('type'));
 
-    //let {toggleDailogAndSetText}=this.props;
-
     var currentThis = this;
 
     //ReceivingMode
@@ -114,7 +112,7 @@ class grievanceCreate extends Component {
       {
         currentThis.setState({receivingModes : response.ReceivingModeType});
       },function(err) {
-
+        currentThis.handleError(err.message);
       });
     }
 
@@ -129,7 +127,7 @@ class grievanceCreate extends Component {
       }
       currentThis.setState({topComplaintTypes : topComplaint});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
 
     //Grievance Category
@@ -137,7 +135,7 @@ class grievanceCreate extends Component {
     {
       currentThis.setState({grievanceCategory : response.ServiceGroups});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
 
     this.setState({loadingstatus:'hide'});
@@ -161,7 +159,7 @@ class grievanceCreate extends Component {
   				var userEmail = userResponse.user[0].emailId;
           _this.createGrievance(userName,userMobile,userEmail);
         },function(err) {
-
+          _this.handleError(err.message);
         });
       }else if(type == 'EMPLOYEE'){
         _this.createGrievance();
@@ -275,21 +273,21 @@ class grievanceCreate extends Component {
                 {currentThis.handleOpen()}
               }
             },function(err) {
-
+              currentThis.handleError(err.message);
             });
           }
         }
       }
     },function(err) {
           currentThis.setState({loadingstatus:'hide'});
-          currentThis.handleError();
     });
   }
 
-handleError = () => {
- let {toggleSnackbarAndSetText} = this.props;
-  toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
-}
+  handleError = (msg) => {
+    let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
+    toggleDailogAndSetText(true, msg);
+    //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
+  }
 
 
   handleTouchTap = () => {
@@ -574,7 +572,7 @@ const mapDispatchToProps = dispatch => ({
       {
         currentThis.setState({boundarySource : response});
       },function(err) {
-
+        currentThis.handleError(err.message);
       });
     }
   },
@@ -602,7 +600,7 @@ const mapDispatchToProps = dispatch => ({
       };
       dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: e.target.value, isRequired : true, pattern: ''});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
 
   },

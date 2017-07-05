@@ -414,6 +414,10 @@ class Login extends Component {
         })
       }
    }
+   openAnonymousComplaint = () => {
+     let {history} = this.props;
+     history.push('/pgr/createGrievance');
+   }
 
    render() {
       //console.log("IN LOGIN");
@@ -581,7 +585,7 @@ class Login extends Component {
                         <FloatingActionButton  style={styles.floatingIconButton}>
                             <i className="material-icons">mode_edit</i>
                         </FloatingActionButton>
-                        <div style={styles.floatLeft}>
+                        <div style={{"float": "left", "cursor": "pointer"}} onClick={this.openAnonymousComplaint}>
                           <h4>{translate('pgr.lbl.register.grievance')}</h4>
                           <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>

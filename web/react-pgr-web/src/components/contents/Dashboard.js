@@ -76,7 +76,7 @@ class Dashboard extends Component {
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
-          Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+          Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 response.serviceRequests.sort(function(s1, s2) {
                   var d1 = s1.requestedDatetime.split(" ")[0].split("-");
                   var d2 = s2.requestedDatetime.split(" ")[0].split("-");

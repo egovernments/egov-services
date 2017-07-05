@@ -24,7 +24,6 @@ public class ReportApp{
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportApp.class);
 
-	
     @Autowired
     public static ResourceLoader resourceLoader;
     
@@ -62,9 +61,11 @@ public class ReportApp{
 	  public static ReportDefinitions loadYaml() {
 	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     try {
+
         /*ReportDefinitions reportDefinitions = mapper.readValue(new File("/home/senthilkumar/application.yml"), ReportDefinitions.class);*/
     	Resource resource = resourceLoader.getResource("file:/home/senthilkumar/application.yml");
     	//Resource resource = resourceLoader.getResource("file:"+env.getProperty("report.yaml.path"));
+
         File yamlFile = resource.getFile();
         ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
         LOGGER.info(reportDefinitions.toString());

@@ -21,6 +21,7 @@ import {translate} from '../../../../common/common';
 var flag = 0;
 const styles = {
   headerStyle : {
+    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -247,6 +248,7 @@ class ServiceTypeCreate extends Component {
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
            "attributes" :this.props.createServiceType.attributes,
            "slaHours" : this.props.createServiceType.slaHours,
+           "metadata" :  this.props.createServiceType.metadata,
            "tenantId":"default"
           }
       }
@@ -343,16 +345,23 @@ console.log(createServiceType);
                             id="attributesName"
                         />
                     </Col>
+                    <Col xs={12} md={3} sm={3} style={styles.textRight}>
+                    <br/>
+                    { (editIndex == -1 || editIndex == undefined ) &&
+                      <RaisedButton type="button" label="Add" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                          _this.props.addNestedFormData("dataTypes","dataType");
 
-                    <Col xs={12}  md={3} sm={6} style={{textAlign:"center"}}>
-                      {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.add")} onClick={() => {
-                        _this.props.addNestedFormDataTwo("attributes","attributes",'dataTypes');
-                        _this.props.resetObject("dataTypes");
-                      }}/>}
-                      {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.update")} onClick={() => {
-                        //updateEscalation();
-                      }}/>}
-
+                          }
+                      }/>
+                    }
+                    { (editIndex > -1) &&
+                      <RaisedButton type="button" label="Save"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                            this.props.updateObject("owners","owner",  editIndex);
+                            this.props.resetObject("owner");
+                            isEditIndex(-1);
+                          }
+                      }/>
+                    }
                     </Col>
                   </Row>
 
@@ -571,8 +580,15 @@ console.log(createServiceType);
           <div className="clearfix"></div>
           { (editIndex == -1 || editIndex == undefined ) &&
             <RaisedButton type="button" label="Add Attribute" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
-
-                _this.props.addStucture(createServiceType.attribute,createServiceType.dataTypes);
+              createServiceType.attribute.attributes =[];
+                createServiceType.dataTypes.forEach(function(d){
+                  createServiceType.attribute.attributes.push({
+                    "key": d.attributesKey,
+                    "name" : d.attributesName
+                  });
+              
+              });
+                _this.props.addNestedFormData("attributes","attribute");
                 }
             }/>
           }
@@ -781,7 +797,8 @@ console.log(createServiceType);
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
               </div>
           </form>
           <Dialog
@@ -881,11 +898,9 @@ const mapDispatchToProps = dispatch => ({
   addStucture: (attribute,dataTypes) =>{
     console.log(attribute);
     console.log(dataTypes);
-    dataTypes.forEach(function(d){
-      attribute.arr({"key":d.attributesKey,
-                        "name":d.attributesName});
-    });
+
     console.log("fin",attribute);
+    _this.props.addNestedFormData("attributes","attribute");
 
   },
   addNestedFormData: (formArray, formData) => {

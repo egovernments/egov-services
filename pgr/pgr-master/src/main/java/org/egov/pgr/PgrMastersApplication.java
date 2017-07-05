@@ -66,6 +66,8 @@ public class PgrMastersApplication {
     	application.sources(ReportApp.class);
     	
     	application.run(args);
+    	/*Object [] obj = {PgrMastersApplication.class,ReportApp.class};
+    	SpringApplication.run(obj, args);*/
     }
 
     @Bean

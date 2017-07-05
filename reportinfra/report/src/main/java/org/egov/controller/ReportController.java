@@ -42,15 +42,6 @@ public class ReportController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 	
-	@Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter() {
-        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        converter.setObjectMapper(mapper);
-        return converter;
-    }
-	 
 	  
 	
 

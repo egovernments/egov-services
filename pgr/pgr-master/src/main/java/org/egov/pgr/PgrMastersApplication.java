@@ -77,19 +77,11 @@ public class PgrMastersApplication {
     public static volatile ConcurrentHashMap<Long, String> supplyTypeMap = new ConcurrentHashMap<>();
 
     public static void main(final String[] args) {
-    	
-    	System.out.println("Loading the Main class from PGR "+new Date());
-    	LOGGER.info("Loading the Main class from logger info "+new Date());
-    	LOGGER.error("Loading the Main class from logger error "+new Date());
-    	LOGGER.warn("Loading the Main class from logger error "+new Date());
-    	
         SpringApplicationBuilder application = new SpringApplicationBuilder();
     	application.sources(PgrMastersApplication.class);
     	application.sources(ReportApp.class);
     	application.run(args);
     	
-    	/*Object [] obj = {PgrMastersApplication.class,ReportApp.class};
-    	SpringApplication.run(obj, args);*/
     }
 
     @Bean
@@ -101,23 +93,6 @@ public class PgrMastersApplication {
         converter.setObjectMapper(mapper);
         return converter;
     }
-    @Bean("reportDefinitions")
-	public ReportDefinitions loadYaml() {
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		try {
-
-			System.out.println("Loading the report definitions from PGR");
-			//Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
-			Resource resource = resourceLoader.getResource("classpath:application.yml");
-			File yamlFile = resource.getFile();
-			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
-			System.out.println("Report Defintion PGR: "+reportDefinitions.toString());
-			return reportDefinitions;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+    
 	
 }

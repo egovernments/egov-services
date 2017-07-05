@@ -3,23 +3,12 @@ package org.egov.egf.budget.domain.service;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.master.web.contract.BoundaryContract;
-import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.common.web.contract.CommonRequest;
-import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.repository.BudgetDetailRepository;
-import org.egov.egf.budget.domain.repository.BudgetRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
-import org.egov.egf.master.domain.repository.EgfStatusRepository;
-import org.egov.egf.master.web.contract.BudgetGroupContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.master.web.contract.SchemeContract;
-import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,25 +32,30 @@ public class BudgetDetailService {
 
 	@Autowired
 	private SmartValidator validator;
+
 	@Autowired
-	/*private SchemeContractRepository schemeContractRepository;
-	@Autowired
-	private FunctionContractRepository functionContractRepository;
-	@Autowired
-	private BudgetGroupContractRepository budgetGroupContractRepository;
-	@Autowired
-	private DepartmentContractRepository departmentContractRepository;
-	@Autowired
-	private BudgetRepository budgetRepository;
-	@Autowired
-	private FundContractRepository fundContractRepository;
-	@Autowired
-	private SubSchemeContractRepository subSchemeContractRepository;
-	@Autowired
-	private EgfStatusRepository egfStatusRepository;
-	@Autowired
-	private BoundaryContractRepository boundaryContractRepository;
-*/
+	/*
+	 * private SchemeContractRepository schemeContractRepository;
+	 * 
+	 * @Autowired private FunctionContractRepository functionContractRepository;
+	 * 
+	 * @Autowired private BudgetGroupContractRepository
+	 * budgetGroupContractRepository;
+	 * 
+	 * @Autowired private DepartmentContractRepository
+	 * departmentContractRepository;
+	 * 
+	 * @Autowired private BudgetRepository budgetRepository;
+	 * 
+	 * @Autowired private FundContractRepository fundContractRepository;
+	 * 
+	 * @Autowired private SubSchemeContractRepository
+	 * subSchemeContractRepository;
+	 * 
+	 * @Autowired private EgfStatusRepository egfStatusRepository;
+	 * 
+	 * @Autowired private BoundaryContractRepository boundaryContractRepository;
+	 */
 	public BindingResult validate(List<BudgetDetail> budgetdetails, String method, BindingResult errors) {
 
 		try {
@@ -95,87 +89,73 @@ public class BudgetDetailService {
 	public List<BudgetDetail> fetchRelated(List<BudgetDetail> budgetdetails) {
 		for (BudgetDetail budgetDetail : budgetdetails) {
 			// fetch related items
-			/*if (budgetDetail.getBudgetGroup() != null) {
-				BudgetGroupContract budgetGroup = budgetGroupContractRepository.findById(budgetDetail.getBudgetGroup());
-				if (budgetGroup == null) {
-					throw new InvalidDataException("budgetGroup", "budgetGroup.invalid", " Invalid budgetGroup");
-				}
-				budgetDetail.setBudgetGroup(budgetGroup);
-			}
-			if (budgetDetail.getBudget() != null) {
-				Budget budget = budgetRepository.findById(budgetDetail.getBudget());
-				if (budget == null) {
-					throw new InvalidDataException("budget", "budget.invalid", " Invalid budget");
-				}
-				budgetDetail.setBudget(budget);
-			}
-			if (budgetDetail.getUsingDepartment() != null) {
-				DepartmentContract usingDepartment = departmentContractRepository
-						.findById(budgetDetail.getUsingDepartment());
-				if (usingDepartment == null) {
-					throw new InvalidDataException("usingDepartment", "usingDepartment.invalid",
-							" Invalid usingDepartment");
-				}
-				budgetDetail.setUsingDepartment(usingDepartment);
-			}
-			if (budgetDetail.getExecutingDepartment() != null) {
-				DepartmentContract executingDepartment = departmentContractRepository
-						.findById(budgetDetail.getExecutingDepartment());
-				if (executingDepartment == null) {
-					throw new InvalidDataException("executingDepartment", "executingDepartment.invalid",
-							" Invalid executingDepartment");
-				}
-				budgetDetail.setExecutingDepartment(executingDepartment);
-			}
-			if (budgetDetail.getFunction() != null) {
-				FunctionContract function = functionContractRepository.findById(budgetDetail.getFunction());
-				if (function == null) {
-					throw new InvalidDataException("function", "function.invalid", " Invalid function");
-				}
-				budgetDetail.setFunction(function);
-			}
-			if (budgetDetail.getScheme() != null) {
-				SchemeContract scheme = schemeContractRepository.findById(budgetDetail.getScheme());
-				if (scheme == null) {
-					throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
-				}
-				budgetDetail.setScheme(scheme);
-			}
-			if (budgetDetail.getFund() != null) {
-				FundContract fund = fundContractRepository.findById(budgetDetail.getFund());
-				if (fund == null) {
-					throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
-				}
-				budgetDetail.setFund(fund);
-			}
-			if (budgetDetail.getSubScheme() != null) {
-				SubSchemeContract subScheme = subSchemeContractRepository.findById(budgetDetail.getSubScheme());
-				if (subScheme == null) {
-					throw new InvalidDataException("subScheme", "subScheme.invalid", " Invalid subScheme");
-				}
-				budgetDetail.setSubScheme(subScheme);
-			}
-			if (budgetDetail.getFunctionary() != null) {
-				FunctionContract functionary = functionContractRepository.findById(budgetDetail.getFunctionary());
-				if (functionary == null) {
-					throw new InvalidDataException("functionary", "functionary.invalid", " Invalid functionary");
-				}
-				budgetDetail.setFunctionary(functionary);
-			}
-			if (budgetDetail.getBoundary() != null) {
-				BoundaryContract boundary = boundaryContractRepository.findById(budgetDetail.getBoundary());
-				if (boundary == null) {
-					throw new InvalidDataException("boundary", "boundary.invalid", " Invalid boundary");
-				}
-				budgetDetail.setBoundary(boundary);
-			}
-			if (budgetDetail.getStatus() != null) {
-				EgfStatus status = egfStatusRepository.findById(budgetDetail.getStatus());
-				if (status == null) {
-					throw new InvalidDataException("status", "status.invalid", " Invalid status");
-				}
-				budgetDetail.setStatus(status);
-			}*/
+			/*
+			 * if (budgetDetail.getBudgetGroup() != null) { BudgetGroupContract
+			 * budgetGroup =
+			 * budgetGroupContractRepository.findById(budgetDetail.
+			 * getBudgetGroup()); if (budgetGroup == null) { throw new
+			 * InvalidDataException("budgetGroup", "budgetGroup.invalid",
+			 * " Invalid budgetGroup"); }
+			 * budgetDetail.setBudgetGroup(budgetGroup); } if
+			 * (budgetDetail.getBudget() != null) { Budget budget =
+			 * budgetRepository.findById(budgetDetail.getBudget()); if (budget
+			 * == null) { throw new InvalidDataException("budget",
+			 * "budget.invalid", " Invalid budget"); }
+			 * budgetDetail.setBudget(budget); } if
+			 * (budgetDetail.getUsingDepartment() != null) { DepartmentContract
+			 * usingDepartment = departmentContractRepository
+			 * .findById(budgetDetail.getUsingDepartment()); if (usingDepartment
+			 * == null) { throw new InvalidDataException("usingDepartment",
+			 * "usingDepartment.invalid", " Invalid usingDepartment"); }
+			 * budgetDetail.setUsingDepartment(usingDepartment); } if
+			 * (budgetDetail.getExecutingDepartment() != null) {
+			 * DepartmentContract executingDepartment =
+			 * departmentContractRepository
+			 * .findById(budgetDetail.getExecutingDepartment()); if
+			 * (executingDepartment == null) { throw new
+			 * InvalidDataException("executingDepartment",
+			 * "executingDepartment.invalid", " Invalid executingDepartment"); }
+			 * budgetDetail.setExecutingDepartment(executingDepartment); } if
+			 * (budgetDetail.getFunction() != null) { FunctionContract function
+			 * =
+			 * functionContractRepository.findById(budgetDetail.getFunction());
+			 * if (function == null) { throw new
+			 * InvalidDataException("function", "function.invalid",
+			 * " Invalid function"); } budgetDetail.setFunction(function); } if
+			 * (budgetDetail.getScheme() != null) { SchemeContract scheme =
+			 * schemeContractRepository.findById(budgetDetail.getScheme()); if
+			 * (scheme == null) { throw new InvalidDataException("scheme",
+			 * "scheme.invalid", " Invalid scheme"); }
+			 * budgetDetail.setScheme(scheme); } if (budgetDetail.getFund() !=
+			 * null) { FundContract fund =
+			 * fundContractRepository.findById(budgetDetail.getFund()); if (fund
+			 * == null) { throw new InvalidDataException("fund", "fund.invalid",
+			 * " Invalid fund"); } budgetDetail.setFund(fund); } if
+			 * (budgetDetail.getSubScheme() != null) { SubSchemeContract
+			 * subScheme =
+			 * subSchemeContractRepository.findById(budgetDetail.getSubScheme())
+			 * ; if (subScheme == null) { throw new
+			 * InvalidDataException("subScheme", "subScheme.invalid",
+			 * " Invalid subScheme"); } budgetDetail.setSubScheme(subScheme); }
+			 * if (budgetDetail.getFunctionary() != null) { FunctionContract
+			 * functionary =
+			 * functionContractRepository.findById(budgetDetail.getFunctionary()
+			 * ); if (functionary == null) { throw new
+			 * InvalidDataException("functionary", "functionary.invalid",
+			 * " Invalid functionary"); }
+			 * budgetDetail.setFunctionary(functionary); } if
+			 * (budgetDetail.getBoundary() != null) { BoundaryContract boundary
+			 * =
+			 * boundaryContractRepository.findById(budgetDetail.getBoundary());
+			 * if (boundary == null) { throw new
+			 * InvalidDataException("boundary", "boundary.invalid",
+			 * " Invalid boundary"); } budgetDetail.setBoundary(boundary); } if
+			 * (budgetDetail.getStatus() != null) { EgfStatus status =
+			 * egfStatusRepository.findById(budgetDetail.getStatus()); if
+			 * (status == null) { throw new InvalidDataException("status",
+			 * "status.invalid", " Invalid status"); }
+			 * budgetDetail.setStatus(status); }
+			 */
 
 		}
 

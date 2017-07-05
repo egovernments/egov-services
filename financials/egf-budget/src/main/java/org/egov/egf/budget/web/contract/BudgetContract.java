@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.budget.web.contract;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
@@ -49,22 +50,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-@JsonPropertyOrder({ "id","name","financialYear","estimationType","parent","description","isActiveBudget","isPrimaryBudget","materializedPath","referenceBudget","documentNumber","status"})
+@JsonPropertyOrder({ "id", "name", "financialYear", "estimationType", "parent", "description", "isActiveBudget",
+		"isPrimaryBudget", "materializedPath", "referenceBudget", "documentNumber", "status" })
 public class BudgetContract extends AuditableContract {
 
-	/**
+	/*
 	 * id of the budget representing the unique value of each record getting
 	 * saved.
 	 */
 	private String id;
 
-	/**
+	/*
 	 * name given for budget in the tree structure. Generally Tree structure
 	 * consist of 3 levels : 1. Root level : which is basically defined as
 	 * RE-2017-18 or BE-2017-18 which defines the budget type and the financial
@@ -77,67 +79,68 @@ public class BudgetContract extends AuditableContract {
 	 */
 	private String name;
 
-	/**
-	 * financialYear is the attribute to identify to which year the BudgetContract
-	 * belongs is tagged.
+	/*
+	 * financialYear is the attribute to identify to which year the
+	 * BudgetContract belongs is tagged.
 	 */
 	private FinancialYearContract financialYear;
 
-	/**
+	/*
 	 * estimationType is type of the budget definition - which signifies budget
 	 * type i.e New budget (BE) or the Revised budget (RE)
 	 */
 	private String estimationType;
 
-	/**
+	/*
 	 * parent is the node used to define in the budget hierarchy tree structure
 	 * definition. The root node will not have any parent. The lowest node is
 	 * the budget under which the details are defined.
 	 */
 	private BudgetContract parent;
 
-	/**
+	/*
 	 * description provides more information on budget line item and this is
 	 * combination of department name, estimation type,budget type and financial
 	 * year. example description
-	 * "ENGINEERING RE RevenueBudgetContract for the year 2015-16" (ENG-Engineering
-	 * department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+	 * "ENGINEERING RE RevenueBudgetContract for the year 2015-16"
+	 * (ENG-Engineering department,RE- Revision Estimate,Rev-Revenue,2017-18:
+	 * financial year)
 	 */
 	private String description;
 
-	/**
-	 * isActiveBudgetContract provides flag denotes whether the budget is active or not.
-	 * i.e all the detail budget defined under this tree will not be accessible
-	 * in transaction.
+	/*
+	 * isActiveBudgetContract provides flag denotes whether the budget is active
+	 * or not. i.e all the detail budget defined under this tree will not be
+	 * accessible in transaction.
 	 */
 	private Boolean isActiveBudgetContract;
 
-	/**
-	 * isPrimaryBudgetContract is the flag that identifies the root budget. (which has
-	 * no parent).
+	/*
+	 * isPrimaryBudgetContract is the flag that identifies the root budget.
+	 * (which has no parent).
 	 */
 	private Boolean isPrimaryBudgetContract;
 
-	/**
+	/*
 	 * materializedPath is unique data by hierarchy level.
 	 */
 	private String materializedPath;
 
-	/**
-	 * referenceBudgetContract is the previous year budget tree id reference to refer
-	 * previous year budget. When the BE is created, the previous year RE
+	/*
+	 * referenceBudgetContract is the previous year budget tree id reference to
+	 * refer previous year budget. When the BE is created, the previous year RE
 	 * reference is mapped to the BE of current year or for the year for which
 	 * BE is created.
 	 */
 	private BudgetContract referenceBudgetContract;
 
-	/**
+	/*
 	 * documentNumber is the reference number to identify the attachments made
 	 * to the budget definition.
 	 */
 	private Long documentNumber;
 
-	/**
+	/*
 	 * status gives the current status of the budget Node. i.e collective status
 	 * of the details. However the status at budget detail also exist.
 	 */

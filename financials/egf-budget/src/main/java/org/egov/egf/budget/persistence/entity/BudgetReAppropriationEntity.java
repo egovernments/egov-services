@@ -17,7 +17,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Builder
 public class BudgetReAppropriationEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_budgetreappropriation";
@@ -41,7 +40,7 @@ public class BudgetReAppropriationEntity extends AuditableEntity {
 		budgetReAppropriation.setOriginalAdditionAmount(this.originalAdditionAmount);
 		budgetReAppropriation.setOriginalDeductionAmount(this.originalDeductionAmount);
 		budgetReAppropriation.setAnticipatoryAmount(this.anticipatoryAmount);
-		//budgetReAppropriation.setStatus(EgfStatus.builder().id(statusId).build());
+		// budgetReAppropriation.setStatus(EgfStatus.builder().id(statusId).build());
 		budgetReAppropriation.setAsOnDate(this.asOnDate);
 		return budgetReAppropriation;
 	}

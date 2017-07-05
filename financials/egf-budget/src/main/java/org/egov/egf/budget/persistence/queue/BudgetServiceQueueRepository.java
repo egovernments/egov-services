@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MastersQueueRepository {
+public class BudgetServiceQueueRepository {
 
 	@Autowired
 	private FinancialProducer financialProducer;

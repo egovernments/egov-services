@@ -58,55 +58,55 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 		if (budgetReAppropriationSearchEntity.getId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("id =: id");
+			params.append("id =:id");
 			paramValues.put("id", budgetReAppropriationSearchEntity.getId());
 		}
 		if (budgetReAppropriationSearchEntity.getBudgetDetailId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetDetail =: budgetDetail");
+			params.append("budgetDetail =:budgetDetail");
 			paramValues.put("budgetDetail", budgetReAppropriationSearchEntity.getBudgetDetailId());
 		}
 		if (budgetReAppropriationSearchEntity.getAdditionAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("additionAmount =: additionAmount");
+			params.append("additionAmount =:additionAmount");
 			paramValues.put("additionAmount", budgetReAppropriationSearchEntity.getAdditionAmount());
 		}
 		if (budgetReAppropriationSearchEntity.getDeductionAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("deductionAmount =: deductionAmount");
+			params.append("deductionAmount =:deductionAmount");
 			paramValues.put("deductionAmount", budgetReAppropriationSearchEntity.getDeductionAmount());
 		}
 		if (budgetReAppropriationSearchEntity.getOriginalAdditionAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("originalAdditionAmount =: originalAdditionAmount");
+			params.append("originalAdditionAmount =:originalAdditionAmount");
 			paramValues.put("originalAdditionAmount", budgetReAppropriationSearchEntity.getOriginalAdditionAmount());
 		}
 		if (budgetReAppropriationSearchEntity.getOriginalDeductionAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("originalDeductionAmount =: originalDeductionAmount");
+			params.append("originalDeductionAmount =:originalDeductionAmount");
 			paramValues.put("originalDeductionAmount", budgetReAppropriationSearchEntity.getOriginalDeductionAmount());
 		}
 		if (budgetReAppropriationSearchEntity.getAnticipatoryAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("anticipatoryAmount =: anticipatoryAmount");
+			params.append("anticipatoryAmount =:anticipatoryAmount");
 			paramValues.put("anticipatoryAmount", budgetReAppropriationSearchEntity.getAnticipatoryAmount());
 		}
 		if (budgetReAppropriationSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =: status");
+			params.append("status =:status");
 			paramValues.put("status", budgetReAppropriationSearchEntity.getStatusId());
 		}
 		if (budgetReAppropriationSearchEntity.getAsOnDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("asOnDate =: asOnDate");
+			params.append("asOnDate =:asOnDate");
 			paramValues.put("asOnDate", budgetReAppropriationSearchEntity.getAsOnDate());
 		}
 

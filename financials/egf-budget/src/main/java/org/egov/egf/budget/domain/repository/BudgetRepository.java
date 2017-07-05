@@ -5,9 +5,9 @@ import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.persistence.entity.BudgetEntity;
+import org.egov.egf.budget.persistence.queue.BudgetServiceQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetContract;
-import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +16,9 @@ public class BudgetRepository {
 
 	@Autowired
 	private BudgetJdbcRepository budgetJdbcRepository;
+
 	@Autowired
-	private MastersQueueRepository budgetQueueRepository;
+	private BudgetServiceQueueRepository budgetQueueRepository;
 
 	public Budget findById(Budget budget) {
 		return budgetJdbcRepository.findById(new BudgetEntity().toEntity(budget)).toDomain();

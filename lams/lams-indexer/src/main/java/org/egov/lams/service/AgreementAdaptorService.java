@@ -55,7 +55,7 @@ public class AgreementAdaptorService {
 		Asset asset = assetRepository.getAsset(agreement.getAsset().getId(),agreement.getTenantId());
 		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId(),agreement.getTenantId(),requestInfo);
 		//City city = tenantRepository.fetchTenantByCode(agreement.getTenantId());
-		Demand agreementDemand = demandRepository.getDemandBySearch(agreement.getDemands().get(0), agreement.getTenantId());
+		///Demand agreementDemand = demandRepository.getDemandBySearch(agreement.getDemands().get(0), agreement.getTenantId());
 				
 		agreementDetailsEs.setAsset(asset);
 		agreementDetailsEs.setAgreement(agreement);
@@ -64,8 +64,8 @@ public class AgreementAdaptorService {
 		agreementDetailsEs.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
 				
 		agreementIndex.setAgreementDetails(agreementDetailsEs);
-		if(agreementDemand != null)
-		agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
+		//if(agreementDemand != null)
+		//agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
 		//boundaryRepository.getBoundary(); FIXME make call to city controller
 		return agreementIndex;
 	}

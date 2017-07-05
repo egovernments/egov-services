@@ -50,6 +50,12 @@ const RightIcon = (props) => {
   if (props.token) {
     return (
       <div>
+      <i onClick={()=>{
+        if(localStorage.getItem("token"))
+          props.setRoute("/dashboard");
+        else 
+          props.setRoute("/");
+      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
 
       <IconMenu
@@ -653,7 +659,7 @@ class Header extends Component {
         <AppBar title={<div><Logo/> Egovernments </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
-                iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>
+                iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
           {/*<div id="menu"></div>*/}
@@ -698,6 +704,7 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
+    setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
     handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),

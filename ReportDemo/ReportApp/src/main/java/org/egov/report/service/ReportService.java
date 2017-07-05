@@ -9,7 +9,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.ReportYamlMetaData;
-import org.egov.domain.model.ReportYamlMetaData.searchParams;
 import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
 import org.egov.domain.model.Response;
 import org.egov.report.repository.ReportRepository;
@@ -20,52 +19,46 @@ import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.ReportMetadata;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
-
 import org.egov.swagger.model.SearchColumn;
-import org.egov.swagger.model.SearchParam;
 import org.egov.swagger.model.SourceColumn;
-import org.egov.swagger.model.ColumnDetail.TypeEnum;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReportService {
-	
+
 	@Autowired
 	public ReportDefinitions reportDefinitions;
-	
+
 	@Autowired
 	private ReportRepository reportRepository;
-	
 
 	@Autowired
 	private Response responseInfoFactory;
-	
-	
-public MetadataResponse getMetaData(String reportName){
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
+
+	public MetadataResponse getMetaData(String reportName) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinition reportDefinition = new ReportDefinition();
-		
-		
-		System.out.println("Report Definition is" +reportDefinitions.getReportDefinitions());
-		for(ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
-			if(rDefinition.getReportName().equals(reportName)){
-			
+
+		System.out.println("Report Definition is" + reportDefinitions.getReportDefinitions());
+		for (ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
+			if (rDefinition.getReportName().equals(reportName)) {
+
 				reportDefinition = rDefinition;
 			}
 		}
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportDefinition.getReportName());
-		
+
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
 		List<ColumnDetail> searchParams = new ArrayList<>();
-		for(SourceColumn cd : reportDefinition.getSourceColumns()){
+		for (SourceColumn cd : reportDefinition.getSourceColumns()) {
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
 			reportheader.setName(cd.getName());
@@ -74,7 +67,7 @@ public MetadataResponse getMetaData(String reportName){
 			reportHeaders.add(reportheader);
 
 		}
-		for(SearchColumn cd : reportDefinition.getSearchParams()){
+		for (SearchColumn cd : reportDefinition.getSearchParams()) {
 			ColumnDetail searchParam = new ColumnDetail();
 			searchParam.setLabel(cd.getLabel());
 			searchParam.setName(cd.getName());
@@ -88,24 +81,26 @@ public MetadataResponse getMetaData(String reportName){
 		metadataResponse.setReportDetails(rmt);
 		return metadataResponse;
 	}
-	public TypeEnum getType(String type)
-	{
-		if(type.equals("string")){
+
+	public TypeEnum getType(String type) {
+		if (type.equals("string")) {
 			return ColumnDetail.TypeEnum.STRING;
 		}
-        if(type.equals("number")){
-        	return ColumnDetail.TypeEnum.NUMBER;
+		if (type.equals("number")) {
+			return ColumnDetail.TypeEnum.NUMBER;
 		}
-        if(type.equals("epoch")){
-        	return ColumnDetail.TypeEnum.EPOCH;
+		if (type.equals("epoch")) {
+			return ColumnDetail.TypeEnum.EPOCH;
 		}
-        if(type.equals("singlevaluelist")){
-        	return ColumnDetail.TypeEnum.SINGLEVALUELIST;
+		if (type.equals("singlevaluelist")) {
+			return ColumnDetail.TypeEnum.SINGLEVALUELIST;
 		}
-        
+
 		return null;
 	}
-	public ResponseEntity<?> getSuccessResponse(final MetadataResponse metadataResponse, final RequestInfo requestInfo,String tenantID) {
+
+	public ResponseEntity<?> getSuccessResponse(final MetadataResponse metadataResponse, final RequestInfo requestInfo,
+			String tenantID) {
 		final MetadataResponse metadataResponses = new MetadataResponse();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
@@ -114,47 +109,49 @@ public MetadataResponse getMetaData(String reportName){
 		metadataResponses.setReportDetails(metadataResponse.getReportDetails());
 		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
 
-	}	
+	}
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
-
-
-	public ReportResponse getReportData(ReportRequest reportRequest){
-		/*List<ReportYamlMetaData> reportYamlMetaDatas = reportDefinitions.getReportDefinitions();*/
-		List<ReportYamlMetaData> reportYamlMetaDatas = new ArrayList<>();
-		ReportYamlMetaData reportYamlMetaData = reportYamlMetaDatas.stream().
-				filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);
-		LOGGER.info("reportYamlMetaData::"+reportYamlMetaData);
-		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportYamlMetaData);
-		List<sourceColumns> columns = reportYamlMetaData.getSourceColumns();
-		LOGGER.info("columns::"+columns);
-		LOGGER.info("maps::"+maps);
+	public ReportResponse getReportData(ReportRequest reportRequest) {
 		
+		List<ReportDefinition> listReportDefinitions  = reportDefinitions.getReportDefinitions();
+		 
+		ReportDefinition reportDefinition = listReportDefinitions.stream()
+				.filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);
+		LOGGER.info("reportYamlMetaData::" + reportDefinition);
+		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);
+		List<SourceColumn> columns = reportDefinition.getSourceColumns();
+		LOGGER.info("columns::" + columns);
+		LOGGER.info("maps::" + maps);
+
 		ReportResponse reportResponse = new ReportResponse();
 		populateData(columns, maps, reportResponse);
-		populateReportHeader(reportYamlMetaData, reportResponse);
-		
+		populateReportHeader(reportDefinition, reportResponse);
+
 		return reportResponse;
 	}
-	
-	private void populateData(List<sourceColumns> columns, List<Map<String, Object>> maps, ReportResponse reportResponse){
-		
+
+	private void populateData(List<SourceColumn> columns, List<Map<String, Object>> maps,
+			ReportResponse reportResponse) {
+
 		List<List<Object>> lists = new ArrayList<>();
-		
-		for(int i=0; i<maps.size(); i++){
+
+		for (int i = 0; i < maps.size(); i++) {
 			List<Object> objects = new ArrayList<>();
 			Map<String, Object> map = maps.get(i);
-			for(sourceColumns sourceColm : columns){
+			for (SourceColumn sourceColm : columns) {
 				objects.add(map.get(sourceColm.getName()));
 			}
 			lists.add(objects);
 		}
 		reportResponse.setReportData(lists);
 	}
-	
-	private void populateReportHeader(ReportYamlMetaData reportYamlMetaData, ReportResponse reportResponse){
-		List<sourceColumns>  columns = reportYamlMetaData.getSourceColumns();
-		List<ColumnDetail> columnDetails = columns.stream().map(p -> new ColumnDetail(p.getLabel(), p.getName(), TypeEnum.fromValue(p.getType()))).collect(Collectors.toList());
+
+	private void populateReportHeader(ReportDefinition reportDefinition, ReportResponse reportResponse) {
+		List<SourceColumn> columns = reportDefinition.getSourceColumns();
+		List<ColumnDetail> columnDetails = columns.stream()
+				.map(p -> new ColumnDetail(p.getLabel(), p.getName(), p.getType()))
+				.collect(Collectors.toList());
+		
 		reportResponse.setReportHeader(columnDetails);
 	}
 }

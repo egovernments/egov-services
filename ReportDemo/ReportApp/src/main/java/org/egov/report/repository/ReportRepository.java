@@ -7,6 +7,7 @@ import java.util.Map;
 import org.egov.ReportApp;
 import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.report.repository.builder.ReportQueryBuilder;
+import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.ReportRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,8 @@ public class ReportRepository {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportRepository.class);
 	
-	public List<Map<String, Object>> getData(ReportRequest reportRequest, ReportYamlMetaData reportYamlMetaData) {
-		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportYamlMetaData);
+	public List<Map<String, Object>> getData(ReportRequest reportRequest, ReportDefinition reportDefinition) {
+		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition);
 		Long startTime = new Date().getTime();
 		LOGGER.info("final query:"+query);
 		List<Map<String, Object>> maps = jdbcTemplate.queryForList(query);

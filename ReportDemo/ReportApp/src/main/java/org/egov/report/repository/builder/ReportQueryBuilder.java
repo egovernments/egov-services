@@ -3,6 +3,7 @@ package org.egov.report.repository.builder;
 import java.util.List;
 
 import org.egov.domain.model.ReportYamlMetaData;
+import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportQueryBuilder {
 		
-	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportYamlMetaData reportYamlMetaData){
+	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
 		System.out.println("searchParams:" + searchParams);
 		
-		String baseQuery = reportYamlMetaData.getQuery();
+		String baseQuery = reportDefinition.getQuery();
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
 		for(SearchParam searchParam : searchParams){
 				

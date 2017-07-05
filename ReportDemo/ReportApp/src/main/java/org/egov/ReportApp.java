@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 
-
 @SpringBootApplication
 public class ReportApp{
 
@@ -26,19 +25,10 @@ public class ReportApp{
 
     @Autowired
     public static ResourceLoader resourceLoader;
-    
    
     @Autowired
     private Environment env;
     
-
-	/*@Autowired
-	public ReportDefinitions reportDefintions;
-	*/
-    
-  
-
-
     public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
@@ -57,26 +47,23 @@ public class ReportApp{
     }
 	 
 	  
-	  @Bean("reportDefinitions")
-	  public static ReportDefinitions loadYaml() {
-	      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    try {
+	@Bean("reportDefinitions")
+	public static ReportDefinitions loadYaml() {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		try {
 
-        /*ReportDefinitions reportDefinitions = mapper.readValue(new File("/home/senthilkumar/application.yml"), ReportDefinitions.class);*/
-    	Resource resource = resourceLoader.getResource("file:/home/senthilkumar/application.yml");
-    	//Resource resource = resourceLoader.getResource("file:"+env.getProperty("report.yaml.path"));
+			Resource resource = resourceLoader.getResource("file:/home/lenovo/Desktop/application.yml");
+			// Resource resource =
+			// resourceLoader.getResource("file:"+env.getproperty("report.yaml.path"));
 
-        File yamlFile = resource.getFile();
-        ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
-        LOGGER.info(reportDefinitions.toString());
-        return reportDefinitions;
-    } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
-    return null;
-    }
-	  
-
-	
+			File yamlFile = resource.getFile();
+			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
+			LOGGER.info(reportDefinitions.toString());
+			return reportDefinitions;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

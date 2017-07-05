@@ -40,16 +40,8 @@
 
 package org.egov.eis.web.controller;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveOpeningBalance;
@@ -57,14 +49,7 @@ import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.service.LeaveAllotmentService;
 import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.service.LeaveOpeningBalanceService;
-import org.egov.eis.web.contract.EligibleLeave;
-import org.egov.eis.web.contract.EligibleLeaveResponse;
-import org.egov.eis.web.contract.LeaveAllotmentGetRequest;
-import org.egov.eis.web.contract.LeaveApplicationGetRequest;
-import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
@@ -73,12 +58,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/eligibleleaves")

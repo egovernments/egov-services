@@ -34,3 +34,13 @@ web/property-tax-web/package.json
 
 environment-addons/es-alerts/config.yaml
 environment-addons/es-alerts/rules/*.yaml
+web/react-pgr-web/src/router.js
+web/react-pgr-web/src/components/common/Header.js
+lams/lams-indexer/src/main/java/org/egov/lams/contract/AgreementDetailsEs.java
+web/react-pgr-web/src/components/contents/Dashboard.js
+web/react-pgr-web/src/components/contents/Login.js
+financials/egf-master/mvnw
+financials/egf-instrument/mvnw
+lams/lams-indexer/src/main/java/org/egov/lams/contract/AgreementDetailsEs.java
+financials/egf-master/mvnw
+financials/egf-instrument/mvnw

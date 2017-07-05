@@ -8,15 +8,16 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // import PropTypes from 'prop-types'
-import { withRouter } from 'react-router'
-
+import { withRouter } from 'react-router';
+import Api from '../../api/api';
 // import {history} from 'react-router-dom'
 
 // import {Grid, Row, Col} from 'react-bootstrap';
 
 
-
 import CustomMenu from './CustomMenu';
+
+var base='/';
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -41,7 +42,7 @@ const styles = {
 
 const Logo = () => {
 
-  return (<img src={require("../../images/main_logo.jpg")} style={styles.mainLogo} alt="logo"/>);
+  return (<img src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
 }
 
 const RightIcon = (props) => {
@@ -52,7 +53,7 @@ const RightIcon = (props) => {
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
 
       <IconMenu
-            iconButtonElement={<IconButton style={{backgroundColor:"white"}}><MoreVertIcon /></IconButton>}
+            iconButtonElement={<IconButton style={{color:"white"}}><i className="material-icons">more_vert</i></IconButton>}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
@@ -66,11 +67,20 @@ const RightIcon = (props) => {
             <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
             */}
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
-              var locale = localStorage.getItem('locale');
-              localStorage.clear();
-              localStorage.setItem('locale',locale);
-              props.logout();
-                // props.history.push("/");
+                //  Api.commonApiPost("/user/_logout", {access_token: localStorage.getItem('auth')}).then(function(response)
+                //  {
+                //    var locale = localStorage.getItem('locale');
+                //    localStorage.clear();
+                //    localStorage.setItem('locale',locale);
+                //    props.logout();
+                //  },function(err) {
+                //    console.log(err);
+                // });
+                document.title = "Egovernments";
+                var locale = localStorage.getItem('locale');
+                localStorage.clear();
+                localStorage.setItem('locale',locale);
+                props.logout();
             }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
 
@@ -163,34 +173,34 @@ class Header extends Component {
       id:4,
       name:'Search Grievance',
       displayName:"Search Grievance",
-      url:"/pgr/searchGrievance",
+      url:base + "pgr/searchGrievance",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:2,
       level:3,
 
     },
-    {
-      id:4,
-      name:'My Pending Grievance',
-      displayName:"My Pending Grievance",
-      url:"/pgr/viewGrievance",
-      enabled:"true",
-      orderNumber:2,
-      queryParams:"",
-      leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
-      parentModule:2,
-      level:3,
-    },
+    // {
+    //   id:4,
+    //   name:'My Pending Grievance',
+    //   displayName:"My Pending Grievance",
+    //   url:base + "pgr/viewGrievance",
+    //   enabled:"true",
+    //   orderNumber:2,
+    //   queryParams:"",
+    //   leftIcon:'view_module',
+    //   rightIcon:'',
+    //   parentModule:2,
+    //   level:3,
+    // },
     {
       id:5,
       name:'Officials Register Grievance',
       displayName:"Officials Register Grievance",
-      url:"/pgr/createGrievance",
+      url:base + "pgr/createGrievance",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
@@ -241,30 +251,29 @@ class Header extends Component {
       level:4,
       nextLevel:7,
     },
-    {
-      id:8,
-      name:'Escalation',
-      displayName:"Escalation",
-      url:"",
-      enabled:"true",
-      orderNumber:4,
-      queryParams:"",
-      leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
-      parentModule:2,
-      level:4,
-      nextLevel:8,
-    },
+    // {
+    //   id:8,
+    //   name:'Escalation',
+    //   displayName:"Escalation",
+    //   url:"",
+    //   enabled:"true",
+    //   orderNumber:4,
+    //   queryParams:"",
+    //   leftIcon:'view_module',
+    //   rightIcon:'keyboard_arrow_right',
+    //   parentModule:2,
+    //   level:4,
+    //   nextLevel:8,
+    // },
     {
       id:9,
       name:'Create Grievance Type',
       displayName:"Create Grievance Type",
-      url:"",
+      url:base + "pgr/createServiceType",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
       parentModule:4,
       level:5,
     },
@@ -272,12 +281,11 @@ class Header extends Component {
       id:10,
       name:'View Grievance Type',
       displayName:"View Grievance Type",
-      url:"",
+      url:base + "pgr/viewOrUpdateServiceType/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
       parentModule:4,
       level:5,
     },
@@ -285,12 +293,12 @@ class Header extends Component {
       id:11,
       name:'Update Grievance Type',
       displayName:"Update Grievance Type",
-      url:"",
+      url:base + "pgr/viewOrUpdateServiceType/update",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:5,
     },
@@ -298,12 +306,12 @@ class Header extends Component {
       id:9,
       name:'Create Router',
       displayName:"Create Router",
-      url:"/pgr/createRouter",
+      url:base + "pgr/createRouter",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:6,
     },
@@ -311,12 +319,12 @@ class Header extends Component {
       id:10,
       name:'View Router',
       displayName:"View Router",
-      url:"/pgr/searchRouter/view",
+      url:base + "pgr/searchRouter/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:6,
     },
@@ -324,12 +332,12 @@ class Header extends Component {
       id:11,
       name:'Update Router',
       displayName:"Update Router",
-      url:"/pgr/searchRouter/edit",
+      url:base + "pgr/searchRouter/edit",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:6,
     },
@@ -337,7 +345,7 @@ class Header extends Component {
       id:12,
       name:'Bulk Router Genaration',
       displayName:"Bulk Router Genaration",
-      url:"/pgr/routerGeneration",
+      url:base + "pgr/routerGeneration",
       enabled:"true",
       orderNumber:4,
       queryParams:"",
@@ -350,12 +358,12 @@ class Header extends Component {
       id:13,
       name:'Create Escalation Time',
       displayName:"Create Escalation Time",
-      url:"/pgr/defineEscalationTime",
+      url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:7,
     },
@@ -363,12 +371,12 @@ class Header extends Component {
       id:14,
       name:'View Escalation Time',
       displayName:"View Escalation Time",
-      url:"/pgr/defineEscalationTime",
+      url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:7,
     },
@@ -376,12 +384,12 @@ class Header extends Component {
       id:15,
       name:'Update Escalation Time',
       displayName:"Update Escalation Time",
-      url:"/pgr/defineEscalationTime",
+      url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:7,
     },
@@ -389,12 +397,12 @@ class Header extends Component {
       id:16,
       name:'Create Escalation',
       displayName:"Create Escalation",
-      url:"/pgr/defineEscalation",
+      url:base + "pgr/defineEscalation",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:8,
     },
@@ -402,12 +410,12 @@ class Header extends Component {
       id:17,
       name:'View Escalation',
       displayName:"View Escalation",
-      url:"/pgr/viewEscalation",
+      url:base + "pgr/viewEscalation",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:8,
     },
@@ -428,12 +436,12 @@ class Header extends Component {
       id:19,
       name:'Bulk Escalation',
       displayName:"Bulk Escalation",
-      url:"/pgr/bulkEscalationGeneration",
+      url:base + "pgr/bulkEscalationGeneration",
       enabled:"true",
       orderNumber:4,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:8,
     },
@@ -469,12 +477,12 @@ class Header extends Component {
       id:22,
       name:'Create Receiving Center',
       displayName:"Create Receiving Center",
-      url:"/pgr/createReceivingCenter",
+      url:base + "pgr/createReceivingCenter",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:9,
     },
@@ -482,7 +490,7 @@ class Header extends Component {
       id:23,
       name:'View Receiving Center',
       displayName:"View Receiving Center",
-      url:"/pgr/receivingCenter/view",
+      url:base + "pgr/receivingCenter/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -495,12 +503,12 @@ class Header extends Component {
       id:24,
       name:'Update Receiving Center',
       displayName:"Update Receiving Center",
-      url:"/pgr/receivingCenter/edit",
+      url:base + "pgr/receivingCenter/edit",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:9,
     },
@@ -508,12 +516,12 @@ class Header extends Component {
       id:25,
       name:'Create Receiving Mode',
       displayName:"Create Receiving Mode",
-      url:"/pgr/receivingModeCreate",
+      url:base + "pgr/receivingModeCreate",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:10,
     },
@@ -521,12 +529,12 @@ class Header extends Component {
       id:26,
       name:'View Receiving Mode',
       displayName:"View Receiving Mode",
-      url:"/pgr/viewOrUpdateReceivingMode/view",
+      url:base + "pgr/viewOrUpdateReceivingMode/view",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
       leftIcon:'view_module',
-      rightIcon:'keyboard_arrow_right',
+      rightIcon:'',
       parentModule:4,
       level:10,
     },
@@ -534,15 +542,41 @@ class Header extends Component {
       id:27,
       name:'Update Receiving Mode',
       displayName:"Update Receiving Mode",
-      url:"/pgr/viewOrUpdateReceivingMode/update",
+      url:base + "pgr/viewOrUpdateReceivingMode/update",
+      enabled:"true",
+      orderNumber:3,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:4,
+      level:10,
+    },{
+      id:28,
+      name:'Reports',
+      displayName:"Reports",
+      url:"",
       enabled:"true",
       orderNumber:3,
       queryParams:"",
       leftIcon:'view_module',
       rightIcon:'keyboard_arrow_right',
-      parentModule:4,
-      level:10,
-    }
+      parentModule:1,
+      level:2,
+      nextLevel:11,
+    },
+    {
+      id:29,
+      name:'Aging Report',
+      displayName:"Aging Report",
+      url:base + "report/agingReport",
+      enabled:"true",
+      orderNumber:1,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:1,
+      level:11
+    },
 
 
   ]
@@ -616,7 +650,7 @@ class Header extends Component {
   render() {
     return (
       <div className="Header">
-        <AppBar title={<div><Logo/> eGov </div>}
+        <AppBar title={<div><Logo/> Egovernments </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>
@@ -698,3 +732,8 @@ export default connect(mapStateToProps,mapDispatchToProps)(Header);
 // import MenuItem from 'material-ui/MenuItem';
 // import IconButton from 'material-ui/IconButton';
 // import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
+
+
+// WEBPACK FOOTER //
+// ./src/components/common/Header.js

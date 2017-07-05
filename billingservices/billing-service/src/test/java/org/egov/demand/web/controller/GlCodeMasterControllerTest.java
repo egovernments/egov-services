@@ -65,7 +65,6 @@ public class GlCodeMasterControllerTest {
 		glCodeMasterResponse.setGlCodeMasters(glCodeMaster);
 		glCodeMasterResponse.setResponseInfo(new ResponseInfo());
 
-		System.out.println("glCodeMasterResponse:::::"+glCodeMasterResponse);
 		when(glCodeMasterService.getGlCodes(Matchers.any(GlCodeMasterCriteria.class), Matchers.any(RequestInfo.class)))
 				.thenReturn(glCodeMasterResponse);
 		
@@ -92,6 +91,24 @@ public class GlCodeMasterControllerTest {
 				.content(getFileContents("glCodeMasterCreateRequest.json"))).andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("glCodeMasterCreateResponse.json")));
+	}
+	
+	@Test
+	public void test_Should_Update_GlCodeMaster() throws Exception {
+
+		List<GlCodeMaster> glCodeMasters = new ArrayList<>();
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		glCodeMasters.add(glCodeMaster);
+		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();
+		glCodeMasterResponse.setGlCodeMasters(glCodeMasters);
+		glCodeMasterResponse.setResponseInfo(new ResponseInfo());
+
+		when(glCodeMasterService.updateAsync(any(GlCodeMasterRequest.class))).thenReturn(glCodeMasterResponse);
+
+		mockMvc.perform(post("/glcodemasters/_update").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("glCodeMasterUpdateRequest.json"))).andExpect(status().isCreated())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("glCodeMasterUpdateResponse.json")));
 	}
 	
 	private String getFileContents(String fileName) throws IOException {

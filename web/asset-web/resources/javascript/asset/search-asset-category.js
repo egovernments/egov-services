@@ -95,11 +95,11 @@ class SearchAssetCategory extends React.Component {
 
   handleClick(type, id) {
     if (type === "update") {
-      window.open(`app/asset/create-asset-category.html?id=${id}&type=update`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/asset/create-asset-category.html?id=${id}&type=update`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     } else if(type) {
-      window.open(`app/asset/create-asset-category.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/asset/create-asset-category.html?id=${id}&type=${type}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     } else {
-      window.open(`app/asset/create-asset-category.html?id=${id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/asset/create-asset-category.html?id=${id}&type=view`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }
   }
 

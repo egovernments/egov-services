@@ -40,49 +40,35 @@
 
 package org.egov.wcms.service;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.MeterCost;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.MeterCostRepository;
 import org.egov.wcms.web.contract.MeterCostRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class MeterCostService {
-
-    public static final Logger logger = LoggerFactory.getLogger(MeterCostService.class);
 
     @Autowired
     private MeterCostRepository meterCostRepository;
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     public MeterCostRequest create(final MeterCostRequest meterCostRequest) {
         return meterCostRepository.persistCreateMeterCost(meterCostRequest);
     }
 
     public MeterCost createMeterCost(final String topic, final String key, final MeterCostRequest meterCostRequest) {
-        // meterCostRequest.getMeterCost().setCode(codeGeneratorService.generate(meterCostRequest.getMeterCost().SEQ_METERCOST));
-        final ObjectMapper mapper = new ObjectMapper();
 
-        String meterCostValue = null;
         try {
-            logger.info("createMeterCost service::" + meterCostRequest);
-            meterCostValue = mapper.writeValueAsString(meterCostRequest);
-            logger.info("meterCostValue::" + meterCostValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, meterCostValue);
+            kafkaTemplate.send(topic, key, meterCostRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return meterCostRequest.getMeterCost();
     }

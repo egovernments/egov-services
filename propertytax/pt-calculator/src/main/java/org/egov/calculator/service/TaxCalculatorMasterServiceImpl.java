@@ -207,8 +207,6 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			calculationFactorResponse.setCalculationFactors(calculationFactors);
 			calculationFactorResponse.setResponseInfo(responseInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
 			throw new InvalidInputException(requestInfo);
 		}
 		return calculationFactorResponse;

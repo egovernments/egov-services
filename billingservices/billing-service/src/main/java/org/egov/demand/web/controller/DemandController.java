@@ -76,6 +76,7 @@ public class DemandController {
 
 	@Autowired
 	private DemandValidator demandValidator;
+	
 	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
 	@PostMapping("_create")
 	@ResponseBody
@@ -99,19 +100,28 @@ public class DemandController {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		demandValidator.validate(demandRequest, bindingResult);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
+					HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(demandService.updateAsync(demandRequest), HttpStatus.CREATED);
 	}
-	
-	@PostMapping("_edit")
-	public ResponseEntity<?> edit(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+
+	@PostMapping("collection/_update")
+	public ResponseEntity<?> updateCollection(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(demandService.updateAsync(demandRequest), HttpStatus.CREATED);
+		
+		demandValidator.validate(demandRequest, bindingResult);
+		return new ResponseEntity<>(demandService.updateCollection(demandRequest), HttpStatus.CREATED);
 	}
 
 	@PostMapping("_search")

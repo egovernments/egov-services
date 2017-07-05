@@ -40,11 +40,8 @@
 
 package org.egov.eis.web.errorhandlers;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +49,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Component
 public class ErrorHandler {

@@ -49,16 +49,15 @@ import org.egov.wcms.repository.builder.CategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.CategoryTypeRowMapper;
 import org.egov.wcms.web.contract.CategoryTypeGetRequest;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class CategoryTypeRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(CategoryTypeRepository.class);
+@Repository
+@Slf4j
+public class CategoryTypeRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -70,7 +69,7 @@ public class CategoryTypeRepository {
     private CategoryTypeRowMapper categoryRowMapper;
 
     public CategoryTypeRequest persistCreateCategory(final CategoryTypeRequest categoryRequest) {
-        LOGGER.info("ConnectionCategoryRequest::" + categoryRequest);
+        log.info("ConnectionCategoryRequest::" + categoryRequest);
         final String categoryInsert = CategoryTypeQueryBuilder.insertCategoryQuery();
         final CategoryType category = categoryRequest.getCategory();
         final Object[] obj = new Object[] { Long.valueOf(category.getCode()), category.getCode(), category.getName(),
@@ -84,7 +83,7 @@ public class CategoryTypeRepository {
     }
 
     public CategoryTypeRequest persistModifyCategory(final CategoryTypeRequest categoryRequest) {
-        LOGGER.info("ConnectionCategoryRequest::" + categoryRequest);
+        log.info("ConnectionCategoryRequest::" + categoryRequest);
         final String categoryUpdate = CategoryTypeQueryBuilder.updateCategoryQuery();
         final CategoryType category = categoryRequest.getCategory();
         final Object[] obj = new Object[] { category.getName(), category.getDescription(), category.getActive(),
@@ -98,7 +97,6 @@ public class CategoryTypeRepository {
     public boolean checkCategoryByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
-        // preparedStatementValues.add(id);
         preparedStatementValues.add(tenantId);
         final String query;
         if (code == null)

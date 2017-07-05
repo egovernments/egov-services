@@ -3,6 +3,7 @@ package org.egov.asset.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,8 +100,8 @@ public class VoucherServiceTest {
 	private List<VouchercreateAccountCodeDetails> getVouchercreateAccountCodeDetails() {
 		final VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails = new VouchercreateAccountCodeDetails();
 
-		vouchercreateAccountCodeDetails.setCreditAmount(Double.valueOf("0"));
-		vouchercreateAccountCodeDetails.setDebitAmount(Double.valueOf("10"));
+		vouchercreateAccountCodeDetails.setCreditAmount(new BigDecimal("0"));
+		vouchercreateAccountCodeDetails.setDebitAmount(new BigDecimal("10"));
 		vouchercreateAccountCodeDetails.setGlcode("generalLedger6Code");
 		final Function function = new Function();
 		function.setId(Long.valueOf("124"));
@@ -134,10 +135,10 @@ public class VoucherServiceTest {
 		final Revaluation revaluation = new Revaluation();
 		revaluation.setTenantId("ap.kurnool");
 		revaluation.setAssetId(Long.valueOf("12"));
-		revaluation.setCurrentCapitalizedValue(Double.valueOf("100.58"));
+		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.58"));
 		revaluation.setTypeOfChange(TypeOfChangeEnum.INCREASED);
-		revaluation.setRevaluationAmount(Double.valueOf("10"));
-		revaluation.setValueAfterRevaluation(Double.valueOf("90.68"));
+		revaluation.setRevaluationAmount(new BigDecimal("10"));
+		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
 		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
 		revaluation.setReevaluatedBy("5");
 		revaluation.setReasonForRevaluation("reasonForRevaluation");

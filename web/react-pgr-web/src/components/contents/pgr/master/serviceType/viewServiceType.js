@@ -21,7 +21,6 @@ import {translate} from '../../../../common/common';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -50,6 +49,9 @@ const styles = {
   },
   checkbox: {
     marginTop: 37
+  },
+  bold: {
+    fontWeight: "bolder"
   }
 };
 
@@ -155,14 +157,86 @@ class ViewServiceType extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewServiceType.id ? viewServiceType.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.add.name")}<span style={{float:'right'}}>{viewServiceType.serviceName ? viewServiceType.serviceName : ''}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.code")}<span style={{float:'right'}}>{viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Category<span style={{float:'right'}}>{getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Active <span style={{float:'right'}}>{viewServiceType.active? 'true' : 'false'}</span></ListGroupItem>
-                                      <ListGroupItem>{translate("core.lbl.description")}<span style={{float:'right'}}>{viewServiceType.description? viewServiceType.description : ''}</span></ListGroupItem>
-                                      <ListGroupItem>SLA Hours <span style={{float:'right'}}>{viewServiceType.slaHours? viewServiceType.slaHours : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Has Financial Impact <span style={{float:'right'}}>{viewServiceType.hasFinancialImpact? 'true' : 'false'}</span></ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               ID
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.id ? viewServiceType.id : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.add.name")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.serviceName ? viewServiceType.serviceName : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.code")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Category
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Active
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.active? 'true' : 'false'}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.description")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.description? viewServiceType.description : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               SLA Hours
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.slaHours? viewServiceType.slaHours : ''}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Has Financial Impact
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewServiceType.hasFinancialImpact? 'true' : 'false'}
+                                          </Col>
+                                        </Row>
+                                      </ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>

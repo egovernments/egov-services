@@ -9,6 +9,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RevaluationService.class)
-// @RunWith(MockitoJUnitRunner.class)
 public class RevaluationServiceTest {
 
 	@Mock
@@ -161,24 +161,15 @@ public class RevaluationServiceTest {
 		assertEquals(revaluationResponse.toString(), expectedRevaluationResponse.toString());
 	}
 
-	private List<ChartOfAccountDetailContract> get_ChartOfAccountDetailContract() {
-		final ChartOfAccountDetailContract chartOfAccountDetailContract = new ChartOfAccountDetailContract();
-
-		final List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<>();
-		chartOfAccountDetailContracts.add(chartOfAccountDetailContract);
-
-		return chartOfAccountDetailContracts;
-	}
-
 	private Revaluation getRevaluationForCreateAsync() {
 
 		final Revaluation revaluation = new Revaluation();
 		revaluation.setTenantId("ap.kurnool");
 		revaluation.setAssetId(Long.valueOf("31"));
-		revaluation.setCurrentCapitalizedValue(Double.valueOf("100.68"));
+		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
 		revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
-		revaluation.setRevaluationAmount(Double.valueOf("10"));
-		revaluation.setValueAfterRevaluation(Double.valueOf("90.68"));
+		revaluation.setRevaluationAmount(new BigDecimal("10.0"));
+		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
 		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
 		revaluation.setReevaluatedBy("5");
 		revaluation.setReasonForRevaluation("reasonForRevaluation");
@@ -239,10 +230,10 @@ public class RevaluationServiceTest {
 		final Revaluation revaluation = new Revaluation();
 		revaluation.setTenantId("ap.kurnool");
 		revaluation.setAssetId(Long.valueOf("31"));
-		revaluation.setCurrentCapitalizedValue(Double.valueOf("100.68"));
+		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
 		revaluation.setTypeOfChange(TypeOfChangeEnum.DECREASED);
-		revaluation.setRevaluationAmount(Double.valueOf("10"));
-		revaluation.setValueAfterRevaluation(Double.valueOf("90.68"));
+		revaluation.setRevaluationAmount(new BigDecimal("10"));
+		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
 		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
 		revaluation.setReevaluatedBy("5");
 		revaluation.setReasonForRevaluation("reasonForRevaluation");

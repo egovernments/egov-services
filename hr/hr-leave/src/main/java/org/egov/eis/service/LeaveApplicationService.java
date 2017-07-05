@@ -40,27 +40,17 @@
 
 package org.egov.eis.service;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.egov.eis.broker.LeaveApplicationProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.util.ApplicationConstants;
-import org.egov.eis.web.contract.LeaveApplicationGetRequest;
-import org.egov.eis.web.contract.LeaveApplicationRequest;
-import org.egov.eis.web.contract.LeaveApplicationResponse;
-import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
-import org.egov.eis.web.contract.LeaveApplicationUploadResponse;
-import org.egov.eis.web.contract.LeaveTypeGetRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +59,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class LeaveApplicationService {
@@ -80,17 +73,11 @@ public class LeaveApplicationService {
     @Value("${kafka.topics.leaveapplication.create.name}")
     private String leaveApplicationCreateTopic;
 
-    @Value("${kafka.topics.leaveapplication.create.key}")
-    private String leaveApplicationCreateKey;
-
     @Value("${kafka.topics.leaveapplication.update.name}")
     private String leaveApplicationUpdateTopic;
 
-    @Value("${kafka.topics.leaveapplication.update.key}")
-    private String leaveApplicationUpdateKey;
-
     @Autowired
-    private LeaveApplicationProducer leaveApplicationProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private LeaveApplicationRepository leaveApplicationRepository;
@@ -142,20 +129,7 @@ public class LeaveApplicationService {
                         leaveApplicationRequest.getRequestInfo()).get(0).getId());
             leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
         }
-        String leaveApplicationRequestJson = null;
-        try {
-            leaveApplicationRequestJson = objectMapper.writeValueAsString(leaveApplicationRequest);
-            LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
-        } catch (final JsonProcessingException e) {
-            LOGGER.error("Error while converting Leave Application to JSON", e);
-            e.printStackTrace();
-        }
-        try {
-            leaveApplicationProducer.sendMessage(leaveApplicationCreateTopic, leaveApplicationCreateKey,
-                    leaveApplicationRequestJson);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-        }
+        kafkaTemplate.send(leaveApplicationCreateTopic, leaveApplicationRequest);
         if (isExcelUpload)
             return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
                     leaveApplicationRequest.getRequestInfo());
@@ -215,20 +189,7 @@ public class LeaveApplicationService {
                     leaveApplicationRequest.getRequestInfo());
             leaveApplications.get(0).setStatus(oldApplications.get(0).getStatus());
             leaveApplications.get(0).setStateId(oldApplications.get(0).getStateId());
-            String leaveApplicationRequestJson = null;
-            try {
-                leaveApplicationRequestJson = objectMapper.writeValueAsString(leaveApplicationRequest);
-                LOGGER.info("leaveApplicationRequestJson::" + leaveApplicationRequestJson);
-            } catch (final JsonProcessingException e) {
-                LOGGER.error("Error while converting Leave Application to JSON", e);
-                e.printStackTrace();
-            }
-            try {
-                leaveApplicationProducer.sendMessage(leaveApplicationUpdateTopic, leaveApplicationUpdateKey,
-                        leaveApplicationRequestJson);
-            } catch (final Exception ex) {
-                ex.printStackTrace();
-            }
+            kafkaTemplate.send(leaveApplicationUpdateTopic, leaveApplicationRequest);
             leaveApplicationStatusChange(leaveApplications.get(0), leaveApplicationRequest.getRequestInfo());
         }
         return getSuccessResponseForCreate(leaveApplications, leaveApplicationRequest.getRequestInfo());

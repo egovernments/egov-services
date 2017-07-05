@@ -77,7 +77,7 @@ public class MovementQueryBuilder {
             final List preparedStatementValues, final RequestInfo requestInfo) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-        addWhereClause(selectQuery, preparedStatementValues, movementSearchRequest, requestInfo);
+        addWhereClause(selectQuery, preparedStatementValues, movementSearchRequest);
         addOrderByClause(selectQuery, movementSearchRequest);
         addPagingClause(selectQuery, preparedStatementValues, movementSearchRequest);
 
@@ -87,7 +87,7 @@ public class MovementQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final MovementSearchRequest movementSearchRequest, final RequestInfo requestInfo) {
+            final MovementSearchRequest movementSearchRequest) {
 
         if (movementSearchRequest.getId() == null && movementSearchRequest.getEmployeeId() == null
                 && movementSearchRequest.getTypeOfmovement() == null && movementSearchRequest.getEffectiveFromDate() == null

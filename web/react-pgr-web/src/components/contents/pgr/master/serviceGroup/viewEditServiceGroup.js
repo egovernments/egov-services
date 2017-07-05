@@ -23,7 +23,6 @@ import {translate} from '../../../../common/common';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -82,7 +81,7 @@ class ViewEditReceivingCenter extends Component {
     }
 
     handleNavigation = (type, id) => {
-      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+      this.props.history.push(type+id);
     }
 
 

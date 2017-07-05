@@ -18,7 +18,6 @@ import {translate} from '../../../../common/common';
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -230,14 +229,15 @@ class receivingModeCreate extends Component {
               </CardText>
            </Card>
            <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} backgroundColor={"#5a3e1b"} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={(e)=>{this.close()}}/>
+
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={ !_this.state.id ? 'Create' : 'Update'} primary={true}/>
+
               </div>
          </form>
          <Dialog
-          title="Success"
+          title={translate("pgr.lbl.success")}
           actions={[<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={handleOpenNClose}
 				      />]}

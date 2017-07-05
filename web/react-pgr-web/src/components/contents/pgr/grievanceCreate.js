@@ -22,7 +22,6 @@ import {translate} from '../../common/common';
 
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -71,7 +70,7 @@ class grievanceCreate extends Component {
     let {initForm, history} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    history.push("/viewGrievance/"+this.state.serviceRequestId);
+    history.push("/pgr/viewGrievance/"+this.state.serviceRequestId);
     window.location.reload();
   };
 
@@ -82,7 +81,7 @@ class grievanceCreate extends Component {
        {
          currentThis.setState({receivingCenter : response.ReceivingCenterType});
        },function(err) {
-
+         currentThis.handleError(err.message);
        });
      }else{
        //currentThis.setState({receivingCenter : []});
@@ -95,7 +94,7 @@ class grievanceCreate extends Component {
      {
        currentThis.setState({grievanceType : response.complaintTypes});
      },function(err) {
-
+       currentThis.handleError(err.message);
      });
    }
 
@@ -105,8 +104,6 @@ class grievanceCreate extends Component {
     let {initForm} = this.props;
     initForm(localStorage.getItem('type'));
 
-    //let {toggleDailogAndSetText}=this.props;
-
     var currentThis = this;
 
     //ReceivingMode
@@ -115,7 +112,7 @@ class grievanceCreate extends Component {
       {
         currentThis.setState({receivingModes : response.ReceivingModeType});
       },function(err) {
-
+        currentThis.handleError(err.message);
       });
     }
 
@@ -130,7 +127,7 @@ class grievanceCreate extends Component {
       }
       currentThis.setState({topComplaintTypes : topComplaint});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
 
     //Grievance Category
@@ -138,7 +135,7 @@ class grievanceCreate extends Component {
     {
       currentThis.setState({grievanceCategory : response.ServiceGroups});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
 
     this.setState({loadingstatus:'hide'});
@@ -155,14 +152,15 @@ class grievanceCreate extends Component {
         userArray.push(localStorage.getItem('id'));
         userRequest['id']=userArray;
         userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
-        let userInfo = Api.commonApiPost("/user/_search",{},userRequest).then(function(userResponse)
+        let userInfo = Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse)
         {
           var userName = userResponse.user[0].name;
   				var userMobile = userResponse.user[0].mobileNumber;
   				var userEmail = userResponse.user[0].emailId;
           _this.createGrievance(userName,userMobile,userEmail);
         },function(err) {
-
+          _this.setState({loadingstatus:'hide'});
+          _this.handleError(err.message);
         });
       }else if(type == 'EMPLOYEE'){
         _this.createGrievance();
@@ -276,21 +274,21 @@ class grievanceCreate extends Component {
                 {currentThis.handleOpen()}
               }
             },function(err) {
-
+              currentThis.handleError(err.message);
             });
           }
         }
       }
     },function(err) {
           currentThis.setState({loadingstatus:'hide'});
-          currentThis.handleError();
     });
   }
 
-handleError = () => {
- let {toggleSnackbarAndSetText} = this.props;
-  toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
-}
+  handleError = (msg) => {
+    let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
+    toggleDailogAndSetText(true, msg);
+    //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
+  }
 
 
   handleTouchTap = () => {
@@ -357,7 +355,7 @@ handleError = () => {
                             handleChange(e, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
                             {this.state.receivingModes !== undefined ?
                             this.state.receivingModes.map((receivingmode, index) => (
-                                <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} />
+                                receivingmode.active ? <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} /> : ''
                             )) : ''}
                           </SelectField>
                         </Col> : ''
@@ -498,7 +496,6 @@ handleError = () => {
           </Card>
           <div style={{textAlign: 'center'}}>
             <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
-            <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
           </div>
         </form>
         <div>
@@ -562,7 +559,7 @@ const mapDispatchToProps = dispatch => ({
           };
           _this.props.handleChange(e, "receivingCenter", true, "")}} errorText={_this.props.fieldErrors.receivingCenter ? _this.props.fieldErrors.receivingCenter : ""} >
           {_this.state.receivingCenter.map((receivingcenter, index) => (
-              <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} />
+              receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
           ))}
         </SelectField>
       </Col>
@@ -576,7 +573,7 @@ const mapDispatchToProps = dispatch => ({
       {
         currentThis.setState({boundarySource : response});
       },function(err) {
-
+        currentThis.handleError(err.message);
       });
     }
   },
@@ -604,7 +601,7 @@ const mapDispatchToProps = dispatch => ({
       };
       dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: e.target.value, isRequired : true, pattern: ''});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
 
   },

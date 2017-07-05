@@ -5,6 +5,7 @@ import {Link, Route} from 'react-router-dom';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
 import SwipeableViews from 'react-swipeable-views';
@@ -17,12 +18,15 @@ const styles = {
     marginBottom: 12,
     fontWeight: 400,
   },
+  headerStyle : {
+    fontSize : 19
+  },
   slide: {
     padding: 10,
   },
   status:{
     fontSize:14,
-    background:"rgb(53, 79, 87)",
+    background:"#5f5c62",
     display:"inline-block",
     padding:"4px 8px",
     borderRadius:4,
@@ -37,26 +41,77 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       slideIndex: 0,
-      serviceRequests: []
+      serviceRequests: [],
+	  localArray:[]
     };
 }
   componentWillMount() {
 
     let current = this;
     let {currentUser}=this.props;
-    console.log(currentUser);
-    Api.commonApiPost("/pgr/seva/v1/_search?tenantId=default",{userId:currentUser.id},{}).then(function(response){
-        console.log(response);
-        current.setState({
-          serviceRequests: response
-        });
-    }).catch((error)=>{
-        console.log(error);
-        current.setState({
-          serviceRequests: []
-        });
-    })
+
+    if(currentUser.type=="CITIZEN") {
+      Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
+          response.serviceRequests.sort(function(s1, s2) {
+              var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+              var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+              if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                return 1;
+              } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                return -1;
+              }
+              return 0;
+            })
+
+          current.setState({
+            serviceRequests: response.serviceRequests,
+			      localArray: response.serviceRequests
+          });
+      }).catch((error)=>{
+          current.setState({
+            serviceRequests: [],
+			      localArray:[]
+          });
+      })
+    } else {
+      Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
+        if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
+          Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+                response.serviceRequests.sort(function(s1, s2) {
+                  var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+                  var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+                  if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                    return 1;
+                  } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                    return -1;
+                  }
+                  return 0;
+                })
+                current.setState({
+                  serviceRequests: response.serviceRequests,
+                  localArray:response.serviceRequests
+                });
+            }).catch((error)=>{
+                current.setState({
+                  serviceRequests: [],
+                  localArray:[]
+                });
+            })
+        } else {
+            currentUser.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
+        }
+      })
+    }
   };
+  
+  localHandleChange = (string) => {
+	 var b = this.state.serviceRequests.filter(function(item, index, array){
+		  if(JSON.stringify(item).toLowerCase().match(string.toLowerCase())){
+			  return item;
+		  }
+	  })
+	  this.setState({localArray:b});
+  }
 
   handleChange = (value) => {
     this.setState({
@@ -67,7 +122,7 @@ class Dashboard extends Component {
 
   render() {
 
-    // console.log(this);
+    //console.log(this.state.localArray);
     var {currentUser}=this.props;
     // console.log(currentUser);
     return (
@@ -79,9 +134,8 @@ class Dashboard extends Component {
               onChange={this.handleChange}
               value={this.state.slideIndex}
             >
-              <Tab label="My Request" value={0} />
-              <Tab label="New Services" value={1} />
-              <Tab label="New Grievances" value={2} />
+              <Tab label="My Request" value={0}/>
+              <Tab label="New Grievances" value={1}  onClick={()=>{this.props.history.push("/pgr/createGrievance")}}/>
             </Tabs>
             <SwipeableViews
               index={this.state.slideIndex}
@@ -90,27 +144,36 @@ class Dashboard extends Component {
               <div>
                   <Grid>
                     <Row>
-                      {this.state.serviceRequests && this.state.serviceRequests.map((e,i)=>{
+						<Col xs={12} md={12}>
+							<TextField
+								hintText="Search"
+								floatingLabelText="Search"
+								fullWidth="true"
+								onChange={(e, value) =>this.localHandleChange(value)}
+							/>
+						</Col>
+                      {this.state.localArray && this.state.localArray.map((e,i)=>{
+						  						  
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
-                             <Card>
+                             <Card style={{minHeight:320}}>
                                  <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="status"){
-                                        return(item.value)
+                                        return(item.name)
                                       }
                                   })}
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={e.serviceRequestId}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>
-                                    Service No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
                                         if(item.key =="status"){
-                                          return(item.value)
+                                          return(item.name)
                                         }
                                     })} status.
                                  </CardText>
@@ -122,23 +185,59 @@ class Dashboard extends Component {
                   </Grid>
               </div>
               <div style={styles.slide}>
-                slide n°2
-              </div>
-              <div style={styles.slide}>
                   <Grid>
                     <Row>
                       <Col>
-                          <Link to={`/pgr/createGrievance`} target="_blank"><RaisedButton label="Create Grievance" secondary={true} /></Link>
+                          <Link to={`/pgr/createGrievance`} target=""><RaisedButton label="Create Grievance" secondary={true} /></Link>
                       </Col>
                     </Row>
                   </Grid>
               </div>
             </SwipeableViews>
           </div>:  <Card>
-              <CardHeader
-               title="Work list"
-              />
+              <CardHeader title={< div style = {styles.headerStyle} >Work List< /div>} />
+				<CardText>
+						 <Grid style={{"paddingTop":"0"}}>
+                    <Row>
+					<Col xs={12} md={12}>
+							<TextField
+								hintText="Search"
+								floatingLabelText="Search"
+								fullWidth="true"
+								onChange={(e, value) =>this.localHandleChange(value)}
+							/>
+						</Col>
+                      {this.state.localArray && this.state.localArray.map((e,i)=>{
+                        return(
+                          <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
+                             <Card style={{minHeight:320}}>
+                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
+                                  title={e.serviceName}
+                                  subtitle={e.attribValues && e.attribValues.map((item,index)=>{
+                                      if(item.key =="status"){
+                                        return(item.name)
+                                      }
+                                  })}
+                                 />
 
+                                 <CardHeader  titleStyle={{fontSize:18}}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   subtitle={e.requestedDatetime}
+                                 />
+                                 <CardText>
+                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                        if(item.key =="status"){
+                                          return(item.name)
+                                        }
+                                    })} status.
+                                 </CardText>
+                             </Card>
+                          </Col>
+                        )
+                      }) }
+                    </Row>
+                  </Grid>
+				</CardText>
 
               {/*<CardText>
                             <Grid>
@@ -269,6 +368,9 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    }
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     // setLabels: payload => dispatch({type: 'LABELS', payload}),

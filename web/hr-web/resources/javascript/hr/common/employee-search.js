@@ -181,9 +181,9 @@ class EmployeeSearch extends React.Component {
 
   handleClick(type, id) {
     if (type === "update") {
-      window.open(`app/hr/employee/create.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/hr/employee/create.html?id=${id}&type=${type}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }else {
-      window.open(`app/hr/employee/create.html?id=${id}&type=${type}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/hr/employee/create.html?id=${id}&type=${type}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }
   }
 

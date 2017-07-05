@@ -243,7 +243,7 @@ public class ServiceGroupController {
 
 	private ResponseEntity<?> getSuccessResponse(final List<ServiceGroup> serviceGroupList, final RequestInfo requestInfo) {
 		final ServiceGroupResponse serviceGroupResponse = new ServiceGroupResponse();
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		serviceGroupResponse.setResponseInfo(responseInfo);
 		serviceGroupResponse.setServiceGroups(serviceGroupList);

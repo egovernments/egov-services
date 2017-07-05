@@ -121,7 +121,7 @@ public class MovementController {
 
     @PostMapping("_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody final MovementRequest movementRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid final MovementRequest movementRequest,
             final BindingResult bindingResult, @RequestParam(name = "type", required = false) final String type) {
 
         final ResponseEntity<?> errorResponseEntity = validateMovementRequests(movementRequest,
@@ -134,7 +134,7 @@ public class MovementController {
 
     @PostMapping("/{movementId}/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody final MovementRequest movementRequest,
+    public ResponseEntity<?> update(@RequestBody @Valid final MovementRequest movementRequest,
             @PathVariable(required = true, name = "movementId") final Long movementId,
             final BindingResult bindingResult) {
         final ResponseEntity<?> errorResponseEntity = validateMovementRequests(movementRequest,

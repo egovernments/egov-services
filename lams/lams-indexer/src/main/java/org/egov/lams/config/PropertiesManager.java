@@ -35,6 +35,15 @@ public class PropertiesManager {
 	 @Value("${egov.services.boundary_service.citysearchpath}")
 	 private String boundaryApiCitySearchPath;
 	 
+	 @Value("${egov.services.demand_service.hostname}")
+	 private String demandServiceHostName;
+	 
+	 @Value("${egov.services.demand_reason_service.searchpath}")
+	 private String demandSearchServicepath;
+	 
+	 @Value("${egov.services.tenant.host}")
+	 private String tenantServiceHostName;
+	 
 	 
 	 @Value("${egov.services.lams.indexer.host}")
 	 private String indexServiceHostUrl;

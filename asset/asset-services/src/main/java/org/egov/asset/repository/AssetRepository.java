@@ -50,12 +50,14 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
+import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -162,13 +164,33 @@ public class AssetRepository {
 				location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
 				asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
-				asset.getVersion() };
+				asset.getVersion(), asset.getEnableYearWiseDepreciation() };
 		try {
 			jdbcTemplate.update(query, obj);
 		} catch (final Exception ex) {
 			logger.info("the exception from insert query : " + ex);
 		}
+		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
+			final List<YearWiseDepreciation> yearWiseDepreciation = asset.getDepreciationRate();
+			if (yearWiseDepreciation != null) {
+				String batchUpdateQuery = AssetQueryBuilder.BATCHUPDATEQUERY;
 
+				List<Object[]> depreciationBatchArgs = new ArrayList<>();
+				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {
+					Object[] depreciationRecord = { depreciationRate.getDepreciationRate(),
+							depreciationRate.getFinancialYear(), depreciationRate.getAssetId(),
+							depreciationRate.getUsefulLifeInYears() };
+					depreciationBatchArgs.add(depreciationRecord);
+				}
+
+				try {
+					jdbcTemplate.batchUpdate(batchUpdateQuery, depreciationBatchArgs);
+				} catch (DataAccessException ex) {
+					ex.printStackTrace();
+					throw new RuntimeException(ex.getMessage());
+				}
+			}
+		}
 		return asset;
 	}
 
@@ -212,7 +234,7 @@ public class AssetRepository {
 				location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), asset.getGrossValue(),
 				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getCode(),
-				asset.getTenantId() };
+				asset.getTenantId(), asset.getEnableYearWiseDepreciation(), asset.getDepreciationRate() };
 		try {
 			logger.info("query1::" + query + "," + Arrays.toString(obj));
 			final int i = jdbcTemplate.update(query, obj);

@@ -1,7 +1,7 @@
 package org.egov.eis.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.web.contract.CalendarYearResponse;
-import org.egov.eis.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

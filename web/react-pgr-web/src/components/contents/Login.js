@@ -82,6 +82,7 @@ class Login extends Component {
            isActive: {
              checked: false
            },
+           localeready : false,
            locale: localStorage.getItem('locale') ? localStorage.getItem('locale') : 'en_IN',
            dataSource: [],
            errorMsg: "",
@@ -123,23 +124,14 @@ class Login extends Component {
    }
 
    componentWillMount() {
-    //  console.log(this);
-     //call boundary service fetch wards,location,zone data
+
    }
 
    componentDidMount() {
-     let {initForm} = this.props;
+     let {initForm, setLoadingStatus} = this.props;
      initForm();
-
+     setLoadingStatus("loading");
      this.handleLocaleChange(this.state.locale);
-
-
-    //  Api.commonApiPost("egf-masters", "functionaries", "_search").then(function(response)
-    //  {
-    //  console.log(response);
-    //  },function(err) {
-    //  console.log(err);
-    //  });
    }
 
    componentWillUnmount() {
@@ -155,12 +147,16 @@ class Login extends Component {
    }
 
    handleLocaleChange = (value) => {
+     //console.log(value);
+     let {setLoadingStatus} = this.props;
      var self = this;
      Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
      {
        self.setState({'locale':value});
+       self.setState({'localeready':true});
        localStorage.setItem("locale", value);
        localStorage.setItem("lang_response", JSON.stringify(response.messages));
+       setLoadingStatus("hide");
      },function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message);
      });
@@ -284,7 +280,8 @@ class Login extends Component {
 
    searchGrievance = (e) => {
      let {history} = this.props;
-     history.push("/viewGrievance/"+this.state.srn);
+     if(this.state.srn)
+      history.push("/pgr/viewGrievance/"+this.state.srn);
    }
 
    validateOTP() {
@@ -421,6 +418,10 @@ class Login extends Component {
         })
       }
    }
+   openAnonymousComplaint = () => {
+     let {history} = this.props;
+     history.push('/pgr/createGrievance');
+   }
 
    render() {
       //console.log("IN LOGIN");
@@ -469,6 +470,7 @@ class Login extends Component {
       //       <Redirect to="/dashboard"/>
       //     )
       // } else {
+
       const showError = function() {
         if(errorMsg) {
           return (<p className="text-danger">{errorMsg}</p>)
@@ -515,6 +517,8 @@ class Login extends Component {
       }
 
         return(
+          <div>
+          {this.state.localeready ?
           <div className="Login">
             <Grid>
              <Row>
@@ -560,7 +564,7 @@ class Login extends Component {
                                   {showError()}
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
+                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} onClick={(e)=>{
                                     loginRequest()
                                   }}/>
                                   <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
@@ -585,7 +589,7 @@ class Login extends Component {
                         <FloatingActionButton  style={styles.floatingIconButton}>
                             <i className="material-icons">mode_edit</i>
                         </FloatingActionButton>
-                        <div style={styles.floatLeft}>
+                        <div style={{"float": "left", "cursor": "pointer"}} onClick={this.openAnonymousComplaint}>
                           <h4>{translate('pgr.lbl.register.grievance')}</h4>
                           <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
@@ -601,7 +605,7 @@ class Login extends Component {
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label={translate('core.lbl.search')} backgroundColor={"#354f57"} labelColor={white} onClick={(e)=>{searchGrievance(e)}}/>
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} primary={true}/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -793,6 +797,8 @@ class Login extends Component {
                 </Row>
             </Dialog>
           </div>
+          : ""}
+          </div>
         )
       // }
 
@@ -824,6 +830,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 });
 

@@ -98,6 +98,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.glCodeMaster.key}")
 	private String createGlCodeMasterTopicKey;
 	
+	@Value("${kafka.topics.update.glCodeMaster}")
+	private String updateGlCodeMasterTopicName;
+	
+	@Value("${kafka.topics.update.glCodeMaster.key}")
+	private String updateGlCodeMasterTopicKey;
+	
 	@Value("${kafka.topics.create.taxperiod.name}")
 	private String createTaxPeriodTopicName;
 

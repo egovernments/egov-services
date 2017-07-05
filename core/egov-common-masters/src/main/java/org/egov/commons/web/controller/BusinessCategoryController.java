@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.service.BusinessCategoryService;
@@ -17,9 +19,7 @@ import org.egov.commons.web.contract.BusinessCategory;
 import org.egov.commons.web.contract.BusinessCategoryGetRequest;
 import org.egov.commons.web.contract.BusinessCategoryRequest;
 import org.egov.commons.web.contract.BusinessCategoryResponse;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.Error;
 import org.egov.commons.web.errorhandlers.ErrorHandler;

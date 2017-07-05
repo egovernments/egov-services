@@ -19,7 +19,7 @@ public class PropertyPipeSizeResponseInfo {
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
     @JsonProperty("propertyCategories")
-    private List<CommonResponseInfo> propCategory;
+    private List<PropertyTypeResponseInfo> propCategory;
     
     
     

@@ -42,8 +42,11 @@ package org.egov.demand.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -73,7 +76,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DemandService {
-	
+
 	@Autowired
 	private OwnerRepository ownerRepository;
 
@@ -91,10 +94,10 @@ public class DemandService {
 
 	@Autowired
 	private ResponseFactory responseInfoFactory;
-	
+
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
-	
+
 	public DemandResponse create(DemandRequest demandRequest) {
 
 		log.debug("the demand service : " + demandRequest);
@@ -137,25 +140,91 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 
+	public DemandResponse updateCollection(DemandRequest demandRequest) {
+
+		log.debug("the demand service : " + demandRequest);
+		RequestInfo requestInfo = demandRequest.getRequestInfo();
+		List<Demand> demands = demandRequest.getDemands();
+		AuditDetail auditDetail = getAuditDetail(requestInfo);
+
+		Map<String, Demand> demandMap = demands.stream().collect(Collectors.toMap(Demand::getId, Function.identity()));
+		Map<String, DemandDetail> demandDetailMap = new HashMap<>();
+		for (Demand demand : demands) {
+			for (DemandDetail demandDetail : demand.getDemandDetails())
+				demandDetailMap.put(demandDetail.getId(), demandDetail);
+		}
+		DemandCriteria demandCriteria = DemandCriteria.builder().demandId(demandMap.keySet())
+				.tenantId(demands.get(0).getTenantId()).build();
+		List<Demand> existingDemands = demandRepository.getDemands(demandCriteria, null);
+		 
+		for (Demand demand : existingDemands) {
+
+			AuditDetail demandAuditDetail = demand.getAuditDetail();
+			demandAuditDetail.setLastModifiedBy(auditDetail.getLastModifiedBy());
+			demandAuditDetail.setLastModifiedTime(auditDetail.getLastModifiedTime());
+
+			for (DemandDetail demandDetail : demand.getDemandDetails()) {
+				DemandDetail demandDetail2 = demandDetailMap.get(demandDetail.getId());
+				demandDetail.setTaxAmount(demandDetail2.getTaxAmount());
+				demandDetail.setCollectionAmount(demandDetail2.getCollectionAmount());
+
+				AuditDetail demandDetailAudit = demandDetail.getAuditDetail();
+				demandDetailAudit.setLastModifiedBy(auditDetail.getLastModifiedBy());
+				demandDetailAudit.setLastModifiedTime(auditDetail.getLastModifiedTime());
+			}
+		}
+		demandRequest.setDemands(existingDemands);
+		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
+		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED),
+				existingDemands);
+	}
+
 	public DemandResponse updateAsync(DemandRequest demandRequest) {
 
 		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
-		String userId = demandRequest.getRequestInfo().getUserInfo().getId().toString();
-		Long currEpochDate = new Date().getTime();
+		AuditDetail auditDetail = getAuditDetail(requestInfo);
+
+		List<Demand> newDemands = new ArrayList<>();
+		List<DemandDetail> newDemandDetails = new ArrayList<>();
 
 		for (Demand demand : demands) {
-			AuditDetail auditDetail = demand.getAuditDetail();
-			auditDetail.setLastModifiedBy(userId);
-			auditDetail.setLastModifiedTime(currEpochDate);
-			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-				AuditDetail auditDetail1 = demandDetail.getAuditDetail();
-				auditDetail1.setLastModifiedBy(userId);
-				auditDetail1.setLastModifiedTime(currEpochDate);
+			if (demand.getId() == null) {
+				String demandId = sequenceGenService.getIds(1, applicationProperties.getDemandSeqName()).get(0);
+				demand.setId(demandId);
+				demand.setAuditDetail(auditDetail);
+				newDemands.add(demand);
+				for (DemandDetail demandDetail : demand.getDemandDetails()) {
+					demandDetail.setDemandId(demandId);
+					demandDetail.setAuditDetail(auditDetail);
+					newDemandDetails.add(demandDetail);
+				}
+			} else {
+				AuditDetail auditDetailUpdate = demand.getAuditDetail();
+				auditDetailUpdate.setLastModifiedBy(auditDetail.getLastModifiedBy());
+				auditDetail.setLastModifiedTime(auditDetail.getLastModifiedTime());
+				for (DemandDetail demandDetail : demand.getDemandDetails()) {
+					if (demandDetail.getId() == null) {
+						demandDetail.setDemandId(demand.getId());
+						demandDetail.setAuditDetail(auditDetail);
+						newDemandDetails.add(demandDetail);
+					} else {
+						AuditDetail demandDetailAudit = demandDetail.getAuditDetail();
+						demandDetailAudit.setLastModifiedBy(auditDetail.getLastModifiedBy());
+						demandDetailAudit.setLastModifiedTime(auditDetail.getLastModifiedTime());
+					}
+				}
 			}
 		}
-		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
+		int demandSetailSize = newDemandDetails.size();
+		List<String> DemandDetailsId = sequenceGenService.getIds(demandSetailSize,
+				applicationProperties.getDemandDetailSeqName());
+		int i = 0;
+		for (DemandDetail demandDetail : newDemandDetails) {
+			demandDetail.setId(DemandDetailsId.get(i++));
+		}
+		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 
@@ -173,7 +242,7 @@ public class DemandService {
 	}
 
 	public DemandDetailResponse getDemandDetails(DemandDetailCriteria demandDetailCriteria, RequestInfo requestInfo) {
-		
+
 		return new DemandDetailResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),
 				demandRepository.getDemandDetails(demandDetailCriteria));
 	}
@@ -185,7 +254,7 @@ public class DemandService {
 	public void update(DemandRequest demandRequest) {
 		demandRepository.update(demandRequest);
 	}
-	
+
 	private AuditDetail getAuditDetail(RequestInfo requestInfo) {
 
 		String userId = requestInfo.getUserInfo().getId().toString();

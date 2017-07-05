@@ -15,7 +15,7 @@ var requestInfo = {
     "authToken": authToken
 };
 
-var tenantId = "ap.";
+var tenantId = "";
 if(window.location.origin.split("-").length>1)
 {
   tenantId+=window.location.origin.split("-")[0].split("//")[1]
@@ -24,6 +24,7 @@ else {
   tenantId+=window.location.origin.split(".")[0].split("//")[1]
 }
 
+tenantId = tenantIds[tenantId] || "ap." + tenantId;
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();

@@ -16,11 +16,11 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import {translate} from '../../../../common/common';
 
 var flag = 0;
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -49,6 +49,9 @@ const styles = {
   },
   checkbox: {
     marginTop: 37
+  },
+  bold: {
+    fontWeight: "bolder"
   }
 };
 
@@ -106,7 +109,7 @@ class viewReceivingSet extends Component {
       return(
         <div className="viewReceivingSet">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Receiving Mode< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate("pgr.lbl.view")} {translate("pgr.lbl.receivingmode")}< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>
@@ -114,12 +117,66 @@ class viewReceivingSet extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>ID <span style={{float:'right'}}>{viewReceivingSet.id ? viewReceivingSet.id : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Name <span style={{float:'right'}}>{viewReceivingSet.name ? viewReceivingSet.name : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Code <span style={{float:'right'}}>{viewReceivingSet.code ? viewReceivingSet.code : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Description <span style={{float:'right'}}>{viewReceivingSet.description? viewReceivingSet.description : ''}</span></ListGroupItem>
-                                      <ListGroupItem>Active <span style={{float:'right'}}>{viewReceivingSet.active? "True" : "False"}</span></ListGroupItem>
-                                      <ListGroupItem>Channel<span style={{float:'right'}}>{viewReceivingSet.channels ? viewReceivingSet.channels : ''}</span></ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               ID
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.id ? viewReceivingSet.id : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.add.name")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.name ? viewReceivingSet.name : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.code")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.code ? viewReceivingSet.code : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("core.lbl.description")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.description? viewReceivingSet.description : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               {translate("pgr.lbl.active")}
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.active? "True" : "False"}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
+                                      <ListGroupItem>
+                                        <Row>
+                                          <Col xs={4} md={2} style={styles.bold}>
+                                               Channel
+                                          </Col>
+                                          <Col xs={8} md={10}>
+                                              {viewReceivingSet.channels ? viewReceivingSet.channels : ''}
+                                          </Col>
+                                        </Row> 
+                                      </ListGroupItem>
                                   </ListGroup>
                               </CardText>
                           </Card>
@@ -127,8 +184,7 @@ class viewReceivingSet extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                   <RaisedButton style={{margin:'15px 5px'}} label="Close" onClick={(e)=>{this.close()}}/>
-                 </div>
+              </div>
         </div>)
     }
 }

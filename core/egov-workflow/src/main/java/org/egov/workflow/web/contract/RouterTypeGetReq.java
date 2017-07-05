@@ -61,7 +61,7 @@ public class RouterTypeGetReq {
 
     private Long boundaryid;
 
-    private Long serviceid;
+    private List<Long> serviceid;
     
     private Long position;
 

@@ -70,22 +70,21 @@ public class TaxHeadMasterQueryBuilder {
 		}else if(searchTaxHead.getCode()!=null && !searchTaxHead.getCode().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" taxhead.code IN ("+ getIdQuery(searchTaxHead.getCode()));
-			//preparedStatementValues.add("%" + searchTaxHead.getCode() + "%");
 		}
 		if (searchTaxHead.getCategory() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" taxhead.category = ?");
-			preparedStatementValues.add("%" + searchTaxHead.getCategory() + "%");
+			preparedStatementValues.add(searchTaxHead.getCategory());
 		}
 		if (searchTaxHead.getIsActualDemand() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" taxhead.isActualDemand = ?");
-			preparedStatementValues.add("%" + searchTaxHead.getIsActualDemand() + "%");
+			preparedStatementValues.add(searchTaxHead.getIsActualDemand());
 		}
 		if (searchTaxHead.getIsDebit() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" taxhead.isDebit = ?");
-			preparedStatementValues.add("%" + searchTaxHead.getIsDebit() + "%");
+			preparedStatementValues.add( searchTaxHead.getIsDebit());
 		}
 		
 		if (searchTaxHead.getValidFrom() != null && searchTaxHead.getValidTill()!=null) {

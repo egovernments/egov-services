@@ -40,29 +40,17 @@
 
 package org.egov.eis.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.egov.eis.broker.LeaveOpeningBalanceProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.repository.CommonMastersRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.LeaveOpeningBalanceRepository;
-import org.egov.eis.web.contract.CalendarYear;
-import org.egov.eis.web.contract.CalendarYearResponse;
-import org.egov.eis.web.contract.EmployeeInfo;
-import org.egov.eis.web.contract.EmployeeInfoResponse;
-import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
-import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
-import org.egov.eis.web.contract.LeaveOpeningBalanceResponse;
-import org.egov.eis.web.contract.LeaveOpeningBalanceUploadResponse;
-import org.egov.eis.web.contract.LeaveTypeGetRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +59,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class LeaveOpeningBalanceService {
@@ -82,17 +72,11 @@ public class LeaveOpeningBalanceService {
 	@Value("${kafka.topics.leaveopeningbalance.create.name}")
 	private String leaveOpeningBalanceCreateTopic;
 
-	@Value("${kafka.topics.leaveopeningbalance.create.key}")
-	private String leaveOpeningBalanceCreateKey;
-
 	@Value("${kafka.topics.leaveopeningbalance.update.name}")
 	private String leaveOpeningBalanceUpdateTopic;
 
-	@Value("${kafka.topics.leaveopeningbalance.update.key}")
-	private String leaveOpeningBalanceUpdateKey;
-
 	@Autowired
-	private LeaveOpeningBalanceProducer leaveOpeningBalanceProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private LeaveOpeningBalanceRepository leaveOpeningBalanceRepository;
@@ -130,20 +114,7 @@ public class LeaveOpeningBalanceService {
 				errorLeaveOpeningBalanceList.add(leaveOpeningBalance);
 		}
 		leaveOpeningBalanceRequest.setLeaveOpeningBalance(successLeaveOpeningBalanceList);
-		String leaveOpeningBalanceRequestJson = null;
-		try {
-			leaveOpeningBalanceRequestJson = objectMapper.writeValueAsString(leaveOpeningBalanceRequest);
-			LOGGER.info("leaveOpeningBalanceRequestJson::" + leaveOpeningBalanceRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON", e);
-			e.printStackTrace();
-		}
-		try {
-			leaveOpeningBalanceProducer.sendMessage(leaveOpeningBalanceCreateTopic, leaveOpeningBalanceCreateKey,
-					leaveOpeningBalanceRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		kafkaTemplate.send(leaveOpeningBalanceCreateTopic, leaveOpeningBalanceRequest);
 		if (type != null && "upload".equalsIgnoreCase(type))
 			return getSuccessResponseForUpload(successLeaveOpeningBalanceList, errorLeaveOpeningBalanceList,
 					leaveOpeningBalanceRequest.getRequestInfo());
@@ -226,21 +197,7 @@ public class LeaveOpeningBalanceService {
 
 	public ResponseEntity<?> updateLeaveOpeningBalance(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
 		List<LeaveOpeningBalance> leaveOpeningBalance = leaveOpeningBalanceRequest.getLeaveOpeningBalance();
-		String leaveOpeningBalanceRequestJson = null;
-		try {
-			leaveOpeningBalanceRequestJson = objectMapper.writeValueAsString(leaveOpeningBalanceRequest);
-			LOGGER.info("leaveOpeningBalanceRequestJson::" + leaveOpeningBalanceRequestJson);
-		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while converting Employee to JSON", e);
-			e.printStackTrace();
-		}
-		try {
-			leaveOpeningBalanceProducer.sendMessage(leaveOpeningBalanceUpdateTopic, leaveOpeningBalanceUpdateKey,
-					leaveOpeningBalanceRequestJson);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		kafkaTemplate.send(leaveOpeningBalanceUpdateTopic, leaveOpeningBalanceRequest);
 		return getSuccessResponseForCreate(leaveOpeningBalance, leaveOpeningBalanceRequest.getRequestInfo());
 	}
 
@@ -251,7 +208,6 @@ public class LeaveOpeningBalanceService {
 	 * 
 	 * @param leaveOpeningBalance
 	 * @param requestInfo
-	 * @param headers
 	 * @return ResponseEntity<?>
 	 */
 	public ResponseEntity<?> getSuccessResponseForCreate(List<LeaveOpeningBalance> leaveOpeningBalance,

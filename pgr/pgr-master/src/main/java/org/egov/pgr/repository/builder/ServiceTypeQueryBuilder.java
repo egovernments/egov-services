@@ -154,7 +154,7 @@ public class ServiceTypeQueryBuilder {
         return query.append(")").toString();
     }
 
-    public static String insertComplaintTypeQuery(){
+    public String insertComplaintTypeQuery(){
     	return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category) "
     			+ "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?)"; 
     	
@@ -163,7 +163,7 @@ public class ServiceTypeQueryBuilder {
     public static String fetchServiceKeywords() { 
     	return "SELECT keyword FROM servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
     }
-    public static String insertServiceTypeQuery() {
+    public String insertServiceTypeQuery() {
         return "INSERT INTO service_definition (code,tenantid,createdby,createddate) values "
                 + "(?,?,?,?)";
     }  

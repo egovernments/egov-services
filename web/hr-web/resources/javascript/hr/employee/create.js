@@ -1024,7 +1024,7 @@ function checkIfNoDup(employee, objectType, subObject) {
 }
 
 function validateDates(employee, objectType, subObject) {
-    if (objectType == "assignments" && subObject.isPrimary) {
+    if (objectType == "assignments" && (subObject.isPrimary == "true" || subObject.isPrimary == true)) {
         for (let i = 0; i < employee[objectType].length; i++) {
             if (employee[objectType][i].isPrimary && (editIndex == -1 || (editIndex > -1 && i != editIndex))) {
                 var subFromDate = new Date(subObject.fromDate.split("/")[1] + "/" + subObject.fromDate.split("/")[0] + "/" + subObject.fromDate.split("/")[2]).getTime();
@@ -1244,7 +1244,7 @@ function updateTable(tableName, modalName, object) {
                                         ${assignments_position.length>0?assignments_position[0]["name"]:""}
                                     </td>`)
                 $(tableName).append(`<td data-label=${"isPrimary"}>
-                                        ${employee[object][i]["isPrimary"] || ""}
+                                        ${(employee[object][i]["isPrimary"] ? ([true, "true"].indexOf(employee[object][i]["isPrimary"]) > -1 ? "Yes" : "No") : ("No"))}
                                     </td>`)
                 $(tableName).append(`<td data-label=${"fund"}>
                                         ${getNameById("fund",employee[object][i]["fund"],"") || ""}
@@ -1536,7 +1536,8 @@ function getPositions(_this, cb) {
                     tenantId,
                     departmentId: $("#assignments\\.department").val(),
                     designationId: $("#assignments\\.designation").val(),
-                    asOnDate: _date
+                    asOnDate: _date,
+                    pageSize: 100
                 }, function(err, res) {
                     if (res) {
                         commonObject["assignments_position"] = res.Position;
@@ -1552,7 +1553,8 @@ function getPositions(_this, cb) {
             commonApiPost("hr-masters", "positions", "_search", {
                 tenantId,
                 departmentId: $("#assignments\\.department").val(),
-                designationId: $("#assignments\\.designation").val()
+                designationId: $("#assignments\\.designation").val(),
+                pageSize: 100
             }, function(err, res) {
                 if (res) {
                     commonObject["assignments_position"] = res.Position;

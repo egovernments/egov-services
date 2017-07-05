@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.VoucherRequest;
@@ -47,6 +48,9 @@ public class DisposalService {
 	@Autowired
 	private VoucherService voucherService;
 
+	@Autowired
+	private AssetService assetService;
+
 	public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
 		List<Disposal> disposals = null;
 
@@ -61,11 +65,25 @@ public class DisposalService {
 
 	public void create(final DisposalRequest disposalRequest) {
 		disposalRepository.create(disposalRequest);
+		setStatusOfAssetToDisposed(disposalRequest);
+	}
+
+	public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
+		final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
+				disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
+		asset.setStatus("DISPOSED");
+		final AssetRequest assetRequest = AssetRequest.builder().asset(asset)
+				.requestInfo(disposalRequest.getRequestInfo()).build();
+		assetService.update(assetRequest);
 	}
 
 	public DisposalResponse createAsync(final DisposalRequest disposalRequest) {
 
 		disposalRequest.getDisposal().setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
+
+		if (disposalRequest.getDisposal().getAuditDetails() == null)
+			disposalRequest.getDisposal()
+					.setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
 
 		try {
 			final Long voucherId = createVoucherForDisposal(disposalRequest);

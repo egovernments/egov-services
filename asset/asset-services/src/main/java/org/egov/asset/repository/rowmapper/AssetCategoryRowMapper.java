@@ -50,8 +50,8 @@ public class AssetCategoryRowMapper implements RowMapper<AssetCategory>{
 		
 		assetCategory.setDepreciationExpenseAccount((Long)rs.getObject("depreciationexpenseaccount"));
 		assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationmethod")));
-		//Todo DepreciationRate
-		//	assetCategory.setDepreciationRate(rs.getInt("depreciationrate"));
+	
+		assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
 		assetCategory.setId((Long)rs.getObject("id"));
 		assetCategory.setTenantId(rs.getString("tenantid"));
 		assetCategory.setName(rs.getString("name"));

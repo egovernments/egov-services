@@ -65,7 +65,7 @@ public class TaxHeadMasterRepositoryTest {
 		taxHeads.add(taxHeadMaster);
 		taxHeadMasterRequest.setTaxHeadMasters(taxHeads);
 		
-		when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[] { 1 });
 		assertTrue(taxHeads.equals(taxHeadMasterRepository.create(taxHeadMasterRequest)));
 	}
 	
@@ -83,7 +83,7 @@ public class TaxHeadMasterRepositoryTest {
 		taxHeads.add(taxHeadMaster);
 		taxHeadMasterRequest.setTaxHeadMasters(taxHeads);
 		
-		when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[] { 1 });
 		assertTrue(taxHeads.equals(taxHeadMasterRepository.update(taxHeadMasterRequest)));
 	}
 	

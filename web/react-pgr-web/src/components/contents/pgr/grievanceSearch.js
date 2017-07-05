@@ -420,9 +420,7 @@ class grievanceSearch extends Component {
 	                		</Row>
 	                		<Row>
 			                    <Col xs={12} md={12}>
-			                      <FlatButton
-			                        backgroundColor="#a4c639"
-			                        hoverColor="#8AA62F"
+			                      <RaisedButton
 			                        label={buttonText}
 			                        onClick={(e) => {e.preventDefault(); buttonText == translate("core.lbl.more") ? changeButtonText(translate("core.lbl.less")) : changeButtonText(translate("core.lbl.more"))}}
 			                      />

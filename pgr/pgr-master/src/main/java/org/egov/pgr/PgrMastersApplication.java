@@ -40,10 +40,14 @@
 package org.egov.pgr;
 
 import java.io.File;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.egov.ReportApp;
 import org.egov.domain.model.ReportDefinitions;
+import org.egov.report.service.ReportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -66,18 +70,24 @@ public class PgrMastersApplication {
     @Autowired
     private Environment env;
     
-
+    public static final Logger LOGGER = LoggerFactory.getLogger(PgrMastersApplication.class);
     public static volatile ConcurrentHashMap<Long, String> categoryTypeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<Long, String> pipeSizeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<Long, String> sourceTypeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<Long, String> supplyTypeMap = new ConcurrentHashMap<>();
 
     public static void main(final String[] args) {
-        
+    	
+    	System.out.println("Loading the Main class from PGR "+new Date());
+    	LOGGER.info("Loading the Main class from logger info "+new Date());
+    	LOGGER.error("Loading the Main class from logger error "+new Date());
+    	LOGGER.warn("Loading the Main class from logger error "+new Date());
+    	
         SpringApplicationBuilder application = new SpringApplicationBuilder();
     	application.sources(PgrMastersApplication.class);
     	application.sources(ReportApp.class);
     	application.run(args);
+    	
     	/*Object [] obj = {PgrMastersApplication.class,ReportApp.class};
     	SpringApplication.run(obj, args);*/
     }

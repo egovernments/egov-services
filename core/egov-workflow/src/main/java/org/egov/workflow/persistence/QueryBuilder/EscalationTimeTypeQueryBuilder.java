@@ -71,9 +71,9 @@ public class EscalationTimeTypeQueryBuilder {
 	public String getQuery(final EscalationTimeTypeGetReq centerTypeRequest, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		addWhereClause(selectQuery, preparedStatementValues, centerTypeRequest);
-		addOrderByClause(selectQuery, centerTypeRequest);
-		addPagingClause(selectQuery, preparedStatementValues, centerTypeRequest);
-		logger.debug("Query : " + selectQuery);
+	 	addOrderByClause(selectQuery, centerTypeRequest);
+	 	addPagingClause(selectQuery, preparedStatementValues, centerTypeRequest);
+		logger.info("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
@@ -81,37 +81,42 @@ public class EscalationTimeTypeQueryBuilder {
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final EscalationTimeTypeGetReq escalationRequest) {
 
-		if (escalationRequest.getId() == null && escalationRequest.getGrievanceType() == 0 && escalationRequest.getDesignation() == 0
-				 && escalationRequest.getTenantId() == null)
+		if (null == escalationRequest.getId() && 0 == escalationRequest.getGrievanceType()
+				&& 0 == escalationRequest.getDesignation() && null == escalationRequest.getTenantId())
 			return;
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (escalationRequest.getTenantId() != null) {
+		if (null != escalationRequest.getTenantId()) {
 			isAppendAndClause = true;
 			selectQuery.append(" escalation.tenantId = ?");
 			preparedStatementValues.add(escalationRequest.getTenantId());
 		}
 
-		if (escalationRequest.getId() != null) {
+		if (null != escalationRequest.getId()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" escalation.id IN " + getIdQuery(escalationRequest.getId()));
+			selectQuery.append(" ( escalation.id IN " + getIdQuery(escalationRequest.getId()) + " OR ");
+			selectQuery.append(" escalation.complaint_type_id IN " + getIdQuery(escalationRequest.getId()) + " ) ");
+			
 		}
 
-		if (escalationRequest.getGrievanceType() != 0) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" escalation.complaint_type_id = ?");
-			preparedStatementValues.add(escalationRequest.getGrievanceType());
+		if (null != escalationRequest.getGrievanceType()) {
+			if (0 != escalationRequest.getGrievanceType()) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" escalation.complaint_type_id = ? ");
+				preparedStatementValues.add(escalationRequest.getGrievanceType());
+				
+			}
 		}
-		
-		if (escalationRequest.getDesignation() != 0) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" escalation.designation_id = ?");
-			preparedStatementValues.add(escalationRequest.getDesignation());
+
+		if (null != escalationRequest.getDesignation()) {
+			if (0 != escalationRequest.getDesignation()) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" escalation.designation_id = ?");
+				preparedStatementValues.add(escalationRequest.getDesignation());
+			}
 		}
-		
-		
 
 		/*
 		 * if (centerTypeRequest.getCode() != null) { isAppendAndClause =
@@ -119,11 +124,12 @@ public class EscalationTimeTypeQueryBuilder {
 		 * selectQuery.append(" centerType.code = ?");
 		 * preparedStatementValues.add(centerTypeRequest.getCode()); }
 		 */
-		/*if (escalationRequest.getActive() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" centerType.active = ?");
-			preparedStatementValues.add(escalationRequest.getActive());
-		}*/
+		/*
+		 * if (escalationRequest.getActive() != null) { isAppendAndClause =
+		 * addAndClauseIfRequired(isAppendAndClause, selectQuery);
+		 * selectQuery.append(" centerType.active = ?");
+		 * preparedStatementValues.add(escalationRequest.getActive()); }
+		 */
 
 	}
 

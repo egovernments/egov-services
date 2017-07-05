@@ -69,36 +69,55 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			if (serviceAttrib.containsKey(rs.getString("code"))) {
 				Map<String, Attribute> innerMap = serviceAttrib.get(rs.getString("code"));
 				if (innerMap.containsKey(rs.getString("attributecode"))) {
-					if (attribValue.containsKey(rs.getString("code").concat(separator + rs.getString("attributecode")))) {
-						List<Value> innerValueList = attribValue.get(rs.getString("code").concat(separator + rs.getString("attributecode")));
+					if (attribValue
+							.containsKey(rs.getString("code").concat(separator + rs.getString("attributecode")))) {
+						List<Value> innerValueList = attribValue
+								.get(rs.getString("code").concat(separator + rs.getString("attributecode")));
 						innerValueList.add(createValueObjectForMe(rs));
 					} else {
 						List<Value> innerValueList = new ArrayList<>();
 						innerValueList.add(createValueObjectForMe(rs));
-						attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")),innerValueList);
+						attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")),
+								innerValueList);
 					}
 				} else {
+					if (null != rs.getString("key")) {
+						if(!rs.getString("key").isEmpty()) {
+						List<Value> innerValueList = new ArrayList<>();
+						innerValueList.add(createValueObjectForMe(rs));
+						attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")),
+								innerValueList);
+						innerMap.put(rs.getString("attributecode"), createAttributeObjectForMe(rs));
+					} 
+					}
+				}
+
+			} else {
+				if (null != rs.getString("attributecode")) {
+					if(!rs.getString("attributecode").isEmpty()) {
 					List<Value> innerValueList = new ArrayList<>();
 					innerValueList.add(createValueObjectForMe(rs));
-					attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")),innerValueList);
+					attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")),
+							innerValueList);
+					Map<String, Attribute> innerMap = new HashMap<>();
 					innerMap.put(rs.getString("attributecode"), createAttributeObjectForMe(rs));
+					serviceAttrib.put(rs.getString("code"), innerMap);
 				}
-			} else {
-				List<Value> innerValueList = new ArrayList<>();
-				innerValueList.add(createValueObjectForMe(rs));
-				attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")), innerValueList);
-				Map<String, Attribute> innerMap = new HashMap<>();
-				innerMap.put(rs.getString("attributecode"), createAttributeObjectForMe(rs));
-				serviceAttrib.put(rs.getString("code"), innerMap);
+				}
 			}
 		} else {
-			List<Value> innerValueList = new ArrayList<>();
-			innerValueList.add(createValueObjectForMe(rs));
-			attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")), innerValueList);
-			Map<String, Attribute> innerMap = new HashMap<>();
-			innerMap.put(rs.getString("attributecode"), createAttributeObjectForMe(rs));
-			serviceAttrib.put(rs.getString("code"), innerMap);
-			serviceMap.put(rs.getString("code"), createServiceTypeObjectForMe(rs));
+			if (null != rs.getString("key")) {
+				if (!rs.getString("key").isEmpty()) {
+					List<Value> innerValueList = new ArrayList<>();
+					innerValueList.add(createValueObjectForMe(rs));
+					attribValue.put(rs.getString("code").concat(separator + rs.getString("attributecode")),
+							innerValueList);
+					Map<String, Attribute> innerMap = new HashMap<>();
+					innerMap.put(rs.getString("attributecode"), createAttributeObjectForMe(rs));
+					serviceAttrib.put(rs.getString("code"), innerMap);
+				}
+			}
+					serviceMap.put(rs.getString("code"), createServiceTypeObjectForMe(rs));
 		}
 		return new ServiceType();
 	}

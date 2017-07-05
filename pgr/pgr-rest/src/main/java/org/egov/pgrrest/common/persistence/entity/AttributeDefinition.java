@@ -1,9 +1,10 @@
 package org.egov.pgrrest.common.persistence.entity;
 
 import lombok.*;
-import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeActionsDefinition;
+import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
 import org.egov.pgrrest.common.domain.model.ValueDefinition;
+import org.egov.pgrrest.common.domain.model.ConstraintDefinition;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -55,8 +56,9 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
     }
 
     public org.egov.pgrrest.common.domain.model.AttributeDefinition toDomain(List<ValueDefinition> domainValues,
-                                                                             List<AttributeRolesDefinition> domainAttributeRoles,
-                                                                             List<AttributeActionsDefinition> domainAttributeActions) {
+                                                                             List<AttributeRolesDefinition> roles,
+                                                                             List<AttributeActionsDefinition> actions,
+                                                                             List<ConstraintDefinition> constraints) {
         return org.egov.pgrrest.common.domain.model.AttributeDefinition.builder()
             .code(getCode())
             .dataType(dataType)
@@ -66,9 +68,10 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
             .dataTypeDescription(dataTypeDescription)
             .description(description)
             .url(url)
-            .roles(domainAttributeRoles)
-            .actions(domainAttributeActions)
+            .roles(roles)
+            .actions(actions)
             .values(domainValues)
+            .constraints(constraints)
             .build();
     }
 

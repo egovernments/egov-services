@@ -22,6 +22,7 @@ public class AttributeDefinition {
     private String groupCode;
     private List<AttributeRolesDefinition> roles;
     private List<AttributeActionsDefinition> actions;
+    private List<ConstraintDefinition> constraints;
     private List<ValueDefinition> values;
 
     public List<String> getRoleNames(){
@@ -36,3 +37,4 @@ public class AttributeDefinition {
             .collect(Collectors.toList());
     }
 }
+

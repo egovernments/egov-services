@@ -23,6 +23,7 @@ public class AttributeDefinition {
     private String groupCode;
     private List<String> roles;
     private List<String> actions;
+    private List<ConstraintDefinition> constraints;
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgrrest.common.domain.model.AttributeDefinition attributeDefinition) {
@@ -48,3 +49,4 @@ public class AttributeDefinition {
             .collect(Collectors.toList());
     }
 }
+

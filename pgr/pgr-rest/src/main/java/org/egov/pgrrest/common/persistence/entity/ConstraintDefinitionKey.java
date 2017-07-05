@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class AttributeActionsDefinitionKey implements Serializable {
+public class ConstraintDefinitionKey implements Serializable {
 
     @Column(name = "attributecode", nullable = false)
     private String attributeCode;
@@ -26,4 +26,3 @@ public class AttributeActionsDefinitionKey implements Serializable {
     @Column(name = "name")
     private String name;
 }
-

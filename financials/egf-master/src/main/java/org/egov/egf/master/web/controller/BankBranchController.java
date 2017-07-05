@@ -86,6 +86,7 @@ public class BankBranchController {
 			throw new CustomBindException(errors);
 		}
 
+		bankBranchContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BankBranchContract> bankBranchResponse = new CommonResponse<>();
 		List<BankBranch> bankbranches = new ArrayList<>();

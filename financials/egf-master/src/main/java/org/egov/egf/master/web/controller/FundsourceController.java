@@ -86,12 +86,13 @@ public class FundsourceController {
 			throw new CustomBindException(errors);
 		}
 
+		fundsourceContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FundsourceContract> fundsourceResponse = new CommonResponse<>();
 		List<Fundsource> fundsources = new ArrayList<>();
-		Fundsource fundsource = null;
-		FundsourceContract contract = null;
-		List<FundsourceContract> fundsourceContracts = new ArrayList<FundsourceContract>();
+		Fundsource fundsource;
+		FundsourceContract contract;
+		List<FundsourceContract> fundsourceContracts = new ArrayList<>();
 
 		for (FundsourceContract fundsourceContract : fundsourceContractRequest.getData()) {
 			fundsource = new Fundsource();

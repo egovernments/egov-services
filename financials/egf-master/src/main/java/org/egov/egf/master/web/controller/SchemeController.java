@@ -86,6 +86,7 @@ public class SchemeController {
 			throw new CustomBindException(errors);
 		}
 
+		schemeContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<SchemeContract> schemeResponse = new CommonResponse<>();
 		List<Scheme> schemes = new ArrayList<>();

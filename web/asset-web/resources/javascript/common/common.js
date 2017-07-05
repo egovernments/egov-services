@@ -1,6 +1,6 @@
 var baseUrl = window.location.origin;
 
-var authToken = "bf5c1a56-a4c7-4d9d-a5f4-67dea606481f"//localStorage.getItem("auth-token");
+var authToken = "b635ec65-bf85-4488-89d5-40eba64b70ac"//localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {

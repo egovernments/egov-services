@@ -22,28 +22,17 @@ class SearchAsset extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.close = this.close.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
-    this.handleClick = this.handleClick.bind(this);
     this.handleAction = this.handleAction.bind(this);
   }
 
   handleAction(e, id) {
     e.preventDefault();
     e.stopPropagation();
-    if(e.target.value == "revaluate") {
-      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
-    } else if(e.target.value = "sale") {
-      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
-    }
+    window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
 
     this.setState({
       action: ""
     });
-  }
-
-  handleClick(e, id) {
-    e.preventDefault();
-    e.stopPropagation();
-    window.open(`app/asset/create-asset.html?id=${id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
   }
 
   setInitialState(initState) {
@@ -215,7 +204,6 @@ class SearchAsset extends React.Component {
                       <th>Asset Category</th>
                       <th>Location</th>
                       <th>Current Value Of Asset</th>
-                      <th>Action</th>
                   </tr>
                   </thead>
                   <tbody id="assetSearchResultTableBody">
@@ -233,20 +221,13 @@ class SearchAsset extends React.Component {
       if (assetList.length>0) {
         return assetList.map((item, index)=>
         {
-          return (<tr key={index} onClick={(e) => {handleClick(e, item.id)}}>
+          return (<tr key={index} onClick={(e) => {handleAction(e, item.id)}}>
                     <td>{index+1}</td>
                     <td>{item.code}</td>
                     <td>{item.name}</td>
                     <td>{item.assetCategory.name}</td>
                     <td>{item.locationDetails.locality ? getNameById(locality, item.locationDetails.locality) : ""}</td>
                     <td>{item.grossValue}</td>
-                    <td>
-                      <select onChange={(e) => handleAction(e, item.id)} value={action} onClick={(e) => {e.stopPropagation()}}>
-                        <option value="">Select Action</option>
-                        <option value="revaluate">Revaluate</option>
-                        <option value="sale">Dispose/Sale</option>
-                      </select>
-                    </td>
               </tr>  );
         })
       }

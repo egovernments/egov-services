@@ -52,11 +52,12 @@ public class ReportApp{
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		try {
 
-			
-			Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
+			LOGGER.info("Loading the report definitions from yaml");
+			//Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
+			Resource resource = resourceLoader.getResource("classpath:application.yml");
 			File yamlFile = resource.getFile();
 			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
-			LOGGER.info(reportDefinitions.toString());
+			LOGGER.info("Report Defintion is: "+reportDefinitions.toString());
 			return reportDefinitions;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -64,6 +64,7 @@ public class AgreementAdaptorService {
 		agreementDetailsEs.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
 				
 		agreementIndex.setAgreementDetails(agreementDetailsEs);
+		if(agreementDemand != null)
 		agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
 		//boundaryRepository.getBoundary(); FIXME make call to city controller
 		return agreementIndex;

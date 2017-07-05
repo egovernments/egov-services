@@ -700,6 +700,7 @@ class Login extends Component {
               open={this.state.open2}
               message={translate('core.msg.success.password.updated')}
               style={{"textAlign": "center"}}
+              onRequestClose={(e) => {handleClose("open2")}}
               autoHideDuration={4000}
             />
             <Snackbar
@@ -707,6 +708,7 @@ class Login extends Component {
               message={translate('core.account.created.successfully')}
               style={{"textAlign": "center"}}
               autoHideDuration={4000}
+              onRequestClose={(e) => {handleClose("open4")}}
             />
             <Dialog
               title={translate('pgr.title.create.account')}

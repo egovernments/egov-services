@@ -252,6 +252,7 @@ class routerGeneration extends Component {
     }
 
     delete searchSet.boundaryType;
+    delete searchSet.position;
     self.props.setLoadingStatus("loading");
   	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
@@ -261,7 +262,6 @@ class routerGeneration extends Component {
   		});
       self.props.setLoadingStatus("hide");
   	}, function(err) {
-      console.log("HERE1");
       self.props.setLoadingStatus("hide");
       self.props.toggleSnackbarAndSetText(true, err.message);
   	})
@@ -312,7 +312,6 @@ class routerGeneration extends Component {
 	  		});
         self.props.setLoadingStatus("hide");
 		  }, function(err) {
-        console.log("HERE2");
         self.props.setLoadingStatus("hide");
         self.props.toggleSnackbarAndSetText(true, err.message);
 		  })

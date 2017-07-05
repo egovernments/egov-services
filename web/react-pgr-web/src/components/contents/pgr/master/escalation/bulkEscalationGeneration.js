@@ -62,6 +62,50 @@ const styles = {
   }
 };
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+const getNameByServiceCode = function(object, serviceCode, property = "") {
+  if (serviceCode == "" || serviceCode == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].serviceCode == serviceCode) {
+                return object[i].serviceName;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].serviceCode == serviceCode) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class BulkEscalationGeneration extends Component {
     constructor(props) {
       super(props)
@@ -71,7 +115,8 @@ class BulkEscalationGeneration extends Component {
                 text: 'name',
                 value: 'id',
               },
-              grievanceType:[]
+              serviceCode:[],
+              searchResult:[]
             };
     }
 
@@ -102,13 +147,13 @@ class BulkEscalationGeneration extends Component {
       });
 
 
-        Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+        Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
             self.setState({
-              grievanceType: response.complaintTypes
+              serviceCode: response.complaintTypes
             })
         }, function(err) {
           self.setState({
-              grievanceType: []
+              serviceCode: []
             })
         });
     }
@@ -128,11 +173,19 @@ class BulkEscalationGeneration extends Component {
 
   submitForm = (e) => {
       e.preventDefault()
-      flag = 1;
-      this.setState({
-        resultList: [],
-        isSearchClicked: true
-      })
+
+      let self = this;
+
+      let searchSet = this.props.bulkEscalationGeneration;
+        Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSet).then(function(response) {
+          self.setState({
+            searchResult: response.escalationHierarchies
+          });
+       
+        }, function(err) {
+            console.log(err);
+        });
+      
   }
 
     render() {
@@ -145,20 +198,22 @@ class BulkEscalationGeneration extends Component {
         handleAutoCompleteKeyUp
       } = this.props;
 
+      let self = this;
+
       let {submitForm} = this;
 
-      let {isSearchClicked, resultList} = this.state;
+      let {isSearchClicked, searchResult} = this.state;
 
       console.log(bulkEscalationGeneration);
 
       const renderBody = function() {
-      	  if(resultList && resultList.length)
-      		return resultList.map(function(val, i) {
+      	  if(searchResult && searchResult.length)
+      		return searchResult.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{val.serviceName}</td>
-      					<td>{val.boundaryType}</td>
-      					<td>{val.boundary}</td>
+      					<td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
+      					<td>{getNameByServiceCode(self.state.serviceCode, val.serviceCode)}</td>
+      					<td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
       				</tr>
       			)
       		})
@@ -223,23 +278,23 @@ class BulkEscalationGeneration extends Component {
                                            multiple={true}
                                            floatingLabelText="Grievance Type"
                                            fullWidth={true}
-                                           value={bulkEscalationGeneration.grievanceType ? bulkEscalationGeneration.grievanceType : ""}
+                                           value={bulkEscalationGeneration.serviceCode ? bulkEscalationGeneration.serviceCode : ""}
                                            onChange= {(e, index ,values) => {
                                              var e = {
                                                target: {
                                                  value: values
                                                }
                                              };
-                                             handleChange(e, "grievanceType", true, "");
+                                             handleChange(e, "serviceCode", true, "");
                                             }}
                                          >
-                                         {this.state.grievanceType.map((item, index) => (
+                                         {this.state.serviceCode && this.state.serviceCode.map((item, index) => (
                                                    <MenuItem
                                                      value={item.serviceCode}
                                                      key={index}
                                                      insetChildren={true}
                                                      primaryText={item.serviceName}
-                                                     checked={bulkEscalationGeneration.grievanceType && bulkEscalationGeneration.grievanceType.indexOf(item.serviceCode) > -1}
+                                                     checked={bulkEscalationGeneration.serviceCode && bulkEscalationGeneration.serviceCode.indexOf(item.serviceCode) > -1}
                                                    />
                                           ))}
                                           </SelectField>

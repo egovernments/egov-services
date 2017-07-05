@@ -131,8 +131,8 @@ class Dashboard extends Component {
 						  						  
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
-                             <Card>
-                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700,minHeight:320}} subtitleStyle={styles.status}
+                             <Card style={{minHeight:320}}>
+                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="status"){

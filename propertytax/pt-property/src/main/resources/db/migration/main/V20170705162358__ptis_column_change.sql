@@ -1,5 +1,5 @@
 ALTER TABLE egpt_propertydetails
-ALTER regddocno type timestamp USING regddocno::timestamp
+ALTER regddocno type timestamp USING regdDocDate::timestamp
 
 ALTER TABLE egpt_propertydetails ADD COLUMN taxCalculations jsonb;
 

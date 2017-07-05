@@ -166,7 +166,7 @@ public class PropertyRepository {
 				final PreparedStatement ps = connection
 						.prepareStatement(PropertyDetailBuilder.INSERT_PROPERTYDETAILS_QUERY, new String[] { "id" });
 				ps.setString(1, propertyDetails.getSource().toString());
-				ps.setObject(2, TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocNo()));
+				ps.setObject(2, propertyDetails.getRegdDocNo());
 				ps.setObject(3, TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocDate()));
 				ps.setString(4, propertyDetails.getReason());
 				ps.setString(5, propertyDetails.getStatus().toString());
@@ -627,7 +627,7 @@ public class PropertyRepository {
 		String propertyDetailsUpdate = PropertyDetailBuilder.updatePropertyDetailQuery();
 
 		Object[] propertyDetailsArgs = { propertyDetails.getSource().toString(),
-				TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocNo()),
+				propertyDetails.getRegdDocNo(),
 				TimeStampUtil.getTimeStamp(propertyDetails.getRegdDocDate()), propertyDetails.getReason(),
 				propertyDetails.getStatus().toString(), propertyDetails.getIsVerified(),
 				TimeStampUtil.getTimeStamp(propertyDetails.getVerificationDate()), propertyDetails.getIsExempted(),

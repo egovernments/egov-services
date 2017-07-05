@@ -25,6 +25,7 @@ public class ServiceRequestESRepository {
     private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private static final String EMPTY_STRING = "";
     private static final String NEW_LINE = "\n";
+    private static final String TRUE = "true";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
@@ -35,12 +36,12 @@ public class ServiceRequestESRepository {
                                       @Value("${es.index.name}") String indexName,
                                       @Value("${es.document.type}") String documentType,
                                       QueryFactory queryFactory,
-                                      @Value("${es.log.request}") boolean isESRequestLoggingEnabled) {
+                                      @Value("${es.log.request}") String isESRequestLoggingEnabled) {
         this.esClient = esClient;
         this.indexName = indexName;
         this.documentType = documentType;
         this.queryFactory = queryFactory;
-        this.isESRequestLoggingEnabled = isESRequestLoggingEnabled;
+        this.isESRequestLoggingEnabled = TRUE.equalsIgnoreCase(isESRequestLoggingEnabled);
     }
 
     public long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {

@@ -249,7 +249,9 @@ class CreateReceivingCenter extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
+
                 <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
+
               </div>
           </form>
           <Dialog

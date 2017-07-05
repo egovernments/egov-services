@@ -690,19 +690,21 @@ class grievanceView extends Component{
                 </div>
               </Col>
             </Row> : ""}
+
             {this.state.isUpdateAllowed ?
               <Row>
                 <div style={{textAlign: 'center'}}>
                   <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
                 </div>
               </Row>: ''}
+
           </CardText>
         </Card>
       </Grid>
       : ''
       }
       <div style={{textAlign: 'center'}}>
-        
+
       </div>
       </form>
       <Dialog

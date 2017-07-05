@@ -200,7 +200,7 @@ class SearchEscalation extends Component {
    	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-   		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+   		         <thead>
    		            <tr>
                     <th>{translate("pgr.lbl.grievance.type")}</th>
                     <th>{translate("pgr.lbl.designation")}</th>
@@ -272,7 +272,9 @@ class SearchEscalation extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
+
                       <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate("core.lbl.search")} primary={true}/>
+
                   </div>
                   {viewTable()}
               </CardText>

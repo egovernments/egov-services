@@ -296,7 +296,7 @@ class grievanceSearch extends Component {
   	const showTable = function() {
 			return (
 				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive>
-			    <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+			    <thead >
 			      <tr>
 			        <th>{translate("pgr.lbl.srn")}</th>
 			        <th>{translate("pgr.lbl.grievance.type")}</th>
@@ -433,7 +433,9 @@ class grievanceSearch extends Component {
 	            	</CardText>
 	          </Card>
 	          <div style={{textAlign: 'center'}}>
+
 		          <RaisedButton style={{margin:'15px 5px'}} type="submit" primary={true} label={translate("core.lbl.search")}/>
+
               </div>
 	        </form>
 	        {displayTableCard()}

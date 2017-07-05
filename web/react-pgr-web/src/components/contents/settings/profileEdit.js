@@ -323,7 +323,7 @@ class ProfileEdit extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={'Save Changes'} backgroundColor={"#5a3e1b"} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={'Save Changes'} labelColor={white}/>
                 <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
               </div>
           </form>

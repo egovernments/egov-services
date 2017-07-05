@@ -72,7 +72,7 @@ class ServiceTypeCreate extends Component {
       }
       this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
       this.addAsset = this.addAsset.bind(this);
-      this.renderDelEvent = this.renderDelEvent.bind(this);
+
       this.handleOpenNClose=this.handleOpenNClose.bind(this);
     }
 
@@ -278,24 +278,6 @@ class ServiceTypeCreate extends Component {
 
     }
 
-    renderDelEvent(index,to="") {
-      if (to==="column") {
-        var columns = this.state.customField.columns;
-        columns.splice(index, 1);
-        this.setState({
-          customField:{
-            ...this.state.customField,
-            columns
-          }
-        });
-      } else {
-        var assetFieldsDefination = this.state.assetCategory.assetFieldsDefination;
-        assetFieldsDefination.splice(index, 1);
-        this.setState({
-          assetFieldsDefination
-        });
-      }
-    }
     showCustomFieldForm(isShow)
     {
       this.setState({isCustomFormVisible:isShow})
@@ -308,15 +290,20 @@ class ServiceTypeCreate extends Component {
 
     render() {
 
+
       var _this = this;
 
       let {
+        dataTypes,
+        attributes,
         createServiceType ,
         fieldErrors,
         isFormValid,
         isTableShow,
         handleUpload,
+        deleteObject,
         files,
+        isEditIndex,
         handleChange,
         handleMap,
         handleChangeNextOne,
@@ -324,24 +311,25 @@ class ServiceTypeCreate extends Component {
         buttonText
       } = this.props;
 
+console.log(createServiceType);
       let {submitForm,showCustomFieldForm,renderDelEvent,addAsset,handleOpenNClose} = this;
       let {nomineeFieldsDefination,isCustomFormVisible,showMsg,customField,assetFieldsDefination,isDataType, editIndex} = this.state;
 
 
       const viewTypes = function() {
         console.log("createServiceType",createServiceType);
-          if( (createServiceType.dataType!=2) && (createServiceType.dataType!=undefined))
+          if( (createServiceType.attribute.dataType!=2) && (createServiceType.attribute.dataType!=undefined))
           return (
-<div>
+              <div>
                 <div className="clearfix"></div>
                   <Row>
                     <Col xs={12} md={3} sm={6}>
                         <TextField
                             fullWidth={true}
                             floatingLabelText="Key"
-                            value={createServiceType.dataTypes ? createServiceType.dataTypes.attributesKey : ""}
-                            errorText={fieldErrors.dataTypes ? fieldErrors.dataTypes.attributesKey : ""}
-                              onChange={(e) => handleChangeNextOne(e,"dataTypes" ,"attributesKey", false, "")}
+                            value={createServiceType.dataType ? createServiceType.dataType.attributesKey : ""}
+                            errorText={fieldErrors.dataTypes ? fieldErrors.dataType.attributesKey : ""}
+                              onChange={(e) => handleChangeNextOne(e,"dataType" ,"attributesKey", false, "")}
                             id="attributesKey"
                         />
                     </Col>
@@ -349,12 +337,13 @@ class ServiceTypeCreate extends Component {
                         <TextField
                             fullWidth={true}
                             floatingLabelText="Name"
-                            value={createServiceType.dataTypes ? createServiceType.dataTypes.attributesName : ""}
-                            errorText={fieldErrors.dataTypes ? fieldErrors.dataTypes.attributesName : ""}
-                              onChange={(e) => handleChangeNextOne(e,"dataTypes" ,"attributesName", false, "")}
+                            value={createServiceType.dataType ? createServiceType.dataType.attributesName : ""}
+                            errorText={fieldErrors.dataType ? fieldErrors.dataType.attributesName : ""}
+                              onChange={(e) => handleChangeNextOne(e,"dataType" ,"attributesName", false, "")}
                             id="attributesName"
                         />
                     </Col>
+
                     <Col xs={12}  md={3} sm={6} style={{textAlign:"center"}}>
                       {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.add")} onClick={() => {
                         _this.props.addNestedFormDataTwo("attributes","attributes",'dataTypes');
@@ -363,70 +352,48 @@ class ServiceTypeCreate extends Component {
                       {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}}  label={translate("pgr.lbl.update")} onClick={() => {
                         //updateEscalation();
                       }}/>}
+
                     </Col>
                   </Row>
 
+                  <Col xs={12} md={12}>
+                  <Row>
+                        {createServiceType.dataTypes &&
+                          <div>  <br/>
+                          <Table id="createServiceTypeTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Key</th>
+                              <th>Name</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              {createServiceType.dataTypes && createServiceType.dataTypes.map(function(i, index){
+                                if(i){
+                                  return (<tr key={index}>
+                                      <td>{index+1}</td>
+                                      <td>{i.attributesKey}</td>
+                                      <td>{i.attributesName}</td>
+                                      <td><i className="material-icons" style={styles.iconFont} onClick={ () => {
+                                              deleteObject("dataTypes", index);
 
-              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-                <thead style={{backgroundColor:"#f2851f",color:"white"}}>
-                  <tr>
-                    <th>No.</th>
-                    <th>Key</th>
-                    <th>Value</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {renderBody()}
-                </tbody>
-              </Table>
+                                          }}>delete</i>
+                                          </td>
+                                    </tr> )
+                                }
+
+                              })}
+
+                          </tbody>
+                          </Table></div> }
+
+                      </Row>
+                  </Col>
         </div>
       )
       }
-
-    const addDropdown = function() {
-        if(createServiceType.dataType==1) {
-        return (
-          <div>
-            <div className="clearfix"></div>
-            <Col xs={12} md={3} sm={6}>
-                <TextField
-                    fullWidth={true}
-                    floatingLabelText="Key"
-                    value={createServiceType.attributesKey? createServiceType.attributesKey : ""}
-                    errorText={fieldErrors.attributesKey ? fieldErrors.attributesKey : ""}
-                      onChange={(e) => handleChange(e, "attributesKey", false, '')}
-                    id="attributesKey"
-                />
-            </Col>
-            <Col xs={12} md={3} sm={6}>
-                <TextField
-                    fullWidth={true}
-                    floatingLabelText="Name"
-                    value={createServiceType.attributesName? createServiceType.attributesName : ""}
-                    errorText={fieldErrors.attributesName ? fieldErrors.attributesName : ""}
-                      onChange={(e) => handleChange(e, "attributesName", false, '')}
-                    id="attributesName"
-                />
-            </Col>
-          <Col xs={12} md={3} sm={6}>
-          <button type="button" className="btn btn-primary " onClick={()=>{addCustomOption(true)}}>Add Option</button>
-          <span>" "</span><button type="button" className="btn btn-primary  " onClick={()=>{showCustomFieldForm(true)}}>delete Option</button>
-          </Col>
-          </div>
-        )
-      }
-      }
-
-      const addCustomOption = function() {
-        return (
-          <div>
-            HI
-          </div>
-        )
-      }
-
-
       const showAddNewBtn = function() {
 
           return (
@@ -436,84 +403,10 @@ class ServiceTypeCreate extends Component {
 
       }
 
-      const renderBody=function(to="")
-      {
-          if (to=="column") {
-            if(customField.columns.length>0) {
-                return customField.columns.map((item,index)=> {
-                    return (<tr  key={index} className="text-center">
-                    <td>{index+1}</td>
-                      <td  >
-                    {item.name}
-                      </td>
-                      <td  >
-                        {item.type}
-                      </td>
-                      <td  >
-                    {item.isActive?"true":"false"}
-                      </td>
-                      <td  >
-                    {item.isMandatory?"true":"false"}
-                      </td>
-                      <td  >
-                    {item.values}
-                      </td>
-                      <td  >
-                    {item.order}
-                      </td>
-
-                    {/*  <td  >
-                    {item.columns.length>0?item.columns.length:""}
-                      </td>
-                    */}
-
-                      <td data-label="Action">
-                                  <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index,"column")}} ><span className="glyphicon glyphicon-trash"></span></button>
-                    </td></tr>)
-                })
-            }
-          } else {
-            if(assetFieldsDefination.length>0) {
-                return assetFieldsDefination.map((item,index)=> {
-                    return (<tr  key={index} className="text-center">
-                    <td>{index+1}</td>
-                      <td  >
-                    {item.name}
-                      </td>
-                      <td  >
-                        {item.type}
-                      </td>
-                      <td>
-                    {item.isActive?"true":"false"}
-                      </td>
-                      <td  >
-                    {item.isMandatory?"true":"false"}
-                      </td>
-                      <td  >
-                    {item.values}
-                      </td>
-
-                      <td  >
-                    {item.order}
-                      </td>
-
-                      <td  >
-                    {item.columns.length>0?item.columns.length:""}
-                      </td>
-
-                      <td data-label="Action">
-                      <button type="button" className="btn btn-default btn-action" onClick={(e)=>{renderDelEvent(index)}} ><span className="glyphicon glyphicon-trash"></span></button>
-                    </td></tr>)
-                })
-            }
-          }
-
-
-      }
 
 
       const  promotionFunc =function() {
-          if(createServiceType.attributes=="true"||createServiceType.attributes==true){
+          if(createServiceType.metadata=="true"||createServiceType.metadata==true){
             console.log("hi");
             return (
               <div className="form-section">
@@ -521,24 +414,52 @@ class ServiceTypeCreate extends Component {
                 <div className="row" style={{"paddingRight": "18px"}}>
                   {showAddNewBtn()}
                 </div>
-                <div className="land-table table-responsive">
-                    <table className="table table-bordered">
-                        <thead>
-                        <tr>
-                          <th>Code</th>
-                           <th>Datatype</th>
-                           <th>Description</th>
-                           <th>Variable</th>
-                           <th>Required</th>
 
-
-                         </tr>
+                <Col xs={12} md={12}>
+                <Row>
+                      {createServiceType.attributes &&
+                        <div>  <br/>
+                        <Table id="createServiceTypeTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+                        <thead >
+                          <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                             <th>Datatype</th>
+                             <th>Description</th>
+                             <th>Datatype Description</th>
+                             <th>Variable</th>
+                             <th>Required</th>
+                            <th></th>
+                          </tr>
                         </thead>
                         <tbody>
-                          {renderBody()}
+                            {createServiceType.attributes && createServiceType.attributes.map(function(i, index){
+                              if(i){
+                                return (<tr key={index}>
+                                    <td>{index+1}</td>
+                                    <td>{i.code}</td>
+                                    <td>{i.dataType}</td>
+                                    <td>{i.datatypeDescription}</td>
+                                    <td>{i.description}</td>
+                                    <td>{i.variable}</td>
+                                    <td>{i.required}</td>
+
+                                    <td><i className="material-icons" style={styles.iconFont} onClick={ () => {
+                                            deleteObject("attributes", index);
+
+                                        }}>delete</i>
+                                        </td>
+                                  </tr> )
+                              }
+
+                            })}
+
                         </tbody>
-                    </table>
-                </div>
+                        </Table></div> }
+
+                    </Row>
+                </Col>
+
                 {showCustomFieldAddForm()}
               </div>
 
@@ -555,83 +476,89 @@ class ServiceTypeCreate extends Component {
                       <TextField
                           fullWidth={true}
                           floatingLabelText="Code"
-                          value={createServiceType.code? createServiceType.code : ""}
-                          errorText={fieldErrors.code ? fieldErrors.code : ""}
-                            onChange={(e) => handleChange(e, "code", false, '')}
-                          id="code"
+                          value={createServiceType.attribute ? createServiceType.attribute.code : ""}
+                          errorText={fieldErrors.attribute ? fieldErrors.attribute.code : ""}
+                            onChange={(e) => handleChangeNextOne(e,"attribute" ,"code", false, "")}
+                          id="attributesName"
                       />
                   </Col>
-
-
-                    <Col xs={12} md={3} sm={6}>
+                  <Col xs={12} md={3} sm={6}>
+                      <TextField
+                          fullWidth={true}
+                          floatingLabelText="Datatype Description"
+                          value={createServiceType.attribute ? createServiceType.attribute.datatypeDescription : ""}
+                          errorText={fieldErrors.attribute ? fieldErrors.attribute.datatypeDescription : ""}
+                            onChange={(e) => handleChangeNextOne(e,"attribute" ,"datatypeDescription", false, "")}
+                          id="datatypeDescription"
+                      />
+                  </Col>
+                  <Col xs={12} md={3} sm={6}>
                       <TextField
                           fullWidth={true}
                           floatingLabelText="Description"
-                          value={createServiceType.description? createServiceType.description : ""}
-                          errorText={fieldErrors.description ? fieldErrors.description : ""}
-                          onChange={(e) => handleChange(e, "description", false, '')}
-                          multiLine={true}
+                          value={createServiceType.attribute ? createServiceType.attribute.description : ""}
+                          errorText={fieldErrors.attribute ? fieldErrors.attribute.description : ""}
+                            onChange={(e) => handleChangeNextOne(e,"attribute" ,"description", false, "")}
                           id="description"
                       />
                   </Col>
-                  <Col xs={12} md={3} sm={6}>
-                      <TextField
-                          fullWidth={true}
-                          floatingLabelText="Group Code"
-                          value={createServiceType.groupCode? createServiceType.groupCode : ""}
-                          errorText={fieldErrors.groupCode ? fieldErrors.groupCode : ""}
-                          onChange={(e) => handleChange(e, "groupCode", false, '')}
-                          multiLine={true}
-                          id="groupCode"
-                      />
-                  </Col>
-                  <Col xs={12} md={3} sm={6}>
-                      <Checkbox
-                        label="Required"
-                        style={styles.required}
-                        checked = {createServiceType.required || false}
-                        onCheck = {(e, i, v) => { console.log(createServiceType.required, i);
 
-                          var e = {
-                            target: {
-                              value:i
-                            }
-                          }
-                          handleChange(e, "required", false, '')
-                        }}
-                        id="required"
-                      />
-                  </Col>
-                  <Col xs={12} md={3} sm={6}>
-                      <Checkbox
-                        label="Variable"
-                        style={styles.variable}
-                        checked = {createServiceType.variable || false}
-                        onCheck = {(e, i, v) => { console.log(createServiceType.variable, i);
-
-                          var e = {
-                            target: {
-                              value:i
-                            }
-                          }
-                          handleChange(e, "variable", false, '')
-                        }}
-                        id="variable"
-                      />
-                  </Col>
-                    <div className="clearfix"></div>
                   <Col  xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="Data Type"
+                           floatingLabelText="Required"
                            fullWidth={true}
-                           value={createServiceType.dataType ? createServiceType.dataType : ""}
+                           value={createServiceType.attribute ? createServiceType.attribute.required : ""}
                            onChange= {(e, index ,values) => {
                              var e = {
                                target: {
                                  value: values
                                }
                              };
-                             handleChange(e, "dataType", false, "");
+
+                              handleChangeNextOne(e, "attribute","required",  false, '')
+                            }}
+                         >
+                        <MenuItem value={"true"} primaryText={"True"} />
+                        <MenuItem  value={"false"} primaryText={"False"} />
+
+
+                      </SelectField>
+                  </Col>
+
+                  <Col  xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="Variable"
+                           fullWidth={true}
+                           value={createServiceType.attribute ? createServiceType.attribute.variable : ""}
+                           onChange= {(e, index ,values) => {
+                             var e = {
+                               target: {
+                                 value: values
+                               }
+                             };
+
+                              handleChangeNextOne(e, "attribute","variable",  false, '')
+                            }}
+                         >
+                        <MenuItem value={"true"} primaryText={"True"} />
+                        <MenuItem  value={"false"} primaryText={"False"} />
+
+
+                      </SelectField>
+                  </Col>
+                  <Col  xs={12} md={3} sm={6}>
+                        <SelectField
+                           floatingLabelText="Data Type"
+                           fullWidth={true}
+                           value={createServiceType.attribute ? createServiceType.attribute.dataType : ""}
+                           onChange= {(e, index ,values) => {
+                             var e = {
+                               target: {
+                                 value: values
+                               }
+                             };
+
+                              handleChangeNextOne(e, "attribute","dataType",  false, '')
                             }}
                          >
                         <MenuItem value={1} primaryText={"Single value list"} />
@@ -640,11 +567,23 @@ class ServiceTypeCreate extends Component {
 
                       </SelectField>
                   </Col>
-                    {viewTypes()}
+                    {createServiceType.attribute && createServiceType.attribute.dataType==1 && viewTypes() }
           <div className="clearfix"></div>
-                  <div className="text-center">
-                    <button type="button" className="btn btn-primary" onClick={(e)=>{addAsset()}} >Add/Edit</button>
-                  </div>
+          { (editIndex == -1 || editIndex == undefined ) &&
+            <RaisedButton type="button" label="Add Attribute" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+
+                _this.props.addStucture(createServiceType.attribute,createServiceType.dataTypes);
+                }
+            }/>
+          }
+          { (editIndex > -1) &&
+            <RaisedButton type="button" label="Save"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                  this.props.updateObject("owners","owner",  editIndex);
+                  this.props.resetObject("owner");
+                  isEditIndex(-1);
+                }
+            }/>
+          }
 
                 </div>
               )
@@ -781,7 +720,7 @@ class ServiceTypeCreate extends Component {
                               <div className="clearfix"></div>
 
                               <Col xs={12} md={3} sm={6}>
-                              {console.log(createServiceType.active)}
+
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.active}
@@ -799,7 +738,7 @@ class ServiceTypeCreate extends Component {
                                   />
                               </Col>
                               <Col xs={12} md={3} sm={6}>
-                              {console.log(createServiceType.hasFinancialImpact)}
+
                                   <Checkbox
                                     label="Has Financial Impact"
                                     style={styles.hasFinancialImpact}
@@ -817,21 +756,21 @@ class ServiceTypeCreate extends Component {
                                   />
                               </Col>
                                <Col xs={12} md={3} sm={6}>
-                              {console.log(createServiceType.attributes)}
+
                                   <Checkbox
                                     label="Attributes"
-                                    style={styles.attributes}
-                                    checked = {createServiceType.attributes || false}
-                                    onCheck = {(e, i, v) => { console.log(createServiceType.attributes, i);
+                                    style={styles.metadata}
+                                    checked = {createServiceType.metadata || false}
+                                    onCheck = {(e, i, v) => { console.log(createServiceType.metadata, i);
 
                                       var e = {
                                         target: {
                                           value:i
                                         }
                                       }
-                                      handleChange(e, "attributes", false, '')
+                                      handleChange(e, "metadata", false, '')
                                     }}
-                                    id="attributes"
+                                    id="metadata"
                                   />
                               </Col>
                               <div className="clearfix"></div>
@@ -932,16 +871,41 @@ const mapDispatchToProps = dispatch => ({
       pattern
     });
   },
+  isEditIndex: (index) => {
+    dispatch({
+      type: "EDIT_INDEX",
+      index
+    })
+  },
+
+  addStucture: (attribute,dataTypes) =>{
+    console.log(attribute);
+    console.log(dataTypes);
+    dataTypes.forEach(function(d){
+      attribute.arr({"key":d.attributesKey,
+                        "name":d.attributesName});
+    });
+    console.log("fin",attribute);
+
+  },
+  addNestedFormData: (formArray, formData) => {
+    console.log(formArray);
+    console.log(formData);
+    dispatch({
+      type: "PUSH_ONE",
+      formArray,
+      formData
+    })
+  },
+  deleteObject: (property, index) => {
+    dispatch({
+      type: "DELETE_OBJECT",
+      property,
+      index
+    })
+  },
 
 
-    addNestedFormDataTwo: (formObject, formArray, formData) => {
-      dispatch({
-        type: "PUSH_ONE_ARRAY",
-        formObject,
-        formArray,
-        formData
-      })
-    },
     resetObject: (object) => {
       dispatch({
         type: "RESET_OBJECT",

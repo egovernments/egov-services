@@ -287,11 +287,13 @@ class DefineEscalationTime extends Component {
       					<td>{val.designation.name}</td>
                 <td>{val.noOfHours}</td>
                 <td>
+
                 <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
                     editObject(i);
                     current.setState({editIndex:i})
                 }}/>
                 {false && <RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.delete")} disabled={editIndex<0?false:true} primary={true} onClick={() => {
+
                     deleteObject(i);
                 }}/>}</td>
       				</tr>
@@ -342,6 +344,7 @@ class DefineEscalationTime extends Component {
                           addEscalation();
                         }}/>}
                         {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
+
                           updateEscalation();
                         }}/>}
                     </Col>
@@ -349,7 +352,7 @@ class DefineEscalationTime extends Component {
               </CardText>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-   		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+   		         <thead>
    		            <tr>
    		              <th>No.</th>
                     <th>{translate("pgr.lbl.designation")}</th>
@@ -404,13 +407,17 @@ class DefineEscalationTime extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
+
                       <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.serviceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
+
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
                       <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} >{translate("pgr.lbl.escdetail")}</strong>}/>
                       <CardText>
+
                           <RaisedButton style={{margin:'10px 0'}} label={translate("pgr.lbl.addesc")} primary={true} onClick={() => {
+
                             this.setState({
                               isSearchClicked: true,
                               noData:false

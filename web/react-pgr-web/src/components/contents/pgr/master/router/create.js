@@ -307,7 +307,9 @@ class createRouter extends Component {
     console.log(routerCreateSet);
   	const showBtn = function() {
   		if(!readonly) {
+
   			return (<RaisedButton style={{margin:'15px 5px'}} type="submit" label={match.params && match.params.type == "edit" ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} disabled={!isFormValid} primary={true}/>);
+
   		}
   	}
 

@@ -15,5 +15,7 @@ public class WallTypesBuilder {
             + " SET tenantid = ?, code = ?, data =? ,"
             + " lastmodifiedby = ?, lastmodifiedtime = ?"
             + " WHERE id = ?";
+    
+    public static final String SELECT_WALLTYPES_CREATETIME = "SELECT  createdTime From egpt_mstr_walltype WHERE id = ?";
 
 }

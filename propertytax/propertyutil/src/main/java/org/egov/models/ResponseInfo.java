@@ -43,5 +43,5 @@ public class ResponseInfo {
 
 	@JsonProperty("status")
 	@NotNull
-	private ResponseStatusEnum status = null;
+	private String status = null;
 }

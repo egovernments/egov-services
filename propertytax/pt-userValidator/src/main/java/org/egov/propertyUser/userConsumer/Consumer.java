@@ -119,7 +119,7 @@ public class Consumer {
 					if(user.getId() !=null){
 
 						Map<String,Object> userSearchRequestInfo=new HashMap<String,Object >();
-						userSearchRequestInfo.put("username",user.getUserName());
+						userSearchRequestInfo.put("username",user.getMobileNumber());
 						userSearchRequestInfo.put("tenantId",user.getTenantId());
 						userSearchRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
 						//search user

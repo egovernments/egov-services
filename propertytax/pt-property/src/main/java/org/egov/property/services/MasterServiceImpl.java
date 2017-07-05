@@ -87,9 +87,12 @@ public class MasterServiceImpl implements Masterservice {
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(floorType);
+			Long createdTime = new Date().getTime();
 			try {
 				Long id = propertyMasterRepository.saveFloorType(floorType, data);
 				floorType.setId(id);
+				floorType.getAuditDetails().setCreatedTime(createdTime);
+				floorType.getAuditDetails().setLastModifiedTime(createdTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(floorTypeRequest.getRequestInfo());
 			}
@@ -110,8 +113,8 @@ public class MasterServiceImpl implements Masterservice {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(floorType);
 			try {
-				long updatedTime = new Date().getTime();
-				propertyMasterRepository.updateFloorType(floorType, data);
+				Long updatedTime = new Date().getTime();
+				floorType = propertyMasterRepository.updateFloorType(floorType, data);
 				floorType.getAuditDetails().setLastModifiedTime(updatedTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(floorTypeRequest.getRequestInfo());
@@ -156,8 +159,11 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(woodType);
 
 			try {
+				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveWoodType(woodType, data);
 				woodType.setId(id);
+				woodType.getAuditDetails().setCreatedTime(createdTime);
+				woodType.getAuditDetails().setLastModifiedTime(createdTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(woodTypeRequest.getRequestInfo());
 			}
@@ -178,7 +184,9 @@ public class MasterServiceImpl implements Masterservice {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(woodType);
 			try {
-				propertyMasterRepository.updateWoodType(woodType, data);
+				Long updatedTime = new Date().getTime();
+				woodType = propertyMasterRepository.updateWoodType(woodType, data);
+				woodType.getAuditDetails().setLastModifiedTime(updatedTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(woodTypeRequest.getRequestInfo());
 			}
@@ -219,8 +227,11 @@ public class MasterServiceImpl implements Masterservice {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(roofType);
 			try {
+				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveRoofType(roofType, data);
 				roofType.setId(id);
+				roofType.getAuditDetails().setCreatedTime(createdTime);
+				roofType.getAuditDetails().setLastModifiedTime(createdTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(roofTypeRequest.getRequestInfo());
 			}
@@ -240,7 +251,9 @@ public class MasterServiceImpl implements Masterservice {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(roofType);
 			try {
-				propertyMasterRepository.updateRoofType(roofType, data);
+				Long updatedTime = new Date().getTime();
+				roofType = propertyMasterRepository.updateRoofType(roofType, data);
+				roofType.getAuditDetails().setLastModifiedTime(updatedTime);
 			} catch (Exception e) {
 				throw new InvalidInputException(roofTypeRequest.getRequestInfo());
 			}
@@ -301,7 +314,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			String data = gson.toJson(department);
 
-			propertyMasterRepository.updateDepartment(department, data, department.getId());
+			department = propertyMasterRepository.updateDepartment(department, data, department.getId());
 			department.getAuditDetails().setLastModifiedTime(modifiedTime);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
@@ -378,7 +391,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			String data = gson.toJson(occuapancyMaster);
 
-			propertyMasterRepository.updateOccuapancy(occuapancyMaster, data);
+			occuapancyMaster = propertyMasterRepository.updateOccuapancy(occuapancyMaster, data);
 
 			occuapancyMaster.getAuditDetails().setLastModifiedTime(modifiedTime);
 
@@ -453,9 +466,9 @@ public class MasterServiceImpl implements Masterservice {
 
 			String data = gson.toJson(propertyType);
 
-			propertyMasterRepository.updatePropertyType(propertyType, data);
+			propertyType = propertyMasterRepository.updatePropertyType(propertyType, data);
 
-			propertyType.getAuditDetails().setCreatedTime(modifiedTime);
+			propertyType.getAuditDetails().setLastModifiedTime(modifiedTime);
 
 		}
 		ResponseInfo responseInfo = responseInfoFactory
@@ -498,9 +511,12 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(usageMaster);
 
 			try {
-
+				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveUsageMaster(usageMaster, data);
 				usageMaster.setId(id);
+
+				usageMaster.getAuditDetails().setCreatedTime(createdTime);
+				usageMaster.getAuditDetails().setLastModifiedTime(createdTime);
 
 			} catch (Exception e) {
 
@@ -530,9 +546,9 @@ public class MasterServiceImpl implements Masterservice {
 
 			try {
 
-				long updatedTime = new Date().getTime();
+				Long updatedTime = new Date().getTime();
 
-				propertyMasterRepository.updateUsageMaster(usageMaster, data);
+				usageMaster = propertyMasterRepository.updateUsageMaster(usageMaster, data);
 
 				usageMaster.getAuditDetails().setLastModifiedTime(updatedTime);
 
@@ -581,9 +597,11 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(wallType);
 
 			try {
-
+				Long createTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveWallTypes(wallType, data);
 				wallType.setId(id);
+				wallType.getAuditDetails().setCreatedTime(createTime);
+				wallType.getAuditDetails().setLastModifiedTime(createTime);
 
 			} catch (Exception e) {
 				throw new InvalidInputException(wallTypeRequest.getRequestInfo());
@@ -611,9 +629,9 @@ public class MasterServiceImpl implements Masterservice {
 
 			try {
 
-				long updatedTime = new Date().getTime();
+				Long updatedTime = new Date().getTime();
 
-				propertyMasterRepository.updateWallTypes(wallType, data);
+				wallType = propertyMasterRepository.updateWallTypes(wallType, data);
 
 				wallType.getAuditDetails().setLastModifiedTime(updatedTime);
 
@@ -666,9 +684,11 @@ public class MasterServiceImpl implements Masterservice {
 			String data = gson.toJson(structureClass);
 
 			try {
-
+				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveStructureClsses(tenantId, structureClass, data);
 				structureClass.setId(id);
+				structureClass.getAuditDetails().setCreatedTime(createdTime);
+				structureClass.getAuditDetails().setLastModifiedTime(createdTime);
 
 			} catch (Exception e) {
 
@@ -698,9 +718,9 @@ public class MasterServiceImpl implements Masterservice {
 
 			try {
 
-				long updatedTime = new Date().getTime();
+				Long updatedTime = new Date().getTime();
 
-				propertyMasterRepository.updateStructureClsses(structureClass, data);
+				structureClass = propertyMasterRepository.updateStructureClsses(structureClass, data);
 
 				structureClass.getAuditDetails().setLastModifiedTime(updatedTime);
 

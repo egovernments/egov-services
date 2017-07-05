@@ -9,7 +9,6 @@ import java.util.Map;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -51,7 +50,7 @@ public class GlobalExceptionHandler {
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(ResponseStatusEnum.FAILED);
+		responseInfo.setStatus(environment.getProperty("failed"));
 		return new ErrorRes(responseInfo, errorList);
 	}
 
@@ -72,7 +71,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			responseInfo.setStatus(environment.getProperty("failed"));
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -80,7 +79,7 @@ public class GlobalExceptionHandler {
 			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			responseInfo.setStatus(environment.getProperty("failed"));
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);

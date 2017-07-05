@@ -179,6 +179,7 @@ definitions:
             - singlevaluelist
             - multivaluelist
         pattern:
+          type: string
           description: |
             1. display format for the column - in case of epoch type datatypes. 
             2. In case of single/multivalue list this will be pipe separated url|keyJSONPath|valueJSONPath (URL to fetch the list values, jsonPath of the key value, jsonPath of what to display)

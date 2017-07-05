@@ -25,7 +25,7 @@ public class ChartOfAccountEntity extends AuditableEntity {
 	private String accountCodePurposeId;
 	private String description;
 	private Boolean isActiveForPosting;
-	private String parentIdId;
+	private String parentId;
 	private Character type;
 	private Long classification;
 	private Boolean functionRequired;
@@ -42,7 +42,7 @@ public class ChartOfAccountEntity extends AuditableEntity {
 		chartOfAccount.setAccountCodePurpose(AccountCodePurpose.builder().id(accountCodePurposeId).build());
 		chartOfAccount.setDescription(this.description);
 		chartOfAccount.setIsActiveForPosting(this.isActiveForPosting);
-		chartOfAccount.setParentId(ChartOfAccount.builder().id(parentIdId).build());
+		chartOfAccount.setParentId(ChartOfAccount.builder().id(parentId).build());
 		chartOfAccount.setType(this.type);
 		chartOfAccount.setClassification(this.classification);
 		chartOfAccount.setFunctionRequired(this.functionRequired);
@@ -61,7 +61,7 @@ public class ChartOfAccountEntity extends AuditableEntity {
 				? chartOfAccount.getAccountCodePurpose().getId() : null;
 		this.description = chartOfAccount.getDescription();
 		this.isActiveForPosting = chartOfAccount.getIsActiveForPosting();
-		this.parentIdId = chartOfAccount.getParentId() != null ? chartOfAccount.getParentId().getId() : null;
+		this.parentId = chartOfAccount.getParentId() != null ? chartOfAccount.getParentId().getId() : null;
 		this.type = chartOfAccount.getType();
 		this.classification = chartOfAccount.getClassification();
 		this.functionRequired = chartOfAccount.getFunctionRequired();

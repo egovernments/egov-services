@@ -24,7 +24,7 @@ public class FunctionEntity extends AuditableEntity {
 	private Integer level;
 	private Boolean active;
 	private Boolean isParent;
-	private String parentIdId;
+	private String parentId;
 
 	public Function toDomain() {
 		Function function = new Function();
@@ -35,7 +35,7 @@ public class FunctionEntity extends AuditableEntity {
 		function.setLevel(this.level);
 		function.setActive(this.active);
 		function.setIsParent(this.isParent);
-		function.setParentId(Function.builder().id(parentIdId).build());
+		function.setParentId(Function.builder().id(parentId).build());
 		return function;
 	}
 
@@ -47,7 +47,7 @@ public class FunctionEntity extends AuditableEntity {
 		this.level = function.getLevel();
 		this.active = function.getActive();
 		this.isParent = function.getIsParent();
-		this.parentIdId = function.getParentId() != null ? function.getParentId().getId() : null;
+		this.parentId = function.getParentId() != null ? function.getParentId().getId() : null;
 		return this;
 	}
 

@@ -107,8 +107,7 @@ class Login extends Component {
               password: "",
               confirmPassword: "",
               emailId: "",
-              name: "",
-              active: true
+              name: ""
            },
            signUpErrorMsg: ""
        }
@@ -386,7 +385,6 @@ class Login extends Component {
           signUpErrorMsg: translate("OTP is required")
         })
       } else {
-        
         Api.commonApiPost("otp/v1/_validate", {}, {
           otp: {
             "tenantId": localStorage.getItem("tenantId") || "default",

@@ -3,7 +3,6 @@ package org.egov.lams.consumers;
 import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AgreementDetailsEs;
 import org.egov.lams.contract.AgreementIndex;
 import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.repository.ElasticSearchRepository;

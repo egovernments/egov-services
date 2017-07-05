@@ -126,6 +126,9 @@ class createRouter extends Component {
 
   	this.props.initForm();
     self.props.setLoadingStatus('loading');
+    searchTextCom = "";
+    searchTextBoun = "";
+    searchTextPos = "";
     const checkIfUpdateOrView = function() {
       if(type === "edit" || type === "view") {
         var id=self.props.match.params.id;

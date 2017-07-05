@@ -175,7 +175,7 @@ class Dashboard extends Component {
           </div>:  <Card>
               <CardHeader title={< div style = {styles.headerStyle} >Work List< /div>} />
 				<CardText>
-						 <Grid>
+						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
 					<Col xs={12} md={12}>
 							<TextField

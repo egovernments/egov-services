@@ -27,7 +27,7 @@ public class ReportApp{
     public static ResourceLoader resourceLoader;
    
     @Autowired
-    private static Environment env;
+    private Environment env;
     
     public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
@@ -48,7 +48,7 @@ public class ReportApp{
 	 
 	  
 	@Bean("reportDefinitions")
-	public static ReportDefinitions loadYaml() {
+	public ReportDefinitions loadYaml() {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		try {
 

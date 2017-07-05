@@ -5,7 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import {connect} from 'react-redux';
 import TextField from 'material-ui/TextField';
-
+import RaisedButton from 'material-ui/RaisedButton';
 // import MenuItem from 'material-ui/MenuItem';
 // import Paper from 'material-ui/Paper';
 
@@ -229,7 +229,7 @@ class CustomMenu extends Component {
       <div className="custom-menu" style={style}>
           {
             <TextField
-               hintText="Quick Find"
+               hintText = "Quick Find"
                onChange={this.handleChange}
                value={searchText}
              />
@@ -241,12 +241,18 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true} width={320}>
-        {(level>0 || searchText) && <FloatingActionButton iconStyle={{height: 35, width: 35, fontSize:19, lineHeight:'35px'}} onTouchTap={()=>{changeLevel(0)}}  mini={true} style={{margin:"0px 13px 13px 19px", fontSize:11}}>
-              <i className="material-icons">home</i>
-          </FloatingActionButton>}
-        { level>0 &&  <FloatingActionButton iconStyle={{height: 35, width: 35,  fontSize:19, lineHeight:'35px'}} onTouchTap={()=>{changeLevel(parentLevel)}} mini={true} style={{margin:"0 0 13px",fontSize:11}}>
-              <i className="material-icons">fast_rewind</i>
-          </FloatingActionButton>}
+        {(level>0 || searchText) && <RaisedButton
+                                      primary={true}
+                                      icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}
+                                      style={{...style, "marginLeft": "2px"}}
+                                      onTouchTap={()=>{changeLevel(0)}}
+                                    />}
+        { level>0 &&  <RaisedButton
+                        primary={true}
+                        icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>fast_rewind</i>}
+                        style={{...style, "float": "right", "marginRight": "2px"}}
+                        onTouchTap={()=>{changeLevel(parentLevel)}}
+                      />}
 
           {/*
             <MenuItem

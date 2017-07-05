@@ -18,12 +18,15 @@ const styles = {
     marginBottom: 12,
     fontWeight: 400,
   },
+  headerStyle : {
+    fontSize : 19
+  },
   slide: {
     padding: 10,
   },
   status:{
     fontSize:14,
-    background:"rgb(53, 79, 87)",
+    background:"#5f5c62",
     display:"inline-block",
     padding:"4px 8px",
     borderRadius:4,
@@ -170,7 +173,7 @@ class Dashboard extends Component {
               </div>
             </SwipeableViews>
           </div>:  <Card>
-              <CardHeader title="Work list" />
+              <CardHeader title={< div style = {styles.headerStyle} >Work List< /div>} />
 				<CardText>
 						 <Grid>
                     <Row>

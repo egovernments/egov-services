@@ -556,7 +556,7 @@ class Login extends Component {
                                   {showError()}
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
+                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} onClick={(e)=>{
                                     loginRequest()
                                   }}/>
                                   <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
@@ -597,7 +597,7 @@ class Login extends Component {
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label={translate('core.lbl.search')} backgroundColor={"#354f57"} labelColor={white} onClick={(e)=>{searchGrievance(e)}}/>
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} primary={true}/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>

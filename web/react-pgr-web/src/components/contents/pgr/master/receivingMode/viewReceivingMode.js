@@ -16,6 +16,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import {translate} from '../../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -108,7 +109,7 @@ class viewReceivingSet extends Component {
       return(
         <div className="viewReceivingSet">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Receiving Mode< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate("pgr.lbl.view")} {translate("pgr.lbl.receivingmode")}< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>
@@ -129,7 +130,7 @@ class viewReceivingSet extends Component {
                                       <ListGroupItem>
                                         <Row>
                                           <Col xs={4} md={2} style={styles.bold}>
-                                               Name
+                                               {translate("core.lbl.add.name")}
                                           </Col>
                                           <Col xs={8} md={10}>
                                               {viewReceivingSet.name ? viewReceivingSet.name : ''}
@@ -139,7 +140,7 @@ class viewReceivingSet extends Component {
                                       <ListGroupItem>
                                         <Row>
                                           <Col xs={4} md={2} style={styles.bold}>
-                                               Code
+                                               {translate("core.lbl.code")}
                                           </Col>
                                           <Col xs={8} md={10}>
                                               {viewReceivingSet.code ? viewReceivingSet.code : ''}
@@ -149,7 +150,7 @@ class viewReceivingSet extends Component {
                                       <ListGroupItem>
                                         <Row>
                                           <Col xs={4} md={2} style={styles.bold}>
-                                               Description
+                                               {translate("core.lbl.description")}
                                           </Col>
                                           <Col xs={8} md={10}>
                                               {viewReceivingSet.description? viewReceivingSet.description : ''}
@@ -159,7 +160,7 @@ class viewReceivingSet extends Component {
                                       <ListGroupItem>
                                         <Row>
                                           <Col xs={4} md={2} style={styles.bold}>
-                                               Active
+                                               {translate("pgr.lbl.active")}
                                           </Col>
                                           <Col xs={8} md={10}>
                                               {viewReceivingSet.active? "True" : "False"}

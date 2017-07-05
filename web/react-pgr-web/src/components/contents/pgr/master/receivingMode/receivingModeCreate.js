@@ -233,9 +233,9 @@ class receivingModeCreate extends Component {
               </div>
          </form>
          <Dialog
-          title="Success"
+          title={translate("pgr.lbl.success")}
           actions={[<FlatButton
-				        label="Close"
+				        label={translate("core.lbl.close")}
 				        primary={true}
 				        onTouchTap={handleOpenNClose}
 				      />]}

@@ -51,7 +51,7 @@ class Dashboard extends Component {
     let {currentUser}=this.props;
 
     if(currentUser.type=="CITIZEN") {
-      Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+      Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
           response.serviceRequests.sort(function(s1, s2) {
               var d1 = s1.requestedDatetime.split(" ")[0].split("-");
               var d2 = s2.requestedDatetime.split(" ")[0].split("-");
@@ -74,29 +74,34 @@ class Dashboard extends Component {
           });
       })
     } else {
-        Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:currentUser.id, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
-            response.serviceRequests.sort(function(s1, s2) {
-              var d1 = s1.requestedDatetime.split(" ")[0].split("-");
-              var d2 = s2.requestedDatetime.split(" ")[0].split("-");
-              if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
-                return 1;
-              } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
-                return -1;
-              }
-              return 0;
+      Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
+        if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
+          Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+                response.serviceRequests.sort(function(s1, s2) {
+                  var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+                  var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+                  if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                    return 1;
+                  } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                    return -1;
+                  }
+                  return 0;
+                })
+                current.setState({
+                  serviceRequests: response.serviceRequests,
+                  localArray:response.serviceRequests
+                });
+            }).catch((error)=>{
+                current.setState({
+                  serviceRequests: [],
+                  localArray:[]
+                });
             })
-            current.setState({
-              serviceRequests: response.serviceRequests,
-			        localArray:response.serviceRequests
-            });
-        }).catch((error)=>{
-            current.setState({
-              serviceRequests: [],
-			        localArray:[]
-            });
-        })
+        } else {
+            currentUser.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
+        }
+      })
     }
-
   };
   
   localHandleChange = (string) => {
@@ -363,6 +368,9 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    }
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     // setLabels: payload => dispatch({type: 'LABELS', payload}),

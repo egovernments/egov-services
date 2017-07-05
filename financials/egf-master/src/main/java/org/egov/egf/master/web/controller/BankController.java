@@ -22,7 +22,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,7 +85,7 @@ public class BankController {
 		CommonResponse<BankContract> bankResponse = new CommonResponse<>();
 		List<Bank> banks = new ArrayList<>();
 		Bank bank = null;
-
+		bankContractRequest.getRequestInfo().setAction("update");
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -126,15 +125,13 @@ public class BankController {
 		mapper.map(bankSearchContract, domain);
 
 		Pagination<Bank> banks = bankService.search(domain);
-		int i = 0;
-		errors.addError(new ObjectError("hellow", "hollow"));
-		if (i == 0) {
+		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
-		BankContract contract = null;
+		BankContract contract;
 		ModelMapper model = new ModelMapper();
-		List<BankContract> bankContracts = new ArrayList<BankContract>();
+		List<BankContract> bankContracts = new ArrayList<>();
 		for (Bank bank : banks.getPagedData()) {
 
 			contract = new BankContract();

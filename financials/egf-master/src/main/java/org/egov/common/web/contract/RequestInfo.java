@@ -2,6 +2,8 @@ package org.egov.common.web.contract;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.domain.model.User;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,5 +34,6 @@ public class RequestInfo {
 
 	private String tenantId;
 
+	@NotNull
 	private User userInfo;
 }

@@ -85,7 +85,7 @@ public class FundController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
+		fundContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
 		List<Fund> funds = new ArrayList<>();

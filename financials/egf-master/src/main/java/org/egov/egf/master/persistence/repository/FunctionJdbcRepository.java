@@ -107,7 +107,7 @@ paramValues.put("parentId" ,functionSearchEntity.getParentId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page);
+		page = getPagination(searchQuery, page,paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + functionSearchEntity.getPageSize() + " offset "

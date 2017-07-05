@@ -35,34 +35,8 @@ public class ReportApp{
     
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
+		
 	}
 	
-	@Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter() {
-        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        converter.setObjectMapper(mapper);
-        return converter;
-    }
-	 
-	  
-	@Bean("reportDefinitions")
-	public ReportDefinitions loadYaml() {
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		try {
 
-			System.out.println("Loading the report definitions from yaml");
-			//Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
-			Resource resource = resourceLoader.getResource("classpath:application.yml");
-			File yamlFile = resource.getFile();
-			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
-			System.out.println("Report Defintion is: "+reportDefinitions.toString());
-			return reportDefinitions;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
 }

@@ -39,20 +39,33 @@
  */
 package org.egov.pgr;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.egov.ReportApp;
+import org.egov.domain.model.ReportDefinitions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 @SpringBootApplication
 public class PgrMastersApplication {
+	@Autowired
+    public ResourceLoader resourceLoader;
+   
+    @Autowired
+    private Environment env;
+    
 
     public static volatile ConcurrentHashMap<Long, String> categoryTypeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<Long, String> pipeSizeMap = new ConcurrentHashMap<>();
@@ -64,7 +77,6 @@ public class PgrMastersApplication {
         SpringApplicationBuilder application = new SpringApplicationBuilder();
     	application.sources(PgrMastersApplication.class);
     	application.sources(ReportApp.class);
-    	
     	application.run(args);
     	/*Object [] obj = {PgrMastersApplication.class,ReportApp.class};
     	SpringApplication.run(obj, args);*/
@@ -79,4 +91,23 @@ public class PgrMastersApplication {
         converter.setObjectMapper(mapper);
         return converter;
     }
+    @Bean("reportDefinitions")
+	public ReportDefinitions loadYaml() {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		try {
+
+			System.out.println("Loading the report definitions from PGR");
+			//Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
+			Resource resource = resourceLoader.getResource("classpath:application.yml");
+			File yamlFile = resource.getFile();
+			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
+			System.out.println("Report Defintion PGR: "+reportDefinitions.toString());
+			return reportDefinitions;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

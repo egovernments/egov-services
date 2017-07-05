@@ -11,6 +11,7 @@ import org.egov.demand.web.contract.GlCodeMasterResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.validator.GlCodeMasterValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class GlCodeMasterController {
 	private ResponseFactory responseFactory;
 	@Autowired
 	private GlCodeMasterService glCodeMasterService;
+	
+	@Autowired
+	private GlCodeMasterValidator  glCodeMasterValidator;
 
 	private static final Logger logger = LoggerFactory.getLogger(GlCodeMasterController.class);
 	
@@ -61,8 +65,22 @@ public class GlCodeMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		// TODO Input field validation, it will be a part of phase-2
+		System.out.println(":calling glcode validator::::");
+		glCodeMasterValidator.validateGlCodeMaster(glCodeMasterRequest,bindingResult);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
 		final GlCodeMasterResponse glCodeMasterRponse = glCodeMasterService.createAsync(glCodeMasterRequest);
 		return new ResponseEntity<>(glCodeMasterRponse, HttpStatus.CREATED);
+	}
+	@PostMapping("_update")
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid GlCodeMasterRequest request
+			,BindingResult bindingResult){
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, request.getRequestInfo());
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(glCodeMasterService.updateAsync(request), HttpStatus.CREATED);
 	}
 }

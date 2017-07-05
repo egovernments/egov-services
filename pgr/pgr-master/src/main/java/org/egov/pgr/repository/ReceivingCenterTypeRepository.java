@@ -108,13 +108,13 @@ public class ReceivingCenterTypeRepository {
 		return receivingCenterTypes;
 	}
 
-	public boolean checkReceivingCenterTypeByCode(final String code, final String name, final String tenantId) {
+	public boolean checkReceivingCenterTypeByCode(final String code, final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
 		// preparedStatementValues.add(id);
 		preparedStatementValues.add(tenantId);
 		String query = "";
-		if (code != null && code != "") {
+		if ((code != null && code != "")) {
 
 			preparedStatementValues.add(code);
 			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByCode();

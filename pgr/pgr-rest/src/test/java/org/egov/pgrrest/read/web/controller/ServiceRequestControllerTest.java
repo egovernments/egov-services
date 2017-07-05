@@ -2,11 +2,11 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
-import org.egov.pgrrest.common.model.UserType;
-import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
+import org.egov.pgrrest.common.domain.model.UserType;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException;
 import org.egov.pgrrest.read.domain.exception.ServiceRequestIdMandatoryException;
 import org.egov.pgrrest.read.domain.exception.TenantIdMandatoryException;
@@ -166,9 +166,10 @@ public class ServiceRequestControllerTest {
 
         ServiceRequestSearchCriteria criteria = ServiceRequestSearchCriteria.builder()
             .positionId(10L)
+            .startDate(null)
             .endDate(null)
             .escalationDate(null)
-            .lastModifiedDatetime(null)
+            .startLastModifiedDate(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
             .status(Arrays.asList("REGISTERED", "FORWARDED"))
@@ -178,7 +179,7 @@ public class ServiceRequestControllerTest {
             .name(name)
             .locationId(4L)
             .childLocationId(5L)
-            .receivingMode(5L)
+            .receivingMode("receivingModeCode")
             .tenantId("tenantId")
             .pageSize(20)
             .fromIndex(2)
@@ -200,7 +201,7 @@ public class ServiceRequestControllerTest {
                 .param("name", "kumar")
                 .param("emailId", "abc@gmail.com")
                 .param("mobileNumber", "74742487428")
-                .param("receivingMode", "5")
+                .param("receivingMode", "receivingModeCode")
                 .param("locationId", "4")
                 .param("childLocationId", "5")
                 .param("fromIndex", "2")
@@ -222,7 +223,7 @@ public class ServiceRequestControllerTest {
             .positionId(10L)
             .endDate(null)
             .escalationDate(null)
-            .lastModifiedDatetime(null)
+            .startLastModifiedDate(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
             .status(Arrays.asList("REGISTERED", "FORWARDED"))
@@ -232,7 +233,7 @@ public class ServiceRequestControllerTest {
             .name(name)
             .locationId(4L)
             .childLocationId(5L)
-            .receivingMode(5L)
+            .receivingMode("receivingModeCode")
             .tenantId("tenantId")
             .pageSize(20)
             .fromIndex(2)
@@ -254,7 +255,7 @@ public class ServiceRequestControllerTest {
                 .param("name", "kumar")
                 .param("emailId", "abc@gmail.com")
                 .param("mobileNumber", "74742487428")
-                .param("receivingMode", "5")
+                .param("receivingMode", "receivingModeCode")
                 .param("locationId", "4")
                 .param("childLocationId", "5")
                 .param("fromIndex", "2")
@@ -272,7 +273,7 @@ public class ServiceRequestControllerTest {
             .positionId(10L)
             .endDate(null)
             .escalationDate(null)
-            .lastModifiedDatetime(null)
+            .startLastModifiedDate(null)
             .serviceCode("serviceCode_123")
             .serviceRequestId("serid_123").startDate(null)
             .status(Arrays.asList("REGISTERED", "FORWARDED"))
@@ -282,7 +283,7 @@ public class ServiceRequestControllerTest {
             .name("kumar")
             .locationId(4L)
             .childLocationId(5L)
-            .receivingMode(5L)
+            .receivingMode("receivingModeCode")
             .tenantId("tenantId")
             .build();
 
@@ -300,7 +301,7 @@ public class ServiceRequestControllerTest {
                 .param("name", "kumar")
                 .param("emailId", "abc@gmail.com")
                 .param("mobileNumber", "74742487428")
-                .param("receivingMode", "5")
+                .param("receivingMode", "receivingModeCode")
                 .param("locationId", "4")
                 .param("childLocationId", "5")
                 .content(resources.getFileContents("requestinfobody.json"))

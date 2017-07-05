@@ -48,11 +48,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum BillingType {
     METERED("METERED"), NONMETERED("NON-METERED");
 
-    private String value;
+    private final String value;
 
     BillingType(final String value) {
         this.value = value;
     }
+    
+
+    public String getValue() {
+        return value;
+    }
+
 
     @Override
     @JsonValue

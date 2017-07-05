@@ -44,19 +44,21 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.wcms.model.Donation;
+import org.egov.wcms.repository.builder.DonationQueryBuilder;
+import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class DonationRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(DonationRepository.class);
+@Repository
+@Slf4j
+public class DonationRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -64,50 +66,125 @@ public class DonationRepository {
     @Autowired
     private DonationRowMapper donationRowMapper;
 
+    @Autowired
+    private DonationQueryBuilder donationQueryBuilder;
+
     public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
-        LOGGER.info("Donation Request::" + donationRequest);
-        final String donationInsert = "INSERT INTO egwtr_donation "
-                + "(id, property_type, usage_type, category, hsc_pipesize_max, hsc_pipesize_min, from_date, to_date, donation_amount, active, tenantid, createddate, createdby) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        final Object[] obj = new Object[] { donationRequest.getDonation().getId(),
-                donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
-                donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
-                donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(),
-                donationRequest.getDonation().getToDate(),
-                donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
-                donationRequest.getDonation().getTenantId(), new Date(new java.util.Date().getTime()),
-                donationRequest.getRequestInfo().getUserInfo().getId() };
+        log.info("Donation Request::" + donationRequest);
+
+        final String donationInsert = DonationQueryBuilder.donationInsertQuery();
+        final Donation donation = donationRequest.getDonation();
+
+        final String categoryQuery = DonationQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
+            log.info("Category Id: " + categoryId);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null)
+            log.info("Invalid input.");
+
+        final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
+        Long maxPipeSizeId = 0L;
+        try {
+            maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMaxPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (maxPipeSizeId == null)
+            log.info("Invalid input for MaxPipeSize.");
+
+        Long minPipeSizeId = 0L;
+        try {
+            minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMinPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (minPipeSizeId == null)
+            log.info("Invalid input for MinPipeSize");
+
+        final Object[] obj = new Object[] { donation.getPropertyTypeId(), donation.getUsageTypeId(), categoryId,
+                maxPipeSizeId, minPipeSizeId, donation.getFromDate(), donation.getToDate(),
+                donation.getDonationAmount(), donation.getActive(), donation.getTenantId(),
+                Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), };
         jdbcTemplate.update(donationInsert, obj);
         return donationRequest;
     }
 
     public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
-        LOGGER.info("Donation update Request::" + donationRequest);
-        final String donationInsert = "update egwtr_donation set property_type=?,usage_type=?,category=?, hsc_pipesize_max=?, hsc_pipesize_min=?,"
-                + " from_date=?, to_date=?, donation_amount=?, active=?,lastmodifiedby=?, lastmodifieddate=? where id=?)";
-        final Object[] obj = new Object[] {
-                donationRequest.getDonation().getPropertyTypeId(), donationRequest.getDonation().getUsageTypeId(),
-                donationRequest.getDonation().getCategoryTypeId(), donationRequest.getDonation().getMaxHSCPipeSizeId(),
-                donationRequest.getDonation().getMinHSCPipeSizeId(), donationRequest.getDonation().getFromDate(),
-                donationRequest.getDonation().getToDate(),
-                donationRequest.getDonation().getDonationAmount(), donationRequest.getDonation().isActive(),
-                donationRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
-                donationRequest.getDonation().getId() };
+        log.info("Donation update Request::" + donationRequest);
+        final String donationInsert = DonationQueryBuilder.donationUpdateQuery();
+        final Donation donation = donationRequest.getDonation();
+        final String categoryQuery = DonationQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
+            log.info("Category Id: " + categoryId);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null)
+            log.info("Invalid input.");
+
+        final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
+        Long maxPipeSizeId = 0L;
+        try {
+            maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMaxPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for max pipesize");
+        }
+        if (maxPipeSizeId == null)
+            log.info("Invalid input for MaxPipeSize.");
+
+        Long minPipeSizeId = 0L;
+        try {
+            minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { donation.getMinPipeSize(), donation.getTenantId() }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for min pipesize");
+        }
+        if (minPipeSizeId == null)
+            log.info("Invalid input for MinPipeSize");
+
+        final Object[] obj = new Object[] { donation.getPropertyTypeId(), donation.getUsageTypeId(), categoryId,
+                maxPipeSizeId, minPipeSizeId, donation.getFromDate(), donation.getToDate(),
+                donation.getDonationAmount(), donation.getActive(),
+                Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), donation.getId() };
         jdbcTemplate.update(donationInsert, obj);
         return donationRequest;
     }
 
-    public List<Donation> getDonationList(final DonationGetRequest donation) {
+    public List<Donation> findForCriteria(final DonationGetRequest donation) {
+
         final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(Long.valueOf(donation.getPropertyType()));
-        preparedStatementValues.add(Long.valueOf(donation.getUsageType()));
-        preparedStatementValues.add(Long.valueOf(donation.getCategoryType()));
-        preparedStatementValues.add(donation.getMaxHSCPipeSize());
-        preparedStatementValues.add(donation.getMinHSCPipeSize());
-        preparedStatementValues.add(donation.getTenantId());
-        final String queryStr = "SELECT * FROM egwtr_donation WHERE property_type = ? AND usage_type = ? "
-                + " AND category = ? AND hsc_pipesize_max <= ? AND hsc_pipesize_min >= ? AND tenantid = ? AND  "
-                + "  active IS TRUE";
-        final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), donationRowMapper);
+        try {
+            if (donation.getCategoryType() != null)
+                donation.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
+                        new Object[] { donation.getCategoryType() }, Long.class));
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty set for category type.");
+
+        }
+
+        final String queryStr = donationQueryBuilder.getQuery(donation, preparedStatementValues);
+        final String categoryNameQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryTypeName();
+        final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                donationRowMapper);
+        for (final Donation donations : donationList) {
+            donations.setCategory(jdbcTemplate.queryForObject(categoryNameQuery,
+                    new Object[] { donations.getCategoryTypeId() }, String.class));
+        }
         return donationList;
+
     }
 }

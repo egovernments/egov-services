@@ -4,7 +4,9 @@ const defaultState = {
   form: {},
   files: [],
   msg: '',
+  toastMsg:'',
   dialogOpen: false,
+  snackbarOpen:false,
   fieldErrors: {},
   isFormValid: false,
   validationData: {},
@@ -139,6 +141,7 @@ export default(state = defaultState, action) => {
           validationData: validationData.validationData,
           isFormValid: validationData.isFormValid
         }
+
     case "HANDLE_CHANGE_NEXT_TWO":
       let validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.propertyTwo, action.value, state.validationData);
@@ -177,6 +180,34 @@ export default(state = defaultState, action) => {
       }
     }
 
+    case "PUSH_ONE_ARRAY" :
+
+    if (!state.form.hasOwnProperty(action.formObject)) {
+          state.form[action.formObject] = {};
+          state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject]) { alert('Boom2');
+      state.form[action.formObject] = {};
+      state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject][action.formArray]) {
+      state.form[action.formObject][action.formArray] = [];
+      //console.log(state.form[action.formObject]);
+    }
+
+    return {
+      ...state,
+      form: {
+        ...state.form,
+        [action.formObject]: {
+          ...state.form[action.formObject],
+             [action.formArray]:[
+               ...state.form[action.formObject][action.formArray],
+               state.form[action.formData]
+             ]
+        }
+      }
+    }
+
+
     case "REMOVE_MANDATORY":
     var obj = state.validationData;
     if(obj.required.required.includes(action.property)){
@@ -208,6 +239,7 @@ export default(state = defaultState, action) => {
         validationData: action.validationData,
         msg: '',
         dialogOpen: false,
+        snackbarOpen: false,
         isFormValid: false,
         showTable:false,
         buttonText:"Search"
@@ -233,6 +265,17 @@ export default(state = defaultState, action) => {
         ...state,
         msg:action.msg,
         dialogOpen:action.dailogState,
+      }
+    case "TOGGLE_SNACKBAR_AND_SET_TEXT":
+      return {
+        ...state,
+        toastMsg:action.toastMsg,
+        snackbarOpen:action.snackbarState,
+      }
+    case "SET_LOADING_STATUS":
+      return {
+        ...state,
+        loadingStatus: action.loadingStatus
       }
     default:
       return state;
@@ -273,8 +316,8 @@ function validate(isRequired, pattern, name, value, validationData) {
   if (!isRequired && value == "") {
     errorText = "";
   }
-  console.log(validationData.required.required.length)
-  console.log(validationData.required.current.length)
+  //console.log(validationData.required.required.length)
+  //console.log(validationData.required.current.length)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
   return {

@@ -30,9 +30,9 @@ class SearchAsset extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     if(e.target.value == "revaluate") {
-      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     } else if(e.target.value = "sale") {
-      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }
 
     this.setState({

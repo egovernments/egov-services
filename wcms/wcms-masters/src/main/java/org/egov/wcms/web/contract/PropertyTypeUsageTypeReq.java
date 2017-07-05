@@ -64,6 +64,6 @@ public class PropertyTypeUsageTypeReq {
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("propertyTypeUsageType")
+    @JsonProperty("PropertyTypeUsageType")
     private PropertyTypeUsageType propertyTypeUsageType;
 }

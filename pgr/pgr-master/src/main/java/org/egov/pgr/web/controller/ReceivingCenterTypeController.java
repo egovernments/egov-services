@@ -102,7 +102,7 @@ public class ReceivingCenterTypeController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Receiving CenterType Request::" + centerTypeRequest);
+		logger.info("ReceivingCenterType Create : Request::" + centerTypeRequest);
 
 		final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest,true);
 		if (!errorResponses.isEmpty())
@@ -123,7 +123,7 @@ public class ReceivingCenterTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("ReceivingCenterTypeRequest::" + centerTypeRequest);
+        logger.info("ReceivingCenterType Update : Request::" + centerTypeRequest);
         centerTypeRequest.getCenterType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest,false);
@@ -213,11 +213,11 @@ public class ReceivingCenterTypeController {
 					.field(PgrMasterConstants.RECEIVINGCENTER_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} 
-		else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getName(),receivingCenter.getTenantId())) {
+		else if (flag && !receivingCenterService.checkReceivingCenterTypeByCode(receivingCenter.getCode(),receivingCenter.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
-                    .message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
+                    .code(PgrMasterConstants.RECEIVINGMODE_CODE_UNIQUE_CODE)
+                    .message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
+                    .field(PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME).build();
             errorFields.add(errorField);
         } else
 			return;

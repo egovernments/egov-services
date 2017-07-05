@@ -51,9 +51,9 @@ public class ServiceTypeQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceTypeQueryBuilder.class);
 
-    private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, "   
+    private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, comp.slahours, "   
     			+ " comp.hasfinancialimpact, adef.code attributecode, "  
-    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, adef.groupcode, vdef.key, vdef.name keyname "   
+    			+ " adef.datatype, adef.description attrdescription, adef.datatypedescription, adef.variable, adef.required, adef.groupcode, vdef.key, vdef.name keyname "   
     			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
     			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode ";
 
@@ -154,12 +154,16 @@ public class ServiceTypeQueryBuilder {
         return query.append(")").toString();
     }
 
-    public static String insertComplaintTypeQuery(){
+    public String insertComplaintTypeQuery(){
     	return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category) "
     			+ "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?)"; 
     	
     }
-    public static String insertServiceTypeQuery() {
+    
+    public static String fetchServiceKeywords() { 
+    	return "SELECT keyword FROM servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
+    }
+    public String insertServiceTypeQuery() {
         return "INSERT INTO service_definition (code,tenantid,createdby,createddate) values "
                 + "(?,?,?,?)";
     }  
@@ -169,6 +173,11 @@ public class ServiceTypeQueryBuilder {
         return "INSERT INTO attribute_definition (code, variable, datatype, description, datatypedescription, servicecode,  required, groupcode, "
         		+ "tenantid, createdby, createddate) values "
                 + "(?,?,?,?,?,?,?,?,?,?,?)";
+    }
+    
+    public static String insertServiceKeyworkMappingQuery() {
+    	return "INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createdby, createddate) " 
+    			+ " VALUES (NEXTVAL('seq_servicetype_keyword'),?,?,?,?,?) "; 
     }
     
     public static String insertValueDefinitionQuery(){
@@ -182,11 +191,15 @@ public class ServiceTypeQueryBuilder {
     }
     
     public static String removeAttributeQuery() {
-    	return "DELETE from attribute_definition WHERE servicecode = ? " ;
+    	return "DELETE from attribute_definition WHERE servicecode = ? AND tenantid = ?  " ;
     }
     
     public static String removeValueQuery() {
-    	return "DELETE from value_definition WHERE servicecode = ?  " ;
+    	return "DELETE from value_definition WHERE servicecode = ? AND tenantid = ?  " ;
+    }
+    
+    public static String removeServiceKeywordMapping() { 
+    	return "DELETE from servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
     }
 
     public static String selectServiceNameAndCodeQuery() {

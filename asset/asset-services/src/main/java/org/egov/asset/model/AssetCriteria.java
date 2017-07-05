@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.asset.model.enums.Status;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +24,7 @@ public class AssetCriteria {
 	private String code;
 	private Long assetCategory;
 	private Long department;
-	private Status status;
+	private String status;
 	private Long locality;
 	private Long zone;
 	private Long revenueWard;

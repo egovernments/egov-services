@@ -1,8 +1,13 @@
 package org.egov.workflow.persistence.repository.builder;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.workflow.domain.model.ServiceType;
+import org.egov.workflow.web.contract.BoundaryIdType;
+import org.egov.workflow.web.contract.RouterType;
 import org.egov.workflow.web.contract.RouterTypeGetReq;
+import org.egov.workflow.web.contract.RouterTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,20 +24,40 @@ public class RouterQueryBuilder {
 
 	private static final String INSERT_ROUTER = "INSERT INTO egpgr_router(id,complainttypeid, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
 			+ "(nextval('seq_egpgr_router'),?,?,?,?,?,?,?,?,?)";
-	private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? where bndryid = ? and complainttypeid= ? and tenantid=?";
+	private static final String INSERT_ROUTER_WITHOUT_SERVICE = "INSERT INTO egpgr_router(id, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
+			+ "(nextval('seq_egpgr_router'),?,?,?,?,?,?,?,?)";
+	private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, active = ? where bndryid = ? and complainttypeid= ? and tenantid=?";
+	
+	private static final String UPDATE_ROUTER_WITHOUT_SERVICE = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, active = ? where bndryid = ? and tenantid=?";
 	
 	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ? and tenantid=?";
 	
+	private static final String CHECK_DUPLICATE_WITHOUT_SERVICE = "select * from egpgr_router where complainttypeid IS NULL and bndryid = ? and tenantid=?";
+	
+	private static final String OFFSET = "99999";
+	
 	public static String insertRouter() {
 		return INSERT_ROUTER;
+	}
+	
+	public static String insertRouterWithoutService() {
+		return INSERT_ROUTER_WITHOUT_SERVICE;
 	}
 
 	public static String validateRouter() {
 		return CHECK_DUPLICATE;
 	}
+	
+	public static String validateRouterWithoutService() {
+		return CHECK_DUPLICATE_WITHOUT_SERVICE;
+	}
 
 	public static String updateRouter() {
 		return UPDATE_ROUTER;
+	}
+	
+	public static String updateRouterWithoutService() {
+		return UPDATE_ROUTER_WITHOUT_SERVICE;
 	}
 	
 	public String getRouterDetail(){
@@ -53,7 +78,7 @@ public class RouterQueryBuilder {
 
 		if (routerTypeRequest.getId() == null && routerTypeRequest.getBoundaryid() == null
 				&& routerTypeRequest.getServiceid() == null && routerTypeRequest.getTenantId() == null && 
-				routerTypeRequest.getDesignationid() == null)
+				routerTypeRequest.getPosition() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -72,9 +97,7 @@ public class RouterQueryBuilder {
 		
 		if (routerTypeRequest.getServiceid() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" comp.id = ?  ");
-			preparedStatementValues.add(routerTypeRequest.getServiceid());
-			
+			selectQuery.append(" comp.id IN " + getIdQuery(routerTypeRequest.getServiceid()));
 		}
 
 		if (routerTypeRequest.getBoundaryid() != null) {
@@ -83,10 +106,10 @@ public class RouterQueryBuilder {
 			preparedStatementValues.add(routerTypeRequest.getBoundaryid());
 		}
 
-		if (routerTypeRequest.getDesignationid() != null) {
+		if (routerTypeRequest.getPosition() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" router.position = ?");
-			preparedStatementValues.add(routerTypeRequest.getDesignationid());
+			preparedStatementValues.add(routerTypeRequest.getPosition());
 		}
 		
 		
@@ -116,6 +139,41 @@ public class RouterQueryBuilder {
 				query.append(", " + idList.get(i));
 		}
 		return query.append(")").toString();
+	}
+	
+	public String getVerificationQuery(RouterTypeReq routerTypeReq) {
+		final RouterType routerType = routerTypeReq.getRouterType();
+		List<ServiceType> serviceTypes = new ArrayList<>();
+		List<BoundaryIdType> boundaries = new ArrayList<>();
+		if (null != routerType.getServices()) {
+			serviceTypes = routerType.getServices();
+		}
+		if (null != routerType.getBoundaries()) {
+			boundaries = routerType.getBoundaries();
+		}
+		StringBuilder innerConditions = new StringBuilder();
+		StringBuilder completeQuery = new StringBuilder();
+		for (int i = 0; i < boundaries.size(); i++) {
+			Integer boundaryTypeId = boundaries.get(i).getBoundaryType();
+			int flag = 0;
+			for (int j = 0; j < serviceTypes.size(); j++) {
+				flag++;
+				Long serviceTypeId = serviceTypes.get(j).getId();
+				if (null != serviceTypeId && serviceTypeId > 0) {
+					innerConditions.append("( complainttypeid = " + serviceTypeId + " AND tenantid = '"
+							+ routerType.getTenantId() + "' AND bndryid = " + boundaryTypeId + ") OR");
+				}
+			}
+			if (flag == 0) {
+				innerConditions.append("( complainttypeid IS NULL AND tenantid = '" + routerType.getTenantId()
+						+ "' AND bndryid = " + boundaryTypeId + ") OR");
+			}
+		}
+		if (boundaries.size() > 0) {
+			completeQuery.append("SELECT count(*) FROM egpgr_router WHERE " + innerConditions.toString()
+					+ "(position = " + OFFSET + ")");
+		}
+		return completeQuery.toString();
 	}
 	
 	

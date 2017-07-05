@@ -58,8 +58,6 @@ import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,11 +70,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/pipesize")
 public class PipeSizeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(PipeSizeController.class);
 
     @Autowired
     private PipeSizeService pipeSizeService;
@@ -101,7 +100,7 @@ public class PipeSizeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("pipeSizeRequest::" + pipeSizeRequest);
+        log.info("pipeSizeRequest::" + pipeSizeRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validatePipeSizeRequest(pipeSizeRequest);
         if (!errorResponses.isEmpty())
@@ -117,13 +116,13 @@ public class PipeSizeController {
 
     @PostMapping(value = "/{code}/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeRequest pipeSizeRequest, final BindingResult errors,
-            @PathVariable("code") final String code) {
+    public ResponseEntity<?> update(@RequestBody @Valid final PipeSizeRequest pipeSizeRequest,
+            final BindingResult errors, @PathVariable("code") final String code) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("pipeSizeRequest::" + pipeSizeRequest);
+        log.info("pipeSizeRequest::" + pipeSizeRequest);
         pipeSizeRequest.getPipeSize().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validatePipeSizeRequest(pipeSizeRequest);
@@ -140,7 +139,8 @@ public class PipeSizeController {
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final PipeSizeGetRequest pipeSizeGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -157,7 +157,7 @@ public class PipeSizeController {
         try {
             pipeSizeList = pipeSizeService.getPipeSizes(pipeSizeGetRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + pipeSizeGetRequest, exception);
+            log.error("Error while processing request " + pipeSizeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 

@@ -23,36 +23,65 @@ import java.util.stream.Stream;
 public class ServiceRequestESRepository {
     private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
     private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
+    private static final String EMPTY_STRING = "";
+    private static final String NEW_LINE = "\n";
     private TransportClient esClient;
     private String indexName;
     private String documentType;
     private QueryFactory queryFactory;
+    private boolean isESRequestLoggingEnabled;
 
     public ServiceRequestESRepository(TransportClient esClient,
                                       @Value("${es.index.name}") String indexName,
                                       @Value("${es.document.type}") String documentType,
-                                      QueryFactory queryFactory) {
+                                      QueryFactory queryFactory,
+                                      @Value("${es.log.request}") boolean isESRequestLoggingEnabled) {
         this.esClient = esClient;
         this.indexName = indexName;
         this.documentType = documentType;
         this.queryFactory = queryFactory;
+        this.isESRequestLoggingEnabled = isESRequestLoggingEnabled;
     }
 
     public long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         final BoolQueryBuilder boolQueryBuilder = queryFactory.create(serviceRequestSearchCriteria);
-        final SearchResponse searchResponse = esClient.prepareSearch(indexName)
+        final SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(indexName)
             .setTypes(documentType)
             .setSize(0)
-            .setQuery(boolQueryBuilder)
+            .setQuery(boolQueryBuilder);
+        logRequest(searchRequestBuilder);
+        final SearchResponse searchResponse = searchRequestBuilder
             .execute()
             .actionGet();
+        logResponse(searchResponse);
         return searchResponse.getHits().getTotalHits();
     }
 
     public List<String> getMatchingServiceRequestIds(ServiceRequestSearchCriteria criteria) {
         final SearchRequestBuilder searchRequestBuilder = getSearchRequest(criteria);
+        logRequest(searchRequestBuilder);
         final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+        logResponse(searchResponse);
         return mapToServiceRequestIdList(searchResponse);
+    }
+
+    private void logRequest(SearchRequestBuilder searchRequestBuilder) {
+        if (isESRequestLoggingEnabled) {
+            log.info(removeNewLines(searchRequestBuilder.toString()));
+        }
+    }
+
+    private void logResponse(SearchResponse searchResponse) {
+        if (isESRequestLoggingEnabled) {
+            log.info(removeNewLines(searchResponse.toString()));
+        }
+    }
+
+    private String removeNewLines(String string) {
+        if (string == null) {
+            return EMPTY_STRING;
+        }
+        return string.replaceAll(NEW_LINE, EMPTY_STRING);
     }
 
     private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {

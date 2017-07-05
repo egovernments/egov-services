@@ -40,6 +40,7 @@
 
 package org.egov.commons.web.contract;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.commons.model.Category;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

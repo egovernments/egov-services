@@ -1,7 +1,7 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.Requester;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.Requester;
 import org.egov.pgrrest.read.domain.exception.TenantIdMandatoryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;

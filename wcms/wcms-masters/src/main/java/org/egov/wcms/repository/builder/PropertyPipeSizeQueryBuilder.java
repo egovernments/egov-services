@@ -42,14 +42,13 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component
-public class PropertyPipeSizeQueryBuilder {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertyPipeSizeQueryBuilder.class);
+@Component
+@Slf4j
+public class PropertyPipeSizeQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT propertypipesize.id as propertypipesize_id, propertypipesize.propertytypeid as propertypipesize_propertytypeId,"
             + "propertypipesize.pipesizeid as propertypipesize_pipesizeId,propertypipesize.active as propertypipesize_active, "
@@ -61,7 +60,7 @@ public class PropertyPipeSizeQueryBuilder {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, propertyPipeSizeGetRequest);
         addOrderByClause(selectQuery, propertyPipeSizeGetRequest);
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -158,6 +157,5 @@ public class PropertyPipeSizeQueryBuilder {
     public static String getPipeSizeInmm() {
         return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
     }
-    
 
 }

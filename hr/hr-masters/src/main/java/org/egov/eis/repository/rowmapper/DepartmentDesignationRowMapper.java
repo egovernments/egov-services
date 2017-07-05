@@ -40,11 +40,6 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Designation;
 import org.egov.eis.service.DesignationService;
@@ -52,6 +47,11 @@ import org.egov.eis.web.contract.DesignationGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class DepartmentDesignationRowMapper implements RowMapper<DepartmentDesignation> {

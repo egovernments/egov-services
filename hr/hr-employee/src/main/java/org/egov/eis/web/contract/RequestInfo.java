@@ -47,6 +47,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

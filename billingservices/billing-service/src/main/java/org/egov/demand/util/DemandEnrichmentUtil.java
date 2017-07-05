@@ -51,23 +51,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class DemandEnrichmentUtil {
 
-	public List<Demand> enrichOwners(List<Demand> demands,List<Owner> owners){
-		
-		Map<Long,Owner> map = new HashMap<>();
+	public List<Demand> enrichOwners(List<Demand> demands, List<Owner> owners) {
+
+		Map<Long, Owner> map = new HashMap<>();
 		List<Demand> rsDemands = new ArrayList<>();
 		for (Owner owner : owners) {
-			map.put(owner.getId(),owner);
+			map.put(owner.getId(), owner);
 		}
-		
 		for (Demand demand : demands) {
-			
 			Long ownerId = demand.getOwner().getId();
-			if(map.containsKey(ownerId)){
+			if (map.containsKey(ownerId)) {
 				demand.setOwner(map.get(ownerId));
 				rsDemands.add(demand);
 			}
 		}
-	return rsDemands;
+		return rsDemands;
 	}
 
 	/*public void enrichTaxHeadMAsters(List<DemandDetail> demandDetails, List<TaxHeadMaster> taxHeadMAsters) {

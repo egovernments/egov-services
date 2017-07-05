@@ -2,7 +2,7 @@ package org.egov.pgrrest.read.domain.service;
 
 import java.util.List;
 
-import org.egov.pgrrest.common.entity.ServiceTypeCategory;
+import org.egov.pgrrest.common.persistence.entity.ServiceTypeCategory;
 import org.egov.pgrrest.read.persistence.repository.ServiceTypeCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

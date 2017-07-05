@@ -71,7 +71,7 @@ public class ServiceGroupRepository {
 
 	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
 		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
+		final String serviceGroupInsert = serviceGroupQueryBuilder.insertServiceGroupQuery();
 		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
 		final Object[] obj = new Object[] { serviceGroup.getCode(), serviceGroup.getName(), serviceGroup.getDescription(),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
@@ -84,7 +84,7 @@ public class ServiceGroupRepository {
 	
 	public ServiceGroupRequest persistUpdateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
 		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupUpdate = ServiceGroupQueryBuilder.updateServiceGroupQuery();
+		final String serviceGroupUpdate = serviceGroupQueryBuilder.updateServiceGroupQuery();
 		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
 		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
@@ -102,6 +102,35 @@ public class ServiceGroupRepository {
 		final List<ServiceGroup> serviceGroupTypes = jdbcTemplate.query(getQuery,
 				preparedStatementValues.toArray(), serviceGroupMapper);
 		return serviceGroupTypes;
+	}
+	
+	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) {
+		String checkQuery = serviceGroupQueryBuilder.checkIfAvailable();
+		List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getCode());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+		
+		final List<Integer> availableCount = jdbcTemplate.queryForList(checkQuery,
+				preparedStatementValues.toArray(), Integer.class);
+		if(availableCount.size()>0) {
+			if(availableCount.get(0) > 0){
+				return true;
+			} else {
+				preparedStatementValues = new ArrayList<>();
+				preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
+				preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+				checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
+				final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
+						preparedStatementValues.toArray(), Integer.class);
+				if(count.size()>0){
+					if(count.get(0) > 0){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	

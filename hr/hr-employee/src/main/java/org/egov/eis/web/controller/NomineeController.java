@@ -61,6 +61,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @RestController
 @RequestMapping("/nominees")
 public class NomineeController {
@@ -86,9 +88,7 @@ public class NomineeController {
 	private DataIntegrityValidatorForUpdateNominee dataIntegrityValidatorForUpdateNominee;
 
 	/**
-	 * Maps Post Requests for _search & returns ResponseEntity of either
-	 * NomineeResponse type or ErrorResponse type
-	 * 
+	 * Maps Post Requests for _search & returns ResponseEntity of either NomineeResponse type or ErrorResponse type
 	 * @param nomineeGetRequest,
 	 * @param modelAttributeBindingResult
 	 * @param requestInfoWrapper
@@ -105,7 +105,7 @@ public class NomineeController {
 		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
 				modelAttributeBindingResult, requestBodyBindingResult);
 
-		if (errorResponseEntity != null)
+		if (!isEmpty(errorResponseEntity))
 			return errorResponseEntity;
 
 		List<Nominee> nomineesList = null;
@@ -120,9 +120,7 @@ public class NomineeController {
 	}
 
 	/**
-	 * Maps Post Requests for _create & returns ResponseEntity of either
-	 * NomineeResponse type or ErrorResponse type
-	 * 
+	 * Maps Post Requests for _create & returns ResponseEntity of either NomineeResponse type or ErrorResponse type
 	 * @param nomineeRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
@@ -133,7 +131,7 @@ public class NomineeController {
 		LOGGER.debug("nomineeRequest::" + nomineeRequest);
 
 		ResponseEntity<?> errorResponseEntity = validateNomineeRequest(nomineeRequest, bindingResult, false);
-		if (errorResponseEntity != null)
+		if (!isEmpty(errorResponseEntity))
 			return errorResponseEntity;
 
 		List<Nominee> nominees = null;
@@ -147,9 +145,7 @@ public class NomineeController {
 	}
 
 	/**
-	 * Maps Post Requests for _update & returns ResponseEntity of either
-	 * NomineeResponse type or ErrorResponse type
-	 * 
+	 * Maps Post Requests for _update & returns ResponseEntity of either NomineeResponse type or ErrorResponse type
 	 * @param nomineeRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
@@ -160,15 +156,12 @@ public class NomineeController {
 		LOGGER.debug("nomineeRequest::" + nomineeRequest);
 
 		ResponseEntity<?> errorResponseEntity = validateNomineeRequest(nomineeRequest, bindingResult, true);
-		if (errorResponseEntity != null)
+		if (!isEmpty(errorResponseEntity))
 			return errorResponseEntity;
 		
 		List<Nominee> nominees = null;
 		try {
 			nominees = nomineeService.updateAsync(nomineeRequest);
-		} catch (UserException ue) {
-			LOGGER.error("Error while processing request ", ue);
-			return errorHandler.getResponseEntityForUserErrors(ue);
 		} catch (Exception exception) {
 			LOGGER.error("Error while processing request ", exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(nomineeRequest.getRequestInfo());
@@ -177,9 +170,7 @@ public class NomineeController {
 	}
 
 	/**
-	 * Validate NomineeRequest object & returns ErrorResponseEntity if there
-	 * are any errors or else returns null
-	 * 
+	 * Validate NomineeRequest object & returns ErrorResponseEntity if there are any errors or else returns null
 	 * @param nomineeRequest
 	 * @param bindingResult
 	 * @param isUpdate
@@ -204,9 +195,8 @@ public class NomineeController {
 	}
 
 	/**
-	 * Populate NomineeResponse object & returns ResponseEntity of type
-	 * NomineeResponse containing ResponseInfo & List of Nominee
-	 * 
+	 * Populate NomineeResponse object & returns ResponseEntity of type NomineeResponse
+	 * containing ResponseInfo & List of Nominee
 	 * @param nomineesList
 	 * @param requestInfo
 	 * @return ResponseEntity<?>
@@ -214,17 +204,15 @@ public class NomineeController {
 	private ResponseEntity<?> getSuccessResponseForSearch(List<Nominee> nomineesList, RequestInfo requestInfo) {
 		NomineeResponse nomineeResponse = new NomineeResponse();
 		nomineeResponse.setNominees(nomineesList);
-		System.out.println("nomineesList=" + nomineesList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		nomineeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<NomineeResponse>(nomineeResponse, HttpStatus.OK);
+		return new ResponseEntity<>(nomineeResponse, HttpStatus.OK);
 	}
 	
 	/**
-	 * Populate NomineeResponse object & returns ResponseEntity of type
-	 * NomineeResponse containing ResponseInfo & Nominee objects
-	 * 
+	 * Populate NomineeResponse object & returns ResponseEntity of type NomineeResponse
+	 * containing ResponseInfo & Nominee objects
 	 * @param nominees
 	 * @param requestInfo
 	 * @return ResponseEntity<?>
@@ -232,10 +220,9 @@ public class NomineeController {
 	public ResponseEntity<?> getSuccessResponseForCreateAndUpdate(List<Nominee> nominees, RequestInfo requestInfo) {
 		NomineeResponse nomineeResponse = new NomineeResponse();
 		nomineeResponse.setNominees(nominees);
-
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		nomineeResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<NomineeResponse>(nomineeResponse, HttpStatus.OK);
+		return new ResponseEntity<>(nomineeResponse, HttpStatus.OK);
 	}
 }

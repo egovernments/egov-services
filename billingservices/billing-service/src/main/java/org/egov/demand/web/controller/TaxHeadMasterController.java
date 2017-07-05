@@ -44,6 +44,7 @@ public class TaxHeadMasterController {
 	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid final TaxHeadMasterCriteria taxHeadMasterCriteria,
 			final BindingResult bindingResult) {
+		
 		logger.info("taxHeadMasterCriteria::" + taxHeadMasterCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (bindingResult.hasErrors()) {
@@ -65,8 +66,10 @@ public class TaxHeadMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		// TODO Input field validation, it will be a part of phase-2
-		taxHeadMasterValidator.validateTaxHeads(taxHeadMasterRequest);
+		taxHeadMasterValidator.validateTaxHeads(taxHeadMasterRequest,bindingResult);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
 		final TaxHeadMasterResponse taxHeadMasterRponse = taxHeadMasterService.createAsync(taxHeadMasterRequest);
 		return new ResponseEntity<>(taxHeadMasterRponse, HttpStatus.CREATED);
 	}

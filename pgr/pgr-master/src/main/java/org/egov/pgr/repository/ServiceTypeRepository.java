@@ -57,6 +57,7 @@ import org.egov.pgr.web.contract.ServiceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -73,7 +74,7 @@ public class ServiceTypeRepository {
 
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
-		final String complaintInsert = ServiceTypeQueryBuilder.insertComplaintTypeQuery();
+		final String complaintInsert = serviceTypeQueryBuilder.insertComplaintTypeQuery();
 		boolean active = true;
 		final Object[] object = new Object[] { serviceRequest.getService().getServiceName(),
 				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
@@ -82,7 +83,7 @@ public class ServiceTypeRepository {
 				};
 		jdbcTemplate.update(complaintInsert, object);
 
-		final String serviceInsert = ServiceTypeQueryBuilder.insertServiceTypeQuery();
+		final String serviceInsert = serviceTypeQueryBuilder.insertServiceTypeQuery();
 		final Object[] obj = new Object[] { serviceRequest.getService().getServiceCode(),
 				serviceRequest.getService().getTenantId(), serviceRequest.getRequestInfo().getUserInfo().getId(),
 				new Date(new java.util.Date().getTime()) };
@@ -90,34 +91,53 @@ public class ServiceTypeRepository {
 		if (serviceRequest.getService().isMetadata()) {
 			persistAttributeValues(serviceRequest);
 		}
+		if (null != serviceRequest.getService().getKeywords()){
+			if(serviceRequest.getService().getKeywords().size() > 0){
+				persistKeywordServiceCodeMapping(serviceRequest);
+			}
+		}
 		return serviceRequest;
 	}
 	
-	private void persistAttributeValues(ServiceRequest serviceRequest){
+	private void persistAttributeValues(ServiceRequest serviceRequest) {
 		final String serviceInsertAttribValues = ServiceTypeQueryBuilder.insertServiceTypeQueryAttribValues();
-		List<Attribute> attributeList = new ArrayList<>() ;
-		if(null != serviceRequest.getService().getAttributes()){
+		List<Attribute> attributeList = new ArrayList<>();
+		if (null != serviceRequest.getService().getAttributes()) {
 			attributeList = serviceRequest.getService().getAttributes();
 		}
 		for (int i = 0; i < attributeList.size(); i++) {
 			Attribute attribute = attributeList.get(i);
-			final Object[] obj1 = new Object[] { attribute.getCode(), attribute.getVariable()? "Y" : "N",
-					attribute.getDatatype(), attribute.getDescription(), attribute.getDatatypeDescription(), serviceRequest.getService().getServiceCode(), attribute.getRequired()? "Y" : "N",
+			final Object[] obj1 = new Object[] { attribute.getCode(), attribute.getVariable() ? "Y" : "N",
+					attribute.getDatatype(), attribute.getDescription(), attribute.getDatatypeDescription(),
+					serviceRequest.getService().getServiceCode(), attribute.getRequired() ? "Y" : "N",
 					attribute.getGroupCode(), serviceRequest.getService().getTenantId(),
-					serviceRequest.getRequestInfo().getUserInfo().getId(),
-					new Date(new java.util.Date().getTime()) };
+					serviceRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
 			jdbcTemplate.update(serviceInsertAttribValues, obj1);
-			if(attribute.getAttributes().size() > 0){
-				final String valueInsertQuery = ServiceTypeQueryBuilder.insertValueDefinitionQuery();
-				List<Value> valueList = attribute.getAttributes();
-				for (int j = 0; j < valueList.size() ; j++) {
-					Value value = valueList.get(j);
-					final Object[] obj2 = new Object[] { 
-							serviceRequest.getService().getServiceCode(), attribute.getCode(), value.getKey(), value.getName(), serviceRequest.getService().getTenantId(), 
-							new Date(new java.util.Date().getTime()), serviceRequest.getRequestInfo().getUserInfo().getId() };
-					jdbcTemplate.update(valueInsertQuery, obj2);
+			if (null != attribute.getAttributes()) {
+				if (attribute.getAttributes().size() > 0) {
+					final String valueInsertQuery = ServiceTypeQueryBuilder.insertValueDefinitionQuery();
+					List<Value> valueList = attribute.getAttributes();
+					for (int j = 0; j < valueList.size(); j++) {
+						Value value = valueList.get(j);
+						final Object[] obj2 = new Object[] { serviceRequest.getService().getServiceCode(),
+								attribute.getCode(), value.getKey(), value.getName(),
+								serviceRequest.getService().getTenantId(), new Date(new java.util.Date().getTime()),
+								serviceRequest.getRequestInfo().getUserInfo().getId() };
+						jdbcTemplate.update(valueInsertQuery, obj2);
+					}
 				}
 			}
+		}
+	}
+	
+	private void persistKeywordServiceCodeMapping(ServiceRequest serviceRequest) {
+		ServiceType serviceType = serviceRequest.getService();
+		final String serviceKeywordMappingQuery = ServiceTypeQueryBuilder.insertServiceKeyworkMappingQuery();
+		for(int i=0; i<serviceType.getKeywords().size(); i++) {
+			final Object[] obj1 = new Object[] { serviceType.getServiceCode(), serviceType.getKeywords().get(i), serviceType.getTenantId(),
+					serviceRequest.getRequestInfo().getUserInfo().getId(),
+					new Date(new java.util.Date().getTime()) };
+			jdbcTemplate.update(serviceKeywordMappingQuery, obj1);
 		}
 	}
 
@@ -130,13 +150,21 @@ public class ServiceTypeRepository {
                 new Date(new java.util.Date().getTime()), serviceType.getServiceCode(), serviceType.getTenantId() };
         jdbcTemplate.update(serviceTypeUpdate, obj);
         final String valueRemove = ServiceTypeQueryBuilder.removeValueQuery();
-        final Object[] objValueRemove = new Object[] { serviceType.getServiceCode()};
+        final Object[] objValueRemove = new Object[] { serviceType.getServiceCode(), serviceType.getTenantId()};
         jdbcTemplate.update(valueRemove, objValueRemove);
         final String attributeRemove = ServiceTypeQueryBuilder.removeAttributeQuery();
-        final Object[] objAttributeRemove = new Object[] { serviceType.getServiceCode()};
+        final Object[] objAttributeRemove = new Object[] { serviceType.getServiceCode(), serviceType.getTenantId()};
         jdbcTemplate.update(attributeRemove, objAttributeRemove);
+        final String serviceKeywordRemove = ServiceTypeQueryBuilder.removeServiceKeywordMapping();
+        final Object[] objserviceKeywordRemove = new Object[] { serviceType.getServiceCode(), serviceType.getTenantId()};
+        jdbcTemplate.update(serviceKeywordRemove, objserviceKeywordRemove);
         if (serviceRequest.getService().isMetadata()) {
 			persistAttributeValues(serviceRequest);
+		}
+        if (null != serviceRequest.getService().getKeywords()){
+			if(serviceRequest.getService().getKeywords().size() > 0){
+				persistKeywordServiceCodeMapping(serviceRequest);
+			}
 		}
         return serviceRequest;
 
@@ -187,6 +215,8 @@ public class ServiceTypeRepository {
 		while (sMapItr.hasNext()) {
 			Entry<String, ServiceType> srvEntry = sMapItr.next();
 			ServiceType serviceType = srvEntry.getValue();
+			List<String> keywordsList = getKeywordsForService(serviceType);
+			serviceType.setKeywords(keywordsList);
 			serviceTypeList.add(serviceType);
 		}
 		for (int i = 0; i < serviceTypeList.size(); i++) {
@@ -214,6 +244,22 @@ public class ServiceTypeRepository {
 		}
 		return serviceTypeList;
 	}
+	
+	public List<String> getKeywordsForService(ServiceType serviceType) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        String queryStr = serviceTypeQueryBuilder.fetchServiceKeywords();
+        preparedStatementValues.add(serviceType.getServiceCode());
+        preparedStatementValues.add(serviceType.getTenantId());
+        List<String> keywords = new ArrayList<>();
+        try{
+        	keywords = jdbcTemplate.queryForList(queryStr,preparedStatementValues.toArray(),String.class);
+        } catch(EmptyResultDataAccessException ex) {
+        	LOGGER.info("There are no keywords available for the Service Code : " + ex);
+        } catch(Exception e) {
+        	LOGGER.error("Encountered an Exception : " + e);
+        }
+        return keywords;
+    }
 
 }
 

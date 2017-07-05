@@ -9,7 +9,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import Api from '../../api/commonAPIS';
+import Api from '../../api/api';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');

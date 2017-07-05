@@ -16,7 +16,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 // import DataTable from '../common/Table';
-import Api from '../../api/commonAPIS';
+import Api from '../../api/api';
 
 var flag = 0;
 const styles = {

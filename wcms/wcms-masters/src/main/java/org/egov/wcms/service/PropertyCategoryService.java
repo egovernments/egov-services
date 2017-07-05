@@ -40,46 +40,41 @@
 
 package org.egov.wcms.service;
 
-import org.egov.wcms.producers.WaterMasterProducer;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PropertyCategoryService {
 
     @Autowired
     private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    public static final Logger logger = LoggerFactory.getLogger(PropertyCategoryService.class);
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    @Autowired
+    private RestPropertyTaxMasterService restPropertyTaxMasterService;
 
     public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 
-        final ObjectMapper mapper = new ObjectMapper();
-        String propertyCategoryValue = null;
         try {
-            logger.info("createPropertyCategory service::" + propertyCategoryRequest);
-            propertyCategoryValue = mapper.writeValueAsString(propertyCategoryRequest);
-            logger.info("propertyCategoryValue::" + propertyCategoryValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, propertyCategoryValue);
+            kafkaTemplate.send(topic, key, propertyCategoryRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return propertyCategoryRequest;
     }
@@ -92,13 +87,50 @@ public class PropertyCategoryService {
         return propertyCategoryRepository.persistUpdatePropertyCategory(propertyCategoryRequest);
     }
 
-    public PropertyTypeCategoryTypesRes getPropertyCategories(final PropertyCategoryGetRequest propertyCategoryGetRequest) {
+    public PropertyTypeCategoryTypesRes getPropertyCategories(
+            final PropertyCategoryGetRequest propertyCategoryGetRequest) {
+        if (propertyCategoryGetRequest.getPropertyType() != null) {
+            final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+                    propertyCategoryGetRequest.getPropertyType(), propertyCategoryGetRequest.getTenantId());
+            if (propertyTypes != null)
+                propertyCategoryGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
+
+        }
         return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
 
     }
 
-    public boolean checkIfMappingExists(final String propertyType, final String categoryType, final String tenantId) {
-        return propertyCategoryRepository.checkIfMappingExists(propertyType, categoryType, tenantId);
+    public boolean checkIfMappingExists(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+        getPropertyTypeByName(propertyCategoryRequest);
+        return propertyCategoryRepository.checkIfMappingExists(
+                propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeId(),
+                propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName(),
+                propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
+    }
+
+    public Boolean getPropertyTypeByName(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+        Boolean isValidProperty = Boolean.FALSE;
+        final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+                propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName(),
+                propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
+        if (propertyTypes.getPropertyTypesSize()) {
+            isValidProperty = Boolean.TRUE;
+            propertyCategoryRequest.getPropertyTypeCategoryType().setPropertyTypeId(
+                    propertyTypes.getPropertyTypes() != null && propertyTypes.getPropertyTypes().get(0) != null
+                            ? propertyTypes.getPropertyTypes().get(0).getId() : "");
+
+        }
+        return isValidProperty;
+
+    }
+
+    private PropertyTypeResponse getPropertyIdFromPTModule(String propertyTypeNae, String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+        url = url.replace("{name}", propertyTypeNae);
+        url = url.replace("{tenantId}", tenantId);
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+        return propertyTypes;
     }
 
 }

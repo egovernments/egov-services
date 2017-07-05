@@ -59,8 +59,6 @@ import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,11 +71,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/propertytype-categorytype")
 public class PropertyCategoryController {
-
-    private static final Logger logger = LoggerFactory.getLogger(PropertyCategoryController.class);
 
     @Autowired
     private PropertyCategoryService propertyCategoryService;
@@ -102,14 +101,16 @@ public class PropertyCategoryController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("propertyCategoryRequest::" + propertyCategoryRequest);
+        log.info("propertyCategoryRequest::" + propertyCategoryRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validatePropertyCategoryRequest(propertyCategoryRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils
+                .validatePropertyCategoryRequest(propertyCategoryRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
-                applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create", propertyCategoryRequest);
+                applicationProperties.getCreatePropertyCategoryTopicName(), "property-category-create",
+                propertyCategoryRequest);
         return getSuccessResponse(propertyCategory, "created", propertyCategoryRequest.getRequestInfo());
 
     }
@@ -117,28 +118,30 @@ public class PropertyCategoryController {
     @PostMapping(value = "/{propertyCategoryId}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final PropertyTypeCategoryTypeReq propertyCategoryRequest,
-            final BindingResult errors,
-            @PathVariable("propertyCategoryId") final Long propertyCategoryId) {
+            final BindingResult errors, @PathVariable("propertyCategoryId") final Long propertyCategoryId) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("propertyCategoryRequest::" + propertyCategoryRequest);
+        log.info("propertyCategoryRequest::" + propertyCategoryRequest);
         propertyCategoryRequest.getPropertyTypeCategoryType().setId(propertyCategoryId);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validatePropertyCategoryRequest(propertyCategoryRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils
+                .validatePropertyCategoryRequest(propertyCategoryRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final PropertyTypeCategoryTypeReq propertyCategory = propertyCategoryService.createPropertyCategory(
-                applicationProperties.getUpdatePropertyCategoryTopicName(), "property-category-update", propertyCategoryRequest);
+                applicationProperties.getUpdatePropertyCategoryTopicName(), "property-category-update",
+                propertyCategoryRequest);
         return getSuccessResponse(propertyCategory, null, propertyCategoryRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final PropertyCategoryGetRequest propertyCategoryGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -150,12 +153,12 @@ public class PropertyCategoryController {
         if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-        logger.info("Request: " + propertyCategoryGetRequest);
+        log.info("Request: " + propertyCategoryGetRequest);
         PropertyTypeCategoryTypesRes propertyCategoryResponse = null;
         try {
             propertyCategoryResponse = propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + propertyCategoryGetRequest, exception);
+            log.error("Error while processing request " + propertyCategoryGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 

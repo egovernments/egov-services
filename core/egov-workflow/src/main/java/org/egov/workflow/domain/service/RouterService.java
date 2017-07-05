@@ -115,55 +115,68 @@ public class RouterService {
 	public PersistRouterReq create(final RouterTypeReq routerRequests) {
 		List<ServiceType> serviceTypes = new ArrayList<ServiceType>();
 		serviceTypes = routerRequests.getRouterType().getServices();
-		logger.info("Service Type size is" +serviceTypes.size());
-		
+		logger.info("Service Type size is" + serviceTypes.size());
+
 		List<BoundaryIdType> boundaries = new ArrayList<BoundaryIdType>();
 		boundaries = routerRequests.getRouterType().getBoundaries();
-		
+
 		PersistRouterReq prq = new PersistRouterReq();
 		PersistRouter pr = new PersistRouter();
 		prq.setRequestInfo(routerRequests.getRequestInfo());
-	    pr.setPosition(routerRequests.getRouterType().getPosition());
-	    pr.setId(routerRequests.getRouterType().getId());
-	    pr.setTenantId(routerRequests.getRouterType().getTenantId());
-	    
-	    for(int i=0;i<serviceTypes.size();i++){
-	    	Long serviceID = serviceTypes.get(i).getId();
-	    	for (int j=0;j<boundaries.size();j++){
-	    		
-	    		logger.info("Boundary Size is" +boundaries.get(j).getBoundaryType());
-	    		int boundaryID = boundaries.get(j).getBoundaryType();
-	    		pr.setService(serviceID);
-	    		pr.setBoundary(boundaryID);
-	    		prq.setRouterType(pr);
-	    		if(checkforDuplicate(prq)){
-	    		routerRepository.createRouter(prq);
-	    		logger.info("Creating the Router Entry");
-	    		}
-	    		else {
-	    			routerRepository.updateRouter(prq);
-	    			logger.info("Updating the Router Entry");
-	    		}
-	    	}
-	    }
+		pr.setPosition(routerRequests.getRouterType().getPosition());
+		pr.setId(routerRequests.getRouterType().getId());
+		pr.setTenantId(routerRequests.getRouterType().getTenantId());
+		pr.setActive(routerRequests.getRouterType().getActive());
+
+		for (int i = 0; i < boundaries.size(); i++) {
+			int boundaryID = boundaries.get(i).getBoundaryType();
+			int flag = 0;
+			for (int j = 0; j < serviceTypes.size(); j++) {
+				flag++;
+				Long serviceID = serviceTypes.get(j).getId();
+				logger.info("Boundary Size is" + boundaries.get(j).getBoundaryType());
+				pr.setService(serviceID);
+				pr.setBoundary(boundaryID);
+				prq.setRouterType(pr);
+				if (checkforDuplicate(prq, true)) {
+					routerRepository.createRouter(prq, true);
+					logger.info("Creating the Router Entry");
+				} else {
+					routerRepository.updateRouter(prq, true);
+					logger.info("Updating the Router Entry");
+				}
+			}
+			if (flag == 0) {
+				pr.setBoundary(boundaryID);
+				prq.setRouterType(pr);
+				if (checkforDuplicate(prq, false)) {
+					routerRepository.createRouter(prq, false);
+					logger.info("Creating the Router Entry");
+				} else {
+					routerRepository.updateRouter(prq, false);
+					logger.info("Updating the Router Entry");
+				}
+			}
+		}
 		logger.info("Persisting Router record");
-		//return routerRepository.createRouter(prq);
+		// return routerRepository.createRouter(prq);
 		return null;
-		
+
 	}
 	
-	public boolean checkforDuplicate(PersistRouterReq persistRouterReq){
+	public boolean checkforDuplicate(PersistRouterReq persistRouterReq, boolean action){
 		PersistRouter pr = new PersistRouter();
-		pr = routerRepository.ValidateRouter(persistRouterReq);
+		pr = routerRepository.ValidateRouter(persistRouterReq, action);
 		if (pr != null){
 			return false;
 		}
 			else {
 				return true;
-			}
-		
-		
-		
+		}
+	}
+	
+	public boolean verifyUniquenessOfRequest(RouterTypeReq routerTypeReq) {
+		return routerRepository.verifyUniquenessOfRequest(routerTypeReq);
 	}
 	
 

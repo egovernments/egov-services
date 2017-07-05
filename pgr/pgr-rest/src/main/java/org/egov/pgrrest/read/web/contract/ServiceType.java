@@ -18,7 +18,7 @@ public class ServiceType {
     private Integer slaHours;
     private String tenantId;
 
-    public ServiceType(org.egov.pgrrest.common.entity.ServiceType entityServiceType) {
+    public ServiceType(org.egov.pgrrest.common.persistence.entity.ServiceType entityServiceType) {
         this.id = entityServiceType.getId();
         this.serviceName = entityServiceType.getName();
         this.serviceCode = entityServiceType.getCode();

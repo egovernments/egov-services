@@ -67,21 +67,6 @@ public class EmployeeControllerTest {
     @MockBean
 	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
 
-    @MockBean
-	private EmployeeHelper employeeHelper;
-    
-        @MockBean
-        private UserSearchURLHelper userSearchURLHelper;
-
-	@Before
-	public void setUp() throws Exception {
-	    when(userSearchURLHelper.searchURL(Mockito.anyList(), Mockito.anyString())).thenReturn("");
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
 	public void testSearch() throws IOException, Exception {
 		List<EmployeeInfo> expectedEmployeesList = getExpectedEmployeesForSearch();
@@ -113,7 +98,7 @@ public class EmployeeControllerTest {
         .andExpect(content().json(
         		getFileContents("employeeGetResponse1.json")));
 	}
-	
+
 	private List<EmployeeInfo> getExpectedEmployeesForSearch() {
 		List<EmployeeInfo> employeeInfos = new ArrayList<>();
 		Assignment assignment1 = Assignment.builder().id(10L).build();

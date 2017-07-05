@@ -47,8 +47,10 @@ public class GlCodeMasterService {
 		return getGlCodeMasterResponse(glCodeMaster,requestInfo);
 	}
 
-	public void create(GlCodeMasterRequest glCodeMasterRequest) {
+	public GlCodeMasterResponse create(GlCodeMasterRequest glCodeMasterRequest) {
 		glCodeMasterRepository.create(glCodeMasterRequest);
+		
+		return getGlCodeMasterResponse(glCodeMasterRequest.getGlCodeMasters(), glCodeMasterRequest.getRequestInfo());
 	}
 	
 	public GlCodeMasterResponse createAsync(GlCodeMasterRequest glCodeMasterRequest) {
@@ -57,20 +59,34 @@ public class GlCodeMasterService {
 		List<String> glCodeMasterIds = sequenceGenService.getIds(glCodeMaster.size(),
 				applicationProperties.getGlCodeMasterseqName());
 		
-		int id=0;
+		int index=0;
 		for (GlCodeMaster master: glCodeMaster) {
-			master.setId(glCodeMasterIds.get(id));
+			master.setId(glCodeMasterIds.get(index));
 		}
 		glCodeMasterRequest.setGlCodeMasters(glCodeMaster);
 
-		logger.info("taxHeadMasterRequest createAsync::" + glCodeMasterRequest);
+		logger.info("glCodeMasterRequest createAsync::" + glCodeMasterRequest);
 
 		kafkaTemplate.send(applicationProperties.getCreateGlCodeMasterTopicName(),
 				applicationProperties.getCreateGlCodeMasterTopicKey(), glCodeMasterRequest);
-		// kafkaTemplate.send(applicationProperties.getCreateGlCodeMasterTopicName(),
-		// taxHeadMasterRequest);
 
 		return getGlCodeMasterResponse(glCodeMaster, glCodeMasterRequest.getRequestInfo());
+	}
+	
+	public GlCodeMasterResponse update(GlCodeMasterRequest request){
+		System.out.println("Update method got called:::::::");
+		logger.info("glCodeMasterRequest update::" + request);		
+		glCodeMasterRepository.update(request);
+		return getGlCodeMasterResponse(request.getGlCodeMasters(), request.getRequestInfo());
+	}
+	
+	public GlCodeMasterResponse updateAsync(GlCodeMasterRequest request){
+		
+		logger.info("glCodeMasterRequest updateAsync::" + request);
+		kafkaTemplate.send(applicationProperties.getUpdateGlCodeMasterTopicName(),
+				applicationProperties.getUpdateGlCodeMasterTopicKey(), request);
+
+		return getGlCodeMasterResponse(request.getGlCodeMasters(), request.getRequestInfo());
 	}
 	
 	private GlCodeMasterResponse getGlCodeMasterResponse(List<GlCodeMaster> glCodeMaster, RequestInfo requestInfo) {

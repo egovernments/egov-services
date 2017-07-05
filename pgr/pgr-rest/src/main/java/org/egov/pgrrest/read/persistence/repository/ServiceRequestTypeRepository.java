@@ -1,10 +1,10 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.entity.ServiceType;
-import org.egov.pgrrest.common.entity.ServiceTypeKeyword;
-import org.egov.pgrrest.common.entity.Submission;
-import org.egov.pgrrest.common.repository.ServiceRequestTypeJpaRepository;
-import org.egov.pgrrest.common.repository.ServiceTypeKeywordJpaRepository;
+import org.egov.pgrrest.common.persistence.entity.ServiceType;
+import org.egov.pgrrest.common.persistence.entity.ServiceTypeKeyword;
+import org.egov.pgrrest.common.persistence.entity.Submission;
+import org.egov.pgrrest.common.persistence.repository.ServiceRequestTypeJpaRepository;
+import org.egov.pgrrest.common.persistence.repository.ServiceTypeKeywordJpaRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;

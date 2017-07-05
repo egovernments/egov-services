@@ -46,9 +46,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -74,7 +74,7 @@ public class PropertyCategoryServiceTest {
     private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @InjectMocks
     private PropertyCategoryService propertyCategoryService;

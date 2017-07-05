@@ -59,7 +59,7 @@ public class PropertyCategoryGetRequest {
     private List<Long> id;
     private String propertyType;
     private String categoryType;
-    private Long propertyTypeId;
+    private String propertyTypeId;
     private Long categoryTypeId;
     private Boolean active;
     private String tenantId;

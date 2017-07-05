@@ -1,5 +1,7 @@
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
+
 import org.egov.asset.model.enums.TransactionType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -53,10 +55,10 @@ public class Disposal {
 	private String aadharCardNumber = null;
 
 	@JsonProperty("assetCurrentValue")
-	private Double assetCurrentValue = null;
+	private BigDecimal assetCurrentValue = null;
 
 	@JsonProperty("saleValue")
-	private Double saleValue = null;
+	private BigDecimal saleValue = null;
 
 	@JsonProperty("transactionType")
 	private TransactionType transactionType = null;

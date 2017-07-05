@@ -40,27 +40,24 @@
 
 package org.egov.wcms.model.enums;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ApplicationType {
     ADDITIONALCONNECTION("ADDITIONALCONNECTION"), CHANGEOFUSE("CHANGEOFUSE"), CLOSINGCONNECTION(
             "CLOSINGCONNECTION"), HOLDINGCONNECTION("HOLDINGCONNECTION"), NEWCONNECTION(
                     "NEWCONNECTION"), REGULARIZATIONCONNECTION("REGULARIZATIONCONNECTION"), TITTLETRANSFER("TITTLETRANSFER");
 
-    private String value;
+    private final String value;
 
     ApplicationType(final String value) {
         this.value = value;
     }
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
+
+    public String getValue() {
+        return value;
     }
+
 
     @JsonCreator
     public static ApplicationType fromValue(final String passedValue) {

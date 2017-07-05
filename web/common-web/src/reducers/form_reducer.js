@@ -2,8 +2,11 @@ import _ from 'lodash';
 
 const defaultState = {
   form: {},
+  files: [],
   msg: '',
+  toastMsg:'',
   dialogOpen: false,
+  snackbarOpen:false,
   fieldErrors: {},
   isFormValid: false,
   validationData: {},
@@ -36,10 +39,7 @@ export default(state = defaultState, action) => {
 
         return {
           ...state,
-          form: {
-            ...state.form,
-            [action.object]:null
-          }
+          form: {}
         }
 
     case "UPDATE_OBJECT":
@@ -111,6 +111,12 @@ export default(state = defaultState, action) => {
         isFormValid: validationData.isFormValid
       }
 
+      case 'FILE_UPLOAD':
+      return {
+          ...state,
+          files: action.files
+      };
+
       case "HANDLE_CHANGE_NEXT_ONE":
 
         validationData = undefined;
@@ -135,6 +141,7 @@ export default(state = defaultState, action) => {
           validationData: validationData.validationData,
           isFormValid: validationData.isFormValid
         }
+
     case "HANDLE_CHANGE_NEXT_TWO":
       let validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.propertyTwo, action.value, state.validationData);
@@ -158,13 +165,81 @@ export default(state = defaultState, action) => {
         isFormValid: validationData.isFormValid
       }
 
+    case "ADD_MANDATORY":
+    var obj = state.validationData;
+    if(!obj.required.required.includes(action.property)){
+      obj.required.required.push(action.property)
+      if (action.pattern.toString().length > 0) obj.pattern.required.push(action.property);
+      return{
+        ...state,
+        validationData: obj
+      }
+    }else{
+      return {
+        ...state
+      }
+    }
+
+    case "PUSH_ONE_ARRAY" :
+
+    if (!state.form.hasOwnProperty(action.formObject)) {
+          state.form[action.formObject] = {};
+          state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject]) { alert('Boom2');
+      state.form[action.formObject] = {};
+      state.form[action.formObject][action.formArray] = [];
+    } else if(!state.form[action.formObject][action.formArray]) {
+      state.form[action.formObject][action.formArray] = [];
+      console.log(state.form[action.formObject]);
+    }
+
+    return {
+      ...state,
+      form: {
+        ...state.form,
+        [action.formObject]: {
+          ...state.form[action.formObject],
+             [action.formArray]:[
+               ...state.form[action.formObject][action.formArray],
+               state.form[action.formData]
+             ]
+        }
+      }
+    }
+
+
+    case "REMOVE_MANDATORY":
+    var obj = state.validationData;
+    if(obj.required.required.includes(action.property)){
+      let rindex = obj.required.required.indexOf(action.property);
+      obj.required.required.splice(rindex, 1);
+      if(obj.required.current.includes(action.property)){
+        let cindex = obj.required.current.indexOf(action.property);
+        obj.required.current.splice(cindex, 1);
+      }
+      if (action.pattern.toString().length > 0){
+        let pindex = obj.pattern.required.indexOf(action.property);
+        obj.pattern.required.splice(pindex, 1);
+      }
+      return{
+        ...state,
+        validationData: obj
+      }
+    }else{
+      return {
+        ...state
+      }
+    }
+
     case "RESET_STATE":
       return {
         form: {},
+        files :[],
         fieldErrors: {},
         validationData: action.validationData,
         msg: '',
         dialogOpen: false,
+        snackbarOpen: false,
         isFormValid: false,
         showTable:false,
         buttonText:"Search"
@@ -191,6 +266,17 @@ export default(state = defaultState, action) => {
         msg:action.msg,
         dialogOpen:action.dailogState,
       }
+    case "TOGGLE_SNACKBAR_AND_SET_TEXT":
+      return {
+        ...state,
+        toastMsg:action.toastMsg,
+        snackbarOpen:action.snackbarState,
+      }
+    case "SET_LOADING_STATUS":
+      return {
+        ...state,
+        loadingStatus: action.loadingStatus
+      }
     default:
       return state;
   }
@@ -213,13 +299,16 @@ function validate(isRequired, pattern, name, value, validationData) {
   if (pattern.toString().length > 0) {
     if (value != "") {
       if (pattern.test(value)) {
-        if (_.indexOf(validationData.pattern.current, name) == -1) {
-          validationData.pattern.current.push(name);
-        }
+        // if (_.indexOf(validationData.pattern.current, name) == -1) {
+        //   validationData.pattern.current.push(name);
+        // }
       } else {
-        validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        validationData.required.current = _.remove(validationData.required.current, (item) => {
           return item != name
         });
+        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        //   return item != name
+        // });
         errorText = "Invalid field data";
       }
     }
@@ -227,11 +316,13 @@ function validate(isRequired, pattern, name, value, validationData) {
   if (!isRequired && value == "") {
     errorText = "";
   }
+  console.log(validationData.required.required.length)
+  console.log(validationData.required.current.length)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
   return {
     errorText: errorText,
     validationData: validationData,
-    isFormValid: (validationData.required.required.length == validationData.required.current.length) && (errorText == "")
+    isFormValid: (validationData.required.required.length == validationData.required.current.length)
   };
 }

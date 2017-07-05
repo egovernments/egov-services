@@ -46,6 +46,7 @@ import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

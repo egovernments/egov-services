@@ -40,20 +40,13 @@
 
 package org.egov.commons.web.errorhandlers;
 
-import java.util.List;
-
-import org.egov.common.contract.response.ErrorField;
-import org.egov.commons.web.contract.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ResponseInfo;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 @Getter
 @Setter

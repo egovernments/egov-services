@@ -23,6 +23,12 @@ public class TenantRowMapper implements RowMapper<Tenant> {
             .logoId(rs.getString(LOGO_ID))
             .imageId(rs.getString(IMAGE_ID))
             .type(TenantType.valueOf(rs.getString(TYPE)))
+            .twitterUrl(rs.getString(TWITTER_URL))
+            .facebookUrl(rs.getString(FACEBOOK_URL))
+            .emailId(rs.getString(EMAILID))
+            .address(rs.getString(ADDRESS))
+            .contactNumber(rs.getString(CONTACTNUMBER))
+            .helplineNumber(rs.getString(HELPLINENUMBER))
             .build();
     }
 }

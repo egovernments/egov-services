@@ -82,6 +82,8 @@ public class RouterController{
     private ErrorHandler errHandler;
 	
 	private static final Logger logger = LoggerFactory.getLogger(RouterController.class);
+	
+	private static String[] taskAction = {"create","update"}; 
 
 	@Autowired
 	private RouterService routerService;
@@ -101,7 +103,7 @@ public class RouterController{
 		}
 		logger.info("Router Request:" + routerTypeReq);
 
-		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
+		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq, taskAction[0]);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -123,7 +125,7 @@ public class RouterController{
 		}
 		logger.info("Router Request:" + routerTypeReq);
 
-		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
+		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq, taskAction[1]);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -161,39 +163,37 @@ public class RouterController{
         return getSuccessResponse(routerTypeList, requestInfo);
 
     }
-	private List<ErrorResponse> validateRouterRequest(final RouterTypeReq routerTypeReq) {
+	private List<ErrorResponse> validateRouterRequest(final RouterTypeReq routerTypeReq, String action) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(routerTypeReq);
+		final Error error = getError(routerTypeReq, action);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final RouterTypeReq routerTypeReq) {
+	private Error getError(final RouterTypeReq routerTypeReq, String action) {
 		routerTypeReq.getRouterType();
-		final List<ErrorField> errorFields = getErrorFields(routerTypeReq);
+		final List<ErrorField> errorFields = getErrorFields(routerTypeReq, action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq) {
+	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq, String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addRouterValidationErrors(routerTypeReq, errorFields);
 		addTeanantIdValidationErrors(routerTypeReq, errorFields);
+		if (action.equals(taskAction[0])) {
+			verifyUniquenessOfRequest(routerTypeReq, errorFields);
+		}
 		return errorFields;
 	}
 
 	private void addRouterValidationErrors(final RouterTypeReq routerTypeReq,
 			final List<ErrorField> errorFields) {
 		final RouterType routerType = routerTypeReq.getRouterType();
-		if (routerType.getServices() == null || routerType.getServices().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_SERVICE_MANDATORY_CODE)
-					.message(PgrMasterConstants.ROUTER_SERVICE_MANADATORY_FIELD_NAME)
-					.field(PgrMasterConstants.ROUTER_SERVICE_MANADATORY_ERROR_MESSAGE).build();
-			errorFields.add(errorField);
-		}
+		
 		
 		if (routerType.getPosition() == null || routerType.getPosition() == 0) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_POSITION_MANDATORY_CODE)
@@ -216,6 +216,17 @@ public class RouterController{
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
 					.message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
 					.field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else
+			return;
+	}
+	
+	private void verifyUniquenessOfRequest(final RouterTypeReq routerTypeReq,
+			final List<ErrorField> errorFields) {
+		if (routerService.verifyUniquenessOfRequest(routerTypeReq)) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_CODE)
+					.message(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_ERROR_MESSAGE)
+					.field(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} else
 			return;

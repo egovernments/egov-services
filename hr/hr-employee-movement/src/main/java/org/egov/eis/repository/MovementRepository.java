@@ -41,19 +41,27 @@
 package org.egov.eis.repository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.model.Movement;
+import org.egov.eis.model.enums.MovementStatus;
+import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.builder.MovementQueryBuilder;
 import org.egov.eis.repository.rowmapper.MovementRowMapper;
+import org.egov.eis.service.EmployeeService;
+import org.egov.eis.service.HRStatusService;
 import org.egov.eis.service.UserService;
 import org.egov.eis.service.WorkFlowService;
+import org.egov.eis.web.contract.Assignment;
+import org.egov.eis.web.contract.Employee;
 import org.egov.eis.web.contract.MovementRequest;
 import org.egov.eis.web.contract.MovementSearchRequest;
 import org.egov.eis.web.contract.ProcessInstance;
 import org.egov.eis.web.contract.RequestInfo;
+import org.egov.eis.web.contract.Task;
 import org.egov.eis.web.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -76,6 +84,12 @@ public class MovementRepository {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HRStatusService hrStatusService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     public List<Movement> findForCriteria(final MovementSearchRequest movementSearchRequest,
             final RequestInfo requestInfo) {
@@ -113,5 +127,91 @@ public class MovementRepository {
             jdbcTemplate.update(movementInsertQuery, obj);
         }
         return movementRequest;
+    }
+
+    public Movement updateMovement(final MovementRequest movementRequest) {
+        final Task task = workFlowService.update(movementRequest);
+        final String movementInsertQuery = MovementQueryBuilder.updateMovementQuery();
+        final Date now = new Date();
+        final Movement movement = movementRequest.getMovement().get(0);
+        final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                movementRequest.getRequestInfo());
+        movement.setStateId(Long.valueOf(task.getId()));
+        movementStatusChange(movement, movementRequest.getRequestInfo());
+        final Object[] obj = new Object[] { movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
+                movement.getCurrentAssignment(),
+                movement.getTransferType().toString(), movement.getPromotionBasis().getId(), movement.getRemarks(),
+                movement.getReason().getId(), movement.getEffectiveFrom(),
+                movement.getEnquiryPassedDate(), movement.getTransferedLocation(),
+                movement.getDepartmentAssigned(), movement.getDesignationAssigned(),
+                movement.getPositionAssigned(), movement.getFundAssigned(), movement.getFunctionAssigned(),
+                movement.getDocuments(), movement.getEmployeeAcceptance(),
+                movement.getStatus(), movement.getStateId(),
+                userResponse.getUsers().get(0).getId(), now,
+                userResponse.getUsers().get(0).getId(), now,
+                movement.getId(), movement.getTenantId() };
+        jdbcTemplate.update(movementInsertQuery, obj);
+        if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
+                .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+                        movementRequest.getRequestInfo()).get(0).getId()))
+            promoteEmployee(movementRequest);
+        else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER)
+                || movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION)) && movement.getStatus()
+                        .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+                                movementRequest.getRequestInfo()).get(0).getId()))
+            transferEmployee(movementRequest);
+        return movement;
+    }
+
+    private void promoteEmployee(final MovementRequest movementRequest) {
+        final Employee employee = employeeService.getEmployee(movementRequest);
+        final Movement movement = movementRequest.getMovement().get(0);
+        final Date effectiveFromDate = movement.getEffectiveFrom();
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(effectiveFromDate);
+        calendar.add(Calendar.DATE, -1);
+        final Date yesterday = calendar.getTime();
+        for (final Assignment employeeAssignment : employee.getAssignments())
+            if (employeeAssignment.getFromDate().before(effectiveFromDate)
+                    && employeeAssignment.getToDate().after(effectiveFromDate))
+                employeeAssignment.setToDate(yesterday);
+        final Assignment assignment = new Assignment();
+        assignment.setPosition(movement.getPositionAssigned());
+        assignment.setFund(movement.getFundAssigned());
+        assignment.setFunction(movement.getFunctionAssigned());
+        assignment.setDepartment(movement.getDepartmentAssigned());
+        assignment.setDesignation(movement.getDesignationAssigned());
+        assignment.setIsPrimary(true);
+        assignment.setFromDate(effectiveFromDate);
+        assignment.setToDate(employee.getDateOfRetirement());
+        assignment.setTenantId(movement.getTenantId());
+        employee.getAssignments().add(assignment);
+        employeeService.updateEmployee(employee, movement.getTenantId(),
+                movementRequest.getRequestInfo());
+    }
+
+    private void transferEmployee(final MovementRequest movementRequest) {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void movementStatusChange(final Movement movement, final RequestInfo requestInfo) {
+        final String workFlowAction = movement.getWorkflowDetails().getAction();
+        if ("Approve".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+        else if ("Reject".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.REJECTED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+        else if ("Cancel".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.CANCELLED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
+        else if ("Submit".equalsIgnoreCase(workFlowAction))
+            movement
+                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.RESUBMITTED.toString(), movement.getTenantId(),
+                            requestInfo).get(0).getId());
     }
 }

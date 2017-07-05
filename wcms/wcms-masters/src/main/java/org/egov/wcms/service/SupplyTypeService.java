@@ -41,33 +41,33 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.SupplyType;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.SupplyTypeRepository;
 import org.egov.wcms.web.contract.SupplyTypeGetRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class SupplyTypeService {
 
     @Autowired
     private SupplyTypeRepository supplyTypeRepository;
 
     @Autowired
-    private WaterMasterProducer watermasterProducer;
-    
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
     public SupplyTypeRequest createSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         return supplyTypeRepository.persistSupplyType(supplyTypeRequest);
     }
-    
+
     public SupplyTypeRequest updateSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         return supplyTypeRepository.upateSupplyType(supplyTypeRequest);
     }
@@ -77,7 +77,7 @@ public class SupplyTypeService {
         supplyTypeRequest.getSupplyType().setCode(codeGeneratorService.generate(SupplyType.SEQ_SUPPLYTYPE));
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
     }
-    
+
     public SupplyType updateSupplyType(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
@@ -85,17 +85,15 @@ public class SupplyTypeService {
 
     private SupplyType mapRequestObjectToWaterProducer(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
-        String supplytypevalue = null;
         try {
-            supplytypevalue = mapper.writeValueAsString(supplyTypeRequest);
-        } catch (final JsonProcessingException e) {
-            e.printStackTrace();
+            kafkaTemplate.send(topic, key, supplyTypeRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
         }
-        watermasterProducer.sendMessage(topic, key, supplytypevalue);
+
         return supplyTypeRequest.getSupplyType();
     }
-    
+
     public boolean getSupplyTypeByNameAndCode(final String code, final String name, final String tenantId) {
         return supplyTypeRepository.checkSupplyTypeByNameAndCode(code, name, tenantId);
     }
@@ -104,6 +102,5 @@ public class SupplyTypeService {
         return supplyTypeRepository.findForCriteria(supplytypeGetRequest);
 
     }
-   
 
 }

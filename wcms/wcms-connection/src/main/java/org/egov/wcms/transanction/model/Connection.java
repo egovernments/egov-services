@@ -105,7 +105,7 @@ public class Connection {
     private String connectionStatus;
 
     @NotNull
-    private int status;
+    private String status;
 
     @NotNull
     private int stateId;

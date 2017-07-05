@@ -44,31 +44,31 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class PropertyTypeCategoryTypeQueryBuilder {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
+@Component
+@Slf4j
+public class PropertyTypeCategoryTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT id, property_type_Id, category_type_Id, active, tenantId"
+    private static final String BASE_QUERY = "SELECT id, propertytypeid, categorytypeid, active, tenantId"
             + " FROM egwtr_property_category_type";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final PropertyCategoryGetRequest propertyCategoryGetRequest, final List preparedStatementValues) {
+    public String getQuery(final PropertyCategoryGetRequest propertyCategoryGetRequest,
+            final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, propertyCategoryGetRequest);
         if (null != propertyCategoryGetRequest.getSortBy() && null != propertyCategoryGetRequest.getSortOrder())
             addOrderByClause(selectQuery, propertyCategoryGetRequest);
         if (null != propertyCategoryGetRequest.getPageSize() && null != propertyCategoryGetRequest.getPageNumber())
             addPagingClause(selectQuery, preparedStatementValues, propertyCategoryGetRequest);
-        logger.info("Query : " + selectQuery);
+        log.info("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -77,8 +77,8 @@ public class PropertyTypeCategoryTypeQueryBuilder {
             final PropertyCategoryGetRequest propertyCategoryGetRequest) {
 
         if (propertyCategoryGetRequest.getId() == null && propertyCategoryGetRequest.getPropertyType() == null
-                && propertyCategoryGetRequest.getActive() == null
-                && propertyCategoryGetRequest.getTenantId() == null && propertyCategoryGetRequest.getCategoryType() == null)
+                && propertyCategoryGetRequest.getActive() == null && propertyCategoryGetRequest.getTenantId() == null
+                && propertyCategoryGetRequest.getCategoryType() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -97,13 +97,13 @@ public class PropertyTypeCategoryTypeQueryBuilder {
 
         if (propertyCategoryGetRequest.getPropertyType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" property_type_Id = ?");
+            selectQuery.append(" propertytypeid = ?");
             preparedStatementValues.add(propertyCategoryGetRequest.getPropertyTypeId());
         }
 
         if (propertyCategoryGetRequest.getCategoryType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" category_type_Id = ?");
+            selectQuery.append(" categorytypeid = ?");
             preparedStatementValues.add(propertyCategoryGetRequest.getCategoryTypeId());
         }
 
@@ -114,7 +114,8 @@ public class PropertyTypeCategoryTypeQueryBuilder {
         }
     }
 
-    private void addOrderByClause(final StringBuilder selectQuery, final PropertyCategoryGetRequest propertyCategoryGetRequest) {
+    private void addOrderByClause(final StringBuilder selectQuery,
+            final PropertyCategoryGetRequest propertyCategoryGetRequest) {
         final String sortBy = propertyCategoryGetRequest.getSortBy() == null ? "id"
                 : "" + propertyCategoryGetRequest.getSortBy();
         final String sortOrder = propertyCategoryGetRequest.getSortOrder() == null ? "DESC"
@@ -141,14 +142,6 @@ public class PropertyTypeCategoryTypeQueryBuilder {
         // pageNo * pageSize
     }
 
-    /**
-     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
-     * handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
     private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
@@ -167,26 +160,26 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     }
 
     public static String insertPropertyCategoryQuery() {
-        return "INSERT INTO egwtr_property_category_type(property_type_Id, category_type_Id, active, tenantid, "
+        return "INSERT INTO egwtr_property_category_type(id,propertytypeid, categorytypeid, active, tenantid, "
                 + "createddate, createdby, lastmodifieddate, lastmodifiedby) "
-                + "values (?,?,?,?,?,?,?,?)";
+                + "values (nextval('seq_egwtr_property_category_type'),?,?,?,?,?,?,?,?)";
     }
 
     public static String updatePropertyCategoryQuery() {
-        return "UPDATE egwtr_property_category_type SET property_type_Id = ?,category_type_Id = ?,"
+        return "UPDATE egwtr_property_category_type SET propertytypeid = ?,categorytypeid = ?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
     }
 
     public static String getCategoryId() {
-        return "SELECT id FROM egwtr_category WHERE name = ?";
+        return "SELECT id FROM egwtr_category WHERE name = ?  and tenantId = ?";
     }
 
     public static String getCategoryTypeName() {
-        return "SELECT name FROM egwtr_category WHERE id = ?";
+        return "SELECT name FROM egwtr_category WHERE id = ? and tenantId = ?";
     }
 
     public static String getCheckQuery() {
-        return "SELECT id from egwtr_property_category_type where property_type_Id = ? AND category_type_Id = ?"
+        return "SELECT id from egwtr_property_category_type where propertytypeid = ? AND categorytypeid = ?"
                 + "AND tenantId = ?";
     }
 }

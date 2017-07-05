@@ -93,7 +93,7 @@ public class OTPConfigController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("OTP Configuration Request::" + otpConfigRequest);
+		logger.info("OTP Configuration Create : Request::" + otpConfigRequest);
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(otpConfigRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -113,7 +113,7 @@ public class OTPConfigController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		otpConfigRequest.getOtpConfig().setTenantId(tenantId);
-		logger.info("OTP Configuration Request::" + otpConfigRequest);
+		logger.info("OTP Configuration : Update : Request::" + otpConfigRequest);
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(otpConfigRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

@@ -50,6 +50,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.TestConfiguration;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.service.PropertyCategoryService;
@@ -66,14 +67,14 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PropertyCategoryController.class)
-@WebAppConfiguration
+@Import(TestConfiguration.class)
 public class PropertyCategoryControllerTest {
 
     @Autowired
@@ -87,7 +88,7 @@ public class PropertyCategoryControllerTest {
 
     @MockBean
     private ErrorHandler errHandler;
-    
+
     @MockBean
     private ValidatorUtils validatorUtils;
 

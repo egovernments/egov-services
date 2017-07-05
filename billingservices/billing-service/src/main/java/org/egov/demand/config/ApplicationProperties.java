@@ -98,6 +98,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.glCodeMaster.key}")
 	private String createGlCodeMasterTopicKey;
 	
+	@Value("${kafka.topics.update.glCodeMaster}")
+	private String updateGlCodeMasterTopicName;
+	
+	@Value("${kafka.topics.update.glCodeMaster.key}")
+	private String updateGlCodeMasterTopicKey;
+	
 	@Value("${kafka.topics.create.taxperiod.name}")
 	private String createTaxPeriodTopicName;
 
@@ -109,6 +115,18 @@ public class ApplicationProperties {
 
 	@Value("${kafka.topics.update.taxperiod.key}")
 	private String updateTaxPeriodTopicKey;
+
+	@Value("${kafka.topics.create.businessservicedetail.name}")
+	private String createBusinessServiceDetailTopicName;
+
+	@Value("${kafka.topics.update.businessservicedetail.name}")
+	private String updateBusinessServiceDetailTopicName;
+
+	@Value("${kafka.topics.create.businessservicedetail.key}")
+	private String createBusinessServiceDetailTopicKey;
+
+	@Value("${kafka.topics.update.businessservicedetail.key}")
+	private String updateBusinessServiceDetailTopicKey;
 
 	@Value("${bs.bill.seq.name}")
 	private String billSeqName;
@@ -145,6 +163,9 @@ public class ApplicationProperties {
 
 	@Value("${bs.taxperiod.seq.name}")
 	private String taxPeriodSeqName;
+
+	@Value("${bs.businessservicedetail.seq.name}")
+	private String businessServiceDetailSeqName;
 
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);

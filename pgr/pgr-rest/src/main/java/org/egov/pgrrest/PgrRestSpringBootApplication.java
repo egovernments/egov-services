@@ -6,13 +6,14 @@ import org.egov.pgr.common.repository.ComplaintConfigurationRepository;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
-import org.egov.pgrrest.common.repository.UserRepository;
+import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -68,6 +69,7 @@ public class PgrRestSpringBootApplication {
     @PostConstruct
     public void init() throws UnknownHostException {
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+        DateTimeZone.setDefault(DateTimeZone.forID(timeZone));
         Settings settings = Settings.builder().put(CLUSTER_NAME, elasticSearchClusterName).build();
         final InetAddress esAddress = InetAddress.getByName(elasticSearchHost);
         final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,

@@ -50,6 +50,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.TestConfiguration;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.SourceType;
 import org.egov.wcms.service.SourceTypeService;
@@ -65,11 +66,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
+@Import(TestConfiguration.class)
 @WebMvcTest(SourceTypeController.class)
 public class SourceTypeControllerTest {
 
@@ -106,7 +109,6 @@ public class SourceTypeControllerTest {
         waterSource.setName("water source");
         waterSource.setActive(true);
         waterSource.setDescription("water soucre type ");
-
         waterSourceTypes.add(waterSource);
 
         final SourceTypeGetRequest waterSourceTypeGetRequest = Mockito.mock(SourceTypeGetRequest.class);

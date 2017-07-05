@@ -18,6 +18,8 @@ public class CityTest {
             .ulbGrade("municipality")
             .longitude(35.456)
             .latitude(75.443)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
         assertThat(city.isValid()).isFalse();
@@ -36,6 +38,8 @@ public class CityTest {
             .ulbGrade(null)
             .longitude(35.456)
             .latitude(75.443)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
         assertThat(city.isValid()).isFalse();

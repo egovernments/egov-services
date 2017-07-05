@@ -39,12 +39,14 @@
  */
 package org.egov.demand.repository;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.querybuilder.TaxPeriodQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxPeriodRowMapper;
-import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.TaxPeriodRequest;
 import org.slf4j.Logger;
@@ -53,10 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public class TaxPeriodRepository {

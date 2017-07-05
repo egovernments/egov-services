@@ -311,25 +311,9 @@
                                                 icon: 'fa fa-desktop',
                                                 link: '#',
                                                 items: [{
-                                                        name: 'Create',
+                                                        name: 'Search',
                                                         icon: 'fa fa-phone',
-                                                        link: './app/asset/search-asset.html?type=revaluate'
-                                                    }
-                                                ]
-                                            }]
-                                        },
-                                        {
-                                            name: 'Asset Disposal/Sale',
-                                            icon: 'fa fa-phone',
-                                            link: '#',
-                                            items: [{
-                                                title: 'Asset',
-                                                icon: 'fa fa-desktop',
-                                                link: '#',
-                                                items: [{
-                                                        name: 'Create',
-                                                        icon: 'fa fa-phone',
-                                                        link: './app/asset/search-asset.html?type=sale'
+                                                        link: './app/asset/search-asset-reval.html'
                                                     }
                                                 ]
                                             }]
@@ -370,12 +354,12 @@
     <script type="text/javascript">
 
     var response=$.ajax({
-              url: window.location.origin+"/user/_login?tenantId=ap.public&username=smitha&password=demo&grant_type=password&scope=read",
+              url: window.location.origin+"/user/oauth/token?tenantId=default&username=narasappa&password=demo&grant_type=password&scope=read",
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify({}),
               async: false,
-              contentType: 'application/json',
+              contentType: 'application/x-www-form-urlencoded',
               headers:{
                 'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
               }

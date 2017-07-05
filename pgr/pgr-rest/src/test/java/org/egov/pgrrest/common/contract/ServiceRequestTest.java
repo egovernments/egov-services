@@ -1,8 +1,8 @@
 package org.egov.pgrrest.common.contract;
 
 import org.egov.pgr.common.contract.AttributeEntry;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_return_location_id_from_attribute_values_field_when_flag_is_enabled() {
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(new AttributeEntry("locationId", "location")))
             .build();
@@ -30,7 +30,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_return_receiving_center_from_attribute_values_field_when_flag_is_enabled() {
         final AttributeEntry attributeEntry = new AttributeEntry("receivingCenter", "receivingCenter");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(attributeEntry))
             .build();
@@ -44,7 +44,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_return_receiving_mode_from_attribute_values_field_when_flag_is_enabled() {
         final AttributeEntry attributeEntry = new AttributeEntry("receivingMode", "receivingMode");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(attributeEntry))
             .build();
@@ -57,7 +57,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_over_location_coordinates_to_domain_complaint() {
         Double lat = 12.343, lng = 23.243;
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .latitude(lat)
             .longitude(lng)
@@ -72,7 +72,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_cross_hierarchy_id_to_domain_complaint() {
         String crossHierarchyId = "12";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .crossHierarchyId(crossHierarchyId)
             .build();
@@ -86,7 +86,7 @@ public class ServiceRequestTest {
     public void test_should_copy_complaint_type_to_domain_complaint() {
         final String complaintTypeCode = "complaintTypeCode";
         final String complaintTypeName = "complaintTypeName";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .serviceTypeCode(complaintTypeCode)
             .serviceTypeName(complaintTypeName)
@@ -102,7 +102,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_tenant_id_to_domain_complaint() {
         final String tenantId = "tenantId";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .tenantId(tenantId)
             .build();
@@ -116,7 +116,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_address_to_domain_complaint() {
         final String address = "address";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .address(address)
             .build();
@@ -129,7 +129,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_description_to_domain_complaint() {
         final String description = "description";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .address(description)
             .build();
@@ -142,7 +142,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_media_urls_to_domain_complaint() {
         final List<String> mediaUrls = Arrays.asList("url1", "url2");
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .mediaUrls(mediaUrls)
             .build();
@@ -157,7 +157,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_user_id_to_domain_complaint_from_attribute_values_field_when_flag_is_enabled() {
         final HashMap<String, String> values = new HashMap<>();
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(new AttributeEntry("userId", "userId")))
             .build();
@@ -170,7 +170,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_complainant_first_name_to_domain_complaint() {
         final String firstName = "first Name";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .firstName(firstName)
             .build();
@@ -183,7 +183,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_complainant_email_to_domain_complaint() {
         final String email = "email";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .email(email)
             .build();
@@ -196,7 +196,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_complainant_mobile_number_to_domain_complaint() {
         final String mobileNumber = "mobileNumber";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .phone(mobileNumber)
             .build();
@@ -208,7 +208,7 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_copy_complainant_address_from_attribute_values_field_when_flag_is_enabled() {
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(new AttributeEntry("requesterAddress", "address")))
             .build();
@@ -221,7 +221,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_copy_crn_to_domain_complaint() {
         String crn = "crn";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .crn(crn)
             .build();
@@ -234,7 +234,7 @@ public class ServiceRequestTest {
     @Test
     public void test_should_set_modify_flag_to_false_when_creating_domain_complaint_from_create_seva_request() {
         String crn = "crn";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .crn(crn)
             .build();
@@ -247,8 +247,8 @@ public class ServiceRequestTest {
     @Test
     public void test_should_set_modify_flag_to_true_when_creating_domain_complaint_from_update_seva_request() {
         String crn = "crn";
-        org.egov.pgrrest.common.contract.ServiceRequest serviceRequest =
-            org.egov.pgrrest.common.contract.ServiceRequest.builder()
+        org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest =
+            org.egov.pgrrest.common.contract.web.ServiceRequest.builder()
                 .crn(crn)
                 .build();
 

@@ -82,7 +82,7 @@ public class ServiceType {
     
     private String type;
     
-    private String keywords;
+    private List<String> keywords;
     
     private String group;
     

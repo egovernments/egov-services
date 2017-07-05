@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class CorrelationIdFilter implements Filter {
     private static final String FAILED_TO_LOG_REQUEST_MESSAGE = "Failed to log request body";
     private static final String UTF_8 = "UTF-8";
     private static final String REQUEST_URI_LOG_MESSAGE = "Received request URI: {} with query strings: {}";
+    private static final String LOG_RESPONSE_CODE_MESSAGE = "Response code sent: {}";
     private final ObjectMapper objectMapper;
     private boolean inboundHttpRequestBodyLoggingEnabled;
 
@@ -65,6 +67,12 @@ public class CorrelationIdFilter implements Filter {
             logRequestURI(httpRequest);
             filterChain.doFilter(servletRequest, servletResponse);
         }
+        logResponse(servletResponse);
+    }
+
+    private void logResponse(ServletResponse servletResponse) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        log.info(LOG_RESPONSE_CODE_MESSAGE, httpServletResponse.getStatus());
     }
 
     private void logRequestURI(HttpServletRequest httpRequest) {

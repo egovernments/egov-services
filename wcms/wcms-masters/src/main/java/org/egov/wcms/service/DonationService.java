@@ -40,31 +40,35 @@
 package org.egov.wcms.service;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.model.Donation;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.DonationRepository;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
+import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class DonationService {
-
-    public static final Logger logger = LoggerFactory.getLogger(DonationService.class);
 
     @Autowired
     private DonationRepository donationRepository;
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    @Autowired
+    private RestPropertyTaxMasterService restPropertyTaxMasterService;
 
     public DonationRequest create(final DonationRequest donationRequest) {
         return donationRepository.persistDonationDetails(donationRequest);
@@ -75,68 +79,52 @@ public class DonationService {
     }
 
     public Donation sendMessage(final String topic, final String key, final DonationRequest donationRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
-        String donationRequestValue = null;
         try {
-            logger.info("Donation service::" + donationRequest);
-
-            final Donation donation = getIdForRequestCodes(donationRequest);
-            donationRequest.setDonation(donation);
-            donationRequestValue = mapper.writeValueAsString(donationRequest);
-
-            logger.info("Donation Request Value::" + donationRequestValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, donationRequestValue);
+            kafkaTemplate.send(topic, key, donationRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return donationRequest.getDonation();
     }
 
     public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {
-        return donationRepository.getDonationList(donationGetRequest);
+        return donationRepository.findForCriteria(donationGetRequest);
     }
 
-    private Donation getIdForRequestCodes(final DonationRequest donationRequest) {
-        // Hit the Property Tax APIs to verify and get the IDs for the Code.
-        // Once APIs are available, remove random number function.
-        final Donation donation = new Donation();
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setPropertyTypeId(2L);
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setUsageTypeId(3L);
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setCategoryTypeId(3L);
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setMinHSCPipeSizeId(1);
-        ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setMaxHSCPipeSizeId(2);
-        return donation;
+    public Boolean getPropertyTypeByName(final DonationRequest donationRequest) {
+        Boolean isValidProperty = Boolean.FALSE;
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+        url = url.replace("{name}", donationRequest.getDonation().getPropertyType());
+        url = url.replace("{tenantId}", donationRequest.getDonation().getTenantId());
+        final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyTypes(url);
+        if (propertyType.getPropertyTypesSize()) {
+            isValidProperty = Boolean.TRUE;
+            donationRequest.getDonation().setPropertyTypeId(
+                    propertyType.getPropertyTypes() != null && propertyType.getPropertyTypes().get(0) != null
+                            ? propertyType.getPropertyTypes().get(0).getId() : "");
+
+        }
+        return isValidProperty;
+
     }
 
-    private Donation getIdForRequestCodes(final DonationGetRequest donationGetRequest) {
-        // Hit the Property Tax APIs to verify and get the IDs for the Code.
-        // Once APIs are available, remove random number function.
+    public Boolean getUsageTypeByName(final DonationRequest donationRequest) {
+        Boolean isValidUsage = Boolean.FALSE;
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
+        url = url.replace("{name}", donationRequest.getDonation().getUsageType());
+        url = url.replace("{tenantId}", donationRequest.getDonation().getTenantId());
+        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
+        if (usageType.getUsageTypesSize()) {
+            isValidUsage = Boolean.TRUE;
+            donationRequest.getDonation()
+                    .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
+                            ? usageType.getUsageMasters().get(0).getId() : "");
 
-        // Create a Donation Object. Transfer all the values from Donation Get Request to Donation
-        // Return the Donation Object so that Get Donation List fetches the value for these
-        // parameters.
+        }
+        return isValidUsage;
 
-        final Donation donation = new Donation();
-        int randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setPropertyTypeId(randomNum);
-        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setUsageTypeId(randomNum);
-        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setCategoryTypeId(randomNum);
-        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setMinHSCPipeSizeId(randomNum);
-        randomNum = ThreadLocalRandom.current().nextInt(1, 10 + 1);
-        donation.setMaxHSCPipeSizeId(randomNum);
-        return donation;
     }
 
 }

@@ -93,9 +93,9 @@ public class AssetCategoryRepository {
 			logger.info("the exception in assetcategory customfileds mapping :" + e);
 		}
 
-		// TODO depreciationrate as of now hardcoded as null
+
 		final Object[] obj = new Object[] { assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
-				assetCategoryType, depreciationMethod, null, assetCategory.getAssetAccount(),
+				assetCategoryType, depreciationMethod,assetCategory.getDepreciationRate(), assetCategory.getAssetAccount(),
 				assetCategory.getAccumulatedDepreciationAccount(), assetCategory.getRevaluationReserveAccount(),
 				assetCategory.getDepreciationExpenseAccount(), assetCategory.getUnitOfMeasurement(), customFields,
 				assetCategory.getTenantId(), requestInfo.getUserInfo().getId(), new Date(),

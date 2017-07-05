@@ -16,6 +16,8 @@ public class CityTest {
             .regionName("regionname")
             .longitude(35.456)
             .latitude(75.443)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
         org.egov.tenant.domain.model.City expectedCityModel = org.egov.tenant.domain.model.City.builder()
@@ -26,6 +28,8 @@ public class CityTest {
             .regionName("regionname")
             .longitude(35.456)
             .latitude(75.443)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
 
@@ -44,6 +48,8 @@ public class CityTest {
             .regionName("regionname")
             .longitude(35.456)
             .latitude(75.443)
+            .shapeFileLocation("shapeFileLocation")
+            .captcha("captcha")
             .build();
 
         City cityContract = new City(cityModel);
@@ -55,5 +61,7 @@ public class CityTest {
         assertThat(cityContract.getRegionName()).isEqualTo("regionname");
         assertThat(cityContract.getLongitude()).isEqualTo(35.456);
         assertThat(cityContract.getLatitude()).isEqualTo(75.443);
+        assertThat(cityContract.getShapeFileLocation()).isEqualTo("shapeFileLocation");
+        assertThat(cityContract.getCaptcha()).isEqualTo("captcha");
     }
 }

@@ -2,8 +2,8 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pgrrest.common.contract.SevaRequest;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
@@ -13,6 +13,7 @@ import org.egov.pgrrest.read.web.contract.CountResponse;
 import org.egov.pgrrest.read.web.contract.RequestInfoBody;
 import org.egov.pgrrest.read.web.contract.ServiceResponse;
 import org.egov.pgrrest.read.web.contract.SevaResponse;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -52,8 +53,7 @@ public class ServiceRequestController {
         final ServiceRequest complaint = request.toDomainForUpdateRequest();
         serviceRequestService.update(complaint, request);
         ResponseInfo responseInfo = getResponseInfo(request);
-        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract
-            .ServiceRequest(complaint)));
+        return new ServiceResponse(responseInfo, Collections.singletonList(new org.egov.pgrrest.common.contract.web.ServiceRequest(complaint)));
     }
 
     @PostMapping(value = "/v1/_search")
@@ -63,14 +63,14 @@ public class ServiceRequestController {
                                               @RequestParam(value = "serviceCode", required = false) String
                                                   serviceCode,
                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy") Date startDate,
+                                                  (pattern = "dd-MM-yyyy") DateTime startDate,
                                               @RequestParam(value = "endDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy") Date endDate,
+                                                  (pattern = "dd-MM-yyyy") DateTime endDate,
                                               @RequestParam(value = "escalationDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy HH:mm:ss") Date escalationDate,
+                                                  (pattern = "dd-MM-yyyy HH:mm:ss") DateTime escalationDate,
                                               @RequestParam(value = "status", required = false) List<String> status,
                                               @RequestParam(value = "lastModifiedDatetime", required = false)
-                                              @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                              @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime lastModifiedDate,
                                               @RequestParam(value = "positionId", required = false) Long positionId,
                                               @RequestParam(value = "userId", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
@@ -78,8 +78,8 @@ public class ServiceRequestController {
                                                   mobileNumber,
                                               @RequestParam(value = "emailId", required = false) String emailId,
                                               @RequestParam(value = "keyword", required = false) String keyword,
-                                              @RequestParam(value = "receivingMode", required = false) Long
-                                                  receivingMode,
+                                              @RequestParam(value = "receivingMode", required = false)
+                                                      String receivingMode,
                                               @RequestParam(value = "locationId", required = false) Long locationId,
                                               @RequestParam(value = "fromIndex", required = false) Integer fromIndex,
                                               @RequestParam(value = "sizePerPage", required = false) Integer pageSize,
@@ -89,11 +89,11 @@ public class ServiceRequestController {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .positionId(positionId)
+            .startDate(startDate)
             .endDate(endDate)
-            .lastModifiedDatetime(lastModifiedDate)
+            .startLastModifiedDate(lastModifiedDate)
             .serviceCode(serviceCode)
             .serviceRequestId(serviceRequestId)
-            .startDate(startDate)
             .escalationDate(escalationDate)
             .status(status)
             .userId(userId)
@@ -120,15 +120,15 @@ public class ServiceRequestController {
                                                 @RequestParam(value = "serviceCode", required = false)
                                                     String serviceCode,
                                                 @RequestParam(value = "startDate", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime startDate,
                                                 @RequestParam(value = "endDate", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime endDate,
                                                 @RequestParam(value = "escalationDate", required = false)
                                                 @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-                                                    Date escalationDate,
+                                                    DateTime escalationDate,
                                                 @RequestParam(value = "status", required = false) List<String> status,
                                                 @RequestParam(value = "lastModifiedDatetime", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") Date lastModifiedDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime lastModifiedDate,
                                                 @RequestParam(value = "positionId", required = false) Long positionId,
                                                 @RequestParam(value = "userId", required = false) Long userId,
                                                 @RequestParam(value = "name", required = false) String name,
@@ -136,8 +136,8 @@ public class ServiceRequestController {
                                                     mobileNumber,
                                                 @RequestParam(value = "emailId", required = false) String emailId,
                                                 @RequestParam(value = "keyword", required = false) String keyword,
-                                                @RequestParam(value = "receivingMode", required = false) Long
-                                                    receivingMode,
+                                                @RequestParam(value = "receivingMode", required = false)
+                                                        String receivingMode,
                                                 @RequestParam(value = "locationId", required = false) Long locationId,
                                                 @RequestParam(value = "childLocationId", required = false)
                                                     Long childLocationId,
@@ -145,11 +145,11 @@ public class ServiceRequestController {
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .positionId(positionId)
+            .startDate(startDate)
             .endDate(endDate)
-            .lastModifiedDatetime(lastModifiedDate)
+            .startLastModifiedDate(lastModifiedDate)
             .serviceCode(serviceCode)
             .serviceRequestId(serviceRequestId)
-            .startDate(startDate)
             .escalationDate(escalationDate)
             .status(status)
             .userId(userId)
@@ -186,8 +186,8 @@ public class ServiceRequestController {
     }
 
     private ServiceResponse createResponse(List<ServiceRequest> submissions) {
-        final List<org.egov.pgrrest.common.contract.ServiceRequest> serviceRequests = submissions.stream()
-            .map(org.egov.pgrrest.common.contract.ServiceRequest::new)
+        final List<org.egov.pgrrest.common.contract.web.ServiceRequest> serviceRequests = submissions.stream()
+            .map(org.egov.pgrrest.common.contract.web.ServiceRequest::new)
             .collect(Collectors.toList());
         return new ServiceResponse(null, serviceRequests);
     }

@@ -44,38 +44,32 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class DocumentTypeApplicationTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(DocumentTypeApplicationTypeQueryBuilder.class);
-
-    /*
-     * private static final String BASE_QUERY =
-     * "SELECT doc.id , doc.applicationtype , doc.documenttypeid,doc.mandatory,doc.active,doc.createddate," +
-     * "doc.lastmodifieddate,doc.createdby,doc.lastmodifiedby,doc.tenantid from egwtr_documenttype_applicationtype doc";
-     */
 
     private static final String BASE_QUERY = "SELECT docapp.id AS id ,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
             + " docapp.lastmodifieddate,docapp.createdby,docapp.lastmodifiedby,docapp.tenantid from egwtr_documenttype_applicationtype docapp"
             + " LEFT JOIN egwtr_document_type doctype ON docapp.documenttypeid = doctype.id";
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final DocumentTypeApplicationTypeGetRequest docNameGetRequest, final List preparedStatementValues) {
+    public String getQuery(final DocumentTypeApplicationTypeGetRequest docNameGetRequest,
+            final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, docNameGetRequest);
         addOrderByClause(selectQuery, docNameGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, docNameGetRequest);
 
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -89,12 +83,30 @@ public class DocumentTypeApplicationTypeQueryBuilder {
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
     }
 
+    public static String getDocumentTypeIdQuery() {
+        return " select id FROM egwtr_document_type  where name= ? and tenantId = ? ";
+    }
+
+    public static String getDocumentName() {
+        return "SELECT name FROM egwtr_document_type  WHERE id = ? and tenantId = ? ";
+    }
+
+    public static String selectDocumentApplicationIdQuery() {
+        return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ?";
+    }
+
+    public static String selectDocumentApplicationIdNotInQuery() {
+        return " select id FROM egwtr_documenttype_applicationtype where applicationtype = ? and documenttypeid = ? and tenantId = ? and id! =? ";
+
+    }
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
 
         if (docNameGetRequest.getId() == null && docNameGetRequest.getApplicationType() == null
-                && docNameGetRequest.getActive() == null && docNameGetRequest.getTenantId() == null)
+                && docNameGetRequest.getDocumentType() == null && docNameGetRequest.getActive() == null
+                && docNameGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -117,6 +129,12 @@ public class DocumentTypeApplicationTypeQueryBuilder {
             preparedStatementValues.add(docNameGetRequest.getApplicationType());
         }
 
+        if (docNameGetRequest.getDocumentType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" docapp.documenttypeid = ?");
+            preparedStatementValues.add(docNameGetRequest.getDocumentTypeId());
+        }
+
         if (docNameGetRequest.getActive() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" docapp.active = ?");
@@ -126,7 +144,8 @@ public class DocumentTypeApplicationTypeQueryBuilder {
 
     private void addOrderByClause(final StringBuilder selectQuery,
             final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
-        final String sortBy = docNameGetRequest.getSortBy() == null ? "docapp.id" : "docapp." + docNameGetRequest.getSortBy();
+        final String sortBy = docNameGetRequest.getSortBy() == null ? "docapp.id"
+                : "docapp." + docNameGetRequest.getSortBy();
         final String sortOrder = docNameGetRequest.getSortOrder() == null ? "DESC" : docNameGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }

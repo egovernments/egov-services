@@ -120,7 +120,7 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			attr.setCode(null == rs.getString("attributecode") || rs.getString("attributecode").equals("")? "" : rs.getString("attributecode"));
 			attr.setDatatype(null == rs.getString("datatype") || rs.getString("datatype").equals("")? "" : rs.getString("datatype"));
 			attr.setDatatypeDescription(null == rs.getString("datatypedescription") || rs.getString("datatypedescription").equals("")? "" : rs.getString("datatypedescription"));
-			attr.setDescription(null == rs.getString("description") || rs.getString("description").equals("")? "" :rs.getString("description"));
+			attr.setDescription(null == rs.getString("attrdescription") || rs.getString("attrdescription").equals("")? "" :rs.getString("attrdescription"));
 			attr.setRequired(null == rs.getString("required") || rs.getString("required").equals("") ? false : rs.getString("required").equals("Y")? true : false);
 			attr.setVariable(null == rs.getString("required") || rs.getString("required").equals("") ? false : rs.getString("variable").equals("Y")? true : false);
 			attr.setGroupCode(null == rs.getString("groupcode") || rs.getString("groupcode").equals("")? "" : rs.getString("groupcode"));
@@ -140,6 +140,7 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			serviceType.setDescription(rs.getString("description"));
 			serviceType.setCategory(rs.getInt("category"));
 			serviceType.setHasFinancialImpact(rs.getBoolean("hasfinancialimpact"));
+			serviceType.setSlaHours(rs.getInt("slahours"));
 		} catch (Exception e) {
 			LOGGER.error("Encountered an Exception while creating Service Type Object using Result Set " + e);
 		}

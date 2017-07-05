@@ -44,13 +44,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.Language;
 import org.egov.commons.service.LanguageService;
 import org.egov.commons.web.contract.LanguageGetRequest;
 import org.egov.commons.web.contract.LanguageResponse;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/languages")
 public class LanguageController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LanguageController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LanguageController.class);
 
 	@Autowired
 	private LanguageService languageService;
@@ -103,7 +103,7 @@ public class LanguageController {
 		try {
 			languagesList = languageService.getLanguages(languageGetRequest);
 		} catch (Exception exception) {
-			logger.error("Error while processing request " + languageGetRequest, exception);
+			LOGGER.error("Error while processing request " + languageGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 

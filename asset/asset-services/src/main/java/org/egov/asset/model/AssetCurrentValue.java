@@ -1,5 +1,7 @@
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,7 +28,7 @@ public class AssetCurrentValue {
 	private Long assetId;
 	
 	@JsonProperty("currentAmmount")
-	private Double currentAmmount;
+	private BigDecimal currentAmmount;
 
 
 }

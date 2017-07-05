@@ -157,7 +157,7 @@ public class BillService {
 
 	private List<Bill> prepareBill(List<Demand> demands,String tenantId,RequestInfo requestInfo){
 
-		List<Bill> bills = new ArrayList<Bill>();
+		List<Bill> bills = new ArrayList<>();
 
 		Map<String, List<TaxHeadMaster>> taxHeadCodes = getTaxHeadMaster(demands, tenantId, requestInfo);
 
@@ -193,29 +193,31 @@ public class BillService {
 				log.info("prepareBill demand2:" +demand2);
 
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
-				for(DemandDetail demandDetail : demandDetails) {
+				for (DemandDetail demandDetail : demandDetails) {
 
-					log.debug("prepareBill demandDetail:" +demandDetail);
+					log.debug("prepareBill demandDetail:" + demandDetail);
 					totalTaxAmount = totalTaxAmount.add(demandDetail.getTaxAmount());
 					totalCollectedAmount = totalCollectedAmount.add(demandDetail.getCollectionAmount());
 
 					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
-					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter((t) ->
-							demand2.getTaxPeriodFrom().equals(t.getValidFrom()) && demand2.getTaxPeriodTo().equals(t.getValidTill())).findAny().orElse(null);
+					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
+					demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand.getTaxPeriodTo().
+					compareTo(t.getValidTill()) <= 0).findAny().orElse(null);
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
-					
-					log.info("prepareBill glCodeMasters:"+ glCodeMasters);
-					GlCodeMaster glCodeMaster = glCodeMasters.stream().filter((t) ->
-					demand2.getTaxPeriodFrom()>=t.getFromDate() && demand2.getTaxPeriodTo()<=t.getToDate()).findAny().orElse(null);
-					
+
+					log.info("prepareBill glCodeMasters:" + glCodeMasters);
+					GlCodeMaster glCodeMaster = glCodeMasters.stream()
+							.filter((t) -> demand2.getTaxPeriodFrom() >= t.getFromDate()
+									&& demand2.getTaxPeriodTo() <= t.getToDate())
+							.findAny().orElse(null);
+
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					//TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
-					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("").
-							creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
-							.glcode(glCodeMaster.getGlCode())
-							.isActualDemand(taxHeadMaster.getIsActualDemand()).
-							order(taxHeadMaster.getOrder()).build();
+					// TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
+					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("")
+							.creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+							.glcode(glCodeMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand())
+							.order(taxHeadMaster.getOrder()).build();
 
 					billAccountDetails.add(billAccountDetail);
 				}
@@ -226,8 +228,11 @@ public class BillService {
 			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
 			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
 
-			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService()).
-					billAccountDetails(billAccountDetails).billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
+			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
+			
+			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService())
+					.billDescription(description).displayMessage(description).billAccountDetails(billAccountDetails)
+					.billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
 					collectionModesNotAllowed(businessServiceDetail.getCollectionModesNotAllowed()).
 					consumerType(demand3.getConsumerType()).consumerCode(demand3.getConsumerCode()).minimumAmount(totalMinAmount).
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).

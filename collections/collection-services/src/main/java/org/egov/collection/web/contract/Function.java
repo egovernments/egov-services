@@ -1,7 +1,5 @@
 package org.egov.collection.web.contract;
 
-import org.egov.common.contract.response.ResponseInfo;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

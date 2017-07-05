@@ -4,7 +4,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.domain.model.PersistRouter;
 import org.egov.workflow.domain.model.PersistRouterReq;
 import org.egov.workflow.persistence.repository.RouterRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -49,7 +48,7 @@ public class RouterServiceTest {
     
     public boolean checkforDuplicate(PersistRouterReq persistRouterReq){
 		PersistRouter pr = new PersistRouter();
-		pr = routerRepository.ValidateRouter(persistRouterReq);
+		pr = routerRepository.ValidateRouter(persistRouterReq, true);
 		
 		if (pr != null){
 			return false;

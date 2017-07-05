@@ -45,7 +45,14 @@ public class TaxHeadMasterQueryBuilderTest {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		TaxHeadMasterCriteria taxHeadMasterCriteriaQuery = TaxHeadMasterCriteria.builder().tenantId("ap.kurnool").build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "select * from egbs_taxheadmaster WHERE tenantId = ? ORDER BY name LIMIT ? OFFSET ?";
+		String queryWithTenantId = "SELECT *,taxhead.id as taxheadId, taxhead.tenantid as taxheadTenantid, "
+				+ "taxhead.service taxheadService, glcode.id as glCodeId,glcode.tenantid as glCodeTenantId,"
+				+ "glcode.service as glCodeService ,taxhead.createdby as taxcreatedby, taxhead.createdtime "
+				+ "as taxcreatedtime,taxhead.lastmodifiedby as taxlastmodifiedby, taxhead.lastmodifiedtime as taxlastmodifiedtime"
+				+ ",glcode.createdby as glcreatedby, glcode.createdtime as glcreatedtime,"
+				+ " glcode.lastmodifiedby as gllastmodifiedby, glcode.lastmodifiedtime as gllastmodifiedtime "
+				+ "FROM egbs_taxheadmaster taxhead INNER Join egbs_glcodemaster glcode on taxhead.code=glcode.taxhead"
+				+ " and taxhead.tenantid=glcode.tenantid WHERE taxhead.tenantId = ? ORDER BY name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteriaQuery, preparedStatementValues));
 
@@ -57,11 +64,21 @@ public class TaxHeadMasterQueryBuilderTest {
 	}
 	
 	@Test
-	public void getInsertQuery() {
+	public void getInsertQueryTest() {
 		String queryWithTenantId = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
 				+ "service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
 				+ "lastmodifiedby, lastmodifiedtime) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		assertEquals(queryWithTenantId, taxHeadMasterQueryBuilder.getInsertQuery());
+	}
+	
+	@Test
+	public void getUpdateQueryTest() {
+		String query="UPDATE public.egbs_taxheadmaster SET  category=?, service=?, "
+				+ "name=?, code=?, isdebit=?, isactualdemand=?, orderno=?, validfrom=?, validtill=?, "
+				+ "lastmodifiedby=?, lastmodifiedtime=?"
+				+ " WHERE tenantid=?";
+		
+		assertEquals(query, taxHeadMasterQueryBuilder.getUpdateQuery());
 	}
 }

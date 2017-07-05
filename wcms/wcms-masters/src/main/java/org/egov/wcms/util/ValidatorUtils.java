@@ -47,17 +47,18 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
-import org.egov.wcms.model.Donation;
 import org.egov.wcms.model.PipeSize;
+import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
-import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.model.SourceType;
 import org.egov.wcms.model.SupplyType;
 import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
+import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.PipeSizeService;
+import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
@@ -107,6 +108,12 @@ public class ValidatorUtils {
 
 	@Autowired
 	private SupplyTypeService supplyTypeService;
+
+	@Autowired
+	private PropertyCategoryService propertyCategoryService;
+
+	@Autowired
+	private DonationService donationService;
 
 	public List<ErrorResponse> validateCategoryRequest(final CategoryTypeRequest categoryRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -261,8 +268,7 @@ public class ValidatorUtils {
 	private void addDocumentTypeValidationErrors(final DocumentTypeApplicationType docTypeAppType,
 			final List<ErrorField> errorFields) {
 
-		if (docTypeAppType.getDocumentTypeId() == 0) {
-
+		if (docTypeAppType.getDocumentType() == null) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCTYPE_MANDATORY_CODE)
 					.message(WcmsConstants.DOCTYPE_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.DOCTYPE_MANADATORY_FIELD_NAME).build();
@@ -296,8 +302,8 @@ public class ValidatorUtils {
 	private void addDocumentApplicationTypeUniqueValidation(final DocumentTypeApplicationType docTypeAppType,
 			final List<ErrorField> errorFields) {
 
-		if (!documentApplicationService.checkDocumentTypeApplicationTypeExist(docTypeAppType.getApplicationType(),
-				docTypeAppType.getDocumentTypeId(), docTypeAppType.getTenantId())) {
+		if (!documentApplicationService.checkDocumentTypeApplicationTypeExist(docTypeAppType.getId(),docTypeAppType.getApplicationType(),
+				docTypeAppType.getDocumentType(), docTypeAppType.getTenantId())) {
 
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNIQUE_CODE)
 					.message(WcmsConstants.DOCTYPE_APPLICATIONTYPE_UNQ_ERROR_MESSAGE)
@@ -367,19 +373,22 @@ public class ValidatorUtils {
 	}
 
 	private List<ErrorField> getErrorFields(final DonationRequest donationRequest) {
-		final Donation donation = donationRequest.getDonation();
 		final List<ErrorField> errorFields = new ArrayList<>();
-		checkPropertyTypeValue(errorFields, donation);
-		checkUsageTypeValue(errorFields, donation);
-		checkCategoryValue(errorFields, donation);
-		checkPipeSizeValues(errorFields, donation);
-		checkDonationAmountValues(errorFields, donation);
-		checkFromToDateValues(errorFields, donation);
+		checkPropertyTypeValue(errorFields, donationRequest);
+		checkUsageTypeValue(errorFields, donationRequest);
+		checkCategoryValue(errorFields, donationRequest);
+		checkPipeSizeValues(errorFields, donationRequest);
+		checkDonationAmountValues(errorFields, donationRequest);
+		checkFromToDateValues(errorFields, donationRequest);
+		checkPropertyTypeAndUsageTypeExist(errorFields, donationRequest);
+		checkCategoryTypeAndPipeSizeExist(errorFields, donationRequest);
+		addTenantIdValidationErrors(donationRequest.getDonation().getTenantId(), errorFields);
 		return errorFields;
 	}
 
-	private void checkPropertyTypeValue(final List<ErrorField> errorFields, final Donation donation) {
-		if (donation.getPropertyType() == null || donation.getPropertyType().isEmpty()) {
+	private void checkPropertyTypeValue(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+		if (donationRequest.getDonation().getPropertyType() == null
+				|| donationRequest.getDonation().getPropertyType().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTYTYPE_MANDATORY_CODE)
 					.message(WcmsConstants.PROPERTYTYPE_MANDATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.PROPERTYTYPE_MANDATORY_FIELD_NAME).build();
@@ -387,8 +396,9 @@ public class ValidatorUtils {
 		}
 	}
 
-	private void checkUsageTypeValue(final List<ErrorField> errorFields, final Donation donation) {
-		if (donation.getUsageType() == null || donation.getUsageType().isEmpty()) {
+	private void checkUsageTypeValue(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+		if (donationRequest.getDonation().getUsageType() == null
+				|| donationRequest.getDonation().getUsageType().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
 					.message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
@@ -396,8 +406,9 @@ public class ValidatorUtils {
 		}
 	}
 
-	private void checkCategoryValue(final List<ErrorField> errorFields, final Donation donation) {
-		if (donation.getCategory() == null || donation.getCategory().isEmpty()) {
+	private void checkCategoryValue(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+		if (donationRequest.getDonation().getCategory() == null
+				|| donationRequest.getDonation().getCategory().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
 					.message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
@@ -405,9 +416,9 @@ public class ValidatorUtils {
 		}
 	}
 
-	private void checkPipeSizeValues(final List<ErrorField> errorFields, final Donation donation) {
-		if ((donation.getMaxHSCPipeSize() == null || donation.getMaxHSCPipeSize().isEmpty())
-				&& donation.getMinHSCPipeSize() == null || donation.getMinHSCPipeSize().isEmpty()) {
+	private void checkPipeSizeValues(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+		if ((donationRequest.getDonation().getMaxPipeSize() == null)
+				|| donationRequest.getDonation().getMinPipeSize() == null) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
 					.message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
@@ -415,8 +426,8 @@ public class ValidatorUtils {
 		}
 	}
 
-	private void checkDonationAmountValues(final List<ErrorField> errorFields, final Donation donation) {
-		if (donation.getDonationAmount() == null || donation.getDonationAmount().isEmpty()) {
+	private void checkDonationAmountValues(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+		if (donationRequest.getDonation().getDonationAmount() == null) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_MANDATORY_CODE)
 					.message(WcmsConstants.DONATION_MANDATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.DONATION_MANDATORY_FIELD_NAME).build();
@@ -424,11 +435,43 @@ public class ValidatorUtils {
 		}
 	}
 
-	private void checkFromToDateValues(final List<ErrorField> errorFields, final Donation donation) {
-		if (donation.getFromDate() == null || donation.getToDate() == null) {
+	private void checkFromToDateValues(final List<ErrorField> errorFields, final DonationRequest donationRequest) {
+		if (donationRequest.getDonation().getFromDate() == null || donationRequest.getDonation().getToDate() == null) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.FROMTO_MANDATORY_CODE)
 					.message(WcmsConstants.FROMTO_MANDATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.FROMTO_MANDATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+	}
+
+	private void checkPropertyTypeAndUsageTypeExist(final List<ErrorField> errorFields,
+			final DonationRequest donationRequest) {
+		if (!donationService.getPropertyTypeByName(donationRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
+					.field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+		} else if (!donationService.getUsageTypeByName(donationRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME)
+					.field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+		}
+	}
+
+	private void checkCategoryTypeAndPipeSizeExist(final List<ErrorField> errorFields,
+			final DonationRequest donationRequest) {
+		if (propertPipeSizeService.checkPipeSizeExists(donationRequest.getDonation().getMaxPipeSize(),
+				donationRequest.getDonation().getTenantId())) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_PIPESIZE_MAX_INVALID_CODE)
+					.message(WcmsConstants.DONATION_PIPESIZE_MAX_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.DONATION_PIPESIZE_MAX_INVALID_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if (propertPipeSizeService.checkPipeSizeExists(donationRequest.getDonation().getMinPipeSize(),
+				donationRequest.getDonation().getTenantId())) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_PIPESIZE_MIN_INVALID_CODE)
+					.message(WcmsConstants.DONATION_PIPESIZE_MIN_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.DONATION_PIPESIZE_MIN_INVALID_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 	}
@@ -470,7 +513,6 @@ public class ValidatorUtils {
 	}
 
 	private Error getError(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-		propertyPipeSizeRequest.getPropertyPipeSize();
 		final List<ErrorField> errorFields = getErrorFields(propertyPipeSizeRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(WcmsConstants.INVALID_PROPERTY_PIPESIZE_REQUEST_MESSAGE).errorFields(errorFields).build();
@@ -513,9 +555,7 @@ public class ValidatorUtils {
 					.field(WcmsConstants.PROPERTY_PIPESIZE_HSCSIZEINMM_INVALID_FIELD_NAME).build();
 			errorFields.add(errorField);
 
-		} else if (!propertPipeSizeService.checkPropertyByPipeSize(propertyPipeSize.getId(),
-				propertyPipeSize.getPropertyTypeId(), propertyPipeSize.getPipeSizeId(),
-				propertyPipeSize.getTenantId())) {
+		} else if (!propertPipeSizeService.checkPropertyByPipeSize(propertyPipeSizeRequest)) {
 			final ErrorField errorField = ErrorField.builder()
 					.code(WcmsConstants.PROPERTY_PIPESIZE_SIZEINMM_UNIQUE_CODE)
 					.message(WcmsConstants.PROPERTY_PIPESIZE_SIZEINMM_UNQ_ERROR_MESSAGE)
@@ -537,29 +577,45 @@ public class ValidatorUtils {
 	}
 
 	private Error getError(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
+		final List<ErrorField> errorFields = getErrorFields(propertyCategoryRequest);
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(WcmsConstants.INVALID_PROPERTY_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
+	}
+
+	private List<ErrorField> getErrorFields(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		if (propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName() == null
-				|| propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName().isEmpty()) {
+		addPropertyCategoryValidationErrors(propertyCategoryRequest, errorFields);
+		addTenantIdValidationErrors(propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId(), errorFields);
+		addActiveValidationErrors(propertyCategoryRequest.getPropertyTypeCategoryType().getActive(), errorFields);
+		return errorFields;
+	}
+
+	private void addPropertyCategoryValidationErrors(final PropertyTypeCategoryTypeReq propertyCategoryRequest,
+			final List<ErrorField> errorFields) {
+		final PropertyTypeCategoryType propertyCategory = propertyCategoryRequest.getPropertyTypeCategoryType();
+		if (propertyCategory.getCategoryTypeName() == null || propertyCategory.getCategoryTypeName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
 					.message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName() == null
-				|| propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_TYPE_MANDATORY_CODE)
-					.message(WcmsConstants.PROPERTY_TYPE_MANDATORY_ERROR_MESSAGE)
-					.field(WcmsConstants.PROPERTY_TYPE_MANDATORY_FIELD_NAME).build();
+		} else if (propertyCategory.getPropertyTypeName() == null || propertyCategory.getPropertyTypeName().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTYTYPE_MANDATORY_CODE)
+					.message(WcmsConstants.PROPERTYTYPE_MANDATORY_ERROR_MESSAGE)
+					.field(WcmsConstants.PROPERTYTYPE_MANDATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId() == null
-				|| propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId().isEmpty()) {
-			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
-					.message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-					.field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+		} else if (!propertyCategoryService.getPropertyTypeByName(propertyCategoryRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
+					.field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+
+		} else if (!propertyCategoryService.checkIfMappingExists(propertyCategoryRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_CATEGORY_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE)
+					.field(WcmsConstants.PROPERTY_CATEGORY_INVALID_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 
-		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
 	public List<ErrorResponse> validateUsageTypeRequest(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
@@ -574,43 +630,51 @@ public class ValidatorUtils {
 	}
 
 	private Error getError(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-		final PropertyTypeUsageType propUsageType = propUsageTypeRequest.getPropertyTypeUsageType();
-		final List<ErrorField> errorFields = new ArrayList<>();
-		validatePropertyTypeValue(errorFields, propUsageType);
-		validateUsageTypeValue(errorFields, propUsageType);
-		addTenantIdValidationErrors(propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), errorFields);
-		if (errorFields.size() <= 0 && !(propUsageType.getTenantId() == null || propUsageType.getTenantId().isEmpty()))
-			if (propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest)) {
-				final ErrorField errorField = ErrorField.builder()
-						.code(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNIQUE_CODE)
-						.message(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNQ_ERROR_MESSAGE)
-						.field(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNQ_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
+		final List<ErrorField> errorFields = getErrorFields(propUsageTypeRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(WcmsConstants.INVALID_PROPERTYUSAGETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> validatePropertyTypeValue(final List<ErrorField> errorFields,
-			final PropertyTypeUsageType propUsageType) {
-		if (propUsageType.getPropertyType() == null || propUsageType.getPropertyType().isEmpty()) {
+	private List<ErrorField> getErrorFields(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+		final List<ErrorField> errorFields = new ArrayList<>();
+		addPropertyUsageValidationErrors(propUsageTypeRequest, errorFields);
+		addTenantIdValidationErrors(propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), errorFields);
+		addActiveValidationErrors(propUsageTypeRequest.getPropertyTypeUsageType().getActive(), errorFields);
+		return errorFields;
+	}
+
+	private void addPropertyUsageValidationErrors(final PropertyTypeUsageTypeReq propUsageTypeRequest,
+			final List<ErrorField> errorFields) {
+
+		if (propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType() == null
+				|| propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTYTYPE_MANDATORY_CODE)
 					.message(WcmsConstants.PROPERTYTYPE_MANDATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.PROPERTYTYPE_MANDATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		}
-		return errorFields;
-	}
-
-	private List<ErrorField> validateUsageTypeValue(final List<ErrorField> errorFields,
-			final PropertyTypeUsageType propUsageType) {
-		if (propUsageType.getUsageType() == null || propUsageType.getUsageType().isEmpty()) {
+		} else if (propUsageTypeRequest.getPropertyTypeUsageType().getUsageType() == null
+				|| propUsageTypeRequest.getPropertyTypeUsageType().getUsageType().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
 					.message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
+		} else if (!propertyUsageTypeService.getPropertyTypeByName(propUsageTypeRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
+					.field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+		} else if (!propertyUsageTypeService.getUsageTypeByName(propUsageTypeRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
+					.message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME)
+					.field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+		} else if (!propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNIQUE_CODE)
+					.message(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNQ_ERROR_MESSAGE)
+					.field(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNQ_FIELD_NAME).build();
+			errorFields.add(errorField);
 		}
-		return errorFields;
+
 	}
 
 	public List<ErrorResponse> validateWaterSourceRequest(final SourceTypeRequest waterSourceTypeRequest) {

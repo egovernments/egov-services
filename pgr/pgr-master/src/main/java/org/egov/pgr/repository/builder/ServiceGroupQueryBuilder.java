@@ -116,14 +116,22 @@ public class ServiceGroupQueryBuilder {
 		return query.append(")").toString();
 	}
 
-	public static String insertServiceGroupQuery() {
+	public String insertServiceGroupQuery() {
 		return "INSERT INTO egpgr_complainttype_category(id, code, name,description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
 				+ "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?)";
 	}
 	
-	public static String updateServiceGroupQuery() {
+	public String updateServiceGroupQuery() {
 		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?, createdby = ?, lastmodifiedby = ?, "
 				+ "createddate = ?, lastmodifieddate = ?, tenantid = ? where code = ?";
+	}
+	
+	public static String checkIfAvailable() { 
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE code = ? AND name = ? AND tenantid = ? ";
+	}
+	
+	public static String checkIfNameTenantIdAvailable() { 
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE name = ? AND tenantid = ? " ;
 	}
 
 }

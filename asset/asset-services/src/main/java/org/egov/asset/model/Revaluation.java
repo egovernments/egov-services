@@ -1,6 +1,7 @@
 package org.egov.asset.model;
 
-import org.egov.asset.model.enums.RevaluationStatus;
+import java.math.BigDecimal;
+
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,16 +35,16 @@ public class Revaluation {
 	private Long assetId = null;
 
 	@JsonProperty("currentCapitalizedValue")
-	private Double currentCapitalizedValue = null;
+	private BigDecimal currentCapitalizedValue = null;
 
 	@JsonProperty("typeOfChange")
 	private TypeOfChangeEnum typeOfChange = null;
 
 	@JsonProperty("revaluationAmount")
-	private Double revaluationAmount = null;
+	private BigDecimal revaluationAmount = null;
 
 	@JsonProperty("valueAfterRevaluation")
-	private Double valueAfterRevaluation = null;
+	private BigDecimal valueAfterRevaluation = null;
 
 	@JsonProperty("revaluationDate")
 	private Long revaluationDate = null;
@@ -73,7 +74,7 @@ public class Revaluation {
 	private String comments = null;
 
 	@JsonProperty("status")
-	private RevaluationStatus status = null;
+	private String status = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

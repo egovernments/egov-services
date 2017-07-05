@@ -74,4 +74,25 @@ public class TenantServiceTest {
 
         verify(tenantRepository, never()).save(any(Tenant.class));
     }
+    
+    @Test
+    public void test_should_update_tenant() {
+        Tenant tenant = mock(Tenant.class);
+        when(tenant.getCode()).thenReturn("code");
+        when(tenantRepository.isTenantPresent("code")).thenReturn(1L);
+        when(tenantRepository.update(tenant)).thenReturn(tenant);
+
+        Tenant result = tenantService.updateTenant(tenant);
+
+        assertThat(result).isEqualTo(tenant);
+    }
+    
+    @Test(expected = InvalidTenantDetailsException.class)
+    public void test_should_throw_exception_when_tenant_isinvalid_inupdate() {
+        Tenant tenant = Tenant.builder().build();
+
+        tenantService.updateTenant(tenant);
+
+        verify(tenantRepository, never()).update(any(Tenant.class));
+    }
 }

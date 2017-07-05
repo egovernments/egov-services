@@ -42,32 +42,33 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class PropertyUsageTypeQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertyUsageTypeQueryBuilder.class);
     private static final String BASE_QUERY = "SELECT * FROM egwtr_property_usage_type proUseType";
 
     public String getPersistQuery() {
-        return "INSERT into egwtr_property_usage_type (property_type, usage_type, active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) values (?,?,?,?,?,?,?,?) ";
+        return "INSERT into egwtr_property_usage_type (id,propertytypeid, usagetypeid, active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) values (nextval('seq_egwtr_property_usage_type'),?,?,?,?,?,?,?,?) ";
     }
 
     public static String updatePropertyUsageQuery() {
-        return "UPDATE egwtr_property_usage_type SET property_type = ?,usage_type = ?,"
+        return "UPDATE egwtr_property_usage_type SET propertytypeid = ?,usagetypeid = ?,"
                 + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
     }
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest, final List preparedStatementValues) {
+    public String getQuery(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest,
+            final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, propUsageTypeGetRequest);
 
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -90,14 +91,6 @@ public class PropertyUsageTypeQueryBuilder {
         }
     }
 
-    /**
-     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
-     * handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
     private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
@@ -115,8 +108,12 @@ public class PropertyUsageTypeQueryBuilder {
         return query.append(")").toString();
     }
 
-    public String checkPropertyUsageTypeExistsQuery() {
-        return "SELECT * FROM egwtr_property_usage_type WHERE property_type = ? AND usage_type = ? AND tenantid = ? ";
+    public static String selectPropertyByUsageTypeQuery() {
+        return " select id FROM egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ?";
+    }
+
+    public static String selectPropertyByUsageTypeNotInQuery() {
+        return " select id from egwtr_property_usage_type where propertytypeid = ? and usagetypeid = ? and tenantId = ? and id != ? ";
     }
 
 }

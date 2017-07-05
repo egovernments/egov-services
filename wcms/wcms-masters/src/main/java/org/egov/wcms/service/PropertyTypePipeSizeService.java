@@ -41,38 +41,33 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.model.PropertyTypePipeSize;
-import org.egov.wcms.producers.WaterMasterProducer;
+
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
-import org.egov.wcms.web.contract.PropertyTypeResponseInfo;
-import org.egov.wcms.web.contract.RequestInfoWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PropertyTypePipeSizeService {
-
-    public static final Logger logger = LoggerFactory.getLogger(PropertyTypePipeSizeService.class);
 
     @Autowired
     private PropertyPipeSizeRepository propertyPipeSizeRepository;
 
     @Autowired
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private PropertiesManager propertiesManager;
+
+    @Autowired
+    private RestPropertyTaxMasterService restPropertyTaxMasterService;
 
     public PropertyTypePipeSizeRequest create(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistCreatePropertyPipeSize(propertyPipeSizeRequest);
@@ -84,26 +79,21 @@ public class PropertyTypePipeSizeService {
 
     public PropertyTypePipeSize createPropertyPipeSize(final String topic, final String key,
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        final ObjectMapper mapper = new ObjectMapper();
-        String propertyPipeSizeValue = null;
+
         try {
-            logger.info("createPropertyPipeSize service::" + propertyPipeSizeRequest);
-            propertyPipeSizeValue = mapper.writeValueAsString(propertyPipeSizeRequest);
-            logger.info("propertyPipeSizeValue::" + propertyPipeSizeValue);
-        } catch (final JsonProcessingException e) {
-            logger.error("Exception Encountered : " + e);
-        }
-        try {
-            waterMasterProducer.sendMessage(topic, key, propertyPipeSizeValue);
+            kafkaTemplate.send(topic, key, propertyPipeSizeRequest);
         } catch (final Exception ex) {
-            logger.error("Exception Encountered : " + ex);
+            log.error("Exception Encountered : " + ex);
         }
         return propertyPipeSizeRequest.getPropertyPipeSize();
     }
 
-    public boolean checkPropertyByPipeSize(final Long id, final String propertyTypeId, final Long pipeSizeId,
-            final String tenantId) {
-        return propertyPipeSizeRepository.checkPropertyByPipeSize(id, propertyTypeId, pipeSizeId, tenantId);
+    public boolean checkPropertyByPipeSize(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
+        getPropertyTypeByName(propertyPipeSizeRequest);
+        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyPipeSize().getId(),
+                propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeId(),
+                propertyPipeSizeRequest.getPropertyPipeSize().getPipeSizeId(),
+                propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
     }
 
     public List<PropertyTypePipeSize> getPropertyPipeSizes(
@@ -113,22 +103,17 @@ public class PropertyTypePipeSizeService {
     }
 
     public Boolean getPropertyTypeByName(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        Boolean isValidProperty=Boolean.FALSE;
+        Boolean isValidProperty = Boolean.FALSE;
         String url = propertiesManager.getPropertTaxServiceBasePathTopic()
                 + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         url = url.replace("{name}", propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName());
         url = url.replace("{tenantId}", propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
-        final RestTemplate restTemplate = new RestTemplate();
-        final PropertyTypeResponseInfo propertyTypes = restTemplate.postForObject(url.toString(), request,
-                PropertyTypeResponseInfo.class);
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
         if (propertyTypes.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
-            propertyPipeSizeRequest.getPropertyPipeSize().setPropertyTypeId(propertyTypes.getPropertyTypes() != null &&
-                    propertyTypes.getPropertyTypes().get(0) != null ? propertyTypes.getPropertyTypes().get(0).getId()
-                    : "");
+            propertyPipeSizeRequest.getPropertyPipeSize().setPropertyTypeId(
+                    propertyTypes.getPropertyTypes() != null && propertyTypes.getPropertyTypes().get(0) != null
+                            ? propertyTypes.getPropertyTypes().get(0).getId() : "");
 
         }
         return isValidProperty;

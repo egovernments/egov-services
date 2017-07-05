@@ -26,6 +26,8 @@ public class PersistRouter {
 	
 	private Integer boundary;
 	
+	private Boolean active; 
+	
 	@NotNull
 	private Integer position;
 	

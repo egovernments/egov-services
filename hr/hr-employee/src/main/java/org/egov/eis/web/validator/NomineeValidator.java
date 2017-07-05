@@ -49,6 +49,8 @@ import org.springframework.validation.Errors;
 
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class NomineeValidator {
 
@@ -89,6 +91,10 @@ public class NomineeValidator {
      */
     protected void validateNomineesNominatingEmployees(List<Nominee> nominees, Errors errors) {
         for (int i = 0; i < nominees.size(); i++) {
+            if (isEmpty(nominees.get(i).getEmployee().getId())) {
+                errors.rejectValue("nominees[" + i + "].employee.id", "invalid",
+                        "Nominating Employee Id Can't Be Left Empty. Please Enter Correct Id");
+            }
             if (!nomineeRepository.ifExists(EntityType.EMPLOYEE_HEADER.getDbTable(), nominees.get(i).getEmployee().getId(),
                     nominees.get(i).getTenantId())) {
                 errors.rejectValue("nominees[" + i + "].employee.id", "invalid",

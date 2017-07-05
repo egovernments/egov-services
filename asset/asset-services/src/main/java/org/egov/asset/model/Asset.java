@@ -41,6 +41,7 @@
 
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +50,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -82,7 +82,7 @@ public class Asset {
 	private ModeOfAcquisition modeOfAcquisition;
 
 	@NotNull
-	private Status status;
+	private String status;
 	private String description;
 
 	private Date dateOfCreation;
@@ -93,10 +93,12 @@ public class Asset {
 	private String length;
 	private String width;
 	private String totalArea;
-	private Double grossValue;
-	private Double accumulatedDepreciation;
+	private BigDecimal grossValue;
+	private BigDecimal accumulatedDepreciation;
 	private Long assetReference = null;
 	private String version;
 	private List<Attributes> assetAttributes = new ArrayList<>();
 
+	private Boolean enableYearWiseDepreciation;
+	private List<YearWiseDepreciation> depreciationRate = new ArrayList<>();
 }

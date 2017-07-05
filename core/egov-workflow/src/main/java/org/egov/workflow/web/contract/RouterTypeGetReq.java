@@ -61,9 +61,9 @@ public class RouterTypeGetReq {
 
     private Long boundaryid;
 
-    private Long serviceid;
+    private List<Long> serviceid;
     
-    private Long designationid;
+    private Long position;
 
     @NotNull
     private String tenantId;

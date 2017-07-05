@@ -26,13 +26,14 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.egov.tenant.persistence.entity.Tenant.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class TenantRepositoryTest {
-    private static final List<String> TENANT_CODES = asList("AP.KURNOOL", "AP.GUNTOOR");
+    private static final List<String> TENANT_CODES = asList("AP.KURNOOL");
 
     @MockBean
     private CityRepository cityRepository;
@@ -48,7 +49,7 @@ public class TenantRepositoryTest {
     }
 
     @Test
-    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql","/sql/updateTenantData.sql"})
     public void test_should_retrieve_tenant() throws Exception {
         TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
             .tenantCodes(TENANT_CODES)
@@ -62,22 +63,12 @@ public class TenantRepositoryTest {
 
         List<Tenant> tenants = tenantRepository.find(tenantSearchCriteria);
 
-        assertThat(tenants.size()).isEqualTo(2);
-        Tenant tenant = tenants.get(0);
-        assertThat(tenant.getId()).isEqualTo(1L);
-        assertThat(tenant.getCode()).isEqualTo("AP.KURNOOL");
-        assertThat(tenant.getDescription()).isEqualTo("description");
-        assertThat(tenant.getDomainUrl()).isEqualTo("http://egov.ap.gov.in/kurnool");
-        assertThat(tenant.getLogoId()).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
-        assertThat(tenant.getImageId()).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
-        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
-        assertThat(tenant.getCity()).isEqualTo(kurnoolCity);
-        assertThat(tenants.get(1).getCode()).isEqualTo("AP.GUNTOOR");
-        assertThat(tenants.get(1).getCity()).isEqualTo(guntoorCity);
+        assertThat(tenants.size()).isEqualTo(1);
+
     }
 
     @Test
-    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql"})
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql","/sql/updateTenantData.sql"})
     public void test_should_return_all_tenants() throws Exception {
         TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
             .tenantCodes(null)
@@ -90,17 +81,7 @@ public class TenantRepositoryTest {
         List<Tenant> tenants = tenantRepository.find(tenantSearchCriteria);
 
         assertThat(tenants.size()).isEqualTo(2);
-        Tenant tenant = tenants.get(0);
-        assertThat(tenant.getId()).isEqualTo(1L);
-        assertThat(tenant.getCode()).isEqualTo("AP.KURNOOL");
-        assertThat(tenant.getDescription()).isEqualTo("description");
-        assertThat(tenant.getDomainUrl()).isEqualTo("http://egov.ap.gov.in/kurnool");
-        assertThat(tenant.getLogoId()).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
-        assertThat(tenant.getImageId()).isEqualTo("8716872c-cd50-4fbb-a0d6-722e6bc9c143");
-        assertThat(tenant.getType()).isEqualTo(TenantType.CITY);
-        assertThat(tenant.getCity()).isEqualTo(kurnoolCity);
-        assertThat(tenants.get(1).getCode()).isEqualTo("AP.GUNTOOR");
-        assertThat(tenants.get(1).getCity()).isEqualTo(guntoorCity);
+
     }
 
     @Test
@@ -131,6 +112,12 @@ public class TenantRepositoryTest {
             .logoId("d45d7118-2013-11e7-93ae-92361f002671")
             .imageId("8716872c-cd50-4fbb-a0d6-722e6bc9c143")
             .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
             .city(city)
             .build();
 
@@ -149,6 +136,12 @@ public class TenantRepositoryTest {
         assertThat(row.get(CREATED_DATE)).isNotNull();
         assertThat(row.get(LAST_MODIFIED_BY)).isEqualTo(1L);
         assertThat(row.get(LAST_MODIFIED_DATE)).isNotNull();
+        assertThat(row.get(TWITTER_URL)).isNotNull();
+        assertThat(row.get(FACEBOOK_URL)).isNotNull();
+        assertThat(row.get(EMAILID)).isNotNull();
+        assertThat(row.get(ADDRESS)).isEqualTo("address");
+        assertThat(row.get(CONTACTNUMBER)).isEqualTo("contactNumber");
+        assertThat(row.get(HELPLINENUMBER)).isEqualTo("helpLineNumber");
 
         verify(cityRepository).save(city, "AP.KURNOOL");
     }
@@ -170,6 +163,12 @@ public class TenantRepositoryTest {
                     put(CREATED_DATE, resultSet.getString(CREATED_DATE));
                     put(LAST_MODIFIED_BY, resultSet.getLong(LAST_MODIFIED_BY));
                     put(LAST_MODIFIED_DATE, resultSet.getString(LAST_MODIFIED_DATE));
+                    put(TWITTER_URL, resultSet.getString(TWITTER_URL));
+                    put(FACEBOOK_URL, resultSet.getString(FACEBOOK_URL));
+                    put(EMAILID ,resultSet.getString(EMAILID));
+                    put(ADDRESS,resultSet.getString(ADDRESS));
+                    put(CONTACTNUMBER,resultSet.getString(CONTACTNUMBER));
+                    put(HELPLINENUMBER,resultSet.getString(HELPLINENUMBER)); 
                 }};
 
                 rows.add(row);
@@ -177,4 +176,32 @@ public class TenantRepositoryTest {
             return rows;
         }
     }
+    
+    
+    @Test
+    @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql","/sql/insertTenantData.sql"})
+    public void test_should_update_tenant() throws Exception {
+        City city = City.builder().id(1L).build();
+
+        Tenant expected = Tenant.builder()
+            .code("AP.KURNOOL")
+            .description("descrdsfghjkliption")
+            .domainUrl("http://egov.ap.gov.in/kurnool")
+            .logoId("d45d7118-2013-11e7-93ae-92361f002671")
+            .imageId("8716872c-cd50-4fbb-a0d6-722e6bc9c143")
+            .type("CITY")
+            .twitterUrl("twitterUrl")
+            .facebookUrl("faceBookUrl")
+            .emailId("email")
+            .address("address")
+            .contactNumber("contactNumber")
+            .helpLineNumber("helpLineNumber")
+            .city(city)
+            .build();
+
+        Tenant actual=  tenantRepository.update(expected);
+        assertEquals(expected,actual);
+       
+    }
+
 }

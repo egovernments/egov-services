@@ -7,11 +7,14 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
-import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.repository.querybuilder.GlCodeMasterQueryBuilder;
 import org.egov.demand.repository.rowmapper.GlCodeMasterRowMapper;
+import org.egov.demand.web.contract.GlCodeMasterRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,6 +45,39 @@ public class GlCodeMasterRepositoryTest {
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(GlCodeMasterRowMapper.class))).thenReturn(glCodeMaster);
 
 		assertTrue(glCodeMaster.equals(glCodeMasterRepository.findForCriteria(new GlCodeMasterCriteria())));
+	}
+	
+	@Test
+	public void testCreateGlCodeMaster() {
+		
+		GlCodeMasterRequest glCodeMasterRequest = new GlCodeMasterRequest();
+		RequestInfo requestInfo = new RequestInfo();
+		User user = new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		glCodeMasterRequest.setRequestInfo(requestInfo);
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		List<GlCodeMaster> glCodes = new ArrayList<>();
+		glCodes.add(glCodeMaster);
+		glCodeMasterRequest.setGlCodeMasters(glCodes);
+		
+		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[] {1});
+		assertTrue(glCodes.equals(glCodeMasterRepository.create(glCodeMasterRequest)));
+	}
+	
+	@Test
+	public void testUpdateGlCodeMaster() {
+		
+		GlCodeMasterRequest glCodeMasterRequest = new GlCodeMasterRequest();
+		RequestInfo requestInfo = new RequestInfo();
+		glCodeMasterRequest.setRequestInfo(requestInfo);
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		List<GlCodeMaster> glCodes = new ArrayList<>();
+		glCodes.add(glCodeMaster);
+		glCodeMasterRequest.setGlCodeMasters(glCodes);
+		
+		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[]{1});
+		assertTrue(glCodes.equals(glCodeMasterRepository.update(glCodeMasterRequest)));
 	}
 	
 	private GlCodeMaster getGlCodeMaster(){

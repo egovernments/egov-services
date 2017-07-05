@@ -56,8 +56,6 @@ import org.egov.wcms.web.contract.MeterCostRequest;
 import org.egov.wcms.web.contract.MeterCostResponse;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,11 +66,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/metercost")
 public class MeterCostController {
-
-    private static final Logger logger = LoggerFactory.getLogger(MeterCostController.class);
 
     @Autowired
     private MeterCostService meterCostService;
@@ -88,19 +87,20 @@ public class MeterCostController {
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final MeterCostRequest meterCostRequest, final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final MeterCostRequest meterCostRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("meterCostRequest::" + meterCostRequest);
+        log.info("meterCostRequest::" + meterCostRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final MeterCost meterCost = meterCostService.createMeterCost(applicationProperties.getCreateMeterCostTopicName(),
-                "metercost-create", meterCostRequest);
+        final MeterCost meterCost = meterCostService.createMeterCost(
+                applicationProperties.getCreateMeterCostTopicName(), "metercost-create", meterCostRequest);
         final List<MeterCost> meterCosts = new ArrayList<>();
         meterCosts.add(meterCost);
         return getSuccessResponse(meterCosts, "created", meterCostRequest.getRequestInfo());
@@ -112,7 +112,7 @@ public class MeterCostController {
         final MeterCostResponse meterCostResponse = new MeterCostResponse();
         meterCostResponse.setMeterCost(meterCostList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        if(StringUtils.isNotBlank(mode))
+        if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());
         else
             responseInfo.setStatus(HttpStatus.OK.toString());

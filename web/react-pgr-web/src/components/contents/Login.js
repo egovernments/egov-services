@@ -107,7 +107,8 @@ class Login extends Component {
               password: "",
               confirmPassword: "",
               emailId: "",
-              name: ""
+              name: "",
+              active: true
            },
            signUpErrorMsg: ""
        }

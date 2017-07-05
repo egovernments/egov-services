@@ -72,8 +72,6 @@ class ServiceTypeCreate extends Component {
           isDataType: false
       }
       this.showCustomFieldForm=this.showCustomFieldForm.bind(this);
-      this.addAsset = this.addAsset.bind(this);
-
       this.handleOpenNClose=this.handleOpenNClose.bind(this);
     }
 
@@ -128,113 +126,12 @@ class ServiceTypeCreate extends Component {
 
 
     }
-
-
-    addAsset(to="") {
-      alert("hi");
-      var {
-        isEdit,
-        index,
-        list,
-        customField,
-        column,
-        assetCategory
-      } = this.state;
-
-      if(!to && (!customField.name || !customField.type)) {
-        return this.setState({
-          showMsg: true,
-          readonly: false
-        })
-      } else {
-        var _this = this;
-        setTimeout(function() {
-          _this.setState({
-            showMsg: false,
-            readonly: false
-          });
-        }, 300);
-      }
-
-      if (isEdit) {
-        // console.log(isEdit,index);
-        //update holidays with current holiday
-        assetCategory["assetFieldsDefination"][index] = customField
-        this.setState({
-          assetCategory,
-          isEdit: false,
-          readonly: false
-        })
-        //this.setState({isEdit:false})
-      } else {
-        //get asset Category from state
-        // customFieldData["columns"]=[];
-
-        if (to=="column") {
-          var temp = customField;
-          temp.columns.push(column);
-          this.setState({
-            customField: temp,
-            readonly: false,
-            column:{
-                 "name": null,
-                 "type": null,
-                 "isActive": false,
-                 "isMandatory": false,
-                 "values": null,
-                 "localText": null,
-                 "regExFormate": null,
-                 "url": null,
-                 "order": null,
-                 "columns": []
-            }
-          })
-        } else {
-          var temp = Object.assign({}, assetCategory);
-          temp.assetFieldsDefination.push(customField);
-          this.setState({
-            assetCategory: temp,
-            readonly: false,
-            customField: {
-                 "name": null,
-                 "type": null,
-                 "isActive": false,
-                 "isMandatory": false,
-                 "values": null,
-                 "localText": null,
-                 "regExFormate": null,
-                 "url": null,
-                 "order": null,
-                 "columns": []
-            } ,
-            isCustomFormVisible:false,
-            column: {
-                 "name": null,
-                 "type": null,
-                 "isActive": false,
-                 "isMandatory": false,
-                 "values": null,
-                 "localText": null,
-                 "regExFormate": null,
-                 "url": null,
-                 "order": null,
-                 "columns": []
-            }
-          })
-        }
-
-        //use push to add new customField inside assetCategory
-        //set back assetCategory to state
-      }
-    }
-
-
-
     submitForm = (e) => {
 
       e.preventDefault()
       var current = this;
       console.log(this.props);
+      this
       var body = {
           "Service":{
            "serviceCode": this.props.createServiceType.serviceCode,
@@ -247,7 +144,7 @@ class ServiceTypeCreate extends Component {
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
            "attributes" :this.props.createServiceType.attributes,
-           "slaHours" : this.props.createServiceType.slaHours,
+           "slaHours" : parseInt(this.props.createServiceType.slaHours),
            "metadata" :  this.props.createServiceType.metadata,
            "tenantId":"default"
           }
@@ -255,7 +152,7 @@ class ServiceTypeCreate extends Component {
       console.log("body",body);
 
       if(this.props.match.params.id){
-        console.log("hi");
+
           Api.commonApiPost("/pgr-master/service/v1/"+body.Service.serviceCode+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
@@ -320,7 +217,7 @@ console.log(createServiceType);
 
       const viewTypes = function() {
         console.log("createServiceType",createServiceType);
-          if( (createServiceType.attribute.dataType!=2) && (createServiceType.attribute.dataType!=undefined))
+          if( (createServiceType.attribute.dataType=="Single value list" || createServiceType.attribute.dataType== "Multi select") && (createServiceType.attribute.dataType!=undefined))
           return (
               <div>
                 <div className="clearfix"></div>
@@ -348,14 +245,14 @@ console.log(createServiceType);
                     <Col xs={12} md={3} sm={3} style={styles.textRight}>
                     <br/>
                     { (editIndex == -1 || editIndex == undefined ) &&
-                      <RaisedButton type="button" label="Add" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                      <RaisedButton type="button" label="Add" primary="true" onClick={()=> {
                           _this.props.addNestedFormData("dataTypes","dataType");
-
+                          _this.props.resetObject("dataType");
                           }
                       }/>
                     }
                     { (editIndex > -1) &&
-                      <RaisedButton type="button" label="Save"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                      <RaisedButton type="button" label="Save"    onClick={()=> {
                             this.props.updateObject("owners","owner",  editIndex);
                             this.props.resetObject("owner");
                             isEditIndex(-1);
@@ -407,7 +304,7 @@ console.log(createServiceType);
 
           return (
 
-              <button type="button" className="btn btn-primary  pull-right" onClick={()=>{showCustomFieldForm(true)}}>Add New</button>
+              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={"Add New"} labelColor={white}/>
             )
 
       }
@@ -494,6 +391,16 @@ console.log(createServiceType);
                   <Col xs={12} md={3} sm={6}>
                       <TextField
                           fullWidth={true}
+                          floatingLabelText="Group Code"
+                          value={createServiceType.attribute ? createServiceType.attribute.groupCode : ""}
+                          errorText={fieldErrors.attribute ? fieldErrors.attribute.groupCode : ""}
+                            onChange={(e) => handleChangeNextOne(e,"attribute" ,"groupCode", false, "")}
+                          id="groupCode"
+                      />
+                  </Col>
+                  <Col xs={12} md={3} sm={6}>
+                      <TextField
+                          fullWidth={true}
                           floatingLabelText="Datatype Description"
                           value={createServiceType.attribute ? createServiceType.attribute.datatypeDescription : ""}
                           errorText={fieldErrors.attribute ? fieldErrors.attribute.datatypeDescription : ""}
@@ -527,8 +434,8 @@ console.log(createServiceType);
                               handleChangeNextOne(e, "attribute","required",  false, '')
                             }}
                          >
-                        <MenuItem value={"true"} primaryText={"True"} />
-                        <MenuItem  value={"false"} primaryText={"False"} />
+                        <MenuItem value={true} primaryText={"True"} />
+                        <MenuItem  value={false} primaryText={"False"} />
 
 
                       </SelectField>
@@ -549,8 +456,8 @@ console.log(createServiceType);
                               handleChangeNextOne(e, "attribute","variable",  false, '')
                             }}
                          >
-                        <MenuItem value={"true"} primaryText={"True"} />
-                        <MenuItem  value={"false"} primaryText={"False"} />
+                        <MenuItem value={true} primaryText={"True"} />
+                        <MenuItem  value={false} primaryText={"False"} />
 
 
                       </SelectField>
@@ -570,30 +477,39 @@ console.log(createServiceType);
                               handleChangeNextOne(e, "attribute","dataType",  false, '')
                             }}
                          >
-                        <MenuItem value={1} primaryText={"Single value list"} />
-                        <MenuItem  value={2} primaryText={"Text"} />
+                        <MenuItem value={"Single value list"} primaryText={"Single value list"} />
+                        <MenuItem  value={"Text"} primaryText={"Text"} />
+                        <MenuItem  value={"Multi select"} primaryText={"Multi select"} />
+                        <MenuItem  value={"Date"} primaryText={"Date"} />
+                        <MenuItem  value={"File"} primaryText={"File"} />
+                        <MenuItem  value={"Table"} primaryText={"Table"} />
+                        <MenuItem  value={"Email"} primaryText={"Email"} />
+                        <MenuItem  value={"Number"} primaryText={"Number"} />
 
 
                       </SelectField>
                   </Col>
-                    {createServiceType.attribute && createServiceType.attribute.dataType==1 && viewTypes() }
+                    {createServiceType.attribute && (createServiceType.attribute.dataType=="Single value list" || createServiceType.attribute.dataType== "Multi select") && viewTypes() }
           <div className="clearfix"></div>
           { (editIndex == -1 || editIndex == undefined ) &&
-            <RaisedButton type="button" label="Add Attribute" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
-              createServiceType.attribute.attributes =[];
-                createServiceType.dataTypes.forEach(function(d){
-                  createServiceType.attribute.attributes.push({
-                    "key": d.attributesKey,
-                    "name" : d.attributesName
-                  });
-              
-              });
+            <RaisedButton type="button" label="Add Attribute"  primary="true"  onClick={()=> {
+              if(createServiceType.dataTypes!==undefined){
+                        createServiceType.attribute.attributes =[];
+                          createServiceType.dataTypes.forEach(function(d){
+                            createServiceType.attribute.attributes.push({
+                              "key": d.attributesKey,
+                              "name" : d.attributesName
+                            });
+
+                        });
+                    }
                 _this.props.addNestedFormData("attributes","attribute");
+                _this.props.resetObject("attribute");
                 }
             }/>
           }
           { (editIndex > -1) &&
-            <RaisedButton type="button" label="Save"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+            <RaisedButton type="button" label="Save"    onClick={()=> {
                   this.props.updateObject("owners","owner",  editIndex);
                   this.props.resetObject("owner");
                   isEditIndex(-1);
@@ -797,8 +713,7 @@ console.log(createServiceType);
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
-                <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
               </div>
           </form>
           <Dialog
@@ -895,14 +810,6 @@ const mapDispatchToProps = dispatch => ({
     })
   },
 
-  addStucture: (attribute,dataTypes) =>{
-    console.log(attribute);
-    console.log(dataTypes);
-
-    console.log("fin",attribute);
-    _this.props.addNestedFormData("attributes","attribute");
-
-  },
   addNestedFormData: (formArray, formData) => {
     console.log(formArray);
     console.log(formData);

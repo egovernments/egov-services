@@ -80,7 +80,7 @@ public class Budget extends Auditable {
 	 * financialYear is the attribute to identify to which year the Budget
 	 * belongs is tagged.
 	 */
-	private FinancialYearContract financialYear;
+	private FinancialYearContract financialYearId;
 
 	/**
 	 * estimationType is type of the budget definition - which signifies budget
@@ -93,7 +93,7 @@ public class Budget extends Auditable {
 	 * definition. The root node will not have any parent. The lowest node is
 	 * the budget under which the details are defined.
 	 */
-	private Budget parent;
+	private Budget parentId;
 
 	/**
 	 * description provides more information on budget line item and this is
@@ -128,7 +128,7 @@ public class Budget extends Auditable {
 	 * reference is mapped to the BE of current year or for the year for which
 	 * BE is created.
 	 */
-	private Budget referenceBudget;
+	private Budget referenceBudgetId;
 
 	/**
 	 * documentNumber is the reference number to identify the attachments made
@@ -140,6 +140,6 @@ public class Budget extends Auditable {
 	 * status gives the current status of the budget Node. i.e collective status
 	 * of the details. However the status at budget detail also exist.
 	 */
-	private EgfStatus status;
+	private EgfStatus statusId;
 
 }

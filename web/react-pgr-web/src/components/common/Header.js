@@ -42,7 +42,7 @@ const styles = {
 
 const Logo = () => {
 
-  return (<img src={require("../../images/main_logo.jpg")} style={styles.mainLogo} alt="logo"/>);
+  return (<img src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
 }
 
 const RightIcon = (props) => {
@@ -76,6 +76,7 @@ const RightIcon = (props) => {
                 //  },function(err) {
                 //    console.log(err);
                 // });
+                document.title = "Egovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale',locale);
@@ -649,7 +650,7 @@ class Header extends Component {
   render() {
     return (
       <div className="Header">
-        <AppBar title={<div><Logo/> eGov </div>}
+        <AppBar title={<div><Logo/> Egovernments </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} />}/>

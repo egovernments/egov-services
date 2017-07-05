@@ -6,6 +6,8 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.DisposalCriteria;
+import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetService;
 import org.slf4j.Logger;
@@ -56,6 +58,43 @@ public class AssetValidator {
 			}
 		} else
 			logger.info("no duplicate asset with same name found");
+	}
+
+	public void validateRevaluationCriteria(RevaluationCriteria revaluationCriteria) {
+		if (revaluationCriteria.getFromDate() == null && revaluationCriteria.getToDate() != null) {
+			throw new RuntimeException("Invalid Search! from date required");
+		}
+		if (revaluationCriteria.getFromDate() != null && revaluationCriteria.getToDate() == null) {
+			throw new RuntimeException("Invalid Search! to date required");
+		}
+		if (revaluationCriteria.getFromDate() != null && revaluationCriteria.getToDate() != null
+				&& revaluationCriteria.getToDate().compareTo(revaluationCriteria.getFromDate()) == -1) {
+			throw new RuntimeException("Invalid Search! to date should not be less than from date");
+		}
+
+		if (revaluationCriteria.getFromDate() != null && revaluationCriteria.getToDate() != null
+				&& revaluationCriteria.getToDate().compareTo(revaluationCriteria.getFromDate()) == 0) {
+			throw new RuntimeException("Invalid Search! to date should not be equal to from date");
+		}
+	}
+
+	public void validateDisposalCriteria(DisposalCriteria disposalCriteria) {
+		if (disposalCriteria.getFromDate() == null && disposalCriteria.getToDate() != null) {
+			throw new RuntimeException("Invalid Search! from date required");
+		}
+		if (disposalCriteria.getFromDate() != null && disposalCriteria.getToDate() == null) {
+			throw new RuntimeException("Invalid Search! to date required");
+		}
+
+		if (disposalCriteria.getFromDate() != null && disposalCriteria.getToDate() != null
+				&& disposalCriteria.getToDate().compareTo(disposalCriteria.getFromDate()) == -1) {
+			throw new RuntimeException("Invalid Search! to date should not be less than from date");
+		}
+
+		if (disposalCriteria.getFromDate() != null && disposalCriteria.getToDate() != null
+				&& disposalCriteria.getToDate().compareTo(disposalCriteria.getFromDate()) == 0) {
+			throw new RuntimeException("Invalid Search! to date should not be equal to from date");
+		}
 	}
 
 	public void validateDisposal(final DisposalRequest disposalRequest) {

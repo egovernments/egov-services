@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MastersQueueRepository {
+public class BudgetServiceQueueRepository {
 
 	@Autowired
 	private FinancialProducer financialProducer;
 
-	@Value("${kafka.topics.egf.masters.validated.topic}")
+	@Value("${kafka.topics.egf.budget.service.validated.topic}")
 	private String validatedTopic;
 
-	@Value("${kafka.topics.egf.masters.validated.key}")
+	@Value("${kafka.topics.egf.budget.service.validated.key}")
 	private String validatedKey;
 
 	public void add(CommonRequest<?> request) {
@@ -30,11 +30,11 @@ public class MastersQueueRepository {
 		switch (request.getRequestInfo().getAction().toLowerCase()) {
 
 		case "create":
-			topicMap.put(masterName.toLowerCase() + "__create", request);
+			topicMap.put(masterName.toLowerCase() + "_create", request);
 			System.out.println("push create topic" + request);
 			break;
 		case "update":
-			topicMap.put(masterName + "_update", request);
+			topicMap.put(masterName.toLowerCase() + "_update", request);
 			break;
 
 		}

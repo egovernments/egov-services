@@ -25,4 +25,6 @@ public class DisposalCriteria {
 	private List<Long> assetId;
 	private Long size;
 	private Long offset;
+	private Long fromDate;
+	private Long toDate;
 }

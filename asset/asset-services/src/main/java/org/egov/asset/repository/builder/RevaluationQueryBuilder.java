@@ -75,6 +75,10 @@ public class RevaluationQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" revalution.assetid IN (" + getIdQuery(revaluationCriteria.getAssetId()));
 		}
+		if(revaluationCriteria.getFromDate() != null && revaluationCriteria.getToDate() != null){
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" revalution.revaluationDate BETWEEN "+revaluationCriteria.getFromDate() +" AND "+revaluationCriteria.getToDate());
+		}
 
 		selectQuery.append(" ORDER BY revalution.revaluationdate desc");
 	}

@@ -23,5 +23,7 @@ public class RevaluationCriteria {
 	private String status;
 	private Long size;
 	private Long offset;
+	private Long fromDate;
+	private Long toDate;
 
 }

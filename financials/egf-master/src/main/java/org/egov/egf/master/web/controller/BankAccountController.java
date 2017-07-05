@@ -86,6 +86,7 @@ public class BankAccountController {
 			throw new CustomBindException(errors);
 		}
 
+		bankAccountContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BankAccountContract> bankAccountResponse = new CommonResponse<>();
 		List<BankAccount> bankaccounts = new ArrayList<>();

@@ -89,12 +89,13 @@ public class ChartOfAccountDetailController {
 			throw new CustomBindException(errors);
 		}
 
+		chartOfAccountDetailContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<ChartOfAccountDetailContract> chartOfAccountDetailResponse = new CommonResponse<>();
 		List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<>();
-		ChartOfAccountDetail chartOfAccountDetail = null;
-		ChartOfAccountDetailContract contract = null;
-		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<ChartOfAccountDetailContract>();
+		ChartOfAccountDetail chartOfAccountDetail;
+		ChartOfAccountDetailContract contract;
+		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<>();
 
 		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailContractRequest
 				.getData()) {

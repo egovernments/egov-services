@@ -85,6 +85,7 @@ public class BudgetGroupController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		budgetGroupContractRequest.getRequestInfo().setAction("update");
 
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetGroupContract> budgetGroupResponse = new CommonResponse<>();

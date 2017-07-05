@@ -969,7 +969,7 @@ paths:
             type: integer
             in: query
             description: from year to search Depreciation
-          - name: fromYear
+          - name: toYear
             type: integer
             in: query
             description: to year to search Depreciation
@@ -1710,8 +1710,8 @@ definitions:
           format: int32
           description: from year for the Depreciation
         toYear:
-		      type: integer
-		      format: int32
+          type: integer
+          format: int32
           description: to year for the Depreciation
         description:
           type: string

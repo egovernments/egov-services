@@ -59,35 +59,35 @@ public class BankJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("id =: id");
+			params.append("id =:id");
 			paramValues.put("id", bankSearchEntity.getId());
 		}
 		if (bankSearchEntity.getCode() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("code =: code");
+			params.append("code =:code");
 			paramValues.put("code", bankSearchEntity.getCode());
 		}
 		if (bankSearchEntity.getName() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("name =: name");
+			params.append("name =:name");
 			paramValues.put("name", bankSearchEntity.getName());
 		}
 		if (bankSearchEntity.getDescription() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("description =: description");
+			params.append("description =:description");
 			paramValues.put("description", bankSearchEntity.getDescription());
 		}
 		if (bankSearchEntity.getActive() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("active =: active");
+			params.append("active =:active");
 			paramValues.put("active", bankSearchEntity.getActive());
 		}
 		if (bankSearchEntity.getType() != null) {
@@ -128,7 +128,7 @@ public class BankJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page);
+		page = getPagination(searchQuery, page,paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + bankSearchEntity.getPageSize() + " offset "

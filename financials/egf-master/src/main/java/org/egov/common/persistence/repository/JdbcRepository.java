@@ -120,9 +120,10 @@ public abstract class JdbcRepository {
 	}
 
 	public static String updateQuery(List<String> fields, String tableName, List<String> uniqueFields) {
-		String uQuery = "update :tableName set (:fields) where  :uniqueField ) ";
+		String uQuery = "update :tableName set :fields where  :uniqueField ";
 		StringBuilder fieldNameAndParams = new StringBuilder();
 		StringBuilder uniqueFieldNameAndParams = new StringBuilder();
+
 		int i = 0;
 		for (String s : fields) {
 			if (i > 0) {
@@ -132,7 +133,7 @@ public abstract class JdbcRepository {
 			fieldNameAndParams.append(s).append("=").append(":").append(s);
 			i++;
 		}
-
+		i = 0;
 		for (String s : uniqueFields) {
 			if (i > 0) {
 				uniqueFieldNameAndParams.append(" and ");
@@ -142,8 +143,9 @@ public abstract class JdbcRepository {
 			i++;
 		}
 
-		uQuery = uQuery.replace(":fields", fieldNameAndParams.toString()).replace(":uniqueField",
-				uniqueFieldNameAndParams.toString());
+		uQuery = uQuery.replace(":fields", fieldNameAndParams.toString())
+				.replace(":uniqueField", uniqueFieldNameAndParams.toString()).replace(":tableName", tableName)
+				.toString();
 		return uQuery;
 	}
 
@@ -307,12 +309,21 @@ public abstract class JdbcRepository {
 		return ob;
 	}
 
-	public Pagination getPagination(String searchQuery, Pagination page) {
+	public Pagination getPagination(String searchQuery, Pagination page, Map<String, Object> paramValues) {
 		String countQuery = "select count(*) from (" + searchQuery + ") as x";
-		Long count = jdbcTemplate.queryForObject(countQuery, Long.class);
+		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
 		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
 		page.setTotalPages(totalpages);
 		page.setCurrentPage(page.getOffSet());
 		return page;
 	}
+
+	/*public Pagination getPaginationNew(String searchQuery, Pagination page, Map<String, Object> paramValues) {
+		String countQuery = "select count(*) from (" + searchQuery + ") as x";
+		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
+		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
+		page.setTotalPages(totalpages);
+		page.setCurrentPage(page.getOffSet());
+		return page;
+	}*/
 }

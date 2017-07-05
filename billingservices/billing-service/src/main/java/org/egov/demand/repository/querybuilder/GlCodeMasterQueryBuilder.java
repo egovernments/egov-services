@@ -20,7 +20,7 @@ public class GlCodeMasterQueryBuilder {
 	private static final String BASE_QUERY="select * from egbs_glcodemaster";
 	public String getQuery(final GlCodeMasterCriteria searchGlCode, final List<Object> preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		log.info(":::::::get query:::::::");
+		log.info("get query:::::::");
 	    addWhereClause(selectQuery, preparedStatementValues, searchGlCode);
 		addPagingClause(selectQuery, preparedStatementValues, searchGlCode);
 		log.info("Query from asset querybuilde for search : " + selectQuery);
@@ -115,9 +115,13 @@ public class GlCodeMasterQueryBuilder {
 	}
 
 	public String getInsertQuery() {
-		// TODO Auto-generated method stub
 		return "INSERT INTO public.egbs_glcodemaster(id, tenantid, taxhead, service, "
 				+ "fromdate, todate, createdby,createdtime, lastmodifiedby, lastmodifiedtime,"
 				+ " glcode)VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?);";
+	}
+	
+	public String getUpdateQuery(){
+		return "UPDATE egbs_glcodemaster SET taxhead=?, service=?, fromdate=?, "
+				+ "todate=?,lastmodifiedby=?, lastmodifiedtime=?, glcode=? WHERE tenantid=?;";
 	}
 }

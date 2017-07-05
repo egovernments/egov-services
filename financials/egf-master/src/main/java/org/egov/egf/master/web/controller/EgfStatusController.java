@@ -45,6 +45,8 @@ public class EgfStatusController {
 			throw new CustomBindException(errors);
 		}
 
+		egfStatusContractRequest.getRequestInfo().setAction("create");
+
 		ModelMapper model = new ModelMapper();
 		CommonResponse<EgfStatusContract> egfStatusResponse = new CommonResponse<>();
 		List<EgfStatus> egfstatuses = new ArrayList<>();
@@ -86,12 +88,13 @@ public class EgfStatusController {
 			throw new CustomBindException(errors);
 		}
 
+		egfStatusContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<EgfStatusContract> egfStatusResponse = new CommonResponse<>();
 		List<EgfStatus> egfstatuses = new ArrayList<>();
-		EgfStatus egfStatus = null;
-		EgfStatusContract contract = null;
-		List<EgfStatusContract> egfStatusContracts = new ArrayList<EgfStatusContract>();
+		EgfStatus egfStatus;
+		EgfStatusContract contract;
+		List<EgfStatusContract> egfStatusContracts = new ArrayList<>();
 
 		for (EgfStatusContract egfStatusContract : egfStatusContractRequest.getData()) {
 			egfStatus = new EgfStatus();

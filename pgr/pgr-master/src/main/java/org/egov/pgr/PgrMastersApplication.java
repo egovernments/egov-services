@@ -41,8 +41,10 @@ package org.egov.pgr;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.egov.ReportApp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
@@ -58,7 +60,14 @@ public class PgrMastersApplication {
     public static volatile ConcurrentHashMap<Long, String> supplyTypeMap = new ConcurrentHashMap<>();
 
     public static void main(final String[] args) {
-        SpringApplication.run(PgrMastersApplication.class, args);
+        
+        SpringApplicationBuilder application = new SpringApplicationBuilder();
+    	application.sources(PgrMastersApplication.class);
+    	application.sources(ReportApp.class);
+    	
+    	application.run(args);
+    	/*Object [] obj = {PgrMastersApplication.class,ReportApp.class};
+    	SpringApplication.run(obj, args);*/
     }
 
     @Bean

@@ -25,15 +25,15 @@ import './styles/buttons.dataTables.min.css';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-
+document.title="Egovernments";
 
 
 const muiTheme = getMuiTheme({
   palette: {
 
-    primary1Color: "#354f57",
-    primary2Color: "#354f57",
-    textColor:"#354f57"
+    primary1Color: "#2196f3",
+    primary2Color: "#2196f3",
+    textColor:"#5f5c62"
   }
 });
 

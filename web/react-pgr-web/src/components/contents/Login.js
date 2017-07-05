@@ -124,12 +124,14 @@ class Login extends Component {
    }
 
    componentWillMount() {
-     this.handleLocaleChange(this.state.locale);
+
    }
 
    componentDidMount() {
-     let {initForm} = this.props;
+     let {initForm, setLoadingStatus} = this.props;
      initForm();
+     setLoadingStatus("loading");
+     this.handleLocaleChange(this.state.locale);
    }
 
    componentWillUnmount() {
@@ -146,6 +148,7 @@ class Login extends Component {
 
    handleLocaleChange = (value) => {
      //console.log(value);
+     let {setLoadingStatus} = this.props;
      var self = this;
      Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
      {
@@ -153,6 +156,7 @@ class Login extends Component {
        self.setState({'localeready':true});
        localStorage.setItem("locale", value);
        localStorage.setItem("lang_response", JSON.stringify(response.messages));
+       setLoadingStatus("hide");
      },function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message);
      });
@@ -414,6 +418,10 @@ class Login extends Component {
         })
       }
    }
+   openAnonymousComplaint = () => {
+     let {history} = this.props;
+     history.push('/pgr/createGrievance');
+   }
 
    render() {
       //console.log("IN LOGIN");
@@ -556,7 +564,7 @@ class Login extends Component {
                                   {showError()}
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" backgroundColor={"#354f57"}  labelColor={white} onClick={(e)=>{
+                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} onClick={(e)=>{
                                     loginRequest()
                                   }}/>
                                   <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
@@ -581,7 +589,7 @@ class Login extends Component {
                         <FloatingActionButton  style={styles.floatingIconButton}>
                             <i className="material-icons">mode_edit</i>
                         </FloatingActionButton>
-                        <div style={styles.floatLeft}>
+                        <div style={{"float": "left", "cursor": "pointer"}} onClick={this.openAnonymousComplaint}>
                           <h4>{translate('pgr.lbl.register.grievance')}</h4>
                           <p>{translate('pgr.lbl.register.grievance')}</p>
                         </div>
@@ -597,7 +605,7 @@ class Login extends Component {
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label={translate('core.lbl.search')} backgroundColor={"#354f57"} labelColor={white} onClick={(e)=>{searchGrievance(e)}}/>
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} primary={true}/>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -692,6 +700,7 @@ class Login extends Component {
               open={this.state.open2}
               message={translate('core.msg.success.password.updated')}
               style={{"textAlign": "center"}}
+              onRequestClose={(e) => {handleClose("open2")}}
               autoHideDuration={4000}
             />
             <Snackbar
@@ -699,6 +708,7 @@ class Login extends Component {
               message={translate('core.account.created.successfully')}
               style={{"textAlign": "center"}}
               autoHideDuration={4000}
+              onRequestClose={(e) => {handleClose("open4")}}
             />
             <Dialog
               title={translate('pgr.title.create.account')}
@@ -822,6 +832,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 });
 

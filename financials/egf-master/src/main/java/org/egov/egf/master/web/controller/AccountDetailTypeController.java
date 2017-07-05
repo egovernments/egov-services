@@ -88,6 +88,7 @@ public class AccountDetailTypeController {
 			throw new CustomBindException(errors);
 		}
 
+		accountDetailTypeContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<AccountDetailTypeContract> accountDetailTypeResponse = new CommonResponse<>();
 		List<AccountDetailType> accountdetailtypes = new ArrayList<>();

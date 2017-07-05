@@ -18,12 +18,15 @@ const styles = {
     marginBottom: 12,
     fontWeight: 400,
   },
+  headerStyle : {
+    fontSize : 19
+  },
   slide: {
     padding: 10,
   },
   status:{
     fontSize:14,
-    background:"rgb(53, 79, 87)",
+    background:"#5f5c62",
     display:"inline-block",
     padding:"4px 8px",
     borderRadius:4,
@@ -49,34 +52,56 @@ class Dashboard extends Component {
 
     if(currentUser.type=="CITIZEN") {
       Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
-          console.log(response);
+          response.serviceRequests.sort(function(s1, s2) {
+              var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+              var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+              if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                return 1;
+              } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                return -1;
+              }
+              return 0;
+            })
+
           current.setState({
             serviceRequests: response.serviceRequests,
-			 localArray:response.serviceRequests
+			      localArray: response.serviceRequests
           });
       }).catch((error)=>{
-          console.log(error);
           current.setState({
             serviceRequests: [],
-			localArray:[]
+			      localArray:[]
           });
       })
     } else {
-        Api.commonApiPost("/pgr/seva/v1/_search",{assignmentId:currentUser.id},{}).then(function(response){
-            console.log(response);
-            current.setState({
-              serviceRequests: response.serviceRequests,
-			   localArray:response.serviceRequests
-            });
-        }).catch((error)=>{
-            console.log(error);
-            current.setState({
-              serviceRequests: [],
-			  localArray:[]
-            });
-        })
+      Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
+        if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
+          Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+                response.serviceRequests.sort(function(s1, s2) {
+                  var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+                  var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+                  if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                    return 1;
+                  } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                    return -1;
+                  }
+                  return 0;
+                })
+                current.setState({
+                  serviceRequests: response.serviceRequests,
+                  localArray:response.serviceRequests
+                });
+            }).catch((error)=>{
+                current.setState({
+                  serviceRequests: [],
+                  localArray:[]
+                });
+            })
+        } else {
+            currentUser.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
+        }
+      })
     }
-
   };
   
   localHandleChange = (string) => {
@@ -109,8 +134,8 @@ class Dashboard extends Component {
               onChange={this.handleChange}
               value={this.state.slideIndex}
             >
-              <Tab label="My Request" value={0} />
-              <Tab label="New Grievances" value={1} />
+              <Tab label="My Request" value={0}/>
+              <Tab label="New Grievances" value={1}  onClick={()=>{this.props.history.push("/pgr/createGrievance")}}/>
             </Tabs>
             <SwipeableViews
               index={this.state.slideIndex}
@@ -170,9 +195,9 @@ class Dashboard extends Component {
               </div>
             </SwipeableViews>
           </div>:  <Card>
-              <CardHeader title="Work list" />
+              <CardHeader title={< div style = {styles.headerStyle} >Work List< /div>} />
 				<CardText>
-						 <Grid>
+						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
 					<Col xs={12} md={12}>
 							<TextField
@@ -343,6 +368,9 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    }
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),
     // setLabels: payload => dispatch({type: 'LABELS', payload}),

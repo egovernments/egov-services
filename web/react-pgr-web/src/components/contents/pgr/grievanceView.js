@@ -38,7 +38,8 @@ class grievanceView extends Component{
     super(props);
     this.state={
       loadingstatus: 'loading',
-      open: false
+      open: false,
+      isUpdateAllowed : true
     };
   }
   handleOpen = () => {
@@ -69,6 +70,7 @@ class grievanceView extends Component{
       currentThis.setState({SD : response.attributes})
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
 
     Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
@@ -101,15 +103,18 @@ class grievanceView extends Component{
 
         },function(err) {
           currentThis.setState({loadingstatus:'hide'});
+          currentThis.handleError(err.message);
         });
 
 
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
       });
 
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   getDepartmentById = () => {
@@ -119,6 +124,7 @@ class grievanceView extends Component{
       currentThis.getReceivingCenter();
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   getReceivingCenter(){
@@ -129,6 +135,7 @@ class grievanceView extends Component{
         currentThis.getLocation();
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
       });
     }else {
       currentThis.getLocation();
@@ -142,6 +149,7 @@ class grievanceView extends Component{
         currentThis.nextStatus();
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
       });
     else {
       currentThis.setState({childLocationName : ""});
@@ -156,6 +164,7 @@ class grievanceView extends Component{
         currentThis.allServices();
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
       });
     }else {
       currentThis.setState({loadingstatus:'hide'});
@@ -170,6 +179,7 @@ class grievanceView extends Component{
         currentThis.checkUpdateEnabled();
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
       });
     }else{
       currentThis.setState({loadingstatus:'hide'});
@@ -182,6 +192,7 @@ class grievanceView extends Component{
       currentThis.getWard();
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   getWard = () => {
@@ -191,6 +202,7 @@ class grievanceView extends Component{
       currentThis.getLocality();
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   getLocality = () => {
@@ -200,6 +212,7 @@ class grievanceView extends Component{
       currentThis.getDepartment();
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   getDepartment = () => {
@@ -209,6 +222,7 @@ class grievanceView extends Component{
       currentThis.setState({loadingstatus:'hide'});
     },function(err) {
       currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   renderWorkflow = () =>{
@@ -277,6 +291,15 @@ class grievanceView extends Component{
     var date = dat.split("/").join("-");
     req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
 
+    let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
+    if(checkStatus === 'FORWARDED'){
+      if(currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId == undefined){
+        currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError('Select position to whom it is forwarded');
+        return false;
+      }
+    }
+
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
       if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
@@ -296,7 +319,7 @@ class grievanceView extends Component{
     currentThis.chckkey('approvalComments', req_obj);
     if(localStorage.getItem('type') == 'EMPLOYEE'){
       currentThis.chckkey('PRIORITY', req_obj);
-      currentThis.chckkey('priorityColor', req_obj);
+      //currentThis.chckkey('priorityColor', req_obj);
     }else if(localStorage.getItem('type') == 'CITIZEN'){
         currentThis.chckkey('rating', req_obj);
     }
@@ -316,7 +339,7 @@ class grievanceView extends Component{
           req_obj.serviceRequest.attribValues.push(obj);
           currentThis.updateSeva(req_obj);
         },function(err) {
-
+          currentThis.handleError(err.message);
         });
       }
     }else{
@@ -337,11 +360,26 @@ class grievanceView extends Component{
         }
       }
     }else{
-      var finobj = {
-          key: key,
-          name: currentThis.props.grievanceView[key]
-      };
-      req_obj.serviceRequest.attribValues.push(finobj);
+      var priorityarray = [{key:'PRIORITY-1',color:'#F44336'},{key:'PRIORITY-2',color:'#4CAF50'},{key:'PRIORITY-3',color:'#FFEB3B'}]
+      if(currentThis.props.grievanceView[key]){
+        var finobj;
+        if(key === 'PRIORITY'){
+          priorityarray.forEach(function(item, index){
+            if(item['key'] === currentThis.props.grievanceView[key]){
+              finobj = {
+                  key: key,
+                  name: item['color']
+              };
+            }
+          });
+        }else{
+          finobj = {
+              key: key,
+              name: currentThis.props.grievanceView[key]
+          };
+        }
+        req_obj.serviceRequest.attribValues.push(finobj);
+      }
     }
   }
   updateSeva = (req_obj) =>{
@@ -352,7 +390,8 @@ class grievanceView extends Component{
       currentThis.setState({loadingstatus:'hide'});
       {currentThis.handleOpen()}
     },function(err) {
-
+      currentThis.setState({loadingstatus:'hide'});
+      currentThis.handleError(err.message);
     });
   }
   employeesDocs = () =>{
@@ -380,6 +419,11 @@ class grievanceView extends Component{
       });
     }
   }
+  handleError = (msg) => {
+    let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
+    toggleDailogAndSetText(true, msg);
+    //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
+  }
   render(){
     let
     {
@@ -392,7 +436,9 @@ class grievanceView extends Component{
     let{
       handleChange,
       handleWard,
+      handleLocality,
       handleDesignation,
+      handleStatusChange,
       handlePosition,
       grievanceView,
       files,
@@ -568,7 +614,8 @@ class grievanceView extends Component{
           </CardText>
         </Card>
       </Grid>
-      { (localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
+      {this.state.isUpdateAllowed ?
+      (localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED' && this.state.status !== 'FORWARDED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
@@ -578,7 +625,7 @@ class grievanceView extends Component{
             <Row>
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.status ? grievanceView.status : this.state.status} onChange={(event, key, value) => {
-                  handleChange(value, "status", false, "")
+                  handleStatusChange(value, "status", false, "")
                 }}>
                   {this.state.nextStatus !== undefined ?
                   this.state.nextStatus.map((status, index) => (
@@ -609,7 +656,7 @@ class grievanceView extends Component{
               { localStorage.getItem('type') == 'EMPLOYEE' ?
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
-                  handleChange(value, "childLocationId", true, "")}}>
+                  handleLocality(value, "childLocationId", true, "")}}>
                   {this.state.locality !== undefined ?
                   this.state.locality.map((locality, index) => (
                       <MenuItem value={locality.id} key={index} primaryText={locality.name} />
@@ -656,14 +703,6 @@ class grievanceView extends Component{
             { localStorage.getItem('type') == 'EMPLOYEE' ?
             <Row>
               {loadServiceDefinition()}
-              <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Priority Color *" maxHeight={200} value={grievanceView.priorityColor} onChange={(event, key, value) => {
-                  handleChange(value, "priorityColor", true, ""); }} errorText={fieldErrors.priorityColor ? fieldErrors.priorityColor : ""}>
-                  <MenuItem value="#F44336" primaryText="Red" />
-                  <MenuItem value="#4CAF50" primaryText="Green" />
-                  <MenuItem value="#FFEB3B" primaryText="Yellow" />
-                </SelectField>
-              </Col>
             </Row> : ''}
             { localStorage.getItem('type') == 'CITIZEN' && (this.state.status == 'COMPLETED' || currentThis.state.status == 'REJECTED') ?
             <Row>
@@ -690,22 +729,16 @@ class grievanceView extends Component{
                 </div>
               </Col>
             </Row> : ""}
-
-            {this.state.isUpdateAllowed ?
               <Row>
                 <div style={{textAlign: 'center'}}>
                   <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
                 </div>
-              </Row>: ''}
-
+              </Row>
           </CardText>
         </Card>
       </Grid>
-      : ''
+      : '' : ''
       }
-      <div style={{textAlign: 'center'}}>
-
-      </div>
       </form>
       <Dialog
         actions={actions}
@@ -748,6 +781,13 @@ const mapDispatchToProps = dispatch => ({
   handleChange: (value, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
+  handleStatusChange: (value, property, isRequired, pattern) => {
+    if(value !== 'FORWARDED'){
+      dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
+      dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
+    }
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  },
   handleWard : (value, property, isRequired, pattern) => {
     Api.commonApiPost("/egov-location/boundarys/childLocationsByBoundaryId",{boundaryId : value}).then(function(response)
     {
@@ -757,8 +797,12 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property: "childLocationId", value:'', isRequired:true, pattern:''});
       dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
     },function(err) {
-
+      currentThis.handleError(err.message);
     });
+  },
+  handleLocality : (value, property, isRequired, pattern) => {
+    dispatch({type: "ADD_MANDATORY", property: "childLocationId", value: '', isRequired : true, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleDesignation: (value, property, isRequired, pattern) => {
     if(property == 'departmentId' && value == 0)
@@ -778,7 +822,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch({type: "ADD_MANDATORY", property: "positionId", value: '', isRequired : true, pattern: ''});
         dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
       },function(err) {
-
+        currentThis.handleError(err.message);
       });
     }
   },
@@ -794,7 +838,7 @@ const mapDispatchToProps = dispatch => ({
           currentThis.setState({position : response.Employee});
           dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
         },function(err) {
-
+          currentThis.handleError(err.message);
         });
       }else {
         currentThis.setState({position : []});
@@ -803,10 +847,10 @@ const mapDispatchToProps = dispatch => ({
 
   },
   loadServiceDefinition: () => {
-    if(currentThis.state.SD != undefined && localStorage.getItem('type') == 'EMPLOYEE'){
-      dispatch({type: "ADD_MANDATORY", property: "priorityColor", value: '', isRequired : true, pattern: ''})
+    if(currentThis.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
+      //dispatch({type: "ADD_MANDATORY", property: "priorityColor", value: '', isRequired : true, pattern: ''})
       let FormFields = currentThis.state.SD.filter(function (el) {
-        return (el.code != 'CHECKLIST' && el.code != 'DOCUMENTS') ;
+        return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
       });
       if(FormFields.length > 0){
         return FormFields.map((item,index) =>
@@ -822,6 +866,12 @@ const mapDispatchToProps = dispatch => ({
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})
   },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(grievanceView);

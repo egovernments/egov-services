@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.demand.model.AuditDetail;
-import org.egov.demand.model.Demand;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.repository.builder.TaxHeadMasterQueryBuilder;
@@ -80,8 +78,41 @@ public class TaxHeadMasterRepository {
 		});
 		return taxHeadMasters;
 	}
-	
 	public List<TaxHeadMaster> update(TaxHeadMasterRequest taxHeadMasterRequest) {
+		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
+		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
+		
+		log.debug("update requestInfo:"+ requestInfo);
+		log.debug("update taxHeadMasters:"+ taxHeadMasters);
+		
+		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getUpdateQuery(), new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				TaxHeadMaster taxHeadMaster = taxHeadMasters.get(index);
+
+				ps.setString(1, taxHeadMaster.getCategory().toString());
+				ps.setString(2, taxHeadMaster.getService());
+				ps.setString(3, taxHeadMaster.getName());
+				ps.setString(4, taxHeadMaster.getCode());
+				ps.setBoolean(5, taxHeadMaster.getIsDebit());
+				ps.setBoolean(6, taxHeadMaster.getIsActualDemand());
+				ps.setObject(7, taxHeadMaster.getOrder());
+				ps.setObject(8, taxHeadMaster.getValidFrom());
+				ps.setObject(9, taxHeadMaster.getValidTill());
+				ps.setObject(10, requestInfo.getUserInfo().getId().toString());
+				ps.setObject(11, new Date().getTime());
+				ps.setString(12, taxHeadMaster.getTenantId());
+			}
+			@Override
+			public int getBatchSize() {
+				return taxHeadMasters.size();
+			}
+		});
+		return taxHeadMasters;
+		}
+	
+	/*public List<TaxHeadMaster> update(TaxHeadMasterRequest taxHeadMasterRequest) {
 		RequestInfo requestInfo = taxHeadMasterRequest.getRequestInfo();
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterRequest.getTaxHeadMasters();
 		
@@ -104,5 +135,5 @@ public class TaxHeadMasterRepository {
 		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.getUpdateQuery(), taxHeadBatchArgs);
 		
 		return taxHeadMasters;
-	}
+	}*/
 }

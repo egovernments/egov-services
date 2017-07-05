@@ -28,13 +28,10 @@ public class GlCodeMasterRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
 	@Autowired
 	private GlCodeMasterQueryBuilder glCodeMasterQueryBuilder;
-	
 	@Autowired
 	private GlCodeMasterRowMapper glCodeMasterRowMapper;
-	
 	
 	public List<GlCodeMaster> findForCriteria(GlCodeMasterCriteria glCodeMasterCriteria) {
 
@@ -50,7 +47,6 @@ public class GlCodeMasterRepository {
 		}
 		return glCodeMaster;
 	}
-
 	@Transactional
 	public List<GlCodeMaster> create(GlCodeMasterRequest glCodeMasterRequest){
 		
@@ -60,13 +56,11 @@ public class GlCodeMasterRepository {
 		log.debug("create requestInfo:"+ requestInfo);
 		log.debug("create glCodeMasters:"+ glCodeMasters);
 		
-		
 		jdbcTemplate.batchUpdate(glCodeMasterQueryBuilder.getInsertQuery(), new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				GlCodeMaster glCodeMaster = glCodeMasters.get(index);
-
 
 				ps.setString(1, glCodeMaster.getId());
 				ps.setString(2, glCodeMaster.getTenantId());
@@ -80,7 +74,6 @@ public class GlCodeMasterRepository {
 				ps.setLong(10, new Date().getTime());
 				ps.setString(11, glCodeMaster.getGlCode());
 			}
-			
 			@Override
 			public int getBatchSize() {
 				return glCodeMasters.size();
@@ -89,5 +82,30 @@ public class GlCodeMasterRepository {
 		return glCodeMasters;
 	}
 	
-
+	public List<GlCodeMaster> update(GlCodeMasterRequest glCodeMasterRequest){
+		RequestInfo requestInfo=glCodeMasterRequest.getRequestInfo();
+		List<GlCodeMaster> glCodeMasters=glCodeMasterRequest.getGlCodeMasters();
+		log.debug("update requestInfo:"+ requestInfo);
+		jdbcTemplate.batchUpdate(glCodeMasterQueryBuilder.getUpdateQuery(),new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				GlCodeMaster master=glCodeMasters.get(index);
+				
+				ps.setString(1, master.getTaxHead());
+				ps.setString(2, master.getService());
+				ps.setObject(3,master.getFromDate());
+				ps.setObject(4, master.getToDate());
+				ps.setString(5, requestInfo.getUserInfo().getId().toString());
+				ps.setObject(6, new Date().getTime());
+				ps.setString(7, master.getGlCode());
+				ps.setString(8, master.getTenantId());
+			}
+			@Override
+			public int getBatchSize() {
+				return glCodeMasters.size();
+			}
+		});
+		return glCodeMasters;
+	}
 }

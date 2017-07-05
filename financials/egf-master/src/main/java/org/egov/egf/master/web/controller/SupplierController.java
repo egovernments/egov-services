@@ -85,6 +85,7 @@ public class SupplierController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		supplierContractRequest.getRequestInfo().setAction("update");
 
 		ModelMapper model = new ModelMapper();
 		CommonResponse<SupplierContract> supplierResponse = new CommonResponse<>();

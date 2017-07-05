@@ -88,12 +88,13 @@ public class AccountEntityController {
 			throw new CustomBindException(errors);
 		}
 
+		accountEntityContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<AccountEntityContract> accountEntityResponse = new CommonResponse<>();
 		List<AccountEntity> accountentities = new ArrayList<>();
-		AccountEntity accountEntity = null;
-		AccountEntityContract contract = null;
-		List<AccountEntityContract> accountEntityContracts = new ArrayList<AccountEntityContract>();
+		AccountEntity accountEntity;
+		AccountEntityContract contract;
+		List<AccountEntityContract> accountEntityContracts = new ArrayList<>();
 
 		for (AccountEntityContract accountEntityContract : accountEntityContractRequest.getData()) {
 			accountEntity = new AccountEntity();

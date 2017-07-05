@@ -142,7 +142,7 @@ paramValues.put("bank" ,supplierSearchEntity.getBankId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page);
+		page = getPagination(searchQuery, page,paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + supplierSearchEntity.getPageSize() + " offset "

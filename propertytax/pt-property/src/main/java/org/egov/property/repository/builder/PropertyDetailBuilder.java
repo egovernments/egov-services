@@ -8,8 +8,8 @@ public class PropertyDetailBuilder {
 			+ "department, apartment, siteLength, siteBreadth, sitalArea,"
 			+ "totalBuiltupArea, undividedShare, noOfFloors, isSuperStructure, landOwner, floorType,"
 			+ "woodType, roofType, wallType, stateId, applicationNo, createdBy, lastModifiedBy, "
-			+ "createdTime, lastModifiedTime, property)"
-			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "createdTime, lastModifiedTime, property, taxCalculations)"
+			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String PROPERTY_DETAIL_BY_PROPERTY_QUERY = " select * from egpt_propertydetails where property = ?";
 
@@ -24,7 +24,7 @@ public class PropertyDetailBuilder {
 				.append(" apartment = ?, siteLength = ?, siteBreadth = ?, sitalArea = ?, totalBuiltupArea = ?,")
 				.append(" undividedShare = ?, noOfFloors = ?, isSuperStructure = ?, landOwner = ?,")
 				.append(" floorType = ?, woodType = ?, roofType = ?, wallType = ?, stateId = ?,")
-				.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?")
+				.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?, taxCalculations = ?")
 				.append(" WHERE id = ?");
 
 		return propertyDetailUpdateSQL.toString();

@@ -13,7 +13,9 @@ public class RoofTypeBuilder {
             + " VALUES( ?, ?, ?, ?, ?,?,?)";
 
     public static final String UPDATE_ROOF_QUERY = "UPDATE egpt_mstr_rooftype SET tenantid = "
-            + "? ,code = ?, data=?, createdby =?,lastModifiedBy =? ,createdTime = ?,"
+            + "? ,code = ?, data=?, lastModifiedBy =? ,"
             + "lastModifiedtime= ? WHERE id = ?";
+    
+    public static final String SELECT_ROOF_CREATETIME = "SELECT  createdTime From egpt_mstr_rooftype WHERE id = ?";
 
 }

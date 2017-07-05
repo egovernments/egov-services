@@ -85,11 +85,11 @@ if (params.length() > 0)
 params.append(" and "); 
 params.append( "isParent =: isParent");
 paramValues.put("isParent" ,functionSearchEntity.getIsParent());} 
-if( functionSearchEntity.getParentIdId()!=null) {
+if( functionSearchEntity.getParentId()!=null) {
 if (params.length() > 0) 
 params.append(" and "); 
 params.append( "parentId =: parentId");
-paramValues.put("parentId" ,functionSearchEntity.getParentIdId());} 
+paramValues.put("parentId" ,functionSearchEntity.getParentId());} 
 
 		 
 
@@ -107,7 +107,7 @@ paramValues.put("parentId" ,functionSearchEntity.getParentIdId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page);
+		page = getPagination(searchQuery, page,paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + functionSearchEntity.getPageSize() + " offset "

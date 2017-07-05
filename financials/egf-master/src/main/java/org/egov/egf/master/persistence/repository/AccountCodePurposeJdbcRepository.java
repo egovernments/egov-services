@@ -82,7 +82,7 @@ paramValues.put("name" ,accountCodePurposeSearchEntity.getName());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page);
+		page = getPagination(searchQuery, page,paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + accountCodePurposeSearchEntity.getPageSize() + " offset "

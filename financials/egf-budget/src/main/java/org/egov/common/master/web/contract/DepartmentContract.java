@@ -39,8 +39,6 @@
  */
 package org.egov.common.master.web.contract;
 
-import org.egov.common.domain.model.Auditable;
-
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;

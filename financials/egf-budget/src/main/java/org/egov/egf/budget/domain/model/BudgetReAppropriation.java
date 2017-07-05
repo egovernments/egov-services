@@ -69,7 +69,7 @@ public class BudgetReAppropriation extends Auditable {
 	 * budgetDetail is the reference given for budget re appropriation to
 	 * identify for witch budget line item this appropriation is doing.
 	 */
-	private BudgetDetail budgetDetail;
+	private BudgetDetail budgetDetailId;
 
 	/*
 	 * additionAmount is the proposed extra amount to add for the given budget
@@ -104,7 +104,7 @@ public class BudgetReAppropriation extends Auditable {
 	/*
 	 * status gives the current status of the budget re appropriation line item.
 	 */
-	private EgfStatus status;
+	private EgfStatus statusId;
 
 	/*
 	 * asOnDate is the date on witch date the current appropriation is done.

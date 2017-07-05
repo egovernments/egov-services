@@ -8,7 +8,7 @@ public class PropertyBuilder {
 	public static final String INSERT_PROPERTY_QUERY = "INSERT INTO egpt_property ("
 			+ "tenantId, upicNumber, oldUpicNumber, vltUpicNumber,creationReason, assessmentDate,"
 			+ " occupancyDate, gisRefNo,isAuthorised, isUnderWorkflow, channel,"
-			+ " createdBy,lastModifiedBy, createdTime,lastModifiedTime)" + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " createdBy,lastModifiedBy, createdTime,lastModifiedTime,demands)" + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static String updatePropertyQuery() {
 
@@ -18,7 +18,7 @@ public class PropertyBuilder {
 				.append(" SET tenantId = ? , upicNumber = ?, oldUpicNumber = ?, vltUpicNumber = ?,")
 				.append("creationReason = ?, assessmentDate = ?, occupancyDate = ?, gisRefNo = ?,")
 				.append(" isAuthorised = ?, isUnderWorkflow = ?, channel = ?,")
-				.append(" lastModifiedBy = ?, lastModifiedTime = ?").append(" WHERE id = ? ");
+				.append(" lastModifiedBy = ?, lastModifiedTime = ?,demands = ?").append(" WHERE id = ? ");
 
 		return propertyUpdateSQL.toString();
 	}

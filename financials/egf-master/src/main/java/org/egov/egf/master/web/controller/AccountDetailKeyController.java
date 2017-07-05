@@ -87,13 +87,14 @@ public class AccountDetailKeyController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		accountDetailKeyContractRequest.getRequestInfo().setAction("update");
 
 		ModelMapper model = new ModelMapper();
 		CommonResponse<AccountDetailKeyContract> accountDetailKeyResponse = new CommonResponse<>();
 		List<AccountDetailKey> accountdetailkeys = new ArrayList<>();
-		AccountDetailKey accountDetailKey = null;
-		AccountDetailKeyContract contract = null;
-		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<AccountDetailKeyContract>();
+		AccountDetailKey accountDetailKey;
+		AccountDetailKeyContract contract;
+		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<>();
 
 		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyContractRequest.getData()) {
 			accountDetailKey = new AccountDetailKey();

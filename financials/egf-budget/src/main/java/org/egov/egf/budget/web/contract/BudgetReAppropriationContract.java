@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.budget.web.contract;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -51,18 +52,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-@JsonPropertyOrder({ "id","budgetDetail","additionAmount","deductionAmount","originalAdditionAmount","originalDeductionAmount","anticipatoryAmount","status","asOnDate"})
+@JsonPropertyOrder({ "id", "budgetDetail", "additionAmount", "deductionAmount", "originalAdditionAmount",
+		"originalDeductionAmount", "anticipatoryAmount", "status", "asOnDate" })
 public class BudgetReAppropriationContract extends AuditableContract {
 
-	/**
-	 * id of the BudgetReAppropriationContract representing the unique value of each
-	 * record getting saved.
+	/*
+	 * id of the BudgetReAppropriationContract representing the unique value of
+	 * each record getting saved.
 	 */
 	private String id;
 

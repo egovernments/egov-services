@@ -240,6 +240,7 @@ public class ServiceTypeRepository {
 					}
 				}
 				serviceTypeList.get(i).setAttributes(attributeList);
+				serviceTypeList.get(i).setMetadata(true);
 			}
 		}
 		return serviceTypeList;

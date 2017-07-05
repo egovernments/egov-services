@@ -86,12 +86,13 @@ public class SubSchemeController {
 			throw new CustomBindException(errors);
 		}
 
+		subSchemeContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<SubSchemeContract> subSchemeResponse = new CommonResponse<>();
 		List<SubScheme> subschemes = new ArrayList<>();
-		SubScheme subScheme = null;
-		SubSchemeContract contract = null;
-		List<SubSchemeContract> subSchemeContracts = new ArrayList<SubSchemeContract>();
+		SubScheme subScheme;
+		SubSchemeContract contract;
+		List<SubSchemeContract> subSchemeContracts = new ArrayList<>();
 
 		for (SubSchemeContract subSchemeContract : subSchemeContractRequest.getData()) {
 			subScheme = new SubScheme();

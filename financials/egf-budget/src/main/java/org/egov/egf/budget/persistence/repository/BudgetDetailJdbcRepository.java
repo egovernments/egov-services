@@ -58,122 +58,122 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 		if (budgetDetailSearchEntity.getId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("id =: id");
+			params.append("id =:id");
 			paramValues.put("id", budgetDetailSearchEntity.getId());
 		}
 		if (budgetDetailSearchEntity.getBudgetGroupId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetGroup =: budgetGroup");
+			params.append("budgetGroup =:budgetGroup");
 			paramValues.put("budgetGroup", budgetDetailSearchEntity.getBudgetGroupId());
 		}
 		if (budgetDetailSearchEntity.getBudgetId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budget =: budget");
+			params.append("budget =:budget");
 			paramValues.put("budget", budgetDetailSearchEntity.getBudgetId());
 		}
 		if (budgetDetailSearchEntity.getOriginalAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("originalAmount =: originalAmount");
+			params.append("originalAmount =:originalAmount");
 			paramValues.put("originalAmount", budgetDetailSearchEntity.getOriginalAmount());
 		}
 		if (budgetDetailSearchEntity.getApprovedAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("approvedAmount =: approvedAmount");
+			params.append("approvedAmount =:approvedAmount");
 			paramValues.put("approvedAmount", budgetDetailSearchEntity.getApprovedAmount());
 		}
 		if (budgetDetailSearchEntity.getBudgetAvailable() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetAvailable =: budgetAvailable");
+			params.append("budgetAvailable =:budgetAvailable");
 			paramValues.put("budgetAvailable", budgetDetailSearchEntity.getBudgetAvailable());
 		}
 		if (budgetDetailSearchEntity.getAnticipatoryAmount() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("anticipatoryAmount =: anticipatoryAmount");
+			params.append("anticipatoryAmount =:anticipatoryAmount");
 			paramValues.put("anticipatoryAmount", budgetDetailSearchEntity.getAnticipatoryAmount());
 		}
 		if (budgetDetailSearchEntity.getUsingDepartmentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("usingDepartment =: usingDepartment");
+			params.append("usingDepartment =:usingDepartment");
 			paramValues.put("usingDepartment", budgetDetailSearchEntity.getUsingDepartmentId());
 		}
 		if (budgetDetailSearchEntity.getExecutingDepartmentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("executingDepartment =: executingDepartment");
+			params.append("executingDepartment =:executingDepartment");
 			paramValues.put("executingDepartment", budgetDetailSearchEntity.getExecutingDepartmentId());
 		}
 		if (budgetDetailSearchEntity.getFunctionId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("function =: function");
+			params.append("function =:function");
 			paramValues.put("function", budgetDetailSearchEntity.getFunctionId());
 		}
 		if (budgetDetailSearchEntity.getSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("scheme =: scheme");
+			params.append("scheme =:scheme");
 			paramValues.put("scheme", budgetDetailSearchEntity.getSchemeId());
 		}
 		if (budgetDetailSearchEntity.getFundId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("fund =: fund");
+			params.append("fund =:fund");
 			paramValues.put("fund", budgetDetailSearchEntity.getFundId());
 		}
 		if (budgetDetailSearchEntity.getSubSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("subScheme =: subScheme");
+			params.append("subScheme =:subScheme");
 			paramValues.put("subScheme", budgetDetailSearchEntity.getSubSchemeId());
 		}
 		if (budgetDetailSearchEntity.getFunctionaryId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("functionary =: functionary");
+			params.append("functionary =:functionary");
 			paramValues.put("functionary", budgetDetailSearchEntity.getFunctionaryId());
 		}
 		if (budgetDetailSearchEntity.getBoundaryId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("boundary =: boundary");
+			params.append("boundary =:boundary");
 			paramValues.put("boundary", budgetDetailSearchEntity.getBoundaryId());
 		}
 		if (budgetDetailSearchEntity.getMaterializedPath() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("materializedPath =: materializedPath");
+			params.append("materializedPath =:materializedPath");
 			paramValues.put("materializedPath", budgetDetailSearchEntity.getMaterializedPath());
 		}
 		 
 		if (budgetDetailSearchEntity.getDocumentNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("documentNumber =: documentNumber");
+			params.append("documentNumber =:documentNumber");
 			paramValues.put("documentNumber", budgetDetailSearchEntity.getDocumentNumber());
 		}
 		if (budgetDetailSearchEntity.getUniqueNo() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("uniqueNo =: uniqueNo");
+			params.append("uniqueNo =:uniqueNo");
 			paramValues.put("uniqueNo", budgetDetailSearchEntity.getUniqueNo());
 		}
 		if (budgetDetailSearchEntity.getPlanningPercent() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("planningPercent =: planningPercent");
+			params.append("planningPercent =:planningPercent");
 			paramValues.put("planningPercent", budgetDetailSearchEntity.getPlanningPercent());
 		}
 		if (budgetDetailSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =: status");
+			params.append("status =:status");
 			paramValues.put("status", budgetDetailSearchEntity.getStatusId());
 		}
 
@@ -191,7 +191,7 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page, paramValues);
+		page = getPagination(searchQuery, page, paramValues); 
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + budgetDetailSearchEntity.getPageSize() + " offset "

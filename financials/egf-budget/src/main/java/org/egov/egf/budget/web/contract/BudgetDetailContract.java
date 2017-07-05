@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.budget.web.contract;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,13 +61,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","budgetGroup","budget","originalAmount","approvedAmount","budgetAvailable","anticipatoryAmount","usingDepartment","executingDepartment","function","scheme","fund","subScheme","functionary","boundary","materializedPath","budgetReAppropriations","documentNumber","uniqueNo","planningPercent","status"})
+@JsonPropertyOrder({ "id", "budgetGroup", "budget", "originalAmount", "approvedAmount", "budgetAvailable",
+		"anticipatoryAmount", "usingDepartment", "executingDepartment", "function", "scheme", "fund", "subScheme",
+		"functionary", "boundary", "materializedPath", "budgetReAppropriations", "documentNumber", "uniqueNo",
+		"planningPercent", "status" })
 public class BudgetDetailContract extends AuditableContract {
 
 	/*
@@ -80,7 +85,7 @@ public class BudgetDetailContract extends AuditableContract {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
-	private BudgetGroupContract  budgetGroup;
+	private BudgetGroupContract budgetGroup;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure
@@ -113,7 +118,7 @@ public class BudgetDetailContract extends AuditableContract {
 	 * usingDepartment is the department for which the budget line item is
 	 * actually budgeted for.
 	 */
-	private DepartmentContract  usingDepartment;
+	private DepartmentContract usingDepartment;
 
 	/*
 	 * executingDepartment is the department which uses the budget to execute
@@ -158,7 +163,8 @@ public class BudgetDetailContract extends AuditableContract {
 	private BoundaryContract boundary;
 
 	/**
-	 * materializedPath is unique data by hierarchy level.This data is created internally
+	 * materializedPath is unique data by hierarchy level.This data is created
+	 * internally
 	 */
 	private String materializedPath;
 
@@ -177,7 +183,8 @@ public class BudgetDetailContract extends AuditableContract {
 	/*
 	 * unique number is unique ref number to identify the budget line item. ie
 	 * the combination of MIS attributes used for defining budget and budget
-	 * group. Ex - Fund, Function, dept and Group. This data is internal to the system.
+	 * group. Ex - Fund, Function, dept and Group. This data is internal to the
+	 * system.
 	 */
 	private String uniqueNo;
 

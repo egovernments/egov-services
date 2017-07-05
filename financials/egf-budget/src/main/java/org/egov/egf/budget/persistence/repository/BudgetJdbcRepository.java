@@ -58,73 +58,73 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		if (budgetSearchEntity.getId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("id =: id");
+			params.append("id =:id");
 			paramValues.put("id", budgetSearchEntity.getId());
 		}
 		if (budgetSearchEntity.getName() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("name =: name");
+			params.append("name =:name");
 			paramValues.put("name", budgetSearchEntity.getName());
 		}
 		if (budgetSearchEntity.getFinancialYearId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("financialYear =: financialYear");
+			params.append("financialYear =:financialYear");
 			paramValues.put("financialYear", budgetSearchEntity.getFinancialYearId());
 		}
 		if (budgetSearchEntity.getEstimationType() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("estimationType =: estimationType");
+			params.append("estimationType =:estimationType");
 			paramValues.put("estimationType", budgetSearchEntity.getEstimationType());
 		}
 		if (budgetSearchEntity.getParentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("parent =: parent");
+			params.append("parent =:parent");
 			paramValues.put("parent", budgetSearchEntity.getParentId());
 		}
 		if (budgetSearchEntity.getDescription() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("description =: description");
+			params.append("description =:description");
 			paramValues.put("description", budgetSearchEntity.getDescription());
 		}
 		if (budgetSearchEntity.getIsActiveBudget() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("isActiveBudget =: isActiveBudget");
+			params.append("isActiveBudget =:isActiveBudget");
 			paramValues.put("isActiveBudget", budgetSearchEntity.getIsActiveBudget());
 		}
 		if (budgetSearchEntity.getIsPrimaryBudget() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("isPrimaryBudget =: isPrimaryBudget");
+			params.append("isPrimaryBudget =:isPrimaryBudget");
 			paramValues.put("isPrimaryBudget", budgetSearchEntity.getIsPrimaryBudget());
 		}
 		if (budgetSearchEntity.getMaterializedPath() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("materializedPath =: materializedPath");
+			params.append("materializedPath =:materializedPath");
 			paramValues.put("materializedPath", budgetSearchEntity.getMaterializedPath());
 		}
 		if (budgetSearchEntity.getReferenceBudgetId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("referenceBudget =: referenceBudget");
+			params.append("referenceBudget =:referenceBudget");
 			paramValues.put("referenceBudget", budgetSearchEntity.getReferenceBudgetId());
 		}
 		if (budgetSearchEntity.getDocumentNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("documentNumber =: documentNumber");
+			params.append("documentNumber =:documentNumber");
 			paramValues.put("documentNumber", budgetSearchEntity.getDocumentNumber());
 		}
 		if (budgetSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =: status");
+			params.append("status =:status");
 			paramValues.put("status", budgetSearchEntity.getStatusId());
 		}
 

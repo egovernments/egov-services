@@ -88,12 +88,13 @@ public class ChartOfAccountController {
 			throw new CustomBindException(errors);
 		}
 
+		chartOfAccountContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<ChartOfAccountContract> chartOfAccountResponse = new CommonResponse<>();
 		List<ChartOfAccount> chartofaccounts = new ArrayList<>();
-		ChartOfAccount chartOfAccount = null;
-		ChartOfAccountContract contract = null;
-		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<ChartOfAccountContract>();
+		ChartOfAccount chartOfAccount;
+		ChartOfAccountContract contract;
+		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<>();
 
 		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getData()) {
 			chartOfAccount = new ChartOfAccount();

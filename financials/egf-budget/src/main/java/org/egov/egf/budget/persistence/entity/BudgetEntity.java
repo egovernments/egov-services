@@ -1,6 +1,5 @@
 package org.egov.egf.budget.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.master.web.contract.FinancialYearContract;
@@ -15,7 +14,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Builder
 public class BudgetEntity extends AuditableEntity {
 	public static final String TABLE_NAME = "egf_budget";
@@ -46,7 +44,7 @@ public class BudgetEntity extends AuditableEntity {
 		budget.setMaterializedPath(this.materializedPath);
 		budget.setReferenceBudget(Budget.builder().id(referenceBudgetId).build());
 		budget.setDocumentNumber(this.documentNumber);
-		//budget.setStatus(EgfStatus.builder().id(statusId).build());
+		// budget.setStatus(EgfStatus.builder().id(statusId).build());
 		return budget;
 	}
 

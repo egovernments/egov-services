@@ -12,7 +12,6 @@ import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
 import org.egov.egf.budget.domain.repository.BudgetDetailRepository;
 import org.egov.egf.budget.domain.repository.BudgetReAppropriationRepository;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
-import org.egov.egf.master.domain.repository.EgfStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,10 +35,9 @@ public class BudgetReAppropriationService {
 
 	@Autowired
 	private SmartValidator validator;
+
 	@Autowired
 	private BudgetDetailRepository budgetDetailRepository;
-	@Autowired
-	private EgfStatusRepository egfStatusRepository;
 
 	public BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
 			BindingResult errors) {
@@ -82,7 +80,6 @@ public class BudgetReAppropriationService {
 				}
 				budgetReAppropriation.setBudgetDetail(budgetDetail);
 			}
-			 
 
 		}
 

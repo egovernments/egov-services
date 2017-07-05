@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class FinancialBudgetListener {
 
-	@Value("${kafka.topics.egf.masters.completed.topic}")
+	@Value("${kafka.topics.egf.budget.service.completed.topic}")
 	private String completedTopic;
 
 	@Autowired
@@ -26,7 +26,7 @@ public class FinancialBudgetListener {
 	@Autowired
 	private FinancialProducer financialProducer;
 
-	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
+	@KafkaListener(id = "${kafka.topics.egf.budget.service.validated.id}", topics = "${kafka.topics.egf.budget.service.validated.topic}", group = "${kafka.topics.egf.budget.service.validated.group}")
 	public void process(HashMap<String, CommonRequest<?>> mastersMap) {
 
 	}

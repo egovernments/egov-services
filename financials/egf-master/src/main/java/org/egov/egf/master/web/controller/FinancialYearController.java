@@ -88,6 +88,7 @@ public class FinancialYearController {
 			throw new CustomBindException(errors);
 		}
 
+		financialYearContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FinancialYearContract> financialYearResponse = new CommonResponse<>();
 		List<FinancialYear> financialyears = new ArrayList<>();

@@ -87,13 +87,14 @@ public class AccountCodePurposeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		accountCodePurposeContractRequest.getRequestInfo().setAction("update");
 
 		ModelMapper model = new ModelMapper();
 		CommonResponse<AccountCodePurposeContract> accountCodePurposeResponse = new CommonResponse<>();
 		List<AccountCodePurpose> accountcodepurposes = new ArrayList<>();
-		AccountCodePurpose accountCodePurpose = null;
-		AccountCodePurposeContract contract = null;
-		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<AccountCodePurposeContract>();
+		AccountCodePurpose accountCodePurpose;
+		AccountCodePurposeContract contract;
+		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<>();
 
 		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest.getData()) {
 			accountCodePurpose = new AccountCodePurpose();

@@ -39,8 +39,8 @@ public class BudgetController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetContract> create(@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest,
-			BindingResult errors) {
+	public CommonResponse<BudgetContract> create(
+			@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -64,9 +64,9 @@ public class BudgetController {
 
 		budgets = budgetService.add(budgets, errors);
 
-		for (Budget f : budgets) {
+		for (Budget b : budgets) {
 			contract = new BudgetContract();
-			model.map(f, contract);
+			model.map(b, contract);
 			budgetContracts.add(contract);
 		}
 
@@ -79,13 +79,15 @@ public class BudgetController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetContract> update(@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest,
-			BindingResult errors) {
+	public CommonResponse<BudgetContract> update(
+			@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
+		
+		budgetContractRequest.getRequestInfo().setAction("update");
+		
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetContract> budgetResponse = new CommonResponse<>();
 		List<Budget> budgets = new ArrayList<>();

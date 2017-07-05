@@ -46,11 +46,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.egov.workflow.domain.model.Attribute;
 import org.egov.workflow.domain.model.PersistRouter;
 import org.egov.workflow.domain.model.PersistRouterReq;
 import org.egov.workflow.domain.model.ServiceType;
-import org.egov.workflow.domain.model.Value;
 import org.egov.workflow.persistence.repository.builder.RouterQueryBuilder;
 import org.egov.workflow.persistence.repository.rowmapper.PersistRouteRowMapper;
 import org.egov.workflow.persistence.repository.rowmapper.RouterRowMapper;
@@ -171,8 +169,8 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
     }
 	
 	private List<RouterType> prepareRouterTypeList(RouterRowMapper rowMapper){
-		Map<String, List<Value>> attribValue = rowMapper.attribValue;
-		Map<String, Map<String, Attribute>> serviceAttrib = rowMapper.serviceAttrib;
+		/*Map<String, List<Value>> attribValue = rowMapper.attribValue;
+		Map<String, Map<String, Attribute>> serviceAttrib = rowMapper.serviceAttrib;*/
 		Map<Long, Map<String, List<ServiceType>>> serviceMap = rowMapper.serviceMap;
 		Map<Long, RouterType> routerMap = rowMapper.routerMap;
 		RouterType routerType = new RouterType();
@@ -193,7 +191,10 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 				ServiceType serviceType = new ServiceType();
 				while (serviceItr.hasNext()) {
 					serviceType = serviceItr.next();
-					Map<String, Attribute> innerAttrMap = serviceAttrib.get(serviceType.getServiceCode());
+					// Removed as the Attributes and Values are not being considered in the 
+					// router search API.
+					// If Attributes and Values are required in future, enable these commented code
+					/*Map<String, Attribute> innerAttrMap = serviceAttrib.get(serviceType.getServiceCode());
 					Iterator<Entry<String, Attribute>> innerAttrItr = innerAttrMap.entrySet().iterator();
 					List<Attribute> finalAttributeList = new ArrayList<>();
 					while (innerAttrItr.hasNext()) {
@@ -202,7 +203,7 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 						attrEntry.getValue().setAttributes(valueList);
 						finalAttributeList.add(attrEntry.getValue());
 					}
-					serviceType.setAttributes(finalAttributeList);
+					serviceType.setAttributes(finalAttributeList);*/
 				}
 				routerType.setService(serviceType);
 				routerTypes.add(routerType);

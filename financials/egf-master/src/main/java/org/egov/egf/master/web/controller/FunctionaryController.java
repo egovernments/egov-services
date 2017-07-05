@@ -86,12 +86,13 @@ public class FunctionaryController {
 			throw new CustomBindException(errors);
 		}
 
+		functionaryContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FunctionaryContract> functionaryResponse = new CommonResponse<>();
 		List<Functionary> functionaries = new ArrayList<>();
-		Functionary functionary = null;
-		FunctionaryContract contract = null;
-		List<FunctionaryContract> functionaryContracts = new ArrayList<FunctionaryContract>();
+		Functionary functionary;
+		FunctionaryContract contract;
+		List<FunctionaryContract> functionaryContracts = new ArrayList<>();
 
 		for (FunctionaryContract functionaryContract : functionaryContractRequest.getData()) {
 			functionary = new Functionary();

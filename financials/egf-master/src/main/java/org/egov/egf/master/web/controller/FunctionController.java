@@ -86,12 +86,13 @@ public class FunctionController {
 			throw new CustomBindException(errors);
 		}
 
+		functionContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FunctionContract> functionResponse = new CommonResponse<>();
 		List<Function> functions = new ArrayList<>();
-		Function function = null;
-		FunctionContract contract = null;
-		List<FunctionContract> functionContracts = new ArrayList<FunctionContract>();
+		Function function;
+		FunctionContract contract;
+		List<FunctionContract> functionContracts = new ArrayList<>();
 
 		for (FunctionContract functionContract : functionContractRequest.getData()) {
 			function = new Function();
@@ -124,9 +125,9 @@ public class FunctionController {
 		ModelMapper mapper = new ModelMapper();
 		FunctionSearch domain = new FunctionSearch();
 		mapper.map(functionSearchContract, domain);
-		FunctionContract contract = null;
+		FunctionContract contract;
 		ModelMapper model = new ModelMapper();
-		List<FunctionContract> functionContracts = new ArrayList<FunctionContract>();
+		List<FunctionContract> functionContracts = new ArrayList<>();
 
 		Pagination<Function> functions = functionService.search(domain);
 

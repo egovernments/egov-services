@@ -86,6 +86,7 @@ public class FiscalPeriodController {
 			throw new CustomBindException(errors);
 		}
 
+		fiscalPeriodContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FiscalPeriodContract> fiscalPeriodResponse = new CommonResponse<>();
 		List<FiscalPeriod> fiscalperiods = new ArrayList<>();

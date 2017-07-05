@@ -229,7 +229,7 @@ class CustomMenu extends Component {
       <div className="custom-menu" style={style}>
           {
             <TextField
-               hintText = "Quick Find"
+               hintText = "&nbsp;&nbsp;Quick Find"
                onChange={this.handleChange}
                value={searchText}
              />

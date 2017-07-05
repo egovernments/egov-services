@@ -26,7 +26,7 @@ class Revaluation extends React.Component {
             "subScheme": "",
             "comments": "",
             "status": "ACTIVE",
-            "auditDetails": ""
+            "auditDetails": null
           }
         };
         this.handleChange = this.handleChange.bind(this);

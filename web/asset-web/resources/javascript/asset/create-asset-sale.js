@@ -69,7 +69,7 @@ class Sale extends React.Component {
             "currentValueOfTheAsset": "",
             "saleValue": "",
             "assetSaleAccountCode": "",
-            "auditDetails": "",
+            "auditDetails": null,
             "documents": []
           },
           departments: [],
@@ -538,7 +538,7 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <select value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
+                              <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
                                 <option value="">Select Account Code</option>
                                 {renderOptions(assetAccount)}
                               </select>

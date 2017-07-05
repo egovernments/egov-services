@@ -40,6 +40,7 @@
 package org.egov.egf.budget.domain.model;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.FinancialYearContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,7 +54,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "parent", "referenceBudget","status" }, callSuper = false)
+@EqualsAndHashCode(exclude = { "parent", "referenceBudget", "status" }, callSuper = false)
 public class Budget extends Auditable {
 
 	/**
@@ -79,7 +80,7 @@ public class Budget extends Auditable {
 	 * financialYear is the attribute to identify to which year the Budget
 	 * belongs is tagged.
 	 */
-	private String financialYear;
+	private FinancialYearContract financialYear;
 
 	/**
 	 * estimationType is type of the budget definition - which signifies budget

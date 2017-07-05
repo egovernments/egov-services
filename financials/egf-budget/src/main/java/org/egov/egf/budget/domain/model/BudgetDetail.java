@@ -44,8 +44,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.egov.common.domain.model.Auditable;
-import org.egov.egf.master.domain.model.BudgetGroup;
+import org.egov.common.master.web.contract.BoundaryContract;
+import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.contract.SubSchemeContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -106,49 +111,49 @@ public class BudgetDetail extends Auditable {
 	 * usingDepartment is the department for which the budget line item is
 	 * actually budgeted for.
 	 */
-	private String usingDepartment;
+	private DepartmentContract usingDepartment;
 
 	/*
 	 * executingDepartment is the department which uses the budget to execute
 	 * the work which is defined in the budget of using department.
 	 */
-	private String executingDepartment;
+	private DepartmentContract executingDepartment;
 
 	/*
 	 * function is the MIS or financial transaction attribute which contributes
 	 * the budget details definition.
 	 */
-	private String function;
+	private FunctionContract function;
 
 	/*
 	 * scheme is the MIS or financial transaction attribute which contributes
 	 * the budget details definition. Scheme can be optional
 	 */
-	private String scheme;
+	private SchemeContract scheme;
 
 	/*
 	 * fund is the MIS or financial transaction attribute which contributes the
 	 * budget details definition
 	 */
-	private String fund;
+	private FundContract fund;
 
 	/*
 	 * subScheme is the MIS or financial transaction attribute which contributes
 	 * the budget details definition. sub Scheme can be optional
 	 */
-	private String subScheme;
+	private SubSchemeContract subScheme;
 
 	/*
 	 * functionary is the MIS or financial transaction attribute which
 	 * contributes the budget details definition
 	 */
-	private String functionary;
+	private FunctionContract functionary;
 
 	/*
 	 * boundary is also the MIS attribute which is used incase the budget need
 	 * to be defined and idetified by boundaries of the organization.
 	 */
-	private String boundary;
+	private BoundaryContract boundary;
 
 	/**
 	 * materializedPath is unique data by hierarchy level.

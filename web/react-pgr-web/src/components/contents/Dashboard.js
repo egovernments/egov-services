@@ -55,7 +55,8 @@ class Dashboard extends Component {
     this.state = {
       slideIndex: 0,
       serviceRequests: [],
-	  localArray:[]
+	     localArray:[],
+       hasData:false
     };
 }
   componentWillMount() {
@@ -93,12 +94,14 @@ class Dashboard extends Component {
 
           current.setState({
             serviceRequests: response.serviceRequests,
-			      localArray: response.serviceRequests
+			      localArray: response.serviceRequests,
+            hasData:true
           });
       }).catch((error)=>{
           current.setState({
             serviceRequests: [],
-			      localArray:[]
+			      localArray:[],
+            hasData:true
           });
       })
     } else {
@@ -118,12 +121,14 @@ class Dashboard extends Component {
                 })
                 current.setState({
                   serviceRequests: response.serviceRequests,
-                  localArray:response.serviceRequests
+                  localArray:response.serviceRequests,
+                   hasData:true
                 });
             }).catch((error)=>{
                 current.setState({
                   serviceRequests: [],
-                  localArray:[]
+                  localArray:[],
+                   hasData:false
                 });
             })
         } else {
@@ -142,7 +147,19 @@ class Dashboard extends Component {
  };
   
   componentWillUpdate() {
-    $('#searchTable').DataTable({
+   /* $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });*/
+  }
+
+   componentDidUpdate() {
+    if(this.state.hasData){
+       $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
           bDestroy: true,
@@ -150,6 +167,8 @@ class Dashboard extends Component {
              "emptyTable": "No Records"
           }
     });
+    }
+    
   }
   
   localHandleChange = (string) => {
@@ -168,7 +187,7 @@ class Dashboard extends Component {
   };
   
    handleNavigation = (type, id) => {
-      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+      this.props.history.push(type+id);
     }
 
 
@@ -198,7 +217,7 @@ class Dashboard extends Component {
 			 
 		  return(
 								<tr key={i} style={{ cursor:'pointer'}} onClick={()=>{
-									 this.handleNavigation("#/pgr/viewGrievance/", e.serviceRequestId);
+									 this.handleNavigation("/pgr/viewGrievance/", e.serviceRequestId);
 								}}>
 									<td>{i+1}</td>
 									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>

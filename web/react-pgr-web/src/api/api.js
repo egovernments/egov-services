@@ -59,7 +59,7 @@ module.exports = {
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale', locale);
-                window.location.href = "/";
+                window.location.hash = "#/";
             } else {
                 throw new Error("Something went wrong, please try again later.");
             }

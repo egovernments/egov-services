@@ -19,7 +19,6 @@ import org.egov.commons.web.contract.DepartmentResponse;
 import org.egov.commons.web.contract.LanguageResponse;
 import org.egov.commons.web.contract.ReligionResponse;
 import org.egov.core.web.contract.RequestInfoWrapper;
-import org.egov.core.web.contract.ResponseInfo;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;

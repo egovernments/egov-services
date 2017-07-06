@@ -43,10 +43,8 @@ package org.egov.commons.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.Language;
-import org.egov.commons.model.Religion;
-import org.egov.commons.web.contract.ReligionResponse.ReligionResponseBuilder;
-import org.egov.core.web.contract.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

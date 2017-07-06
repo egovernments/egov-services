@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
@@ -39,15 +40,18 @@ public class ReportService {
 
 	@Autowired
 	private Response responseInfoFactory;
+	
+	@Autowired
+	private IntegrationService integrationService;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
-	public MetadataResponse getMetaData(String reportName) {
+	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinition reportDefinition = new ReportDefinition();
         System.out.println("Report Definitions from service "+reportDefinitions.getReportDefinitions());
 		for (ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
-			if (rDefinition.getReportName().equals(reportName)) {
+			if (rDefinition.getReportName().equals(metaDataRequest.getReportName())) {
 
 				reportDefinition = rDefinition;
 			}
@@ -61,23 +65,16 @@ public class ReportService {
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
 			reportheader.setName(cd.getName());
-			if(cd.getPattern() != null) {
-				reportheader.setPattern(cd.getPattern());	
-			}
-			
 			TypeEnum te = getType(cd.getType().toString());
 			reportheader.setType(te);
 			reportHeaders.add(reportheader);
-
+            
 		}
 		for (SearchColumn cd : reportDefinition.getSearchParams()) {
 			ColumnDetail searchParam = new ColumnDetail();
 			searchParam.setLabel(cd.getLabel());
 			searchParam.setName(cd.getName());
 			TypeEnum te = getType(cd.getType().toString());
-			if(cd.getPattern() != null) {
-				searchParam.setPattern(cd.getPattern());	
-			}
 			searchParam.setType(te);
 			searchParams.add(searchParam);
 
@@ -85,6 +82,8 @@ public class ReportService {
 		rmt.setReportHeader(reportHeaders);
 		rmt.setSearchParams(searchParams);
 		metadataResponse.setReportDetails(rmt);
+		metadataResponse.setTenantId(metaDataRequest.getTenantId());
+		integrationService.getData(reportDefinition, metadataResponse, metaDataRequest.getRequestInfo());
 		return metadataResponse;
 	}
 
@@ -101,7 +100,7 @@ public class ReportService {
 		if (type.equals("singlevaluelist")) {
 			return ColumnDetail.TypeEnum.SINGLEVALUELIST;
 		}
-
+		
 		return null;
 	}
 
@@ -154,7 +153,7 @@ public class ReportService {
 	private void populateReportHeader(ReportDefinition reportDefinition, ReportResponse reportResponse) {
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
 		List<ColumnDetail> columnDetails = columns.stream()
-				.map(p -> new ColumnDetail(p.getLabel(),p.getPattern(), p.getType(),p.getName()))
+				.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getName()))
 				.collect(Collectors.toList());
 		
 		reportResponse.setReportHeader(columnDetails);

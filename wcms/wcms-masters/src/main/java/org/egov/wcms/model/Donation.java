@@ -42,8 +42,7 @@ package org.egov.wcms.model;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -65,61 +64,61 @@ import lombok.ToString;
 @Builder
 public class Donation {
 
-	public static final String SEQ_CATEGORY = "SEQ_EGWTR_DONATION";
+    public static final String SEQ_CATEGORY = "SEQ_EGWTR_DONATION";
 
-	@NotNull
-	private Long id;
+    @NotNull
+    private Long id;
 
-	@NotNull
-	@Length(min = 1, max = 100)
-	private String propertyType;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private String propertyType;
 
-	private String propertyTypeId;
+    private String propertyTypeId;
 
-	@NotNull
-	@Length(min = 1, max = 100)
-	private String category;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private String category;
 
-	private Long categoryTypeId;
+    private Long categoryTypeId;
 
-	@NotNull
-	@Length(min = 1, max = 100)
-	private String usageType;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private String usageType;
 
-	private String usageTypeId;
+    private String usageTypeId;
 
-	@NotNull
-	@Length(min = 1, max = 100)
-	private Double maxPipeSize;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private Double maxPipeSize;
 
-	private Long maxPipeSizeId;
+    private Long maxPipeSizeId;
 
-	@NotNull
-	@Length(min = 1, max = 100)
-	private Double minPipeSize;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private Double minPipeSize;
 
-	private Long minPipeSizeId;
+    private Long minPipeSizeId;
 
-	@NotNull
-	@Length(min = 1, max = 100)
-	private Double donationAmount;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private Double donationAmount;
 
-	@NotNull
-	@JsonIgnore
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date fromDate;
+    @NotNull
+    @JsonIgnore
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
 
-	@NotNull
-	@JsonIgnore
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date toDate;
+    @NotNull
+    @JsonIgnore
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
 
-	@Length(max = 250)
-	@NotNull
-	private String tenantId;
+    @Size(max = 250)
+    @NotNull
+    private String tenantId;
 
-	@NotNull
-	private Boolean active;
+    @NotNull
+    private Boolean active;
 
-	private AuditDetails auditDetails;
+    private AuditDetails auditDetails;
 }

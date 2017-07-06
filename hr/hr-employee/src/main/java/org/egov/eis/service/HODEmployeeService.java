@@ -40,6 +40,11 @@
 
 package org.egov.eis.service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -49,15 +54,10 @@ import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.HODEmployeeCriteria;
-import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class HODEmployeeService {
@@ -101,7 +101,8 @@ public class HODEmployeeService {
 		employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
 		if (!ids.isEmpty()) {
-			List<EmployeeDocument> employeeDocuments = hodEmployeeRepository.getDocumentsForListOfHODEmployeeIds(ids);
+			List<EmployeeDocument> employeeDocuments = hodEmployeeRepository.getDocumentsForListOfHODEmployeeIds(ids,
+					hodEmployeeCriteria.getTenantId());
 			employeeHelper.mapDocumentsWithEmployees(employeeInfoList, employeeDocuments);
 		}
 

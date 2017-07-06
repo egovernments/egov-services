@@ -40,34 +40,35 @@
 
 package org.egov.eis.repository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.repository.builder.PositionAssignmentQueryBuilder;
-import org.egov.eis.repository.rowmapper.PositionIdsRowMapper;
+import org.egov.eis.repository.rowmapper.EmployeeIdsRowMapper;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class PositionAssignmentRepository {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	private PositionIdsRowMapper positionIdsRowMapper;
+	private EmployeeIdsRowMapper employeeIdsRowMapper;
 
 	@Autowired
 	private PositionAssignmentQueryBuilder positionAssignmentsQueryBuilder;
 
 	public List<Long> findForCriteria(Long employeeId, PositionGetRequest positionGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
+		Map<String, Object> namedParameters = new HashMap<>();
 		String queryStr = positionAssignmentsQueryBuilder.getQuery(employeeId, positionGetRequest,
-				preparedStatementValues);
+				namedParameters);
 
-		List<Long> positionIds = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionIdsRowMapper);
+		List<Long> positionIds = namedParameterJdbcTemplate.query(queryStr, namedParameters, employeeIdsRowMapper);
 
 		return positionIds;
 	}

@@ -12,11 +12,13 @@ public class FundSearchEntity extends FundEntity {
 	private Date toDate;
 	private Integer pageSize = 10;
 	private Integer offset = 0;
+	private String sortBy;
 
 	public FundSearchEntity toEntity(FundSearch fundSearch) {
 
 		super.toEntity(fundSearch);
 		this.pageSize = fundSearch.getPageSize();
+		this.sortBy = fundSearch.getSortBy();
 		return this;
 
 	}

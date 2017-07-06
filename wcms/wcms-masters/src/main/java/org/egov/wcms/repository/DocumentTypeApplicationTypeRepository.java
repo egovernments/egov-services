@@ -167,4 +167,17 @@ public class DocumentTypeApplicationTypeRepository {
         return true;
     }
 
+    public boolean checkDocumentTypeExists(final String DocumentType, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(DocumentType);
+        preparedStatementValues.add(tenantId);
+        final String query = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();
+        final List<Map<String, Object>> documentType = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!documentType.isEmpty())
+            return false;
+
+        return true;
+    }
+
 }

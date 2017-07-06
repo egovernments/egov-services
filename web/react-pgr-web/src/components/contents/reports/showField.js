@@ -32,7 +32,7 @@ export default class ShowField extends Component
             <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory, /^[+-]?\d+(\.\d+)?$/)}   />
           </Col>
         );
-      case "date":
+      case "date" :
         return(
           <Col xs={12} md={3}>
             <DatePicker fullWidth={true}  floatingLabelText={description}  onChange={(first, object)=>{
@@ -48,24 +48,40 @@ export default class ShowField extends Component
           {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
           </Col>
         );
-      case "singlevaluelist":
-        return(
-          <Col xs={12} md={3}>
-            <SelectField fullWidth={true} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
-              this.props.handler(value, obj.name, obj.isMandatory, "")
-            }} >
-            {obj.attribValues.map((dd, index) => (
-                <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} />
-            ))}
-            </SelectField>
-          </Col>
-        );
-      case "multivaluelist":
-        return(
-          <Col xs={12} md={3}>
-            <SelectField fullWidth={true} multiple={true} floatingLabelText={description}  />
-          </Col>
-        );
+        case "epoch" :
+          return(
+            <Col xs={12} md={3}>
+              <DatePicker fullWidth={true}  floatingLabelText={description}  onChange={(first, object)=>{
+
+                let e={
+                  target:{
+                    value:object
+                  }
+                }
+                this.props.handler(e, obj.name, obj.isMandatory, '')
+
+              }}/>
+            {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
+            </Col>
+          );
+      // case "singlevaluelist":
+      //   return(
+      //     <Col xs={12} md={3}>
+      //       <SelectField fullWidth={true} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
+      //         this.props.handler(value, obj.name, obj.isMandatory, "")
+      //       }} >
+      //       {/*obj.attribValues.map((dd, index) => (
+      //           <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} />
+      //       ))*/}
+      //       </SelectField>
+      //     </Col>
+      //   );
+      // case "multivaluelist":
+      //   return(
+      //     <Col xs={12} md={3}>
+      //       <SelectField fullWidth={true} multiple={true} floatingLabelText={description}  />
+      //     </Col>
+      //   );
     }
   }
   render(){

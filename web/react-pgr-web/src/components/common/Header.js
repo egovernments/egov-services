@@ -53,9 +53,9 @@ const RightIcon = (props) => {
       <i onClick={()=>{
         if(localStorage.getItem("token"))
           props.setRoute("/dashboard");
-        else 
+        else
           props.setRoute("/");
-      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
 
       <IconMenu
@@ -362,8 +362,8 @@ class Header extends Component {
     },
     {
       id:13,
-      name:'Create Escalation Time',
-      displayName:"Create Escalation Time",
+      name:'Create/Update Escalation Time',
+      displayName:"Create/Update Escalation Time",
       url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:1,
@@ -375,9 +375,9 @@ class Header extends Component {
     },
     {
       id:14,
-      name:'View Escalation Time',
+      name:'Search Escalation Time',
       displayName:"View Escalation Time",
-      url:base + "pgr/defineEscalationTime",
+      url:base + "pgr/searchEscalationTime",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -385,7 +385,7 @@ class Header extends Component {
       rightIcon:'',
       parentModule:4,
       level:7,
-    },
+    },/*
     {
       id:15,
       name:'Update Escalation Time',
@@ -398,7 +398,7 @@ class Header extends Component {
       rightIcon:'',
       parentModule:4,
       level:7,
-    },
+    },*/
     {
       id:16,
       name:'Create Escalation',
@@ -556,7 +556,8 @@ class Header extends Component {
       rightIcon:'',
       parentModule:4,
       level:10,
-    },{
+    },
+    {
       id:28,
       name:'Reports',
       displayName:"Reports",
@@ -572,9 +573,9 @@ class Header extends Component {
     },
     {
       id:29,
-      name:'Aging Report',
-      displayName:"Aging Report",
-      url:base + "report/agingReport",
+      name:'Grivience By Id',
+      displayName:"Grivience By Id",
+      url:base + "report/GrievanceByType",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -583,6 +584,59 @@ class Header extends Component {
       parentModule:1,
       level:11
     },
+    {
+      id:30,
+      name:'Service Group',
+      displayName:"Service Group",
+      url:"",
+      enabled:"true",
+      orderNumber:3,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'keyboard_arrow_right',
+      parentModule:2,
+      level:4,
+      nextLevel:12,
+    },
+    {
+      id:31,
+      name:'Create Service Group',
+      displayName:"Create",
+      url:base + "pgr/createServiceGroup",
+      enabled:"true",
+      orderNumber:1,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:4,
+      level:12,
+    },
+    {
+      id:32,
+      name:'View Service Group',
+      displayName:"View",
+      url:base + "pgr/serviceGroup/view",
+      enabled:"true",
+      orderNumber:2,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:4,
+      level:12,
+    },
+    {
+      id:33,
+      name:'Update Service Group',
+      displayName:"Update Receiving Mode",
+      url:base + "pgr/serviceGroup/edit",
+      enabled:"true",
+      orderNumber:3,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:4,
+      level:12,
+    }
 
 
   ]

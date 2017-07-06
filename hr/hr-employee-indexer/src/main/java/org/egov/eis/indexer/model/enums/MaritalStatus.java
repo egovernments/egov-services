@@ -40,8 +40,6 @@
 
 package org.egov.eis.indexer.model.enums;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -57,7 +55,7 @@ public enum MaritalStatus {
 	@Override
 	@JsonValue
     public String toString() {
-        return StringUtils.capitalize(name());
+        return name();
     }
 
 	@JsonCreator

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.core.web.contract.RequestInfoWrapper;
-import org.egov.core.web.contract.ResponseInfo;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.egov.eis.model.Designation;
 import org.egov.eis.model.EmployeeType;

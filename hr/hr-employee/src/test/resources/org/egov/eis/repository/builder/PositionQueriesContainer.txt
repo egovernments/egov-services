@@ -1,0 +1,11 @@
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId AND positionId IN (:ids) ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId AND isPrimary = :isPrimary ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId AND :asOnDate BETWEEN fromDate AND toDate ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId AND departmentId = :departmentId ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId AND designationId = :designationId ORDER BY fromDate DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId ORDER BY positionId DESC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId ORDER BY fromDate ASC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId ORDER BY positionId ASC LIMIT :pageSize OFFSET :pageNumber
+SELECT DISTINCT positionId AS id, fromDate FROM egeis_assignment WHERE employeeId = :employeeId AND tenantId = :tenantId AND positionId IN (:ids) AND isPrimary = :isPrimary AND :asOnDate BETWEEN fromDate AND toDate AND departmentId = :departmentId AND designationId = :designationId ORDER BY positionId ASC LIMIT :pageSize OFFSET :pageNumber

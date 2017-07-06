@@ -19,7 +19,7 @@ public class LinkedReport   {
     
     COLUMNVALUE("COLUMNVALUE"),
     
-    FUXEDURL("FUXEDURL");
+    FIXEDURL("FIXEDURL");
 
     private String value;
 

@@ -56,7 +56,7 @@ const styles = {
 
 var _this;
 
-class ViewEditReceivingCenter extends Component {
+class ViewEditServiceGroup extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -88,7 +88,7 @@ class ViewEditReceivingCenter extends Component {
     render() {
 
       let {
-        serviceGroupCreate,
+        viewEditServiceGroup,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -106,7 +106,7 @@ class ViewEditReceivingCenter extends Component {
       let url = this.props.location.pathname;
 
       return(
-        <div className="serviceGroupCreate">
+        <div className="viewEditServiceGroup">
             <Card style={styles.marginStyle}>
                 <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Group</div>} />
                 <CardText style={{padding:0}}>
@@ -126,23 +126,17 @@ class ViewEditReceivingCenter extends Component {
                                     <tbody>
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
-                                            <tr key={i}>
+                                            <tr key={i}onClick={()=>{
+                        if(url == '/pgr/serviceGroup/view'){
+                          this.props.history.push('/pgr/viewServiceGroup/'+e.id);
+                        } else {
+                          this.props.history.push('/pgr/createServiceGroup/'+e.id);
+                        }
+                      }}>
                                               <td>{e.id}</td>
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
-                                              <td>{e.active}</td>
-                                              <td>{e.auditDetails}</td>
-                                              <td>{e.iscrnrequired}</td>
-                                              <td>{e.orderno}</td>
-                                              {url == '/pgr/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("/pgr/viewServiceGroup/", id);
-                                              }}/></td>}
-                                              {url == '/pgr/serviceGroup/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("/pgr/createServiceGroup/", id);
-                                              }}/></td>}
                                             </tr>
                                           )
                                         })}
@@ -159,7 +153,7 @@ class ViewEditReceivingCenter extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({serviceGroupCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({viewEditServiceGroup: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -169,7 +163,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["name","code","orderno", "description"]
+          required: ["name","code","description"]
         },
         pattern: {
           current: [],
@@ -191,4 +185,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewEditReceivingCenter);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEditServiceGroup);

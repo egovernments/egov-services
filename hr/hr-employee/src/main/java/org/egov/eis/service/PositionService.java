@@ -40,6 +40,10 @@
 
 package org.egov.eis.service;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.List;
+
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.PositionAssignmentRepository;
 import org.egov.eis.service.helper.PositionSearchURLHelper;
@@ -49,10 +53,6 @@ import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class PositionService {

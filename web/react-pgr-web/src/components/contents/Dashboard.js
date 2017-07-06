@@ -6,11 +6,24 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import DataTable from '../common/Table';
 import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
 import SwipeableViews from 'react-swipeable-views';
 //api import
 import Api from "../../api/api";
+
+const $ = require('jquery');
+$.DataTable = require('datatables.net');
+const dt = require('datatables.net-bs');
+
+const buttons = require('datatables.net-buttons-bs');
+
+require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
+require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
+require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
+require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -42,16 +55,32 @@ class Dashboard extends Component {
     this.state = {
       slideIndex: 0,
       serviceRequests: [],
-	  localArray:[]
+	     localArray:[],
+       hasData:false
     };
 }
   componentWillMount() {
 
+    
+	  
+	 $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+	
+	  let { setLoadingStatus} = this.props;
+     setLoadingStatus("loading");
+	  
     let current = this;
     let {currentUser}=this.props;
 
     if(currentUser.type=="CITIZEN") {
       Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
+         setLoadingStatus("hide");
           response.serviceRequests.sort(function(s1, s2) {
               var d1 = s1.requestedDatetime.split(" ")[0].split("-");
               var d2 = s2.requestedDatetime.split(" ")[0].split("-");
@@ -65,16 +94,19 @@ class Dashboard extends Component {
 
           current.setState({
             serviceRequests: response.serviceRequests,
-			      localArray: response.serviceRequests
+			      localArray: response.serviceRequests,
+            hasData:true
           });
       }).catch((error)=>{
           current.setState({
             serviceRequests: [],
-			      localArray:[]
+			      localArray:[],
+            hasData:true
           });
       })
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
+            setLoadingStatus("hide");
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
           Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 response.serviceRequests.sort(function(s1, s2) {
@@ -89,12 +121,14 @@ class Dashboard extends Component {
                 })
                 current.setState({
                   serviceRequests: response.serviceRequests,
-                  localArray:response.serviceRequests
+                  localArray:response.serviceRequests,
+                   hasData:true
                 });
             }).catch((error)=>{
                 current.setState({
                   serviceRequests: [],
-                  localArray:[]
+                  localArray:[],
+                   hasData:false
                 });
             })
         } else {
@@ -103,6 +137,39 @@ class Dashboard extends Component {
       })
     }
   };
+
+
+  
+ componentWillUnmount(){
+     $('#searchTable')
+     .DataTable()
+     .destroy(true);
+ };
+  
+  componentWillUpdate() {
+   /* $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });*/
+  }
+
+   componentDidUpdate() {
+    if(this.state.hasData){
+       $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+    }
+    
+  }
   
   localHandleChange = (string) => {
 	 var b = this.state.serviceRequests.filter(function(item, index, array){
@@ -118,9 +185,60 @@ class Dashboard extends Component {
       slideIndex: value,
     });
   };
+  
+   handleNavigation = (type, id) => {
+      this.props.history.push(type+id);
+    }
 
 
   render() {
+	  
+	  const renderBody=()=> {
+		 return this.state.localArray.map((e,i)=> {
+				var priority;
+				var triColor = "#fff";
+				e.attribValues.map((item,index)=>{
+				  if(item.key =="PRIORITY"){
+					triColor = item.name
+				  }
+				})
+				
+			/*	switch (priority) {
+					case "PRIORITY-1":
+						triColor = "Red";
+						break;
+					case "PRIORITY-2":
+						triColor = "Yellow";
+						break;	
+					case "PRIORITY-3":
+						triColor = "Green";
+						break;			
+				}	*/
+			 
+		  return(
+								<tr key={i} style={{ cursor:'pointer'}} onClick={()=>{
+									 this.handleNavigation("/pgr/viewGrievance/", e.serviceRequestId);
+								}}>
+									<td>{i+1}</td>
+									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>
+									<td>{e.requestedDatetime}</td>
+									<td>{e.firstName}</td>
+									<td></td>
+									<td>{e.attribValues && e.attribValues.map((item,index)=>{
+                                      if(item.key =="status"){
+                                        return(item.name)
+                                      }
+									})}</td>
+									<td  style={{maxWidth:300}}> Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                        if(item.key =="status"){
+                                          return(item.name)
+                                        }
+                                    })} </td>
+									
+								</tr>
+		  )	}
+							)
+	  }
 
     //console.log(this.state.localArray);
     var {currentUser}=this.props;
@@ -175,7 +293,7 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} status.
+                                    })} 
                                  </CardText>
                              </Card>
                           </Col>
@@ -199,15 +317,29 @@ class Dashboard extends Component {
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
-					<Col xs={12} md={12}>
-							<TextField
-								hintText="Search"
-								floatingLabelText="Search"
-								fullWidth="true"
-								onChange={(e, value) =>this.localHandleChange(value)}
-							/>
-						</Col>
-                      {this.state.localArray && this.state.localArray.map((e,i)=>{
+					
+				<div  className="tableLayout">
+            <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+						 <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Application No.</th>
+							  <th>Date</th>
+							  <th>Sender</th>
+							  <th>Nature of Work</th>
+							  <th>Status</th>
+							  <th>Comments</th>
+							</tr>
+							
+						  </thead> 
+						  <tbody>
+						  {renderBody()}
+						  </tbody>
+					</Table> 
+          </div>
+          <div className="cardLayout">
+         {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
+                            
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
                              <Card style={{minHeight:320}}>
@@ -229,12 +361,15 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} status.
+                                    })} 
                                  </CardText>
                              </Card>
                           </Col>
                         )
                       }) }
+					</div>
+					
+                      
                     </Row>
                   </Grid>
 				</CardText>
@@ -370,6 +505,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    },
+        setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     }
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),

@@ -40,9 +40,10 @@
 
 package org.egov.eis.model.enums;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang.StringUtils;
 
 public enum EntityType {
 	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee","employee", "Employee"),

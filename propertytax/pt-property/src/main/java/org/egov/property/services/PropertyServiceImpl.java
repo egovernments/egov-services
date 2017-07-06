@@ -14,9 +14,9 @@ import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
-import org.egov.property.propertyConsumer.Producer;
 import org.egov.property.util.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -36,7 +36,7 @@ public class PropertyServiceImpl implements PropertyService {
 	PropertyValidator propertyValidator;
 
 	@Autowired
-	Producer producer;
+	PropertyProducer producer;
 
 	@Autowired
 	Environment environment;

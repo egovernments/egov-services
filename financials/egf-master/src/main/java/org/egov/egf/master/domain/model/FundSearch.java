@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FundSearch extends Fund {
 	private Date fromDate;
-	private int pageSize;
+	private int pageSize=10;
+	private String sortBy;
 }

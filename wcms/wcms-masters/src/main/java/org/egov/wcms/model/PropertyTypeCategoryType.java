@@ -40,8 +40,7 @@
 package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,7 +82,7 @@ public class PropertyTypeCategoryType {
     @NotNull
     private AuditDetails auditDetails;
 
-    @Length(max = 250)
+    @Size(max = 250)
     @NotNull
     private String tenantId;
 

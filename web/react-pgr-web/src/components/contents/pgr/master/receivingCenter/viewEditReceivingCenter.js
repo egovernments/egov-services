@@ -127,17 +127,21 @@ class ViewEditServiceGroup extends Component {
                                     <tbody>
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
-                                            <tr key={i}>
+                                           <tr key={i}  onClick={()=>{
+											  if(url == '/pgr/receivingCenter/view'){
+												  this.props.history.push('/pgr/viewReceivingCenter/'+e.id);
+											  } else {
+												  this.props.history.push('/pgr/createReceivingCenter/'+e.id);
+											  }
+										  }}>
                                               <td>{e.id}</td>
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
                                               <td>{e.active  ? "true" : "false"}</td>
                                               <td>{e.auditDetails}</td>
-                                              <td>{e.iscrnrequired}</td>
+                                              <td>{e.iscrnrequired ? "true" : "false"}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/pgr/receivingCenter/view' && <td><Link to={`/pgr/viewReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")}/></Link></td>}
-                                              {url == '/pgr/receivingCenter/edit' && <td><Link to={`/pgr/createReceivingCenter/${e.id}`}><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")}/></Link></td>}
                                             </tr>
                                           )
                                         })}

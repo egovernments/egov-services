@@ -48,14 +48,16 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
+		String orderBy = "order by id";
+		if(fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
+		    orderBy = "order by " + fundSearchEntity.getSortBy();
+		    
 
 		searchQuery = searchQuery.replace(":tablename", FundEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-		 
 
 		Pagination<Fund> page = new Pagination<>();
 		page.setOffSet(fundSearchEntity.getOffset());
@@ -69,9 +71,9 @@ public class FundJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + fundSearchEntity.getPageSize() + " offset "
@@ -96,14 +98,15 @@ public class FundJdbcRepository extends JdbcRepository {
 	public FundEntity findById(FundEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<FundEntity> funds = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FundEntity>());
+		List<FundEntity> funds = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(FundEntity.class));
 		if (funds.isEmpty()) {
 			return null;
 		} else {

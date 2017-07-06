@@ -237,7 +237,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("pgr.lbl.order.no")+"*"}
+                                      floatingLabelText={translate("pgr.lbl.order.no")+"*&&"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
                                       onChange={(e) => handleChange(e, "orderno", true, '')}
@@ -306,7 +306,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: []
+          required: ["orderno"]
         }
       }
     });

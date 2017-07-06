@@ -53,7 +53,7 @@ import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.PtPropertyApplication;
-import org.egov.property.propertyConsumer.Producer;
+import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.services.Masterservice;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -79,7 +79,7 @@ public class PropertyServiceTest {
 	Environment environment;
 
 	@Autowired
-	Producer producer;
+	PropertyProducer producer;
 
 	public Long floorId = 1l;
 	public Long roofId = 1l;

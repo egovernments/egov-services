@@ -40,9 +40,18 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.model.enums.MaritalStatus;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.BloodGroupResponse;
+import org.egov.eis.web.contract.MaritalStatusResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
@@ -55,10 +64,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 public class EnumsController {

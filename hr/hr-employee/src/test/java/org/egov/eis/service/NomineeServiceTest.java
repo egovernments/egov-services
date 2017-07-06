@@ -1,34 +1,36 @@
 package org.egov.eis.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.eis.broker.EmployeeProducer;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.NominatingEmployee;
 import org.egov.eis.model.Nominee;
 import org.egov.eis.model.User;
-import org.egov.eis.model.enums.Gender;
-import org.egov.eis.model.enums.MaritalStatus;
-import org.egov.eis.model.enums.Relationship;
 import org.egov.eis.repository.NomineeRepository;
 import org.egov.eis.service.helper.NomineeNominatingEmployeeMapper;
 import org.egov.eis.utils.SeedHelper;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.EmployeeCriteria;
+import org.egov.eis.web.contract.NomineeGetRequest;
+import org.egov.eis.web.contract.NomineeRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NomineeServiceTest {
@@ -39,7 +41,7 @@ public class NomineeServiceTest {
     private ObjectMapper mapper;
 
     @Mock
-    private EmployeeProducer employeeProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private NomineeRepository nomineeRepository;
@@ -79,17 +81,10 @@ public class NomineeServiceTest {
     @Test
     public void testCreateAsync() throws JsonProcessingException {
         List<Nominee> expectedNominees = seedHelper.getNominees();
-
         doReturn(Arrays.asList(1L)).when(nomineeRepository).generateSequences(anyInt());
-        doReturn(new String()).when(mapper).writeValueAsString(any(NomineeRequest.class));
-        doNothing().when(employeeProducer).sendMessage(anyString(), anyString(), anyString());
-
         List<Nominee> actualNominees = nomineeService.createAsync(seedHelper.getNomineeRequest());
-
         verify(nomineeRepository).generateSequences(anyInt());
-        verify(mapper).writeValueAsString(any(NomineeRequest.class));
-        verify(employeeProducer).sendMessage(anyString(), anyString(), anyString());
-
+        verify(kafkaTemplate).send(anyString(), any(NomineeRequest.class));
         assertEquals(expectedNominees, actualNominees);
     }
 
@@ -103,15 +98,8 @@ public class NomineeServiceTest {
     @Test
     public void testUpdateAsync() throws JsonProcessingException {
         List<Nominee> expectedNominees = seedHelper.getNominees();
-
-        doReturn(new String()).when(mapper).writeValueAsString(any(NomineeRequest.class));
-        doNothing().when(employeeProducer).sendMessage(anyString(), anyString(), anyString());
-
         List<Nominee> actualNominees = nomineeService.updateAsync(seedHelper.getNomineeRequest());
-
-        verify(mapper).writeValueAsString(any(NomineeRequest.class));
-        verify(employeeProducer).sendMessage(anyString(), anyString(), anyString());
-
+        verify(kafkaTemplate).send(anyString(), any(NomineeRequest.class));
         assertEquals(expectedNominees, actualNominees);
     }
 

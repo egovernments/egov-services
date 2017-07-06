@@ -40,16 +40,16 @@
 
 package org.egov.eis.web.validator;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.List;
+
 import org.egov.eis.model.Nominee;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.NomineeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class NomineeValidator {

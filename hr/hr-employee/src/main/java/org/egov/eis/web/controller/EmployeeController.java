@@ -40,17 +40,27 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserException;
-import org.egov.eis.service.helper.UserSearchURLHelper;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.EmployeeCriteria;
+import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.EmployeeInfoResponse;
+import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.EmployeeResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.DataIntegrityValidatorForCreate;
-import org.egov.eis.web.validator.DataIntegrityValidatorForUpdate;
+import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
+import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
 import org.egov.eis.web.validator.EmployeeAssignmentValidator;
 import org.egov.eis.web.validator.RequestValidator;
 import org.slf4j.Logger;
@@ -60,10 +70,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/employees")
@@ -87,10 +99,10 @@ public class EmployeeController {
     private EmployeeAssignmentValidator employeeAssignmentValidator;
 
     @Autowired
-    private DataIntegrityValidatorForCreate dataIntegrityValidatorForCreate;
+    private DataIntegrityValidatorForCreateEmployee dataIntegrityValidatorForCreate;
 
     @Autowired
-    private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
+    private DataIntegrityValidatorForUpdateEmployee dataIntegrityValidatorForUpdate;
 
     /**
      * Maps Post Requests for _search & returns ResponseEntity of either

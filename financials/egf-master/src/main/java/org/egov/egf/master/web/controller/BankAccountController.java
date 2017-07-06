@@ -48,9 +48,9 @@ public class BankAccountController {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BankAccountContract> bankAccountResponse = new CommonResponse<>();
 		List<BankAccount> bankaccounts = new ArrayList<>();
-		BankAccount bankAccount = null;
+		BankAccount bankAccount;
 		List<BankAccountContract> bankAccountContracts = new ArrayList<BankAccountContract>();
-		BankAccountContract contract = null;
+		BankAccountContract contract;
 
 		bankAccountContractRequest.getRequestInfo().setAction("create");
 

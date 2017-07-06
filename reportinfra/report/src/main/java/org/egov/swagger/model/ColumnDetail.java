@@ -14,9 +14,6 @@ public class ColumnDetail extends ColumnDef  {
   @JsonProperty("label")
   private String label = null;
 
-  @JsonProperty("pattern")
-  private String pattern;
-  
   @JsonProperty("type")
   private TypeEnum type = null;
   
@@ -25,17 +22,15 @@ public class ColumnDetail extends ColumnDef  {
 		
 	}
   
-  public ColumnDetail(String label, String pattern, TypeEnum type, String name) {
+  public ColumnDetail(String label, TypeEnum type, String name) {
 	super();
 	this.label = label;
-	this.pattern = pattern;
 	this.type = type;
 	this.name(name);
 }
-  public ColumnDetail(String label, String pattern, TypeEnum type) {
+  public ColumnDetail(String label, TypeEnum type) {
 		super();
 		this.label = label;
-		this.pattern = pattern;
 		this.type = type;
 	}
 public String getLabel() {
@@ -43,14 +38,6 @@ public String getLabel() {
 }
 public void setLabel(String label) {
 	this.label = label;
-}
-
-public String getPattern() {
-	return pattern;
-}
-
-public void setPattern(String pattern) {
-	this.pattern = pattern;
 }
 
 public TypeEnum getType() {

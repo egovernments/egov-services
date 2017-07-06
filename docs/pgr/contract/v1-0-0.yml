@@ -16,7 +16,7 @@ host: phoenix-qa.egovernments.org
 schemes:
   - https
 basePath: '/v1/[API endpoint]'
-
+###########################################################################
 paths:
     /services/_search:
       post:
@@ -66,7 +66,7 @@ paths:
             description: tenatId was not provided or General service error
             schema:
               $ref: '#/definitions/ErrorRes'
-          
+###########################################################################          
     /services/_create:
       post:
         summary: Creates a new Service for a given tenantId
@@ -95,7 +95,7 @@ paths:
               description: tenantId was not provided or General service error
               schema:
                 $ref: '#/definitions/ErrorRes'
-            
+###########################################################################            
     /services/{serviceCode}/_update:
       post:
         summary: Updates Service Type and its details.
@@ -130,7 +130,7 @@ paths:
             description: serviceCode or tenantId was not provided or General service error
             schema:
               $ref: '#/definitions/ErrorRes'
-  
+###########################################################################  
     /seva/_create:
       post:
         summary: Create service requests
@@ -155,7 +155,7 @@ paths:
               error
             schema:
               $ref: '#/definitions/ErrorRes'
-          
+###########################################################################            
     /seva/_search:         
       post:
         summary: Query multiple Seva request
@@ -243,7 +243,7 @@ paths:
               service error
             schema:
               $ref: '#/definitions/ErrorRes'
-                
+###########################################################################                  
     /seva/_count:         
       post:
         summary: Returns count of matching service requests
@@ -301,7 +301,7 @@ paths:
               service error
             schema:
               $ref: '#/definitions/ErrorRes'
-            
+###########################################################################              
     /seva/{serviceRequestId}/_update:
       post:
         summary: Update service requests
@@ -338,7 +338,7 @@ paths:
               error
             schema:
               $ref: '#/definitions/ErrorRes'
-          
+###########################################################################            
     /serviceGroup/_search:
       post:
         summary: Get all complaint type category(or Service Group).
@@ -362,8 +362,8 @@ paths:
           '400':
             description: tenantId is not present
             schema:
-              $ref: '#/definitions/Error'
-              
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+###########################################################################                
     /serviceGroup/_create:
       post:
         summary: Create complaint type category(or Service Group).
@@ -388,8 +388,31 @@ paths:
           '400':
             description: tenantId is not present
             schema:
-              $ref: '#/definitions/Error'
-              
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+###########################################################################                
+    /pgr/v1/otp/_send:
+      post:
+        summary: search OTP Configuration entry using uuid
+        description: search the mobile number and otp using uuid ,uuid nothing but otp reference number
+        tags:
+          - PGR-OTPConfig
+        parameters:
+          - name: OTPConfig
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/CreateOTPConfigReq'
+        responses:
+          '200':
+            description: Request acknowledged sucessfully
+            schema:
+              $ref: "#/definitions/OTPConfigRess"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
+###########################################################################                
     /serviceGroup/{id}/_update:
       post:
         summary: Update complaint type category(or Service Group).
@@ -420,8 +443,8 @@ paths:
           '400':
             description: tenantId is not present
             schema:
-              $ref: '#/definitions/Error'  
-              
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'  
+###########################################################################                
     # OTP Configuration API
     /receivingmode/_create:
       post:
@@ -449,7 +472,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
+###########################################################################      
     /receivingmode/{id}/_update:
       post:
         summary: update receiving mode
@@ -482,7 +505,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
-
+###########################################################################  
     /receivingmode/_search:
       post:
         summary: searches receving mode
@@ -505,7 +528,7 @@ paths:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
     # receiving center API
     /receivingcenter/_create:
       post:
@@ -533,6 +556,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+###########################################################################                
    # receiving center API
     /receivingcenter/{id}/_update:
       post:
@@ -566,7 +590,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
     /receivingcenter/_search:
       post:
         summary: searches receiving center
@@ -589,7 +613,7 @@ paths:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
     # Bulk Router Type API
     /router/_create:
       post:
@@ -617,6 +641,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+###########################################################################                
    # Bulk Router Type API
     /router/_update:
       post:
@@ -644,7 +669,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
     /router/_search:
       post:
         summary: searches existing values
@@ -666,7 +691,7 @@ paths:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
      # Escalation Time Type API
     /escalation/_create:
       post:
@@ -694,6 +719,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+###########################################################################                
    # Escalation Time Type API
     /escalation/{id}/_update:
       post:
@@ -728,7 +754,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
     /escalation/_search:
       post:
         summary: searches existing values
@@ -749,7 +775,7 @@ paths:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
+###########################################################################      
          # receiving mode API
     /OTPConfig/_create:
       post:
@@ -777,7 +803,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+###########################################################################                
     /OTPConfig/{tenantid}/_update:
       post:
         summary: update OTP Configuration entry
@@ -809,7 +835,7 @@ paths:
             description: tenantId provided was not found
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
-
+###########################################################################  
     /OTPConfig/_search:
       post:
         summary: searches OTP Configurations
@@ -828,7 +854,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    
+###########################################################################      
 parameters:
     id:
       name: id
@@ -899,6 +925,48 @@ parameters:
 #
 ################################################################################
 definitions:
+  CreateOTPConfigReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        otp:
+          $ref: '#/definitions/Createotps'
+      required:
+        - RequestInfo
+        - otp
+###########################################################################          
+  Createotps:
+      type: object
+      properties:
+        mobileNumber:
+          type: string
+          description: mobile number for validating otp
+        tenantId: 
+          type: string
+          description: Unique Identifier of the tenantId to which user primarily belongs and it is mandatory field in all the end points shoiuld pass this value
+      required:
+        - tenantId
+        - mobileNumber
+###########################################################################          
+  Createotpress:
+      type: object
+      properties:
+        isSuccessful:
+          type: boolean
+          description: return true if otp is valid else return false
+###########################################################################                    
+  OTPConfigRess:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        otp:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/Createotpress'   
+###########################################################################                      
   Service:
     type: object
     properties:
@@ -955,7 +1023,7 @@ definitions:
         description:
           The human readable title of an option for singlevaluelist or
           multivaluelist.
-
+###########################################################################          
   Attribute:
     type: object
     properties:
@@ -996,7 +1064,7 @@ definitions:
             $ref: '#/definitions/Value'
     required:
       - code
-
+###########################################################################          
   Seva:
     type: object
     description: Service request raised by the citizen also called Seva in eGov platform
@@ -1005,7 +1073,7 @@ definitions:
       - serviceCode
       - description
       - phone
-
+###########################################################################          
     properties:
       tenantId:
         type: string
@@ -1118,16 +1186,16 @@ definitions:
     properties:
       requestInfo:
         allOf:
-          - $ref: '#/definitions/RequestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       service:
         $ref: '#/definitions/Service'
     type: object
-    
+###########################################################################              
   ServiceRes:
     properties:
       resposneInfo:
        allOf:
-        - $ref: '#/definitions/ResponseInfo'
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       services:
         type: array
         items:
@@ -1136,14 +1204,14 @@ definitions:
   SevaRequest:
     properties:
       requestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       seva:
         $ref: '#/definitions/Seva'
     type: object
   SevaResponse:
     properties:
       responseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       seva:
         type: array
         items:
@@ -1153,81 +1221,18 @@ definitions:
     type: object
     properties:
       responseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       count:
         type: integer
-
+###########################################################################          
   ErrorRes:
     properties:
       resposneInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       error:
-        $ref: '#/definitions/Error'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     type: object
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description:
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts
-  ResponseInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
+    
   ServiceGroup:
     type: object
     properties:
@@ -1240,12 +1245,12 @@ definitions:
       description:
         type: string
         description: Category of Complaint type or Service Group.
-  
+###########################################################################            
   ServiceGroupReq:
     type: object 
     properties:
       requestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       serviceGroup:
         $ref: '#/definitions/ServiceGroup'
         
@@ -1253,7 +1258,7 @@ definitions:
     type: object 
     properties:
       requestInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       serviceGroups:
         type: array
         items:
@@ -1263,23 +1268,8 @@ definitions:
     properties:
       url:
         type: string
-       
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      description:
-        type: string
-      fields:
-        type: object
-    required:
-      - code
-      - message
-      
+###########################################################################           
+###########################################################################                
    #Receiving Code Definitions
   ReceivingModeTypeReq:
       type: object
@@ -1291,7 +1281,7 @@ definitions:
       required:
         - RequestInfo
         - receivingmode
-    
+###########################################################################             
   ReceivingModeTypeRes:
       type: object
       properties:
@@ -1342,7 +1332,7 @@ definitions:
         - name
         - channel
         - tenantId
-        
+###########################################################################                  
   #Receiving Code Definitions
   ReceivingCenterTypeReq:
       type: object
@@ -1365,7 +1355,7 @@ definitions:
           maximum: 20
           items:
             $ref: '#/definitions/ReceivingCenterType'
-            
+###########################################################################                      
   ReceivingCenterType:
       type: object
       properties:
@@ -1406,7 +1396,7 @@ definitions:
         - code
         - name
         - tenantId  
-        
+###########################################################################                  
     #Bulk Router Definitions
   RouterTypeReq:
       type: object
@@ -1418,7 +1408,7 @@ definitions:
       required:
         - RequestInfo
         - routertype
-    
+###########################################################################              
   RouterTypeRes:
       type: object
       properties:
@@ -1429,7 +1419,7 @@ definitions:
           maximum: 20
           items:
             $ref: '#/definitions/RouterType'
-  
+###########################################################################            
   RouterSearchRes:
       type: object
       properties:
@@ -1440,7 +1430,7 @@ definitions:
           maximum: 20
           items:
             $ref: '#/definitions/RouterRes'          
-  
+###########################################################################           
   RouterRes:
       type: object
       properties:
@@ -1465,7 +1455,7 @@ definitions:
         - boundary
         - position
         - tenantId 
-        
+###########################################################################                 
   RouterType:
       type: object
       properties:
@@ -1494,7 +1484,7 @@ definitions:
         - boundary
         - position
         - tenantId 
-        
+###########################################################################                 
   OTPConfig:
       type: object
       properties:
@@ -1507,14 +1497,14 @@ definitions:
       required:
         - tenantId
         - otpEnabledForAnonymousComplaint
-        
+###########################################################################                  
   BoundaryIdType:
       type: object
       properties:
         boundarytype:
           type: integer
           description: boundary id. 
-          
+###########################################################################                    
   OTPConfigReq:
       type: object
       properties:
@@ -1525,7 +1515,7 @@ definitions:
       required:
         - RequestInfo
         - otpConfig
-    
+###########################################################################              
   OTPConfigRes:
       type: object
       properties:
@@ -1537,7 +1527,7 @@ definitions:
           items:
             $ref: '#/definitions/OTPConfig'
   
-    
+###########################################################################              
     #Escalation Time Definitions
   EscalationTimeTypeReq:
       type: object
@@ -1549,7 +1539,7 @@ definitions:
       required:
         - RequestInfo
         - escalationtimetype
-    
+###########################################################################              
   EscalationTimeTypeRes:
       type: object
       properties:
@@ -1560,7 +1550,7 @@ definitions:
           maximum: 20
           items:
             $ref: '#/definitions/EscalationTimeType'
-            
+###########################################################################                      
   EscalationTimeType:
       type: object
       properties:

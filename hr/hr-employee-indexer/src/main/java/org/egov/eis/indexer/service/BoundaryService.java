@@ -7,7 +7,7 @@ import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.web.contract.BoundaryResponse;
 import org.egov.boundary.web.contract.BoundaryTypeResponse;
-import org.egov.core.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -361,7 +361,7 @@ class Revaluation extends React.Component {
 	                  <h3 className="categoryType">Asset Revaluation Details </h3>
 	                </div>
 	                <div className="col-md-4 col-sm-4 text-right">
-	                  
+
 	                </div>
 	              </div>
 	              <div className="form-section-inner">
@@ -451,7 +451,7 @@ class Revaluation extends React.Component {
 	                  <h3 className="categoryType">Accounting Details </h3>
 	                </div>
 	                <div className="col-md-4 col-sm-4 text-right">
-	                  
+
 	                </div>
 	              </div>
 	              <div className="form-section-inner">
@@ -566,7 +566,7 @@ class Revaluation extends React.Component {
 	                  <h3 className="categoryType">Approved Details </h3>
 	                </div>
 	                <div className="col-md-4 col-sm-4 text-right">
-	                  
+
 	                </div>
 	              </div>
 	              <div className="form-section-inner">

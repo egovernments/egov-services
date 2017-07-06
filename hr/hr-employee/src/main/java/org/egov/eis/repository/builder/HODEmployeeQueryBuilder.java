@@ -40,28 +40,34 @@
 
 package org.egov.eis.repository.builder;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.HODEmployeeCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class HODEmployeeQueryBuilder {
-
-	private static final Logger logger = LoggerFactory.getLogger(HODEmployeeQueryBuilder.class);
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	private static final String EMPLOYEE_IDS_QUERY = "SELECT distinct a.employeeId AS id "
+	private static final String EMPLOYEE_IDS_QUERY = "SELECT DISTINCT a.employeeId AS id"
 			+ " FROM egeis_assignment a"
 			+ " JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = a.tenantId"
-			+ " WHERE a.tenantId = ?";
+			+ " WHERE a.tenantId = :tenantId";
 
+	/**
+	 * FIXME : Added sorting logic for this query as user will most probably sort based on employee criteria.
+	 * Find a better solution for this.
+	 */
 	private static final String BASE_QUERY = "SELECT e.id AS e_id, e.code AS e_code,"
 			+ " e.employeeStatus AS e_employeeStatus, e.employeeTypeId AS e_employeeTypeId, e.bankId AS e_bankId,"
 			+ " e.bankBranchId AS e_bankBranchId, e.bankAccount AS e_bankAccount, e.tenantId AS e_tenantId,"
@@ -77,111 +83,73 @@ public class HODEmployeeQueryBuilder {
 			+ " JOIN egeis_assignment a ON e.id = a.employeeId AND a.tenantId = e.tenantId"
 			+ " JOIN egeis_hodDepartment hod ON a.id = hod.assignmentId AND hod.tenantId = e.tenantId"
 			+ " LEFT JOIN egeis_employeeJurisdictions ej ON e.id = ej.employeeId AND ej.tenantId = e.tenantId"
-			+ " WHERE e.tenantId = ?";
+			+ " WHERE e.tenantId = :tenantId";
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public String getQueryForListOfHODEmployeeIds(HODEmployeeCriteria hodEmployeeCriteria, List preparedStatementValues) {
+	public String getQueryForListOfHODEmployeeIds(HODEmployeeCriteria hodEmployeeCriteria,
+												  Map<String, Object> namedParameters) {
 		StringBuilder selectQuery = new StringBuilder(EMPLOYEE_IDS_QUERY);
 
-		// Pushing 1 tenantId for a.tenantId
-		preparedStatementValues.add(hodEmployeeCriteria.getTenantId());
+		addWhereClause(selectQuery, namedParameters, hodEmployeeCriteria, null);
+		addPagingClause(selectQuery, namedParameters, hodEmployeeCriteria);
 
-		addWhereClause(selectQuery, preparedStatementValues, hodEmployeeCriteria, null);
-		addPagingClause(selectQuery, preparedStatementValues, hodEmployeeCriteria);
-
-		logger.debug("Query : " + selectQuery);
+		log.debug("Get List Of HOD Employee Ids Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public String getQuery(HODEmployeeCriteria hodEmployeeCriteria, List preparedStatementValues, List<Long> empIds) {
+	public String getQuery(HODEmployeeCriteria hodEmployeeCriteria, Map<String, Object> namedParameters, List<Long> empIds) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		// Pushing 1 tenantId for e.tenantId
-		preparedStatementValues.add(hodEmployeeCriteria.getTenantId());
-
-		addWhereClause(selectQuery, preparedStatementValues, hodEmployeeCriteria, empIds);
+		addWhereClause(selectQuery, namedParameters, hodEmployeeCriteria, empIds);
 		addOrderByClause(selectQuery, hodEmployeeCriteria);
 
-		logger.debug("Query : " + selectQuery);
+		log.debug("Get HOD Employees Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			HODEmployeeCriteria hodEmployeeCriteria, List<Long> empIds) {
+	private void addWhereClause(StringBuilder selectQuery, Map<String, Object> namedParameters,
+								HODEmployeeCriteria hodEmployeeCriteria, List<Long> empIds) {
 
-		if (hodEmployeeCriteria.getDepartmentId() == null && hodEmployeeCriteria.getAsOnDate() == null)
+		namedParameters.put("tenantId", hodEmployeeCriteria.getTenantId());
+
+		if (isEmpty(empIds) && isEmpty(hodEmployeeCriteria.getDepartmentId()) && isEmpty(hodEmployeeCriteria.getAsOnDate()))
 			return;
 
-		boolean isAppendAndClause = true;
-
-		if(empIds != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" e.id IN " + getIdQuery(empIds));
+		if(!isEmpty(empIds)) {
+			selectQuery.append(" AND e.id IN (:ids)");
+			namedParameters.put("ids", empIds);
 		}
 
-		if (hodEmployeeCriteria.getDepartmentId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" hod.departmentId = ?");
-			preparedStatementValues.add(hodEmployeeCriteria.getDepartmentId());
+		if (!isEmpty(hodEmployeeCriteria.getDepartmentId())) {
+			selectQuery.append(" AND hod.departmentId = :departmentId");
+			namedParameters.put("departmentId", hodEmployeeCriteria.getDepartmentId());
 		}
 
-		if (hodEmployeeCriteria.getAsOnDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ? BETWEEN a.fromDate AND a.toDate");
-			preparedStatementValues.add(hodEmployeeCriteria.getAsOnDate());
+		if (!isEmpty(hodEmployeeCriteria.getAsOnDate())) {
+			selectQuery.append(" AND :asOnDate BETWEEN a.fromDate AND a.toDate");
+			namedParameters.put("asOnDate", hodEmployeeCriteria.getAsOnDate());
 		}
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, HODEmployeeCriteria hodEmployeeCriteria) {
-		String sortBy = (hodEmployeeCriteria.getSortBy() == null ? "e.id" : hodEmployeeCriteria.getSortBy());
-		String sortOrder = (hodEmployeeCriteria.getSortOrder() == null ? "ASC" : hodEmployeeCriteria.getSortOrder());
+		String sortBy = (isEmpty(hodEmployeeCriteria.getSortBy()) ? "e.id" : hodEmployeeCriteria.getSortBy());
+		String sortOrder = (isEmpty(hodEmployeeCriteria.getSortOrder()) ? "ASC" : hodEmployeeCriteria.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			HODEmployeeCriteria hodEmployeeCriteria) {
+	private void addPagingClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
+								 HODEmployeeCriteria hodEmployeeCriteria) {
 		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
+		selectQuery.append(" LIMIT :pageSize");
 		long pageSize = Integer.parseInt(applicationProperties.empSearchPageSizeDefault());
-		if (hodEmployeeCriteria.getPageSize() != null)
+		if (!isEmpty(hodEmployeeCriteria.getPageSize()))
 			pageSize = hodEmployeeCriteria.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+		preparedStatementValues.put("pageSize", pageSize); // Set limit to pageSize
 
 		// handle offset here
-		selectQuery.append(" OFFSET ?");
+		selectQuery.append(" OFFSET :pageNumber");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (hodEmployeeCriteria.getPageNumber() != null)
+		if (!isEmpty(hodEmployeeCriteria.getPageNumber()))
 			pageNumber = hodEmployeeCriteria.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
-	}
-
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
-
-		return true;
-	}
-
-	// FIXME : Optimize - Add Question Marks instead of hard-coding the values
-	private static String getIdQuery(List<Long> idList) {
-		StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
-				query.append(", " + idList.get(i));
-			}
-		}
-		return query.append(")").toString();
+		preparedStatementValues.put("pageNumber", pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 }

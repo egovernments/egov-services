@@ -1,13 +1,14 @@
 package org.egov.eis.web.controller;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.TestConfiguration;
 import org.egov.eis.model.Nominee;
 import org.egov.eis.service.NomineeService;
 import org.egov.eis.utils.FileUtils;
 import org.egov.eis.utils.SeedHelper;
 import org.egov.eis.web.contract.NomineeGetRequest;
 import org.egov.eis.web.contract.NomineeRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreateNominee;
@@ -23,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -46,6 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @PowerMockRunnerDelegate(SpringRunner.class)
 @WebMvcTest(NomineeController.class)
 @PrepareForTest( { ValidationUtils.class } )
+@Import(TestConfiguration.class)
 public class NomineeControllerTest {
 
     private SeedHelper seedHelper = new SeedHelper();

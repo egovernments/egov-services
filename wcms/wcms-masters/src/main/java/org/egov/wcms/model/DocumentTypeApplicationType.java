@@ -40,8 +40,7 @@
 package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -69,11 +68,11 @@ public class DocumentTypeApplicationType {
     private long documentTypeId;
 
     @NotNull
-    @Length(max = 150)
+    @Size(max = 150)
     private String applicationType;
 
     @NotNull
-    @Length(max = 150)
+    @Size(max = 150)
     private String documentType;
 
     @NotNull
@@ -84,7 +83,7 @@ public class DocumentTypeApplicationType {
 
     private AuditDetails auditDetails;
 
-    @Length(max = 250)
+    @Size(max = 250)
     @NotNull
     private String tenantId;
 

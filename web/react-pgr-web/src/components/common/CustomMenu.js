@@ -220,7 +220,7 @@ class CustomMenu extends Component {
       else {
 
           return menuItems.map((item,index)=>{
-                if (item.url && item.name.toLowerCase().startsWith(searchText.toLowerCase())) {
+                if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
                   return(
                     <Link   key={index} to={item.url} >
                       <MenuItem

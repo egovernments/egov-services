@@ -24,7 +24,7 @@ public class DemandRepository {
 	public Demand getDemandBySearch(String demandID, String tenantId) {
 
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandSearchServicepath()
-				+ "?demandId=" +demandID +"&tenantId=" + tenantId;
+				+ "?demandId=" +demandID;
 		LOGGER.info("the url of demand search API call ::: is " + url);
 
 		DemandResponse demandResponse = null;

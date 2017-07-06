@@ -76,7 +76,7 @@ public class AgreementDetailsEs {
 	private Date commencementDate;
 	private Date expiryDate;
 	private String orderDetails;
-	Double renttype;
+	Double rent;
 	private String tradeLicenseNumber;
 	private String paymentCycle;
 	private String rentIncrementMethod;
@@ -116,7 +116,7 @@ public class AgreementDetailsEs {
 		this.commencementDate = agreement.getCommencementDate();
 		this.expiryDate = agreement.getExpiryDate();
 		this.orderDetails = agreement.getOrderDetails();
-		this.renttype = agreement.getRent();
+		this.rent = agreement.getRent();
 		this.tradeLicenseNumber = agreement.getTradelicenseNumber();
 		this.paymentCycle = agreement.getPaymentCycle().toString();
 		this.rentIncrementMethod = agreement.getRentIncrementMethod().getType();

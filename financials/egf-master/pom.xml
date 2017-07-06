@@ -129,7 +129,7 @@
 						<configuration>
 							<classifier>client</classifier>
 							<includes>
-								<include>**/master/web/contract/*</include>
+								<include>**/master/web/contract/**</include>
 							</includes>
 						</configuration>
 					</execution>

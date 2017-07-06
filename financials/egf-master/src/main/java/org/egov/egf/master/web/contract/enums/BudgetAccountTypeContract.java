@@ -31,60 +31,14 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.master.web.contract;
-import javax.validation.constraints.NotNull;
+package org.egov.egf.master.web.contract.enums;
 
-import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.web.contract.enums.BankAccountTypeContract;
-import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-@Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-
-@JsonPropertyOrder({ "id","bankBranch","chartOfAccount","fund","accountNumber","accountType","description","active","payTo","type"})
-public class BankAccountContract extends AuditableContract {
-
-	private String id;
-
-	private BankBranchContract bankBranch;
-
-	private ChartOfAccountContract chartOfAccount;
-
-	private FundContract fund;
-
-	@NotNull
-	@Length(max = 25)
-	private String accountNumber;
-
-	// is this required ?
-	private String accountType;
-
-	@Length(max = 256)
-	private String description;
-
-	@NotNull
-	private Boolean active;
-
-	@Length(max = 100)
-	private String payTo;
-
-	@NotNull
-	private BankAccountTypeContract type;
-
+public enum BudgetAccountTypeContract {
+	REVENUE_RECEIPTS, REVENUE_EXPENDITURE, CAPITAL_RECEIPTS, CAPITAL_EXPENDITURE
 }

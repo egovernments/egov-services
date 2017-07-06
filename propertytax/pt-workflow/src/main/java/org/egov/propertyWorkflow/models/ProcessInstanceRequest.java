@@ -3,8 +3,6 @@ package org.egov.propertyWorkflow.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.RequestInfo;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

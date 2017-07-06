@@ -3,9 +3,6 @@ package org.egov.propertyWorkflow.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.models.SourceEnum;
-import org.egov.models.StatusEnum;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -55,16 +52,13 @@ public class ProcessInstance {
 
 	@Size(min = 1, max = 128)
 	@JsonProperty("state")
-	private SourceEnum state;
+	private String state;
 
 	@Size(min = 1, max = 128)
 	@JsonProperty("status")
-	private StatusEnum status;
+	private String status;
 
 	@Size(min = 1, max = 128)
 	@JsonProperty("senderName")
 	private String senderName;
-
-	@JsonProperty("tenantId")
-	private String tenantId;
 }

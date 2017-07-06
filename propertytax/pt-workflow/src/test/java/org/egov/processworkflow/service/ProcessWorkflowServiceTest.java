@@ -68,7 +68,7 @@ public class ProcessWorkflowServiceTest {
 
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
-		processInstance.setBusinessKey("Property");
+		processInstance.setBusinessKey("Create Property");
 		processInstance.setType("Property");
 		processInstance.setAssignee(position);
 		processInstance.setSenderName("manas");

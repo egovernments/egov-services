@@ -3,16 +3,16 @@ package org.egov.propertyWorkflow.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.models.RequestInfo;
 import org.egov.models.WorkFlowDetails;
-import org.egov.models.WorkflowDetailsRequestInfo;
 import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
 import org.egov.propertyWorkflow.models.ProcessInstanceResponse;
+import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.Task;
 import org.egov.propertyWorkflow.models.TaskRequest;
 import org.egov.propertyWorkflow.models.TaskResponse;
+import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -105,7 +105,7 @@ public class WorkFlowUtil {
 		task.setBusinessKey("Create Property");
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
-		task.setTenantId("default");
+		// task.setTenantId("default");
 		assignee.setId((long) workflowDetails.getAssignee());
 		task.setAssignee(assignee);
 

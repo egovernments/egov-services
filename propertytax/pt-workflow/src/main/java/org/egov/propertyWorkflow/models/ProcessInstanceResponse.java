@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.models.Page;
-import org.egov.models.ResponseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

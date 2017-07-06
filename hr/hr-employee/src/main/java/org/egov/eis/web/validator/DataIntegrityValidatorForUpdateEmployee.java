@@ -40,7 +40,22 @@
 
 package org.egov.eis.web.validator;
 
-import org.egov.eis.model.*;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.DepartmentalTest;
+import org.egov.eis.model.EducationalQualification;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.Probation;
+import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.ServiceHistory;
+import org.egov.eis.model.TechnicalQualification;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeRepository;
@@ -49,16 +64,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Component
-public class DataIntegrityValidatorForUpdate extends EmployeeCommonValidator implements Validator {
+public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValidator implements Validator {
 
     @Autowired
     private EmployeeRepository employeeRepository;

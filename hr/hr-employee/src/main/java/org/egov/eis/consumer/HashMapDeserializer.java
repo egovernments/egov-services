@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.consumers;
+package org.egov.eis.consumer;
 
 import java.util.HashMap;
 

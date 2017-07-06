@@ -40,6 +40,13 @@
 
 package org.egov.eis.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.DepartmentalTest;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.DepartmentalTestTableRowMapper;
@@ -52,13 +59,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class DepartmentalTestRepository {
@@ -112,9 +112,9 @@ public class DepartmentalTestRepository {
 				ps.setString(3, departmentalTest.getTest());
 				ps.setInt(4, departmentalTest.getYearOfPassing());
 				ps.setString(5, departmentalTest.getRemarks());
-				ps.setLong(6, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setLong(6, employeeRequest.getRequestInfo().getUserInfo().getId());
 				ps.setTimestamp(7, new Timestamp(new java.util.Date().getTime()));
-				ps.setLong(8, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setLong(8, employeeRequest.getRequestInfo().getUserInfo().getId());
 				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(10, departmentalTest.getTenantId());
 

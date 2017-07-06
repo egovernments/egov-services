@@ -40,23 +40,26 @@
 
 package org.egov.eis.consumer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import java.util.Map;
+
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.NomineeService;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.NomineeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class EmployeeSaveConsumer {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeSaveConsumer.class);
+@Slf4j
+@Service
+public class EmployeeConsumer {
 
     @Autowired
     PropertiesManager propertiesManager;
@@ -70,39 +73,20 @@ public class EmployeeSaveConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory",
-            topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}",
+    @KafkaListener(topics = {"${kafka.topics.employee.savedb.name}", "${kafka.topics.employee.updatedb.name}",
                     "${kafka.topics.nominee.savedb.name}", "${kafka.topics.nominee.updatedb.name}"})
-    public void listen(ConsumerRecord<String, String> record) {
-        LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());
+    public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        log.info("topic :: " + topic);
+        log.info("record :: " + record);
 
-        if (record.topic().equals(propertiesManager.getSaveEmployeeTopic())) {
-            try {
-                employeeService.create(objectMapper.readValue(record.value(), EmployeeRequest.class));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (record.topic().equals(propertiesManager.getUpdateEmployeeTopic())) {
-            try {
-                LOGGER.info("entering updateemp consumer");
-                employeeService.update(objectMapper.readValue(record.value(), EmployeeRequest.class));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (record.topic().equals(propertiesManager.getSaveNomineeTopic())) {
-            try {
-                nomineeService.create(objectMapper.readValue(record.value(), NomineeRequest.class));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (record.topic().equals(propertiesManager.getUpdateNomineeTopic())) {
-            try {
-                LOGGER.info("entering update nominee consumer");
-                nomineeService.update(objectMapper.readValue(record.value(), NomineeRequest.class));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (topic.equals(propertiesManager.getSaveEmployeeTopic())) {
+                employeeService.create(objectMapper.convertValue(record, EmployeeRequest.class));
+        } else if (topic.equals(propertiesManager.getUpdateEmployeeTopic())) {
+                employeeService.update(objectMapper.convertValue(record, EmployeeRequest.class));
+        } else if (topic.equals(propertiesManager.getSaveNomineeTopic())) {
+                nomineeService.create(objectMapper.convertValue(record, NomineeRequest.class));
+        } else if (topic.equals(propertiesManager.getUpdateNomineeTopic())) {
+                nomineeService.update(objectMapper.convertValue(record, NomineeRequest.class));
         }
     }
 }

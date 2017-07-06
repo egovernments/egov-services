@@ -40,6 +40,12 @@
 
 package org.egov.eis.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.Nominee;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.NomineeQueryBuilder;
@@ -54,12 +60,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class NomineeRepository {

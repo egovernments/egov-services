@@ -40,6 +40,14 @@
 
 package org.egov.eis.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.Regularisation;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.RegularisationTableRowMapper;
@@ -52,14 +60,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class RegularisationRepository {
@@ -118,9 +118,9 @@ public class RegularisationRepository {
 				ps.setDate(6, (regularisation.getOrderDate() == null ? null
 						: new Date(regularisation.getOrderDate().getTime())));
 				ps.setString(7, regularisation.getRemarks());
-				ps.setLong(8, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setLong(8, employeeRequest.getRequestInfo().getUserInfo().getId());
 				ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
-				ps.setLong(10, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setLong(10, employeeRequest.getRequestInfo().getUserInfo().getId());
 				ps.setTimestamp(11, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(12, regularisation.getTenantId());
 

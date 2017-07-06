@@ -48,7 +48,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class DataIntegrityValidatorForCreate extends EmployeeCommonValidator implements Validator {
+public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValidator implements Validator {
 	
 	@Autowired
 	private EmployeeRepository employeeRepository;

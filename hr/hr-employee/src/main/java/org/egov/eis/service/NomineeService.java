@@ -40,9 +40,11 @@
 
 package org.egov.eis.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.eis.broker.EmployeeProducer;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.Nominee;
@@ -50,35 +52,24 @@ import org.egov.eis.model.User;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.NomineeRepository;
 import org.egov.eis.service.helper.NomineeNominatingEmployeeMapper;
-import org.egov.eis.web.contract.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.eis.web.contract.EmployeeCriteria;
+import org.egov.eis.web.contract.NomineeGetRequest;
+import org.egov.eis.web.contract.NomineeRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-//import org.egov.eis.broker.NomineeProducer;
-//import org.egov.eis.model.NomineeDocument;
-//import org.egov.eis.repository.NomineeJurisdictionRepository;
-//import org.egov.eis.repository.NomineeLanguageRepository;
-//import org.egov.eis.service.exception.NomineeIdNotFoundException;
-//import org.egov.eis.service.helper.NomineeHelper;
-//import org.egov.eis.service.helper.NomineeUserMapper;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class NomineeService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(NomineeService.class);
-
     @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private EmployeeProducer employeeProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private NomineeRepository nomineeRepository;
@@ -102,11 +93,11 @@ public class NomineeService {
             return nominees;
 
         List<Long> ids = nominees.stream().map(nominee -> nominee.getEmployee().getId()).collect(Collectors.toList());
-        LOGGER.debug("NominatingEmployee ids " + ids);
+        log.debug("NominatingEmployee ids " + ids);
         EmployeeCriteria employeeCriteria = EmployeeCriteria.builder()
                 .id(ids).tenantId(nomineeGetRequest.getTenantId()).build();
         List<User> users = userService.getUsers(employeeCriteria, requestInfo);
-        LOGGER.debug("userService: " + users);
+        log.debug("userService: " + users);
         nomineeNominatingEmployeeMapper.mapNominatingEmployeesWithNominees(nominees, users);
         nominees.forEach(nominee -> {
             List<EmployeeDocument> docs = documentsService.getDocumentsForReferenceType(nominee.getEmployee().getId(),
@@ -120,14 +111,8 @@ public class NomineeService {
 
     public List<Nominee> createAsync(NomineeRequest nomineeRequest) throws JsonProcessingException {
         populateDataForSave(nomineeRequest.getNominees(), nomineeRequest.getRequestInfo());
-
-        String nomineeRequestJson = null;
-        nomineeRequestJson = mapper.writeValueAsString(nomineeRequest);
-        LOGGER.info("nomineeJson::" + nomineeRequestJson);
-
-        employeeProducer.sendMessage(propertiesManager.getSaveNomineeTopic(), propertiesManager.getNomineeSaveKey(),
-                nomineeRequestJson);
-
+        log.info("nomineeRequest before sending to kafka for create :: " + nomineeRequest);
+        kafkaTemplate.send(propertiesManager.getSaveNomineeTopic(), nomineeRequest);
         return nomineeRequest.getNominees();
     }
 
@@ -139,13 +124,8 @@ public class NomineeService {
 
     public List<Nominee> updateAsync(NomineeRequest nomineeRequest) throws JsonProcessingException {
         populateDataForUpdate(nomineeRequest.getNominees(), nomineeRequest.getRequestInfo());
-
-        String nomineeUpdateRequestJson = null;
-        nomineeUpdateRequestJson = mapper.writeValueAsString(nomineeRequest);
-        LOGGER.info("nomineeJson update::" + nomineeUpdateRequestJson);
-
-        employeeProducer.sendMessage(propertiesManager.getUpdateNomineeTopic(), propertiesManager.getNomineeUpdateKey(),
-                nomineeUpdateRequestJson);
+        log.info("nomineeRequest before sending to kafka for update :: " + nomineeRequest);
+        kafkaTemplate.send(propertiesManager.getUpdateNomineeTopic(), nomineeRequest);
         return nomineeRequest.getNominees();
     }
 
@@ -156,14 +136,14 @@ public class NomineeService {
     }
 
     private void populateDataForSave(List<Nominee> nominees, RequestInfo requestInfo) {
-        UserInfo requester = requestInfo.getUserInfo();
+        org.egov.common.contract.request.User userInfo = requestInfo.getUserInfo();
         List<Long> sequences = nomineeRepository.generateSequences(nominees.size());
         for (int i = 0; i < nominees.size(); i++) {
             nominees.get(i).setId(sequences.get(i));
             nominees.get(i).setTenantId(nominees.get(i).getTenantId());
-            nominees.get(i).setCreatedBy(requester.getId());
+            nominees.get(i).setCreatedBy(userInfo.getId());
             nominees.get(i).setCreatedDate(new Date().getTime());
-            nominees.get(i).setLastModifiedBy(requester.getId());
+            nominees.get(i).setLastModifiedBy(userInfo.getId());
             nominees.get(i).setLastModifiedDate(new Date().getTime());
         }
     }

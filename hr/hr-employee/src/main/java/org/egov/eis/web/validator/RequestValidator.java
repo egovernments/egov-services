@@ -40,7 +40,7 @@
 
 package org.egov.eis.web.validator;
 
-import org.egov.eis.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

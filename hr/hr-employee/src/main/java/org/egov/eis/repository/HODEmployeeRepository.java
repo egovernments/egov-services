@@ -40,6 +40,10 @@
 
 package org.egov.eis.repository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.repository.builder.HODEmployeeQueryBuilder;
@@ -50,11 +54,8 @@ import org.egov.eis.web.contract.HODEmployeeCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class HODEmployeeRepository {
@@ -62,7 +63,7 @@ public class HODEmployeeRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(HODEmployeeRepository.class);
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private EmployeeIdsRowMapper employeeIdsRowMapper;
@@ -76,38 +77,37 @@ public class HODEmployeeRepository {
 	@Autowired
 	private HODEmployeeQueryBuilder hodEmployeeQueryBuilder;
 
-	public List<Long> findIdsForCriteria(HODEmployeeCriteria hodEmployeeCriteria) {
-		List<Object> preparedStatementValuesForListOfHODEmployeeIds = new ArrayList<Object>();
-		String queryStrForListOfEmployeeIds = hodEmployeeQueryBuilder.getQueryForListOfHODEmployeeIds(hodEmployeeCriteria,
-				preparedStatementValuesForListOfHODEmployeeIds);
+	private static final String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
+			+ " FROM egeis_employeeDocuments where employeeId IN (:employeeIds) AND tenantId = :tenantId";
 
-		List<Long> listOfIds = jdbcTemplate.query(queryStrForListOfEmployeeIds,
-				preparedStatementValuesForListOfHODEmployeeIds.toArray(), employeeIdsRowMapper);
+	public List<Long> findIdsForCriteria(HODEmployeeCriteria hodEmployeeCriteria) {
+		Map<String, Object> namedParametersForListOfHODEmployeeIds = new HashMap<>();
+		String queryStrForListOfEmployeeIds = hodEmployeeQueryBuilder.getQueryForListOfHODEmployeeIds(hodEmployeeCriteria,
+				namedParametersForListOfHODEmployeeIds);
+
+		List<Long> listOfIds = namedParameterJdbcTemplate.query(queryStrForListOfEmployeeIds,
+				namedParametersForListOfHODEmployeeIds, employeeIdsRowMapper);
 
 		return listOfIds;
 	}
 
 	public List<EmployeeInfo> findForCriteria(HODEmployeeCriteria hodEmployeeCriteria, List<Long> listOfIds) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = hodEmployeeQueryBuilder.getQuery(hodEmployeeCriteria, preparedStatementValues, listOfIds);
+		Map<String, Object> namedParameters = new HashMap<>();
+		String queryStr = hodEmployeeQueryBuilder.getQuery(hodEmployeeCriteria, namedParameters, listOfIds);
 
-		List<EmployeeInfo> employeesInfo = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				employeeInfoRowMapper);
+		List<EmployeeInfo> employeesInfo = namedParameterJdbcTemplate.query(queryStr, namedParameters, employeeInfoRowMapper);
 
 		return employeesInfo;
 	}
 
-	// FIXME : Figure out a better way to do this
-	public List<EmployeeDocument> getDocumentsForListOfHODEmployeeIds(List<Long> employeeIds) {
-		String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
-				+ " FROM egeis_employeeDocuments where employeeId IN (" + getIdsAsCSVs(employeeIds) + ")";
-
-		List<EmployeeDocument> documents = jdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY,
-				employeeDocumentsRowMapper);
+	@SuppressWarnings("serial")
+	public List<EmployeeDocument> getDocumentsForListOfHODEmployeeIds(List<Long> employeeIds, String tenantId) {
+		Map<String, Object> namedParameters = new HashMap<String, Object>(){{
+			put("employeeIds", employeeIds);
+			put("tenantId", tenantId);
+		}};
+		List<EmployeeDocument> documents = namedParameterJdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY,
+				namedParameters, employeeDocumentsRowMapper);
 		return documents;
-	}
-
-	private String getIdsAsCSVs(List<Long> ids) {
-		return ids.toString().replace("[", "").replace("]", "");
 	}
 }

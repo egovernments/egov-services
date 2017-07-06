@@ -40,6 +40,12 @@
 
 package org.egov.eis.repository;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
@@ -55,12 +61,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public class EmployeeRepository {
@@ -91,6 +93,9 @@ public class EmployeeRepository {
 	
 	public static final String GET_ID_QUERY = "SELECT id FROM $table WHERE $column = ? AND tenantId = ?";
 
+	public static final String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
+			+ " FROM egeis_employeeDocuments WHERE employeeId IN (:ids) AND tenantId = :tenantId";
+
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, code, dateOfAppointment, dateOfJoining, dateOfRetirement, employeeStatus, recruitmentModeId,"
 			+ " recruitmentTypeId, recruitmentQuotaId, maritalStatus, retirementAge, dateOfResignation, dateOfTermination,"
@@ -101,6 +106,9 @@ public class EmployeeRepository {
 	
 		public static final String DUPLICATE_EXISTS_QUERY = "SELECT exists(SELECT id FROM $table WHERE $column = ?"
 			+ " AND tenantId = ?)";
+
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -125,33 +133,33 @@ public class EmployeeRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<EmployeeInfo> findForCriteria(EmployeeCriteria employeeCriteria) {
-		List<Object> preparedStatementValuesForListOfEmployeeIds = new ArrayList<Object>();
+		Map<String, Object> namedParametersForListOfEmployeeIds = new HashMap<>();
 		String queryStrForListOfEmployeeIds = employeeQueryBuilder.getQueryForListOfEmployeeIds(employeeCriteria,
-				preparedStatementValuesForListOfEmployeeIds);
+				namedParametersForListOfEmployeeIds);
 
-		List<Long> listOfIds = jdbcTemplate.query(queryStrForListOfEmployeeIds,
-				preparedStatementValuesForListOfEmployeeIds.toArray(), employeeIdsRowMapper);
+		List<Long> listOfIds = namedParameterJdbcTemplate.query(queryStrForListOfEmployeeIds,
+				namedParametersForListOfEmployeeIds, employeeIdsRowMapper);
 
 		if (listOfIds.isEmpty()) {
 			return Collections.EMPTY_LIST;
 		}
 
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = employeeQueryBuilder.getQuery(employeeCriteria, preparedStatementValues, listOfIds);
+		Map<String, Object> namedParameters = new HashMap<>();
+		String queryStr = employeeQueryBuilder.getQuery(employeeCriteria, namedParameters, listOfIds);
 
-		List<EmployeeInfo> employeesInfo = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				employeeInfoRowMapper);
+		List<EmployeeInfo> employeesInfo = namedParameterJdbcTemplate.query(queryStr, namedParameters, employeeInfoRowMapper);
 
 		return employeesInfo;
 	}
 
-	// FIXME : Figure out a better way to do this
+	@SuppressWarnings("serial")
 	public List<EmployeeDocument> getDocumentsForListOfEmployeeIds(List<Long> employeeIds, String tenantId) {
-		String SELECT_EMPLOYEE_DOCUMENTS_QUERY = "SELECT employeeId, document"
-				+ " FROM egeis_employeeDocuments where employeeId IN (" + getIdsAsCSVs(employeeIds) + ")";
-
-		List<EmployeeDocument> documents = jdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY,
-				employeeDocumentsRowMapper);
+		Map<String, Object> namedParameters = new HashMap<String, Object>() {{
+			put("ids", employeeIds);
+			put("tenantId", tenantId);
+		}};
+		List<EmployeeDocument> documents = namedParameterJdbcTemplate.query(SELECT_EMPLOYEE_DOCUMENTS_QUERY,
+				namedParameters, employeeDocumentsRowMapper);
 		return documents;
 	}
 
@@ -247,10 +255,6 @@ public class EmployeeRepository {
 	public boolean checkIfEmployeeExists(Long id, String tenantId) {
 		return jdbcTemplate.queryForObject(EMPLOYEE_EXISTENCE_CHECK_QUERY, new Object[] { id, tenantId },
 				Boolean.class);
-	}
-
-	private String getIdsAsCSVs(List<Long> ids) {
-		return ids.toString().replace("[", "").replace("]", "");
 	}
 
 	public Employee findById(Long employeeId, String tenantId) {

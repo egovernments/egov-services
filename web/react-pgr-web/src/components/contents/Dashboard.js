@@ -6,11 +6,24 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import DataTable from '../common/Table';
 import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
 import SwipeableViews from 'react-swipeable-views';
 //api import
 import Api from "../../api/api";
+
+const $ = require('jquery');
+$.DataTable = require('datatables.net');
+const dt = require('datatables.net-bs');
+
+const buttons = require('datatables.net-buttons-bs');
+
+require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
+require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
+require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
+require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -46,7 +59,17 @@ class Dashboard extends Component {
     };
 }
   componentWillMount() {
-
+	  
+	 $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          ordering: false,
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+	  
     let current = this;
     let {currentUser}=this.props;
 
@@ -104,6 +127,24 @@ class Dashboard extends Component {
     }
   };
   
+ componentWillUnmount(){
+     $('#searchTable')
+     .DataTable()
+     .destroy(true);
+ };
+  
+  componentWillUpdate() {
+    $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          ordering: false,
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+  }
+  
   localHandleChange = (string) => {
 	 var b = this.state.serviceRequests.filter(function(item, index, array){
 		  if(JSON.stringify(item).toLowerCase().match(string.toLowerCase())){
@@ -121,6 +162,32 @@ class Dashboard extends Component {
 
 
   render() {
+	  
+	  const renderBody=()=> {
+		 return this.state.localArray.map((e,i)=> {
+			  console.log(e)
+		  return(
+								<tr key={i}>
+									<td>{i+1}</td>
+									<td>{e.serviceRequestId}</td>
+									<td>{e.requestedDatetime}</td>
+									<td>{e.firstName}</td>
+									<td></td>
+									<td>{e.attribValues && e.attribValues.map((item,index)=>{
+                                      if(item.key =="status"){
+                                        return(item.name)
+                                      }
+									})}</td>
+									<td> Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                        if(item.key =="status"){
+                                          return(item.name)
+                                        }
+                                    })} </td>
+									
+								</tr>
+		  )	}
+							)
+	  }
 
     //console.log(this.state.localArray);
     var {currentUser}=this.props;
@@ -199,42 +266,26 @@ class Dashboard extends Component {
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
-					<Col xs={12} md={12}>
-							<TextField
-								hintText="Search"
-								floatingLabelText="Search"
-								fullWidth="true"
-								onChange={(e, value) =>this.localHandleChange(value)}
-							/>
-						</Col>
-                      {this.state.localArray && this.state.localArray.map((e,i)=>{
-                        return(
-                          <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
-                             <Card style={{minHeight:320}}>
-                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
-                                  title={e.serviceName}
-                                  subtitle={e.attribValues && e.attribValues.map((item,index)=>{
-                                      if(item.key =="status"){
-                                        return(item.name)
-                                      }
-                                  })}
-                                 />
-
-                                 <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
-                                   subtitle={e.requestedDatetime}
-                                 />
-                                 <CardText>
-                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
-                                        if(item.key =="status"){
-                                          return(item.name)
-                                        }
-                                    })} status.
-                                 </CardText>
-                             </Card>
-                          </Col>
-                        )
-                      }) }
+					
+					{this.state.localArray && <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+						 <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Application No.</th>
+							  <th>Date</th>
+							  <th>Sender</th>
+							  <th>Nature of Work</th>
+							  <th>Status</th>
+							  <th style={{maxWidth:300}}>Comments</th>
+							</tr>
+						  </thead>
+						  <tbody>
+						  {renderBody()}
+						  </tbody>
+					</Table> }
+					
+					
+                      
                     </Row>
                   </Grid>
 				</CardText>

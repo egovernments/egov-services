@@ -17,6 +17,9 @@ public class SourceColumn extends ColumnDetail  {
 
   @JsonProperty("colName")
   private String colName = null;
+  
+  @JsonProperty("linkedReport")
+  private LinkedReport linkedReport = null;
 
   @JsonProperty("isExternal")
   private Boolean isExternal = false;
@@ -67,7 +70,10 @@ public class SourceColumn extends ColumnDetail  {
   public void setColName(String colName) {
     this.colName = colName;
   }
-
+  public SourceColumn linkedReport(LinkedReport linkedReport) {
+    this.linkedReport = linkedReport;
+    return this;
+  }
   public SourceColumn isExternal(Boolean isExternal) {
     this.isExternal = isExternal;
     return this;
@@ -77,6 +83,13 @@ public class SourceColumn extends ColumnDetail  {
    * flag to indicate that this column value can be fetched from external service. This will be useful when we start segragating the services in their own physical data stores 
    * @return isExternal
   **/
+  public LinkedReport getLinkedReport() {
+    return linkedReport;
+  }
+
+  public void setLinkedReport(LinkedReport linkedReport) {
+    this.linkedReport = linkedReport;
+  }
   
   public Boolean getIsExternal() {
     return isExternal;
@@ -152,6 +165,7 @@ public class SourceColumn extends ColumnDetail  {
     SourceColumn sourceColumn = (SourceColumn) o;
     return Objects.equals(this.source, sourceColumn.source) &&
         Objects.equals(this.colName, sourceColumn.colName) &&
+        Objects.equals(this.linkedReport, sourceColumn.linkedReport) &&
         Objects.equals(this.isExternal, sourceColumn.isExternal) &&
         Objects.equals(this.url, sourceColumn.url) &&
         Objects.equals(this.jsonPath, sourceColumn.jsonPath) &&
@@ -161,7 +175,7 @@ public class SourceColumn extends ColumnDetail  {
 
   @Override
   public int hashCode() {
-    return Objects.hash(source, colName, isExternal, url, jsonPath, dependsOn, super.hashCode());
+    return Objects.hash(source, colName, linkedReport, isExternal, url, jsonPath, dependsOn, super.hashCode());
   }
 
   @Override
@@ -171,6 +185,7 @@ public class SourceColumn extends ColumnDetail  {
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    colName: ").append(toIndentedString(colName)).append("\n");
+    sb.append("    linkedReport: ").append(toIndentedString(linkedReport)).append("\n");
     sb.append("    isExternal: ").append(toIndentedString(isExternal)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");
     sb.append("    jsonPath: ").append(toIndentedString(jsonPath)).append("\n");

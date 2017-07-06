@@ -3,16 +3,16 @@ package org.egov.propertyWorkflow.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.models.Position;
-import org.egov.models.ProcessInstance;
-import org.egov.models.ProcessInstanceRequest;
-import org.egov.models.ProcessInstanceResponse;
 import org.egov.models.RequestInfo;
-import org.egov.models.Task;
-import org.egov.models.TaskRequest;
-import org.egov.models.TaskResponse;
 import org.egov.models.WorkFlowDetails;
 import org.egov.models.WorkflowDetailsRequestInfo;
+import org.egov.propertyWorkflow.models.Position;
+import org.egov.propertyWorkflow.models.ProcessInstance;
+import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
+import org.egov.propertyWorkflow.models.ProcessInstanceResponse;
+import org.egov.propertyWorkflow.models.Task;
+import org.egov.propertyWorkflow.models.TaskRequest;
+import org.egov.propertyWorkflow.models.TaskResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -34,7 +34,6 @@ public class WorkFlowUtil {
 
 	@Autowired
 	Environment environment;
-	ProcessInstance processInstance = new ProcessInstance();
 
 	public ProcessInstance startWorkflow(ProcessInstanceRequest processInstanceRequest) {
 

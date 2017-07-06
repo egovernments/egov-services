@@ -165,6 +165,7 @@ class Login extends Component {
    }
 
    loginRequest (e) {
+	   e.preventDefault();
       var self = this, props = this.props;
       self.setState({
           errorMsg: ""

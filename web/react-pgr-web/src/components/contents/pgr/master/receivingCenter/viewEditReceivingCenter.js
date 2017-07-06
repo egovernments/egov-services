@@ -129,9 +129,9 @@ class ViewEditServiceGroup extends Component {
                                           return(
                                            <tr key={i}  onClick={()=>{
 											  if(url == '/pgr/receivingCenter/view'){
-												  window.open('/pgr/viewReceivingCenter/${e.id}');
+												  this.props.history.push('/pgr/viewReceivingCenter/'+e.id);
 											  } else {
-												  window.open('/pgr/createReceivingCenter/${e.id}');
+												  this.props.history.push('/pgr/createReceivingCenter/'+e.id);
 											  }
 										  }}>
                                               <td>{e.id}</td>

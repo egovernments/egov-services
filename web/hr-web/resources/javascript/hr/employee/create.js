@@ -1103,7 +1103,7 @@ function commonAddAndUpdate(tableName, modalName, object) {
         if(commonObject["assignments_position"]) {
             var flag = 0;
             for(var i=0; i< commonObject["assignments_position"].length; i++) {
-                if($("#assignments\\.position").val() == commonObject["assignments_position"][i].id)
+                if($("#assignments\\.position").val() == commonObject["assignments_position"][i].name)
                     flag = 1;
             }
 

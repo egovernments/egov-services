@@ -45,6 +45,7 @@ import java.util.Date;
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
@@ -112,6 +113,7 @@ public class BudgetReAppropriationContract extends AuditableContract {
 	/*
 	 * asOnDate is the date on witch date the current appropriation is done.
 	 */
+	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "IST")
 	private Date asOnDate;
 
 }

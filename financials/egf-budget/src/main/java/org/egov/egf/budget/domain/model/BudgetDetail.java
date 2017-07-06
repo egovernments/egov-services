@@ -40,8 +40,6 @@
 package org.egov.egf.budget.domain.model;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.egov.common.domain.model.Auditable;
 import org.egov.common.master.web.contract.BoundaryContract;
@@ -52,9 +50,10 @@ import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -64,7 +63,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "budget", "status" }, callSuper = false)
+@JsonPropertyOrder({ "id", "budgetGroupId", "budgetId", "originalAmount", "approvedAmount", "budgetAvailable",
+	"anticipatoryAmount", "usingDepartmentId", "executingDepartmentId", "functionId", "schemeId", "fundId", "subSchemeId",
+	"functionaryId", "boundaryId", "materializedPath", "documentNumber", "uniqueNo",
+	"planningPercent", "status" })
 public class BudgetDetail extends Auditable {
 
 	/*
@@ -165,7 +167,8 @@ public class BudgetDetail extends Auditable {
 	 * budgetReAppropriations is the reference to the re appropriations made for
 	 * the given budget line item
 	 */
-	private Set<BudgetReAppropriation> budgetReAppropriations = new HashSet<BudgetReAppropriation>(0);
+	// private Set<BudgetReAppropriation> budgetReAppropriations = new
+	// HashSet<BudgetReAppropriation>(0);
 
 	/*
 	 * documentNumber is the reference number to identify the attachments made

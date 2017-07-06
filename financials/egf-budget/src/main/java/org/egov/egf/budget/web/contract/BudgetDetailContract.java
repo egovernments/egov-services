@@ -40,13 +40,10 @@
 package org.egov.egf.budget.web.contract;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.egov.common.master.web.contract.BoundaryContract;
 import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
@@ -67,10 +64,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @JsonPropertyOrder({ "id", "budgetGroup", "budget", "originalAmount", "approvedAmount", "budgetAvailable",
 		"anticipatoryAmount", "usingDepartment", "executingDepartment", "function", "scheme", "fund", "subScheme",
-		"functionary", "boundary", "materializedPath", "budgetReAppropriations", "documentNumber", "uniqueNo",
+		"functionary", "boundary", "materializedPath", "documentNumber", "uniqueNo",
 		"planningPercent", "status" })
 public class BudgetDetailContract extends AuditableContract {
 
@@ -172,7 +168,7 @@ public class BudgetDetailContract extends AuditableContract {
 	 * budgetReAppropriations is the reference to the re appropriations made for
 	 * the given budget line item
 	 */
-	private Set<BudgetReAppropriation> budgetReAppropriations = new HashSet<BudgetReAppropriation>(0);
+//	private Set<BudgetReAppropriation> budgetReAppropriations = new HashSet<BudgetReAppropriation>(0);
 
 	/*
 	 * documentNumber is the reference number to identify the attachments made

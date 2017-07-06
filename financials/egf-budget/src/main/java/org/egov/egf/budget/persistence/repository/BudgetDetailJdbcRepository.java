@@ -1,5 +1,6 @@
 package org.egov.egf.budget.persistence.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,25 +74,29 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 			params.append("budget =:budget");
 			paramValues.put("budget", budgetDetailSearchEntity.getBudgetId());
 		}
-		if (budgetDetailSearchEntity.getOriginalAmount() != null) {
+		if (budgetDetailSearchEntity.getOriginalAmount() != null
+				&& 0 != budgetDetailSearchEntity.getOriginalAmount().compareTo(BigDecimal.ZERO)) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("originalAmount =:originalAmount");
 			paramValues.put("originalAmount", budgetDetailSearchEntity.getOriginalAmount());
 		}
-		if (budgetDetailSearchEntity.getApprovedAmount() != null) {
+		if (budgetDetailSearchEntity.getApprovedAmount() != null
+				&& 0 != budgetDetailSearchEntity.getApprovedAmount().compareTo(BigDecimal.ZERO)) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("approvedAmount =:approvedAmount");
 			paramValues.put("approvedAmount", budgetDetailSearchEntity.getApprovedAmount());
 		}
-		if (budgetDetailSearchEntity.getBudgetAvailable() != null) {
+		if (budgetDetailSearchEntity.getBudgetAvailable() != null
+				&& 0 != budgetDetailSearchEntity.getBudgetAvailable().compareTo(BigDecimal.ZERO)) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("budgetAvailable =:budgetAvailable");
 			paramValues.put("budgetAvailable", budgetDetailSearchEntity.getBudgetAvailable());
 		}
-		if (budgetDetailSearchEntity.getAnticipatoryAmount() != null) {
+		if (budgetDetailSearchEntity.getAnticipatoryAmount() != null
+				&& 0 != budgetDetailSearchEntity.getAnticipatoryAmount().compareTo(BigDecimal.ZERO)) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("anticipatoryAmount =:anticipatoryAmount");
@@ -151,7 +156,7 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 			params.append("materializedPath =:materializedPath");
 			paramValues.put("materializedPath", budgetDetailSearchEntity.getMaterializedPath());
 		}
-		 
+
 		if (budgetDetailSearchEntity.getDocumentNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -191,7 +196,7 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page, paramValues); 
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + budgetDetailSearchEntity.getPageSize() + " offset "

@@ -170,14 +170,14 @@ class Dashboard extends Component {
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
 				var priority;
-				var triColor;
+				var triColor = "#fff";
 				e.attribValues.map((item,index)=>{
 				  if(item.key =="PRIORITY"){
-					priority = item.name
+					triColor = item.name
 				  }
 				})
 				
-				switch (priority) {
+			/*	switch (priority) {
 					case "PRIORITY-1":
 						triColor = "Red";
 						break;
@@ -187,14 +187,14 @@ class Dashboard extends Component {
 					case "PRIORITY-3":
 						triColor = "Green";
 						break;			
-				}	
+				}	*/
 			 
 		  return(
-								<tr key={i} style={{backgroundColor:triColor, cursor:'pointer'}} onClick={()=>{
+								<tr key={i} style={{ cursor:'pointer'}} onClick={()=>{
 									 this.handleNavigation("#/pgr/viewGrievance/", e.serviceRequestId);
 								}}>
 									<td>{i+1}</td>
-									<td>{e.serviceRequestId}</td>
+									<td><span style={{width:10, height:10, borderRadius:50, backgroundColor:triColor, display:"inline-block"}}></span>{e.serviceRequestId}</td>
 									<td>{e.requestedDatetime}</td>
 									<td>{e.firstName}</td>
 									<td></td>
@@ -292,7 +292,8 @@ class Dashboard extends Component {
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
 					
-					{this.state.localArray && <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+					{(this.state.localArray.length > 0) && 
+            <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 						 <thead>
 							<tr>
 							  <th>#</th>
@@ -309,6 +310,36 @@ class Dashboard extends Component {
 						  {renderBody()}
 						  </tbody>
 					</Table> }
+
+         { this.state.localArray.map((e,i)=>{
+                            
+                        return(
+                          <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
+                             <Card style={{minHeight:320}}>
+                                 <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
+                                  title={e.serviceName}
+                                  subtitle={e.attribValues && e.attribValues.map((item,index)=>{
+                                      if(item.key =="status"){
+                                        return(item.name)
+                                      }
+                                  })}
+                                 />
+
+                                 <CardHeader  titleStyle={{fontSize:18}}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   subtitle={e.requestedDatetime}
+                                 />
+                                 <CardText>
+                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+                                        if(item.key =="status"){
+                                          return(item.name)
+                                        }
+                                    })} status.
+                                 </CardText>
+                             </Card>
+                          </Col>
+                        )
+                      }) }
 					
 					
                       

@@ -269,9 +269,9 @@ class DefineEscalation extends Component {
 			  }]
     }
 	
-	var idd = this.props.defineEscalation.fromPosition;
+	//var idd = this.props.defineEscalation.fromPosition;
 
-    Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/"+idd,{},body).then(function(response){
+    Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
         console.log(response);
         current.setState({
           resultList:[
@@ -336,6 +336,8 @@ class DefineEscalation extends Component {
     render() {
 
       var current = this;
+	  
+	  console.log(this.state.toPosition);
 
       let {
         isFormValid,
@@ -455,7 +457,7 @@ class DefineEscalation extends Component {
                         <SelectField
                            floatingLabelText="To Position"
                            fullWidth={true}
-                           value={defineEscalation.toPosition ?  getNameById(current.state.toPosition, defineEscalation.toPosition)  : ""}
+                           value={defineEscalation.toPosition ?  defineEscalation.toPosition  : ""}
                            onChange= {(e, index ,value) => {
                              var e = {
                                target: {
@@ -467,7 +469,7 @@ class DefineEscalation extends Component {
                          >
                             {current.state.toPosition && current.state.toPosition.map((item, index)=>{
 								 return(
-									<MenuItem value={item.id} key={index} primaryText={item.name} />
+									<MenuItem value={item.id} key={index} primaryText={item.name ?  item.name: getNameById(current.state.toPosition, defineEscalation.toPosition)} />
 								 )
 							})}
                         </SelectField>

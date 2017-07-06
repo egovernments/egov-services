@@ -1593,6 +1593,7 @@ function setPositionId(commonObject, employeeSubObject) {
 
     $(`#assignments\\.position`).autocomplete({
         source: _positions,
+        minLength: 2,
         change: function(e, ui) {
             for(var k=0; k<commonObject["assignments_position"].length; k++) {
                 if(commonObject["assignments_position"][k].name == ui.item.value) {

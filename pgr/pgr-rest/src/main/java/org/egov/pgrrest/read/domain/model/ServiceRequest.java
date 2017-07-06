@@ -8,10 +8,12 @@ import org.egov.pgr.common.model.OtpValidationRequest;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.common.domain.model.Requester;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -145,5 +147,31 @@ public class ServiceRequest {
 
     public void setServiceType(boolean isComplaintType) {
         serviceRequestType.setServiceType(isComplaintType);
+    }
+
+    public ServiceDefinitionSearchCriteria getServiceDefinitionSearchCriteria() {
+        return serviceRequestType.getSearchCriteria();
+    }
+
+    public String getServiceTypeCode() {
+        return getServiceRequestType().getCode();
+    }
+
+    public List<AttributeEntry> getAttributesWithKey(String attributeDefinitionCode) {
+        return attributeEntries.stream()
+            .filter(a -> attributeDefinitionCode.equals(a.getKey()))
+            .collect(Collectors.toList());
+    }
+
+    public AttributeEntry getAttributeWithKey(String attributeDefinitionCode) {
+        final List<AttributeEntry> matchingAttributes = getAttributesWithKey(attributeDefinitionCode);
+        if(CollectionUtils.isEmpty(matchingAttributes)) {
+            return null;
+        }
+        return matchingAttributes.get(0);
+    }
+
+    public boolean isMultipleAttributeEntriesPresent(String attributeCode) {
+        return getAttributesWithKey(attributeCode).size() > 1;
     }
 }

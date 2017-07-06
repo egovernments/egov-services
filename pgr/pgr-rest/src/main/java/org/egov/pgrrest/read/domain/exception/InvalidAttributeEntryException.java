@@ -8,3 +8,4 @@ import lombok.Getter;
 public class InvalidAttributeEntryException extends RuntimeException {
     private String field;
 }
+

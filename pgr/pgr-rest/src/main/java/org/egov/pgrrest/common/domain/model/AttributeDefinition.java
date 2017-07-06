@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Builder
 public class AttributeDefinition {
     private boolean readOnly;
-    private String dataType;
+    private AttributeDataType dataType;
     private boolean required;
     private String dataTypeDescription;
     private int order;

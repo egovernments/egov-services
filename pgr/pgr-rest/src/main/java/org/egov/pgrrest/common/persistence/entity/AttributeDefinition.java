@@ -1,16 +1,20 @@
 package org.egov.pgrrest.common.persistence.entity;
 
 import lombok.*;
+import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.common.domain.model.AttributeActionsDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
-import org.egov.pgrrest.common.domain.model.ValueDefinition;
 import org.egov.pgrrest.common.domain.model.ConstraintDefinition;
+import org.egov.pgrrest.common.domain.model.ValueDefinition;
+import org.egov.pgrrest.read.domain.exception.InvalidAttributeDataTypeException;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Entity
 @Getter
@@ -61,7 +65,7 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
                                                                              List<ConstraintDefinition> constraints) {
         return org.egov.pgrrest.common.domain.model.AttributeDefinition.builder()
             .code(getCode())
-            .dataType(dataType)
+            .dataType(getEnumDataType())
             .readOnly(isReadOnly())
             .required(isRequired())
             .order(order)
@@ -73,6 +77,13 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
             .values(domainValues)
             .constraints(constraints)
             .build();
+    }
+
+    private AttributeDataType getEnumDataType() {
+        return Stream.of(AttributeDataType.values())
+            .filter(dataType -> dataType.getName().equals(this.dataType))
+            .findFirst()
+            .orElseThrow(() -> new InvalidAttributeDataTypeException(this.dataType, this.id.getCode()));
     }
 
     private boolean isRequired() {

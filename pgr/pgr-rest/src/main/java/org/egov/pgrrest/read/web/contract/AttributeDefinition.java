@@ -29,7 +29,7 @@ public class AttributeDefinition {
     public AttributeDefinition(org.egov.pgrrest.common.domain.model.AttributeDefinition attributeDefinition) {
         this.variable = !attributeDefinition.isReadOnly();
         this.code = attributeDefinition.getCode();
-        this.dataType = attributeDefinition.getDataType();
+        this.dataType = attributeDefinition.getDataType().getName();
         this.required = attributeDefinition.isRequired();
         this.dataTypeDescription = attributeDefinition.getDataTypeDescription();
         this.description=attributeDefinition.getDescription();

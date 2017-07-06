@@ -140,7 +140,7 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.active  ? "true" : "false"}</td>
                                               <td>{e.auditDetails}</td>
-                                              <td>{e.iscrnrequired}</td>
+                                              <td>{e.iscrnrequired ? "true" : "false"}</td>
                                               <td>{e.orderno}</td>
                                             </tr>
                                           )

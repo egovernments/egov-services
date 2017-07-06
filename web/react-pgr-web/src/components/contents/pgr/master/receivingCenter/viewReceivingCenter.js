@@ -126,7 +126,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.id ? viewReceivingCenter.id : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -136,7 +136,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.name ? viewReceivingCenter.name : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -146,7 +146,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.code ? viewReceivingCenter.code : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -156,7 +156,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.description? viewReceivingCenter.description : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -166,7 +166,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.active? "true": 'false'}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -176,7 +176,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.auditdetails ? viewReceivingCenter.auditdetails : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -184,9 +184,9 @@ class ViewReceivingCenter extends Component {
                                                {translate("pgr.lbl.crn")}
                                           </Col>
                                           <Col xs={8} md={10}>
-                                              {viewReceivingCenter.iscrnrequired ? viewReceivingCenter.iscrnrequired : ''}
+                                              {viewReceivingCenter.iscrnrequired? "true": 'false'}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
@@ -196,7 +196,7 @@ class ViewReceivingCenter extends Component {
                                           <Col xs={8} md={10}>
                                               {viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}
                                           </Col>
-                                        </Row> 
+                                        </Row>
                                       </ListGroupItem>
                                   </ListGroup>
                               </CardText>

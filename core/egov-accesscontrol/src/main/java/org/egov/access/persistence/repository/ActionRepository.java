@@ -46,7 +46,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.egov.access.domain.model.Action;
@@ -68,7 +67,6 @@ public class ActionRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ActionRepository.class);
 
-	public static Map<Long, Module> moduleMap = null;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

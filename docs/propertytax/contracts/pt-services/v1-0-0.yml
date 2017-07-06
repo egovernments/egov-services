@@ -790,9 +790,11 @@ definitions:
         description: Application type.
         enum:
           - CREATE
-          - RENEWAL
-          - EVICTION
-          - CANCEL
+          - TITLE_TRANSFER
+          - BIFURCATION
+          - ALTER
+		  - EDIT
+		  - AMALGAMATION
           
   Document:
     type: object

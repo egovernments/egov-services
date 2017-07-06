@@ -148,10 +148,10 @@ definitions:
     - $ref: "#/definitions/ColumnDef"
     - type: object
       properties:
-        value: 
+        input: 
           description: |
-            User provided value of this parameter that will be used in query. Please note that value will be format checked against the value deficition of this parameter in report definition
-          type: string
+            User provided input of this parameter that will be used in query. Please note that value will be format checked against the value definition of this parameter in report definition. This field has been made an object so that multiple values from things like multivalue list can be accepted.
+          type: object
         isMandatory:
           type: boolean
           default: true
@@ -178,13 +178,11 @@ definitions:
             - url
             - singlevaluelist
             - multivaluelist
-        pattern:
-          type: string
+        defaultValue:
+          type: object
           description: |
-            1. display format for the column - in case of epoch type datatypes. 
-            2. In case of single/multivalue list this will be pipe separated url|keyJSONPath|valueJSONPath (URL to fetch the list values, jsonPath of the key value, jsonPath of what to display)
-              2.1 In case the URL wants the values to be statically defined as a list use list://pipe_separated_values!
-            3. In case the other datatype - this will be the parametarized URL that consumer can then use to call the next drill down/action - for drill down use _parent?key=value&key=value (where key would be name of additional params and value search value to construct new search params)
+            any default value for the column if the column type is number, string, date, datetime, epoch or URL
+            collection contaning possible list value pairs for singlevaluelist and multivaluelist
       required:
         - type
       
@@ -243,6 +241,8 @@ definitions:
           type: string
           description: |
             column name in the table/index
+        linkedReport:
+          $ref: '#/definitions/LinkedReport'
         isExternal: 
           type: boolean
           default: false
@@ -277,9 +277,31 @@ definitions:
           type: string
           description: |
             column name in the table/index
+        pattern:
+          type: string
+          description: |
+            1. display format for the column - in case of epoch type datatypes. 
+            2. In case of single/multivalue list this will be pipe separated url|keyJSONPath|valueJSONPath (URL to fetch the list values, jsonPath of the key value, jsonPath of what to display)
+              2.1 In case the URL wants the values to be statically defined as a list use list://pipe_separated_values!
+            3. In case the other datatype - this will be the parametarized URL that consumer can then use to call the next drill down/action - for drill down use _parent?key=value&key=value (where key would be name of additional params and value search value to construct new search params)
       required:
         - source
         - colName
+        
+  LinkedReport:
+    type: object
+    description: |
+      links the next report to a column in SourceColumns and indicates whether the link is on COLUMN (meaning value of column header), COLUMNVALUE (meaning actual value of column in that row) or FIXEDPATH (meaning a totally different end point)
+    properties:
+      reportName: 
+        type: string
+        description: name of the next report
+      linkType:
+        type: string
+        enum: 
+        - COLUMN
+        - COLUMNVALUE
+        - FUXEDURL
 
   
   ReportDefinition:

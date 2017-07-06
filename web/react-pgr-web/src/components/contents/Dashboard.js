@@ -159,21 +159,40 @@ class Dashboard extends Component {
       slideIndex: value,
     });
   };
+  
+   handleNavigation = (type, id) => {
+      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+    }
 
 
   render() {
 	  
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
-				var trColor;
+				var priority;
+				var triColor;
 				e.attribValues.map((item,index)=>{
 				  if(item.key =="PRIORITY"){
-					trColor = item.name
+					priority = item.name
 				  }
 				})
+				
+				switch (priority) {
+					case "PRIORITY-1":
+						triColor = "Red";
+						break;
+					case "PRIORITY-2":
+						triColor = "Yellow";
+						break;	
+					case "PRIORITY-3":
+						triColor = "Green";
+						break;			
+				}	
 			 
 		  return(
-								<tr key={i}>
+								<tr key={i} style={{backgroundColor:triColor, cursor:'pointer'}} onClick={()=>{
+									 this.handleNavigation("#/pgr/viewGrievance/", e.serviceRequestId);
+								}}>
 									<td>{i+1}</td>
 									<td>{e.serviceRequestId}</td>
 									<td>{e.requestedDatetime}</td>

@@ -306,7 +306,18 @@ function validate(isRequired, pattern, name, value, validationData) {
         // if (_.indexOf(validationData.pattern.current, name) == -1) {
         //   validationData.pattern.current.push(name);
         // }
-      } else {
+		
+      } else if(pattern == "/^[0-9]+$/"){
+		  
+		validationData.required.current = _.remove(validationData.required.current, (item) => {
+          return item != name
+        });
+        // validationData.pattern.current = _.remove(validationData.pattern.current, (item) => {
+        //   return item != name
+        // });
+        errorText = "It expects numeric only";
+		  
+	  } else {
         validationData.required.current = _.remove(validationData.required.current, (item) => {
           return item != name
         });

@@ -244,7 +244,7 @@ class CreateReceivingCenter extends Component {
                                       floatingLabelText={translate("pgr.lbl.order.no")+"*"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
-                                      onChange={(e) => handleChange(e, "orderno", true, '')}
+                                      onChange={(e) => handleChange(e, "orderno", true, /^[0-9]+$/)}
                                       id="orderno"
                                   />
                               </Col>

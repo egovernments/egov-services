@@ -132,6 +132,8 @@ class Login extends Component {
      initForm();
      setLoadingStatus("loading");
      this.handleLocaleChange(this.state.locale);
+	 
+	 
    }
 
    componentWillUnmount() {
@@ -143,7 +145,7 @@ class Login extends Component {
    }
 
    componentDidUpdate(prevProps, prevState) {
-
+		
    }
 
    handleLocaleChange = (value) => {
@@ -162,7 +164,7 @@ class Login extends Component {
      });
    }
 
-   loginRequest () {
+   loginRequest (e) {
       var self = this, props = this.props;
       self.setState({
           errorMsg: ""
@@ -515,6 +517,8 @@ class Login extends Component {
 
         return false;
       }
+	  
+	  console.log(credential);
 
         return(
           <div>
@@ -536,13 +540,15 @@ class Login extends Component {
               </Row>
               <Row style={styles.marginTop}>
                   <Col xs={12} md={6} mdPush={6} style={styles.marginBottom}>
+					<form autoComplete="on" onSubmit={(e) => { 
+					loginRequest(e)}}>
                     <Card>
                       <CardText>
                           <Row>
                               <Col lg={12}>
                               <h4>{translate('core.lbl.signin')}</h4>
                                 <Col lg={12}>
-                                <TextField
+                                <TextField  
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                                     style={styles.fullWidth}
                                     errorText={fieldErrors.username
@@ -551,7 +557,7 @@ class Login extends Component {
                                 />
                                 </Col>
                                 <Col lg={12}>
-                                <TextField
+                                <TextField tabindex="0"
                                     floatingLabelText={translate('core.lbl.password')}
                                     type="password"
                                     style={styles.fullWidth}
@@ -564,15 +570,14 @@ class Login extends Component {
                                   {showError()}
                                 </Col>
                                 <Col lg={12}>
-                                  <RaisedButton disabled={!isFormValid}  label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} onClick={(e)=>{
-                                    loginRequest()
-                                  }}/>
+                                  <RaisedButton disabled={!isFormValid} type="submit" label={translate('core.lbl.signin')} style={styles.buttonTopMargin} className="pull-right" primary={true} />
                                   <FlatButton label={translate('core.lbl.forgot.password')} style={styles.buttonTopMargin} onClick={showPasswordModal}/>
                                 </Col>
                               </Col>
                           </Row>
                           </CardText>
                     </Card>
+					</form>
                   </Col>
                   <Col xs={12}  md={6} mdPull={6}>
                     <Row>

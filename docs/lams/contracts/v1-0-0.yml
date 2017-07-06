@@ -936,7 +936,7 @@ definitions:
 
   AgreementResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
       Agreements:
         type: array
@@ -946,7 +946,7 @@ definitions:
 
   DocumentTypeResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
       Assets:
         type: array
@@ -1065,7 +1065,7 @@ definitions:
         
   NoticeResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
       Notices:
         type: array
@@ -1157,7 +1157,7 @@ definitions:
       
   ErrorRes:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: '#/definitions/ResponseInfo'
       Error:
         $ref: '#/definitions/Error'

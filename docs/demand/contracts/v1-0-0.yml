@@ -921,7 +921,7 @@ definitions:
 
   DemandResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Demands:
         type: array
@@ -931,7 +931,7 @@ definitions:
     
   DemandDetailResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       DemandDetails:
         type: array
@@ -949,7 +949,7 @@ definitions:
 
   DemandReasonResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Demands:
         type: array
@@ -969,7 +969,7 @@ definitions:
 
   BillResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       BillInfos:
         type: array
@@ -987,7 +987,7 @@ definitions:
 
   InstallmentResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Installments:
         type: array

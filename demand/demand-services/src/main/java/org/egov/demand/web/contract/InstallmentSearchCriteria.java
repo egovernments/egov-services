@@ -3,8 +3,10 @@ package org.egov.demand.web.contract;
 import java.util.Date;
 
 public class InstallmentSearchCriteria {
+
 	private Date fromDate = null;
 	private Date toDate = null;
+	private Date currentDate = null;
 	private Date installmentYear = null;
 	private String module = null;
 	private String installmentNumber = null;
@@ -27,6 +29,14 @@ public class InstallmentSearchCriteria {
 
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
 	}
 
 	public Date getInstallmentYear() {

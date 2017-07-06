@@ -38,7 +38,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoleController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
-
+	
+	private static final String[] taskAction = { "create", "update" };
+	
 	private RoleService roleService;
 
 	@Autowired
@@ -73,7 +75,7 @@ public class RoleController {
 
 		logger.info("Create Role Type Request::" + roleRequest);
 
-		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest);
+		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest,taskAction[0]);
 
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -93,7 +95,7 @@ public class RoleController {
 
 		logger.info("Update Role Request::" + roleRequest);
 
-		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest);
+		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest,taskAction[1]);
 
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -124,27 +126,32 @@ public class RoleController {
 		return errRes;
 	}
 
-	private List<ErrorResponse> validatRoleRequest(final RoleRequest roleRequest) {
+	private List<ErrorResponse> validatRoleRequest(final RoleRequest roleRequest,String action) {
 
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(roleRequest);
+		final Error error = getError(roleRequest,action);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final RoleRequest roleRequest) {
-		final List<ErrorField> errorFields = getErrorFields(roleRequest);
+	private Error getError(final RoleRequest roleRequest,String action) {
+		final List<ErrorField> errorFields = getErrorFields(roleRequest,action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(AccessControlConstants.INVALID_ACTION_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final RoleRequest roleRequest) {
+	private List<ErrorField> getErrorFields(final RoleRequest roleRequest,String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addRoleameValidationErrors(roleRequest, errorFields);
+		if(action.equals(taskAction[0])){
 		checkRoleNameExistValidationErrors(roleRequest, errorFields);
+		} else if(action.equals(taskAction[1])){
+			
+			checkRoleNameDoesNotExitValidationErrors(roleRequest, errorFields);
+		}
 
 		return errorFields;
 	}
@@ -169,6 +176,19 @@ public class RoleController {
 						.code(AccessControlConstants.ROLE_NAME_DUPLICATE_CODE)
 						.message(AccessControlConstants.ROLE_NAME_DUPLICATE_ERROR_MESSAGE+" in "+(i+1)+" Object")
 						.field(AccessControlConstants.ROLE_NAME_DUPLICATEFIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+		}
+	}
+	
+	private void checkRoleNameDoesNotExitValidationErrors(final RoleRequest roleRequest, final List<ErrorField> errorFields) {
+
+		for (int i = 0; i < roleRequest.getRoles().size(); i++) {
+			if (!roleService.checkRoleNameDuplicationValidationErrors(roleRequest.getRoles().get(i).getName())) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_CODE)
+						.message(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_ERROR_MESSAGE+" in "+(i+1)+" Object")
+						.field(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_FIELD_NAME).build();
 				errorFields.add(errorField);
 			}
 		}

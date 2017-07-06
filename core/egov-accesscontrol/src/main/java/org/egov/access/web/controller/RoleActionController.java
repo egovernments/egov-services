@@ -33,13 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoleActionController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoleActionController.class);
-	
+
 	@Autowired
 	private RoleActionService roleActionService;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
+
 	@PostMapping(value = "_create")
 	public ResponseEntity<?> createRoleActions(@RequestBody @Valid final RoleActionsRequest roleActionRequest,
 			final BindingResult errors) {
@@ -60,7 +60,7 @@ public class RoleActionController {
 
 		return getSuccessResponse(roleActions, roleActionRequest.getRequestInfo());
 	}
-	
+
 	private ResponseEntity<?> getSuccessResponse(final List<RoleAction> roleActions, final RequestInfo requestInfo) {
 		final RoleActionsResponse roleActionResponse = new RoleActionsResponse();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -69,7 +69,7 @@ public class RoleActionController {
 		roleActionResponse.setRoleActions(roleActions);
 		return new ResponseEntity<>(roleActionResponse, HttpStatus.OK);
 	}
-	
+
 	private List<ErrorResponse> validateRoleActionsRequest(final RoleActionsRequest roleActionRequest) {
 
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -80,13 +80,13 @@ public class RoleActionController {
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
-	
+
 	private Error getError(final RoleActionsRequest roleActionRequest) {
 		final List<ErrorField> errorFields = getErrorFields(roleActionRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(AccessControlConstants.INVALID_ACTION_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
-	
+
 	private ErrorResponse populateErrors(final BindingResult errors) {
 		final ErrorResponse errRes = new ErrorResponse();
 
@@ -103,22 +103,34 @@ public class RoleActionController {
 	private List<ErrorField> getErrorFields(final RoleActionsRequest roleActionRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addTeanantIdValidationErrors(roleActionRequest, errorFields);
-						
+		addRoleCodeAndNameValidationErrors(roleActionRequest,errorFields);
 		return errorFields;
 	}
-	
-	private void addTeanantIdValidationErrors(final RoleActionsRequest roleActionRequest, final List<ErrorField> errorFields) {
 
-		for (int i = 0; i < roleActionRequest.getActions().size(); i++) {
-			if (roleActionRequest.getActions().get(i).getTenantId() == null
-					|| roleActionRequest.getActions().get(i).getTenantId().isEmpty()) {
-				final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.TENANTID_MANDATORY_CODE)
-						.message(
-								AccessControlConstants.TENANTID_MANADATORY_ERROR_MESSAGE + " in " + (i + 1) + " Object")
-						.field(AccessControlConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-				errorFields.add(errorField);
-			}
+	private void addTeanantIdValidationErrors(final RoleActionsRequest roleActionRequest,
+			final List<ErrorField> errorFields) {
+
+		if (roleActionRequest.getTenantId() == null
+				|| roleActionRequest.getTenantId().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.TENANTID_MANDATORY_CODE)
+					.message(AccessControlConstants.TENANTID_MANADATORY_ERROR_MESSAGE )
+					.field(AccessControlConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+	}
+
+	private void addRoleCodeAndNameValidationErrors(final RoleActionsRequest roleActionRequest,
+			final List<ErrorField> errorFields) {
+
+		if (roleActionRequest.getRole().getCode() == null 
+				|| roleActionRequest.getRole().getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_CODE_MANDATORY_CODE)
+					.message(AccessControlConstants.ROLE_CODE_MANADATORY_ERROR_MESSAGE )
+					.field(AccessControlConstants.ROLE_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
 		}
 	}
 	
-}
+
+	}
+

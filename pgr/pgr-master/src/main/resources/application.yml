@@ -2,82 +2,82 @@ ReportDefinitions:
 #
 #Grievance Type Report:
 #Grouping the count based on the status with from date and to date:
-#select egct.name,count(*),status from submission seva 
+#select egct.name,count(*),status from submission seva
 #join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= '2017-06-01' and seva.createddate <= '2017-06-29' group by seva.status,egct.name order by egct.name asc;
 
 #Grouping the count based on the status and grievance type with from date and to date:
-#select egct.name,count(*),status from submission seva 
+#select egct.name,count(*),status from submission seva
 #join egpgr_complainttype egct on egct.code = seva.serviceCode where seva.createddate >= '2017-06-01' and seva.createddate <= '2017-06-29' and egct.code = 'BRKNB' group by seva.status,egct.name;
 
 # Both above reports can be achived by creating the report for second case and making status as non mandatory seacrh parameter (Refer revised reportdef yaml)
   - reportName: GrievanceByType
     summary: Report grouped by Grievance Type and status - based on a date period
     version: 1.0.0
-    
+
     sourceColumns:
       - name: name
         label: reports.pgr.complainttype.name
         type: string
-        source: egpgr_complainttype 
+        source: egpgr_complainttype
       - name: registered
         label: reports.pgr.status.registered
         type: number
-        source: seva 
+        source: seva
       - name: inprocess
         label: reports.pgr.status.inprocess
         type: number
-        source: completed 
+        source: completed
       - name: completed
         label: reports.pgr.status.completed
         type: number
-        source: reopened 
+        source: reopened
       - name: rejected
         label: reports.pgr.status.reopened
         type: number
-        source: seva 
+        source: seva
       - name: rejected
         label: reports.pgr.status.rejected
         type: number
-        source: seva 
+        source: seva
       - name: withinsla
         label: reports.pgr.status.withinsla
         type: number
-        source: seva 
+        source: seva
       - name: beyondsla
         label: reports.pgr.status.beyondsla
         type: number
-        source: seva 
+        source: seva
       - name: issla
         label: reports.pgr.status.issla
         type: string
-        source: seva 
-        
+        source: seva
+
     searchParams:
       - name: fromDate
         label: reports.pgr.datefrom
         type: epoch
-        source: seva 
+        source: seva
       - name: toDate
         label: reports.pgr.dateto
         type: epoch
-        source: seva 
+        source: seva
       - name: complainttype
         label: reports.pgr.complainttype
         type: singlevaluelist
-        pattern: http://localhost:8080/billing-service/glcodemasters/_search?tenantId=$tenantid&service=businessservice 99&taxHead=1,2|$.GlCodeMasters..taxHead|$.GlCodeMasters..id
+        pattern: http://pgr-master:8080/serviceGroup/v1/_search?tenantId=default|$..code|$..name
         source: seva
       - name: status
         label: reports.pgr.status
         type: singlevaluelist
-        pattern: http://localhost:8080/billing-service/glcodemasters/_search?tenantId=$tenantid&service=businessservice 99&taxHead=1,2|$.GlCodeMasters..taxHead|$.GlCodeMasters..id
+        pattern: http://pgr-master:8080/serviceGroup/v1/_search?tenantId=default|$..code|$..name
         source: seva
       - name: test
         label: reports.pgr.status
         type: singlevaluelist
-        pattern: http://localhost:8080/billing-service/glcodemasters/_search?tenantId=$tenantid&service=businessservice 99&taxHead=1,2|$.GlCodeMasters..taxHead|$.GlCodeMasters..id
+        pattern: http://pgr-master:8080/serviceGroup/v1/_search?tenantId=default|$..code|$..name
         source: seva
 
     query: SELECT ctype.name,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN 1 ELSE NULL::integer END) AS registered,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'PROCESSING'::character varying::text, 'NOTCOMPLETED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'WITHDRAWN'::character varying::text, 'CLOSED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened, count(CASE WHEN cs.status::text = 'REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected, sum(CASE WHEN (cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS withinsla, sum(CASE WHEN (cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 WHEN (cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS beyondsla, CASE WHEN bool_or((cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision)) THEN 'Yes'::text WHEN bool_or((cs.status::text <> ALL (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs, egpgr_complainttype ctype WHERE cs.servicecode = ctype.code and ctype.code = $complainttype and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.tenantid = $tenantid GROUP BY ctype.name;
-    
+
   - reportName: nextReport
     summary: next report summary

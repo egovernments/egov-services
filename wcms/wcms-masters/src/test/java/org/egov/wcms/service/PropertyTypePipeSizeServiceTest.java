@@ -39,8 +39,10 @@
  */
 package org.egov.wcms.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -48,8 +50,11 @@ import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
+import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
+import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
+import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.junit.Test;
@@ -58,8 +63,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 @RunWith(MockitoJUnitRunner.class)
+@WebMvcTest(PropertyTypePipeSizeService.class)
 public class PropertyTypePipeSizeServiceTest {
 
     @Mock
@@ -74,14 +81,15 @@ public class PropertyTypePipeSizeServiceTest {
     @InjectMocks
     private PropertyTypePipeSizeService propertyPipeSizeService;
 
-    @Test
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
     public void test_Should_Search_PropertyPipeSize() {
         final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         propertyPipeSizes.add(getPropertyPipeSize());
-        when(propertyPipeSizeRepository.findForCriteria(any(PropertyTypePipeSizeGetRequest.class)))
-                .thenReturn(propertyPipeSizes);
+        final PropertyTypePipeSizeGetRequest propertyTypePipeSizeGetRequest = Mockito.mock(PropertyTypePipeSizeGetRequest.class);
+        when(propertyPipeSizeRepository.findForCriteria(propertyTypePipeSizeGetRequest)).thenThrow(Exception.class);
         assertTrue(propertyPipeSizes
-                .equals(propertyPipeSizeService.getPropertyPipeSizes(any(PropertyTypePipeSizeGetRequest.class))));
+                .equals(propertyPipeSizeService.getPropertyPipeSizes(propertyTypePipeSizeGetRequest)));
     }
 
     @Test

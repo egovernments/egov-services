@@ -74,7 +74,7 @@ public class ServiceTypeRepository {
 
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
-		final String complaintInsert = ServiceTypeQueryBuilder.insertComplaintTypeQuery();
+		final String complaintInsert = serviceTypeQueryBuilder.insertComplaintTypeQuery();
 		boolean active = true;
 		final Object[] object = new Object[] { serviceRequest.getService().getServiceName(),
 				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
@@ -83,7 +83,7 @@ public class ServiceTypeRepository {
 				};
 		jdbcTemplate.update(complaintInsert, object);
 
-		final String serviceInsert = ServiceTypeQueryBuilder.insertServiceTypeQuery();
+		final String serviceInsert = serviceTypeQueryBuilder.insertServiceTypeQuery();
 		final Object[] obj = new Object[] { serviceRequest.getService().getServiceCode(),
 				serviceRequest.getService().getTenantId(), serviceRequest.getRequestInfo().getUserInfo().getId(),
 				new Date(new java.util.Date().getTime()) };
@@ -240,6 +240,7 @@ public class ServiceTypeRepository {
 					}
 				}
 				serviceTypeList.get(i).setAttributes(attributeList);
+				serviceTypeList.get(i).setMetadata(true);
 			}
 		}
 		return serviceTypeList;

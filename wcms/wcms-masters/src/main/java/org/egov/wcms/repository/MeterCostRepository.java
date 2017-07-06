@@ -45,28 +45,28 @@ import java.sql.Date;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.repository.builder.MeterCostQueryBuilder;
 import org.egov.wcms.web.contract.MeterCostRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class MeterCostRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MeterCostRepository.class);
+@Repository
+@Slf4j
+public class MeterCostRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public MeterCostRequest persistCreateMeterCost(final MeterCostRequest meterCostRequest) {
-        LOGGER.info("MeterCostRequest::" + meterCostRequest);
+        log.info("MeterCostRequest::" + meterCostRequest);
         final String meterCostInsert = MeterCostQueryBuilder.insertMeterCostQuery();
         final MeterCost meterCost = meterCostRequest.getMeterCost();
         final Object[] obj = new Object[] { meterCost.getPipeSize(), meterCost.getMeterMake(), meterCost.getAmount(),
                 meterCost.getActive(), Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
-                Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()), new Date(new java.util.Date().getTime()),
-                new Date(new java.util.Date().getTime()), meterCost.getTenantId() };
+                Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                meterCost.getTenantId() };
 
         jdbcTemplate.update(meterCostInsert, obj);
         return meterCostRequest;

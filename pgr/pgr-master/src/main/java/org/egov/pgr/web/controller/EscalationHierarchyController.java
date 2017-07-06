@@ -102,7 +102,7 @@ public class EscalationHierarchyController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("EscalationTimeTypeRequest::" + escalationHierarchyRequest);
+		logger.info("EscalationHierarchy Create : Request ::" + escalationHierarchyRequest);
 
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationHierarchyRequest,
 				taskAction[0]);
@@ -127,7 +127,7 @@ public class EscalationHierarchyController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("EscalationTimeTypeRequest::" + escalationHierarchyRequest);
+		logger.info("EscalationHierarchy Update: Request::" + escalationHierarchyRequest);
 
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationHierarchyRequest,
 				taskAction[1]);
@@ -164,7 +164,7 @@ public class EscalationHierarchyController {
         try {
         	escHierarchyList = escalationHierarchyService.getAllEscalationHierarchy(escHierarchyGetRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + escHierarchyGetRequest, exception);
+            logger.error("EscalationHierarchy Search : Error while processing request : " + escHierarchyGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 

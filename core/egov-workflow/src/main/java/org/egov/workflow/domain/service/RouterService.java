@@ -134,7 +134,7 @@ public class RouterService {
 			for (int j = 0; j < serviceTypes.size(); j++) {
 				flag++;
 				Long serviceID = serviceTypes.get(j).getId();
-				logger.info("Boundary Size is" + boundaries.get(j).getBoundaryType());
+				logger.info("Boundary Size is" + boundaries.get(i).getBoundaryType());
 				pr.setService(serviceID);
 				pr.setBoundary(boundaryID);
 				prq.setRouterType(pr);

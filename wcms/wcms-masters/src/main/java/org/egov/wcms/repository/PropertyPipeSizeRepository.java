@@ -50,17 +50,16 @@ import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyPipeSizeRowMapper;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class PropertyPipeSizeRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(PropertyPipeSizeRepository.class);
+@Repository
+@Slf4j
+public class PropertyPipeSizeRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -73,7 +72,7 @@ public class PropertyPipeSizeRepository {
 
     public PropertyTypePipeSizeRequest persistCreatePropertyPipeSize(
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        LOGGER.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
+        log.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeInsert = PropertyPipeSizeQueryBuilder.insertPropertyPipeSizeQuery();
         final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
@@ -83,10 +82,10 @@ public class PropertyPipeSizeRepository {
                     new Object[] { propertyPipeSize.getPipeSize(), propertyPipeSize.getTenantId() },
                     Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            LOGGER.info("EmptyResultDataAccessException: Query returned empty result set");
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
         }
         if (pipesizeId == null)
-            LOGGER.info("Invalid input.");
+            log.info("Invalid input.");
 
         final Object[] obj = new Object[] { pipesizeId, propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeId(),
                 propertyPipeSize.getActive(),
@@ -100,7 +99,7 @@ public class PropertyPipeSizeRepository {
 
     public PropertyTypePipeSizeRequest persistUpdatePropertyPipeSize(
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        LOGGER.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
+        log.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeUpdate = PropertyPipeSizeQueryBuilder.updatePropertyPipeSizeQuery();
         final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
@@ -110,10 +109,10 @@ public class PropertyPipeSizeRepository {
                     new Object[] { propertyPipeSize.getPipeSize(), propertyPipeSize.getTenantId() },
                     Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            LOGGER.info("EmptyResultDataAccessException: Query returned empty result set while update");
+            log.info("EmptyResultDataAccessException: Query returned empty result set while update");
         }
         if (pipesizeId == null)
-            LOGGER.info("Invalid input.");
+            log.info("Invalid input.");
 
         final Object[] obj = new Object[] { pipesizeId, propertyPipeSize.getPropertyTypeId(),
                 propertyPipeSize.getActive(),
@@ -131,10 +130,10 @@ public class PropertyPipeSizeRepository {
         preparedStatementValues.add(tenantId);
         final String query;
         if (id == null)
-            query = propertyPipeSizeQueryBuilder.selectPropertyByPipeSizeQuery();
+            query = PropertyPipeSizeQueryBuilder.selectPropertyByPipeSizeQuery();
         else {
             preparedStatementValues.add(id);
-            query = propertyPipeSizeQueryBuilder.selectPropertyByPipeSizeNotInQuery();
+            query = PropertyPipeSizeQueryBuilder.selectPropertyByPipeSizeNotInQuery();
         }
         final List<Map<String, Object>> propertyPipeSizes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
@@ -143,8 +142,6 @@ public class PropertyPipeSizeRepository {
 
         return true;
     }
-    
-    
 
     public List<PropertyTypePipeSize> findForCriteria(final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
@@ -156,7 +153,7 @@ public class PropertyPipeSizeRepository {
                                         propertyPipeSizeGetRequest.getTenantId() },
                                 Long.class));
         } catch (final EmptyResultDataAccessException e) {
-            LOGGER.error("EmptyResultDataAccessException: Query returned empty RS.");
+            log.error("EmptyResultDataAccessException: Query returned empty RS.");
 
         }
 

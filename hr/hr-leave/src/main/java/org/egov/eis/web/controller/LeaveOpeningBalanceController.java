@@ -40,18 +40,14 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.service.LeaveOpeningBalanceService;
 import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
 import org.egov.eis.web.contract.LeaveOpeningBalanceRequest;
 import org.egov.eis.web.contract.LeaveOpeningBalanceResponse;
-import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
@@ -60,14 +56,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/leaveopeningbalances")
@@ -118,8 +110,9 @@ public class LeaveOpeningBalanceController {
 	 * Maps Post Requests for _create & returns ResponseEntity of either
 	 * LeaveOpeningBalanceResponse type or ErrorResponse type
 	 * 
-	 * @param LeaveOpeningBalanceRequest
-	 * @param BindingResult
+	 * @param leaveOpeningBalanceRequest
+	 * @param bindingResult
+	 * @param type
 	 * @return ResponseEntity<?>
 	 */
 
@@ -141,8 +134,9 @@ public class LeaveOpeningBalanceController {
 	 * Maps Post Requests for _create & returns ResponseEntity of either
 	 * LeaveOpeningBalanceResponse type or ErrorResponse type
 	 * 
-	 * @param LeaveOpeningBalanceRequest
-	 * @param BindingResult
+	 * @param leaveOpeningBalanceRequest
+	 * @param employeeId
+	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
 
@@ -180,7 +174,7 @@ public class LeaveOpeningBalanceController {
 	 * Validate EmployeeRequest object & returns ErrorResponseEntity if there
 	 * are any errors or else returns null
 	 * 
-	 * @param EmployeeRequest
+	 * @param leaveOpeningBalanceRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */

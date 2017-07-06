@@ -102,7 +102,7 @@ public class ReceivingCenterTypeController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Receiving CenterType Request::" + centerTypeRequest);
+		logger.info("ReceivingCenterType Create : Request::" + centerTypeRequest);
 
 		final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest,true);
 		if (!errorResponses.isEmpty())
@@ -123,7 +123,7 @@ public class ReceivingCenterTypeController {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("ReceivingCenterTypeRequest::" + centerTypeRequest);
+        logger.info("ReceivingCenterType Update : Request::" + centerTypeRequest);
         centerTypeRequest.getCenterType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validateReceivingCenterRequest(centerTypeRequest,false);

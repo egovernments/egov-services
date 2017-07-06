@@ -43,138 +43,137 @@ package org.egov.wcms.repository.builder;
 import java.util.List;
 
 import org.egov.wcms.web.contract.DonationGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class DonationQueryBuilder {
 
-	public static final Logger logger = LoggerFactory.getLogger(DonationQueryBuilder.class);
+    private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.propertytypeid as donation_propertytypeId,"
+            + "donation.usagetypeid as donation_usagetypeId,donation.categorytypeid as donation_categorytypeId,donation.maxpipesizeid"
+            + " as donation_maxpipesizId,donation.minpipesizeid as donation_minpipesizeId,donation.fromdate as donation_fromDate,"
+            + "donation.todate as donation_toDate,donation.donationamount as donation_amount, donation.active as donation_active, "
+            + "donation.tenantId as donation_tenantId " + "FROM egwtr_donation donation ";
 
-	private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.propertytypeid as donation_propertytypeId,"
-			+ "donation.usagetypeid as donation_usagetypeId,donation.categorytypeid as donation_categorytypeId,donation.maxpipesizeid"
-			+ " as donation_maxpipesizId,donation.minpipesizeid as donation_minpipesizeId,donation.fromdate as donation_fromDate,"
-			+ "donation.todate as donation_toDate,donation.donationamount as donation_amount, donation.active as donation_active, "
-			+ "donation.tenantId as donation_tenantId " + "FROM egwtr_donation donation ";
+    public String getQuery(final DonationGetRequest donation, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        addWhereClause(selectQuery, preparedStatementValues, donation);
+        addOrderByClause(selectQuery, donation);
+        log.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-	public String getQuery(final DonationGetRequest donation, final List preparedStatementValues) {
-		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		addWhereClause(selectQuery, preparedStatementValues, donation);
-		addOrderByClause(selectQuery, donation);
-		logger.debug("Query : " + selectQuery);
-		return selectQuery.toString();
-	}
+    @SuppressWarnings("unchecked")
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final DonationGetRequest donation) {
 
-	@SuppressWarnings("unchecked")
-	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final DonationGetRequest donation) {
+        if (donation.getId() == null && donation.getPropertyType() == null && donation.getUsageType() == null
+                && donation.getCategoryType() == null && donation.getMaxPipeSize() == null
+                && donation.getMinPipeSize() == null && donation.getDonationAmount() == 0
+                && donation.getActive() == null && donation.getTenantId() == null)
+            return;
 
-		if (donation.getId() == null && donation.getPropertyType() == null && donation.getUsageType() == null
-				&& donation.getCategoryType() == null && donation.getMaxPipeSize() == null
-				&& donation.getMinPipeSize() == null && donation.getDonationAmount() == 0 && donation.getActive() == null
-				&& donation.getTenantId() == null)
-			return;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        if (donation.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" donation.tenantId = ?");
+            preparedStatementValues.add(donation.getTenantId());
+        }
 
-		if (donation.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" donation.tenantId = ?");
-			preparedStatementValues.add(donation.getTenantId());
-		}
+        if (donation.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.id IN " + getIdQuery(donation.getId()));
+        }
 
-		if (donation.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.id IN " + getIdQuery(donation.getId()));
-		}
+        if (donation.getPropertyType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.propertytypeid = ?");
+            preparedStatementValues.add(donation.getPropertyTypeId());
+        }
 
-		if (donation.getPropertyType() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.propertytypeid = ?");
-			preparedStatementValues.add(donation.getPropertyTypeId());
-		}
+        if (donation.getUsageType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.usagetypeid = ?");
+            preparedStatementValues.add(donation.getUsageTypeId());
+        }
 
-		if (donation.getUsageType() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.usagetypeid = ?");
-			preparedStatementValues.add(donation.getUsageTypeId());
-		}
+        if (donation.getCategoryType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.categorytypeid = ?");
+            preparedStatementValues.add(donation.getCategoryTypeId());
+        }
 
-		if (donation.getCategoryType() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.categorytypeid = ?");
-			preparedStatementValues.add(donation.getCategoryTypeId());
-		}
+        if (donation.getMaxPipeSize() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.maxpipesizeid = ?");
+            preparedStatementValues.add(donation.getMaxPipeSizeId());
+        }
 
-		if (donation.getMaxPipeSize() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.maxpipesizeid = ?");
-			preparedStatementValues.add(donation.getMaxPipeSizeId());
-		}
+        if (donation.getMinPipeSize() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.minpipesizeid = ?");
+            preparedStatementValues.add(donation.getMinPipeSizeId());
+        }
 
-		if (donation.getMinPipeSize() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.minpipesizeid = ?");
-			preparedStatementValues.add(donation.getMinPipeSizeId());
-		}
+        if (donation.getActive() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.active = ?");
+            preparedStatementValues.add(donation.getActive());
+        }
+    }
 
-		if (donation.getActive() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" donation.active = ?");
-			preparedStatementValues.add(donation.getActive());
-		}
-	}
+    private void addOrderByClause(final StringBuilder selectQuery, final DonationGetRequest donation) {
+        final String sortBy = donation.getSortBy() == null ? "donation.id" : "donation." + donation.getSortBy();
+        final String sortOrder = donation.getSortOrder() == null ? "DESC" : donation.getSortOrder();
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
 
-	private void addOrderByClause(final StringBuilder selectQuery, final DonationGetRequest donation) {
-		final String sortBy = donation.getSortBy() == null ? "donation.id" : "donation." + donation.getSortBy();
-		final String sortOrder = donation.getSortOrder() == null ? "DESC" : donation.getSortOrder();
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
 
-	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
+        return true;
+    }
 
-		return true;
-	}
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append(", " + idList.get(i));
+        }
+        return query.append(")").toString();
+    }
 
-	private static String getIdQuery(final List<Long> idList) {
-		final StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++)
-				query.append(", " + idList.get(i));
-		}
-		return query.append(")").toString();
-	}
+    public static String donationInsertQuery() {
+        return "INSERT INTO egwtr_donation "
+                + "(id, propertytypeid, usagetypeid, categorytypeid, maxpipesizeid, minpipesizeid, fromdate, todate, donationamount, "
+                + "active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) VALUES (nextval('SEQ_EGWTR_DONATION'),?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    }
 
-	public static String donationInsertQuery() {
-		return "INSERT INTO egwtr_donation "
-				+ "(id, propertytypeid, usagetypeid, categorytypeid, maxpipesizeid, minpipesizeid, fromdate, todate, donationamount, "
-				+ "active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) VALUES (nextval('SEQ_EGWTR_DONATION'),?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	}
+    public static String donationUpdateQuery() {
+        return "UPDATE egwtr_donation set propertytypeid=?,usagetypeid=?,categorytypeid=?, maxpipesizeid= ?, minpipesizeid=?,"
+                + " fromdate=?, todate=?, donationamount=?, active=?,lastmodifiedby=?, lastmodifieddate= ? where id= ?)";
+    }
 
-	public static String donationUpdateQuery() {
-		return "UPDATE egwtr_donation set propertytypeid=?,usagetypeid=?,categorytypeid=?, maxpipesizeid= ?, minpipesizeid=?,"
-				+ " fromdate=?, todate=?, donationamount=?, active=?,lastmodifiedby=?, lastmodifieddate= ? where id= ?)";
-	}
+    public static String getCategoryId() {
+        return "SELECT id FROM egwtr_category WHERE name = ? and tenantId = ? ";
+    }
 
-	public static String getCategoryId() {
-		return "SELECT id FROM egwtr_category WHERE name = ? and tenantId = ? ";
-	}
+    public static String getCategoryTypeName() {
+        return "SELECT name FROM egwtr_category WHERE id = ? and tenantId = ? ";
+    }
 
-	public static String getCategoryTypeName() {
-		return "SELECT name FROM egwtr_category WHERE id = ? and tenantId = ? ";
-	}
+    public static String getPipeSizeIdQuery() {
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
+    }
 
-	public static String getPipeSizeIdQuery() {
-		return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
-	}
-
-	public static String getPipeSizeInmm() {
-		return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
-	}
+    public static String getPipeSizeInmm() {
+        return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
+    }
 
 }

@@ -43,18 +43,17 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.PipeSizeGetRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class PipeSizeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(PipeSizeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT pipesize.id as pipesize_id, pipesize.code as pipesize_code,"
             + " pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId "
@@ -66,7 +65,7 @@ public class PipeSizeQueryBuilder {
         addWhereClause(selectQuery, preparedStatementValues, pipeSizeGetRequest);
         addOrderByClause(selectQuery, pipeSizeGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, pipeSizeGetRequest);
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -75,8 +74,7 @@ public class PipeSizeQueryBuilder {
             final PipeSizeGetRequest pipeSizeGetRequest) {
 
         if (pipeSizeGetRequest.getId() == null && pipeSizeGetRequest.getSizeInMilimeter() == 0
-                && pipeSizeGetRequest.getActive() == null
-                && pipeSizeGetRequest.getTenantId() == null)
+                && pipeSizeGetRequest.getActive() == null && pipeSizeGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -180,12 +178,14 @@ public class PipeSizeQueryBuilder {
     public static String selectPipeSizeInmmAndCodeNotInQuery() {
         return " select code from egwtr_pipesize where sizeinmilimeter = ? and tenantId = ? and code != ? ";
     }
+
     public static String selectPipesizeByCodeQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         selectQuery.append(" Where pipesize.code = ?");
         selectQuery.append(" AND pipesize.tenantId = ?");
         return selectQuery.toString();
     }
+
     public static String selectPipeSizeIdQuery() {
         return " select * FROM egwtr_pipesize where id = ?";
     }

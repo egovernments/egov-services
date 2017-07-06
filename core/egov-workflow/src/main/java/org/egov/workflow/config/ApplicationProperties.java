@@ -57,6 +57,9 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.router.create.key}")
     private String createRouterTopicKey;
+    
+    @Value("${defaults.escalationHours}")
+    private String defaultEscalationHours;
 
 
 	public String getCreateRouterTopicKey() {
@@ -65,5 +68,9 @@ public class ApplicationProperties {
 
 	public String getCreateRouterTopicName() {
 		return createRouterTopicName;
+	}
+	
+	public String getDefaultEscalationHours() { 
+		return defaultEscalationHours;
 	}
 }

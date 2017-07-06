@@ -44,18 +44,17 @@ import java.util.List;
 
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.DocumentTypeGetReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class DocumentTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(DocumentTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT document.id as document_id, document.code as document_code,"
             + " document.name as document_name, document.description as document_description,document.active as document_active, document.tenantId as document_tenantId "
@@ -69,7 +68,7 @@ public class DocumentTypeQueryBuilder {
         addOrderByClause(selectQuery, documentTypeGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, documentTypeGetRequest);
 
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -78,8 +77,7 @@ public class DocumentTypeQueryBuilder {
             final DocumentTypeGetReq documentTypeGetRequest) {
 
         if (documentTypeGetRequest.getId() == null && documentTypeGetRequest.getName() == null
-                && documentTypeGetRequest.getActive() == null
-                && documentTypeGetRequest.getTenantId() == null)
+                && documentTypeGetRequest.getActive() == null && documentTypeGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -118,7 +116,8 @@ public class DocumentTypeQueryBuilder {
     private void addOrderByClause(final StringBuilder selectQuery, final DocumentTypeGetReq documentTypeGetRequest) {
         final String sortBy = documentTypeGetRequest.getSortBy() == null ? "document.id"
                 : "document." + documentTypeGetRequest.getSortBy();
-        final String sortOrder = documentTypeGetRequest.getSortOrder() == null ? "DESC" : documentTypeGetRequest.getSortOrder();
+        final String sortOrder = documentTypeGetRequest.getSortOrder() == null ? "DESC"
+                : documentTypeGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 

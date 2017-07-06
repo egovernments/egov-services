@@ -35,12 +35,15 @@ export default(state = defaultState, action) => {
             }
           }
 
-    case "RESET_OBJECT":
+      case "RESET_OBJECT":
 
-        return {
-          ...state,
-          form: {}
-        }
+              return {
+                ...state,
+                form: {
+                  ...state.form,
+                  [action.object]:null
+                }
+              }
 
     case "UPDATE_OBJECT":
 
@@ -190,7 +193,7 @@ export default(state = defaultState, action) => {
       state.form[action.formObject][action.formArray] = [];
     } else if(!state.form[action.formObject][action.formArray]) {
       state.form[action.formObject][action.formArray] = [];
-      console.log(state.form[action.formObject]);
+      //console.log(state.form[action.formObject]);
     }
 
     return {
@@ -316,8 +319,8 @@ function validate(isRequired, pattern, name, value, validationData) {
   if (!isRequired && value == "") {
     errorText = "";
   }
-  console.log(validationData.required.required.length)
-  console.log(validationData.required.current.length)
+  // console.log(validationData.required.required)
+  // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
   return {

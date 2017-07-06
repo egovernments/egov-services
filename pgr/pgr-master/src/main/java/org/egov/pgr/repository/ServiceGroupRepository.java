@@ -71,7 +71,7 @@ public class ServiceGroupRepository {
 
 	public ServiceGroupRequest persistCreateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
 		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupInsert = ServiceGroupQueryBuilder.insertServiceGroupQuery();
+		final String serviceGroupInsert = serviceGroupQueryBuilder.insertServiceGroupQuery();
 		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
 		final Object[] obj = new Object[] { serviceGroup.getCode(), serviceGroup.getName(), serviceGroup.getDescription(),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),
@@ -84,7 +84,7 @@ public class ServiceGroupRepository {
 	
 	public ServiceGroupRequest persistUpdateServiceGroup(final ServiceGroupRequest serviceGroupRequest) {
 		LOGGER.info("ServiceGroupRequest::" + serviceGroupRequest);
-		final String serviceGroupUpdate = ServiceGroupQueryBuilder.updateServiceGroupQuery();
+		final String serviceGroupUpdate = serviceGroupQueryBuilder.updateServiceGroupQuery();
 		final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
 		final Object[] obj = new Object[] { serviceGroup.getName(), serviceGroup.getDescription(),
 				Long.valueOf(serviceGroupRequest.getRequestInfo().getUserInfo().getId()),

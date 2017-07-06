@@ -42,30 +42,35 @@
 package org.egov.asset.repository.rowmapper;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.Location;
+import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.egov.asset.model.enums.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class AssetRowMapper implements RowMapper<Asset> {
+public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AssetRowMapper.class);
 
@@ -73,85 +78,111 @@ public class AssetRowMapper implements RowMapper<Asset> {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public Asset mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Asset asset = new Asset();
+	public ArrayList<Asset> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		Map<Long, Asset> map = new HashMap<Long, Asset>();
 
-		try {
-			asset.setId((Long) rs.getObject("assetId"));
-			asset.setName(rs.getString("assetname"));
-			asset.setCode(rs.getString("assetcode"));
-			asset.setAssetDetails(rs.getString("assetDetails"));
-			asset.setTenantId(rs.getString("tenantId"));
-			asset.setModeOfAcquisition(ModeOfAcquisition.fromValue(rs.getString("modeofacquisition")));
-			asset.setStatus(Status.fromValue(rs.getString("status")));
-			asset.setDescription(rs.getString("description"));
-			asset.setDateOfCreation(rs.getDate("dateOfCreation"));
-			asset.setRemarks(rs.getString("remarks"));
-			asset.setLength(rs.getString("length"));
-			asset.setWidth(rs.getString("width"));
-			asset.setTotalArea(rs.getString("totalArea"));
-			Double accumulatedDepreciation = rs.getDouble("accumulateddepreciation");
-			if (accumulatedDepreciation == 0)
-				asset.setAccumulatedDepreciation(null);
-			else
-				asset.setAccumulatedDepreciation(accumulatedDepreciation);
+		while (rs.next()) {
+			Long assetId = rs.getLong("id");
 
-			Double grossValue = rs.getDouble("grossvalue");
-			if (grossValue == 0)
-				asset.setGrossValue(null);
-			else
-				asset.setGrossValue(grossValue);
-			asset.setAssetReference((Long) rs.getObject("assetreference"));
-			asset.setVersion(rs.getString("version"));
+			logger.info("agreementid in row mapper" + assetId);
 
-			String properties = rs.getString("properties");
-			Asset asset2 = null;
+			Asset asset = map.get(assetId);
+			if (asset == null) {
+				asset = new Asset();
+				asset.setId(assetId);
+				asset.setName(rs.getString("assetname"));
+				asset.setCode(rs.getString("assetcode"));
+				asset.setAssetDetails(rs.getString("assetDetails"));
+				asset.setTenantId(rs.getString("tenantId"));
+				asset.setModeOfAcquisition(ModeOfAcquisition.fromValue(rs.getString("modeofacquisition")));
+				asset.setStatus(rs.getString("status"));
+				asset.setDescription(rs.getString("description"));
+				asset.setDateOfCreation(rs.getDate("dateOfCreation"));
+				asset.setRemarks(rs.getString("remarks"));
+				asset.setLength(rs.getString("length"));
+				asset.setWidth(rs.getString("width"));
+				asset.setTotalArea(rs.getString("totalArea"));
+				asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepriciation"));
 
-			asset2 = objectMapper.readValue(properties, Asset.class);
+				final BigDecimal accumulatedDepreciation = rs.getBigDecimal("accumulateddepreciation");
+				if (accumulatedDepreciation == BigDecimal.ZERO)
+					asset.setAccumulatedDepreciation(null);
+				else
+					asset.setAccumulatedDepreciation(accumulatedDepreciation);
 
-			asset.setAssetAttributes(asset2.getAssetAttributes());
+				final BigDecimal grossValue = rs.getBigDecimal("grossvalue");
+				if (grossValue == BigDecimal.ZERO)
+					asset.setGrossValue(null);
+				else
+					asset.setGrossValue(grossValue);
+				asset.setAssetReference((Long) rs.getObject("assetreference"));
+				asset.setVersion(rs.getString("version"));
 
-			Department department = new Department();
-			department.setId((Long) rs.getObject("department"));
-			asset.setDepartment(department);
+				final String properties = rs.getString("properties");
+				Asset asset2 = null;
 
-			Location location = new Location();
-			location.setBlock((Long) rs.getObject("block"));
-			location.setLocality((Long) rs.getObject("locality"));
-			location.setDoorNo(rs.getString("doorNo"));
-			location.setElectionWard((Long) rs.getObject("electionWard"));
-			location.setRevenueWard((Long) rs.getObject("revenueWard"));
-			location.setPinCode((Long) rs.getObject("pincode"));
-			location.setZone((Long) rs.getObject("zone"));
-			location.setStreet((Long) rs.getObject("street"));
-			asset.setLocationDetails(location);
+				try {
+					asset2 = objectMapper.readValue(properties, Asset.class);
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-			AssetCategory assetCategory = new AssetCategory();
-			assetCategory.setId((Long) rs.getObject("assetcategoryId"));
-			assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
-			assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
-			assetCategory.setAssetAccount((Long) rs.getObject("assetAccount"));
-			assetCategory.setName(rs.getString("assetCategoryName"));
-			assetCategory.setCode(rs.getString("assetcategorycode"));
-			assetCategory.setParent((Long) rs.getObject("parentId"));
-			assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
-			assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
-			assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
-			assetCategory.setRevaluationReserveAccount((Long) rs.getObject("revaluationReserveAccount"));
-			assetCategory.setUnitOfMeasurement((Long) rs.getObject("unitOfMeasurement"));
+				asset.setAssetAttributes(asset2.getAssetAttributes());
 
-			asset.setAssetCategory(assetCategory);
+				final Department department = new Department();
+				department.setId((Long) rs.getObject("department"));
+				asset.setDepartment(department);
 
-			logger.info("AssetRowMapper asset:: " + asset);
-		} catch (JsonParseException e) {
-			logger.info("the exception thrown in rwomapper Deserialization : " + e);
-		} catch (JsonMappingException e) {
-			logger.info("the exception thrown in rwomapper Deserialization : " + e);
-		} catch (IOException e) {
-			logger.info("the exception thrown in rwomapper Deserialization : " + e);
-		} catch (Exception ex) {
-			logger.info("the exception thrown in rwomapper : " + ex);
+				final Location location = new Location();
+				location.setBlock((Long) rs.getObject("block"));
+				location.setLocality((Long) rs.getObject("locality"));
+				location.setDoorNo(rs.getString("doorNo"));
+				location.setElectionWard((Long) rs.getObject("electionWard"));
+				location.setRevenueWard((Long) rs.getObject("revenueWard"));
+				location.setPinCode((Long) rs.getObject("pincode"));
+				location.setZone((Long) rs.getObject("zone"));
+				location.setStreet((Long) rs.getObject("street"));
+				asset.setLocationDetails(location);
+
+				final AssetCategory assetCategory = new AssetCategory();
+				assetCategory.setId((Long) rs.getObject("assetcategoryId"));
+				assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
+				assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
+				assetCategory.setAssetAccount((Long) rs.getObject("assetAccount"));
+				assetCategory.setName(rs.getString("assetCategoryName"));
+				assetCategory.setCode(rs.getString("assetcategorycode"));
+				assetCategory.setParent((Long) rs.getObject("parentId"));
+				assetCategory.setDepreciationRate(rs.getDouble("depriciationRate"));
+				assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
+				assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
+				assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
+				assetCategory.setRevaluationReserveAccount((Long) rs.getObject("revaluationReserveAccount"));
+				assetCategory.setUnitOfMeasurement((Long) rs.getObject("unitOfMeasurement"));
+
+				asset.setAssetCategory(assetCategory);
+
+				logger.info("AssetRowMapper asset:: " + asset);
+				map.put(assetId, asset);
+			}
+			List<YearWiseDepreciation> ywd = asset.getDepreciationRate();
+			if (ywd == null) {
+				ywd = new ArrayList<>();
+				asset.setDepreciationRate(ywd);
+			}
+			YearWiseDepreciation ywdObject = new YearWiseDepreciation();
+			ywdObject.setAssetId(rs.getLong("assetid"));
+			ywdObject.setDepreciationRate(rs.getDouble("ywd_depreciationrate"));
+			ywdObject.setFinancialYear(rs.getString("financialyear"));
+			ywdObject.setUsefulLifeInYears(rs.getLong("usefullifeinyears"));
+			ywd.add(ywdObject);
+
+			System.err.println("ywd : " + ywd);
+			asset.setDepreciationRate(ywd);
 		}
-		return asset;
+		return new ArrayList<Asset>(map.values());
 	}
 }

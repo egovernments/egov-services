@@ -65,6 +65,10 @@ public class DisposalQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" disposal.assetid IN (" + getIdQuery(disposalCriteria.getAssetId()));
 		}
+		if(disposalCriteria.getFromDate() != null && disposalCriteria.getToDate() != null){
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" disposal.disposalDate BETWEEN "+disposalCriteria.getFromDate() +" AND "+disposalCriteria.getToDate());
+		}
 
 	}
 

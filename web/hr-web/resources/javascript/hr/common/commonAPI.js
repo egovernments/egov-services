@@ -1,15 +1,15 @@
 var baseUrl = window.location.origin;
+var tenantId = "";
 
-
-
-var tenantId = "ap.";
 if(window.location.origin.split("-").length>1)
 {
-  tenantId+=window.location.origin.split("-")[0].split("//")[1]
+  tenantId += window.location.origin.split("-")[0].split("//")[1]
 }
 else {
-  tenantId+=window.location.origin.split(".")[0].split("//")[1]
+  tenantId += window.location.origin.split(".")[0].split("//")[1]
 }
+
+tenantId = tenantIds[tenantId] || "ap." + tenantId;
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();

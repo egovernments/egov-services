@@ -47,7 +47,8 @@ public class WoodType {
 	@JsonIgnore
 	@JsonProperty("data")
 	private String data;
-
+	
+	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
 }

@@ -46,7 +46,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -71,16 +70,13 @@ public class EscalationTimeTypeGetReq {
     @NotNull
     private String tenantId;
 
-    @NotNull
+    
     private long noOfHours;
     
-    @NotNull
-    private long designation;
+    private Long designation;
     
-    @NotNull
-    private long grievanceType;
+    private Long grievanceType;
     
-    @NotNull
     private boolean active;
     
 	private String sortBy;

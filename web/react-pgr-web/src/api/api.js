@@ -11,9 +11,7 @@ var instance = axios.create({
 
 //document.cookie = "SESSIONID=75dedd21-1145-4745-a8aa-1790a737b7c5; JSESSIONID=Nw2kKeNF6Eu42vtXypb3kP4fER1ghjXNMNISiIF5.ip-10-0-0-100; Authorization=Basic Og==";
 
-var authToken = localStorage.getItem("auth");
-
-console.log(authToken);
+var authToken = localStorage.getItem("token");
 
 //request info from cookies
 var requestInfo = {
@@ -43,6 +41,7 @@ module.exports = {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
+        requestInfo.authToken = localStorage.getItem("token");
         body["RequestInfo"] = requestInfo;
         return instance.post(url, body).then(function(response) {
             return response.data;
@@ -53,9 +52,14 @@ module.exports = {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
                         _err += "\n " + response.response.data[0].error.errorFields[i].message + " ";
                     }
-                    console.log(_err);
                     throw new Error(_err);
                 }
+            } else if(response && response.response && !response.response.data && response.response.status == 400) {
+                document.title = "Egovernments";
+                var locale = localStorage.getItem('locale');
+                localStorage.clear();
+                localStorage.setItem('locale', locale);
+                window.location.href = "/";
             } else {
                 throw new Error("Something went wrong, please try again later.");
             }
@@ -81,7 +85,6 @@ module.exports = {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
                         _err += "\n " + response.response.data[0].error.errorFields[i].message + " ";
                     }
-                    console.log(_err);
                     throw new Error(_err);
                 }
             } else {

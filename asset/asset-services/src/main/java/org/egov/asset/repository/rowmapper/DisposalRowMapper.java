@@ -1,5 +1,6 @@
 package org.egov.asset.repository.rowmapper;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -10,68 +11,37 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DisposalRowMapper implements RowMapper<Disposal>{
+public class DisposalRowMapper implements RowMapper<Disposal> {
 
 	@Override
-	public Disposal mapRow(ResultSet rs, int rowNum) throws SQLException {
-		
-		Disposal disposal = new Disposal();
-		disposal.setId((Long)rs.getObject("id"));
+	public Disposal mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+
+		final Disposal disposal = new Disposal();
+		disposal.setId((Long) rs.getObject("id"));
 		disposal.setTenantId(rs.getString("tenantid"));
 		disposal.setAssetId(rs.getLong("assetid"));
 		disposal.setBuyerName(rs.getString("buyername"));
 		disposal.setBuyerAddress(rs.getString("buyeraddress"));
 		disposal.setDisposalReason(rs.getString("disposalreason"));
-		disposal.setDisposalDate((Long)rs.getObject("disposaldate"));
+		disposal.setDisposalDate((Long) rs.getObject("disposaldate"));
 		disposal.setPanCardNumber(rs.getString("pancardnumber"));
 		disposal.setAadharCardNumber(rs.getString("aadharcardnumber"));
-		
-		disposal.setAssetCurrentValue((Double)rs.getDouble("assetcurrentvalue"));
-		disposal.setSaleValue((Double)rs.getDouble("salevalue"));
+
+		disposal.setAssetCurrentValue(BigDecimal.valueOf(rs.getDouble("assetcurrentvalue")));
+		disposal.setSaleValue(BigDecimal.valueOf(rs.getDouble("salevalue")));
 		disposal.setTransactionType(TransactionType.fromValue(rs.getString("transactiontype")));
-		disposal.setAssetSaleAccount((Long)rs.getObject("id"));
-		
-		AuditDetails auditDetails = new AuditDetails();
+		disposal.setAssetSaleAccount((Long) rs.getObject("id"));
+
+		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
-		auditDetails.setCreatedDate((Long)rs.getLong("createddate"));
+		auditDetails.setCreatedDate(rs.getLong("createddate"));
 		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
-		auditDetails.setLastModifiedDate((Long)rs.getLong("lastmodifieddate"));
+		auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
 		disposal.setAuditDetails(auditDetails);
-		
+
 		disposal.setVoucherReference(Long.valueOf(rs.getString("voucherreference")));
-		
+
 		return disposal;
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

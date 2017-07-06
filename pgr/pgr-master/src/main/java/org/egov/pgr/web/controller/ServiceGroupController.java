@@ -101,7 +101,7 @@ public class ServiceGroupController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("serviceGroupRequest::" + serviceGroupRequest);
+		logger.info("serviceGroup Create : Request::" + serviceGroupRequest);
 
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
 		if (!errorResponses.isEmpty())
@@ -124,7 +124,7 @@ public class ServiceGroupController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("serviceGroupRequest::" + serviceGroupRequest);
+		logger.info("serviceGroup Update : Request::" + serviceGroupRequest);
 		serviceGroupRequest.getServiceGroup().setCode(code);
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
 		if (!errorResponses.isEmpty())
@@ -243,7 +243,7 @@ public class ServiceGroupController {
 
 	private ResponseEntity<?> getSuccessResponse(final List<ServiceGroup> serviceGroupList, final RequestInfo requestInfo) {
 		final ServiceGroupResponse serviceGroupResponse = new ServiceGroupResponse();
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		serviceGroupResponse.setResponseInfo(responseInfo);
 		serviceGroupResponse.setServiceGroups(serviceGroupList);

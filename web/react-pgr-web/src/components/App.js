@@ -30,7 +30,7 @@ class App extends Component {
   // }
 
   componentWillReceiveProps(nextProps) {
-      if (nextProps.redirectTo) {
+        if (nextProps.redirectTo) {
           this.props.history.replace(nextProps.redirectTo);
           this.props.onRedirect();
       }
@@ -40,11 +40,9 @@ class App extends Component {
     let {history}=this.props;
     // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
     // console.log(commonState);
-  /*  if (window.localStorage.getItem("token")) {
-        history.push("/dashboard");
-    } else {
-        history.push("/");
-    }*/
+    //if (!window.localStorage.getItem("token")) {
+      //window.location.href = "/";
+    //}
 
       // this.props.setLabels(agent.labels.getLabels());
       // const token = window.localStorage.getItem('jwt');
@@ -89,8 +87,11 @@ class App extends Component {
 
   }
 
-  render() {
+  handleClose = () => {
+    this.props.toggleDailogAndSetText(false, '');
+  }
 
+  render() {
     var {toggleDailogAndSetText,toggleSnackbarAndSetText, isDialogOpen, msg, token, history, isSnackBarOpen, toastMsg, loadingStatus} = this.props;
 
     const actions = [
@@ -103,12 +104,13 @@ class App extends Component {
     return (
       <div className="App">
           <Header/>
+
               {router}
           <Footer/>
 
           <Dialog
             actions={actions}
-            modal={false}
+            modal={true}
             open={isDialogOpen}
             onRequestClose={()=>toggleDailogAndSetText(false,"")}
             >
@@ -131,6 +133,7 @@ const mapStateToProps = state => ({
     // appLoaded: state.common.appLoaded,
     // appName: state.common.appName,
     // currentUser: state.common.currentUser,
+    // route:state.common.route,
     redirectTo: state.common.redirectTo,
     token:state.common.token,
     // pleaseWait: state.common.pleaseWait,

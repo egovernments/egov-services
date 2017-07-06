@@ -1,9 +1,9 @@
 package org.egov.pgrrest.read.web.adapters.error;
 
 
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.web.contract.ErrorField;
-import org.egov.pgrrest.read.web.contract.ErrorResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +32,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(3, errorFields.size());
         assertEquals("pgr.0001", errorFields.get(0).getCode());
@@ -53,7 +53,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0004", errorFields.get(0).getCode());
@@ -68,7 +68,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0005", errorFields.get(0).getCode());
@@ -83,7 +83,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0006", errorFields.get(0).getCode());
@@ -97,7 +97,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0011", errorFields.get(0).getCode());
@@ -111,7 +111,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0012", errorFields.get(0).getCode());
@@ -125,7 +125,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0013", errorFields.get(0).getCode());
@@ -139,7 +139,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0014", errorFields.get(0).getCode());
@@ -153,7 +153,7 @@ public class SevaRequestErrorAdapterTest {
 
         final ErrorResponse errorResponse = errorAdapter.adapt(complaint);
 
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("pgr.0015", errorFields.get(0).getCode());

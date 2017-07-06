@@ -40,9 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.RecruitmentMode;
 import org.egov.eis.repository.builder.RecruitmentModeQueryBuilder;
 import org.egov.eis.repository.rowmapper.RecruitmentModeRowMapper;
@@ -50,6 +47,9 @@ import org.egov.eis.web.contract.RecruitmentModeGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class RecruitmentModeRepository {

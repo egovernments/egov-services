@@ -9,7 +9,6 @@ import java.util.Map;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 /**
@@ -25,6 +25,7 @@ import org.springframework.web.context.request.WebRequest;
  * @author Pavan Kumar Kamma
  *
  */
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
 	@Autowired
@@ -49,7 +50,7 @@ public class GlobalExceptionHandler {
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(ResponseStatusEnum.FAILED);
+		responseInfo.setStatus(environment.getProperty("failed"));
 		return new ErrorRes(responseInfo, errorList);
 	}
 
@@ -70,7 +71,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
-			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			responseInfo.setStatus(environment.getProperty("failed"));
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
@@ -78,7 +79,7 @@ public class GlobalExceptionHandler {
 			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(ResponseStatusEnum.FAILED);
+			responseInfo.setStatus(environment.getProperty("failed"));
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);

@@ -59,9 +59,9 @@ import lombok.ToString;
 public class RouterTypeGetReq {
 	private List<Long> id;
 
-    private Long boundaryid;
+    private List<Long> boundaryid;
 
-    private Long serviceid;
+    private List<Long> serviceid;
     
     private Long position;
 

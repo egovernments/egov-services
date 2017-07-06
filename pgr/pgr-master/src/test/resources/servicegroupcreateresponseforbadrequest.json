@@ -1,0 +1,18 @@
+[
+    {
+        "responseInfo": null,
+        "error": {
+            "code": 400,
+            "message": "Service Group is invalid",
+            "description": null,
+            "errorFields": [
+                {
+                    "code": "pgr.0003",
+                    "message": "Service Group code is required",
+                    "field": "code"
+                }
+            ],
+            "fields": null
+        }
+    }
+]

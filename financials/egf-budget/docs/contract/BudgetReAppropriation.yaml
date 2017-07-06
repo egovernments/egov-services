@@ -1,0 +1,253 @@
+    /budgetreappropriations/_search:
+      post:
+        summary: Get the list of budgetreappropriations
+        description: budgetreappropriations
+        tags: 
+          - budget
+          - BudgetReAppropriation
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: budgetDetail
+            type: integer
+            format: int64
+            in: query
+            description: |
+              budgetDetail is the reference given for budget re appropriation to
+              identify for witch budget line item this appropriation is doing.
+              
+          - name: additionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              additionAmount is the proposed extra amount to add for the given budget
+              detail
+              
+          - name: deductionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              deductionAmount is the proposed amount to deduct for the given budget
+              detail
+              
+          - name: originalAdditionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              originalAdditionAmount is the amount to deduct for the given budget
+              detail
+              
+          - name: originalDeductionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              
+              
+          - name: anticipatoryAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              anticipatoryAmount is the anticipated amount while processing the
+              re-appropriations.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget re appropriation line item.
+              
+          - name: asOnDate
+            type: string
+            format: date
+            in: query
+            description: |
+              asOnDate is the date on witch date the current appropriation is done.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: BudgetReAppropriation retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetreappropriations/_create:
+      post:
+        summary: Create  new  budgetreappropriations
+        description: Create  new budgetreappropriations
+        tags: 
+          - budget
+          - BudgetReAppropriation
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetReAppropriationRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationRequest'
+        responses:
+          201:
+            description: BudgetReAppropriation created Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetreappropriations/{id}/_update:
+      post:
+        summary: Update any of the budgetreappropriations
+        description: Update any of the budgetreappropriations
+        tags: 
+          - budget
+          - BudgetReAppropriation
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the BudgetReAppropriation
+            required: true
+            type: integer
+            format: int64
+          - name: budgetReAppropriationRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationRequest'
+        responses:
+          200:
+            description: BudgetReAppropriation updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+definitions:
+    BudgetReAppropriation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the BudgetReAppropriation representing the unique value of each
+            record getting saved.
+            
+        budgetDetail:
+          $ref: "#/definitions/BudgetDetail"
+        additionAmount:
+          type: number
+          format: double
+          description: |
+            additionAmount is the proposed extra amount to add for the given budget
+            detail
+            
+        deductionAmount:
+          type: number
+          format: double
+          description: |
+            deductionAmount is the proposed amount to deduct for the given budget
+            detail
+            
+        originalAdditionAmount:
+          type: number
+          format: double
+          description: |
+            originalAdditionAmount is the amount to deduct for the given budget
+            detail
+            
+        originalDeductionAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        anticipatoryAmount:
+          type: number
+          format: double
+          description: |
+            anticipatoryAmount is the anticipated amount while processing the
+            re-appropriations.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        asOnDate:
+          type: string
+          format: date
+          description: |
+            asOnDate is the date on witch date the current appropriation is done.
+            
+    BudgetReAppropriationRequest:
+      description: Contract class to receive request. Array of BudgetReAppropriation items  are used in case of create . Where as single BudgetReAppropriation item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+    BudgetReAppropriationResponse:
+      description: Contract class to send response. Array of BudgetReAppropriation items  are used in case of search results or response for create. Where as single BudgetReAppropriation item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+        page:
+          $ref: '#/definitions/Page'

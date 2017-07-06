@@ -59,8 +59,6 @@ import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,11 +71,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/categorytype")
 public class CategoryTypeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeController.class);
 
     @Autowired
     private CategoryTypeService categoryService;
@@ -102,7 +101,7 @@ public class CategoryTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("categoryRequest::" + categoryRequest);
+        log.info("categoryRequest::" + categoryRequest);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest);
         if (!errorResponses.isEmpty())
@@ -124,7 +123,7 @@ public class CategoryTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("categoryRequest::" + categoryRequest);
+        log.info("categoryRequest::" + categoryRequest);
         categoryRequest.getCategory().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest);
@@ -141,7 +140,8 @@ public class CategoryTypeController {
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final CategoryTypeGetRequest categoryGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -158,7 +158,7 @@ public class CategoryTypeController {
         try {
             categoryList = categoryService.getCategories(categoryGetRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + categoryGetRequest, exception);
+            log.error("Error while processing request " + categoryGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
@@ -171,7 +171,7 @@ public class CategoryTypeController {
         final CategoryTypeResponse categoryResponse = new CategoryTypeResponse();
         categoryResponse.setCategories(categoryList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        if(StringUtils.isNotBlank(mode))
+        if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());
         else
             responseInfo.setStatus(HttpStatus.OK.toString());
@@ -179,7 +179,7 @@ public class CategoryTypeController {
         try {
 
         } catch (final Exception e) {
-            logger.error("Exception Encountered : " + e);
+            log.error("Exception Encountered : " + e);
         }
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
 

@@ -40,11 +40,8 @@
 
 package org.egov.commons.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.Holiday;
 import org.egov.commons.service.CalendarYearService;
 import org.egov.commons.service.HolidayService;
@@ -52,9 +49,7 @@ import org.egov.commons.util.ApplicationConstants;
 import org.egov.commons.web.contract.HolidayGetRequest;
 import org.egov.commons.web.contract.HolidayRequest;
 import org.egov.commons.web.contract.HolidayResponse;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.Error;
 import org.egov.commons.web.errorhandlers.ErrorHandler;
@@ -66,13 +61,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/holidays")

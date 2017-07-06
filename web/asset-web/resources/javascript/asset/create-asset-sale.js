@@ -69,7 +69,7 @@ class Sale extends React.Component {
             "currentValueOfTheAsset": "",
             "saleValue": "",
             "assetSaleAccountCode": "",
-            "auditDetails": "",
+            "auditDetails": null,
             "documents": []
           },
           departments: [],
@@ -91,7 +91,7 @@ class Sale extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       if(this.state.assetSet && this.state.assetSet.id)
-        window.open(`app/asset/create-asset.html?id=${this.state.assetSet.id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+        window.open(`app/asset/create-asset.html?id=${this.state.assetSet.id}&type=view`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }
 
     setInitialState(initState) {
@@ -114,6 +114,14 @@ class Sale extends React.Component {
       let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
+        if(key == "assetSet") {
+          _this.setState({
+            disposal: {
+              ..._this.state.disposal,
+              assetId: res.id
+            }
+          })
+        }
         count--;
         if(count == 0)
           _this.setInitialState(_state);
@@ -253,14 +261,18 @@ class Sale extends React.Component {
     createDisposal(e) {
       e.preventDefault();
       var tempInfo = Object.assign({}, this.state.disposal);
+      if(tempInfo.disposalDate) {
+        var date = tempInfo.disposalDate.split("/");
+        tempInfo.disposalDate = new Date(date[2], date[1]-1, date[0]).getTime();
+      }
+
       var body = {
         RequestInfo: requestInfo,
         Disposal: tempInfo
       };
 
-      //return console.log(JSON.stringify(body));
        $.ajax({
-            url: baseUrl + "/assets/dispose/_create",
+            url: baseUrl + "/asset-services/assets/dispose/_create",
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify(body),

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 // import {blue500} from 'material-ui/styles/colors';
@@ -25,24 +25,24 @@ import './styles/buttons.dataTables.min.css';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-
+document.title="Egovernments";
 
 
 const muiTheme = getMuiTheme({
   palette: {
 
-    primary1Color: "#354f57",
-    primary2Color: "#354f57",
-    textColor:"#354f57"
+    primary1Color: "#51bad9",
+    primary2Color: "#51bad9",
+    textColor:"#5f5c62"
   }
 });
 
 ReactDOM.render(
 <Provider store={store}>
   <MuiThemeProvider muiTheme={muiTheme}>
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </MuiThemeProvider>
 </Provider>, document.getElementById('root'));
 registerServiceWorker();

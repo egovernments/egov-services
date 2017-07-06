@@ -1,0 +1,373 @@
+    /budgetdetails/_search:
+      post:
+        summary: Get the list of budgetdetails
+        description: budgetdetails
+        tags: 
+          - budget
+          - BudgetDetail
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: budgetGroup
+            type: integer
+            format: int64
+            in: query
+            description: |
+              budgetGroup is reference to the budget group which defines the set of COA
+              or a COA at major, minor or detailed level with its account type and
+              budgeting type.
+              
+          - name: budget
+            type: integer
+            format: int64
+            in: query
+            description: |
+              budgetReAppropriations is the reference to the re appropriations made for
+              the given budget line item
+              
+          - name: originalAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              originalAmount is the budget amount for the given combination of budget
+              detail
+              
+          - name: approvedAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              approvedAmount final approved budget (post workflow) amount which is
+              considered for budget checking.
+              
+          - name: budgetAvailable
+            type: number
+            format: double
+            in: query
+            description: |
+              
+              
+          - name: anticipatoryAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              anticipatoryAmount is the anticipated amount while processing the
+              re-appropriations.
+              
+          - name: usingDepartment
+            type: integer
+            format: int64
+            in: query
+            description: |
+              usingDepartment is the department for which the budget line item is
+              actually budgeted for.
+              
+          - name: executingDepartment
+            type: integer
+            format: int64
+            in: query
+            description: |
+              executingDepartment is the department which uses the budget to execute
+              the work which is defined in the budget of using department.
+              
+          - name: function
+            type: integer
+            format: int64
+            in: query
+            description: |
+              functionary is the MIS or financial transaction attribute which
+              contributes the budget details definition
+              
+          - name: scheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              scheme is the MIS or financial transaction attribute which contributes
+              the budget details definition. Scheme can be optional
+              
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              fund is the MIS or financial transaction attribute which contributes the
+              budget details definition
+              
+          - name: subScheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              subScheme is the MIS or financial transaction attribute which contributes
+              the budget details definition. sub Scheme can be optional
+              
+          - name: functionary
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: boundary
+            type: integer
+            format: int64
+            in: query
+            description: |
+              boundary is also the MIS attribute which is used incase the budget need
+              to be defined and idetified by boundaries of the organization.
+              
+          - name: materializedPath
+            type: string
+            in: query
+            description: |
+              materializedPath is unique data by hierarchy level.This data is created internally
+              
+          - name: documentNumber
+            type: integer
+            format: int64
+            in: query
+            description: |
+              documentNumber is the reference number to identify the attachments made
+              to the budget definition.
+              
+          - name: uniqueNo
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: planningPercent
+            type: number
+            format: double
+            in: query
+            description: |
+              planningPercent is the percentage which gives the inflated budget used in
+              certain business modules to have the budget check based on the inflated
+              budget values. Ex: 150% in planning percentage for a budget line item is
+              the 50% extra budget on approved budget used to do the budget checking in
+              works module.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget line item. (detailed level)
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: BudgetDetail retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetdetails/_create:
+      post:
+        summary: Create  new  budgetdetails
+        description: Create  new budgetdetails
+        tags: 
+          - budget
+          - BudgetDetail
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetDetailRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetDetailRequest'
+        responses:
+          201:
+            description: BudgetDetail created Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetdetails/{id}/_update:
+      post:
+        summary: Update any of the budgetdetails
+        description: Update any of the budgetdetails
+        tags: 
+          - budget
+          - BudgetDetail
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the BudgetDetail
+            required: true
+            type: integer
+            format: int64
+          - name: budgetDetailRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetDetailRequest'
+        responses:
+          200:
+            description: BudgetDetail updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+definitions:
+    BudgetDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the budgetDeatil representing the unique value of each record
+            getting saved.
+            
+        budgetGroup:
+          $ref: "#/definitions/BudgetGroupContract"
+        budget:
+          $ref: "#/definitions/Budget"
+        originalAmount:
+          type: number
+          format: double
+          description: |
+            originalAmount is the budget amount for the given combination of budget
+            detail
+            
+        approvedAmount:
+          type: number
+          format: double
+          description: |
+            approvedAmount final approved budget (post workflow) amount which is
+            considered for budget checking.
+            
+        budgetAvailable:
+          type: number
+          format: double
+          description: |
+            
+            
+        anticipatoryAmount:
+          type: number
+          format: double
+          description: |
+            anticipatoryAmount is the anticipated amount while processing the
+            re-appropriations.
+            
+        usingDepartment:
+          $ref: "#/definitions/DepartmentContract"
+        executingDepartment:
+          $ref: "#/definitions/DepartmentContract"
+        function:
+          $ref: "#/definitions/FunctionContract"
+        scheme:
+          $ref: "#/definitions/SchemeContract"
+        fund:
+          $ref: "#/definitions/FundContract"
+        subScheme:
+          $ref: "#/definitions/SubSchemeContract"
+        functionary:
+          $ref: "#/definitions/FunctionContract"
+        boundary:
+          $ref: "#/definitions/BoundaryContract"
+        materializedPath:
+          type: string
+          description: |
+            materializedPath is unique data by hierarchy level.This data is created internally
+            
+        documentNumber:
+          type: integer
+          format: int64
+          description: |
+            documentNumber is the reference number to identify the attachments made
+            to the budget definition.
+            
+        uniqueNo:
+          type: string
+          description: |
+            
+            
+        planningPercent:
+          type: number
+          format: double
+          description: |
+            planningPercent is the percentage which gives the inflated budget used in
+            certain business modules to have the budget check based on the inflated
+            budget values. Ex: 150% in planning percentage for a budget line item is
+            the 50% extra budget on approved budget used to do the budget checking in
+            works module.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+    BudgetDetailRequest:
+      description: Contract class to receive request. Array of BudgetDetail items  are used in case of create . Where as single BudgetDetail item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+    BudgetDetailResponse:
+      description: Contract class to send response. Array of BudgetDetail items  are used in case of search results or response for create. Where as single BudgetDetail item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+        page:
+          $ref: '#/definitions/Page'

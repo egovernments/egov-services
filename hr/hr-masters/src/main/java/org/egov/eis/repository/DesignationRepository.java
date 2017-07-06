@@ -40,9 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.eis.model.Designation;
 import org.egov.eis.repository.builder.DesignationQueryBuilder;
 import org.egov.eis.repository.rowmapper.DesignationRowMapper;
@@ -52,6 +49,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class DesignationRepository {

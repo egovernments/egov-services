@@ -1,0 +1,1060 @@
+    /budgets/_search:
+      post:
+        summary: Get the list of budgets
+        description: budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: |
+              name given for budget in the tree structure. Generally Tree structure
+              consist of 3 levels : 1. Root level : which is basically defined as
+              RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+              year. 2. Account type level : which is defined under root level which
+              will be combination of root level and account type - Revenue and Capital.
+              Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+              type level which will be combination of root level, account type and
+              department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+              department level.
+              
+          - name: financialYear
+            type: integer
+            format: int64
+            in: query
+            description: |
+              financialYear is the attribute to identify to which year the Budget
+              belongs is tagged.
+              
+          - name: estimationType
+            type: string
+            in: query
+            description: |
+              estimationType is type of the budget definition - which signifies budget
+              type i.e New budget (BE) or the Revised budget (RE)
+              
+          - name: parent
+            type: integer
+            format: int64
+            in: query
+            description: |
+              parent is the node used to define in the budget hierarchy tree structure
+              definition. The root node will not have any parent. The lowest node is
+              the budget under which the details are defined.
+              
+          - name: description
+            type: string
+            in: query
+            description: |
+              description provides more information on budget line item and this is
+              combination of department name, estimation type,budget type and financial
+              year. example description
+              "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+              department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+              
+          - name: isActiveBudget
+            type: boolean
+            in: query
+            description: |
+              isActiveBudget provides flag denotes whether the budget is active or not.
+              i.e all the detail budget defined under this tree will not be accessible
+              in transaction.
+              
+          - name: isPrimaryBudget
+            type: boolean
+            in: query
+            description: |
+              isPrimaryBudget is the flag that identifies the root budget. (which has
+              no parent).
+              
+          - name: materializedPath
+            type: string
+            in: query
+            description: |
+              materializedPath is unique data by hierarchy level.
+              
+          - name: referenceBudget
+            type: integer
+            format: int64
+            in: query
+            description: |
+              referenceBudget is the previous year budget tree id reference to refer
+              previous year budget. When the BE is created, the previous year RE
+              reference is mapped to the BE of current year or for the year for which
+              BE is created.
+              
+          - name: documentNumber
+            type: integer
+            format: int64
+            in: query
+            description: |
+              documentNumber is the reference number to identify the attachments made
+              to the budget definition.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget Node. i.e collective status
+              of the details. However the status at budget detail also exist.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Budget retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/_create:
+      post:
+        summary: Create  new  budgets
+        description: Create  new budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          201:
+            description: Budget created Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/{id}/_update:
+      post:
+        summary: Update any of the budgets
+        description: Update any of the budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Budget
+            required: true
+            type: integer
+            format: int64
+          - name: budgetRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          200:
+            description: Budget updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgets/_search:
+      post:
+        summary: Get the list of budgets
+        description: budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: |
+              name given for budget in the tree structure. Generally Tree structure
+              consist of 3 levels : 1. Root level : which is basically defined as
+              RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+              year. 2. Account type level : which is defined under root level which
+              will be combination of root level and account type - Revenue and Capital.
+              Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+              type level which will be combination of root level, account type and
+              department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+              department level.
+              
+          - name: financialYear
+            type: integer
+            format: int64
+            in: query
+            description: |
+              financialYear is the attribute to identify to which year the Budget
+              belongs is tagged.
+              
+          - name: estimationType
+            type: string
+            in: query
+            description: |
+              estimationType is type of the budget definition - which signifies budget
+              type i.e New budget (BE) or the Revised budget (RE)
+              
+          - name: parent
+            type: integer
+            format: int64
+            in: query
+            description: |
+              parent is the node used to define in the budget hierarchy tree structure
+              definition. The root node will not have any parent. The lowest node is
+              the budget under which the details are defined.
+              
+          - name: description
+            type: string
+            in: query
+            description: |
+              description provides more information on budget line item and this is
+              combination of department name, estimation type,budget type and financial
+              year. example description
+              "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+              department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+              
+          - name: isActiveBudget
+            type: boolean
+            in: query
+            description: |
+              isActiveBudget provides flag denotes whether the budget is active or not.
+              i.e all the detail budget defined under this tree will not be accessible
+              in transaction.
+              
+          - name: isPrimaryBudget
+            type: boolean
+            in: query
+            description: |
+              isPrimaryBudget is the flag that identifies the root budget. (which has
+              no parent).
+              
+          - name: materializedPath
+            type: string
+            in: query
+            description: |
+              materializedPath is unique data by hierarchy level.
+              
+          - name: referenceBudget
+            type: integer
+            format: int64
+            in: query
+            description: |
+              referenceBudget is the previous year budget tree id reference to refer
+              previous year budget. When the BE is created, the previous year RE
+              reference is mapped to the BE of current year or for the year for which
+              BE is created.
+              
+          - name: documentNumber
+            type: integer
+            format: int64
+            in: query
+            description: |
+              documentNumber is the reference number to identify the attachments made
+              to the budget definition.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget Node. i.e collective status
+              of the details. However the status at budget detail also exist.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Budget retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/_create:
+      post:
+        summary: Create  new  budgets
+        description: Create  new budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          201:
+            description: Budget created Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/{id}/_update:
+      post:
+        summary: Update any of the budgets
+        description: Update any of the budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Budget
+            required: true
+            type: integer
+            format: int64
+          - name: budgetRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          200:
+            description: Budget updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgets/_search:
+      post:
+        summary: Get the list of budgets
+        description: budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: |
+              name given for budget in the tree structure. Generally Tree structure
+              consist of 3 levels : 1. Root level : which is basically defined as
+              RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+              year. 2. Account type level : which is defined under root level which
+              will be combination of root level and account type - Revenue and Capital.
+              Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+              type level which will be combination of root level, account type and
+              department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+              department level.
+              
+          - name: financialYear
+            type: integer
+            format: int64
+            in: query
+            description: |
+              financialYear is the attribute to identify to which year the Budget
+              belongs is tagged.
+              
+          - name: estimationType
+            type: string
+            in: query
+            description: |
+              estimationType is type of the budget definition - which signifies budget
+              type i.e New budget (BE) or the Revised budget (RE)
+              
+          - name: parent
+            type: integer
+            format: int64
+            in: query
+            description: |
+              parent is the node used to define in the budget hierarchy tree structure
+              definition. The root node will not have any parent. The lowest node is
+              the budget under which the details are defined.
+              
+          - name: description
+            type: string
+            in: query
+            description: |
+              description provides more information on budget line item and this is
+              combination of department name, estimation type,budget type and financial
+              year. example description
+              "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+              department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+              
+          - name: isActiveBudget
+            type: boolean
+            in: query
+            description: |
+              isActiveBudget provides flag denotes whether the budget is active or not.
+              i.e all the detail budget defined under this tree will not be accessible
+              in transaction.
+              
+          - name: isPrimaryBudget
+            type: boolean
+            in: query
+            description: |
+              isPrimaryBudget is the flag that identifies the root budget. (which has
+              no parent).
+              
+          - name: materializedPath
+            type: string
+            in: query
+            description: |
+              materializedPath is unique data by hierarchy level.
+              
+          - name: referenceBudget
+            type: integer
+            format: int64
+            in: query
+            description: |
+              referenceBudget is the previous year budget tree id reference to refer
+              previous year budget. When the BE is created, the previous year RE
+              reference is mapped to the BE of current year or for the year for which
+              BE is created.
+              
+          - name: documentNumber
+            type: integer
+            format: int64
+            in: query
+            description: |
+              documentNumber is the reference number to identify the attachments made
+              to the budget definition.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget Node. i.e collective status
+              of the details. However the status at budget detail also exist.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Budget retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/_create:
+      post:
+        summary: Create  new  budgets
+        description: Create  new budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          201:
+            description: Budget created Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/{id}/_update:
+      post:
+        summary: Update any of the budgets
+        description: Update any of the budgets
+        tags: 
+          - budget
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Budget
+            required: true
+            type: integer
+            format: int64
+          - name: budgetRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          200:
+            description: Budget updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgetdetails/_search:
+      post:
+        summary: Get the list of budgetdetails
+        description: budgetdetails
+        tags: 
+          - budget
+          - BudgetDetail
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: budgetGroup
+            type: integer
+            format: int64
+            in: query
+            description: |
+              budgetGroup is reference to the budget group which defines the set of COA
+              or a COA at major, minor or detailed level with its account type and
+              budgeting type.
+              
+          - name: budget
+            type: integer
+            format: int64
+            in: query
+            description: |
+              budgetReAppropriations is the reference to the re appropriations made for
+              the given budget line item
+              
+          - name: originalAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              originalAmount is the budget amount for the given combination of budget
+              detail
+              
+          - name: approvedAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              approvedAmount final approved budget (post workflow) amount which is
+              considered for budget checking.
+              
+          - name: budgetAvailable
+            type: number
+            format: double
+            in: query
+            description: |
+              
+              
+          - name: anticipatoryAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              anticipatoryAmount is the anticipated amount while processing the
+              re-appropriations.
+              
+          - name: usingDepartment
+            type: integer
+            format: int64
+            in: query
+            description: |
+              usingDepartment is the department for which the budget line item is
+              actually budgeted for.
+              
+          - name: executingDepartment
+            type: integer
+            format: int64
+            in: query
+            description: |
+              executingDepartment is the department which uses the budget to execute
+              the work which is defined in the budget of using department.
+              
+          - name: function
+            type: integer
+            format: int64
+            in: query
+            description: |
+              functionary is the MIS or financial transaction attribute which
+              contributes the budget details definition
+              
+          - name: scheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              scheme is the MIS or financial transaction attribute which contributes
+              the budget details definition. Scheme can be optional
+              
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              fund is the MIS or financial transaction attribute which contributes the
+              budget details definition
+              
+          - name: subScheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              subScheme is the MIS or financial transaction attribute which contributes
+              the budget details definition. sub Scheme can be optional
+              
+          - name: functionary
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: boundary
+            type: integer
+            format: int64
+            in: query
+            description: |
+              boundary is also the MIS attribute which is used incase the budget need
+              to be defined and idetified by boundaries of the organization.
+              
+          - name: materializedPath
+            type: string
+            in: query
+            description: |
+              materializedPath is unique data by hierarchy level.This data is created internally
+              
+          - name: documentNumber
+            type: integer
+            format: int64
+            in: query
+            description: |
+              documentNumber is the reference number to identify the attachments made
+              to the budget definition.
+              
+          - name: uniqueNo
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: planningPercent
+            type: number
+            format: double
+            in: query
+            description: |
+              planningPercent is the percentage which gives the inflated budget used in
+              certain business modules to have the budget check based on the inflated
+              budget values. Ex: 150% in planning percentage for a budget line item is
+              the 50% extra budget on approved budget used to do the budget checking in
+              works module.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget line item. (detailed level)
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: BudgetDetail retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetdetails/_create:
+      post:
+        summary: Create  new  budgetdetails
+        description: Create  new budgetdetails
+        tags: 
+          - budget
+          - BudgetDetail
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetDetailRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetDetailRequest'
+        responses:
+          201:
+            description: BudgetDetail created Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetdetails/{id}/_update:
+      post:
+        summary: Update any of the budgetdetails
+        description: Update any of the budgetdetails
+        tags: 
+          - budget
+          - BudgetDetail
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the BudgetDetail
+            required: true
+            type: integer
+            format: int64
+          - name: budgetDetailRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetDetailRequest'
+        responses:
+          200:
+            description: BudgetDetail updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgetreappropriations/_search:
+      post:
+        summary: Get the list of budgetreappropriations
+        description: budgetreappropriations
+        tags: 
+          - budget
+          - BudgetReAppropriation
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: budgetDetail
+            type: integer
+            format: int64
+            in: query
+            description: |
+              budgetDetail is the reference given for budget re appropriation to
+              identify for witch budget line item this appropriation is doing.
+              
+          - name: additionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              additionAmount is the proposed extra amount to add for the given budget
+              detail
+              
+          - name: deductionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              deductionAmount is the proposed amount to deduct for the given budget
+              detail
+              
+          - name: originalAdditionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              originalAdditionAmount is the amount to deduct for the given budget
+              detail
+              
+          - name: originalDeductionAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              
+              
+          - name: anticipatoryAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              anticipatoryAmount is the anticipated amount while processing the
+              re-appropriations.
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status gives the current status of the budget re appropriation line item.
+              
+          - name: asOnDate
+            type: string
+            format: date
+            in: query
+            description: |
+              asOnDate is the date on witch date the current appropriation is done.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: BudgetReAppropriation retrieved Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetreappropriations/_create:
+      post:
+        summary: Create  new  budgetreappropriations
+        description: Create  new budgetreappropriations
+        tags: 
+          - budget
+          - BudgetReAppropriation
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetReAppropriationRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationRequest'
+        responses:
+          201:
+            description: BudgetReAppropriation created Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetreappropriations/{id}/_update:
+      post:
+        summary: Update any of the budgetreappropriations
+        description: Update any of the budgetreappropriations
+        tags: 
+          - budget
+          - BudgetReAppropriation
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the BudgetReAppropriation
+            required: true
+            type: integer
+            format: int64
+          - name: budgetReAppropriationRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationRequest'
+        responses:
+          200:
+            description: BudgetReAppropriation updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+

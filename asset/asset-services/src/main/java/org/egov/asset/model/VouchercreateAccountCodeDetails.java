@@ -1,5 +1,6 @@
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +22,18 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 public class VouchercreateAccountCodeDetails {
-	
+
 	@JsonProperty("id")
 	private Long id;
-	
+
 	@JsonProperty("glcode")
 	private String glcode;
 
 	@JsonProperty("debitAmount")
-	private Double debitAmount = 0.0;
+	private BigDecimal debitAmount = BigDecimal.ZERO;
 
 	@JsonProperty("creditAmount")
-	private Double creditAmount = 0.0;
+	private BigDecimal creditAmount = BigDecimal.ZERO;
 
 	@JsonProperty("function")
 	private Function function;

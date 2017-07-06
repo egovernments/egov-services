@@ -1,7 +1,6 @@
 package org.egov.eis.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
 @Data

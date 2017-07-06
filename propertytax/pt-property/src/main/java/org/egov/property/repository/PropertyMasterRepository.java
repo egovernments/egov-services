@@ -1,6 +1,5 @@
 package org.egov.property.repository;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -96,14 +95,16 @@ public class PropertyMasterRepository {
 	 * @param id
 	 */
 	@Transactional
-	public void updateDepartment(Department department, String data, Long id) {
+	public Department updateDepartment(Department department, String data, Long id) {
 		Long modifiedTime = new Date().getTime();
+
+		String updateDepartmentSql = DepartmentQueryBuilder.UPDATE_DEPARTMENT_QUERY;
+		String selectDepartmentSql = DepartmentQueryBuilder.SELECT_DEPARTMENT_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(DepartmentQueryBuilder.UPDATE_DEPARTMENT_QUERY,
-						new String[] { "id" });
+				final PreparedStatement ps = connection.prepareStatement(updateDepartmentSql, new String[] { "id" });
 				ps.setString(1, department.getTenantId());
 				ps.setString(2, department.getCode());
 				PGobject jsonObject = new PGobject();
@@ -116,7 +117,11 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
+		Long createdTime = jdbcTemplate.queryForObject(selectDepartmentSql, new Object[] { department.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		department.getAuditDetails().setCreatedTime(createdTime);
+		return department;
 
 	}
 
@@ -199,15 +204,17 @@ public class PropertyMasterRepository {
 	 * @param occuapancyMaster
 	 * @param data
 	 */
-	public void updateOccuapancy(OccuapancyMaster occuapancyMaster, String data) {
+	public OccuapancyMaster updateOccuapancy(OccuapancyMaster occuapancyMaster, String data) {
 
 		Long modifiedTime = new Date().getTime();
+
+		String updateOccupancySql = OccuapancyQueryBuilder.UPDATE_OCCUAPANCY_QUERY;
+		String selectOccupancySql = OccuapancyQueryBuilder.SELECT_OCCUAPANCY_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(OccuapancyQueryBuilder.UPDATE_OCCUAPANCY_QUERY,
-						new String[] { "id" });
+				final PreparedStatement ps = connection.prepareStatement(updateOccupancySql, new String[] { "id" });
 				ps.setString(1, occuapancyMaster.getTenantId());
 				ps.setString(2, occuapancyMaster.getCode());
 				PGobject jsonObject = new PGobject();
@@ -220,7 +227,12 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
+
+		Long createdTime = jdbcTemplate.queryForObject(selectOccupancySql, new Object[] { occuapancyMaster.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		occuapancyMaster.getAuditDetails().setCreatedTime(createdTime);
+		return occuapancyMaster;
 
 	}
 
@@ -310,15 +322,17 @@ public class PropertyMasterRepository {
 	 * @param data
 	 */
 	@Transactional
-	public void updatePropertyType(PropertyType propertyType, String data) {
+	public PropertyType updatePropertyType(PropertyType propertyType, String data) {
 
 		Long modifiedTime = new Date().getTime();
+
+		String updatePropertyTypeSql = PropertyTypesBuilder.UPDATE_PROPERTYTYPES_QUERY;
+		String selectPropertyTypeSql = PropertyTypesBuilder.SELECT_PROPERTYTYPES_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection
-						.prepareStatement(PropertyTypesBuilder.UPDATE_PROPERTYTYPES_QUERY, new String[] { "id" });
+				final PreparedStatement ps = connection.prepareStatement(updatePropertyTypeSql, new String[] { "id" });
 				ps.setString(1, propertyType.getTenantId());
 				ps.setString(2, propertyType.getCode());
 				PGobject jsonObject = new PGobject();
@@ -331,7 +345,11 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
+		Long createdTime = jdbcTemplate.queryForObject(selectPropertyTypeSql, new Object[] { propertyType.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		propertyType.getAuditDetails().setCreatedTime(createdTime);
+		return propertyType;
 
 	}
 
@@ -408,8 +426,6 @@ public class PropertyMasterRepository {
 		// The newly generated key will be saved in this object
 		final KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(psc, holder);
-		floorType.getAuditDetails().setCreatedTime(createdTime);
-		floorType.getAuditDetails().setLastModifiedTime(createdTime);
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
@@ -422,10 +438,11 @@ public class PropertyMasterRepository {
 	 */
 
 	@Transactional
-	public void updateFloorType(FloorType floorType, String data) {
+	public FloorType updateFloorType(FloorType floorType, String data) {
 
-		long updatedTime = new Date().getTime();
+		Long updatedTime = new Date().getTime();
 		String updateFloorTypeSql = FloorTypeBuilder.UPDATE_FLOOR_QUERY;
+		String selectFloorCreateTime = FloorTypeBuilder.SELECT_FLOOR_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -437,17 +454,21 @@ public class PropertyMasterRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
-				ps.setString(4, floorType.getAuditDetails().getCreatedBy());
-				ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, floorType.getAuditDetails().getCreatedTime());
-				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setLong(8, floorType.getId());
+				ps.setString(4, floorType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, updatedTime);
+				ps.setLong(6, floorType.getId());
 
 				return ps;
 			}
 		};
 
 		jdbcTemplate.update(psc);
+
+		Long createdTime = jdbcTemplate.queryForObject(selectFloorCreateTime, new Object[] { floorType.getId() },
+				Long.class);
+
+		floorType.getAuditDetails().setCreatedTime(createdTime);
+		return floorType;
 
 	}
 
@@ -519,9 +540,6 @@ public class PropertyMasterRepository {
 		// The newly generated key will be saved in this object
 		final KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(psc, holder);
-		roofType.getAuditDetails().setCreatedTime(createdTime);
-		roofType.getAuditDetails().setLastModifiedTime(createdTime);
-
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
@@ -534,10 +552,11 @@ public class PropertyMasterRepository {
 	 */
 
 	@Transactional
-	public void updateRoofType(RoofType roofType, String data) {
+	public RoofType updateRoofType(RoofType roofType, String data) {
 
 		long updatedTime = new Date().getTime();
 		String updateRoofTypeSql = RoofTypeBuilder.UPDATE_ROOF_QUERY;
+		String selectRoofTypeSql = RoofTypeBuilder.SELECT_ROOF_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -549,19 +568,18 @@ public class PropertyMasterRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
-				ps.setString(4, roofType.getAuditDetails().getCreatedBy());
-				ps.setString(5, roofType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, roofType.getAuditDetails().getCreatedTime());
-				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setLong(8, roofType.getId());
-
+				ps.setString(4, roofType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, updatedTime);
+				ps.setLong(6, roofType.getId());
 				return ps;
 			}
 		};
 
+		Long createdTime = jdbcTemplate.queryForObject(selectRoofTypeSql, new Object[] { roofType.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
-		roofType.getAuditDetails().setLastModifiedTime(updatedTime);
-
+		roofType.getAuditDetails().setCreatedTime(createdTime);
+		return roofType;
 	}
 
 	/**
@@ -632,8 +650,6 @@ public class PropertyMasterRepository {
 		// The newly generated key will be saved in this object
 		final KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(psc, holder);
-		woodType.getAuditDetails().setCreatedTime(createdTime);
-		woodType.getAuditDetails().setLastModifiedTime(createdTime);
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
@@ -646,10 +662,11 @@ public class PropertyMasterRepository {
 	 */
 
 	@Transactional
-	public void updateWoodType(WoodType woodType, String data) {
+	public WoodType updateWoodType(WoodType woodType, String data) {
 
 		long updatedTime = new Date().getTime();
 		String updateWoodTypeSql = WoodTypeBuilder.UPDATE_WOOD_QUERY;
+		String selectWoodCreateTime = WoodTypeBuilder.SELECT_WOOD_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -661,17 +678,19 @@ public class PropertyMasterRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
-				ps.setString(4, woodType.getAuditDetails().getCreatedBy());
-				ps.setString(5, woodType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, woodType.getAuditDetails().getCreatedTime());
-				ps.setBigDecimal(7, new BigDecimal(updatedTime));
-				ps.setLong(8, woodType.getId());
+				ps.setString(4, woodType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, updatedTime);
+				ps.setLong(6, woodType.getId());
 
 				return ps;
 			}
 		};
 
+		Long createdTime = jdbcTemplate.queryForObject(selectWoodCreateTime, new Object[] { woodType.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		woodType.getAuditDetails().setCreatedTime(createdTime);
+		return woodType;
 
 	}
 
@@ -734,10 +753,10 @@ public class PropertyMasterRepository {
 		for (WallType wallType : wallTypes) {
 			WallType wallData = gson.fromJson(wallType.getData(), WallType.class);
 			wallType.setCode(wallData.getCode());
+			wallType.setNameLocal(wallData.getNameLocal());
 			wallType.setAuditDetails(wallData.getAuditDetails());
 			wallType.setDescription(wallData.getDescription());
 			wallType.setName(wallData.getName());
-			wallType.setNameLocal(wallType.getNameLocal());
 		}
 		return wallTypes;
 	}
@@ -817,11 +836,12 @@ public class PropertyMasterRepository {
 
 	}
 
-	public void updateStructureClsses(StructureClass structureClass, String data) {
+	public StructureClass updateStructureClsses(StructureClass structureClass, String data) {
 
 		Long updatedTime = new Date().getTime();
 
 		String structureClassesUpdate = StructureClassesBuilder.UPDATE_STRUCTURECLASSES_QUERY;
+		String selectStructureClassessSql = StructureClassesBuilder.SELECT_STRUCTURECLASSES_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -842,7 +862,11 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
+		Long createdTime = jdbcTemplate.queryForObject(selectStructureClassessSql,
+				new Object[] { structureClass.getId() }, Long.class);
 		jdbcTemplate.update(psc);
+		structureClass.getAuditDetails().setCreatedTime(createdTime);
+		return structureClass;
 	}
 
 	/**
@@ -896,11 +920,12 @@ public class PropertyMasterRepository {
 	 * @param usageMaster
 	 * @param data
 	 */
-	public void updateUsageMaster(UsageMaster usageMaster, String data) {
+	public UsageMaster updateUsageMaster(UsageMaster usageMaster, String data) {
 
 		Long updatedTime = new Date().getTime();
 
 		String usageUpdate = UsageMasterBuilder.UPDATE_USAGEMASTER_QUERY;
+		String selectUsageMasterSql = UsageMasterBuilder.SELECT_USAGEMASTER_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -920,7 +945,11 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
+		Long createdTime = jdbcTemplate.queryForObject(selectUsageMasterSql, new Object[] { usageMaster.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		usageMaster.getAuditDetails().setCreatedTime(createdTime);
+		return usageMaster;
 	}
 
 	/**
@@ -974,11 +1003,12 @@ public class PropertyMasterRepository {
 	 * @param data
 	 */
 
-	public void updateWallTypes(WallType wallType, String data) {
+	public WallType updateWallTypes(WallType wallType, String data) {
 
 		Long updatedTime = new Date().getTime();
 
 		String wallTypesUpdate = WallTypesBuilder.UPDATE_WALLTYPES_QUERY;
+		String selectWallTypeSql = WallTypesBuilder.SELECT_WALLTYPES_CREATETIME;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -998,7 +1028,11 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
+		Long createdTime = jdbcTemplate.queryForObject(selectWallTypeSql, new Object[] { wallType.getId() },
+				Long.class);
 		jdbcTemplate.update(psc);
+		wallType.getAuditDetails().setCreatedTime(createdTime);
+		return wallType;
 	}
 
 	/**

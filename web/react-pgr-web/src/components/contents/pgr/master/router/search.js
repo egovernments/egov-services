@@ -64,7 +64,6 @@ const getNameByBoundary = function(object, id) {
 
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -276,7 +275,7 @@ class searchRouter extends Component {
             <CardHeader title={<strong style = {{color:"#5a3e1b"}} > {translate("pgr.searchresult")} </strong>}/>
             <CardText>
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-              <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+             <thead>
                 <tr>
                   <th>#</th>
                   <th>{translate("pgr.lbl.grievance.type")}</th>
@@ -359,8 +358,9 @@ class searchRouter extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
-             <RaisedButton style={{margin:'15px 5px'}} label={translate("core.lbl.close")}/>
+
+             <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} primary={true}/>
+
            </div>
          </form>
          {viewTable()}

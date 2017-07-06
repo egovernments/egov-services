@@ -46,7 +46,9 @@ import java.util.List;
 import org.egov.eis.broker.MovementProducer;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
+import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.MovementRepository;
+import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.MovementRequest;
 import org.egov.eis.web.contract.MovementResponse;
 import org.egov.eis.web.contract.MovementSearchRequest;
@@ -96,6 +98,12 @@ public class MovementService {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+    
+    @Autowired
+    private PositionService positionService;
+    
+    @Autowired
+    private ApplicationConstants applicationConstants;
 
     public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
             final RequestInfo requestInfo) {
@@ -105,7 +113,7 @@ public class MovementService {
     public ResponseEntity<?> createMovements(final MovementRequest movementRequest, final String type) {
         final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
         movementRequest.setType(type);
-        final List<Movement> movementsList = validate(movementRequest, isExcelUpload);
+        final List<Movement> movementsList = validate(movementRequest);
         final List<Movement> successMovementsList = new ArrayList<>();
         final List<Movement> errorMovementsList = new ArrayList<>();
         for (final Movement movement : movementsList)
@@ -142,13 +150,24 @@ public class MovementService {
             return getSuccessResponseForCreate(movementsList, movementRequest.getRequestInfo());
     }
 
-    private List<Movement> validate(final MovementRequest movementRequest, final Boolean isExcelUpload) {
-        String errorMsg = "";
+    private List<Movement> validate(final MovementRequest movementRequest) {
         for (final Movement movement : movementRequest.getMovement()) {
-            errorMsg = "";
+            String errorMsg = "";
+            if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
+                    .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+                            movementRequest.getRequestInfo()).get(0).getId()))
+                errorMsg = validateEmployeeForPromotion(movement, movementRequest.getRequestInfo());
             movement.setErrorMsg(errorMsg);
         }
         return movementRequest.getMovement();
+    }
+
+    private String validateEmployeeForPromotion(final Movement movement, final RequestInfo requestInfo) {
+        String errorMsg = "";
+        List<Long> positions = positionService.getPositions(movement, requestInfo);
+        if (positions.contains(movement.getPositionAssigned()))
+            errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + " ";
+        return errorMsg;
     }
 
     private ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
@@ -161,7 +180,7 @@ public class MovementService {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(httpStatus.toString());
         movementRes.setResponseInfo(responseInfo);
-        return new ResponseEntity<MovementResponse>(movementRes, httpStatus);
+        return new ResponseEntity<>(movementRes, httpStatus);
     }
 
     private ResponseEntity<?> getSuccessResponseForUpload(final List<Movement> successMovementsList,
@@ -173,7 +192,7 @@ public class MovementService {
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         movementUploadResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<MovementUploadResponse>(movementUploadResponse, HttpStatus.OK);
+        return new ResponseEntity<>(movementUploadResponse, HttpStatus.OK);
     }
 
     public MovementRequest create(final MovementRequest movementRequest) {
@@ -183,7 +202,7 @@ public class MovementService {
     public ResponseEntity<?> updateMovement(final MovementRequest movementRequest) {
         List<Movement> movements = new ArrayList<>();
         movements.add(movementRequest.getMovement().get(0));
-        movements = validate(movementRequest, false);
+        movements = validate(movementRequest);
         if (movements.get(0).getErrorMsg().isEmpty()) {
             final MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
             final List<Long> ids = new ArrayList<>();

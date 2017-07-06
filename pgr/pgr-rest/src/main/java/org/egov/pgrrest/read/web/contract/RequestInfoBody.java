@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.pgrrest.common.model.AuthenticatedUser;
-import org.egov.pgrrest.common.model.UserType;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.UserType;
 
 import java.util.List;
 import java.util.stream.Collectors;

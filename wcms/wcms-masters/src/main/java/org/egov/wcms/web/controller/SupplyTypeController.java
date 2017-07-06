@@ -70,7 +70,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/supplytype")
 public class SupplyTypeController {
 
@@ -92,7 +95,8 @@ public class SupplyTypeController {
     @SuppressWarnings("unchecked")
     @PostMapping("/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final SupplyTypeRequest supplyTypeRequest, final BindingResult errors) {
+    public ResponseEntity<?> create(@RequestBody @Valid final SupplyTypeRequest supplyTypeRequest,
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity(errRes, HttpStatus.BAD_REQUEST);
@@ -102,8 +106,8 @@ public class SupplyTypeController {
         if (!errorRespList.isEmpty())
             return new ResponseEntity(errorRespList, HttpStatus.BAD_REQUEST);
 
-        final SupplyType supplytypeobj = supplyTypeService.createSupplyType(applicationProperties.getCreateSupplyTypeTopicName(),
-                "supplytype-create", supplyTypeRequest);
+        final SupplyType supplytypeobj = supplyTypeService.createSupplyType(
+                applicationProperties.getCreateSupplyTypeTopicName(), "supplytype-create", supplyTypeRequest);
         final List<SupplyType> supplyTypes = new ArrayList<>();
         supplyTypes.add(supplytypeobj);
         return getSuccessResponse(supplyTypes, "created", supplyTypeRequest.getRequestInfo());
@@ -123,8 +127,8 @@ public class SupplyTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final SupplyType supplyType = supplyTypeService.updateSupplyType(applicationProperties.getUpdateSupplyTypeTopicName(),
-                "supplyType-update", supplyTypeRequest);
+        final SupplyType supplyType = supplyTypeService.updateSupplyType(
+                applicationProperties.getUpdateSupplyTypeTopicName(), "supplyType-update", supplyTypeRequest);
         final List<SupplyType> supplyTypes = new ArrayList<>();
         supplyTypes.add(supplyType);
         return getSuccessResponse(supplyTypes, null, supplyTypeRequest.getRequestInfo());
@@ -133,7 +137,8 @@ public class SupplyTypeController {
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final SupplyTypeGetRequest supplyGetRequest,
-            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 

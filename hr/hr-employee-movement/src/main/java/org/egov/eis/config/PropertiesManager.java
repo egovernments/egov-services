@@ -86,4 +86,19 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_masters_service.hrstatuses.key}")
     private String hrMastersServiceStatusesKey;
+
+    @Value("${egov.services.hr_employee_service.hostname}")
+    private String hrEmployeeServiceHostName;
+
+    @Value("${egov.services.hr_employee_service.employees.basepath}")
+    private String hrEmployeeServiceEmployeesBasePath;
+    
+    @Value("${egov.services.hr_employee_service.vacantpositions.basepath}")
+    private String hrEmployeeServiceVacantPositionsBasePath;
+
+    @Value("${egov.services.hr_employee_service.employees.searchpath}")
+    private String hrEmployeeServiceEmployeesSearchPath;
+
+    @Value("${egov.services.hr_employee_service.employees.updatepath}")
+    private String hrEmployeeServiceEmployeesUpdatePath;
 }

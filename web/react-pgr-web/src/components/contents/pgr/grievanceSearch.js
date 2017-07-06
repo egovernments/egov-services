@@ -54,7 +54,6 @@ const getNameByProperty = function(object, key) {
 
 const styles = {
   headerStyle : {
-    color: 'rgb(90, 62, 27)',
     fontSize : 19
   },
   marginStyle:{
@@ -106,6 +105,7 @@ class grievanceSearch extends Component {
        this.resetAndSearch = this.resetAndSearch.bind(this);
        this.handlePageClick = this.handlePageClick.bind(this);
        this.handleNavigation = this.handleNavigation.bind(this);
+       this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   handleNavigation(serviceId) {
@@ -243,6 +243,12 @@ class grievanceSearch extends Component {
     });
   };
 
+  handleRequestClose() {
+    this.setState({
+      open1: false,
+    });
+  };
+
   render() {
   	let {search, resetAndSearch, handlePageClick, handleNavigation} = this;
   	let {
@@ -297,7 +303,7 @@ class grievanceSearch extends Component {
   	const showTable = function() {
 			return (
 				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive>
-			    <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+			    <thead >
 			      <tr>
 			        <th>{translate("pgr.lbl.srn")}</th>
 			        <th>{translate("pgr.lbl.grievance.type")}</th>
@@ -386,6 +392,7 @@ class grievanceSearch extends Component {
   			)
   		}
   	}
+
   	return (
   		<div className="grievanceCreate">
 	        <form autoComplete="off" onSubmit={(e) => {resetAndSearch(e)}}>
@@ -421,9 +428,7 @@ class grievanceSearch extends Component {
 	                		</Row>
 	                		<Row>
 			                    <Col xs={12} md={12}>
-			                      <FlatButton
-			                        backgroundColor="#a4c639"
-			                        hoverColor="#8AA62F"
+			                      <RaisedButton
 			                        label={buttonText}
 			                        onClick={(e) => {e.preventDefault(); buttonText == translate("core.lbl.more") ? changeButtonText(translate("core.lbl.less")) : changeButtonText(translate("core.lbl.more"))}}
 			                      />
@@ -434,8 +439,9 @@ class grievanceSearch extends Component {
 	            	</CardText>
 	          </Card>
 	          <div style={{textAlign: 'center'}}>
-		          <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} backgroundColor={"#5a3e1b"} labelColor={white}/>
-	              <RaisedButton style={{margin:'15px 5px'}} label="Close"/>
+
+		          <RaisedButton style={{margin:'15px 5px'}} type="submit" primary={true} label={translate("core.lbl.search")}/>
+
               </div>
 	        </form>
 	        {displayTableCard()}
@@ -455,6 +461,7 @@ class grievanceSearch extends Component {
             message={translate("pgr.lbl.noresult")}
             autoHideDuration={4000}
             style={{"textAlign": "center"}}
+            onRequestClose={this.handleRequestClose}
           />
         </div>
   	);

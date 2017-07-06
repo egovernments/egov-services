@@ -104,6 +104,40 @@ public class GlCodeMasterServiceTest {
 		
 		assertTrue(glCodeMasterResponse.equals(glCodeMasterService.createAsync(glCodeMasterRequest)));
 	}
+	@Test
+	public void testUpdateTest() {
+		List<GlCodeMaster> glCOde = new ArrayList<>();
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		glCOde.add(glCodeMaster);
+		GlCodeMasterRequest glCodeMasterRequest = new GlCodeMasterRequest();
+		glCodeMasterRequest.setGlCodeMasters(glCOde);
+
+		List<GlCodeMaster> glCodes = new ArrayList<>();
+		glCodes.add(glCodeMaster);
+		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();
+		glCodeMasterResponse.setResponseInfo(null);
+		glCodeMasterResponse.setGlCodeMasters(glCodes);
+
+		when(glCodeMasterRepository.update(any(GlCodeMasterRequest.class))).thenReturn(glCOde);
+		
+		assertTrue(glCodeMasterResponse.equals(glCodeMasterService.update(glCodeMasterRequest)));
+	}
+	
+	@Test
+	public void testUpdateAsync() {
+		
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		GlCodeMasterRequest glCodeMasterRequest = new GlCodeMasterRequest();
+
+		List<GlCodeMaster> glCodeMasters = new ArrayList<>();
+		glCodeMasters.add(glCodeMaster);
+		glCodeMasterRequest.setGlCodeMasters(glCodeMasters);
+		GlCodeMasterResponse glCodeMasterResponse = new GlCodeMasterResponse();
+		glCodeMasterResponse.setResponseInfo(null);
+		glCodeMasterResponse.setGlCodeMasters(glCodeMasters);
+		
+		assertTrue(glCodeMasterResponse.equals(glCodeMasterService.updateAsync(glCodeMasterRequest)));
+	}
 	
 	private GlCodeMaster getGlCodeMaster(){
 		GlCodeMaster glCodeMaster=new GlCodeMaster();

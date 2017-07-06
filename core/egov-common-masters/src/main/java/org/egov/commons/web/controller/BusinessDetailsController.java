@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessAccountSubLedgerDetails;
 import org.egov.commons.model.BusinessCategory;
@@ -20,9 +22,7 @@ import org.egov.commons.web.contract.BusinessDetailsGetRequest;
 import org.egov.commons.web.contract.BusinessDetailsRequest;
 import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
 import org.egov.commons.web.contract.BusinessDetailsResponse;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.Error;
 import org.egov.commons.web.errorhandlers.ErrorHandler;

@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
-import org.egov.pgrrest.common.model.AuthenticatedUser;
+import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.service.ServiceRequestValidator;
 import org.egov.pgrrest.read.domain.service.UpdateServiceRequestEligibilityService;

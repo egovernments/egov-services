@@ -42,6 +42,7 @@ package org.egov.eis.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.eis.model.enums.TransferType;
@@ -66,10 +67,13 @@ public class Movement {
 
     private Long id;
 
+    @NotNull
     private Long employeeId;
 
+    @NotNull
     private TypeOfMovement typeOfMovement;
 
+    @NotNull
     private Long currentAssignment;
 
     private TransferType transferType;
@@ -80,6 +84,7 @@ public class Movement {
 
     private TransferReason reason;
 
+    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date effectiveFrom;
 
@@ -88,10 +93,13 @@ public class Movement {
 
     private Long transferedLocation;
 
+    @NotNull
     private Long departmentAssigned;
 
+    @NotNull
     private Long designationAssigned;
 
+    @NotNull
     private Long positionAssigned;
 
     private Long fundAssigned;
@@ -117,6 +125,7 @@ public class Movement {
     private Date lastModifiedDate;
 
     @Size(max = 256)
+    @NotNull
     private String tenantId;
 
     private WorkFlowDetails workflowDetails;

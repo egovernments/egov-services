@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.common.model.ServiceDefinition;
+import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceDefinitionRepository;
 import org.springframework.stereotype.Service;

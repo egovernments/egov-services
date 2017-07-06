@@ -1,7 +1,7 @@
 package org.egov.pgrrest.write.consumer;
 
-import org.egov.pgrrest.write.contracts.grievance.SevaRequest;
-import org.egov.pgrrest.write.service.ServiceRequestWriteService;
+import org.egov.pgrrest.write.consumer.contracts.request.SevaRequest;
+import org.egov.pgrrest.write.domain.service.ServiceRequestWriteService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 

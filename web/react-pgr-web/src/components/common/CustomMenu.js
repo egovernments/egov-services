@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-
+import {connect} from 'react-redux';
 import TextField from 'material-ui/TextField';
-
+import RaisedButton from 'material-ui/RaisedButton';
 // import MenuItem from 'material-ui/MenuItem';
 // import Paper from 'material-ui/Paper';
 
@@ -24,7 +24,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const style = {
   display: 'inline-block',
-  margin: '16px 32px 16px 0',
+  margin: '14px 32px 16px 0',
 };
 
 
@@ -78,9 +78,6 @@ class CustomMenu extends Component {
   //   return menu;
   // }
 
-
-
-
   handleChange=(e)=>
   {
       this.setState({
@@ -88,19 +85,26 @@ class CustomMenu extends Component {
       })
   }
 
-  menuChange=(nextLevel,parentLevel)=>
-  {
+  menuChange=(nextLevel, parentLevel) => {
     this.setState({
       level:nextLevel,
       parentLevel
-    })
+    });
   }
 
   changeLevel=(level)=>{
+    let {searchText}=this.state;
+    let {setRoute}=this.props;
     this.setState({
       level,
-      parentLevel:level-1
+      parentLevel:level-1,
+      searchText:!level?"":searchText
     })
+
+    if (!level) {
+      console.log("level 0");
+      setRoute("/dashboard");
+    }
   }
 
 
@@ -108,7 +112,7 @@ class CustomMenu extends Component {
 
   render() {
     // console.log(this.state.searchText);
-    let {menuItems}=this.props;
+    let {menuItems, handleToggle}=this.props;
     let {searchText,filterMenu,level,parentLevel}=this.state;
     let {menuChange,changeLevel}=this;
     // console.log(menuItems.length>0?menuItems[0].title:"");
@@ -136,8 +140,8 @@ class CustomMenu extends Component {
     //
     //   return menu;
     // }
-    console.log(menuItems);
-    console.log(parentLevel);
+    // console.log(menuItems);
+    // console.log(parentLevel);
     const showMenu=()=>{
 
       if(searchText.length==0)
@@ -148,7 +152,7 @@ class CustomMenu extends Component {
                 return(
                   <Link   key={index} to={item.url} >
                     <MenuItem
-
+                         onTouchTap={()=>{document.title=item.name; handleToggle(false)}}
                          leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                          primaryText={item.name}
                       />
@@ -164,7 +168,7 @@ class CustomMenu extends Component {
                            leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                            primaryText={item.name}
                            rightIcon={<i className="material-icons">{item.rightIcon}</i>}
-                           onTouchTap={()=>{menuChange(item.nextLevel,item.level)}}
+                           onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
                         />
                     )
               }
@@ -197,21 +201,39 @@ class CustomMenu extends Component {
         // )
       }
       else {
-        return (
-            <span>Searching</span>
-        )
+
+          return menuItems.map((item,index)=>{
+                if (item.url && item.name.toLowerCase().startsWith(searchText.toLowerCase())) {
+                  return(
+                    <Link   key={index} to={item.url} >
+                      <MenuItem
+                           onTouchTap={()=>{handleToggle(false)}}
+                           leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+                           primaryText={item.name}
+                        />
+                    </Link>
+                  )
+                }
+                // else {
+                //   return(
+                //     <span>Not found</span>
+                //   )
+                // }
+          })
+
+
       }
     }
     // console.log(constructMenu(menuItems.length>0?menuItems[0].items:[]));
     return (
       <div className="custom-menu" style={style}>
-          {/*
+          {
             <TextField
-               hintText="Quick Find"
+               hintText = "&nbsp;&nbsp;Quick Find"
                onChange={this.handleChange}
                value={searchText}
              />
-            */}
+          }
 
 
 
@@ -219,12 +241,18 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true} width={320}>
-        {level>1 &&    <FloatingActionButton onTouchTap={()=>{changeLevel(0)}}  mini={true} style={style}>
-              <i className="material-icons">dashboard</i>
-          </FloatingActionButton>}
-        { level>0 &&   <FloatingActionButton onTouchTap={()=>{changeLevel(parentLevel)}} mini={true} style={style}>
-              <i className="material-icons">fast_rewind</i>
-          </FloatingActionButton>}
+        {(level>0 || searchText) && <RaisedButton
+                                      primary={true}
+                                      icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}
+                                      style={{...style, "marginLeft": "2px"}}
+                                      onTouchTap={()=>{changeLevel(0)}}
+                                    />}
+        { level>0 &&  <RaisedButton
+                        primary={true}
+                        icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>fast_rewind</i>}
+                        style={{...style, "float": "right", "marginRight": "2px"}}
+                        onTouchTap={()=>{changeLevel(parentLevel)}}
+                      />}
 
           {/*
             <MenuItem
@@ -277,4 +305,10 @@ class CustomMenu extends Component {
   }
 }
 
-export default CustomMenu;
+
+const mapStateToProps = state => ({});
+const mapDispatchToProps = dispatch => ({
+  handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
+})
+export default connect(mapStateToProps,mapDispatchToProps)(CustomMenu);

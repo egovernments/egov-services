@@ -1,6 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.common.entity.ServiceType;
+import org.egov.pgrrest.common.persistence.entity.ServiceType;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceTypeSearchCriteria;

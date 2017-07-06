@@ -44,11 +44,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.model.UOMCategory;
 import org.egov.commons.service.UOMCategoryService;
-import org.egov.commons.web.contract.RequestInfo;
 import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.ResponseInfo;
 import org.egov.commons.web.contract.UOMCategoryGetRequest;
 import org.egov.commons.web.contract.UOMCategoryResponse;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;

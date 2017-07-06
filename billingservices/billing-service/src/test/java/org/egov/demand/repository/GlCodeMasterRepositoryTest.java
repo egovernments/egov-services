@@ -61,8 +61,23 @@ public class GlCodeMasterRepositoryTest {
 		glCodes.add(glCodeMaster);
 		glCodeMasterRequest.setGlCodeMasters(glCodes);
 		
-		when(jdbcTemplate.update(any(String.class),any(Object[].class))).thenReturn(1);
+		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[] {1});
 		assertTrue(glCodes.equals(glCodeMasterRepository.create(glCodeMasterRequest)));
+	}
+	
+	@Test
+	public void testUpdateGlCodeMaster() {
+		
+		GlCodeMasterRequest glCodeMasterRequest = new GlCodeMasterRequest();
+		RequestInfo requestInfo = new RequestInfo();
+		glCodeMasterRequest.setRequestInfo(requestInfo);
+		GlCodeMaster glCodeMaster = getGlCodeMaster();
+		List<GlCodeMaster> glCodes = new ArrayList<>();
+		glCodes.add(glCodeMaster);
+		glCodeMasterRequest.setGlCodeMasters(glCodes);
+		
+		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[]{1});
+		assertTrue(glCodes.equals(glCodeMasterRepository.update(glCodeMasterRequest)));
 	}
 	
 	private GlCodeMaster getGlCodeMaster(){

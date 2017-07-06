@@ -48,9 +48,9 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.PipeSize;
-import org.egov.wcms.producers.WaterMasterProducer;
 import org.egov.wcms.repository.PipeSizeRepository;
 import org.egov.wcms.web.contract.PipeSizeGetRequest;
 import org.egov.wcms.web.contract.PipeSizeRequest;
@@ -74,7 +74,7 @@ public class PipeSizeServiceTest {
     private PipeSizeRepository pipeSizeRepository;
 
     @Mock
-    private WaterMasterProducer waterMasterProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private CodeGeneratorService codeGeneratorService;

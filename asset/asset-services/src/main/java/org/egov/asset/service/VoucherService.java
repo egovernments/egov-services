@@ -1,6 +1,7 @@
 package org.egov.asset.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,7 +109,7 @@ public class VoucherService {
 	}
 
 	public VouchercreateAccountCodeDetails getGlCodes(final RequestInfo requestInfo, final String tenantId,
-			final Long accountId, final Double amount, final Long functionId, final Boolean iscredit,
+			final Long accountId, final BigDecimal amount, final Long functionId, final Boolean iscredit,
 			final Boolean isDebit) {
 
 		final VouchercreateAccountCodeDetails debitAccountCodeDetail = new VouchercreateAccountCodeDetails();
@@ -125,7 +126,7 @@ public class VoucherService {
 				debitAccountCodeDetail
 						.setGlcode(chartOfAccountContractResponse.getChartOfAccounts().get(0).getGlcode());
 			else
-				throw new RuntimeException("Chart of Account is not present for account : "+accountId);
+				throw new RuntimeException("Chart of Account is not present for account : " + accountId);
 
 			if (iscredit)
 				debitAccountCodeDetail.setCreditAmount(amount);

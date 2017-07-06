@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.enums.RevaluationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +50,11 @@ public class RevaluationQueryBuilder {
 		if (revaluationCriteria.getStatus() != null) {
 			isAppendAndClause = true;
 			selectQuery.append(" revalution.status = ?");
-			preparedStatementValues.add(revaluationCriteria.getStatus().toString());
+			preparedStatementValues.add(revaluationCriteria.getStatus());
 		} else {
 			isAppendAndClause = true;
 			selectQuery.append(" revalution.status = ?");
-			preparedStatementValues.add(RevaluationStatus.ACTIVE.toString());
+			preparedStatementValues.add("ACTIVE");
 		}
 
 		if (revaluationCriteria.getId() == null && revaluationCriteria.getAssetId() == null)
@@ -75,6 +74,10 @@ public class RevaluationQueryBuilder {
 		if (revaluationCriteria.getAssetId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" revalution.assetid IN (" + getIdQuery(revaluationCriteria.getAssetId()));
+		}
+		if(revaluationCriteria.getFromDate() != null && revaluationCriteria.getToDate() != null){
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" revalution.revaluationDate BETWEEN "+revaluationCriteria.getFromDate() +" AND "+revaluationCriteria.getToDate());
 		}
 
 		selectQuery.append(" ORDER BY revalution.revaluationdate desc");

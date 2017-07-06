@@ -67,8 +67,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,7 +105,7 @@ public class EscalationTimeTypeController {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		logger.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
+		logger.info("EscalationTimeType Create : Request ::" + escalationTimeTypeRequest);
 
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
 		if (!errorResponses.isEmpty())
@@ -129,7 +129,7 @@ public class EscalationTimeTypeController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		escalationTimeTypeRequest.getEscalationTimeType().setId(id);
-		logger.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
+		logger.info("EscalationTimeType Update : Request ::" + escalationTimeTypeRequest);
 
 		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
 		if (!errorResponses.isEmpty())

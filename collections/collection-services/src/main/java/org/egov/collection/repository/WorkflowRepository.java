@@ -40,16 +40,24 @@
 
 package org.egov.collection.repository;
 
+import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteria;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
+import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.producer.CollectionProducer;
+import org.egov.collection.web.contract.ProcessInstance;
+import org.egov.collection.web.contract.ProcessInstanceRequest;
+import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -60,14 +68,14 @@ public class WorkflowRepository {
 	public static final Logger logger = LoggerFactory
 			.getLogger(ReceiptRepository.class);
 	
-/*	@Autowired
+	@Autowired
 	private CollectionProducer collectionProducer;
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate; */
+	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -170,5 +178,47 @@ public class WorkflowRepository {
 		return response;
 
 	}
+	
+	public ProcessInstanceResponse startWorkflow(WorkflowDetails workflowDetails){
+		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
+		StringBuilder uri = new StringBuilder();
+		String basePath = applicationProperties.getWorkflowServiceHostName();
+		String searchPath = applicationProperties.getWorkflowServiceSearchPath();
+		uri.append(basePath).append(searchPath);
+		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
+		processInstanceRequest = getProcessInstanceRequest(workflowDetails);
+		
+		try{
+            processInstanceResponse = restTemplate.postForObject(uri.toString(), processInstanceRequest,
+                    ProcessInstanceResponse.class);
+		}catch(Exception e){
+			logger.error("Exception caused while hitting the workflow service: ", e.getCause());
+			processInstanceResponse = null;
+			return processInstanceResponse;
+		}
+		
+		logger.info("ProcessInstanceResponse: "+processInstanceResponse);
+		return processInstanceResponse;
+	}
+	
+    private ProcessInstanceRequest getProcessInstanceRequest(final WorkflowDetails workflowDetails) {
+
+        final RequestInfo requestInfo = workflowDetails.getRequestInfo();
+        final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
+        final ProcessInstance processInstance = new ProcessInstance();
+
+     //   assignee.setId(workFlowDetails.getAssignee());
+        processInstance.setBusinessKey(applicationProperties.getWorkflowServiceBusinessKey());
+        processInstance.setType(applicationProperties.getWorkflowServiceBusinessKey());
+    //    processInstance.setAssignee(assignee);
+        processInstance.setComments(workflowDetails.getComments());
+        processInstance.setInitiatorPosition(workflowDetails.getInitiatorPosition());
+        processInstance.setTenantId(workflowDetails.getTenantId());
+        processInstance.setDetails("Receipt Create : " + workflowDetails.getReceiptNumber());
+        processInstanceRequest.setProcessInstance(processInstance);
+        processInstanceRequest.setRequestInfo(requestInfo);
+
+        return processInstanceRequest;
+    }
 
 }

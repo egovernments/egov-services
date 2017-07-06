@@ -30,7 +30,7 @@ public class RouterQueryBuilder {
 	
 	private static final String UPDATE_ROUTER_WITHOUT_SERVICE = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, active = ? where bndryid = ? and tenantid=?";
 	
-	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ? and tenantid=?";
+	private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ? and tenantid = ?";
 	
 	private static final String CHECK_DUPLICATE_WITHOUT_SERVICE = "select * from egpgr_router where complainttypeid IS NULL and bndryid = ? and tenantid=?";
 	

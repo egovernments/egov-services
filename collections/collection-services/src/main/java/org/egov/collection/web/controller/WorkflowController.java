@@ -47,9 +47,7 @@ import javax.validation.Valid;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.Department;
 import org.egov.collection.model.DepartmentSearchCriteria;
-import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
-import org.egov.collection.model.UserSearchCriteria;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.DepartmentResponse;
@@ -59,7 +57,6 @@ import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,6 +176,8 @@ public class WorkflowController {
 				
 		return getUsersSuccessResponse(users, userSeachCriteriaWrapper.getRequestInfo());
 	}
+	
+	
 	
 	private ResponseEntity<?> getDeptSuccessResponse(List<Department> departments,
 			RequestInfo requestInfo) {

@@ -19,6 +19,7 @@ ReportDefinitions:
         label: reports.pgr.complainttype.name
         type: string
         source: egpgr_complainttype 
+        linkedReport: 
       - name: registered
         label: reports.pgr.status.registered
         type: number
@@ -64,6 +65,7 @@ ReportDefinitions:
       - name: complainttype
         label: reports.pgr.complainttype
         type: singlevaluelist
+        pattern: http://localhost:8080/billing-service/glcodemasters/_search?tenantId=$tenantid&service=businessservice 99&taxHead=1,2|$.GlCodeMasters..service|$.GlCodeMasters..id
         source: seva
       - name: status
         label: reports.pgr.status

@@ -1,5 +1,6 @@
 package org.egov.access.web.contract.action;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActionResponse {
+public class ActionSearchResponse {
     private ResponseInfo responseInfo;
-    private List<ActionContract> actions;
+    private List<Module> modules;
 }

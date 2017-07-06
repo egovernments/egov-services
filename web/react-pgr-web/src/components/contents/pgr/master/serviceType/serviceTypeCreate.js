@@ -572,7 +572,7 @@ console.log(createServiceType);
                                       id="description"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+							  { false && <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText="Type"
@@ -582,13 +582,13 @@ console.log(createServiceType);
                                       multiLine={true}
                                       id="type"
                                   />
-                              </Col>
+                              </Col>}
                               <Col xs={12} md={3}>
                                <SelectField
                                     multiple="true"
                                     errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
                                     value={createServiceType.keywords ? createServiceType.keywords : ""}
-                                    id="keywords"
+                                    id="Type"
                                     onChange={(e, index, value) => {
                                        var e = {
                                          target: {

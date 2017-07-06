@@ -38,34 +38,21 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.broker;
+package org.egov.eis;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
-@Service
-public class EmployeeProducer {
+import static org.mockito.Mockito.mock;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+@Configuration
+public class TestConfiguration {
 
-	public void sendMessage(String topic, String key, Object message) {
+    @Bean
+    @SuppressWarnings("unchecked")
+    public KafkaTemplate<String, Object> kafkaTemplate() {
+        return mock(KafkaTemplate.class);
+    }
 
-		ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
-
-		// Handle success or failure of sending
-		future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-			@Override
-			public void onSuccess(SendResult<String, Object> stringTSendResult) {
-			}
-
-			@Override
-			public void onFailure(Throwable throwable) {
-			}
-		});
-	}
 }

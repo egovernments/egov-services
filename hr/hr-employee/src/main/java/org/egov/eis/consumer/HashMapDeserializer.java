@@ -38,47 +38,17 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.commons.consumers;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import java.util.HashMap;
 
-import javax.validation.constraints.NotNull;
-import java.util.Date;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestInfo {
+@SuppressWarnings("rawtypes")
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-	@NotNull
-	private String apiId;
-
-	@NotNull
-	private String ver;
-
-	@NotNull
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
-	private Date ts;
-
-	private String action;
-
-	private String did;
-
-	private String key;
-
-	private String msgId;
-
-	private String requesterId;
-
-	private String authToken;
-
-	private UserInfo userInfo;
+    public HashMapDeserializer() {
+        super(HashMap.class);
+    }
 
 }

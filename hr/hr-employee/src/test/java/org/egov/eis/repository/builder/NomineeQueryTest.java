@@ -21,7 +21,7 @@ import static org.junit.runners.Parameterized.Parameters;
 import static org.mockito.Mockito.doReturn;
 
 @RunWith(Parameterized.class)
-public class NomineeQueryBuilderTest {
+public class NomineeQueryTest {
 
 	private static String[] expectedQueries;
 	// Using static block to execute & initialise expectedQueries before testConditions() method executes
@@ -34,7 +34,7 @@ public class NomineeQueryBuilderTest {
 	private NomineeGetRequest criteria;
 	private Map<String, Object> expectedParams;
 
-	public NomineeQueryBuilderTest(NomineeGetRequest criteria, String expectedQuery, Map<String, Object> expectedParams) {
+	public NomineeQueryTest(NomineeGetRequest criteria, String expectedQuery, Map<String, Object> expectedParams) {
 		this.criteria = criteria;
 		this.expectedQuery = expectedQuery;
 		this.expectedParams = expectedParams;
@@ -45,11 +45,6 @@ public class NomineeQueryBuilderTest {
 
 	@InjectMocks
 	private NomineeQueryBuilder nomineeQueryBuilder;
-
-	@BeforeClass
-	public static void beforeClass() throws IOException, JSONException {
-		expectedQueries = getFileContents();
-	}
 
 	@Before
 	public void beforeTest() {
@@ -263,6 +258,10 @@ public class NomineeQueryBuilderTest {
 		return Arrays.asList(conditions);
 	}
 
+	/**
+	 * This test method will execute as many times as the parameters defined in the above testConditions() method.
+	 * This will execute index based starting from 0 till the length - 1. So, it'll show indexes in test panel.
+	 */
 	@Test
 	public void testGetQuery() {
 		doReturn("10").when(applicationProperties).empSearchPageSizeDefault();

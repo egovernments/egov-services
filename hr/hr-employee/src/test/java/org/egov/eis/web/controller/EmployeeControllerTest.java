@@ -10,37 +10,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.TestConfiguration;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
-import org.egov.eis.service.helper.EmployeeHelper;
-import org.egov.eis.service.helper.UserSearchURLHelper;
 import org.egov.eis.utils.FileUtils;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.DataIntegrityValidatorForCreate;
-import org.egov.eis.web.validator.DataIntegrityValidatorForUpdate;
+import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
+import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
 import org.egov.eis.web.validator.EmployeeAssignmentValidator;
 import org.egov.eis.web.validator.RequestValidator;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(EmployeeController.class)
+@Import(TestConfiguration.class)
 public class EmployeeControllerTest {
 	
 	@Autowired
@@ -62,10 +60,10 @@ public class EmployeeControllerTest {
 	private EmployeeAssignmentValidator employeeAssignmentValidator;
 
     @MockBean
-	private DataIntegrityValidatorForCreate dataIntegrityValidatorForCreate;
+	private DataIntegrityValidatorForCreateEmployee dataIntegrityValidatorForCreate;
 
     @MockBean
-	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
+	private DataIntegrityValidatorForUpdateEmployee dataIntegrityValidatorForUpdate;
 
 	@Test
 	public void testSearch() throws IOException, Exception {

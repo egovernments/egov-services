@@ -1,5 +1,8 @@
 package org.egov.eis.utils;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.NominatingEmployee;
 import org.egov.eis.model.Nominee;
 import org.egov.eis.model.enums.Gender;
@@ -17,8 +20,8 @@ public class SeedHelper {
 
     public RequestInfo getRequestInfo() {
         return RequestInfo.builder().apiId("apiId").ver("ver").ts(new Date()).action("action").did("did").key("key")
-                .msgId("msgId").requesterId("requesterId").authToken("authToken")
-                .userInfo(new UserInfo()).build();
+                .msgId("msgId").authToken("authToken")
+                .userInfo(new User()).build();
     }
 
     public ResponseInfo getResponseInfo() {
@@ -26,7 +29,8 @@ public class SeedHelper {
                 .resMsgId("resMsgId").status("200").build();
     }
 
-    public Error getError() {
+    @SuppressWarnings("serial")
+	public Error getError() {
         Map<String, Object> fields = new HashMap<String, Object>() {{
             put("field1", "error message for field 1");
             put("field2", "error message for field 2");

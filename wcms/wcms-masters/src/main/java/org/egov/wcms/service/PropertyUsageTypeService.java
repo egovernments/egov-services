@@ -92,6 +92,20 @@ public class PropertyUsageTypeService {
 
     public List<PropertyTypeUsageType> getPropertyUsageTypes(
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
+        if (propUsageTypeGetRequest.getPropertyType() != null) {
+            final PropertyTypeResponse propertyType = getPropertyIdFromPTModule(
+                    propUsageTypeGetRequest.getPropertyType(), propUsageTypeGetRequest.getTenantId());
+            if (propertyType != null)
+                propUsageTypeGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
+
+        }
+        if (propUsageTypeGetRequest.getUsageType() != null) {
+            final UsageTypeResponse usageType = getUsageIdFromPTModule(
+                    propUsageTypeGetRequest.getUsageType(), propUsageTypeGetRequest.getTenantId());
+            if (usageType != null)
+                propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
+
+        }
         return propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest);
     }
 
@@ -107,11 +121,10 @@ public class PropertyUsageTypeService {
 
     public Boolean getPropertyTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType());
-        url = url.replace("{tenantId}", propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
-        final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyTypes(url);
+
+        final PropertyTypeResponse propertyType = getPropertyIdFromPTModule(
+                propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
         if (propertyType.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
             propUsageTypeRequest.getPropertyTypeUsageType().setPropertyTypeId(
@@ -123,13 +136,20 @@ public class PropertyUsageTypeService {
 
     }
 
+    private PropertyTypeResponse getPropertyIdFromPTModule(final String propertyTypeName, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+        url = url.replace("{name}", propertyTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+        return propertyTypes;
+    }
+
     public Boolean getUsageTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidUsage = Boolean.FALSE;
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
-        url = url.replace("{name}", propUsageTypeRequest.getPropertyTypeUsageType().getUsageType());
-        url = url.replace("{tenantId}", propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
-        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
+        final UsageTypeResponse usageType = getUsageIdFromPTModule(
+                propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
             propUsageTypeRequest.getPropertyTypeUsageType()
@@ -139,6 +159,15 @@ public class PropertyUsageTypeService {
         }
         return isValidUsage;
 
+    }
+
+    private UsageTypeResponse getUsageIdFromPTModule(final String usageTypeName, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
+        url = url.replace("{name}", usageTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
+        return usageType;
     }
 
 }

@@ -41,6 +41,8 @@ package org.egov.wcms.web.contract;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,9 +60,22 @@ import lombok.ToString;
 public class PropertyTypeUsageTypeGetReq {
 
     private List<Long> id;
+    
     private String propertyType;
+    
+    private String propertyTypeId;
+    
     private String usageType;
+    
+    private String usageTypeId;
+    
     private Boolean active;
+    
+    @NotNull
     private String tenantId;
+    
+    private String sortBy;
+
+    private String sortOrder;
 
 }

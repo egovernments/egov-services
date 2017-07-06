@@ -92,23 +92,29 @@ public class PropertyTypePipeSizeService {
         getPropertyTypeByName(propertyPipeSizeRequest);
         return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyPipeSize().getId(),
                 propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeId(),
-                propertyPipeSizeRequest.getPropertyPipeSize().getPipeSizeId(),
+                propertyPipeSizeRequest.getPropertyPipeSize().getPipeSize(),
                 propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
     }
 
     public List<PropertyTypePipeSize> getPropertyPipeSizes(
             final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
+        if (propertyPipeSizeGetRequest.getPropertyTypeName() != null) {
+            final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+                    propertyPipeSizeGetRequest.getPropertyTypeName(), propertyPipeSizeGetRequest.getTenantId());
+            if (propertyTypes != null)
+                propertyPipeSizeGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
+
+        }
         return propertyPipeSizeRepository.findForCriteria(propertyPipeSizeGetRequest);
 
     }
 
     public Boolean getPropertyTypeByName(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName());
-        url = url.replace("{tenantId}", propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
-        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+        final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+                propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName(),
+                propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
+
         if (propertyTypes.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
             propertyPipeSizeRequest.getPropertyPipeSize().setPropertyTypeId(
@@ -118,6 +124,15 @@ public class PropertyTypePipeSizeService {
         }
         return isValidProperty;
 
+    }
+
+    private PropertyTypeResponse getPropertyIdFromPTModule(String propertyTypeName, String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+        url = url.replace("{name}", propertyTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+        return propertyTypes;
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {

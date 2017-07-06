@@ -41,6 +41,7 @@ package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
+import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +68,7 @@ public class PropertyUsageTypeQueryBuilder {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, propUsageTypeGetRequest);
-
+        addOrderByClause(selectQuery, propUsageTypeGetRequest);
         log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
@@ -76,7 +77,8 @@ public class PropertyUsageTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
 
-        if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getTenantId() == null)
+        if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getPropertyType()== null && 
+                propUsageTypeGetRequest.getUsageType()==null && propUsageTypeGetRequest.getTenantId() == null)
             return;
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
@@ -89,6 +91,32 @@ public class PropertyUsageTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" proUseType.id IN " + getIdQuery(propUsageTypeGetRequest.getId()));
         }
+        if (propUsageTypeGetRequest.getUsageType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" proUseType.usagetypeid = ?");
+            preparedStatementValues.add(propUsageTypeGetRequest.getUsageTypeId());
+        }
+
+        if (propUsageTypeGetRequest.getPropertyType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" proUseType.propertytypeid = ?");
+            preparedStatementValues.add(propUsageTypeGetRequest.getPropertyTypeId());
+        }
+
+        if (propUsageTypeGetRequest.getActive() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" proUseType.active = ?");
+            preparedStatementValues.add(propUsageTypeGetRequest.getActive());
+        }
+    }
+
+    private void addOrderByClause(final StringBuilder selectQuery,
+            final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
+        final String sortBy = propUsageTypeGetRequest.getSortBy() == null ? "proUseType.id"
+                : "proUseType." + propUsageTypeGetRequest.getSortBy();
+        final String sortOrder = propUsageTypeGetRequest.getSortOrder() == null ? "DESC"
+                : propUsageTypeGetRequest.getSortOrder();
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
     private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
@@ -97,7 +125,6 @@ public class PropertyUsageTypeQueryBuilder {
 
         return true;
     }
-
     private static String getIdQuery(final List<Long> idList) {
         final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {

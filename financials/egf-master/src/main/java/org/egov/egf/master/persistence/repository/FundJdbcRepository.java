@@ -48,7 +48,10 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
+		String orderBy = "order by id";
+		if(fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
+		    orderBy = "order by " + fundSearchEntity.getSortBy();
+		    
 
 		searchQuery = searchQuery.replace(":tablename", FundEntity.TABLE_NAME);
 
@@ -68,7 +71,7 @@ public class FundJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

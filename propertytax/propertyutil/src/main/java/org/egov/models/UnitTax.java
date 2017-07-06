@@ -20,9 +20,9 @@ public class UnitTax {
 
     private Double structureFactor;
 
-    private Number usageFactor;
+    private Double usageFactor;
 
-    private Number subUsageFactor;
+    private Double subUsageFactor;
 
     @NotNull
     private CommonTaxDetails unitTaxes;

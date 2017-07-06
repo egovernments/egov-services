@@ -1,0 +1,76 @@
+    package org.egov.calculator
+   	import org.egov.calculator.service.TaxCalculatorServiceImpl;
+	import org.egov.models.*;
+   	import org.egov.calculator.models.*;
+   	import java.util.*;
+   	
+    dialect"mvel";
+    dialect"java";
+
+ function UnitTax calculateUnitTax(UnitWrapper unitWrapper,TaxPeriod taxPeriod,Property property){
+ 
+ TaxCalculatorServiceImpl taxService=new TaxCalculatorServiceImpl();
+   Map<String, Double> factorsList = unitWrapper.getFactors();
+   System.out.println(factorsList+"factorsList");
+   String occupancy="occupancy"+unitWrapper.getUnit().getOccupancyType();
+   String usage="usage"+unitWrapper.getUnit().getUsage();
+   String propertytype="propertytype"+property.getPropertyDetail().getPropertyType();
+   String structure="structure"+unitWrapper.getUnit().getStructure();
+   String age="age"+unitWrapper.getUnit().getAge();
+   System.out.println("GuidanceValue"+unitWrapper.getGuidanceValue()+" area"+unitWrapper.getUnit().getAssessableArea()+" usage"+factorsList.get(usage)+" propertytype"+factorsList.get(propertytype)+"str "+factorsList.get(structure)+" occ"+factorsList.get(occupancy));
+         Unit unit = unitWrapper.getUnit();
+         Double builtArea = unit.getAssessableArea();
+         Double rentForMonth = unitWrapper.getGuidanceValue() * builtArea * factorsList.get(usage)
+                * factorsList.get(propertytype)
+                * factorsList.get(structure) * factorsList.get(occupancy);
+                rentForMonth = Math.round(rentForMonth * 100.0) / 100.0;
+                System.out.println(rentForMonth+"rent for month");
+       UnitTax unitTax=taxService.calculateUnitTax(unitWrapper,taxPeriod,rentForMonth,factorsList.get(age),0.1);  
+      if(!property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
+      HeadWiseTax headWiseTax=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
+      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).collect(java.util.stream.Collectors.toList()).get(0);
+     int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(headWiseTax);
+     unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
+      }
+      System.out.println("unit tax"+unitTax);
+       return  unitTax;    
+}
+
+
+function void calculateTax(TaxCalculationWrapper taxwrapper)  {
+System.out.println("in calculate tax"+taxwrapper.getTaxPeriods());
+ TaxCalculatorServiceImpl taxService=new TaxCalculatorServiceImpl();
+      try{
+        List<TaxperiodWrapper> taxPeriodsWrapper = taxwrapper.getTaxPeriods();
+        CalculationResponse calculationResponse=new CalculationResponse();
+        List<TaxCalculation> taxCalculationList=new ArrayList<TaxCalculation>();
+        for (TaxperiodWrapper taxPeriodWapper : taxPeriodsWrapper) {
+        System.out.println("taxWrapper"+taxPeriodWapper);
+            List<UnitTax> unitTaxes = new ArrayList<UnitTax>();
+            TaxPeriod taxPeriod = taxPeriodWapper.getTaxPeriod();
+            System.out.println("taxPeriod"+taxPeriod);
+            System.out.println("units"+taxPeriodWapper.getUnits());
+            for (UnitWrapper unitWrapper : taxPeriodWapper.getUnits()) {
+                UnitTax unitTax = calculateUnitTax(unitWrapper, taxPeriod,taxwrapper.getProperty());
+                 System.out.println(unitTax+"unitTaxes ************8");
+                unitTaxes.add(unitTax);
+            }
+            System.out.println(unitTaxes+"unitTaxes ************8");
+            TaxCalculation taxCalculation= taxService.getTaxCalculation(unitTaxes,taxPeriodWapper.getTaxPeriod());
+            taxCalculationList.add(taxCalculation);
+        }
+        calculationResponse.setTaxes(taxCalculationList);
+        taxwrapper.setCalculationResponse(calculationResponse);
+        }catch(Exception ex){
+        System.out.println(ex.getMessage());
+        }
+       
+    }
+ 
+    rule"Tax calculation in maharashtra mvel"
+
+    when $taxCalculation:TaxCalculationWrapper( property!=null )
+     then   
+   
+     calculateTax($taxCalculation) ;
+      end

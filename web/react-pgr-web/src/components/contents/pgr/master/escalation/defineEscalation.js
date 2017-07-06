@@ -85,6 +85,28 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
+const getNameByServiceCode = function(object, serviceCode, property = "") {
+  if (serviceCode == "" || serviceCode == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].serviceCode == serviceCode) {
+                return object[i].serviceName;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].serviceCode == serviceCode) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class DefineEscalation extends Component {
     constructor(props) {
       super(props)
@@ -237,11 +259,53 @@ class DefineEscalation extends Component {
   
   
   updateEscalation = () => {
+		 var current = this
+    var body = {
+      escalationHierarchy: [ {
+				serviceCode : this.props.defineEscalation.grievanceType,
+				tenantId : "default",
+				fromPosition : this.props.defineEscalation.fromPosition,
+				toPosition : this.props.defineEscalation.toPosition
+			  }]
+    }
+	
+	var idd = this.props.defineEscalation.fromPosition;
 
+    Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/"+idd,{},body).then(function(response){
+        console.log(response);
+        current.setState({
+          resultList:[
+            ...current.state.resultList,
+            current.props.defineEscalation
+          ]
+      })
+    }).catch((error)=>{
+        console.log(error);
+    })
   }
 
   addEscalation = () => {
-    console.log(this.props.defineEscalation);
+    var current = this
+    var body = {
+      escalationHierarchy: [ {
+				serviceCode : this.props.defineEscalation.grievanceType,
+				tenantId : "default",
+				fromPosition : this.props.defineEscalation.fromPosition,
+				toPosition : this.props.defineEscalation.toPosition
+			  }]
+    }
+
+    Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_create",{},body).then(function(response){
+        console.log(response);
+        current.setState({
+          resultList:[
+            ...current.state.resultList,
+            current.props.defineEscalation
+          ]
+      })
+    }).catch((error)=>{
+        console.log(error);
+    })
   }
   
   editObject = (index) => {
@@ -391,7 +455,7 @@ class DefineEscalation extends Component {
                         <SelectField
                            floatingLabelText="To Position"
                            fullWidth={true}
-                           value={defineEscalation.toPosition ? defineEscalation.toPosition : ""}
+                           value={defineEscalation.toPosition ?  getNameById(current.state.toPosition, defineEscalation.toPosition)  : ""}
                            onChange= {(e, index ,value) => {
                              var e = {
                                target: {
@@ -459,7 +523,6 @@ class DefineEscalation extends Component {
                                                  }}
                                           dataSource={this.state.positionSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
                                           value={defineEscalation.fromPosition ? defineEscalation.fromPosition : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
@@ -513,7 +576,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["position"]
+          required: ["fromPosition", "grievanceType", "department", "designation", "toPosition"]
         },
         pattern: {
           current: [],

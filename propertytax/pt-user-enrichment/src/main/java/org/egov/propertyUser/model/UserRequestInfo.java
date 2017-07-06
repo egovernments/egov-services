@@ -24,10 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserRequestInfo {
 	@JsonProperty("User")
-	private User User;
+	private User user;
 
-	@JsonProperty("user")
-	private List<User> user;
+//	@JsonProperty("user")
+//	private List<User> user;
 
 	@JsonProperty("RequestInfo")
 	private RequestInfo RequestInfo;

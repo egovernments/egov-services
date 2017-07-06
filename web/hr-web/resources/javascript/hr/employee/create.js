@@ -1480,7 +1480,13 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                                 getPositions({
                                     id: "assignments.department"
                                 }, function() {
-                                    $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                                    for(var k=0; k<commonObject["assignments_position"].length; k++) {
+                                        if(employeeSubObject[object][key] == commonObject["assignments_position"][k].id) {
+                                            $(`#${object}\\.${key}`).val(commonObject["assignments_position"][k].name);
+                                            break;
+                                        }
+
+                                    }
                                 });
                             }, 200, key, object);
                         }

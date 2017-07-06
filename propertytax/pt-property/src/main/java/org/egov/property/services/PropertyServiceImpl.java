@@ -14,7 +14,7 @@ import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
-import org.egov.property.Consumer.PropertyProducer;
+import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.util.PropertyValidator;

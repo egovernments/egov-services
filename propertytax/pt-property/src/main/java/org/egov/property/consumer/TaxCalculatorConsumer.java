@@ -1,5 +1,5 @@
 
-package org.egov.property.Consumer;
+package org.egov.property.consumer;
 
 import java.util.HashMap;
 import java.util.Map;

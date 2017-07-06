@@ -239,7 +239,7 @@ class Revaluation extends React.Component {
 
       //return console.log(JSON.stringify(body));
        $.ajax({
-            url: baseUrl + "/asset-services/assets/reevaluate/_create",
+            url: baseUrl + "/asset-services/assets/revaluation/_create",
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify(body),

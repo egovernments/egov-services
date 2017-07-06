@@ -62,7 +62,7 @@ public class AssetQueryBuilder {
 			+ "asset.name as assetname,asset.code as assetcode,"
 			+ "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
 			+ " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
-			+ "ON asset.assetcategory = assetcategory.id " + "INNER JOIN egasset_yearwisedepreciation ywd "
+			+ "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
 			+ "ON asset.id = ywd.assetid";
 
 	@SuppressWarnings("rawtypes")
@@ -86,11 +86,11 @@ public class AssetQueryBuilder {
 			// assetcategory is mandatory
 			return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+		// selectQuery.append(" WHERE");
+		boolean isAppendAndClause = true;
 
 		if (searchAsset.getTenantId() != null) {
-			isAppendAndClause = true;
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ASSET.tenantId = ?");
 			preparedStatementValues.add(searchAsset.getTenantId());
 		}
@@ -260,17 +260,25 @@ public class AssetQueryBuilder {
 		return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
 				+ "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
 				+ "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
-				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation)"
-				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation,depriciationrate)"
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public String getUpdateQuery() {
 		return "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,"
 				+ "width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
-				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,enableyearwisedepriciation=? "
+				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,enableyearwisedepriciation=?,depriciationrate=? "
 				+ "WHERE code=? and tenantid=?";
-
 	}
-	public final static String BATCHUPDATEQUERY = "INSERT INTO egasset_yearwisedepreciation(depreciationrate,financialyear,assetid,usefullifeinyears) values(?,?,?,?)";
+
+	public final static String BATCHINSERTQUERY = "INSERT INTO egasset_yearwisedepreciation "
+			+ "(depreciationrate,financialyear,assetid,usefullifeinyears,tenantid,createdby,createddate,"
+			+ "lastmodifiedby,lastmodifieddate) values (?,?,?,?,?,?,?,?,?)";
+
+	public final static String BATCHUPDATEQUERY = "UPDATE egasset_yearwisedepreciation SET"
+			+ " depreciationrate=?,usefullifeinyears=?,"
+			+ "createdby=?,createddate=?,lastmodifiedby=?,lastmodifieddate=? "
+			+ "WHERE  assetid=? AND financialyear=? AND tenantid=?";
+
 	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 }

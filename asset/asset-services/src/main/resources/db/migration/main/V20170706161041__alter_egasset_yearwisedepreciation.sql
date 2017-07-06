@@ -1,0 +1,1 @@
+ALTER TABLE egasset_yearwisedepreciation ADD COLUMN tenantid BIGINT NOT NULL,ADD COLUMN createdby character varying(64) NOT NULL,ADD COLUMN createddate BIGINT NOT NULL,ADD COLUMN lastmodifiedby character varying(64),ADD COLUMN lastmodifieddate BIGINT NOT NULL;

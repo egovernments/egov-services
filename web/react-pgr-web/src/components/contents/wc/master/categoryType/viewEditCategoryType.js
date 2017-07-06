@@ -67,9 +67,9 @@ class ViewEditCategoryType extends Component {
     componentWillMount() {
         var body = {}
         let  current = this;
-        Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{},body).then(function(response){
+        Api.commonApiPost("/wcms-masters/categorytype/_search/",{},body).then(function(response){
             console.log(response);
-            current.setState({data:response.ServiceGroups});
+            current.setState({data:response.CategoryTypes});
         }).catch((error)=>{
             console.log(error);
         })
@@ -116,10 +116,10 @@ class ViewEditCategoryType extends Component {
                                 <Table>
                                     <thead>
                                         <tr>
-                                          <th>ID</th>
-                                          <th>{translate("core.lbl.add.name")}</th>
                                           <th>{translate("core.lbl.code")}</th>
+                                          <th>{translate("core.lbl.add.name")}</th>
                                           <th>{translate("core.lbl.description")}</th>
+                                            <th>{translate("pgr.lbl.active")} </th>
                                           <th></th>
                                         </tr>
                                     </thead>
@@ -127,14 +127,10 @@ class ViewEditCategoryType extends Component {
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
                                             <tr key={i}>
-                                              <td>{e.id}</td>
-                                              <td>{e.name}</td>
                                               <td>{e.code}</td>
+                                              <td>{e.name}</td>
                                               <td>{e.description}</td>
-                                              <td>{e.active}</td>
-                                              <td>{e.auditDetails}</td>
-                                              <td>{e.iscrnrequired}</td>
-                                              <td>{e.orderno}</td>
+                                              <td>{e.active  ? "true" : "false"}</td>
                                               {url == '/wc/categoryType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
                                                 let id = e.id;
                                                 this.handleNavigation("/wc/viewCategoryType/", id);

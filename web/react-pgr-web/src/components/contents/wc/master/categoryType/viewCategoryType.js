@@ -74,10 +74,10 @@ class ViewCategoryType extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/wcms-masters/categorytype/_search",{id:this.props.match.params.id},{}).then(function(response){
                 console.log(response);
-                current.setState({data:response.ServiceGroups})
-                setForm(response.ServiceGroups[0])
+                current.setState({data:response.CategoryTypes})
+                setForm(response.CategoryTypes[0])
             }).catch((error)=>{
                 console.log(error);
             })
@@ -118,16 +118,16 @@ class ViewCategoryType extends Component {
                           <Card>
                               <CardText>
                                   <ListGroup>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               ID
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewCategoryType.id ? viewCategoryType.id : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
+                                    <ListGroupItem>
+                                      <Row>
+                                        <Col xs={4} md={2} style={styles.bold}>
+                                             {translate("core.lbl.code")}
+                                        </Col>
+                                        <Col xs={8} md={10}>
+                                            {viewCategoryType.code ? viewCategoryType.code : ''}
+                                        </Col>
+                                      </Row>
+                                    </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
                                           <Col xs={4} md={2} style={styles.bold}>

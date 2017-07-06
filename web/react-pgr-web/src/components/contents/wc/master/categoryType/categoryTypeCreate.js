@@ -83,11 +83,11 @@ class CategoryTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/wcms-masters/categorytype/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log("response",response);
-                  console.log("response object",response.ServiceGroups[0]);
-                current.setState({data:response.ServiceGroups})
-                setForm(response.ServiceGroups[0],false)
+                  console.log("response object",response.CategoryTypes[0]);
+                current.setState({data:response.CategoryTypes})
+                setForm(response.CategoryTypes[0],false)
             }, function(err) {
               current.props.toggleSnackbarAndSetText(true, err.message);
               current.props.setLoadingStatus('hide');
@@ -133,7 +133,7 @@ class CategoryTypeCreate extends Component {
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/pgr-master/serviceGroup/v1/"+body.ServiceGroup.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/wcms-masters/categorytype/"+body.CategoryType.code+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -212,22 +212,20 @@ class CategoryTypeCreate extends Component {
                               <div className="clearfix"></div>
                               <Col xs={12} md={3} sm={6}>
                               {console.log(createCategoryType.active)}
-
                                   <Checkbox
-                                   label={translate("pgr.lbl.active")}
-                                   defaultChecked={true}
-                                   value={createCategoryType.active?createCategoryType.active:""}
-                                   onCheck={(event,isInputChecked) => {
-                                     var e={
-                                       "target":{
-                                         "value":isInputChecked
-                                       }
-                                     }
-                                     handleChange(e, "active", true, "")}
-                                   }
-                                   style={styles.checkbox}
-                                   style={styles.topGap}
-                                   id="active"
+                                    label={translate("pgr.lbl.active")}
+                                    style={styles.checkbox}
+                                    checked = {createCategoryType.active || false}
+                                    onCheck = {(e, i, v) => { console.log(createCategoryType.active, i);
+
+                                      var e = {
+                                        target: {
+                                          value:i
+                                        }
+                                      }
+                                      handleChange(e, "active", false, '')
+                                    }}
+                                    id="active"
                                   />
                               </Col>
                           </Row>

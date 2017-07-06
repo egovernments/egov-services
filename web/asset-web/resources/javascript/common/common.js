@@ -1,6 +1,6 @@
 var baseUrl = window.location.origin;
 
-var authToken = "b635ec65-bf85-4488-89d5-40eba64b70ac"//localStorage.getItem("auth-token");
+var authToken = localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {
@@ -25,7 +25,7 @@ else {
 }
 
 tenantId = tenantIds[tenantId] || "ap." + tenantId;
-tenantId = "default";
+
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();

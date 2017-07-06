@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 /**
  * Description : This is initialization class for pt-calculator module
  * 
- * @author Pavan Kumar Kamma
+ * @author Narendra
  *
  */
 @SpringBootApplication

@@ -110,9 +110,15 @@ public class AgreementService {
 	public Agreement createAgreement(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		logger.info("createAgreement service::" + agreement);
+		String requesterId = requestInfo.getRequesterId();
 		String kafkaTopic = null;
 		String agreementValue = null;
+		agreement.setCreatedBy(requesterId);
+		agreement.setCreatedDate(new Date());
+		agreement.setLastmodifiedBy(requesterId);
+		agreement.setLastmodifiedDate(new Date());
 		
 		if(agreement.getAction().equals(Action.EVICTION)){
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
@@ -181,9 +187,14 @@ public class AgreementService {
 	public Agreement updateAgreement(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		logger.info("update agreement service::" + agreement);
+		String requesterId = requestInfo.getRequesterId();
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 		String agreementValue = null;
 		String kafkaTopic = null;
+		agreement.setLastmodifiedBy(requesterId);
+		agreement.setLastmodifiedDate(new Date());
 
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			kafkaTopic = propertiesManager.getUpdateAgreementTopic();

@@ -463,7 +463,7 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <input type="text" value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required/>
+                              <textarea value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required></textarea>
                             </div>
                           </div>
                         </div>
@@ -475,7 +475,7 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <input type="text" value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required/>
+                              <textarea value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required></textarea>
                             </div>
                           </div>
                         </div>

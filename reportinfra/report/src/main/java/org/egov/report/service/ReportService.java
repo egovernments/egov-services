@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
@@ -39,15 +40,18 @@ public class ReportService {
 
 	@Autowired
 	private Response responseInfoFactory;
+	
+	@Autowired
+	private IntegrationService integrationService;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
-	public MetadataResponse getMetaData(String reportName) {
+	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinition reportDefinition = new ReportDefinition();
         System.out.println("Report Definitions from service "+reportDefinitions.getReportDefinitions());
 		for (ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
-			if (rDefinition.getReportName().equals(reportName)) {
+			if (rDefinition.getReportName().equals(metaDataRequest.getReportName())) {
 
 				reportDefinition = rDefinition;
 			}
@@ -78,6 +82,8 @@ public class ReportService {
 		rmt.setReportHeader(reportHeaders);
 		rmt.setSearchParams(searchParams);
 		metadataResponse.setReportDetails(rmt);
+		metadataResponse.setTenantId(metaDataRequest.getTenantId());
+		integrationService.getData(reportDefinition, metadataResponse, metaDataRequest.getRequestInfo());
 		return metadataResponse;
 	}
 
@@ -94,7 +100,7 @@ public class ReportService {
 		if (type.equals("singlevaluelist")) {
 			return ColumnDetail.TypeEnum.SINGLEVALUELIST;
 		}
-
+		
 		return null;
 	}
 

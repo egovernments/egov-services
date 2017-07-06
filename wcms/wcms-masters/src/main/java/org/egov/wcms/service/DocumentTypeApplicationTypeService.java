@@ -92,9 +92,12 @@ public class DocumentTypeApplicationTypeService {
 
     public boolean checkDocumentTypeApplicationTypeExist(final Long id, final String applicationType,
             final String documentType, final String tenantid) {
-
         return docTypeApplTypeRepository.checkDocumentTypeApplicationTypeExist(id, applicationType, documentType,
                 tenantid);
+    }
+    
+    public boolean checkDocumentTypeExists(final String documentName, final String tenantId) {
+        return docTypeApplTypeRepository.checkDocumentTypeExists(documentName, tenantId);
     }
 
 }

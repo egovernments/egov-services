@@ -1,26 +1,26 @@
 title Interaction Diagram for Collection Integration with Citizen Service
 
-Client->+CitizenSvc: Request for Payment
+CitizenClient->+CitizenSvc: Submit Application Request
 CitizenSvc->+BillingSvc: Create Demand 
 BillingSvc->CitizenSvc: Response with Business Details and Application number
-CitizenSvc->+ReceiptSvc: Redirect with BusinessDetails and Application number
-CitizenSvc->ReceiptSvc: Auto submit search request with BusinessDetails and Application number
-ReceiptSvc->BillingSvc: Generate bill and get the collection modes not allowed
-
+CitizenClient->+CollectionClient: Redirect with BusinessDetails and Application number
+CollectionClient->+BillingSvc: Auto submit search request with BusinessDetails and Application number
+BillingSvc->CollectionClient: Response with bill generated and get the collection modes not allowed
+CollectionClient->+ReceiptSvc: Get collection modes allowed and bank List
 ReceiptSvc->+FinancialSvc: Get bank list
 note over ReceiptSvc,FinancialSvc
     Get the list of bank for Cheque/DD
     payments.
 end note
 FinancialSvc->-ReceiptSvc: Bank list response.
-ReceiptSvc->Client: Response with Collection modes allowed and bank list.
+ReceiptSvc->CollectionClient: Response with Collection modes allowed and bank list.
 
-Client->ReceiptSvc: Submit payment request
+CollectionClient->ReceiptSvc: Submit payment request
 ReceiptSvc->ReceiptSvc: Validate payment request.
 ReceiptSvc->IDGenSvc: Generate receipt number
 ReceiptSvc->+KafkaQSvc: Queue for further processing
-ReceiptSvc->-Client: Create receipt response
-note over Client,ReceiptSvc
+ReceiptSvc->-CollectionClient: Create receipt response
+note over CitizenClient,CollectionClient
 Redirection to the return url of the billing module with 
 Receipt Status and Receipt Number with Hash
 end note

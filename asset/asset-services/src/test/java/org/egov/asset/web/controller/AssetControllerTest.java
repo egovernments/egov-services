@@ -156,7 +156,7 @@ public class AssetControllerTest {
 		revaluationResponse.setResposneInfo(null);
 		revaluationResponse.setRevaluations(revaluations);
 		when(revaluationService.createAsync(any(RevaluationRequest.class))).thenReturn(revaluationResponse);
-		mockMvc.perform(post("/assets/reevaluate/_create").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/assets/revaluation" + "/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("revaluation/revaluationcreaterequest.json"))).andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("revaluation/revaluationcreateresponse.json")));
@@ -170,7 +170,7 @@ public class AssetControllerTest {
 		revaluationResponse.setResposneInfo(null);
 		revaluationResponse.setRevaluations(revaluations);
 		when(revaluationService.search(any(RevaluationCriteria.class))).thenReturn(revaluationResponse);
-		mockMvc.perform(post("/assets/reevaluate/_search").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
 				.param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
 				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("revaluation/revaluatesearchresponse.json")));

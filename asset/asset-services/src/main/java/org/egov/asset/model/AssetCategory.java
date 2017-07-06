@@ -58,5 +58,5 @@ public class AssetCategory {
 
 	private Double depreciationRate;
 
-	private List<AttributeDefination> assetFieldsDefination;
+	private List<AttributeDefinition> assetFieldsDefination;
 }

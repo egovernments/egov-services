@@ -59,6 +59,9 @@ class Dashboard extends Component {
     };
 }
   componentWillMount() {
+
+      let { setLoadingStatus} = this.props;
+     setLoadingStatus("loading");
 	  
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
@@ -75,6 +78,7 @@ class Dashboard extends Component {
 
     if(currentUser.type=="CITIZEN") {
       Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
+         setLoadingStatus("hide");
           response.serviceRequests.sort(function(s1, s2) {
               var d1 = s1.requestedDatetime.split(" ")[0].split("-");
               var d2 = s2.requestedDatetime.split(" ")[0].split("-");
@@ -98,6 +102,7 @@ class Dashboard extends Component {
       })
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
+            setLoadingStatus("hide");
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
           Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 response.serviceRequests.sort(function(s1, s2) {
@@ -126,6 +131,8 @@ class Dashboard extends Component {
       })
     }
   };
+
+
   
  componentWillUnmount(){
      $('#searchTable')
@@ -194,7 +201,7 @@ class Dashboard extends Component {
 									 this.handleNavigation("#/pgr/viewGrievance/", e.serviceRequestId);
 								}}>
 									<td>{i+1}</td>
-									<td><span style={{width:10, height:10, borderRadius:50, backgroundColor:triColor, display:"inline-block"}}></span>{e.serviceRequestId}</td>
+									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>
 									<td>{e.requestedDatetime}</td>
 									<td>{e.firstName}</td>
 									<td></td>
@@ -203,7 +210,7 @@ class Dashboard extends Component {
                                         return(item.name)
                                       }
 									})}</td>
-									<td> Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+									<td  style={{maxWidth:300}}> Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
@@ -302,7 +309,7 @@ class Dashboard extends Component {
 							  <th>Sender</th>
 							  <th>Nature of Work</th>
 							  <th>Status</th>
-							  <th style={{maxWidth:300}}>Comments</th>
+							  <th>Comments</th>
 							</tr>
 							
 						  </thead> 
@@ -311,7 +318,7 @@ class Dashboard extends Component {
 						  </tbody>
 					</Table> }
 
-         { this.state.localArray.map((e,i)=>{
+         {false && this.state.localArray.map((e,i)=>{
                             
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -478,6 +485,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    },
+        setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     }
     // onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     // onRedirect: () => dispatch({type: 'REDIRECT'}),

@@ -3,8 +3,6 @@ package org.egov.propertyWorkflow.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.models.SourceEnum;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -54,7 +52,7 @@ public class Task {
 	private Position owner;
 
 	@JsonProperty("state")
-	private SourceEnum state;
+	private StateEnum state;
 
 	@Size(min = 1, max = 128)
 	@JsonProperty("status")
@@ -81,10 +79,6 @@ public class Task {
 	@JsonProperty("natureOfTask")
 	private String natureOfTask;
 
-	@Size(min = 1, max = 128)
 	@JsonProperty("entity")
 	private String entity;
-
-	@JsonProperty("tenantId")
-	private String tenantId;
 }

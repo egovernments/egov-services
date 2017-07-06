@@ -36,7 +36,7 @@ public class AgreementQueryBuilder {
 				+ "Remarks=?,Rent=?,Rr_Reading_No=?,Security_Deposit=?,Security_Deposit_Date=?,"
 				+ "solvency_certificate_date=?,solvency_certificate_no=?,status=?,tin_number=?,"
 				+ "Tender_Date=?,Tender_Number=?,Trade_license_Number=?,"
-				+ "created_by=?,last_modified_by=?,created_date=?,last_modified_date=?,"
+				+ "last_modified_by=?,last_modified_date=?,"
 				+ "allottee=?,asset=?,Rent_Increment_Method=?,"
 				+ "AcknowledgementNumber=?,stateid=?,Tenant_id=?,goodwillamount=?,timeperiod=?,"
 				+ "collectedsecuritydeposit=?,collectedgoodwillamount=?,source=?,reason=?,"

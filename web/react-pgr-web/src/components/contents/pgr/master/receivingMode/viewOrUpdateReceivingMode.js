@@ -124,7 +124,13 @@ class viewOrUpdateReceivingMode extends Component {
                                     <tbody>
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
-                                            <tr key={i}>
+                                            <tr key={i} onClick={()=>{
+											  if(url == '/pgr/viewOrUpdateReceivingMode/view'){
+												  this.props.history.push('/pgr/viewReceivingMode/${this.props.match.params.type}/'+e.id);
+											  } else {
+												  this.props.history.push('/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}'+e.id);
+											  }
+											}}>
                                               <td>{i+1}</td>
                                               <td>{e.name}</td>
                                               <td>{e.code}</td>

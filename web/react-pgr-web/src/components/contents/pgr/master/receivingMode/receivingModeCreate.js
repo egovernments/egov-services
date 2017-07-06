@@ -185,7 +185,7 @@ class receivingModeCreate extends Component {
                         id="name"
                         errorText={fieldErrors.name ? fieldErrors.name : ""}
                         value={receivingmodeSet.name ? receivingmodeSet.name : "" }
-                        onChange={(e) => {handleChange(e, "name", true, /^[a-zA-Z]+$/)}}/>
+                        onChange={(e) => {handleChange(e, "name", true, /^[^-\s][a-zA-Z ]*$/)}}/>
                     </Col>
                     <Col xs={12} md={3}>
                      <TextField
@@ -204,7 +204,7 @@ class receivingModeCreate extends Component {
                         id="description"
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
-                        onChange={(e) => {handleChange(e, "description", true, /^[a-zA-Z]+$/)}}/>
+                        onChange={(e) => {handleChange(e, "description", true, /^[^-\s][a-zA-Z0-9_\s-]+$/)}}/>
                     </Col>
                     <Col xs={12} md={3}>
                      <SelectField

@@ -49,7 +49,7 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
-		MetadataResponse mdr = reportService.getMetaData(metaDataRequest.getReportName());
+		MetadataResponse mdr = reportService.getMetaData(metaDataRequest);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		
 	}

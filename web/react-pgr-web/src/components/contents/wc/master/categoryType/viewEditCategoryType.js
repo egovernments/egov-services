@@ -56,7 +56,7 @@ const styles = {
 
 var _this;
 
-class ViewEditServiceGroup extends Component {
+class ViewEditCategoryType extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -88,7 +88,7 @@ class ViewEditServiceGroup extends Component {
     render() {
 
       let {
-        viewEditServiceGroup,
+        viewEditCategoryType,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -106,9 +106,9 @@ class ViewEditServiceGroup extends Component {
       let url = this.props.location.pathname;
 
       return(
-        <div className="viewEditServiceGroup">
+        <div className="viewEditCategoryType">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Group</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Category Type</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>
@@ -135,13 +135,13 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired}</td>
                                               <td>{e.orderno}</td>
-                                              {url == '/pgr/serviceGroup/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
+                                              {url == '/wc/categoryType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
                                                 let id = e.id;
-                                                this.handleNavigation("/pgr/viewServiceGroup/", id);
+                                                this.handleNavigation("/wc/viewCategoryType/", id);
                                               }}/></td>}
-                                              {url == '/pgr/serviceGroup/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
+                                              {url == '/wc/categoryType/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
                                                 let id = e.id;
-                                                this.handleNavigation("/pgr/createServiceGroup/", id);
+                                                this.handleNavigation("/wc/createCategoryType/", id);
                                               }}/></td>}
                                             </tr>
                                           )
@@ -159,7 +159,7 @@ class ViewEditServiceGroup extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({viewEditServiceGroup: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({viewEditCategoryType: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -169,7 +169,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["name","code","description"]
+          required: ["name","code","orderno", "description"]
         },
         pattern: {
           current: [],
@@ -191,4 +191,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewEditServiceGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEditCategoryType);

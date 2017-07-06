@@ -53,9 +53,9 @@ const RightIcon = (props) => {
       <i onClick={()=>{
         if(localStorage.getItem("token"))
           props.setRoute("/dashboard");
-        else 
+        else
           props.setRoute("/");
-      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
 
       <IconMenu
@@ -572,9 +572,9 @@ class Header extends Component {
     },
     {
       id:29,
-      name:'Aging Report',
-      displayName:"Aging Report",
-      url:base + "report/agingReport",
+      name:'Grivience By Id',
+      displayName:"Grivience By Id",
+      url:base + "report/GrievanceByType",
       enabled:"true",
       orderNumber:1,
       queryParams:"",
@@ -582,7 +582,7 @@ class Header extends Component {
       rightIcon:'',
       parentModule:1,
       level:11
-    },
+    }
 
 
   ]

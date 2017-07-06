@@ -5,6 +5,8 @@ import Api from '../../../api/api';
 import SearchForm from './searchForm';
 import ReportResult from './reportResult';
 
+
+
 var metaData=
 {
     "requestInfo": null,
@@ -73,13 +75,13 @@ var metaData=
                 "isMandatory": true
             },
             {
-                "name": "fromDate1",
+                "name": "fromDate",
                 "label": "reports.pgr.datefrom",
                 "type": "string",
                 "isMandatory": true
             },
             {
-                "name": "fromDate2",
+                "name": "fromDate",
                 "label": "reports.pgr.datefrom",
                 "type": "number",
                 "isMandatory": true
@@ -107,15 +109,18 @@ class Report extends Component {
   {
     let {setMetaData}=this.props;
 
+    console.log(this.props.match.params.reportName);
+
     //Call api
-    setMetaData(metaData);
-    // let response=Api.commonApiPost("egf-masters", "functions", "_search").then(function(response)
-    // {
-    //   console.log(response)
-    // },function(err) {
-    //     console.log(err);
-    // });
-    //call boundary service fetch wards,location,zone data
+    // setMetaData(metaData);
+    let response=Api.commonApiPost("pgr-master/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
+    {
+      // console.log(response)
+      setMetaData(response)
+    },function(err) {
+        console.log(err);
+    });
+    //call boundsdadary service fetch wards,location,zone data
   }
 
 

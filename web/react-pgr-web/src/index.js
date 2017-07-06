@@ -31,8 +31,8 @@ document.title="Egovernments";
 const muiTheme = getMuiTheme({
   palette: {
 
-    primary1Color: "#2196f3",
-    primary2Color: "#2196f3",
+    primary1Color: "#51bad9",
+    primary2Color: "#51bad9",
     textColor:"#5f5c62"
   }
 });

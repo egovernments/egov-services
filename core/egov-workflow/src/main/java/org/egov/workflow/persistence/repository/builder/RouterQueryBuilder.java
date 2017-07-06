@@ -102,8 +102,7 @@ public class RouterQueryBuilder {
 
 		if (routerTypeRequest.getBoundaryid() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" router.bndryid = ?");
-			preparedStatementValues.add(routerTypeRequest.getBoundaryid());
+			selectQuery.append(" router.bndryid IN " + getIdQuery(routerTypeRequest.getBoundaryid()));
 		}
 
 		if (routerTypeRequest.getPosition() != null) {

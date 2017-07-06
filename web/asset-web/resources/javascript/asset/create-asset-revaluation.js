@@ -33,6 +33,14 @@ class Revaluation extends React.Component {
         this.close = this.close.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
         this.createRevaluation = this.createRevaluation.bind(this);
+        this.viewAssetDetails = this.viewAssetDetails.bind(this);
+    }
+
+    viewAssetDetails(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if(this.state.assetSet && this.state.assetSet.id)
+        window.open(`app/asset/create-asset.html?id=${this.state.assetSet.id}&type=view`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }
 
     setInitialState(initState) {
@@ -231,7 +239,7 @@ class Revaluation extends React.Component {
 
       //return console.log(JSON.stringify(body));
        $.ajax({
-            url: baseUrl + "/asset-services/assets/reevaluate/_create",
+            url: baseUrl + "/asset-services/assets/revaluation/_create",
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify(body),
@@ -292,25 +300,25 @@ class Revaluation extends React.Component {
       		<h3 > Create Asset Revaluation </h3>
       		<form onSubmit={(e) => {createRevaluation(e)}}>
 	            <div className="form-section">
-	              <div className="row">
-	                <div className="col-md-8 col-sm-8">
-	                  <h3 className="categoryType">Asset Details </h3>
-	                </div>
-	                <div className="col-md-4 col-sm-4 text-right">
-	                  
-	                </div>
-	              </div>
-	              <div className="form-section-inner">
-		            <div className="row">
+                <div className="row">
+                  <div className="col-md-8 col-sm-8">
+                    <h3 className="categoryType">Asset Details </h3>
+                  </div>
+                  <div className="col-md-4 col-sm-4 text-right">
+                      <button type="button" className="btn btn-submit" onClick={(e) => viewAssetDetails(e)}>View Details</button>
+                  </div>
+                </div>
+                <div className="form-section-inner">
+                  <div className="row">
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label for="assetCode">Asset Code </label>
+                              <label>Asset Code </label>
                             </div>
                             <div className="col-sm-6 label-view-text">
-                              <label>{assetSet.code} </label>
-                          	</div>
-                          </div>
+                              <label>{assetSet.code}</label>
+                            </div>
+                        </div>
                       </div>
                       <div className="col-sm-6">
                           <div className="row">
@@ -319,24 +327,34 @@ class Revaluation extends React.Component {
                             </div>
                             <div className="col-sm-6 label-view-text">
                               <label>{assetSet.name}</label>
-                          	</div>
+                            </div>
                         </div>
                       </div>
                     </div>
                     <div className="row">
-	                  <div className="col-sm-6">
-	                      <div className="row">
-	                        <div className="col-sm-6 label-text">
-	                          <label>Current Capitalized Value </label>
-	                        </div>
-	                        <div className="col-sm-6 label-view-text">
-	                          <label>{revaluationSet.currentCapitalizedValue}</label>
-	                        </div>
-	                    </div>
-	                  </div>
-	                </div>
-		          </div>
-		        </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label>Description </label>
+                            </div>
+                            <div className="col-sm-6 label-view-text">
+                              <label>{assetSet.description}</label>
+                            </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label>Asset Category Type </label>
+                            </div>
+                            <div className="col-sm-6 label-view-text">
+                              <label>{assetSet.assetCategory && assetSet.assetCategory.name}</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
 		        <div className="form-section">
 	              <div className="row">
 	                <div className="col-md-8 col-sm-8">

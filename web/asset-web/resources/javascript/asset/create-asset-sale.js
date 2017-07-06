@@ -91,7 +91,7 @@ class Sale extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       if(this.state.assetSet && this.state.assetSet.id)
-        window.open(`app/asset/create-asset.html?id=${this.state.assetSet.id}&type=view`, '_blank', 'location=yes, height=760, width=800, scrollbars=yes, status=yes');
+        window.open(`app/asset/create-asset.html?id=${this.state.assetSet.id}&type=view`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
     }
 
     setInitialState(initState) {
@@ -114,6 +114,14 @@ class Sale extends React.Component {
       let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
+        if(key == "assetSet") {
+          _this.setState({
+            disposal: {
+              ..._this.state.disposal,
+              assetId: res.id
+            }
+          })
+        }
         count--;
         if(count == 0)
           _this.setInitialState(_state);
@@ -455,7 +463,7 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <input type="text" value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required/>
+                              <textarea value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required></textarea>
                             </div>
                           </div>
                         </div>
@@ -467,7 +475,7 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div>
-                              <input type="text" value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required/>
+                              <textarea value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required></textarea>
                             </div>
                           </div>
                         </div>

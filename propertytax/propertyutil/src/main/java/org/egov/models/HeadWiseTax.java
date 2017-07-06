@@ -14,7 +14,7 @@ public class HeadWiseTax {
     @NotNull
     private String taxName;
 
-    private String taxDays;
+    private Integer taxDays;
 
     @NotNull
     private Double taxValue;

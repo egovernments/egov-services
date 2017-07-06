@@ -59,68 +59,67 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PropertyUsageTypeRepository {
 
-	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private PropertyUsageTypeRowMapper propUsageTypeMapper;
+    @Autowired
+    private PropertyUsageTypeRowMapper propUsageTypeMapper;
 
-	@Autowired
-	private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
+    @Autowired
+    private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
 
-	public PropertyTypeUsageTypeReq persistCreateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-		log.info("Property Usage Type Request::" + propUsageTypeRequest);
-		final String propUsageTypeInsert = propUsageTypeQueryBuilder.getPersistQuery();
-		final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(),
-				Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
-				Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
-		jdbcTemplate.update(propUsageTypeInsert, obj);
-		return propUsageTypeRequest;
-	}
+    public PropertyTypeUsageTypeReq persistCreateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+        log.info("Property Usage Type Request::" + propUsageTypeRequest);
+        final String propUsageTypeInsert = propUsageTypeQueryBuilder.getPersistQuery();
+        final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(),
+                Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
+                Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()) };
+        jdbcTemplate.update(propUsageTypeInsert, obj);
+        return propUsageTypeRequest;
+    }
 
-	public PropertyTypeUsageTypeReq persistUpdateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-		log.info("Property Usage Type Request::" + propUsageTypeRequest);
-		final String propUsageTypeUpdate = PropertyUsageTypeQueryBuilder.updatePropertyUsageQuery();
-		final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
-				Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
-				new Date(new java.util.Date().getTime()), propUsageTypeRequest.getPropertyTypeUsageType().getId() };
-		jdbcTemplate.update(propUsageTypeUpdate, obj);
-		return propUsageTypeRequest;
-	}
+    public PropertyTypeUsageTypeReq persistUpdateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
+        log.info("Property Usage Type Request::" + propUsageTypeRequest);
+        final String propUsageTypeUpdate = PropertyUsageTypeQueryBuilder.updatePropertyUsageQuery();
+        final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getPropertyTypeId(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getUsageTypeId(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
+                Long.valueOf(propUsageTypeRequest.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), propUsageTypeRequest.getPropertyTypeUsageType().getId() };
+        jdbcTemplate.update(propUsageTypeUpdate, obj);
+        return propUsageTypeRequest;
+    }
 
-	public List<PropertyTypeUsageType> getPropertyUsageType(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final String queryStr = propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
-		final List<PropertyTypeUsageType> propUsageTypes = jdbcTemplate.query(queryStr,
-				preparedStatementValues.toArray(), propUsageTypeMapper);
-		return propUsageTypes;
-	}
+    public List<PropertyTypeUsageType> getPropertyUsageType(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
+        final List<PropertyTypeUsageType> propUsageTypes = jdbcTemplate.query(queryStr,
+                preparedStatementValues.toArray(), propUsageTypeMapper);
+        return propUsageTypes;
+    }
 
-	public boolean checkPropertyUsageTypeExists(final Long id, final String propertyTypeId, final String usageTypeId,
-			final String tenantId) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(propertyTypeId);
-		preparedStatementValues.add(usageTypeId);
-		preparedStatementValues.add(tenantId);
-		final String query;
-		if (id == null)
-			query = PropertyUsageTypeQueryBuilder.selectPropertyByUsageTypeQuery();
-		else {
-			preparedStatementValues.add(id);
-			query = PropertyUsageTypeQueryBuilder.selectPropertyByUsageTypeNotInQuery();
-		}
-		final List<Map<String, Object>> propertyUsages = jdbcTemplate.queryForList(query,
-				preparedStatementValues.toArray());
-		if (!propertyUsages.isEmpty())
-			return false;
+    public boolean checkPropertyUsageTypeExists(final Long id, final String propertyTypeId, final String usageTypeId,
+            final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(propertyTypeId);
+        preparedStatementValues.add(usageTypeId);
+        preparedStatementValues.add(tenantId);
+        final String query;
+        if (id == null)
+            query = PropertyUsageTypeQueryBuilder.selectPropertyByUsageTypeQuery();
+        else {
+            preparedStatementValues.add(id);
+            query = PropertyUsageTypeQueryBuilder.selectPropertyByUsageTypeNotInQuery();
+        }
+        final List<Map<String, Object>> propertyUsages = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!propertyUsages.isEmpty())
+            return false;
 
-		return true;
-	}
+        return true;
+    }
 }

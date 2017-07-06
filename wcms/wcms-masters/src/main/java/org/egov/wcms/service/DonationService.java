@@ -88,16 +88,29 @@ public class DonationService {
     }
 
     public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {
+        if (donationGetRequest.getPropertyType() != null) {
+            final PropertyTypeResponse propertyType = getPropertyIdFromPTModule(
+                    donationGetRequest.getPropertyType(), donationGetRequest.getTenantId());
+            if (propertyType != null)
+                donationGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
+
+        }
+        if (donationGetRequest.getUsageType() != null) {
+            final UsageTypeResponse usageType = getUsageIdFromPTModule(
+                    donationGetRequest.getUsageType(), donationGetRequest.getTenantId());
+            if (usageType != null)
+                donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
+
+        }
         return donationRepository.findForCriteria(donationGetRequest);
     }
 
     public Boolean getPropertyTypeByName(final DonationRequest donationRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", donationRequest.getDonation().getPropertyType());
-        url = url.replace("{tenantId}", donationRequest.getDonation().getTenantId());
-        final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyTypes(url);
+
+        final PropertyTypeResponse propertyType = getPropertyIdFromPTModule(
+                donationRequest.getDonation().getPropertyType(),
+                donationRequest.getDonation().getTenantId());
         if (propertyType.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
             donationRequest.getDonation().setPropertyTypeId(
@@ -109,13 +122,20 @@ public class DonationService {
 
     }
 
+    private PropertyTypeResponse getPropertyIdFromPTModule(final String propertyTypeName, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+        url = url.replace("{name}", propertyTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
+        return propertyTypes;
+    }
+
     public Boolean getUsageTypeByName(final DonationRequest donationRequest) {
         Boolean isValidUsage = Boolean.FALSE;
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
-        url = url.replace("{name}", donationRequest.getDonation().getUsageType());
-        url = url.replace("{tenantId}", donationRequest.getDonation().getTenantId());
-        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
+        final UsageTypeResponse usageType = getUsageIdFromPTModule(
+                donationRequest.getDonation().getUsageType(),
+                donationRequest.getDonation().getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
             donationRequest.getDonation()
@@ -125,6 +145,15 @@ public class DonationService {
         }
         return isValidUsage;
 
+    }
+
+    private UsageTypeResponse getUsageIdFromPTModule(final String usageTypeName, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
+        url = url.replace("{name}", usageTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
+        return usageType;
     }
 
 }

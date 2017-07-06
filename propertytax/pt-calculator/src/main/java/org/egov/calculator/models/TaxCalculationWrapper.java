@@ -2,6 +2,7 @@ package org.egov.calculator.models;
 
 import java.util.List;
 
+import org.egov.models.CalculationResponse;
 import org.egov.models.Property;
 
 import lombok.AllArgsConstructor;
@@ -15,11 +16,7 @@ public class TaxCalculationWrapper {
 
     private Property property;
 
-    private TaxCalculationModel taxCalculationModel;
+   private List<TaxperiodWrapper> taxPeriods;
 
-    private TaxResponse taxResponse;
-
-    private List<TaxResponse> taxResponses;
-
-    private String text;
+    private CalculationResponse calculationResponse;
 }

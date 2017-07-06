@@ -177,9 +177,14 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     public static String getCategoryTypeName() {
         return "SELECT name FROM egwtr_category WHERE id = ? and tenantId = ?";
     }
+    
 
-    public static String getCheckQuery() {
-        return "SELECT id from egwtr_property_category_type where propertytypeid = ? AND categorytypeid = ?"
-                + "AND tenantId = ?";
+    public static String selectPropertyByCategoryQuery() {
+        return " select id FROM egwtr_property_category_type where propertytypeid = ? and categorytypeid = ? and tenantId = ?";
     }
+
+    public static String selectPropertyByCategoryNotInQuery() {
+        return " select id from egwtr_property_category_type where propertytypeid = ? and categorytypeid = ? and tenantId = ? and id != ? ";
+    }
+
 }

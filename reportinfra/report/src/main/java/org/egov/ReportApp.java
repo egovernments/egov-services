@@ -1,5 +1,7 @@
 package org.egov;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import org.egov.domain.model.ReportDefinitions;
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ public class ReportApp{
     public static ResourceLoader resourceLoader;
    
     @Autowired
-    private Environment env;
+    private static Environment env;
     
     public ReportApp(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
@@ -35,34 +37,28 @@ public class ReportApp{
     
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReportApp.class, args);
+		
 	}
-	
-	@Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter() {
-        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        converter.setObjectMapper(mapper);
-        return converter;
-    }
-	 
-	  
 	@Bean("reportDefinitions")
-	public ReportDefinitions loadYaml() {
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		try {
+	public static ReportDefinitions loadYaml() {
+		System.out.println("Loading the report definitions from PGR");
+	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+	try {
 
-			System.out.println("Loading the report definitions from yaml");
-			//Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
-			Resource resource = resourceLoader.getResource("classpath:application.yml");
-			File yamlFile = resource.getFile();
-			ReportDefinitions reportDefinitions = mapper.readValue(yamlFile, ReportDefinitions.class);
-			System.out.println("Report Defintion is: "+reportDefinitions.toString());
-			return reportDefinitions;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	//Resource resource = resourceLoader.getResource("file:/home/lenovo/Desktop/application.yml");
+	// Resource resource =
+	// resourceLoader.getResource("file:"+env.getproperty("report.yaml.path"));
+    //Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
+	//URL oracle = new URL(env.getProperty("report.yaml.path"));
+	URL oracle = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/pgr/pgr-master/src/main/resources/application.yml");
+	       
+	ReportDefinitions reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+	System.out.println("Report Defintion PGR: "+reportDefinitions.toString());
+	return reportDefinitions;
+	} catch (Exception e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	return null;
 	}
 }

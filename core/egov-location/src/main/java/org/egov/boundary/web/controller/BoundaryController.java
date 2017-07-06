@@ -271,6 +271,7 @@ public class BoundaryController {
 	private ResponseEntity<?> getSuccessResponse(final RequestInfo requestInfo, final boolean fileExist) {
 		ShapeFileResponse shapeFileExist = new ShapeFileResponse();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
 		shapeFileExist.setResponseInfo(responseInfo);
 		ShapeFile shapeFile = new ShapeFile();
 		shapeFile.setFileExist(fileExist);

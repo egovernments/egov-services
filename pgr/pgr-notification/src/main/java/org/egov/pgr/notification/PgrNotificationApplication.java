@@ -109,7 +109,8 @@ public class PgrNotificationApplication {
             new ProcessingFeeEnteredCitizenSMSMessageStrategy(),
             new ComplaintRegisteredEmployeeSMSMessageStrategy(),
             new ComplaintEscalatedFromEmployeeSMSMessageStrategy(),
-            new ComplaintEscalatedToEmployeeSMSMessageStrategy());
+            new ComplaintEscalatedToEmployeeSMSMessageStrategy(),
+            new RejectDeliverableCitizenSMSMessageStrategy());
     }
 
     @Bean("emailMessageStrategies")
@@ -120,6 +121,7 @@ public class PgrNotificationApplication {
             new ProcessingFeeEnteredCitizenEmailMessageStrategy(),
             new ComplaintRegisteredEmployeeEmailMessageStrategy(),
             new ComplaintEscalatedFromEmployeeEmailMessageStrategy(),
-            new ComplaintEscalatedToEmployeeEmailMessageStrategy());
+            new ComplaintEscalatedToEmployeeEmailMessageStrategy(),
+            new RejectDeliverableCitizenEmailMessageStrategy());
     }
 }

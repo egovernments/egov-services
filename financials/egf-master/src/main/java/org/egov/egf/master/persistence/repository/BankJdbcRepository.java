@@ -94,7 +94,7 @@ public class BankJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("type =: type");
+			params.append("type =:type");
 			paramValues.put("type", bankSearchEntity.getType());
 		}
 
@@ -128,7 +128,7 @@ public class BankJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + bankSearchEntity.getPageSize() + " offset "
@@ -153,14 +153,15 @@ public class BankJdbcRepository extends JdbcRepository {
 	public BankEntity findById(BankEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<BankEntity> banks = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<BankEntity>());
+		List<BankEntity> banks = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(BankEntity.class));
 		if (banks.isEmpty()) {
 			return null;
 		} else {

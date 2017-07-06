@@ -88,15 +88,34 @@ public class FundEntity extends AuditableEntity {
 
 	public Fund toDomain() {
 
+		Fund fund = new Fund();
 		Fund parent = Fund.builder().id(parentId).build();
-		return Fund.builder().id(id).active(active).code(code).name(name).identifier(identifier).parent(parent).build();
+		super.toDomain(fund);
+		fund.setId(this.id);
+		fund.setCode(this.code);
+		fund.setName(this.name);
+		fund.setIdentifier(this.identifier);
+		fund.setActive(this.active);
+		fund.setParent(parent);
+		fund.setIsParent(this.isParent);
+		fund.setLevel(this.level);
+		return fund;
+
 	}
 
 	public FundEntity toEntity(Fund fund) {
 
-		return FundEntity.builder().id(fund.getId()).active(fund.getActive()).name(fund.getName()).code(fund.getCode())
-				.identifier(fund.getIdentifier()).active(fund.getActive()).level(Long.valueOf(1))
-				.parentId(fund.getParent() != null ? fund.getParent().getId() : null).build();
+		super.toEntity(fund);
+		this.id = fund.getId();
+		this.name = fund.getName();
+		this.code = fund.getCode();
+		this.identifier = fund.getIdentifier();
+		this.level = 1l;
+		this.parentId = fund.getParent() != null ? fund.getParent().getId() : null;
+		this.active = fund.getActive();
+		this.level = fund.getLevel();
+		this.isParent = fund.getIsParent();
+		return this;
 
 	}
 

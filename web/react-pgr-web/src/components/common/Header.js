@@ -362,8 +362,8 @@ class Header extends Component {
     },
     {
       id:13,
-      name:'Create Escalation Time',
-      displayName:"Create Escalation Time",
+      name:'Create/Update Escalation Time',
+      displayName:"Create/Update Escalation Time",
       url:base + "pgr/defineEscalationTime",
       enabled:"true",
       orderNumber:1,
@@ -375,9 +375,9 @@ class Header extends Component {
     },
     {
       id:14,
-      name:'View Escalation Time',
+      name:'Search Escalation Time',
       displayName:"View Escalation Time",
-      url:base + "pgr/defineEscalationTime",
+      url:base + "pgr/searchEscalationTime",
       enabled:"true",
       orderNumber:2,
       queryParams:"",
@@ -385,7 +385,7 @@ class Header extends Component {
       rightIcon:'',
       parentModule:4,
       level:7,
-    },
+    },/*
     {
       id:15,
       name:'Update Escalation Time',
@@ -398,7 +398,7 @@ class Header extends Component {
       rightIcon:'',
       parentModule:4,
       level:7,
-    },
+    },*/
     {
       id:16,
       name:'Create Escalation',

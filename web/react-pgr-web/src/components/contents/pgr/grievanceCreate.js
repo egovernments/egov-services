@@ -75,20 +75,19 @@ class grievanceCreate extends Component {
   };
 
    loadReceivingCenter(value){
-     if(value == 'MANUAL'){
-       var currentThis = this;
+     var currentThis = this;
+     currentThis.setState({isReceivingCenterReq : false});
+     if(value === 'MANUAL'){
        Api.commonApiPost("/pgr-master/receivingcenter/v1/_search").then(function(response)
        {
          currentThis.setState({receivingCenter : response.ReceivingCenterType});
        },function(err) {
          currentThis.handleError(err.message);
        });
-       //ADD_MANDATORY
-       this.props.ADD_MANDATORY();
+       this.props.ADD_MANDATORY('receivingCenter');
      }else{
-       //REMOVE_MANDATORY
-       this.props.REMOVE_MANDATORY();
-       //currentThis.setState({receivingCenter : []});
+       this.props.REMOVE_MANDATORY('receivingCenter');
+       this.props.REMOVE_MANDATORY('externalCRN');
      }
    }
 
@@ -109,6 +108,16 @@ class grievanceCreate extends Component {
     initForm(localStorage.getItem('type'));
 
     var currentThis = this;
+
+    //isMapsEnabled
+    Api.commonApiPost("/egov-location/boundarys/isshapefileexist").then(function(response)
+    {
+      if(response.ShapeFile.fileExist){
+        currentThis.setState({isMapsEnabled : response.ShapeFile.fileExist});
+      }
+    },function(err) {
+      currentThis.handleError(err.message);
+    });
 
     //ReceivingMode
     if(localStorage.getItem('type') == 'EMPLOYEE'){
@@ -312,6 +321,34 @@ class grievanceCreate extends Component {
     });
   };
 
+  handleRCChange = (e) => {
+    var currentThis = this;
+    var valid = false;
+
+    this.state.receivingCenter.forEach(function(item, index){
+      if(item.id === e.target.value){
+        currentThis.setState({isReceivingCenterReq : item.iscrnrequired});
+        valid = item.iscrnrequired;
+        //currentThis.props.ADD_MANDATORY('externalCRN');
+      }else{
+        //currentThis.props.REMOVE_MANDATORY('externalCRN');
+      }
+    });
+
+    if(valid)
+      currentThis.props.ADD_MANDATORY('externalCRN');
+    else
+      currentThis.props.REMOVE_MANDATORY('externalCRN');
+
+  }
+
+  loadCRN = (valid) => {
+    if(valid)
+      this.props.ADD_MANDATORY('externalCRN');
+    else
+      this.props.REMOVE_MANDATORY('externalCRN');
+  }
+
   render() {
 
 
@@ -332,14 +369,14 @@ class grievanceCreate extends Component {
       files,
       handleChange,
       loadReceivingCenterDD,
-      handleMap,
       setCategoryandType,
       handleAutoCompleteKeyUp,
       handleChangeNextOne,
       handleChangeNextTwo,
       buttonText
     } = this.props;
-    let {search, createGrievance} = this;
+    let {search, createGrievance, isMapsEnabled, loadCRN} = this;
+
     return (
       <div className="grievanceCreate">
         <LoadingIndicator status={this.state.loadingstatus}/>
@@ -373,6 +410,12 @@ class grievanceCreate extends Component {
                         loadReceivingCenterDD('receivingCenter')
                          : ''
                       }
+                      {this.state.isReceivingCenterReq === true ?
+                        //loadCRN(this.state.isReceivingCenterReq)
+                        <Col xs={12} md={3}>
+                          <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} onChange={(e) => this.props.handleChange(e, "externalCRN", true, '')}/>
+                        </Col>
+                        : ''}
                     </Row>
                     <Row>
                       <Col xs={12} md={3}>
@@ -493,13 +536,14 @@ class grievanceCreate extends Component {
                     </Col>
                     <ImagePreview files={files}/>
                   </Row>
+                  {this.state.isMapsEnabled ?
                   <Row>
                     <Col md={12}>
                       <div style={{width: '100%', height: 400}}>
-                        <SimpleMap  markers={[]} handler={(places)=>{handleMap(places, "address")}}/>
+                        <SimpleMap  markers={[]} handler={(places)=>{this.props.handleMap(places, "address")}}/>
                       </div>
                     </Col>
-                  </Row>
+                  </Row> : ''}
                 </Grid>
               </CardText>
           </Card>
@@ -556,19 +600,17 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
-  ADD_MANDATORY : () => {
-     dispatch({type: "ADD_MANDATORY", property: 'receivingCenter', value: '', isRequired : false, pattern: ''});
-     dispatch({type: "ADD_MANDATORY", property: 'externalCRN', value: '', isRequired : false, pattern: ''});
+  ADD_MANDATORY : (property) => {
+     dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : false, pattern: ''});
+     dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
   },
-  REMOVE_MANDATORY : () => {
-     dispatch({type: "REMOVE_MANDATORY", property: 'receivingCenter', value: '', isRequired : false, pattern: ''});
-     dispatch({type: "REMOVE_MANDATORY", property: 'externalCRN', value: '', isRequired : false, pattern: ''});
+  REMOVE_MANDATORY : (property) => {
+     dispatch({type: "REMOVE_MANDATORY", property, value: '', isRequired : false, pattern: ''});
+     dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
   },
   loadReceivingCenterDD: (name) => {
     dispatch({type: "ADD_MANDATORY", property: name, value: '', isRequired : true, pattern: ''});
-    dispatch({type: "ADD_MANDATORY", property: 'externalCRN', value: '', isRequired : true, pattern: ''});
     return (
-      <div>
       <Col xs={12} md={3}>
         <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
           var e = {
@@ -576,16 +618,14 @@ const mapDispatchToProps = dispatch => ({
               value: value
             }
           };
-          _this.props.handleChange(e, "receivingCenter", true, "")}} errorText={_this.props.fieldErrors.receivingCenter ? _this.props.fieldErrors.receivingCenter : ""} >
+          dispatch({type: "HANDLE_CHANGE", property: name, value: e.target.value, isRequired : true, pattern: ''});
+          _this.handleRCChange(e)
+          }} errorText={_this.props.fieldErrors.receivingCenter ? _this.props.fieldErrors.receivingCenter : ""} >
           {_this.state.receivingCenter.map((receivingcenter, index) => (
               receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
           ))}
         </SelectField>
       </Col>
-      <Col xs={12} md={3}>
-        <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={_this.props.fieldErrors.externalCRN ? _this.props.fieldErrors.externalCRN : ""} value={_this.props.grievanceCreate.externalCRN?_this.props.grievanceCreate.externalCRN:""} onChange={(e) => _this.props.handleChange(e, "externalCRN", true, '')}/>
-      </Col>
-      </div>
     );
   },
   handleAutoCompleteKeyUp : (e) => {
@@ -629,6 +669,7 @@ const mapDispatchToProps = dispatch => ({
 
   },
   handleMap: (places, field) => {
+    //console.log(places[0].geometry.location.lat().toString(), places[0].geometry.location.lng().toString());
     dispatch({type: "HANDLE_CHANGE", property:'lat', value: places[0].geometry.location.lat().toString(), isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: places[0].geometry.location.lng().toString(), isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '0', isRequired : true, pattern: ''});

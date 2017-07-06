@@ -1105,9 +1105,17 @@ class CreateAsset extends React.Component {
 
     }*/
 
-    const renderOption = function(list, assetCatBool) {
+    const renderOption = function(list, assetCatBool, statusBool) {
         if(list) {
             if (list.length) {
+              if(statusBool) {
+                return list.map((item, ind) => {
+                  return (<option key={ind} value={item.statusValues[0].code}>
+                          {item.statusValues[0].description}
+                    </option>)
+                })
+              };
+
               list.sort(function(item1, item2) {
                 if(item1.name && item2.name)
                   return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
@@ -2071,7 +2079,7 @@ class CreateAsset extends React.Component {
                                     onChange={(e)=>
                                     { handleChange(e,"status")}} disabled={readonly} required>
                                     <option value="">Choose Status</option>
-                                    {renderOption(this.state.statusList)}
+                                    {renderOption(this.state.statusList, "", true)}
                                 </select>
                               </div>
                           </div>
@@ -2164,7 +2172,7 @@ class CreateAsset extends React.Component {
                             <div className="col-sm-6">
                               <select id="refSet.status" name="refSet.status" value={refSet.status} onChange={(e) => {handleReferenceChange(e, "status")}}>
                                     <option value="">Select Status</option>
-                                    {renderOption(this.state.statusList)}
+                                    {renderOption(this.state.statusList, "", true)}
                               </select>
                             <div>
                             </div>
@@ -2295,7 +2303,7 @@ class CreateAsset extends React.Component {
                             <div className="col-sm-6">
                               <select id="refSet.status" name="refSet.status" value={refSet.status} onChange={(e) => {handleReferenceChange(e, "status")}}>
                                     <option value="">Select Status</option>
-                                    {renderOption(this.state.statusList)}
+                                    {renderOption(this.state.statusList, "", true)}
                               </select>
                             <div>
                             </div>

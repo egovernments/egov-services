@@ -55,58 +55,66 @@ public class BankAccountJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( bankAccountSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,bankAccountSearchEntity.getId());} 
-if( bankAccountSearchEntity.getBankBranchId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "bankBranch =: bankBranch");
-paramValues.put("bankBranch" ,bankAccountSearchEntity.getBankBranchId());} 
-if( bankAccountSearchEntity.getChartOfAccountId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "chartOfAccount =: chartOfAccount");
-paramValues.put("chartOfAccount" ,bankAccountSearchEntity.getChartOfAccountId());} 
-if( bankAccountSearchEntity.getFundId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "fund =: fund");
-paramValues.put("fund" ,bankAccountSearchEntity.getFundId());} 
-if( bankAccountSearchEntity.getAccountNumber()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "accountNumber =: accountNumber");
-paramValues.put("accountNumber" ,bankAccountSearchEntity.getAccountNumber());} 
-if( bankAccountSearchEntity.getAccountType()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "accountType =: accountType");
-paramValues.put("accountType" ,bankAccountSearchEntity.getAccountType());} 
-if( bankAccountSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,bankAccountSearchEntity.getDescription());} 
-if( bankAccountSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,bankAccountSearchEntity.getActive());} 
-if( bankAccountSearchEntity.getPayTo()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "payTo =: payTo");
-paramValues.put("payTo" ,bankAccountSearchEntity.getPayTo());} 
-if( bankAccountSearchEntity.getTypeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "type =: type");
-paramValues.put("type" ,bankAccountSearchEntity.getTypeId());} 
-
-		 
+		if (bankAccountSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", bankAccountSearchEntity.getId());
+		}
+		if (bankAccountSearchEntity.getBankBranchId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("bankBranch =:bankBranch");
+			paramValues.put("bankBranch", bankAccountSearchEntity.getBankBranchId());
+		}
+		if (bankAccountSearchEntity.getChartOfAccountId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("chartOfAccount =:chartOfAccount");
+			paramValues.put("chartOfAccount", bankAccountSearchEntity.getChartOfAccountId());
+		}
+		if (bankAccountSearchEntity.getFundId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("fund =:fund");
+			paramValues.put("fund", bankAccountSearchEntity.getFundId());
+		}
+		if (bankAccountSearchEntity.getAccountNumber() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("accountNumber =:accountNumber");
+			paramValues.put("accountNumber", bankAccountSearchEntity.getAccountNumber());
+		}
+		if (bankAccountSearchEntity.getAccountType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("accountType =:accountType");
+			paramValues.put("accountType", bankAccountSearchEntity.getAccountType());
+		}
+		if (bankAccountSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", bankAccountSearchEntity.getDescription());
+		}
+		if (bankAccountSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", bankAccountSearchEntity.getActive());
+		}
+		if (bankAccountSearchEntity.getPayTo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("payTo =:payTo");
+			paramValues.put("payTo", bankAccountSearchEntity.getPayTo());
+		}
+		if (bankAccountSearchEntity.getType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("type =:type");
+			paramValues.put("type", bankAccountSearchEntity.getType());
+		}
 
 		Pagination<BankAccount> page = new Pagination<>();
 		page.setOffSet(bankAccountSearchEntity.getOffset());
@@ -122,7 +130,7 @@ paramValues.put("type" ,bankAccountSearchEntity.getTypeId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + bankAccountSearchEntity.getPageSize() + " offset "
@@ -130,7 +138,8 @@ paramValues.put("type" ,bankAccountSearchEntity.getTypeId());}
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BankAccountEntity.class);
 
-		List<BankAccountEntity> bankAccountEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<BankAccountEntity> bankAccountEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(bankAccountEntities.size());
 
@@ -147,14 +156,15 @@ paramValues.put("type" ,bankAccountSearchEntity.getTypeId());}
 	public BankAccountEntity findById(BankAccountEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<BankAccountEntity> bankaccounts = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<BankAccountEntity>());
+		List<BankAccountEntity> bankaccounts = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(BankAccountEntity.class));
 		if (bankaccounts.isEmpty()) {
 			return null;
 		} else {

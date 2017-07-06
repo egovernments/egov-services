@@ -293,7 +293,7 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} status.
+                                    })} 
                                  </CardText>
                              </Card>
                           </Col>
@@ -318,7 +318,7 @@ class Dashboard extends Component {
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
 					
-				
+				<div  className="tableLayout">
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 						 <thead>
 							<tr>
@@ -336,8 +336,9 @@ class Dashboard extends Component {
 						  {renderBody()}
 						  </tbody>
 					</Table> 
-
-         {false && this.state.localArray.map((e,i)=>{
+          </div>
+          <div className="cardLayout">
+         {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
                             
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -360,13 +361,13 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} status.
+                                    })} 
                                  </CardText>
                              </Card>
                           </Col>
                         )
                       }) }
-					
+					</div>
 					
                       
                     </Row>

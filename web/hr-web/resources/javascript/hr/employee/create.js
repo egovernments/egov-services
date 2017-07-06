@@ -1591,8 +1591,7 @@ function setPositionId(commonObject, employeeSubObject) {
         _positions.push(commonObject["assignments_position"][k].name);
     }
 
-    $(`#assignments\\.position`)
-    .autocomplete({
+    $(`#assignments\\.position`).autocomplete({
         source: _positions,
         change: function(e, ui) {
             for(var k=0; k<commonObject["assignments_position"].length; k++) {

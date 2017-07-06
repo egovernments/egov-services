@@ -187,7 +187,7 @@ class Dashboard extends Component {
   };
   
    handleNavigation = (type, id) => {
-      window.open(type+id, "_blank", "location=yes, height=760, width=800, scrollbars=yes, status=yes");
+      this.props.history.push(type+id);
     }
 
 
@@ -217,7 +217,7 @@ class Dashboard extends Component {
 			 
 		  return(
 								<tr key={i} style={{ cursor:'pointer'}} onClick={()=>{
-									 this.handleNavigation("#/pgr/viewGrievance/", e.serviceRequestId);
+									 this.handleNavigation("/pgr/viewGrievance/", e.serviceRequestId);
 								}}>
 									<td>{i+1}</td>
 									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>

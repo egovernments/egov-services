@@ -18,7 +18,7 @@ import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
 import org.egov.models.User;
-import org.egov.property.propertyConsumer.Producer;
+import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.util.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class PersisterService {
 	RestTemplate restTemplate;
 
 	@Autowired
-	Producer producer;
+	PropertyProducer producer;
 
 	@Autowired
 	PropertyValidator propertyValidator;

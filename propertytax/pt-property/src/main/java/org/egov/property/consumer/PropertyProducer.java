@@ -1,4 +1,4 @@
-package org.egov.property.propertyConsumer;
+package org.egov.property.consumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 @Service
-public class Producer {
+public class PropertyProducer {
 
 	@Autowired
 	private Environment environment;

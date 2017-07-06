@@ -26,6 +26,7 @@ else {
 
 tenantId = tenantIds[tenantId] || "ap." + tenantId;
 
+
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();
@@ -395,8 +396,8 @@ function getDropdown(name, cb, params) {
                     queryString = Object.assign(queryString, params);
                 commonApiPost("asset-services", "assetstatuses", "_search", queryString, function(err, res) {
                     if (res) {
-                        localStorage.setItem("statusList", JSON.stringify(res));
-                        cb(res);
+                        localStorage.setItem("statusList", JSON.stringify(res["AssetStatus"]));
+                        cb(res["AssetStatus"]);
                     } else {
                         cb({});
                     }

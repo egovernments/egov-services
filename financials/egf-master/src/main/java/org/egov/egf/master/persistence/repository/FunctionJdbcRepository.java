@@ -55,43 +55,48 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( functionSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,functionSearchEntity.getId());} 
-if( functionSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,functionSearchEntity.getName());} 
-if( functionSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,functionSearchEntity.getCode());} 
-if( functionSearchEntity.getLevel()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "level =: level");
-paramValues.put("level" ,functionSearchEntity.getLevel());} 
-if( functionSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,functionSearchEntity.getActive());} 
-if( functionSearchEntity.getIsParent()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isParent =: isParent");
-paramValues.put("isParent" ,functionSearchEntity.getIsParent());} 
-if( functionSearchEntity.getParentId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "parentId =: parentId");
-paramValues.put("parentId" ,functionSearchEntity.getParentId());} 
-
-		 
+		if (functionSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", functionSearchEntity.getId());
+		}
+		if (functionSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", functionSearchEntity.getName());
+		}
+		if (functionSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", functionSearchEntity.getCode());
+		}
+		if (functionSearchEntity.getLevel() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("level =:level");
+			paramValues.put("level", functionSearchEntity.getLevel());
+		}
+		if (functionSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", functionSearchEntity.getActive());
+		}
+		if (functionSearchEntity.getIsParent() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isParent =:isParent");
+			paramValues.put("isParent", functionSearchEntity.getIsParent());
+		}
+		if (functionSearchEntity.getParentId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("parentId =:parentId");
+			paramValues.put("parentId", functionSearchEntity.getParentId());
+		}
 
 		Pagination<Function> page = new Pagination<>();
 		page.setOffSet(functionSearchEntity.getOffset());
@@ -107,7 +112,7 @@ paramValues.put("parentId" ,functionSearchEntity.getParentId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + functionSearchEntity.getPageSize() + " offset "
@@ -115,7 +120,8 @@ paramValues.put("parentId" ,functionSearchEntity.getParentId());}
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FunctionEntity.class);
 
-		List<FunctionEntity> functionEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<FunctionEntity> functionEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+				row);
 
 		page.setTotalResults(functionEntities.size());
 
@@ -132,14 +138,15 @@ paramValues.put("parentId" ,functionSearchEntity.getParentId());}
 	public FunctionEntity findById(FunctionEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<FunctionEntity> functions = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FunctionEntity>());
+		List<FunctionEntity> functions = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(FunctionEntity.class));
 		if (functions.isEmpty()) {
 			return null;
 		} else {

@@ -75,7 +75,11 @@ class grievanceView extends Component{
 
     Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
-      //console.log(JSON.stringify(response.serviceRequests))
+      if(response.serviceRequests.length === 0){
+        currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError('Not a valid SRN.');
+        return false;
+      }
       currentThis.setState({srn : response.serviceRequests});
       currentThis.state.srn.map((item, index) => {
         for(var k in item){
@@ -563,6 +567,16 @@ class grievanceView extends Component{
                   {this.state.address ? this.state.address : 'N/A'}
                 </Col>
               </Row>
+              {this.state.externalCRN ?
+                <Row style={{padding:'10px'}}>
+                  <Col xs={6} md={3}>
+                    External CRN
+                  </Col>
+                  <Col xs={6} md={3}>
+                    {this.state.externalCRN}
+                  </Col>
+                </Row>
+              : ''}
               <Row style={{padding:'10px'}}>
                 <Col xs={6} md={3}>
                   Files Uploaded
@@ -614,8 +628,7 @@ class grievanceView extends Component{
           </CardText>
         </Card>
       </Grid>
-      {this.state.isUpdateAllowed ?
-      (localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED' && this.state.status !== 'FORWARDED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
+      { (this.state.isUpdateAllowed && localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
@@ -737,7 +750,7 @@ class grievanceView extends Component{
           </CardText>
         </Card>
       </Grid>
-      : '' : ''
+      : ''
       }
       </form>
       <Dialog

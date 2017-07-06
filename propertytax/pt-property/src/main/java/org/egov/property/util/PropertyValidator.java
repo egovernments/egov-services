@@ -55,6 +55,7 @@ public class PropertyValidator {
 			throws InvalidPropertyBoundaryException {
 
 		List<String> fields = getAllBoundaries();
+		//TODO location service gives provision to search by multiple ids, no need to do multiple calls for each boundary id
 		for (String field : fields) {
 			validateBoundaryFields(property, field, requestInfo);
 		}
@@ -73,7 +74,7 @@ public class PropertyValidator {
 
 		PropertyLocation propertyLocation = property.getBoundary();
 		Long id;
-
+		//TODO do not use strings directly anywhere, create a constants and use it.
 		if (field.equalsIgnoreCase("revenueBoundary")) {
 			id = propertyLocation.getRevenueBoundary().getId();
 		} else if (field.equalsIgnoreCase("locationBoundary")) {
@@ -81,6 +82,7 @@ public class PropertyValidator {
 		} else {
 			id = propertyLocation.getAdminBoundary().getId();
 		}
+		//TODO all this logic to find/search boundary has to move to separate class say BoundaryRepository and just call the api/method here
 		StringBuffer BoundaryURI = new StringBuffer();
 		BoundaryURI.append(env.getProperty("egov.services.boundary_service.hostname"))
 				.append(env.getProperty("egov.services.boundary_service.searchpath"));

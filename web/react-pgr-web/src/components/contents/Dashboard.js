@@ -63,7 +63,6 @@ class Dashboard extends Component {
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          ordering: false,
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -137,7 +136,6 @@ class Dashboard extends Component {
     $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          ordering: false,
           bDestroy: true,
           language: {
              "emptyTable": "No Records"

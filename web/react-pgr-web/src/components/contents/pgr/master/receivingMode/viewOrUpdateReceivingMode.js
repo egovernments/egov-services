@@ -118,7 +118,6 @@ class viewOrUpdateReceivingMode extends Component {
                                           <th>{translate("core.lbl.description")}</th>
                                           <th>Channel</th>
                                           <th>{translate("pgr.lbl.active")}</th>
-                                          <th>{translate("pgr.lbl.actions")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -137,8 +136,6 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.channels}</td>
                                               <td>{e.active?"True":"False"}</td>
-                                              {url == '/pgr/viewOrUpdateReceivingMode/view' && <td><Link to={`/pgr/viewReceivingMode/${this.props.match.params.type}/${e.id}`} target=""><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")}/></Link></td>}
-                                              {url == '/pgr/viewOrUpdateReceivingMode/update' && <td><Link  to={`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`} target=""><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")}/></Link></td>}
                                             </tr>
                                           )
                                         })}

@@ -63,10 +63,13 @@ public class BankAccount extends Auditable {
 
 	private String id;
 
+	@NotNull
 	private BankBranch bankBranch;
 
+	@NotNull
 	private ChartOfAccount chartOfAccount;
 
+	@NotNull
 	private Fund fund;
 
 	@NotNull

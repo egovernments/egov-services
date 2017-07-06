@@ -55,83 +55,96 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( bankBranchSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,bankBranchSearchEntity.getId());} 
-if( bankBranchSearchEntity.getBankId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "bank =: bank");
-paramValues.put("bank" ,bankBranchSearchEntity.getBankId());} 
-if( bankBranchSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,bankBranchSearchEntity.getCode());} 
-if( bankBranchSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,bankBranchSearchEntity.getName());} 
-if( bankBranchSearchEntity.getAddress()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "address =: address");
-paramValues.put("address" ,bankBranchSearchEntity.getAddress());} 
-if( bankBranchSearchEntity.getAddress2()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "address2 =: address2");
-paramValues.put("address2" ,bankBranchSearchEntity.getAddress2());} 
-if( bankBranchSearchEntity.getCity()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "city =: city");
-paramValues.put("city" ,bankBranchSearchEntity.getCity());} 
-if( bankBranchSearchEntity.getState()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "state =: state");
-paramValues.put("state" ,bankBranchSearchEntity.getState());} 
-if( bankBranchSearchEntity.getPincode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "pincode =: pincode");
-paramValues.put("pincode" ,bankBranchSearchEntity.getPincode());} 
-if( bankBranchSearchEntity.getPhone()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "phone =: phone");
-paramValues.put("phone" ,bankBranchSearchEntity.getPhone());} 
-if( bankBranchSearchEntity.getFax()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "fax =: fax");
-paramValues.put("fax" ,bankBranchSearchEntity.getFax());} 
-if( bankBranchSearchEntity.getContactPerson()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "contactPerson =: contactPerson");
-paramValues.put("contactPerson" ,bankBranchSearchEntity.getContactPerson());} 
-if( bankBranchSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,bankBranchSearchEntity.getActive());} 
-if( bankBranchSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,bankBranchSearchEntity.getDescription());} 
-if( bankBranchSearchEntity.getMicr()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "micr =: micr");
-paramValues.put("micr" ,bankBranchSearchEntity.getMicr());} 
-
-		 
+		if (bankBranchSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", bankBranchSearchEntity.getId());
+		}
+		if (bankBranchSearchEntity.getBankId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("bank =:bank");
+			paramValues.put("bank", bankBranchSearchEntity.getBankId());
+		}
+		if (bankBranchSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", bankBranchSearchEntity.getCode());
+		}
+		if (bankBranchSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", bankBranchSearchEntity.getName());
+		}
+		if (bankBranchSearchEntity.getAddress() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("address =:address");
+			paramValues.put("address", bankBranchSearchEntity.getAddress());
+		}
+		if (bankBranchSearchEntity.getAddress2() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("address2 =:address2");
+			paramValues.put("address2", bankBranchSearchEntity.getAddress2());
+		}
+		if (bankBranchSearchEntity.getCity() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("city =:city");
+			paramValues.put("city", bankBranchSearchEntity.getCity());
+		}
+		if (bankBranchSearchEntity.getState() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("state =:state");
+			paramValues.put("state", bankBranchSearchEntity.getState());
+		}
+		if (bankBranchSearchEntity.getPincode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("pincode =:pincode");
+			paramValues.put("pincode", bankBranchSearchEntity.getPincode());
+		}
+		if (bankBranchSearchEntity.getPhone() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("phone =:phone");
+			paramValues.put("phone", bankBranchSearchEntity.getPhone());
+		}
+		if (bankBranchSearchEntity.getFax() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("fax =:fax");
+			paramValues.put("fax", bankBranchSearchEntity.getFax());
+		}
+		if (bankBranchSearchEntity.getContactPerson() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("contactPerson =:contactPerson");
+			paramValues.put("contactPerson", bankBranchSearchEntity.getContactPerson());
+		}
+		if (bankBranchSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", bankBranchSearchEntity.getActive());
+		}
+		if (bankBranchSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", bankBranchSearchEntity.getDescription());
+		}
+		if (bankBranchSearchEntity.getMicr() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("micr =:micr");
+			paramValues.put("micr", bankBranchSearchEntity.getMicr());
+		}
 
 		Pagination<BankBranch> page = new Pagination<>();
 		page.setOffSet(bankBranchSearchEntity.getOffset());
@@ -147,7 +160,7 @@ paramValues.put("micr" ,bankBranchSearchEntity.getMicr());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + bankBranchSearchEntity.getPageSize() + " offset "
@@ -155,7 +168,8 @@ paramValues.put("micr" ,bankBranchSearchEntity.getMicr());}
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BankBranchEntity.class);
 
-		List<BankBranchEntity> bankBranchEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<BankBranchEntity> bankBranchEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(bankBranchEntities.size());
 
@@ -172,14 +186,15 @@ paramValues.put("micr" ,bankBranchSearchEntity.getMicr());}
 	public BankBranchEntity findById(BankBranchEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<BankBranchEntity> bankbranches = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<BankBranchEntity>());
+		List<BankBranchEntity> bankbranches = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(BankBranchEntity.class));
 		if (bankbranches.isEmpty()) {
 			return null;
 		} else {

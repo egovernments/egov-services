@@ -80,4 +80,9 @@ public class Fund extends Auditable {
 	@NotNull
 	protected Boolean active;
 
+	protected Boolean isParent;
+
+	@NotNull
+	protected Long level;
+
 }

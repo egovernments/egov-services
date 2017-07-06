@@ -61,10 +61,6 @@ public class ReportService {
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
 			reportheader.setName(cd.getName());
-			if(cd.getPattern() != null) {
-				reportheader.setPattern(cd.getPattern());	
-			}
-			
 			TypeEnum te = getType(cd.getType().toString());
 			reportheader.setType(te);
 			reportHeaders.add(reportheader);
@@ -75,9 +71,6 @@ public class ReportService {
 			searchParam.setLabel(cd.getLabel());
 			searchParam.setName(cd.getName());
 			TypeEnum te = getType(cd.getType().toString());
-			if(cd.getPattern() != null) {
-				searchParam.setPattern(cd.getPattern());	
-			}
 			searchParam.setType(te);
 			searchParams.add(searchParam);
 
@@ -154,7 +147,7 @@ public class ReportService {
 	private void populateReportHeader(ReportDefinition reportDefinition, ReportResponse reportResponse) {
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
 		List<ColumnDetail> columnDetails = columns.stream()
-				.map(p -> new ColumnDetail(p.getLabel(),p.getPattern(), p.getType(),p.getName()))
+				.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getName()))
 				.collect(Collectors.toList());
 		
 		reportResponse.setReportHeader(columnDetails);

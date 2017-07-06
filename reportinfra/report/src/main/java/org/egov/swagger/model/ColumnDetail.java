@@ -22,13 +22,13 @@ public class ColumnDetail extends ColumnDef  {
 		
 	}
   
-  public ColumnDetail(String label, String pattern, TypeEnum type, String name) {
+  public ColumnDetail(String label, TypeEnum type, String name) {
 	super();
 	this.label = label;
 	this.type = type;
 	this.name(name);
 }
-  public ColumnDetail(String label, String pattern, TypeEnum type) {
+  public ColumnDetail(String label, TypeEnum type) {
 		super();
 		this.label = label;
 		this.type = type;

@@ -53,7 +53,7 @@ import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.PtPropertyApplication;
-import org.egov.property.Consumer.PropertyProducer;
+import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.services.Masterservice;
 import org.junit.FixMethodOrder;
 import org.junit.Test;

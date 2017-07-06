@@ -60,8 +60,7 @@ class Dashboard extends Component {
 }
   componentWillMount() {
 
-      let { setLoadingStatus} = this.props;
-     setLoadingStatus("loading");
+    
 	  
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
@@ -71,6 +70,9 @@ class Dashboard extends Component {
              "emptyTable": "No Records"
           }
     });
+	
+	  let { setLoadingStatus} = this.props;
+     setLoadingStatus("loading");
 	  
     let current = this;
     let {currentUser}=this.props;
@@ -297,7 +299,7 @@ class Dashboard extends Component {
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
 					
-					{(this.state.localArray.length > 0) && 
+				
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 						 <thead>
 							<tr>
@@ -314,7 +316,7 @@ class Dashboard extends Component {
 						  <tbody>
 						  {renderBody()}
 						  </tbody>
-					</Table> }
+					</Table> 
 
          {false && this.state.localArray.map((e,i)=>{
                             

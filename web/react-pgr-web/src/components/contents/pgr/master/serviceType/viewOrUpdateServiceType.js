@@ -83,7 +83,8 @@ class viewOrUpdateServiceType extends Component {
       this.state = {
         data:'',
         categorySource:[]
-      }
+      };
+      this.handleNavigation = this.handleNavigation.bind(this);
     }
 
     componentWillMount() {
@@ -120,6 +121,7 @@ class viewOrUpdateServiceType extends Component {
 
 
     render() {
+      let {handleNavigation} = this;
       let {categorySource}=this.state;
       let {
         serviceTypeCreate,
@@ -156,13 +158,18 @@ class viewOrUpdateServiceType extends Component {
                                           <th>Description</th>
                                           <th>SLA Hour</th>
                                           <th>Has Financial Impact</th>
-                                          <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
-                                            <tr key={i}>
+                                            <tr key={i} onClick={() => {
+                                              if(url == "/pgr/viewOrUpdateServiceType/view") {
+                                                handleNavigation("/pgr/viewServiceType/view/", e.id);
+                                              } else {
+                                                handleNavigation("/pgr/serviceTypeCreate/edit/", e.id);
+                                              }
+                                            }}>
                                               <td>{i+1}</td>
                                               <td>{e.serviceName}</td>
                                               <td>{e.serviceCode}</td>
@@ -171,14 +178,6 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>
                                               <td>{e.hasFinancialImpact?"True":"False"}</td>
-                                              {url == '/pgr/viewOrUpdateServiceType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("/pgr/viewServiceType/view/", id);
-                                              }}/></td>}
-                                              {url == '/pgr/viewOrUpdateServiceType/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("/pgr/serviceTypeCreate/edit/", id);
-                                              }}/></td>}
                                             </tr>
                                           )
                                         })}

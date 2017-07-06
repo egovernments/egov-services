@@ -223,7 +223,13 @@ class Dashboard extends Component {
 									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>
 									<td>{e.requestedDatetime}</td>
 									<td>{e.firstName}</td>
-									<td></td>
+									<td>
+                    {e.attribValues && e.attribValues.map((item, index)=>{
+                      if(item['key'] == 'keyword')
+                        return (item['name'] == 'Complaint' ? 'Grievance' : 'Service');
+                      })
+                    }            
+                  </td>
 									<td>{e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="status"){
                                         return(item.name)

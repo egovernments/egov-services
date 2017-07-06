@@ -38,7 +38,7 @@ public class PropertiesManager {
 	 @Value("${egov.services.demand_service.hostname}")
 	 private String demandServiceHostName;
 	 
-	 @Value("${egov.services.demand_reason_service.searchpath}")
+	 @Value("${egov.services.demand_service.searchpath}")
 	 private String demandSearchServicepath;
 	 
 	 @Value("${egov.services.tenant.host}")

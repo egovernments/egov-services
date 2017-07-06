@@ -165,7 +165,13 @@ class Dashboard extends Component {
 	  
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
-			  console.log(e)
+				var trColor;
+				e.attribValues.map((item,index)=>{
+				  if(item.key =="PRIORITY"){
+					trColor = item.name
+				  }
+				})
+			 
 		  return(
 								<tr key={i}>
 									<td>{i+1}</td>
@@ -278,7 +284,8 @@ class Dashboard extends Component {
 							  <th>Status</th>
 							  <th style={{maxWidth:300}}>Comments</th>
 							</tr>
-						  </thead>
+							
+						  </thead> 
 						  <tbody>
 						  {renderBody()}
 						  </tbody>

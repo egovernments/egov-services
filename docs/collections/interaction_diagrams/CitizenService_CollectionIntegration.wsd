@@ -1,0 +1,34 @@
+title Interaction Diagram for Collection Integration with Citizen Service
+
+Client->+CitizenSvc: Request for Payment
+CitizenSvc->+BillingSvc: Create Demand 
+BillingSvc->CitizenSvc: Response with Business Details and Application number
+CitizenSvc->+ReceiptSvc: Redirect with BusinessDetails and Application number
+CitizenSvc->ReceiptSvc: Auto submit search request with BusinessDetails and Application number
+ReceiptSvc->BillingSvc: Generate bill and get the collection modes not allowed
+
+ReceiptSvc->+FinancialSvc: Get bank list
+note over ReceiptSvc,FinancialSvc
+    Get the list of bank for Cheque/DD
+    payments.
+end note
+FinancialSvc->-ReceiptSvc: Bank list response.
+ReceiptSvc->Client: Response with Collection modes allowed and bank list.
+
+Client->ReceiptSvc: Submit payment request
+ReceiptSvc->ReceiptSvc: Validate payment request.
+ReceiptSvc->IDGenSvc: Generate receipt number
+ReceiptSvc->+KafkaQSvc: Queue for further processing
+ReceiptSvc->-Client: Create receipt response
+note over Client,ReceiptSvc
+Redirection to the return url of the billing module with 
+Receipt Status and Receipt Number with Hash
+end note
+KafkaQSvc->ReceiptSvc: Persist receipt
+
+KafkaQSvc->WorkflowSvc: Initiate workflow
+KafkaQSvc->InstrumentSvc : Persist instrument
+KafkaQSvc->VoucherSvc: Post voucher in financials
+KafkaQSvc->BillingSvc: Updation of DCB.
+KafkaQSvc->ESSvc: Push to elastic search
+KafkaQSvc->NotificationSvc: Send email/sms

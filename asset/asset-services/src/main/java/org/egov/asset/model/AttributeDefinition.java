@@ -13,7 +13,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class AttributeDefination {
+public class AttributeDefinition {
 	private String name = null;
 
 	private String type = null;
@@ -32,6 +32,6 @@ public class AttributeDefination {
 
 	private String order = null;
 
-	private List<AttributeDefination> columns = null;
+	private List<AttributeDefinition> columns = null;
 
 }

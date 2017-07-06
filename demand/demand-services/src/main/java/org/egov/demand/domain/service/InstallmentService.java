@@ -37,4 +37,11 @@ public class InstallmentService {
 				installmentSearchCriteria.getInstallmentType(), installmentSearchCriteria.getModule(),
 				installmentSearchCriteria.getTenantId());
 	}
+	
+	public List<Installment> findCurrentInstallmentByCurrentDateAndInstallmentTypeAndModuleAndTenantId(InstallmentSearchCriteria installmentSearchCriteria) {
+		return installmentRepository.findCurrentInstallmentByCurrentDateAndInstallmentTypeAndModuleAndTenantId(
+				installmentSearchCriteria.getCurrentDate(),
+				installmentSearchCriteria.getInstallmentType(), installmentSearchCriteria.getModule(),
+				installmentSearchCriteria.getTenantId());
+	}
 }

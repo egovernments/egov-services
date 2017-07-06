@@ -73,12 +73,28 @@ var metaData=
                 "isMandatory": true
             },
             {
-                "name": "complainttype",
-                "label": "reports.pgr.complainttype",
-                "type": "singlevaluelist",
-                "pattern": "/pgr-master/service/v1/_search?tenantId=default|$.Service[*].serviceCode|$.Service[*].serviceName",
+                "name": "fromDate1",
+                "label": "reports.pgr.datefrom",
+                "type": "string",
+                "isMandatory": true
+            },
+            {
+                "name": "fromDate2",
+                "label": "reports.pgr.datefrom",
+                "type": "number",
                 "isMandatory": true
             }
+
+
+
+
+            // {
+            //     "name": "complainttype",
+            //     "label": "reports.pgr.complainttype",
+            //     "type": "singlevaluelist",
+            //     "pattern": "/pgr-master/service/v1/_search?tenantId=default|$.Service[*].serviceCode|$.Service[*].serviceName",
+            //     "isMandatory": true
+            // }
         ],
         "query": ""
     },

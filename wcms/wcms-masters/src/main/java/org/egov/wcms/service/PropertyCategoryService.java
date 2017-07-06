@@ -102,7 +102,7 @@ public class PropertyCategoryService {
 
     public boolean checkIfMappingExists(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         getPropertyTypeByName(propertyCategoryRequest);
-        return propertyCategoryRepository.checkIfMappingExists(
+        return propertyCategoryRepository.checkIfMappingExists(propertyCategoryRequest.getPropertyTypeCategoryType().getId(),
                 propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeId(),
                 propertyCategoryRequest.getPropertyTypeCategoryType().getCategoryTypeName(),
                 propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
@@ -124,10 +124,10 @@ public class PropertyCategoryService {
 
     }
 
-    private PropertyTypeResponse getPropertyIdFromPTModule(String propertyTypeNae, String tenantId) {
+    private PropertyTypeResponse getPropertyIdFromPTModule(String propertyTypeName, String tenantId) {
         String url = propertiesManager.getPropertTaxServiceBasePathTopic()
                 + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", propertyTypeNae);
+        url = url.replace("{name}", propertyTypeName);
         url = url.replace("{tenantId}", tenantId);
         final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
         return propertyTypes;

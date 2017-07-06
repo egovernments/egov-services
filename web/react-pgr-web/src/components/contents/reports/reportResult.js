@@ -29,243 +29,92 @@ class ShowField extends Component {
    }
 
 
-  componentWillUnmount()
-  {
-     $('#propertyTaxTable')
-     .DataTable()
-     .destroy(true);
-  }
-
-
-
-
-  componentWillUpdate() {
-    if(flag == 1) {
-      flag = 0;
-      $('#propertyTaxTable').dataTable().fnDestroy();
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-      if (true) {
-          $('#propertyTaxTable').DataTable({
-            dom: 'lBfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false,
-             bDestroy: true,
-
-          });
-      }
-  }
+  // componentWillUnmount()
+  // {
+  //    $('#propertyTaxTable')
+  //    .DataTable()
+  //    .destroy(true);
+  // }
+  //
+  //
+  //
+  //
+  // componentWillUpdate() {
+  //   if(flag == 1) {
+  //     flag = 0;
+  //     $('#propertyTaxTable').dataTable().fnDestroy();
+  //   }
+  // }
+  //
+  // componentDidUpdate(prevProps, prevState) {
+  //     if (true) {
+  //         $('#propertyTaxTable').DataTable({
+  //           dom: 'lBfrtip',
+  //           buttons: [
+  //                    'copy', 'csv', 'excel', 'pdf', 'print'
+  //            ],
+  //            ordering: false,
+  //            bDestroy: true,
+  //
+  //         });
+  //     }
+  // }
 
   render() {
     let {
-      isTableShow
+      isTableShow,
+      metaData,
+      reportResult
     } = this.props;
+    console.log(metaData);
+
+    const showRow=()=>{
+      return
+    }
 
     const viewTabel=()=>
     {
       return (
         <Card>
-          <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Result < /strong>}/>
+          <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
           <Table id="propertyTaxTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
             <tr>
+              {metaData && metaData.reportDetails.reportHeader.map((item,i)=>
+              {
+                return (
+                  <th key={i}>{item.label}</th>
+                )
+              })}
+            {/*
               <th>#</th>
-              <th>Assessment Number</th>
-              <th>Owner Name</th>
-              <th>Address</th>
-              <th>Current Demand</th>
-              <th>Arrears Demand</th>
-              <th>Property usage</th>
-              <th>Action</th>
+                <th>Assessment Number</th>
+                <th>Owner Name</th>
+                <th>Address</th>
+                <th>Current Demand</th>
+                <th>Arrears Demand</th>
+                <th>Property usage</th>*/}
+
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-1" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
 
-            <tr>
-              <td>3</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-                <DropdownButton title="Action" id="dropdown-3" pullRight>
-                    <MenuItem>Create</MenuItem>
-                    <MenuItem>Update</MenuItem>
-                </DropdownButton>
-              </td>
-            </tr>
+                {reportResult.map((item,i)=>
+                {
+                  return (
+                    <tr key={i}>
+                      {item.map((item1,i2)=>{
+                        return (
+                          <td key={i2}>{item1}</td>
+                        )
+                      })}
+                    </tr>
+                    )
+
+                })}
+
+
           </tbody>
         </Table>
       </CardText>
@@ -274,13 +123,13 @@ class ShowField extends Component {
     }
     return (
       <div className="PropertyTaxSearch">
-        {viewTabel()}
+        {isTableShow && viewTabel()}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({isTableShow:state.form.showTable});
+const mapStateToProps = state => ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult});
 
 const mapDispatchToProps = dispatch => ({
 

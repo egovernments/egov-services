@@ -160,6 +160,10 @@ var commomFieldsRules = {
         required: true,
         phone: true
     },
+    "allottee.name": {
+        required: true,
+        alloName: true
+    },
     tenderNumber: {
         required: true
     },
@@ -811,6 +815,10 @@ $.validator.addMethod('aadhar', function(value) {
 $.validator.addMethod('panNo', function(value) {
     return /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10;
 }, 'Please enter a valid pan.');
+
+$.validator.addMethod('alloName', function(value) {
+    return /^[a-zA-Z ]*$/.test(value);
+}, 'Please enter a valid name.');
 
 finalValidatinRules["messages"] = {
     "allottee.name": {

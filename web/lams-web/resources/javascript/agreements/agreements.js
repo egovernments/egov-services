@@ -829,7 +829,7 @@ $.validator.addMethod('panNo', function(value) {
 }, 'Please enter a valid pan.');
 
 $.validator.addMethod('alloName', function(value) {
-    return /^[a-zA-Z]*$/.test(value);
+    return /^[a-zA-Z ]*$/.test(value);
 }, 'Please enter a valid name.');
 
 finalValidatinRules["messages"] = {

@@ -58,6 +58,51 @@ const styles = {
   }
 };
 
+
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+const getNameByServiceCode = function(object, serviceCode, property = "") {
+  if (serviceCode == "" || serviceCode == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].serviceCode == serviceCode) {
+                return object[i].serviceName;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].serviceCode == serviceCode) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class ViewEscalation extends Component {
     constructor(props) {
       super(props)
@@ -73,7 +118,7 @@ class ViewEscalation extends Component {
                 value: 'id',
               },
               isSearchClicked: false,
-              resultList: [],
+              searchResult: [],
             };
     }
 
@@ -104,7 +149,7 @@ class ViewEscalation extends Component {
           })
       });
 
-      Api.commonApiPost("/pgr/services/_search", {type: "all"}).then(function(response) {
+      Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
           console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
@@ -132,28 +177,61 @@ class ViewEscalation extends Component {
     }
 
   submitForm = (e) => {
+    
       e.preventDefault();
 
-      let current = this;
+       let self = this;
 
-      let query = {
-        id:this.props.viewEscalation.position
-      }
+      let searchSetFrom = {
+		  fromPosition: this.props.viewEscalation.position,
+		  serviceCode:this.props.viewEscalation.grievanceType
+	  };
+	  
+	   let searchSetTo = {
+		  toPosition: this.props.viewEscalation.position,
+		  serviceCode:this.props.viewEscalation.grievanceType
+	  };
 
-      Api.commonApiPost("/pgr-master/escalation/_search",query,{}).then(function(response){
-          console.log(response);
-          flag = 1;
-          current.setState({
-            resultList: response.EscalationTimeType,
-            isSearchClicked: true
-          })
-      }).catch((error)=>{
-          console.log(error);
-      })
-
+       Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetFrom).then(function(response) {
+		   console.log(response);
+			flag = 1;
+			for(let i=0; i<response.escalationHierarchies.length;i++){
+				   self.setState({
+						searchResult: [
+							...self.state.searchResult,
+							response.escalationHierarchies[i]
+						],
+						isSearchClicked: true
+					  });
+			}
+      
+        }, function(err) {
+            console.log(err);
+        });
+		
+		Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetTo).then(function(response) {
+			console.log(response);
+			flag = 1;
+			for(let i=0; i<response.escalationHierarchies.length;i++){
+				   self.setState({
+						searchResult: [
+							...self.state.searchResult,
+							response.escalationHierarchies[i]
+						],
+						isSearchClicked: true
+					  });
+			}
+		  }, function(err) {
+            console.log(err);
+        });
+   
   }
 
     render() {
+		
+		let self = this;
+		
+		console.log(this.state.searchResult);
 
       let {
         isFormValid,
@@ -165,16 +243,16 @@ class ViewEscalation extends Component {
 
       let {submitForm} = this;
 
-      let {isSearchClicked, resultList} = this.state;
+      let {isSearchClicked, searchResult} = this.state;
 
       const renderBody = function() {
-      	  if(resultList && resultList.length)
-      		return resultList.map(function(val, i) {
+      	  if(searchResult && searchResult.length)
+      		return searchResult.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{val.serviceName}</td>
-      					<td>{val.boundaryType}</td>
-      					<td>{val.boundary}</td>
+      					<td>{getNameByServiceCode(self.state.grievanceTypeSource, val.serviceCode)}</td>
+      					<td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
+      					<td>{getNameById(self.state.positionSource, val.toPosition)}</td>
       				</tr>
       			)
       		})
@@ -187,7 +265,7 @@ class ViewEscalation extends Component {
    	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-   		         <thead>
+   		         <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
                     <th>Grievance Type</th>
                     <th>From Position</th>
@@ -226,7 +304,7 @@ class ViewEscalation extends Component {
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest.id
+                  	                            value: chosenRequest.serviceCode
                   	                          }
                   	                        };
                   	                        handleChange(e, "grievanceType", true, "");

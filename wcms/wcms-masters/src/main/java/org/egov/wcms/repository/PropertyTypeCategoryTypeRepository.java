@@ -43,6 +43,7 @@ package org.egov.wcms.repository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
@@ -153,26 +154,36 @@ public class PropertyTypeCategoryTypeRepository {
         return propertyCategoryResponse;
     }
 
-    public boolean checkIfMappingExists(final String propertyTypeId, final String categoryType, final String tenantId) {
-        boolean isMappingPresent = false;
-        Long result = 0L;
-        log.info("Incoming values - Property Type : " + propertyTypeId + "Category Type : " + categoryType);
-        final long categoryId = jdbcTemplate.queryForObject(PropertyTypeCategoryTypeQueryBuilder.getCategoryId(),
-                new Object[] { categoryType }, Long.class);
-        final String query = PropertyTypeCategoryTypeQueryBuilder.getCheckQuery();
+    public boolean checkIfMappingExists(final Long id, final String propertyTypeId, final String categoryType,
+            final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String categoryQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
         try {
-            result = jdbcTemplate.queryForObject(query, new Object[] { propertyTypeId, categoryId, tenantId },
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { categoryType, tenantId },
                     Long.class);
-        } catch (final Exception e) {
-            log.error("Exception Encountered at Property Category Mapping : " + e.getMessage());
-            return isMappingPresent;
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set while update");
         }
-        if (result <= 0) {
-            log.error("Property Category Mapping does not exist");
-            return isMappingPresent;
+        if (categoryId == null)
+            log.info("Invalid input.");
+        preparedStatementValues.add(propertyTypeId);
+        preparedStatementValues.add(categoryId);
+        preparedStatementValues.add(tenantId);
+        final String query;
+        if (id == null)
+            query = PropertyTypeCategoryTypeQueryBuilder.selectPropertyByCategoryQuery();
+        else {
+            preparedStatementValues.add(id);
+            query = PropertyTypeCategoryTypeQueryBuilder.selectPropertyByCategoryNotInQuery();
         }
-        isMappingPresent = true;
-        return isMappingPresent;
+        final List<Map<String, Object>> propertyCategory = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!propertyCategory.isEmpty())
+            return false;
+
+        return true;
     }
 
 }

@@ -141,7 +141,7 @@ public class FactorRepository {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-	public List<CalculationFactor> getFactorsByTenantIdAndValidDate(String tenantId, String validDate) {
+	public List<CalculationFactor> getFactorsByTenantIdAndValidDate(String tenantId,String validDate) {
 
 		String factorSearchSql = FactorQueryBuilder.getFactorSearchQueryByTenantIdAndValidDate(tenantId, validDate);
 

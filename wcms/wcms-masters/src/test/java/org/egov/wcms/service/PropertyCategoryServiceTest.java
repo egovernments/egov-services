@@ -146,19 +146,4 @@ public class PropertyCategoryServiceTest {
         assertTrue(propertyCategoryRequest.equals(propertyCategoryService.update(propertyCategoryRequest)));
     }
 
-    /*
-     * @Test public void test_Should_Create_PropertyCategory() throws Exception{ PropertyCategoryProducer propertyCategoryProducer
-     * = new PropertyCategoryProducer(); PropertyCategoryProducer spy = Mockito.spy(propertyCategoryProducer); ObjectMapper mapper
-     * = new ObjectMapper(); mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY); PropertyCategoryRequest
-     * propertyCategoryRequest = Mockito.mock(PropertyCategoryRequest.class); doNothing().when(spy).sendMessage("topic", "key",
-     * "propertyCategory"); assertTrue(propertyCategoryRequest.equals(propertyCategoryService.createPropertyCategory("topic",
-     * "key", propertyCategoryRequest))); }
-     * @Test(expected = Exception.class) public void test_throwException_Create_PropertyCategory() throws Exception{ ObjectMapper
-     * mapper = new ObjectMapper(); PropertyCategoryRequest propertyCategoryRequest = Mockito.mock(PropertyCategoryRequest.class);
-     * when(mapper.writeValueAsString(propertyCategoryRequest)).thenReturn("propertyCategory");
-     * doNothing().when(propertyCategoryProducer).sendMessage("topic", "key", "propertyCategory");
-     * assertTrue(propertyCategoryRequest.equals(propertyCategoryService.createPropertyCategory("topic", "key",
-     * propertyCategoryRequest))); }
-     */
-
 }

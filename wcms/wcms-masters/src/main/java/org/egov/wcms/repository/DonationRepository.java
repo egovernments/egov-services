@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.builder.DonationQueryBuilder;
+import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
 import org.egov.wcms.web.contract.DonationGetRequest;
@@ -170,19 +171,44 @@ public class DonationRepository {
         try {
             if (donation.getCategoryType() != null)
                 donation.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
-                        new Object[] { donation.getCategoryType() }, Long.class));
+                        new Object[] { donation.getCategoryType(),donation.getTenantId() }, Long.class));
         } catch (final EmptyResultDataAccessException e) {
             log.info("EmptyResultDataAccessException: Query returned empty set for category type.");
-
         }
 
+            try {
+                if (donation.getMaxPipeSize() != null)
+                    donation.setMaxPipeSizeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getPipeSizeIdQuery(),
+                                    new Object[] { donation.getMaxPipeSize(),
+                                            donation.getTenantId() },
+                                    Long.class));
+            } catch (final EmptyResultDataAccessException e) {
+                log.error("EmptyResultDataAccessException: Query returned empty RS.");
+
+            }
+            try {
+                if (donation.getMinPipeSize() != null)
+                    donation.setMinPipeSizeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getPipeSizeIdQuery(),
+                                    new Object[] { donation.getMinPipeSize(),
+                                            donation.getTenantId() },
+                                    Long.class));
+            } catch (final EmptyResultDataAccessException e) {
+                log.error("EmptyResultDataAccessException: Query returned empty RS.");
+
+            }
+
         final String queryStr = donationQueryBuilder.getQuery(donation, preparedStatementValues);
-        final String categoryNameQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryTypeName();
+        final String categoryNameQuery = DonationQueryBuilder.getCategoryTypeName();
+        final String pipeSizeInmmQuery = DonationQueryBuilder.getPipeSizeInmm();
         final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 donationRowMapper);
         for (final Donation donations : donationList) {
             donations.setCategory(jdbcTemplate.queryForObject(categoryNameQuery,
-                    new Object[] { donations.getCategoryTypeId() }, String.class));
+                    new Object[] { donations.getCategoryTypeId(),donations.getTenantId() }, String.class));
+            donations.setMaxPipeSize(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
+                    new Object[] { donations.getMaxPipeSizeId(),donations.getTenantId() }, Double.class));
+            donations.setMinPipeSize(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
+                    new Object[] { donations.getMinPipeSizeId(),donations.getTenantId() }, Double.class));
         }
         return donationList;
 

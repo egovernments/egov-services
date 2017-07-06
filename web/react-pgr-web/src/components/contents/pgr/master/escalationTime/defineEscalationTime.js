@@ -206,12 +206,6 @@ class DefineEscalationTime extends Component {
         console.log(error);
     })
 
-  /*  current.setState({
-      resultList:[
-        ...this.state.resultList,
-        this.props.defineEscalationTime
-      ]
-    })*/
   }
 
   updateEscalation = () => {
@@ -489,6 +483,13 @@ const mapDispatchToProps = dispatch => ({
   handleAutoCompleteKeyUp : (e) => {
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : true, pattern: ''});
   },
+     setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    },
+
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefineEscalationTime);

@@ -39,9 +39,10 @@
  */
 
 package org.egov.egf.master.web.contract;
+
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.domain.enums.BudgetAccountType;
-import org.egov.egf.master.domain.enums.BudgetingType;
+import org.egov.egf.master.web.contract.enums.BudgetAccountTypeContract;
+import org.egov.egf.master.web.contract.enums.BudgetingTypeContract;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -51,13 +52,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","name","description","majorCode","maxCode","minCode","accountType","budgetingType","active"})
+@JsonPropertyOrder({ "id", "name", "description", "majorCode", "maxCode", "minCode", "accountType", "budgetingType",
+		"active" })
 public class BudgetGroupContract extends AuditableContract {
 
 	private String id;
@@ -74,9 +77,9 @@ public class BudgetGroupContract extends AuditableContract {
 
 	private ChartOfAccountContract minCode;
 
-	private BudgetAccountType   accountType;
+	private BudgetAccountTypeContract accountType;
 
-	private BudgetingType  budgetingType;
+	private BudgetingTypeContract budgetingType;
 
 	private Boolean active;
 

@@ -1,6 +1,15 @@
 package org.egov.access.web.controller;
 
 
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.egov.access.Resources;
 import org.egov.access.TestConfiguration;
 import org.egov.access.domain.criteria.ActionSearchCriteria;
@@ -8,6 +17,7 @@ import org.egov.access.domain.criteria.ValidateActionCriteria;
 import org.egov.access.domain.model.Action;
 import org.egov.access.domain.model.ActionValidation;
 import org.egov.access.domain.service.ActionService;
+import org.egov.access.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(ActionController.class)
 @Import(TestConfiguration.class)
@@ -34,6 +35,9 @@ public class ActionControllerTest {
 
     @MockBean
     private ActionService actionService;
+    
+    @MockBean
+    ResponseInfoFactory responseInfoFactory;
 
     @Autowired
     private MockMvc mockMvc;

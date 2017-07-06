@@ -73,7 +73,7 @@ public class EscalationTimeTypeGetReq {
     
     private long noOfHours;
     
-    private long designation;
+    private Long designation;
     
     private Long grievanceType;
     

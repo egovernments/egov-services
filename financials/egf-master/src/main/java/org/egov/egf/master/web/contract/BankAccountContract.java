@@ -41,7 +41,7 @@ package org.egov.egf.master.web.contract;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.domain.enums.BankAccountType;
+import org.egov.egf.master.web.contract.enums.BankAccountTypeContract;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -85,6 +85,6 @@ public class BankAccountContract extends AuditableContract {
 	private String payTo;
 
 	@NotNull
-	private BankAccountType type;
+	private BankAccountTypeContract type;
 
 }

@@ -122,11 +122,22 @@ public class PropertyPipeSizeRepository {
         return propertyPipeSizeRequest;
     }
 
-    public boolean checkPropertyByPipeSize(final Long id, final String propertyTypeId, final Long pipeSizeId,
+    public boolean checkPropertyByPipeSize(final Long id, final String propertyTypeId, final Double pipeSize,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
+        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        Long pipesizeId = 0L;
+        try {
+            pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { pipeSize, tenantId },
+                    Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set while update");
+        }
+        if (pipesizeId == null)
+            log.info("Invalid input.");
         preparedStatementValues.add(propertyTypeId);
-        preparedStatementValues.add(pipeSizeId);
+        preparedStatementValues.add(pipesizeId);
         preparedStatementValues.add(tenantId);
         final String query;
         if (id == null)

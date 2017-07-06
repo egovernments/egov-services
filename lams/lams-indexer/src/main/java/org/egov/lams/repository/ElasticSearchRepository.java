@@ -48,6 +48,6 @@ public class ElasticSearchRepository {
 			LOGGER.error(e.toString());
 			throw e;
 		}
-		LOGGER.info("ElasticSearchService saveagreement post agrementindexed in elasticsearch");
+		LOGGER.info("ElasticSearchService updateagreement post agrementindexed in elasticsearch");
 	}
 }

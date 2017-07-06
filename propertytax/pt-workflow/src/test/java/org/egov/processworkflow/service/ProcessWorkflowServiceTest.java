@@ -2,17 +2,17 @@ package org.egov.processworkflow.service;
 
 import static org.junit.Assert.assertTrue;
 
-import org.egov.models.Position;
-import org.egov.models.ProcessInstance;
-import org.egov.models.ProcessInstanceRequest;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
-import org.egov.models.TaskResponse;
 import org.egov.models.UserAuthResponseInfo;
 import org.egov.models.WorkFlowDetails;
 import org.egov.models.WorkflowDetailsRequestInfo;
 import org.egov.propertyWorkflow.PtWorkflowApplication;
 import org.egov.propertyWorkflow.consumer.WorkFlowUtil;
+import org.egov.propertyWorkflow.models.Position;
+import org.egov.propertyWorkflow.models.ProcessInstance;
+import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
+import org.egov.propertyWorkflow.models.TaskResponse;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,9 +63,8 @@ public class ProcessWorkflowServiceTest {
 		requestInfo.setAuthToken("602a0808-fe7f-410f-b223-039616a385dd");
 		requestInfo.setApiId("");
 		requestInfo.setVer("1.0");
-		requestInfo.setTs("27-06-2017 10:30:12");
+		requestInfo.setTs(1l);
 		requestInfo.setKey("abcdkey");
-		requestInfo.setTenantId("default");
 
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
@@ -141,9 +140,8 @@ public class ProcessWorkflowServiceTest {
 		}
 		requestInfo.setApiId("");
 		requestInfo.setVer("1.0");
-		requestInfo.setTs("27-06-2017 10:30:12");
+		requestInfo.setTs(1l);
 		requestInfo.setKey("abcdkey");
-		requestInfo.setTenantId("default");
 
 		return requestInfo;
 	}

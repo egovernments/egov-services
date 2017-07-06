@@ -46,7 +46,8 @@ class ShowForm extends Component {
   handleFormFields = () => {
     let {currentThis}=this;
     let {metaData}=this.props;
-    if(metaData.reportDetails.searchParams.length > 0)
+    console.log(metaData);
+    if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
     {
       return metaData.reportDetails.searchParams.map((item,index) =>
       {
@@ -60,10 +61,10 @@ class ShowForm extends Component {
   componentDidMount()
   {
     let {initForm,metaData,setForm} = this.props;
-    let {searchParams}=metaData.reportDetails;
+    let {searchParams}=metaData.hasOwnProperty("reportDetails")?metaData.reportDetails:{searchParams:[]};
     let required=[];
     for (var i = 0; i < searchParams.length; i++) {
-      if (searchParams.isMandatory) {
+      if (searchParams.isMandatory && searchParams.type!="singlevaluelist") {
         required.push(searchParams.name)
       }
     }
@@ -74,33 +75,10 @@ class ShowForm extends Component {
 
   search(e)
   {
-      let {showTable,changeButtonText,setReportResult}=this.props;
-      let reqForm={
-              "responseInfo": {
-                "apiId": "emp",
-                "ver": "1.0",
-                "ts": "Thu Mar 09 18:30:00 GMT 2017",
-                "resMsgId": "uief87324",
-                "msgId": "20170310130900",
-                "status": "200"
-              },
-              "tenantId": "tenantid",
-              "reportName": "GrievanceByType",
-              "searchParams": [
-                {
-                  "name": "fromDate",
-                  "value": "03-06-2017"
-                },
-                {
-                  "name": "toDate",
-                  "value": "03-07-2017"
-                },
-                {
-                  "name": "complainttype",
-                  "value": "DKK3"
-                }
-              ]
-        }
+    e.preventDefault();
+
+      let {showTable,changeButtonText,setReportResult,searchForm,metaData}=this.props;
+      let searchParams=[]
       let resForm=[
                     ["Nuisance by garbage tractors or trucks",
                         0,
@@ -194,22 +172,45 @@ class ShowForm extends Component {
                       ]
       ]
 
+      for (var variable in searchForm) {
+        // console.log(variable);
+
+        searchParams.push({
+          name:variable,
+          // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
+          value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate()):searchForm[variable]
+
+        })
+      }
+
+      searchParams.push(
+        {
+            "name": "complainttype",
+            "value": "BRKNB"
+        })
 
 
-      e.preventDefault();
+      let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
+      {
+        // console.log(response)
+        setReportResult(response)
+      },function(err) {
+          console.log(err);
+      });
+
       // console.log("Show Table");
 
       changeButtonText("Search Again");
       // this.setState({searchBtnText:'Search Again'})
 
       //call api
-      setReportResult(resForm);
+      // setReportResult(resForm);
       showTable(true);
   }
 
   render() {
     let {
-      propertyTaxSearch,
+      searchForm,
       fieldErrors,
       isFormValid,
       isTableShow,
@@ -221,9 +222,9 @@ class ShowForm extends Component {
     } = this.props;
     let {search} = this;
     // console.log(metaData);
-    console.log(propertyTaxSearch);
+    // console.log(searchForm);
     return (
-      <div className="PropertyTaxSearch">
+      <div className="searchForm">
         <form onSubmit={(e) => {
           search(e)
         }}>
@@ -239,7 +240,7 @@ class ShowForm extends Component {
           </Grid>
           </CardText>
         </Card>
-        <RaisedButton type="submit" disabled={isFormValid}  label={buttonText} />
+        <RaisedButton type="submit" disabled={!isFormValid}  label={buttonText} />
         </form>
 
       </div>
@@ -247,7 +248,7 @@ class ShowForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({propertyTaxSearch: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
+const mapStateToProps = state => ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
 
 const mapDispatchToProps = dispatch => ({
   setForm: (required=[],pattern=[]) => {

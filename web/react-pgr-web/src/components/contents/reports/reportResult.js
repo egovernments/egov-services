@@ -29,36 +29,38 @@ class ShowField extends Component {
    }
 
 
-  // componentWillUnmount()
-  // {
-  //    $('#propertyTaxTable')
-  //    .DataTable()
-  //    .destroy(true);
-  // }
-  //
-  //
-  //
-  //
-  // componentWillUpdate() {
-  //   if(flag == 1) {
-  //     flag = 0;
-  //     $('#propertyTaxTable').dataTable().fnDestroy();
-  //   }
-  // }
-  //
-  // componentDidUpdate(prevProps, prevState) {
-  //     if (true) {
-  //         $('#propertyTaxTable').DataTable({
-  //           dom: 'lBfrtip',
-  //           buttons: [
-  //                    'copy', 'csv', 'excel', 'pdf', 'print'
-  //            ],
-  //            ordering: false,
-  //            bDestroy: true,
-  //
-  //         });
-  //     }
-  // }
+
+
+  componentWillUnmount()
+  {
+     $('#reportTable')
+     .DataTable()
+     .destroy(true);
+  }
+
+
+
+
+  componentWillUpdate() {
+    if(flag == 1) {
+      flag = 0;
+      $('#reportTable').dataTable().fnDestroy();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+      if (true) {
+          $('#reportTable').DataTable({
+            dom: 'lBfrtip',
+            buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+             ],
+             ordering: false,
+             bDestroy: true,
+
+          });
+      }
+  }
 
   render() {
     let {
@@ -66,7 +68,7 @@ class ShowField extends Component {
       metaData,
       reportResult
     } = this.props;
-    console.log(metaData);
+    // console.log(metaData);
 
     const showRow=()=>{
       return
@@ -78,10 +80,10 @@ class ShowField extends Component {
         <Card>
           <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
-          <Table id="propertyTaxTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
+          <Table id="reportTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
           <thead style={{backgroundColor:"#f2851f",color:"white"}}>
             <tr>
-              {metaData && metaData.reportDetails.reportHeader.map((item,i)=>
+              {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
               {
                 return (
                   <th key={i}>{item.label}</th>
@@ -100,7 +102,7 @@ class ShowField extends Component {
           </thead>
           <tbody>
 
-                {reportResult.map((item,i)=>
+                {reportResult.hasOwnProperty("reportData") && reportResult.reportData.map((item,i)=>
                 {
                   return (
                     <tr key={i}>
@@ -123,7 +125,7 @@ class ShowField extends Component {
     }
     return (
       <div className="PropertyTaxSearch">
-        {isTableShow && viewTabel()}
+        {isTableShow && reportResult.hasOwnProperty("reportHeader") && reportResult.hasOwnProperty("repor") && viewTabel()}
       </div>
     );
   }

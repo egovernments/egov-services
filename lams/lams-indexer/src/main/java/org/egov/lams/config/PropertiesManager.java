@@ -14,6 +14,9 @@ public class PropertiesManager {
 	 @Autowired
 	 private Environment environment;
 	 
+	 @Value("${egov.services.module.name}")
+	 private String moduleName;
+
 	 @Value("${egov.services.asset_service.hostname}")
 	 private String assetApiHostUrl;
 	 
@@ -40,6 +43,9 @@ public class PropertiesManager {
 	 
 	 @Value("${egov.services.demand_service.searchpath}")
 	 private String demandSearchServicepath;
+	 
+	 @Value("${egov.services.demand_installment_service.searchpath}")
+	 private String demandInstallmentSearchPath;
 	 
 	 @Value("${egov.services.tenant.host}")
 	 private String tenantServiceHostName;

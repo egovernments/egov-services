@@ -41,7 +41,6 @@ package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
-import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.springframework.stereotype.Component;
 
@@ -77,8 +76,8 @@ public class PropertyUsageTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
 
-        if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getPropertyType()== null && 
-                propUsageTypeGetRequest.getUsageType()==null && propUsageTypeGetRequest.getTenantId() == null)
+        if (propUsageTypeGetRequest.getId() == null && propUsageTypeGetRequest.getPropertyType() == null &&
+                propUsageTypeGetRequest.getUsageType() == null && propUsageTypeGetRequest.getTenantId() == null)
             return;
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
@@ -125,6 +124,7 @@ public class PropertyUsageTypeQueryBuilder {
 
         return true;
     }
+
     private static String getIdQuery(final List<Long> idList) {
         final StringBuilder query = new StringBuilder("(");
         if (idList.size() >= 1) {

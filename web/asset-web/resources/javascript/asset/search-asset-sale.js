@@ -235,7 +235,7 @@ class SearchAsset extends React.Component {
 
     return (
       <div>
-      <h3>Asset Revaluation/Sale Search</h3>
+      <h3>Asset Sale Search</h3>
       <div className="form-section-inner">
         <form onSubmit={(e)=>{search(e)}}>
         <div className="row">

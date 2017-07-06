@@ -86,6 +86,8 @@ public class BudgetDetailController {
 			throw new CustomBindException(errors);
 		}
 
+		budgetDetailContractRequest.getRequestInfo().setAction("update");
+
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
 		List<BudgetDetail> budgetdetails = new ArrayList<>();

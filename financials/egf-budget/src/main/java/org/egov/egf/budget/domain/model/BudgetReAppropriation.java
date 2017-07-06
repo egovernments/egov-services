@@ -44,9 +44,12 @@ import java.util.Date;
 
 import org.egov.common.domain.model.Auditable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,7 +59,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "budgetDetail", "status" }, callSuper = false)
+@JsonPropertyOrder({ "id", "budgetDetailId", "additionAmount", "deductionAmount", "originalAdditionAmount",
+		"originalDeductionAmount", "anticipatoryAmount", "statusId", "asOnDate" })
 public class BudgetReAppropriation extends Auditable {
 
 	/**
@@ -69,6 +73,7 @@ public class BudgetReAppropriation extends Auditable {
 	 * budgetDetail is the reference given for budget re appropriation to
 	 * identify for witch budget line item this appropriation is doing.
 	 */
+	@JsonIgnore
 	private BudgetDetail budgetDetailId;
 
 	/*
@@ -109,6 +114,7 @@ public class BudgetReAppropriation extends Auditable {
 	/*
 	 * asOnDate is the date on witch date the current appropriation is done.
 	 */
+	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "IST")
 	private Date asOnDate;
 
 }

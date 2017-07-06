@@ -5,7 +5,6 @@ var count = 21;
 var tempListBox = [];
 var commonObject, hrConfigurations, startDate;
 var yearOfPassing = [];
-
 for (var i = 2000; i <= new Date().getFullYear(); i++) {
     yearOfPassing.push(i);
 }
@@ -1100,6 +1099,21 @@ function enableAndDisable(id) {
 //common add and update
 function commonAddAndUpdate(tableName, modalName, object) {
     // if(switchValidation(object))
+    if(modalName == "assignmentDetailModal" && employeeSubObject[object].position) {
+        if(commonObject["assignments_position"]) {
+            var flag = 0;
+            for(var i=0; i< commonObject["assignments_position"].length; i++) {
+                if($("#assignments\\.position").val() == commonObject["assignments_position"][i].name)
+                    flag = 1;
+            }
+
+            if(flag == 0)
+                $("#assignments\\.position").val("");
+        } else {
+            $("#assignments\\.position").val("");
+        }
+    }
+
     if ($("#createEmployeeForm").valid()) {
         if (checkIfNoDup(employee, object, employeeSubObject[object])) {
 
@@ -1466,7 +1480,13 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                                 getPositions({
                                     id: "assignments.department"
                                 }, function() {
-                                    $(`#${object}\\.${key}`).val(employeeSubObject[object][key]);
+                                    for(var k=0; k<commonObject["assignments_position"].length; k++) {
+                                        if(employeeSubObject[object][key] == commonObject["assignments_position"][k].id) {
+                                            $(`#${object}\\.${key}`).val(commonObject["assignments_position"][k].name);
+                                            break;
+                                        }
+
+                                    }
                                 });
                             }, 200, key, object);
                         }
@@ -1541,10 +1561,11 @@ function getPositions(_this, cb) {
                 }, function(err, res) {
                     if (res) {
                         commonObject["assignments_position"] = res.Position;
-                        $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+                        setPositionId(commonObject, employeeSubObject);
+                        /*$(`#assignments\\.position`).html(`<option value=''>Select</option>`);
                         for (var i = 0; i < commonObject["assignments_position"].length; i++) {
                             $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-                        }
+                        }*/
                     }
                     if (cb) cb();
                 });
@@ -1558,15 +1579,36 @@ function getPositions(_this, cb) {
             }, function(err, res) {
                 if (res) {
                     commonObject["assignments_position"] = res.Position;
-                    $(`#assignments\\.position`).html(`<option value=''>Select</option>`);
+                    setPositionId(commonObject, employeeSubObject);
+                    /*$(`#assignments\\.position`).html(`<option value=''>Select</option>`);
                     for (var i = 0; i < commonObject["assignments_position"].length; i++) {
                         $(`#assignments\\.position`).append(`<option value='${commonObject["assignments_position"][i]['id']}'>${commonObject["assignments_position"][i]['name']}</option>`)
-                    }
+                    }*/
                 }
                 if (cb) cb();
             });
         }
     }
+}
+
+function setPositionId(commonObject, employeeSubObject) {
+    var _positions = [];
+    for(var k=0; k<commonObject["assignments_position"].length; k++) {
+        _positions.push(commonObject["assignments_position"][k].name);
+    }
+
+    $(`#assignments\\.position`).autocomplete({
+        source: _positions,
+        minLength: 2,
+        change: function(e, ui) {
+            for(var k=0; k<commonObject["assignments_position"].length; k++) {
+                if(commonObject["assignments_position"][k].name == ui.item.value) {
+                    employeeSubObject["assignments"]["position"] = commonObject["assignments_position"][k].id;
+                    break;
+                }
+            }
+        }
+    })
 }
 
 function showAndPrint(currentEmployee) {

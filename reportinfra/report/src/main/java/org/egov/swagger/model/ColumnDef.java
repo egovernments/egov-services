@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
  * Header information for the report
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-06-30T13:11:27.519Z")
+
 
 public class ColumnDef   {
   @JsonProperty("name")

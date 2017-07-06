@@ -45,8 +45,7 @@ public class ReportService {
 	public MetadataResponse getMetaData(String reportName) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinition reportDefinition = new ReportDefinition();
-
-		System.out.println("Report Definition is" + reportDefinitions.getReportDefinitions());
+        System.out.println("Report Definitions from service "+reportDefinitions.getReportDefinitions());
 		for (ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
 			if (rDefinition.getReportName().equals(reportName)) {
 

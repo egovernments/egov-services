@@ -19,8 +19,10 @@ public class SearchColumn extends ColumnDetail  {
   @JsonProperty("colName")
   private String colName = null;
 
-  @JsonProperty("isMandatory")
-  private Boolean isMandatory = true;
+ 
+  
+  @JsonProperty("pattern")
+  private String pattern = null;
 
   public SearchColumn source(String source) {
     this.source = source;
@@ -60,66 +62,71 @@ public class SearchColumn extends ColumnDetail  {
     this.colName = colName;
   }
 
-  public SearchColumn isMandatory(Boolean isMandatory) {
-    this.isMandatory = isMandatory;
-    return this;
-  }
-
-   /**
-   * Get isMandatory
-   * @return isMandatory
-  **/
   
-  public Boolean getIsMandatory() {
-    return isMandatory;
-  }
 
-  public void setIsMandatory(Boolean isMandatory) {
-    this.isMandatory = isMandatory;
-  }
+   
 
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SearchColumn searchColumn = (SearchColumn) o;
-    return Objects.equals(this.source, searchColumn.source) &&
-        Objects.equals(this.colName, searchColumn.colName) &&
-        Objects.equals(this.isMandatory, searchColumn.isMandatory) &&
-        super.equals(o);
-  }
+  public SearchColumn pattern(String pattern) {
+	    this.pattern = pattern;
+	    return this;
+	  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(source, colName, isMandatory, super.hashCode());
-  }
+	   /**
+	   * 1. display format for the column - in case of epoch type datatypes.  2. In case of single/multivalue list this will be pipe separated url|keyJSONPath|valueJSONPath (URL to fetch the list values, jsonPath of the key value, jsonPath of what to display)   2.1 In case the URL wants the values to be statically defined as a list use list://pipe_separated_values! 3. In case the other datatype - this will be the parametarized URL that consumer can then use to call the next drill down/action - for drill down use _parent?key=value&key=value (where key would be name of additional params and value search value to construct new search params) 
+	   * @return pattern
+	  **/
+	 
+	  public String getPattern() {
+	    return pattern;
+	  }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SearchColumn {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    source: ").append(toIndentedString(source)).append("\n");
-    sb.append("    colName: ").append(toIndentedString(colName)).append("\n");
-    sb.append("    isMandatory: ").append(toIndentedString(isMandatory)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	  public void setPattern(String pattern) {
+	    this.pattern = pattern;
+	  }
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+	  @Override
+	  public boolean equals(java.lang.Object o) {
+	    if (this == o) {
+	      return true;
+	    }
+	    if (o == null || getClass() != o.getClass()) {
+	      return false;
+	    }
+	    SearchColumn searchColumn = (SearchColumn) o;
+	    return Objects.equals(this.source, searchColumn.source) &&
+	        Objects.equals(this.colName, searchColumn.colName) &&
+	        Objects.equals(this.pattern, searchColumn.pattern) &&
+	        super.equals(o);
+	  }
+
+	  @Override
+	  public int hashCode() {
+	    return Objects.hash(source, colName, pattern, super.hashCode());
+	  }
+
+	  @Override
+	  public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("class SearchColumn {\n");
+	    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+	    sb.append("    source: ").append(toIndentedString(source)).append("\n");
+	    sb.append("    colName: ").append(toIndentedString(colName)).append("\n");
+	    sb.append("    pattern: ").append(toIndentedString(pattern)).append("\n");
+	    sb.append("}");
+	    return sb.toString();
+	  }
+
+	  /**
+	   * Convert the given object to string with each line indented by 4 spaces
+	   * (except the first line).
+	   */
+	  private String toIndentedString(java.lang.Object o) {
+	    if (o == null) {
+	      return "null";
+	    }
+	    return o.toString().replace("\n", "\n    ");
+	  }
 }
 

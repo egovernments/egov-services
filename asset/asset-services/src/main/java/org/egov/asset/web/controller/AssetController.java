@@ -153,7 +153,7 @@ public class AssetController {
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}
 
-	@PostMapping("reevaluate/_create")
+	@PostMapping("revaluation/_create")
 	@ResponseBody
 	public ResponseEntity<?> reevaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
 			final BindingResult bindingResult) {
@@ -170,7 +170,7 @@ public class AssetController {
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
 	}
 
-	@PostMapping("reevaluate/_search")
+	@PostMapping("revaluation/_search")
 	@ResponseBody
 	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {

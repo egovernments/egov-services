@@ -47,7 +47,6 @@ import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteria;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
-import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,6 +12,7 @@ public class Installment {
 	private String description = null;
 	private String installmentType = null;
 	private String financialYear = null;
+	private String tenantId = null;
 
 	public Long getId() {
 		return id;
@@ -84,5 +85,12 @@ public class Installment {
 	public void setFinancialYear(String financialYear) {
 		this.financialYear = financialYear;
 	}
+    
+	public String getTenantId() {
+		return tenantId;
+	}
 
+	public void setTenantId(String tenatId) {
+		this.tenantId = tenatId;
+	}
 }

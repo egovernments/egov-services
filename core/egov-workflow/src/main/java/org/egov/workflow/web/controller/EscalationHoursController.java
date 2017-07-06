@@ -155,6 +155,8 @@ public class EscalationHoursController {
         // validate input params
         if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+        
+        logger.info("EscalationTimeTypeGetReq: "+escTimeTypeGetRequest.toString());
 
         // Call service
         List<EscalationTimeType> escalationTypeList = null;

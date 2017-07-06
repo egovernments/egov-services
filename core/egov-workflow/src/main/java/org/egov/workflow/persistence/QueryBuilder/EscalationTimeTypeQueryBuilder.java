@@ -79,19 +79,16 @@ public class EscalationTimeTypeQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final EscalationTimeTypeGetReq escalationRequest) {
-
-		if (null == escalationRequest.getId() && 0 == escalationRequest.getGrievanceType()
-				&& 0 == escalationRequest.getDesignation() && null == escalationRequest.getTenantId())
-			return;
-
+			final EscalationTimeTypeGetReq escalationRequest) {	
+		
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (null != escalationRequest.getTenantId()) {
-			isAppendAndClause = true;
-			selectQuery.append(" escalation.tenantId = ?");
-			preparedStatementValues.add(escalationRequest.getTenantId());
+
+		if(!escalationRequest.getTenantId().isEmpty()){
+				isAppendAndClause = true;
+				selectQuery.append(" escalation.tenantId = ?");
+				preparedStatementValues.add(escalationRequest.getTenantId());
 		}
 
 		if (null != escalationRequest.getId()) {
@@ -101,23 +98,16 @@ public class EscalationTimeTypeQueryBuilder {
 			
 		}
 
-		if (null != escalationRequest.getGrievanceType()) {
-			logger.info("Grievance Type is available : " + escalationRequest.getGrievanceType());
-			if (0 != escalationRequest.getGrievanceType()) {
+		if (0L != escalationRequest.getGrievanceType()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.complaint_type_id = ? ");
 				preparedStatementValues.add(escalationRequest.getGrievanceType());
-				
-			}
 		}
 
-		if (null != escalationRequest.getDesignation()) {
-			logger.info("Designation is available : " + escalationRequest.getDesignation());
-			if (0 != escalationRequest.getDesignation()) {
+		if (0L != escalationRequest.getDesignation()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.designation_id = ?");
 				preparedStatementValues.add(escalationRequest.getDesignation());
-			}
 		}
 
 		/*

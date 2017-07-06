@@ -112,7 +112,7 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		logger.info("createAgreement service::" + agreement);
-		String requesterId = requestInfo.getRequesterId();
+		String requesterId = requestInfo.getUserInfo().getId().toString();
 		String kafkaTopic = null;
 		String agreementValue = null;
 		agreement.setCreatedBy(requesterId);
@@ -189,7 +189,7 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		logger.info("update agreement service::" + agreement);
-		String requesterId = requestInfo.getRequesterId();
+		String requesterId = requestInfo.getUserInfo().getId().toString();
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 		String agreementValue = null;
 		String kafkaTopic = null;

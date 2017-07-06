@@ -122,7 +122,6 @@ public class AssetController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
 			final BindingResult bindingResult) {
-
 		logger.info("create asset:" + assetRequest);
 		if (bindingResult.hasErrors()) {
 			final ErrorResponse errorResponse = populateErrors(bindingResult);

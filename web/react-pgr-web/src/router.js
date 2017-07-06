@@ -32,6 +32,11 @@ import DefineEscalationTime from './components/contents/pgr/master/escalationTim
 import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
 
+//WC
+import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';
+import ViewEditCategoryType from './components/contents/wc/master/categoryType/viewEditCategoryType';
+import ViewCategoryType from './components/contents/wc/master/categoryType/viewCategoryType';
+
 const base = "";
 
 const Main = () => {
@@ -77,6 +82,13 @@ const Main = () => {
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base+'/report/:reportName'} component={Report}/>
+
+
+        <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
+        <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
+        <Route exact path={base+'/wc/categoryType/view'} component={ViewEditCategoryType}/>
+        <Route exact path={base+'/wc/categoryType/edit'} component={ViewEditCategoryType}/>
+        <Route exact path={base+'/wc/viewCategoryType/:id'} component={ViewCategoryType}/>
 
 
     </Switch>

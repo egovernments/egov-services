@@ -217,7 +217,7 @@ console.log(createServiceType);
 
       const viewTypes = function() {
         console.log("createServiceType",createServiceType);
-          if( (createServiceType.attribute.dataType=="Single value list" || createServiceType.attribute.dataType== "Multi select") && (createServiceType.attribute.dataType!=undefined))
+          if( (createServiceType.attribute.datatype=="Single value list" || createServiceType.attribute.datatype== "Multi select") && (createServiceType.attribute.dataType!=undefined))
           return (
               <div>
                 <div className="clearfix"></div>

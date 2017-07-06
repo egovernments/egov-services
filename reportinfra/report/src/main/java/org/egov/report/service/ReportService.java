@@ -64,7 +64,7 @@ public class ReportService {
 			TypeEnum te = getType(cd.getType().toString());
 			reportheader.setType(te);
 			reportHeaders.add(reportheader);
-
+            reportheader.
 		}
 		for (SearchColumn cd : reportDefinition.getSearchParams()) {
 			ColumnDetail searchParam = new ColumnDetail();

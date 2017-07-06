@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.core.web.contract;
+package org.egov.eis.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -48,6 +48,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.egov.common.contract.request.RequestInfo;
 
 @Getter
 @Setter

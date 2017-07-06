@@ -2,7 +2,7 @@ package org.egov.eis.indexer.service;
 
 import java.net.URI;
 
-import org.egov.core.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.egf.persistence.queue.contract.Bank;
 import org.egov.egf.persistence.queue.contract.BankBranch;
 import org.egov.egf.persistence.queue.contract.BankBranchResponse;

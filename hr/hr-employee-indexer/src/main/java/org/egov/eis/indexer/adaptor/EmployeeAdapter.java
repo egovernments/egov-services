@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.boundary.persistence.entity.Boundary;
-import org.egov.core.web.contract.RequestInfo;
-import org.egov.core.web.contract.RequestInfoWrapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.indexer.model.es.EmployeeAssignment;
 import org.egov.eis.indexer.model.es.EmployeeDetails;
 import org.egov.eis.indexer.model.es.EmployeeEducation;

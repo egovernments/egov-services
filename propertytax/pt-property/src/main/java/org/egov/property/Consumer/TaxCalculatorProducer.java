@@ -1,4 +1,4 @@
-package org.egov.property.propertyConsumer;
+package org.egov.property.Consumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +20,11 @@ import org.springframework.web.client.RestTemplate;
 /**
  * This class will use for sending property object to kafka server
  * 
- * @author S Anilkumar
+ * @author Prasad Khandagale
  */
 @Configuration
 @Service
-public class Producer {
+public class TaxCalculatorProducer {
 
 	@Autowired
 	private Environment environment;

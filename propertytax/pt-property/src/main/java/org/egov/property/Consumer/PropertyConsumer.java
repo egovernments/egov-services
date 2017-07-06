@@ -1,5 +1,5 @@
 
-package org.egov.property.propertyConsumer;
+package org.egov.property.Consumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import org.springframework.web.client.RestTemplate;
  * @author: S Anilkumar
  */
 @Service
-public class Consumer {
+public class PropertyConsumer {
 
 	@Autowired
 	RestTemplate restTemplate;

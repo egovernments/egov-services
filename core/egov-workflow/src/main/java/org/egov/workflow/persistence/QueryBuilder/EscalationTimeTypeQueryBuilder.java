@@ -79,16 +79,16 @@ public class EscalationTimeTypeQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final EscalationTimeTypeGetReq escalationRequest) {
-
-		if (null == escalationRequest.getId() && 0 == escalationRequest.getGrievanceType()
-				&& 0 == escalationRequest.getDesignation() && null == escalationRequest.getTenantId())
-			return;
+			final EscalationTimeTypeGetReq escalationRequest) {	
+		
+		if (null == escalationRequest.getId() && null == escalationRequest.getGrievanceType() && null == escalationRequest.getDesignation()
+				 && null == escalationRequest.getTenantId())
+			return; 
 
 		selectQuery.append(" WHERE");
 		boolean isAppendAndClause = false;
 
-		if (null != escalationRequest.getTenantId()) {
+		if (escalationRequest.getTenantId() != null || !escalationRequest.getTenantId().isEmpty()) {
 			isAppendAndClause = true;
 			selectQuery.append(" escalation.tenantId = ?");
 			preparedStatementValues.add(escalationRequest.getTenantId());
@@ -102,7 +102,6 @@ public class EscalationTimeTypeQueryBuilder {
 		}
 
 		if (null != escalationRequest.getGrievanceType()) {
-			logger.info("Grievance Type is available : " + escalationRequest.getGrievanceType());
 			if (0 != escalationRequest.getGrievanceType()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.complaint_type_id = ? ");
@@ -112,7 +111,6 @@ public class EscalationTimeTypeQueryBuilder {
 		}
 
 		if (null != escalationRequest.getDesignation()) {
-			logger.info("Designation is available : " + escalationRequest.getDesignation());
 			if (0 != escalationRequest.getDesignation()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.designation_id = ?");

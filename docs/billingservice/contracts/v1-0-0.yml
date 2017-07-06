@@ -1382,7 +1382,7 @@ definitions:
 
   DemandResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Demands:
         type: array
@@ -1393,7 +1393,7 @@ definitions:
     
   DemandDetailResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       DemandDetails:
         type: array
@@ -1416,7 +1416,7 @@ definitions:
 
   BillResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       BillInfos:
         type: array
@@ -1439,7 +1439,7 @@ definitions:
 
   BusinessServiceDetailResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       businessServiceDetails:
         type: array
@@ -1462,7 +1462,7 @@ definitions:
 
   TaxHeadMasterResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       taxHeadMasters:
         type: array
@@ -1485,7 +1485,7 @@ definitions:
 
   GlcodeMasterResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       glcodeMasters:
         type: array
@@ -1508,7 +1508,7 @@ definitions:
 
   TaxPeriodResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       taxPeriods:
         type: array

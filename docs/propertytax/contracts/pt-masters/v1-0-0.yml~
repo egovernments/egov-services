@@ -1,0 +1,1764 @@
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: eGov PTIS Masters 
+  description: eGov PTIS Masters manages all the masters belongs to property tax.
+  contact:
+    name:  Ramakrishna (Ramki)
+    email: ramakrishna@egovernments.org
+host: phoenix-qa.egovernments.org
+schemes:
+  - https
+basePath: '/property/masters/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+
+paths:
+    /departments/_search:
+      post:
+        summary: Get the list of departments
+        description: departments
+        tags: 
+          - Department
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: category
+            type: string
+            in: query
+            description: category of the Department
+            maxLength: 16
+          - name: name
+            type: string
+            in: query
+            description: name of the Department
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the Department
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the Department
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: Department(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/DepartmentResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /departments/_create:
+      post:
+        summary: Create new department(s)
+        description: Create new department(s)
+        tags: 
+          - Department
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: departmentRequest
+            in: body
+            description: Deartment Request
+            schema:
+              $ref: '#/definitions/DepartmentRequest'
+        responses:
+          201:
+            description: Department(s) created Successfully
+            schema:
+              $ref: '#/definitions/DepartmentResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /departments/_update:
+      post:
+        summary: Update any of the departments
+        description: Update any of the departments
+        tags: 
+          - Department
+        parameters:
+          - name: departmentRequest
+            in: body
+            description: Deartment Request
+            schema:
+              $ref: '#/definitions/DepartmentRequest'
+        responses:
+          200:
+            description: Department updated Successfully
+            schema:
+              $ref: '#/definitions/DepartmentResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /floortypes/_search:
+      post:
+        summary: Get the list of floortype(s)
+        description: floortypes
+        tags: 
+          - FloorType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the FloorType
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the FloorType
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the FloorType
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: FloorType(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/FloorTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /floortypes/_create:
+      post:
+        summary: Create new floortype(s)
+        description: Create new floortype(s)
+        tags: 
+          - FloorType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: floorTypeRequest
+            in: body
+            description: Floor Type Request 
+            schema:
+              $ref: '#/definitions/FloorTypeRequest'
+        responses:
+          201:
+            description: FloorType(s) created Successfully
+            schema:
+              $ref: '#/definitions/FloorTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /floortypes/_update:
+      post:
+        summary: Update any of the floortypes
+        description: Update any of the floortypes
+        tags: 
+          - FloorType
+        parameters:
+          - name: floorTypeRequest
+            in: body
+            description: Floor Type Request
+            schema:
+              $ref: '#/definitions/FloorTypeRequest'
+        responses:
+          200:
+            description: FloorType updated Successfully
+            schema:
+              $ref: '#/definitions/FloorTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /occuapancies/_search:
+      post:
+        summary: Get the list of occuapancymaster(s)
+        description: occuapancymasters
+        tags: 
+          - OccuapancyMaster
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the OccuapancyMaster
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the OccuapancyMaster
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the OccuapancyMaster
+            maxLength: 256
+          - name: active
+            type: boolean
+            in: query
+            description: Whether OccuapancyMaster is Active or not. If the value is TRUE, then OccuapancyMaster is active,If the value is FALSE then OccuapancyMaster is inactive,Default value is TRUE
+          - name: orderNumber
+            type: integer
+            format: int32
+            in: query
+            description: order number of the OccupancyMaster
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: OccupancyMaster(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/OccuapancyMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /occuapancies/_create:
+      post:
+        summary: Create new occuapancymaster(s)
+        description: Create new occuapancymaster(s)
+        tags: 
+          - OccuapancyMaster
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: occuapancyMasterRequest
+            in: body
+            description: Occuapancy Master Request
+            schema:
+              $ref: '#/definitions/OccuapancyMasterRequest'
+        responses:
+          201:
+            description: OccuapancyMaster(s) created Successfully
+            schema:
+              $ref: '#/definitions/OccuapancyMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /occuapancies/_update:
+      post:
+        summary: Update any of the occuapancymasters
+        description: Update any of the occuapancymasters
+        tags: 
+          - OccuapancyMaster
+        parameters:
+          - name: occuapancyMasterRequest
+            in: body
+            description: Occuapancy Master Request
+            schema:
+              $ref: '#/definitions/OccuapancyMasterRequest'
+        responses:
+          200:
+            description: OccuapancyMaster updated Successfully
+            schema:
+              $ref: '#/definitions/OccuapancyMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /propertytypes/_search:
+      post:
+        summary: Get the list of propertytype(s)
+        description: propertytypes
+        tags: 
+          - PropertyType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the PropertyType
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the PropertyType
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the PropertyType
+            maxLength: 256
+          - name: active
+            type: boolean
+            in: query
+            description: Whether PropertyType is Active or not. If the value is TRUE, then PropertyType is active,If the value is FALSE then PropertyType is inactive,Default value is TRUE
+          - name: orderNumber
+            type: integer
+            format: int32
+            in: query
+            description: order number of the PropertyType
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: PropertyType(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/PropertyTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /propertytypes/_create:
+      post:
+        summary: Create new propertytype(s)
+        description: Create new propertytype(s)
+        tags: 
+          - PropertyType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: propertyTypeRequest
+            in: body
+            description: Property Type Request
+            schema:
+              $ref: '#/definitions/PropertyTypeRequest'
+        responses:
+          201:
+            description: PropertyType(s) created Successfully
+            schema:
+              $ref: '#/definitions/PropertyTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /propertytypes/_update:
+      post:
+        summary: Update any of the propertytypes
+        description: Update any of the propertytypes
+        tags: 
+          - PropertyType
+        parameters:
+          - name: propertyTypeRequest
+            in: body
+            description: Property Type Request
+            schema:
+              $ref: '#/definitions/PropertyTypeRequest'
+        responses:
+          200:
+            description: PropertyType updated Successfully
+            schema:
+              $ref: '#/definitions/PropertyTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /rooftypes/_search:
+      post:
+        summary: Get the list of rooftype(s)
+        description: rooftypes
+        tags: 
+          - RoofType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the RoofType
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the RoofType
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the RoofType
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: RoofType(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/RoofTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /rooftypes/_create:
+      post:
+        summary: Create new rooftype(s)
+        description: Create  new rooftype(s)
+        tags: 
+          - RoofType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: roofTypeRequest
+            in: body
+            description: Roof Type Request
+            schema:
+              $ref: '#/definitions/RoofTypeRequest'
+        responses:
+          201:
+            description: RoofType(s) created Successfully
+            schema:
+              $ref: '#/definitions/RoofTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /rooftypes/_update:
+      post:
+        summary: Update any of the rooftypes
+        description: Update any of the rooftypes
+        tags: 
+          - RoofType
+        parameters:
+          - name: roofTypeRequest
+            in: body
+            description: Roof Type Request
+            schema:
+              $ref: '#/definitions/RoofTypeRequest'
+        responses:
+          200:
+            description: RoofType updated Successfully
+            schema:
+              $ref: '#/definitions/RoofTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /structureclasses/_search:
+      post:
+        summary: Get the list of structureclass(s)
+        description: structureclasses
+        tags: 
+          - StructureClass
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the StructureClass
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the StructureClass
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the StructureClass
+            maxLength: 256
+          - name: active
+            type: boolean
+            in: query
+            description: Whether StructureClass is Active or not. If the value is TRUE, then StructureClass is active,If the value is FALSE then StructureClass is inactive,Default value is TRUE
+          - name: orderNumber
+            type: integer
+            format: int32
+            in: query
+            description: order number of the StructureClass
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: StructureClass(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/StructureClassResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /structureclasses/_create:
+      post:
+        summary: Create new structureclass(s)
+        description: Create new structureclass(s)
+        tags: 
+          - StructureClass
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: structureClassRequest
+            in: body
+            description: Structure Class Request
+            schema:
+              $ref: '#/definitions/StructureClassRequest'
+        responses:
+          201:
+            description: StructureClass(s) created Successfully
+            schema:
+              $ref: '#/definitions/StructureClassResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /structureclasses/_update:
+      post:
+        summary: Update any of the structureclasses
+        description: Update any of the structureclasses
+        tags: 
+          - StructureClass
+        parameters:
+          - name: structureClassRequest
+            in: body
+            description: Structure Class Request
+            schema:
+              $ref: '#/definitions/StructureClassRequest'
+        responses:
+          200:
+            description: StructureClass updated Successfully
+            schema:
+              $ref: '#/definitions/StructureClassResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /usages/_search:
+      post:
+        summary: Get the list of usagemaster(s)
+        description: usagemasters
+        tags: 
+          - UsageMaster
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the UsageMaster
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the UsageMaster
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the UsageMaster
+            maxLength: 256
+          - name: active
+            type: boolean
+            in: query
+            description: Whether UsageMaster is Active or not. If the value is TRUE, then UsageMaster is active,If the value is FALSE then UsageMaster is inactive,Default value is TRUE
+          - name: isResidential
+            type: boolean
+            in: query
+            description: is residential of the UsageMaster
+          - name: orderNumber
+            type: integer
+            format: int32
+            in: query
+            description: order number of the UsageMaster
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: UsageMaster(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/UsageMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /usages/_create:
+      post:
+        summary: Create new usagemaster(s)
+        description: Create new usagemaster(s)
+        tags: 
+          - UsageMaster
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: usageMasterRequest
+            in: body
+            description: Usage Master Request
+            schema:
+              $ref: '#/definitions/UsageMasterRequest'
+        responses:
+          201:
+            description: UsageMaster(s) created Successfully
+            schema:
+              $ref: '#/definitions/UsageMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /usages/_update:
+      post:
+        summary: Update any of the usagemasters
+        description: Update any of the usagemasters
+        tags: 
+          - UsageMaster
+        parameters:
+          - name: usageMasterRequest
+            in: body
+            description: Usage Master Request
+            schema:
+              $ref: '#/definitions/UsageMasterRequest'
+        responses:
+          200:
+            description: UsageMaster updated Successfully
+            schema:
+              $ref: '#/definitions/UsageMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /walltypes/_search:
+      post:
+        summary: Get the list of walltype(s)
+        description: walltypes
+        tags: 
+          - WallType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the WallType
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the WallType
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the WallType
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: WallType(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/WallTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /walltypes/_create:
+      post:
+        summary: Create  new  walltype(s)
+        description: Create  new walltype(s)
+        tags: 
+          - WallType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: wallTypeRequest
+            in: body
+            description: Wall Type Request
+            schema:
+              $ref: '#/definitions/WallTypeRequest'
+        responses:
+          201:
+            description: WallType(s) created Successfully
+            schema:
+              $ref: '#/definitions/WallTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /walltypes/_update:
+      post:
+        summary: Update any of the walltypes
+        description: Update any of the walltypes
+        tags: 
+          - WallType
+        parameters:
+          - name: wallTypeRequest
+            in: body
+            description: Wall Type Request
+            schema:
+              $ref: '#/definitions/WallTypeRequest'
+        responses:
+          200:
+            description: WallType updated Successfully
+            schema:
+              $ref: '#/definitions/WallTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /woodtypes/_search:
+      post:
+        summary: Get the list of woodtype(s)
+        description: woodtypes
+        tags: 
+          - WoodType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the WoodType
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the WoodType
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the WoodType
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: WoodType retrieved Successfully
+            schema:
+              $ref: '#/definitions/WoodTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /woodtypes/_create:
+      post:
+        summary: Create  new  woodtype(s)
+        description: Create  new woodtype(s)
+        tags: 
+          - WoodType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: woodTypeRequest
+            in: body
+            description: Wood Type Request
+            schema:
+              $ref: '#/definitions/WoodTypeRequest'
+        responses:
+          201:
+            description: WoodType(s) created Successfully
+            schema:
+              $ref: '#/definitions/WoodTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /woodtypes/_update:
+      post:
+        summary: Update any of the woodtype
+        description: Update any of the woodtype
+        tags: 
+          - WoodType
+        parameters:
+          - name: woodTypeRequest
+            in: body
+            description: Wood Type Request
+            schema:
+              $ref: '#/definitions/WoodTypeRequest'
+        responses:
+          200:
+            description: WoodType updated Successfully
+            schema:
+              $ref: '#/definitions/WoodTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /mutationmasters/_search:
+      post:
+        summary: Get the list of mutationmaster(s)
+        description: mutationmasters
+        tags: 
+          - MutationMaster
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: name
+            type: string
+            in: query
+            description: name of the MutationMaster
+            maxLength: 128
+          - name: code
+            type: string
+            in: query
+            description: code of the MutationMaster
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the MutationMaster
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: MutationMaster retrieved Successfully
+            schema:
+              $ref: '#/definitions/MutationMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /mutationmasters/_create:
+      post:
+        summary: Create  new  mutationmaster(s)
+        description: Create  new mutationmaster(s)
+        tags: 
+          - MutationMaster
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: woodTypeRequest
+            in: body
+            description: Wood Type Request
+            schema:
+              $ref: '#/definitions/MutationMasterRequest'
+        responses:
+          201:
+            description: MutationMaster(s) created Successfully
+            schema:
+              $ref: '#/definitions/MutationMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /mutationmasters/_update:
+      post:
+        summary: Update any of the mutationmaster
+        description: Update any of the mutationmaster
+        tags: 
+          - MutationMaster
+        parameters:
+          - name: woodTypeRequest
+            in: body
+            description: Wood Type Request
+            schema:
+              $ref: '#/definitions/MutationMasterRequest'
+        responses:
+          200:
+            description: MutationMaster updated Successfully
+            schema:
+              $ref: '#/definitions/MutationMasterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /depreciations/_search:
+      post:
+        summary: Get the list of depreciation(s)
+        description: depreciations
+        tags: 
+          - Depreciation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: fromYear
+            type: integer
+            in: query
+            description: from year to search Depreciation
+          - name: fromYear
+            type: integer
+            in: query
+            description: to year to search Depreciation
+          - name: code
+            type: string
+            in: query
+            description: code of the Depreciation
+            maxLength: 16
+          - name: nameLocal
+            type: string
+            in: query
+            description: name local of the Depreciation
+            maxLength: 256
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: Depreciation retrieved Successfully
+            schema:
+              $ref: '#/definitions/DepreciationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /depreciations/_create:
+      post:
+        summary: Create  new  depreciation(s)
+        description: Create  new depreciation(s)
+        tags: 
+          - Depreciation
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: woodTypeRequest
+            in: body
+            description: Wood Type Request
+            schema:
+              $ref: '#/definitions/DepreciationRequest'
+        responses:
+          201:
+            description: Depreciation(s) created Successfully
+            schema:
+              $ref: '#/definitions/DepreciationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /depreciations/_update:
+      post:
+        summary: Update any of the depreciation
+        description: Update any of the depreciation
+        tags: 
+          - Depreciation
+        parameters:
+          - name: woodTypeRequest
+            in: body
+            description: Wood Type Request
+            schema:
+              $ref: '#/definitions/DepreciationRequest'
+        responses:
+          200:
+            description: Depreciation updated Successfully
+            schema:
+              $ref: '#/definitions/DepreciationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+definitions:
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Department
+        tenantId:
+          type: string
+          description: tenant id of the Department
+          maxLength: 128
+          minLength: 4
+        category:
+          type: string
+          description: category of the Department
+          maxLength: 16
+          minLength: 4
+        name:
+          type: string
+          description: name of the Department
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the Department
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the Department
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the Department
+          maxLength: 512
+          minLength: 8
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - category
+      - name
+      - code
+    DepartmentRequest:
+      description: Contract class to receive request. Array of Department items are used in case of create, whereas single Department item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        departments:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/Department'
+    DepartmentResponse:
+      description: Contract class to send response. Array of Department items are used in case of search results or response for create, whereas single Department item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        departments:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Department'
+
+    FloorType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the FloorType
+        tenantId:
+          type: string
+          description: tenant id of the FloorType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the FloorType
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the FloorType
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the FloorType
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the FloorType
+          maxLength: 512
+          minLength: 8
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    FloorTypeRequest:
+      description: Contract class to receive request. Array of FloorType items are used in case of create, whereas single FloorType item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        floorTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/FloorType'
+    FloorTypeResponse:
+      description: Contract class to send response. Array of FloorType items  are used in case of search results or response for create, whereas single FloorType item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        floorTypes:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/FloorType'
+
+    OccuapancyMaster:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the OccuapancyMaster
+        tenantId:
+          type: string
+          description: tenant id of the OccuapancyMaster
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the OccuapancyMaster
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the OccuapancyMaster
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the OccuapancyMaster
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the OccuapancyMaster
+          maxLength: 512
+          minLength: 8
+        active:
+          type: boolean
+          description: Whether OccuapancyMaster is Active or not. If the value is TRUE, then OccuapancyMaster is active, if the value is FALSE then OccuapancyMaster is inactive, default value is TRUE
+        orderNumber:
+          type: integer
+          format: int32
+          description: order number of the OccuapancyMaster
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    OccuapancyMasterRequest:
+      description: Contract class to receive request. Array of OccuapancyMaster items are used in case of create, whereas single OccuapancyMaster item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        occuapancyMasters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/OccuapancyMaster'
+    OccuapancyMasterResponse:
+      description: Contract class to send response. Array of OccuapancyMaster items  are used in case of search results or response for create, whereas single OccuapancyMaster item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        occuapancyMasters:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/OccuapancyMaster'
+
+    PropertyType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the PropertyType
+        tenantId:
+          type: string
+          description: tenant id of the PropertyType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the PropertyType
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the PropertyType
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the PropertyType
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the PropertyType
+          maxLength: 512
+          minLength: 8
+        active:
+          type: boolean
+          description: Whether PropertyType is Active or not. If the value is TRUE, then PropertyType is active, if the value is FALSE then PropertyType is inactive, default value is TRUE
+        orderNumber:
+          type: integer
+          format: int32
+          description: order number of the PropertyType
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    PropertyTypeRequest:
+      description: Contract class to receive request. Array of PropertyType items are used in case of create, whereas single PropertyType item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        propertyTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/PropertyType'
+    PropertyTypeResponse:
+      description: Contract class to send response. Array of PropertyType items are used in case of search results or response for create, whereas single PropertyType item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        propertyTypes:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/PropertyType'
+
+    RoofType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the RoofType
+        tenantId:
+          type: string
+          description: tenant id of the RoofType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the RoofType
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the RoofType
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the RoofType
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the RoofType
+          maxLength: 512
+          minLength: 8
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    RoofTypeRequest:
+      description: Contract class to receive request. Array of RoofType items are used in case of create, whereas single RoofType item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        roofTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/RoofType'
+    RoofTypeResponse:
+      description: Contract class to send response. Array of RoofType items are used in case of search results or response for create, whereas single RoofType item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        roofTypes:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/RoofType'
+
+    StructureClass:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the StructureClass
+        tenantId:
+          type: string
+          description: tenant id of the StructureClass
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the StructureClass
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the StructureClass
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the StructureClass
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the StructureClass
+          maxLength: 512
+          minLength: 8
+        active:
+          type: boolean
+          description: Whether StructureClass is Active or not. If the value is TRUE, then StructureClass is active, if the value is FALSE then StructureClass is inactive, default value is TRUE
+        orderNumber:
+          type: integer
+          format: int32
+          description: order number of the StructureClass
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    StructureClassRequest:
+      description: Contract class to receive request. Array of StructureClass items are used in case of create, whereas single StructureClass item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        structureClasses:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/StructureClass'
+    StructureClassResponse:
+      description: Contract class to send response. Array of StructureClass items are used in case of search results or response for create, whereas single StructureClass item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        structureClasses:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/StructureClass'
+
+    UsageMaster:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the UsageMaster
+        tenantId:
+          type: string
+          description: tenant id of the UsageMaster
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the UsageMaster
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the UsageMaster
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the UsageMaster
+          maxLength: 256
+          minLength: 8
+        parent:
+          type: integer
+          format: int64
+          description: The parent usage. Eg:- Under Non-Residential there can be sub usages shop, hotel, lodge etc. In this case Non-Residential is parent for shop, hotel, lodge
+        description:
+          type: string
+          description: description of the UsageMaster
+          maxLength: 512
+          minLength: 8
+        active:
+          type: boolean
+          description: Whether UsageMaster is Active or not. If the value is TRUE, then UsageMaster is active, if the value is FALSE then UsageMaster is inactive, default value is TRUE
+        isResidential:
+          type: boolean
+          description: is residential of the UsageMaster
+        orderNumber:
+          type: integer
+          format: int32
+          description: order number of the UsageMaster
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    UsageMasterRequest:
+      description: Contract class to receive request. Array of UsageMaster items are used in case of create, whereas single UsageMaster item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        usageMasters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/UsageMaster'
+    UsageMasterResponse:
+      description: Contract class to send response. Array of UsageMaster items are used in case of search results or response for create, whereas single UsageMaster item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        usageMasters:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/UsageMaster'
+
+    WallType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the WallType
+        tenantId:
+          type: string
+          description: tenant id of the WallType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the WallType
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the WallType
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the WallType
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the WallType
+          maxLength: 512
+          minLength: 8
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    WallTypeRequest:
+      description: Contract class to receive request. Array of WallType items are used in case of create, whereas single WallType item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        wallTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/WallType'
+    WallTypeResponse:
+      description: Contract class to send response. Array of WallType items are used in case of search results or response for create, whereas single WallType item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        wallTypes:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/WallType'
+
+    WoodType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the WoodType
+        tenantId:
+          type: string
+          description: tenant id of the WoodType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the WoodType
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the WoodType
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the WoodType
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the WoodType
+          maxLength: 512
+          minLength: 8
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    WoodTypeRequest:
+      description: Contract class to receive request. Array of WoodType items are used in case of create, whereas single WoodType item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        woodTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/WoodType'
+    WoodTypeResponse:
+      description: Contract class to send response. Array of WoodType items are used in case of search results or response for create, whereas single WoodType item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        woodTypes:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/WoodType'
+
+    MutationMaster:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the MutationMaster
+        tenantId:
+          type: string
+          description: tenant id of the MutationMaster
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the MutationMaster
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the MutationMaster
+          maxLength: 16
+          minLength: 4
+        nameLocal:
+          type: string
+          description: name local of the MutationMaster
+          maxLength: 256
+          minLength: 8
+        description:
+          type: string
+          description: description of the MutationMaster
+          maxLength: 512
+          minLength: 8
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - name
+      - code
+    MutationMasterRequest:
+      description: Contract class to receive request. Array of MutationMaster items are used in case of create, whereas single MutationMaster item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        MutationMasters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MutationMaster'
+    MutationMasterResponse:
+      description: Contract class to send response. Array of MutationMaster items are used in case of search results or response for create, whereas single MutationMaster item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        MutationMasters:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/MutationMaster'
+
+    Depreciation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Depreciation
+        tenantId:
+          type: string
+          description: tenant id of the Depreciation
+          maxLength: 128
+          minLength: 4
+        code:
+          type: string
+          description: code of the Depreciation
+          maxLength: 16
+          minLength: 4
+        fromYear:
+          type: integer
+          format: int32
+          description: from year for the Depreciation
+        toYear:
+          type: integer
+          format: int32
+          description: to year for the Depreciation
+        description:
+          type: string
+          description: description of the Depreciation
+          maxLength: 512
+          minLength: 8
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - id
+      - tenantId
+      - code
+      
+    DepreciationRequest:
+      description: Contract class to receive request. Array of Depreciation items are used in case of create, whereas single Depreciation item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Depreciations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Depreciation'
+    DepreciationResponse:
+      description: Contract class to send response. Array of Depreciation items are used in case of search results or response for create, whereas single Depreciation item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Depreciations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Depreciation'
+
+parameters:
+    pageSize:
+      name: pageSize
+      type: integer
+      format: int32
+      in: query
+      description: Number of records in a per page in  the Search Results, Default value is 20
+    
+    offSet:
+      name: offSet
+      type: integer
+      format: int32
+      in: query
+      description: page number of the Search Results, Default value is 0
+

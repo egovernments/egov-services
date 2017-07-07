@@ -113,9 +113,9 @@ public class PropertyServiceImpl implements PropertyService {
     public Property generateAcknowledegeNumber(Property property, RequestInfo requestInfo) {
 
         StringBuffer idGenerationUrl = new StringBuffer();
-        idGenerationUrl.append(environment.getProperty("egov.services.id_service.hostname"));
-        idGenerationUrl.append(environment.getProperty("egov.services.id_service.basepath"));
-        idGenerationUrl.append(environment.getProperty("egov.services.id_service.createpath"));
+        idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
+        idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.basepath"));
+        idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
 
         // generating acknowledgement number for all properties
 

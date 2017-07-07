@@ -25,8 +25,8 @@ public class BoundaryRepository {
     public  Boolean isBoundaryExists(Property property,RequestInfo requestInfo,Long id){
         //TODO all this logic to find/search boundary has to move to separate class say BoundaryRepository and just call the api/method here
         StringBuffer BoundaryURI = new StringBuffer();
-        BoundaryURI.append(env.getProperty("egov.services.boundary_service.hostname"))
-                        .append(env.getProperty("egov.services.boundary_service.searchpath"));
+        BoundaryURI.append(env.getProperty("egov.services.egov_location.hostname"))
+                        .append(env.getProperty("egov.services.egov_location.searchpath"));
         URI uri = UriComponentsBuilder.fromUriString(BoundaryURI.toString())
                         .queryParam("Boundary.tenantId", property.getTenantId()).queryParam("Boundary.id", id).build(true)
                         .encode().toUri();

@@ -21,18 +21,21 @@ public class ServiceRequestService {
     private SevaNumberGeneratorService sevaNumberGeneratorService;
     private ServiceRequestTypeService serviceRequestTypeService;
     private List<ServiceRequestValidator> validators;
+    private ServiceRequestCustomFieldService customFieldService;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
                                  SevaNumberGeneratorService sevaNumberGeneratorService,
                                  UserRepository userRepository,
                                  ServiceRequestTypeService serviceRequestTypeService,
-                                 List<ServiceRequestValidator> validators) {
+                                 List<ServiceRequestValidator> validators,
+                                 ServiceRequestCustomFieldService customFieldService) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
         this.serviceRequestTypeService = serviceRequestTypeService;
         this.validators = validators;
+        this.customFieldService = customFieldService;
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
@@ -51,6 +54,7 @@ public class ServiceRequestService {
         enrichWithCRN(serviceRequest);
         contractSevaRequest.update(serviceRequest);
         setUserIdForAnonymousUser(contractSevaRequest);
+        enrichWithComputedFields(serviceRequest, contractSevaRequest);
         serviceRequestRepository.save(contractSevaRequest);
     }
 
@@ -58,6 +62,10 @@ public class ServiceRequestService {
         validate(serviceRequest);
         setUserIdForAnonymousUser(contractSevaRequest);
         serviceRequestRepository.update(contractSevaRequest);
+    }
+
+    private void enrichWithComputedFields(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
+        customFieldService.enrich(serviceRequest, contractSevaRequest);
     }
 
     private void maskCitizenDetailsForAnonymousRequest(ServiceRequestSearchCriteria searchCriteria,

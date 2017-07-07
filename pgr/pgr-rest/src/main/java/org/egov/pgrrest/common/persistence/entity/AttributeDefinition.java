@@ -4,7 +4,7 @@ import lombok.*;
 import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.common.domain.model.AttributeActionsDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
-import org.egov.pgrrest.common.domain.model.ConstraintDefinition;
+import org.egov.pgrrest.common.domain.model.ComputeRuleDefinition;
 import org.egov.pgrrest.common.domain.model.ValueDefinition;
 import org.egov.pgrrest.read.domain.exception.InvalidAttributeDataTypeException;
 
@@ -13,7 +13,6 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @Entity
@@ -62,7 +61,7 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
     public org.egov.pgrrest.common.domain.model.AttributeDefinition toDomain(List<ValueDefinition> domainValues,
                                                                              List<AttributeRolesDefinition> roles,
                                                                              List<AttributeActionsDefinition> actions,
-                                                                             List<ConstraintDefinition> constraints) {
+                                                                             List<ComputeRuleDefinition> computeRules) {
         return org.egov.pgrrest.common.domain.model.AttributeDefinition.builder()
             .code(getCode())
             .dataType(getEnumDataType())
@@ -75,7 +74,7 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
             .roles(roles)
             .actions(actions)
             .values(domainValues)
-            .constraints(constraints)
+            .computeRules(computeRules)
             .build();
     }
 

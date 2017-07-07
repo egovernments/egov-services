@@ -1,4 +1,4 @@
-CREATE TABLE constraint_definition (
+CREATE TABLE cs_compute_rule_definition (
     servicecode VARCHAR (256) NOT NULL,
     attributecode VARCHAR(50) NOT NULL,
     tenantid character varying(256) NOT NULL,
@@ -12,9 +12,9 @@ CREATE TABLE constraint_definition (
     lastmodifiedby bigint
 );
 
-ALTER TABLE constraint_definition ADD CONSTRAINT constraint_definition_pkey
+ALTER TABLE cs_compute_rule_definition ADD CONSTRAINT cs_compute_rule_definition_pkey
 PRIMARY KEY(servicecode, attributecode, tenantid, name);
 
-ALTER TABLE constraint_definition ADD CONSTRAINT constraint_definition_attribute_definition_fkey
+ALTER TABLE cs_compute_rule_definition ADD CONSTRAINT cs_compute_rule_definition_attribute_definition_fkey
 FOREIGN KEY (servicecode, attributecode, tenantid) REFERENCES attribute_definition (servicecode, code, tenantid);
 

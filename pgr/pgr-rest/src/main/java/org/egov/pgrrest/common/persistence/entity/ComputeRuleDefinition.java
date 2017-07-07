@@ -13,11 +13,11 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "constraint_definition")
-public class ConstraintDefinition extends AbstractPersistable<ConstraintDefinitionKey> {
+@Table(name = "cs_compute_rule_definition")
+public class ComputeRuleDefinition extends AbstractPersistable<ComputeRuleDefinitionKey> {
 
     @EmbeddedId
-    private ConstraintDefinitionKey id;
+    private ComputeRuleDefinitionKey id;
 
     @Column(name = "rule")
     private String rule;
@@ -25,8 +25,8 @@ public class ConstraintDefinition extends AbstractPersistable<ConstraintDefiniti
     @Column(name = "value")
     private String value;
 
-    public org.egov.pgrrest.common.domain.model.ConstraintDefinition toDomain() {
-        return org.egov.pgrrest.common.domain.model.ConstraintDefinition.builder()
+    public org.egov.pgrrest.common.domain.model.ComputeRuleDefinition toDomain() {
+        return org.egov.pgrrest.common.domain.model.ComputeRuleDefinition.builder()
             .rule(rule)
             .value(value)
             .name(id.getName())

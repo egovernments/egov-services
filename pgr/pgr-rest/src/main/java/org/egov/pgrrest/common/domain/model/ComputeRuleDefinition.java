@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class ConstraintDefinition {
+public class ComputeRuleDefinition {
     private String rule;
     private String value;
     private String name;

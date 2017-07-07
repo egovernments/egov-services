@@ -1,0 +1,9 @@
+{
+  "responseInfo": null,
+  "error": {
+    "code": 400,
+    "message": "OTP validation unsuccessful",
+    "description": null,
+    "fields": []
+  }
+}

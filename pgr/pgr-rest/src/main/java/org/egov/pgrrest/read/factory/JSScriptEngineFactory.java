@@ -1,7 +1,8 @@
-package org.egov.pgrrest.read.domain.service;
+package org.egov.pgrrest.read.factory;
 
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
+import org.egov.pgrrest.read.factory.utility.DateDifferenceInDays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class JSScriptEngineFactory {
         final NashornSandbox nashornSandbox = NashornSandboxes.create();
         nashornSandbox.setMaxCPUTime(maxCPUTimeForScriptExecutionInMilliSeconds);
         nashornSandbox.setExecutor(executorService);
+        nashornSandbox.inject(DateDifferenceInDays.NAME, new DateDifferenceInDays());
         return nashornSandbox;
     }
 

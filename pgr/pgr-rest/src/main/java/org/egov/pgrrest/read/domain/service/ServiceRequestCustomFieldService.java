@@ -12,6 +12,7 @@ import org.egov.pgrrest.read.domain.exception.RuleEvaluationException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
+import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -40,8 +41,8 @@ public class ServiceRequestCustomFieldService {
     }
 
     public void enrich(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
-        final List<org.egov.pgr.common.contract.AttributeEntry> attribValues = contractSevaRequest
-            .getServiceRequest().getAttribValues();
+        final List<org.egov.pgr.common.contract.AttributeEntry> attribValues =
+            contractSevaRequest.getAttributeValues();
         final ServiceDefinition serviceDefinition = getServiceDefinition(serviceRequest);
         validateKnownServiceDefinition(serviceRequest, serviceDefinition);
         if (serviceDefinition.isAttributesAbsent()) {
@@ -51,6 +52,12 @@ public class ServiceRequestCustomFieldService {
         if (serviceDefinition.isComputedFieldsAbsent()) {
             return;
         }
+        computeFields(serviceRequest, attribValues, serviceDefinition);
+    }
+
+    private void computeFields(ServiceRequest serviceRequest,
+                               List<org.egov.pgr.common.contract.AttributeEntry> attribValues,
+                               ServiceDefinition serviceDefinition) {
         final NashornSandbox scriptEngine = scriptEngineFactory.create();
         final Map<String, List<AttributeEntry>> codeToAttributeEntriesMap =
             getCodeToAttributeEntriesMap(serviceRequest);

@@ -8,6 +8,7 @@ import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
 import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
+import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,7 +92,7 @@ public class ServiceRequestCustomFieldServiceTest {
         final List<org.egov.pgr.common.contract.AttributeEntry> contractAttributeEntries = new ArrayList<>();
         contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("gender", "male"));
         contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("age", "30"));
-        when(mockServiceRequest.getAttribValues()).thenReturn(contractAttributeEntries);
+        when(contractSevaRequest.getAttributeValues()).thenReturn(contractAttributeEntries);
         when(contractSevaRequest.getServiceRequest()).thenReturn(mockServiceRequest);
         final ServiceDefinitionSearchCriteria searchCriteria =
             new ServiceDefinitionSearchCriteria("serviceCode", "tenantId");
@@ -152,8 +153,7 @@ public class ServiceRequestCustomFieldServiceTest {
         final List<org.egov.pgr.common.contract.AttributeEntry> contractAttributeEntries = new ArrayList<>();
         contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("gender", "male"));
         contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("age", "30"));
-        when(mockServiceRequest.getAttribValues()).thenReturn(contractAttributeEntries);
-        when(contractSevaRequest.getServiceRequest()).thenReturn(mockServiceRequest);
+        when(contractSevaRequest.getAttributeValues()).thenReturn(contractAttributeEntries);
         final ServiceDefinitionSearchCriteria searchCriteria =
             new ServiceDefinitionSearchCriteria("serviceCode", "tenantId");
         when(serviceDefinitionService.find(searchCriteria))
@@ -179,8 +179,7 @@ public class ServiceRequestCustomFieldServiceTest {
         final List<org.egov.pgr.common.contract.AttributeEntry> contractAttributeEntries = new ArrayList<>();
         contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("gender", "male"));
         contractAttributeEntries.add(new org.egov.pgr.common.contract.AttributeEntry("age", "30"));
-        when(mockServiceRequest.getAttribValues()).thenReturn(contractAttributeEntries);
-        when(contractSevaRequest.getServiceRequest()).thenReturn(mockServiceRequest);
+        when(contractSevaRequest.getAttributeValues()).thenReturn(contractAttributeEntries);
         final ServiceDefinitionSearchCriteria searchCriteria =
             new ServiceDefinitionSearchCriteria("serviceCode", "tenantId");
         when(serviceDefinitionService.find(searchCriteria)).thenReturn(null);

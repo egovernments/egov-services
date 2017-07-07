@@ -37,31 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
+package org.egov.wcms.transanction.request;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-import org.egov.wcms.transanction.request.WorkFlowRequestInfo;
+import org.egov.wcms.transanction.model.UserInfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class TaskRequest {
+@Setter
+public class WorkFlowRequestInfo {
 
-    @JsonProperty("requestInfo")
-    private WorkFlowRequestInfo requestInfo = null;
+	private String apiId;
 
-    @JsonProperty("tasks")
-    private List<Task> tasks = new ArrayList<>();
+	private String ver;
 
-    @JsonProperty("task")
-    private Task task = null;
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
+	private Date ts;
+
+	private String action;
+
+	private String did;
+
+	private String key;
+
+	private String msgId;
+
+	private String requesterId;
+
+	private String authToken;
+
+	private String tenantId;
+	
+	private UserInfo userInfo;
 
 }

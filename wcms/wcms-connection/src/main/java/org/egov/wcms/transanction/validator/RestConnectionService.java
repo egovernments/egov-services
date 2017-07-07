@@ -154,7 +154,7 @@ public class RestConnectionService {
             waterConnectionRequest.getConnection().getProperty().setPropertyType(propCategory.getPropCategory().get(0).getPropertyTypeId());
             isValidPropAndCategory = Boolean.TRUE;
         }
-        return Boolean.TRUE;
+        return isValidPropAndCategory;
     }
 
     public Boolean validatePropertyPipesizeMapping(WaterConnectionReq waterConnectionRequest) {
@@ -175,7 +175,7 @@ public class RestConnectionService {
                     getPropertyTypeId()));
             isValidPropAndCategory = Boolean.TRUE;
         }
-        return Boolean.TRUE;
+        return isValidPropAndCategory;
     }
 
     public Boolean validatePropertyUsageTypeMapping(WaterConnectionReq waterConnectionRequest) {

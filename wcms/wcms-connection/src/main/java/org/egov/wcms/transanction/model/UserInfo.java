@@ -37,31 +37,78 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
+package org.egov.wcms.transanction.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.wcms.transanction.request.WorkFlowRequestInfo;
+import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
+@Setter
 @ToString
-public class TaskRequest {
+@Builder
+public class UserInfo {
 
-    @JsonProperty("requestInfo")
-    private WorkFlowRequestInfo requestInfo = null;
+    @NotNull
+    private long id;
 
-    @JsonProperty("tasks")
-    private List<Task> tasks = new ArrayList<>();
+    @NotNull
+    private String userName;
 
-    @JsonProperty("task")
-    private Task task = null;
+    @NotNull
+    private String authToken;
+
+    @NotNull
+    private String salutation;
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private String gender;
+
+    @NotNull
+    private String mobileNumber;
+
+    @NotNull
+    private String emailId;
+
+    @NotNull
+    private String aadhaarNumber;
+
+    @NotNull
+    private boolean active;
+
+    @NotNull
+    private long pwdExpiryDate;
+
+    @NotNull
+    private String locale;
+
+    @NotNull
+    private String type;
+
+    @NotNull
+    private boolean accountLocked;
+
+    @NotNull
+    private List<RoleInfo> roles;
+
+    @NotNull
+    private UserDetails userDetails;
+
+    @NotNull
+    private AuditDetails auditDetails;
 
 }

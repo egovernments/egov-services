@@ -174,10 +174,10 @@ class viewOrUpdateServiceType extends Component {
                                               <td>{e.serviceName}</td>
                                               <td>{e.serviceCode}</td>
                                               <td>{getNameById(categorySource,e.category)}</td>
-                                              <td>{e.active?"True":"False"}</td>
+                                              <td>{e.active?"Yes":"No"}</td>
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>
-                                              <td>{e.hasFinancialImpact?"True":"False"}</td>
+                                              <td>{e.hasFinancialImpact?"Yes":"No"}</td>
                                             </tr>
                                           )
                                         })}

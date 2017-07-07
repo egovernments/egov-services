@@ -31,6 +31,8 @@ const styles = {
 
 var _this;
 
+var request = {};
+
 class grievanceCreate extends Component {
   constructor(props) {
        super(props);
@@ -48,22 +50,25 @@ class grievanceCreate extends Component {
           value: 'id',
         },
         open: false,
+        openOTP : false,
         toastOpen: false
        }
        this.search=this.search.bind(this);
        this.loadReceivingCenter = this.loadReceivingCenter.bind(this);
        this.loadGrievanceType = this.loadGrievanceType.bind(this);
-       this.createGrievance = this.createGrievance.bind(this);
+       this.processCreate = this.processCreate.bind(this);
    }
 
-   handleOpen = () => {
+  handleOpen = () => {
     this.setState({open: true});
   };
 
-  handleClose = () => {
-    this.setState({open: false});
-    let {initForm, history} = this.props;
-    initForm(localStorage.getItem('type'));
+  handleOTPOpen = () => {
+    this.setState({openOTP: true});
+  };
+
+  handleOTPClose = () => {
+    this.setState({openOTP: false});
   };
 
   handleView = () => {
@@ -73,6 +78,34 @@ class grievanceCreate extends Component {
     history.push("/pgr/viewGrievance/"+this.state.serviceRequestId);
     window.location.reload();
   };
+
+  validateOTP = () => {
+    //otp validate
+    if(!this.state.otpValue){
+      return false;
+    }
+    this.handleOTPClose();
+    this.setState({loadingstatus:'loading'});
+    let mob = this.props.grievanceCreate.phone;
+    let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
+    var rqst = {
+      tenantId: tenant,
+      otp: this.state.otpValue,
+      identity: mob
+    };
+    Api.commonApiPost("otp/v1/_validate", {}, {otp: rqst}).then(function(response) {
+        //create SRN
+        let finobj = {
+            key: 'otpReference',
+            name:response.otp.UUID
+        };
+        request['serviceRequest'].attribValues.push(finobj);
+        _this.createGrievance(request);
+    }, function(err) {
+      _this.setState({loadingstatus:'hide'});
+      _this.handleError(err.message);
+    });
+  }
 
    loadReceivingCenter(value){
      var currentThis = this;
@@ -93,9 +126,9 @@ class grievanceCreate extends Component {
 
    loadGrievanceType(value){
      var currentThis = this;
-     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
-       currentThis.setState({grievanceType : response.complaintTypes});
+       currentThis.setState({grievanceType : response.Service});
      },function(err) {
        currentThis.handleError(err.message);
      });
@@ -106,8 +139,18 @@ class grievanceCreate extends Component {
     this.setState({type:localStorage.getItem('type')});
     let {initForm} = this.props;
     initForm(localStorage.getItem('type'));
-
+    console.log(localStorage.getItem('type'));
     var currentThis = this;
+
+    //OTP enabled for tenant
+    if(localStorage.getItem('type') === null){
+      Api.commonApiPost("/pgr-master/OTPConfig/_search").then(function(response)
+      {
+        currentThis.setState({otpEnabled: response.otpConfig[0].otpEnabledForAnonymousComplaint})
+      },function(err) {
+        currentThis.handleError(err.message);
+      });
+    }
 
     //isMapsEnabled
     Api.commonApiPost("/egov-location/boundarys/isshapefileexist").then(function(response)
@@ -170,22 +213,22 @@ class grievanceCreate extends Component {
           var userName = userResponse.user[0].name;
   				var userMobile = userResponse.user[0].mobileNumber;
   				var userEmail = userResponse.user[0].emailId;
-          _this.createGrievance(userName,userMobile,userEmail);
+          _this.processCreate(userName,userMobile,userEmail);
         },function(err) {
           _this.setState({loadingstatus:'hide'});
           _this.handleError(err.message);
         });
       }else if(type == 'EMPLOYEE'){
-        _this.createGrievance();
+        _this.processCreate();
       }else{
-        _this.createGrievance();
+        _this.processCreate();
       }
       let {showTable,changeButtonText}=this.props;
       //console.log(this.props.grievanceCreate);
 
   }
 
-  createGrievance(userName='',userMobile='',userEmail=''){
+  processCreate(userName='',userMobile='',userEmail=''){
 
     var data={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
@@ -255,12 +298,37 @@ class grievanceCreate extends Component {
       data['attribValues'].push(finobj);
     }
 
-    var request = {};
     request['serviceRequest'] = data;
 
-    var currentThis = this;
     //console.log(JSON.stringify(request));
+    var currentThis = this;
 
+    if(localStorage.getItem('type') === null){
+
+      let mob = this.props.grievanceCreate.phone;
+      let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
+      //send OTP and validate it
+      Api.commonApiPost("/pgr/v1/otp/_send",{},{mobileNumber:mob, tenantId:tenant}).then(function(response)
+      {
+        //validate OTP
+        currentThis.setState({loadingstatus:'hide'});
+        if(response.isSuccessful){
+          {currentThis.handleOTPOpen()}
+        }else {
+          currentThis.handleError('Sending OTP failed');
+        }
+      },function(err) {
+        currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
+      });
+    }else{
+      this.createGrievance(request);
+    }
+
+  }
+
+  createGrievance = (request) => {
+    var currentThis = this;
     Api.commonApiPost("/pgr/seva/v1/_create",{},request).then(function(createresponse)
     {
 
@@ -351,12 +419,18 @@ class grievanceCreate extends Component {
 
   render() {
 
-
     const actions = [
       <FlatButton
         label="Proceed to view"
         primary={true}
         onTouchTap={this.handleView}
+      />,
+    ];
+    const otpActions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        onTouchTap={this.validateOTP}
       />,
     ];
    _this = this;
@@ -375,7 +449,7 @@ class grievanceCreate extends Component {
       handleChangeNextTwo,
       buttonText
     } = this.props;
-    let {search, createGrievance, isMapsEnabled, loadCRN} = this;
+    let {search, processCreate, isMapsEnabled, loadCRN} = this;
 
     return (
       <div className="grievanceCreate">
@@ -557,9 +631,16 @@ class grievanceCreate extends Component {
           actions={actions}
           modal={true}
           open={this.state.open}
-          onRequestClose={this.handleClose}
         >
         {this.state.acknowledgement}
+        </Dialog>
+        <Dialog
+          title="OTP"
+          actions={otpActions}
+          modal={true}
+          open={this.state.openOTP}
+        >
+          <TextField fullWidth={true} hintText="OTP" errorText="" onChange={(event, newString) => this.setState({otpValue : newString})} />
         </Dialog>
         </div>
       </div>
@@ -654,9 +735,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property: 'serviceCategory', value: e.target.value, isRequired : true, pattern: ''});
 
     var currentThis = _this;
-    Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : group}).then(function(response)
+    Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : group}).then(function(response)
     {
-      currentThis.setState({grievanceType : response.complaintTypes});
+      currentThis.setState({grievanceType : response.Service});
       e = {
         target: {
           value: sCode

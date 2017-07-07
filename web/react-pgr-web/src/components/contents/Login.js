@@ -165,6 +165,7 @@ class Login extends Component {
    }
 
    loginRequest (e) {
+    this.props.setLoadingStatus('loading');
 	   e.preventDefault();
       var self = this, props = this.props;
       self.setState({

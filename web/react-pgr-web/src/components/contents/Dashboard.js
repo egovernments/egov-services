@@ -80,7 +80,6 @@ class Dashboard extends Component {
 
     if(currentUser.type=="CITIZEN") {
       Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
-         setLoadingStatus("hide");
           response.serviceRequests.sort(function(s1, s2) {
               var d1 = s1.requestedDatetime.split(" ")[0].split("-");
               var d2 = s2.requestedDatetime.split(" ")[0].split("-");
@@ -106,7 +105,7 @@ class Dashboard extends Component {
       })
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
-            setLoadingStatus("hide");
+            
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
           Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 response.serviceRequests.sort(function(s1, s2) {
@@ -146,20 +145,14 @@ class Dashboard extends Component {
      .destroy(true);
  };
   
-  componentWillUpdate() {
-   /* $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
-    });*/
-  }
 
    componentDidUpdate() {
+    let self = this;
     if(this.state.hasData){
        $('#searchTable').DataTable({
+        "initComplete": function(settings, json) {
+   self.props.setLoadingStatus('hide');
+  },
          dom: 'lBfrtip',
          buttons: [],
           bDestroy: true,
@@ -167,6 +160,8 @@ class Dashboard extends Component {
              "emptyTable": "No Records"
           }
     });
+       
+
     }
     
   }

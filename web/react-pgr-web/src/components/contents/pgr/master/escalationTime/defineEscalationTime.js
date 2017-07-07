@@ -87,7 +87,7 @@ class DefineEscalationTime extends Component {
     constructor(props) {
       super(props)
       this.state = {
-              serviceTypeSource:[],
+              grievanceTypeSource:[],
               designation:[],
               dataSourceConfig : {
                 text: 'serviceName',
@@ -121,11 +121,11 @@ class DefineEscalationTime extends Component {
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
           console.log(response);
           self.setState({
-            serviceTypeSource: response.complaintTypes
+            grievanceTypeSource: response.complaintTypes
           })
       }, function(err) {
         self.setState({
-            serviceTypeSource: []
+            grievanceTypeSource: []
           })
       });
 
@@ -140,10 +140,17 @@ class DefineEscalationTime extends Component {
       });
     }
 
-    componentWillUpdate() {
+    componentDidUpdate() {
       if(flag == 1) {
         flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
+         $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
       }
     }
 
@@ -157,9 +164,19 @@ class DefineEscalationTime extends Component {
       e.preventDefault();
       let current = this;
 
-      let query = {
-        id:this.props.defineEscalationTime.serviceType.id
+      let query;
+
+      if(this.props.defineEscalationTime.grievanceType.id){
+        query = {
+        id:this.props.defineEscalationTime.grievanceType.id
+        }
+      } else {
+          query = {
+        id:this.props.defineEscalationTime.grievanceType
+       }
       }
+
+     
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
           console.log(response);
@@ -181,21 +198,23 @@ class DefineEscalationTime extends Component {
   }
 
   addEscalation = () => {
+
+    console.log(this.props.defineEscalationTime.grievanceType)
+
     var current = this
     var body = {
       EscalationTimeType:{
         grievancetype:{
-          id: this.props.defineEscalationTime.serviceType.id
+          id: this.props.defineEscalationTime.grievanceType
         },
         noOfHours:this.props.defineEscalationTime.noOfHours,
-        designation:this.props.defineEscalationTime.designation.id,
+        designation:this.props.defineEscalationTime.designation,
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 
       }
     }
 
     Api.commonApiPost("workflow/escalation-hours/v1/_create",{},body).then(function(response){
-        console.log(response);
         current.setState({
           resultList:[
             ...current.state.resultList,
@@ -203,7 +222,7 @@ class DefineEscalationTime extends Component {
           ]
       })
     }).catch((error)=>{
-        console.log(error);
+      
     })
 
   }
@@ -214,27 +233,45 @@ class DefineEscalationTime extends Component {
     var body = {
       EscalationTimeType:{
         grievancetype:{
-          id: this.props.defineEscalationTime.serviceType.id
+          id: this.props.defineEscalationTime.grievanceType.id
         },
         noOfHours:this.props.defineEscalationTime.noOfHours,
-        designation:this.props.defineEscalationTime.designation.id,
+        designation:this.props.defineEscalationTime.designation,
         tenantId :localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
       }
     }
 
-    var idd = this.props.defineEscalationTime.serviceType.id
+    var idd = this.props.defineEscalationTime.id
 
     Api.commonApiPost("workflow/escalation-hours/v1/_update/"+idd,{},body).then(function(response){
-        console.log(response);
+     
+      let searchquery = {
+        id:current.props.defineEscalationTime.grievanceType.id
+      }
+
+      Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
+          console.log("response AFTER UPDATE", response);
+          if (response.EscalationTimeType[0] != null) {
+              flag = 1;
+              current.setState({
+                resultList: response.EscalationTimeType,
+                isSearchClicked: true
+              })
+          } else {
+            current.setState({
+              noData: true,
+            })
+          }
+      }).catch((error)=>{
+         
+      })
+
+
         current.setState((prevState)=>{
-          resultList:[
-            ...current.state.resultList,
-            prevState.resultList[prevState.editIndex] = current.props.defineEscalationTime
-          ],
           prevState.editIndex=-1
         })
     }).catch((error)=>{
-        console.log(error);
+      
     })
 
   }
@@ -270,7 +307,7 @@ class DefineEscalationTime extends Component {
 
       let {isSearchClicked, resultList, escalationForm, designation, editIndex} = this.state;
 
-      console.log(designation);
+      console.log(resultList);
 
       const renderBody = function() {
       	  if(resultList && resultList.length)
@@ -278,7 +315,7 @@ class DefineEscalationTime extends Component {
       			return (
       				<tr key={i}>
                 <td>{i+1}</td>
-      					<td>{val.designation.name}</td>
+      					<td>{getNameById(current.state.designation, val.designation)}</td>
                 <td>{val.noOfHours}</td>
                 <td>
 
@@ -296,7 +333,7 @@ class DefineEscalationTime extends Component {
       }
 
       const viewTable = function() {
-      	  if(!isSearchClicked)
+      	  if(isSearchClicked)
       		return (
    	        <Card>
               <CardText>
@@ -316,7 +353,7 @@ class DefineEscalationTime extends Component {
                             }}
                           >
                               {current.state.designation && current.state.designation.map((e,i)=>{
-                                  return(<MenuItem key={i} value={e} primaryText={e.name} />)
+                                  return(<MenuItem key={i} value={e.id} primaryText={e.name} />)
                               })}
                         </SelectField>
                     </Col>
@@ -363,8 +400,6 @@ class DefineEscalationTime extends Component {
    		)
       }
 
-      console.log(defineEscalationTime);
-
       return(<div className="defineEscalationTime">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
@@ -381,18 +416,18 @@ class DefineEscalationTime extends Component {
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
                                                  }}
-                                          dataSource={this.state.serviceTypeSource}
+                                          dataSource={this.state.grievanceTypeSource}
                                           dataSourceConfig={this.state.dataSourceConfig}
                                           onKeyUp={handleAutoCompleteKeyUp}
-                                          errorText={fieldErrors.serviceType ? fieldErrors.serviceType : "" }
-                                          value={defineEscalationTime.serviceType ? defineEscalationTime.serviceType : ""}
+                                          errorText={fieldErrors.grievanceType ? fieldErrors.grievanceType : "" }
+                                          value={defineEscalationTime.grievanceType ? defineEscalationTime.grievanceType : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest
+                  	                            value: chosenRequest.id
                   	                          }
                   	                        };
-                  	                        handleChange(e, "serviceType", false, "");
+                  	                        handleChange(e, "grievanceType", true, "");
                   	                       }}
                                         />
                                   </Col>
@@ -402,7 +437,7 @@ class DefineEscalationTime extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.serviceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalationTime.grievanceType ? false : true} label={translate("core.lbl.search")} primary={true}/>
 
                   </div>
                   {this.state.noData &&
@@ -440,7 +475,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["designation", "noOfHours"]
+          required: ["designation", "noOfHours", "grievanceType"]
         },
         pattern: {
           current: [],

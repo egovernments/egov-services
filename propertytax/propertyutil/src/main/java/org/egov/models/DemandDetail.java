@@ -3,8 +3,6 @@ package org.egov.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.models.AuditDetails;
-
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 

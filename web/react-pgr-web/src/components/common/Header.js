@@ -585,6 +585,32 @@ class Header extends Component {
       level:11
     },
     {
+      id:34,
+      name:'DrillDown By Department',
+      displayName:"DrillDown By Department",
+      url:base + "report/DrillDownByDepartment",
+      enabled:"true",
+      orderNumber:1,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:1,
+      level:11
+    },
+    {
+      id:35,
+      name:'DrillDown By Boundary',
+      displayName:"DrillDown By Boundary",
+      url:base + "report/DrillDownByBoundary",
+      enabled:"true",
+      orderNumber:1,
+      queryParams:"",
+      leftIcon:'view_module',
+      rightIcon:'',
+      parentModule:1,
+      level:11
+    },
+    {
       id:30,
       name:'Service Group',
       displayName:"Service Group",
@@ -717,7 +743,7 @@ class Header extends Component {
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
           {/*<div id="menu"></div>*/}
-          <CustomMenu menuItems={this.state.menuItems}/>
+        {this.props.actionList.length && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
         </Drawer>
 
         {/*
@@ -752,7 +778,8 @@ const mapStateToProps = state => ({
     pleaseWait: state.common.pleaseWait,
     // isDialogOpen: state.form.dialogOpen,
     // msg: state.form.msg,
-    showMenu: state.common.showMenu
+    showMenu: state.common.showMenu,
+    actionList:state.common.actionList
 });
 
 // this.props.appLoaded

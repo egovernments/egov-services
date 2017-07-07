@@ -6,7 +6,7 @@
         {
             "variable": true,
             "code": "attribute1",
-            "dataType": "dataType1",
+            "dataType": "date",
             "required": true,
             "dataTypeDescription": "data type description1",
             "attribValues": [

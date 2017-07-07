@@ -162,8 +162,6 @@ public class AssetRepository {
 
 		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
 			asset.setDepreciationRate(null);
-		}else {
-			asset.setDepreciationRate(asset.getDepreciationRate());
 		}
 
 		final Location location = asset.getLocationDetails();

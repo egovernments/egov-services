@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.commons.TestConfiguration;
 import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
@@ -16,8 +17,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,13 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BusinessCategoryController.class)
+@Import(TestConfiguration.class)
 public class BusinessCategoryControllerTest {
 
 	@MockBean
 	private BusinessCategoryService serviceCategoryService;
-
-	@MockBean
-	private KafkaTemplate<?,?> kafkaTemplate;
 
 	@Autowired
 	private MockMvc mockMvc;

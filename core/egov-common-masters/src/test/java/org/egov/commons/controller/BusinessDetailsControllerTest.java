@@ -1,26 +1,11 @@
 package org.egov.commons.controller;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.commons.model.AuthenticatedUser;
-import org.egov.commons.model.BusinessAccountDetails;
-import org.egov.commons.model.BusinessAccountSubLedgerDetails;
-import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessDetails;
-import org.egov.commons.model.BusinessDetailsCommonModel;
-import org.egov.commons.model.BusinessDetailsCriteria;
+import org.egov.commons.TestConfiguration;
+import org.egov.commons.model.*;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
@@ -31,19 +16,27 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(BusinessDetailsController.class)
+@Import(TestConfiguration.class)
 public class BusinessDetailsControllerTest {
 	@MockBean
 	private BusinessCategoryService businessCategoryService;
-
-	@MockBean
-	private KafkaTemplate<?,?> kafkaTemplate;
 
 	@MockBean
 	private BusinessDetailsService businessDetailsService;

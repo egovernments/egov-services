@@ -1,6 +1,7 @@
 package org.egov.commons.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,25 +9,20 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.commons.model.AuthenticatedUser;
-import org.egov.commons.model.BusinessAccountSubLedgerDetails;
-import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessDetails;
 import org.egov.commons.model.BusinessDetailsCriteria;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.service.BusinessDetailsService;
 import org.egov.commons.util.CollectionConstants;
-import org.egov.commons.web.contract.BusinessAccountDetails;
-import org.egov.commons.web.contract.BusinessAccountSubLedger;
 import org.egov.commons.web.contract.BusinessDetailsGetRequest;
 import org.egov.commons.web.contract.BusinessDetailsRequest;
 import org.egov.commons.web.contract.BusinessDetailsRequestInfo;
 import org.egov.commons.web.contract.BusinessDetailsResponse;
-import org.egov.commons.web.contract.RequestInfoWrapper;
+import org.egov.commons.web.contract.RequestInfoWrap;
+import org.egov.commons.web.contract.factory.ResponseInfoFact;
 import org.egov.commons.web.contract.factory.ResponseInfoFactory;
 import org.egov.commons.web.errorhandlers.Error;
-import org.egov.commons.web.errorhandlers.ErrorHandler;
 import org.egov.commons.web.errorhandlers.ErrorResponse;
+import org.egov.commons.web.errorhandlers.RequestErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +48,10 @@ public class BusinessDetailsController {
 	BusinessCategoryService businessCategoryService;
 
 	@Autowired
-	private ErrorHandler errHandler;
+	private RequestErrorHandler errHandler;
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseInfoFact responseInfoFactory;
 
 	private static final Logger logger = LoggerFactory.getLogger(BusinessDetailsController.class);
 
@@ -63,60 +59,34 @@ public class BusinessDetailsController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> createBusinessDetails(@RequestBody BusinessDetailsRequest businessDetailsRequest,
 			final BindingResult errors) {
-
-		AuthenticatedUser user = businessDetailsRequest.toDomain();
 		if (errors.hasErrors()) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("businessDetailsRequest::" + businessDetailsRequest);
-		final List<ErrorResponse> errorResponses = validateBusinessDetailsRequest(businessDetailsRequest);
+		final List<ErrorResponse> errorResponses = validateBusinessDetailsRequest(businessDetailsRequest,false);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-		BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		BusinessCategory modelCategory = businessCategoryService
-				.getBusinessCategoryByIdAndTenantId(detailsInfo.getBusinessCategory(), detailsInfo.getTenantId());
-		BusinessDetails modelDetails = new BusinessDetails(detailsInfo, modelCategory);
-		List<BusinessAccountDetails> listContractAccountDetails = detailsInfo.getAccountDetails();
-		List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails = new ArrayList<>();
-		for (BusinessAccountDetails details : listContractAccountDetails) {
-			listModelAccountDetails
-					.add(new org.egov.commons.model.BusinessAccountDetails(details, modelDetails, false));
-		}
-		List<BusinessAccountSubLedger> contractListOfSubledgers = detailsInfo.getSubledgerDetails();
-		List<BusinessAccountSubLedgerDetails> listModelAccountSubledger = new ArrayList<>();
-		for (BusinessAccountSubLedger subledger : contractListOfSubledgers) {
-			listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger, modelDetails, false));
-		}
-		List<BusinessDetailsRequestInfo> detailsRequestInfo = businessDetailsService
-				.createBusinessDetails(modelDetails, listModelAccountDetails, listModelAccountSubledger, user)
-				.toDomainContract();
-		return getSuccessResponse(businessDetailsRequest.getRequestInfo(), detailsRequestInfo);
+		BusinessDetailsRequest detailsRequest=  businessDetailsService.createDetailsAsync(businessDetailsRequest);
+			
+		return getSuccessResponse(businessDetailsRequest.getRequestInfo(),Collections.singletonList(detailsRequest.getBusinessDetails()));
 	}
 
 	@PostMapping(value = "/{businessDetailsCode}/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> updateBusinessDetails(@RequestBody BusinessDetailsRequest businessDetailsRequest,
-			@PathVariable String businessDetailsCode) {
-		AuthenticatedUser user = businessDetailsRequest.toDomain();
-		BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
-		BusinessCategory modelCategory = businessCategoryService
-				.getBusinessCategoryByIdAndTenantId(detailsInfo.getBusinessCategory(), detailsInfo.getTenantId());
-		BusinessDetails modelDetails = new BusinessDetails(detailsInfo, modelCategory);
-		List<BusinessAccountDetails> listContractAccountDetails = detailsInfo.getAccountDetails();
-		List<org.egov.commons.model.BusinessAccountDetails> listModelAccountDetails = new ArrayList<>();
-		for (BusinessAccountDetails details : listContractAccountDetails) {
-			listModelAccountDetails.add(new org.egov.commons.model.BusinessAccountDetails(details, modelDetails, true));
+			@PathVariable String businessDetailsCode,final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		List<BusinessAccountSubLedger> contractListOfSubledgers = detailsInfo.getSubledgerDetails();
-		List<BusinessAccountSubLedgerDetails> listModelAccountSubledger = new ArrayList<>();
-		for (BusinessAccountSubLedger subledger : contractListOfSubledgers) {
-			listModelAccountSubledger.add(new BusinessAccountSubLedgerDetails(subledger, modelDetails, true));
-		}
-		List<BusinessDetailsRequestInfo> detailsRequestInfo = businessDetailsService
-				.updateBusinessDetails(modelDetails, listModelAccountDetails, listModelAccountSubledger, user)
-				.toDomainContract();
-		return getSuccessResponse(businessDetailsRequest.getRequestInfo(), detailsRequestInfo);
+		logger.info("businessDetailsRequest::" + businessDetailsRequest);
+		final List<ErrorResponse> errorResponses = validateBusinessDetailsRequest(businessDetailsRequest,true);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
+		BusinessDetailsRequest detailsRequest = businessDetailsService
+				.updateDetailsAsync(businessDetailsRequest);
+		return getSuccessResponse(businessDetailsRequest.getRequestInfo(), Collections.singletonList(detailsRequest.getBusinessDetails()));
 	}
 
 	@PostMapping(value = "/_search")
@@ -124,7 +94,7 @@ public class BusinessDetailsController {
 	public ResponseEntity<?> searchBusinessDetails(
 			@ModelAttribute @Valid final BusinessDetailsGetRequest detailsGetRequest,
 			final BindingResult modelAttributeBindingResult,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@RequestBody @Valid final RequestInfoWrap requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
 
 		BusinessDetailsCriteria detailsCriteria = BusinessDetailsCriteria.builder()
@@ -159,28 +129,29 @@ public class BusinessDetailsController {
 		return new ResponseEntity<BusinessDetailsResponse>(response, HttpStatus.OK);
 	}
 
-	private List<ErrorResponse> validateBusinessDetailsRequest(final BusinessDetailsRequest businessDetailsRequest) {
+	private List<ErrorResponse> validateBusinessDetailsRequest(final BusinessDetailsRequest businessDetailsRequest
+			,Boolean isUpdate) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(businessDetailsRequest);
+		final Error error = getError(businessDetailsRequest,isUpdate);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final BusinessDetailsRequest businessDetailsRequest) {
-		final List<ErrorField> errorFields = getErrorFields(businessDetailsRequest);
+	private Error getError(final BusinessDetailsRequest businessDetailsRequest,Boolean isUpdate) {
+		final List<ErrorField> errorFields = getErrorFields(businessDetailsRequest,isUpdate);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(CollectionConstants.INVALID_DETAILS_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final BusinessDetailsRequest businessDetailsRequest) {
+	private List<ErrorField> getErrorFields(final BusinessDetailsRequest businessDetailsRequest,Boolean isUpdate) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 
 		addTenantIdValidationErrors(businessDetailsRequest, errorFields);
-		addNameValidationErrors(businessDetailsRequest, errorFields);
-		addCodeValidationErrors(businessDetailsRequest, errorFields);
+		addNameValidationErrors(businessDetailsRequest, errorFields,isUpdate);
+		addCodeValidationErrors(businessDetailsRequest, errorFields,isUpdate);
 		addBusinessTypeValidationErrors(businessDetailsRequest, errorFields);
 		addFundValidationErrors(businessDetailsRequest, errorFields);
 		addFunctionValidationErrors(businessDetailsRequest, errorFields);
@@ -249,7 +220,7 @@ public class BusinessDetailsController {
 	}
 
 	private void addNameValidationErrors(final BusinessDetailsRequest businessDetailsRequest,
-			final List<ErrorField> errorFields) {
+			final List<ErrorField> errorFields,Boolean isUpdate) {
 		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
 		if (detailsInfo.getName() == null || detailsInfo.getName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_NAME_MANDATORY_CODE)
@@ -257,7 +228,7 @@ public class BusinessDetailsController {
 					.field(CollectionConstants.DETAILS_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} else if (!businessDetailsService.getBusinessDetailsByNameAndTenantId(detailsInfo.getName(),
-				detailsInfo.getTenantId())) {
+				detailsInfo.getTenantId(),detailsInfo.getId(),isUpdate)) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_NAME_UNIQUE_CODE)
 					.message(CollectionConstants.DETAILS_NAME_UNIQUE_ERROR_MESSAGE)
 					.field(CollectionConstants.DETAILS_NAME_UNIQUE_FIELD_NAME).build();
@@ -267,7 +238,7 @@ public class BusinessDetailsController {
 	}
 
 	private void addCodeValidationErrors(final BusinessDetailsRequest businessDetailsRequest,
-			List<ErrorField> errorFields) {
+			List<ErrorField> errorFields,Boolean isUpdate) {
 		final BusinessDetailsRequestInfo detailsInfo = businessDetailsRequest.getBusinessDetails();
 		if (detailsInfo.getCode() == null || detailsInfo.getCode().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CODE_MANDATORY_CODE)
@@ -275,7 +246,7 @@ public class BusinessDetailsController {
 					.field(CollectionConstants.DETAILS_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} else if (!businessDetailsService.getBusinessDetailsByCodeAndTenantId(detailsInfo.getCode(),
-				detailsInfo.getTenantId())) {
+				detailsInfo.getTenantId(),detailsInfo.getId(),isUpdate)) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.DETAILS_CODE_UNIQUE_CODE)
 					.message(CollectionConstants.DETAILS_CODE_UNIQUE_ERROR_MESSAGE)
 					.field(CollectionConstants.DETAILS_CODE_UNIQUE_FIELD_NAME).build();

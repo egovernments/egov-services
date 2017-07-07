@@ -40,14 +40,13 @@
 
 package org.egov.eis.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum BloodGroup {
 	A_POSITIVE("A+"), B_POSITIVE("B+"), AB_POSITIVE("AB+"), O_POSITIVE("O+"),
@@ -62,7 +61,7 @@ public enum BloodGroup {
 	@Override
 	@JsonValue
     public String toString() {
-        return StringUtils.capitalize(name());
+        return name();
     }
 
 	public static List<Map<String, String>> getBloodGroups() {

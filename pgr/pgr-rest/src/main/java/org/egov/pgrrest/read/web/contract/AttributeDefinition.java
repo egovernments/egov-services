@@ -23,12 +23,13 @@ public class AttributeDefinition {
     private String groupCode;
     private List<String> roles;
     private List<String> actions;
+    private List<ConstraintDefinition> constraints;
     private List<AttributeValueDefinition> attribValues;
 
     public AttributeDefinition(org.egov.pgrrest.common.domain.model.AttributeDefinition attributeDefinition) {
         this.variable = !attributeDefinition.isReadOnly();
         this.code = attributeDefinition.getCode();
-        this.dataType = attributeDefinition.getDataType();
+        this.dataType = attributeDefinition.getDataType().getName();
         this.required = attributeDefinition.isRequired();
         this.dataTypeDescription = attributeDefinition.getDataTypeDescription();
         this.description=attributeDefinition.getDescription();
@@ -48,3 +49,4 @@ public class AttributeDefinition {
             .collect(Collectors.toList());
     }
 }
+

@@ -40,16 +40,16 @@
 
 package org.egov.eis.repository.builder;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.Map;
+
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.NomineeGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class NomineeQueryBuilder {
@@ -67,9 +67,9 @@ public class NomineeQueryBuilder {
             " n.lastModifiedDate AS n_lastModifiedDate, n.tenantId AS n_tenantId," +
             " e.id AS e_id, e.code AS e_code" +
             " FROM egeis_nominee n" +
-            " JOIN egeis_employee e ON e.id = n.employeeId AND e.tenantId = n.tenantId";
+            " JOIN egeis_employee e ON e.id = n.employeeId AND e.tenantId = n.tenantId" +
+            " WHERE n.tenantId = :tenantId";
 
-    @SuppressWarnings("rawtypes")
     public String getQuery(NomineeGetRequest nomineeGetRequest, Map<String, Object> namedParameters) {
         StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
@@ -84,41 +84,31 @@ public class NomineeQueryBuilder {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addWhereClause(StringBuilder selectQuery, Map namedParameters,
                                 NomineeGetRequest nomineeGetRequest) {
+
+        namedParameters.put("tenantId", nomineeGetRequest.getTenantId());
+
         if (isEmpty(nomineeGetRequest.getId()) && isEmpty(nomineeGetRequest.getEmployeeId())
-                && isEmpty(nomineeGetRequest.getName()) && isEmpty(nomineeGetRequest.getNominated())
-                && isEmpty(nomineeGetRequest.getTenantId()))
+                && isEmpty(nomineeGetRequest.getName()) && isEmpty(nomineeGetRequest.getNominated())) {
             return;
-
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
-
-        if (!isEmpty(nomineeGetRequest.getTenantId())) {
-            isAppendAndClause = true;
-            selectQuery.append(" n.tenantId = :tenantId");
-            namedParameters.put("tenantId", nomineeGetRequest.getTenantId());
         }
 
         if (!isEmpty(nomineeGetRequest.getId())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" n.id IN (:ids)");
+            selectQuery.append(" AND n.id IN (:ids)");
             namedParameters.put("ids", nomineeGetRequest.getId());
         }
 
         if (!isEmpty(nomineeGetRequest.getEmployeeId())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" n.employeeId IN (:employeeIds)");
+            selectQuery.append(" AND n.employeeId IN (:employeeIds)");
             namedParameters.put("employeeIds", nomineeGetRequest.getEmployeeId());
         }
 
         if (!isEmpty(nomineeGetRequest.getNominated())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" n.nominated = :nominated");
+            selectQuery.append(" AND n.nominated = :nominated");
             namedParameters.put("nominated", nomineeGetRequest.getNominated());
         }
 
         if (!isEmpty(nomineeGetRequest.getName())) {
-            addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" n.name = :name");
+            selectQuery.append(" AND n.name = :name");
             namedParameters.put("name", nomineeGetRequest.getName());
         }
     }
@@ -145,20 +135,5 @@ public class NomineeQueryBuilder {
         if (!isEmpty(nomineeGetRequest.getPageNumber()))
             pageNumber = nomineeGetRequest.getPageNumber() - 1;
         namedParameters.put("pageNumber", pageNumber * pageSize); // Set offset to pageNo * pageSize
-    }
-
-    /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
-    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
-
-        return true;
     }
 }

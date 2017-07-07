@@ -54,18 +54,4 @@ public class GlCodeMasterQueryBuilderTest {
 		expectedPreparedStatementValues.add(Long.valueOf("0"));
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
 	}
-	
-	@Test
-	public void getInsertQuery() {
-		String query = "INSERT INTO public.egbs_glcodemaster(id, tenantid, taxhead, service, "
-				+ "fromdate, todate, createdby,createdtime, lastmodifiedby, lastmodifiedtime,"
-				+ " glcode)VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?);";
-		assertEquals(query, glCodeMasterQueryBuilder.getInsertQuery());
-	}
-	
-	@Test
-	public void getUpdateQueryTest(){
-		String query="UPDATE egbs_glcodemaster SET taxhead=?, service=?, fromdate=?, todate=?,lastmodifiedby=?, lastmodifiedtime=?, glcode=? WHERE tenantid=?;";
-		assertEquals(query, glCodeMasterQueryBuilder.getUpdateQuery());
-	}
 }

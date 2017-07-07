@@ -9,17 +9,15 @@
         "authToken":"345678f",
         "userInfo":
         {
-        "id":1,
-        "name":"ram",
-        "mobileNumber":"73878921",
-        "emailId":"ram@gmail.com"
+        "id":1
+      
         }
     
        },
     "BusinessCategoryInfo":{
         "id":1,
-        "name":"Collection",
-        "code":"CL",
+        "name":"Trade Licence",
+        "code":"TLM",
         "active":true,
         "tenantId":"default"
         

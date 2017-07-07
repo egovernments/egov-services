@@ -1,15 +1,20 @@
 package org.egov.service;
 
 import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.egov.enums.ApplicationEnum;
+import org.egov.enums.ChannelEnum;
+import org.egov.enums.CreationReasonEnum;
+import org.egov.enums.SourceEnum;
+import org.egov.enums.StatusEnum;
+import org.egov.enums.UnitTypeEnum;
 import org.egov.models.Address;
-import org.egov.models.ApplicationEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.Boundary;
-import org.egov.models.ChannelEnum;
-import org.egov.models.CreationReasonEnum;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
@@ -35,10 +40,7 @@ import org.egov.models.Role;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
-import org.egov.models.SourceEnum;
-import org.egov.models.StatusEnum;
 import org.egov.models.Unit;
-import org.egov.models.UnitTypeEnum;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;

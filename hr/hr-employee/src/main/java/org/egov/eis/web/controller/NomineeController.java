@@ -40,10 +40,21 @@
 
 package org.egov.eis.web.controller;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import lombok.Setter;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Nominee;
 import org.egov.eis.service.NomineeService;
-import org.egov.eis.service.exception.UserException;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.NomineeGetRequest;
+import org.egov.eis.web.contract.NomineeRequest;
+import org.egov.eis.web.contract.NomineeResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreateNominee;
@@ -56,13 +67,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
-
+@Setter
 @RestController
 @RequestMapping("/nominees")
 public class NomineeController {

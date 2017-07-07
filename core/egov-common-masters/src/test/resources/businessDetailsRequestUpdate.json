@@ -6,7 +6,7 @@
         "did":"4354648646",
         "key":"xyz",
         "msgId":"654654",
-        "authToken":"aceb9362-4147-40ff-936a-34497f83d740",
+        "authToken":"345678f",
         "userInfo":
         {
         	"id":1
@@ -22,6 +22,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -43,6 +44,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -52,8 +54,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":56,
-"amount":"5000.00",
-"tenantId":"default"
+"amount":"5000.00"
+
 },
 {
 "id":5,
@@ -68,6 +70,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -77,8 +80,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":58,
-"amount":"3000.00",
-"tenantId":"default"
+"amount":"3000.00"
+
 },
 {
 "id":6,
@@ -93,6 +96,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -102,8 +106,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":59,
-"amount":"4000.00",
-"tenantId":"default"
+"amount":"4000.00"
+
 }
 ],
 "subledgerDetails":
@@ -127,6 +131,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -136,8 +141,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":56,
-"amount":"5000.00",
-"tenantId":"default"
+"amount":"5000.00"
+
 }
 
 },
@@ -160,6 +165,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -169,8 +175,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":58,
-"amount":"3000.00",
-"tenantId":"default"
+"amount":"3000.00"
+
 }
 
 },
@@ -193,6 +199,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -202,8 +209,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":59,
-"amount":"4000.00",
-"tenantId":"default"
+"amount":"4000.00"
+
 }
 
 },
@@ -226,6 +233,7 @@
 "businessUrl":"/receipts/receipt-create.action",
 "voucherCreation":true,
 "isVoucherApproved":true,
+"callBackForApportioning":true,
 "ordernumber":2,
 "fund":"12",
 "function":"123",
@@ -235,8 +243,8 @@
 "tenantId":"default"
 },
 "chartOfAccounts":56,
-"amount":"5000.00",
-"tenantId":"default"
+"amount":"5000.00"
+
 }
 
 }

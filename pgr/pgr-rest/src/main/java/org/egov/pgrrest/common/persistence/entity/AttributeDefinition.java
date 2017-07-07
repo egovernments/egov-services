@@ -1,15 +1,19 @@
 package org.egov.pgrrest.common.persistence.entity;
 
 import lombok.*;
-import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
+import org.egov.pgrrest.common.domain.model.AttributeDataType;
 import org.egov.pgrrest.common.domain.model.AttributeActionsDefinition;
+import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
+import org.egov.pgrrest.common.domain.model.ComputeRuleDefinition;
 import org.egov.pgrrest.common.domain.model.ValueDefinition;
+import org.egov.pgrrest.read.domain.exception.InvalidAttributeDataTypeException;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Entity
 @Getter
@@ -55,21 +59,30 @@ public class AttributeDefinition extends AbstractPersistable<AttributeDefinition
     }
 
     public org.egov.pgrrest.common.domain.model.AttributeDefinition toDomain(List<ValueDefinition> domainValues,
-                                                                             List<AttributeRolesDefinition> domainAttributeRoles,
-                                                                             List<AttributeActionsDefinition> domainAttributeActions) {
+                                                                             List<AttributeRolesDefinition> roles,
+                                                                             List<AttributeActionsDefinition> actions,
+                                                                             List<ComputeRuleDefinition> computeRules) {
         return org.egov.pgrrest.common.domain.model.AttributeDefinition.builder()
             .code(getCode())
-            .dataType(dataType)
+            .dataType(getEnumDataType())
             .readOnly(isReadOnly())
             .required(isRequired())
             .order(order)
             .dataTypeDescription(dataTypeDescription)
             .description(description)
             .url(url)
-            .roles(domainAttributeRoles)
-            .actions(domainAttributeActions)
+            .roles(roles)
+            .actions(actions)
             .values(domainValues)
+            .computeRules(computeRules)
             .build();
+    }
+
+    private AttributeDataType getEnumDataType() {
+        return Stream.of(AttributeDataType.values())
+            .filter(dataType -> dataType.getName().equals(this.dataType))
+            .findFirst()
+            .orElseThrow(() -> new InvalidAttributeDataTypeException(this.dataType, this.id.getCode()));
     }
 
     private boolean isRequired() {

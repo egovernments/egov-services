@@ -1,6 +1,6 @@
 package org.egov.eis.web.contract;
 
-import org.egov.core.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Employee;
 import org.springframework.stereotype.Service;
 

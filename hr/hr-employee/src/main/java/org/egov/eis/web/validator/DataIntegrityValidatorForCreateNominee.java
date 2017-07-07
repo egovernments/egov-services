@@ -40,6 +40,8 @@
 
 package org.egov.eis.web.validator;
 
+import java.util.List;
+
 import org.egov.eis.model.Nominee;
 import org.egov.eis.repository.NomineeRepository;
 import org.egov.eis.web.contract.NomineeRequest;
@@ -47,8 +49,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.List;
 
 @Component
 public class DataIntegrityValidatorForCreateNominee extends NomineeValidator implements Validator {

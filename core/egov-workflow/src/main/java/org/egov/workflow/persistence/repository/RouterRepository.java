@@ -131,17 +131,19 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 		String validateQuery = "";
 		PersistRouter persistRouter = new PersistRouter();
 		if (status) {
+			LOGGER.info("with service validation");
 			validateQuery = RouterQueryBuilder.validateRouter();
 			try {
 				persistRouter = jdbcTemplate.queryForObject(
 						validateQuery, new Object[] { routerReq.getRouterType().getService(),
-								routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId() },
+								routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
 						new PersistRouteRowMapper());
 				LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
 			} catch (EmptyResultDataAccessException e) {
 				return null;
 			}
 		} else {
+			LOGGER.info("without service validation");
 			validateQuery = RouterQueryBuilder.validateRouterWithoutService();
 			try {
 				persistRouter = jdbcTemplate.queryForObject(
@@ -216,6 +218,7 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 		String finalQuery = routerQueryBuilder.getVerificationQuery(routerTypeReq); 
 		LOGGER.info("Verification Query : " + finalQuery);
 		List<Integer> count = jdbcTemplate.queryForList(finalQuery, Integer.class);
+		LOGGER.info("Count: "+ count.toString());
 		if(count.size() > 0){ 
 			if(count.get(0) > 0) {
 				return true; 

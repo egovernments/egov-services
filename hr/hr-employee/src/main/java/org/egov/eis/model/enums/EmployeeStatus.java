@@ -42,7 +42,6 @@ package org.egov.eis.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
 
 public enum EmployeeStatus {
 	EMPLOYED("EMPLOYED"), RETIRED("RETIRED"), SUSPENDED("SUSPENDED"), DECEASED("DECEASED");
@@ -56,7 +55,7 @@ public enum EmployeeStatus {
 	@Override
 	@JsonValue
     public String toString() {
-        return StringUtils.capitalize(name());
+        return name();
     }
 
 	@JsonCreator

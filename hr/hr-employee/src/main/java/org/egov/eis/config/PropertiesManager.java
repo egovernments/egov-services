@@ -40,9 +40,14 @@
 
 package org.egov.eis.config;
 
-import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Component
 @Getter
@@ -99,10 +104,10 @@ public class PropertiesManager {
     private String hrMastersServicePositionsSearchPath;
 
     @Value("${kafka.topics.assignment.update.name}")
-    private String assignmentUpdateName;
+    private String updateAssignmentTopic;
 
     @Value("${kafka.topics.assignment.update.key}")
-    private String assignmentUpdateKey;
+    private String updateAssignmentKey;
 
 
 }

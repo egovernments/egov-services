@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.transanction.request.WorkFlowRequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -56,7 +57,7 @@ import lombok.ToString;
 public class ProcessInstanceRequest {
 
     @JsonProperty("requestInfo")
-    private RequestInfo requestInfo = null;
+    private WorkFlowRequestInfo requestInfo = null;
 
     @JsonProperty("processInstances")
     private List<ProcessInstance> processInstances = new ArrayList<>();

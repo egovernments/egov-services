@@ -1,14 +1,8 @@
 package org.egov.web.controller;
 
-import org.egov.domain.exception.InvalidTokenRequestException;
-import org.egov.domain.exception.InvalidTokenSearchCriteriaException;
-import org.egov.domain.exception.InvalidTokenValidateRequestException;
-import org.egov.domain.exception.TokenUpdateException;
-import org.egov.web.adapter.error.TokenSearchErrorAdapter;
-import org.egov.web.adapter.error.TokenUpdateErrorAdapter;
-import org.egov.web.adapter.error.TokenValidationRequestErrorAdapter;
+import org.egov.domain.exception.*;
+import org.egov.web.adapter.error.*;
 import org.egov.web.contract.ErrorResponse;
-import org.egov.web.adapter.error.TokenRequestErrorAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -46,6 +40,12 @@ public class CustomControllerAdvice {
     public ErrorResponse handleInvalidSearchException(InvalidTokenSearchCriteriaException ex) {
         return new TokenSearchErrorAdapter().adapt(ex.getTokenSearchCriteria());
     }
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(TokenValidationFailureException.class)
+	public ErrorResponse handleTokenValidationFailureException() {
+		return new TokenValidationFailureAdapter().adapt(null);
+	}
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)

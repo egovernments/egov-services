@@ -1,6 +1,8 @@
 package org.egov.collection.web.contract;
 
+
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.WorkflowDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -30,6 +32,8 @@ public class Receipt   {
   private BankAccount bankAccount;  
   
   private AuditDetails auditDetails;
+  
+  transient private WorkflowDetails workflowDetails;
 
   }
 

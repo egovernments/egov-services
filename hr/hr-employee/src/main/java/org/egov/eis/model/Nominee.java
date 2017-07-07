@@ -40,16 +40,23 @@
 
 package org.egov.eis.model;
 
-import lombok.*;
-import org.egov.eis.model.enums.Gender;
-import org.egov.eis.model.enums.MaritalStatus;
-import org.egov.eis.model.enums.Relationship;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.egov.eis.model.enums.Gender;
+import org.egov.eis.model.enums.MaritalStatus;
+import org.egov.eis.model.enums.Relationship;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Builder

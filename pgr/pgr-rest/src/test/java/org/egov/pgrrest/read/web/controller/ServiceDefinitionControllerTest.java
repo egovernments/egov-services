@@ -81,7 +81,7 @@ public class ServiceDefinitionControllerTest {
         return AttributeDefinition.builder()
             .readOnly(false)
             .code("attribute1")
-            .dataType("dataType1")
+            .dataType(AttributeDataType.DATE)
             .roles(asList(new AttributeRolesDefinition("EMPLOYEE")))
             .actions(asList(new AttributeActionsDefinition("UPDATE")))
             .required(true)

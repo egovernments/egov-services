@@ -589,6 +589,11 @@ definitions:
         description: The Name of the Role.
         minLength: 2
         maxLength: 100
+      code:
+        type: string
+        description: The Code of the Role.
+        minLength: 2
+        maxLength: 50
       description:
         type: string
         description: The description of the Role.

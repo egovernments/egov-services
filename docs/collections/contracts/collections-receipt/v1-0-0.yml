@@ -179,8 +179,11 @@ definitions:
   BillInfo:
     type: object
     properties:
+      id:
+        type: number
+        description: id of the billInfo object    
       payeeName:
-        type: object
+        type: string
         description: Owner/User which needs to be referred from UserService.
       payeeAddress:
         type: string
@@ -188,12 +191,20 @@ definitions:
       payeeEmail:
         type: string
         description: Consumer email defined in bill.
-      displayMessage:
-        type: string
-        description: Remarks to be displayed on receipt.
       paidBy:
         type: string
         description: Name of the Person who is making payment.
+      isActive:
+        type: boolean
+        description: active status of the bill.
+      isCancelled:
+        type: boolean
+        description: cancellation state of the bill.
+      tenantId:
+        type: string
+        description: Tenant Id.
+      auditDetails:
+          $ref: '#/definitions/AuditDetails'
       billDetails:
         type: array
         items:
@@ -202,16 +213,26 @@ definitions:
   BillDetails:
     type: object
     properties:
+      id:
+        type: number
+        description: id of the BillDetails object 
       businessDetailsCode:
         type: string
         description: BusinessDetails code.
       refNo:
         type: string
         description: Bill number.
+      bill:
+        type: string
+        description: Bill.
       billDate:
         type: string
         format: date
         description: Bill date.
+      billNumber:
+        type: string
+        format: date
+        description: Bill Number.
       consumerCode:
         type: string
         description: Consumer code defined in bill.
@@ -223,11 +244,11 @@ definitions:
         description: Summarized bill description.
       minimumAmount:
         type: number
-        format: double
+        format: bigdecimal
         description: Minimum bill amount to be paid.
       totalAmount:
         type: number
-        format: double
+        format: bigdecimal
         description: Total bill amount to be paid.
       amountPaid:
         type: number
@@ -277,6 +298,21 @@ definitions:
         description: Remarks to describe Reason For Cancellation.
         items:
           type: string
+      displayMessage:
+        type: string
+        description: Remarks to be displayed on receipt.
+      tenantId:
+        type: string
+        description: Tenant Id.
+      businessService:
+        type: string
+        description: businessService details of the bill details.
+      callBackForApportioning:
+        type: boolean
+        description: apportioning call based on this value.
+      partPaymentAllowed:
+        type: boolean
+        description: decides if partpayment is allowed
       billAccountDetails:
         type: array
         items:
@@ -285,6 +321,9 @@ definitions:
   BillAccountDetails:
     type: object
     properties:
+      id:
+        type: number
+        description: id of the BillAccountDetails object 
       glcode:
         type: string
         description: Chart of account code.
@@ -297,11 +336,11 @@ definitions:
         description : Account description to be printed on receipt.
       creditAmount:
         type: number
-        format: double
+        format: bigdecimal
         description: Credit account head amount.
       debitAmount:
         type: number
-        format: double
+        format: bigdecimal
         description: Debit account head amount.
       functionCode:
         type: string
@@ -309,6 +348,12 @@ definitions:
       isActualDemand:
         type: boolean
         description: True for tax/charges/penalty. False for advances(if any).
+      tenantId:
+        type: string
+        description: Tenant Id.
+      billDetail:
+        type: string
+        description: Bill Details.
       purpose:
         description: Purpose of Account head.
         items:
@@ -345,6 +390,27 @@ definitions:
           type: string
       BillInfo:
         $ref: '#/definitions/BillInfo'
+        
+        
+  AuditDetails:
+    type: object
+    description: Collection of audit related fields used by most models
+    readOnly: true
+    properties:
+      createdBy: 
+        type: number
+        description: userid of the user that created the object
+      lastModifiedBy: 
+        type: number
+        description: userid of the user that last modified the object
+      createdTime:
+        type: number
+        format: long
+        description: epoch or timestamp of the time object is created
+      lastModifiedTime:
+        type: number
+        format: long
+        description: epoch or timestamp of the time object is last modified
   
 parameters:
   pageSize:

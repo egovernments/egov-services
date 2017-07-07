@@ -1257,6 +1257,10 @@ definitions:
       accountDescription:
         type: string
         description : Account description to be printed on receipt.
+      crAmountToBePaid:
+        type: number
+        format: double
+        description: Credit account head amount to be paid.
       creditAmount:
         type: number
         format: double

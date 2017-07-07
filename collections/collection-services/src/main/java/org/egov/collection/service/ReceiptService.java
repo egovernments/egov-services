@@ -45,12 +45,15 @@ import java.util.List;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
+import org.egov.collection.web.contract.BillDetails;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.jayway.jsonpath.JsonPath;
 
 
 @Service
@@ -70,6 +73,28 @@ public class ReceiptService {
 	
 	public Receipt pushToQueue(ReceiptReq receiptReq){
 		logger.info("Pushing recieptdetail to kafka queue");
+		
+		for(BillDetails billdetails: receiptReq.getReceipt().getBillInfo().getBillDetails()){	
+			String receiptNumber = receiptRepository.generateReceiptNumber(receiptReq);
+			logger.info("Receipt Number generated is: "+receiptNumber);
+			billdetails.setReceiptNumber(receiptNumber);
+			Object businessDetails = receiptRepository.getBusinessDetails(billdetails.getBusinessDetailsCode(), receiptReq);
+			String fund = null;
+			String fundSource = null;
+			String function = null;
+			String department = null;
+			try{
+				fund = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].fund");
+				fundSource = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].fundSource");
+				function= JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].function");
+				department = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].department");
+			}catch(Exception e){
+	        	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
+				logger.error("All business details fields are not available: "+e.getCause());
+				return null;
+			}
+        	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
+		}	
 		return receiptRepository.pushToQueue(receiptReq);
 	}
 	

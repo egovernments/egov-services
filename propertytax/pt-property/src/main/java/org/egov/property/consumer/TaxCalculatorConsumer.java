@@ -98,7 +98,7 @@ public class TaxCalculatorConsumer {
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('propety.recieve')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.tax')}", "#{environment.getProperty('egov.propertytax.property.update.tax')}"  })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -106,7 +106,8 @@ public class TaxCalculatorConsumer {
 		CalculationRequest calculationRequest = new CalculationRequest();
 		calculationRequest.setRequestInfo(consumerRecord.value().getRequestInfo());
 		calculationRequest.setProperty(property);
-		CalculationResponse calculationResponse = restTemplate.postForObject(environment.getProperty("calculate.property.url"),
+		String url=environment.getProperty("egov.services.pt_calculator.hostname")+environment.getProperty("egov.services.pt_calculator.calculatorpath");
+		CalculationResponse calculationResponse = restTemplate.postForObject(url,
 				calculationRequest, CalculationResponse.class);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);

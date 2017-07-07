@@ -41,6 +41,8 @@
 
 package org.egov.asset.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -57,9 +59,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -127,7 +130,10 @@ public class AssetRepository {
 		return result;
 	}
 
+	@Transactional
 	public Asset create(final AssetRequest assetRequest) {
+
+		logger.info("the asset request in repository create : " + assetRequest);
 		final RequestInfo requestInfo = assetRequest.getRequestInfo();
 		final Asset asset = assetRequest.getAsset();
 
@@ -135,7 +141,7 @@ public class AssetRepository {
 		try {
 
 			final ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(Include.NON_NULL);
+			mapper.setSerializationInclusion(Include.NON_EMPTY);
 			final Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
 			property = mapper.writeValueAsString(asset2);
@@ -154,6 +160,10 @@ public class AssetRepository {
 		if (asset.getStatus() != null)
 			status = asset.getStatus();
 
+		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
+			asset.setDepreciationRate(null);
+		}
+
 		final Location location = asset.getLocationDetails();
 
 		final Object[] obj = new Object[] { asset.getId(), asset.getAssetCategory().getId(), asset.getName(),
@@ -164,32 +174,14 @@ public class AssetRepository {
 				location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
 				asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
-				asset.getVersion(), asset.getEnableYearWiseDepreciation() };
+				asset.getVersion(), asset.getEnableYearWiseDepreciation(), asset.getDepreciationRate() };
 		try {
 			jdbcTemplate.update(query, obj);
 		} catch (final Exception ex) {
 			logger.info("the exception from insert query : " + ex);
 		}
 		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
-			final List<YearWiseDepreciation> yearWiseDepreciation = asset.getDepreciationRate();
-			if (yearWiseDepreciation != null) {
-				String batchUpdateQuery = AssetQueryBuilder.BATCHUPDATEQUERY;
-
-				List<Object[]> depreciationBatchArgs = new ArrayList<>();
-				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {
-					Object[] depreciationRecord = { depreciationRate.getDepreciationRate(),
-							depreciationRate.getFinancialYear(), depreciationRate.getAssetId(),
-							depreciationRate.getUsefulLifeInYears() };
-					depreciationBatchArgs.add(depreciationRecord);
-				}
-
-				try {
-					jdbcTemplate.batchUpdate(batchUpdateQuery, depreciationBatchArgs);
-				} catch (DataAccessException ex) {
-					ex.printStackTrace();
-					throw new RuntimeException(ex.getMessage());
-				}
-			}
+			saveYearWiseDepreciation(assetRequest);
 		}
 		return asset;
 	}
@@ -233,8 +225,9 @@ public class AssetRepository {
 				location.getZone(), location.getRevenueWard(), location.getStreet(), location.getElectionWard(),
 				location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), asset.getGrossValue(),
-				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getCode(),
-				asset.getTenantId(), asset.getEnableYearWiseDepreciation(), asset.getDepreciationRate() };
+				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(),
+				asset.getEnableYearWiseDepreciation(), asset.getDepreciationRate(), asset.getCode(),
+				asset.getTenantId() };
 		try {
 			logger.info("query1::" + query + "," + Arrays.toString(obj));
 			final int i = jdbcTemplate.update(query, obj);
@@ -242,6 +235,73 @@ public class AssetRepository {
 		} catch (final Exception ex) {
 			logger.info("the exception from update asset : " + ex);
 		}
+
+		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
+			logger.info("the yearwisedepreciation update : "+ assetRequest.getAsset());
+			updateYearWiseDepreciation(assetRequest);
+		}
 		return asset;
+	}
+
+	private void saveYearWiseDepreciation(AssetRequest assetRequest) {
+
+		RequestInfo requestInfo = assetRequest.getRequestInfo();
+		Asset asset = assetRequest.getAsset();
+		List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
+
+		jdbcTemplate.batchUpdate(AssetQueryBuilder.BATCHINSERTQUERY, new BatchPreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				// TODO Auto-generated method stub
+				YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
+				ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
+				ps.setString(2, yearWiseDepreciation.getFinancialYear());
+				ps.setLong(3, asset.getId());
+				ps.setObject(4, yearWiseDepreciation.getUsefulLifeInYears());
+				ps.setString(5, asset.getTenantId());
+				ps.setString(6, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(7, new Date().getTime());
+				ps.setString(8, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(9, new Date().getTime());
+			}
+
+			@Override
+			public int getBatchSize() {
+				// TODO Auto-generated method stub
+				return yearWiseDepreciations.size();
+			}
+		});
+	}
+
+	private void updateYearWiseDepreciation(AssetRequest assetRequest) {
+
+		RequestInfo requestInfo = assetRequest.getRequestInfo();
+		Asset asset = assetRequest.getAsset();
+		List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
+
+		jdbcTemplate.batchUpdate(AssetQueryBuilder.BATCHUPDATEQUERY, new BatchPreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps, int index) throws SQLException {
+				// TODO Auto-generated method stub
+				YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
+				ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
+				ps.setObject(2, yearWiseDepreciation.getUsefulLifeInYears());
+				ps.setString(3, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(4, new Date().getTime());
+				ps.setString(5, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(6, new Date().getTime());
+				ps.setLong(7, asset.getId());
+				ps.setString(8, yearWiseDepreciation.getFinancialYear());
+				ps.setString(9, asset.getTenantId());
+			}
+
+			@Override
+			public int getBatchSize() {
+				// TODO Auto-generated method stub
+				return yearWiseDepreciations.size();
+			}
+		});
 	}
 }

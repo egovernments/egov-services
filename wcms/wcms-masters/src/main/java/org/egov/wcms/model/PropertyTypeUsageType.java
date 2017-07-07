@@ -40,8 +40,7 @@
 package org.egov.wcms.model;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,7 +63,6 @@ public class PropertyTypeUsageType {
 
     private Long id;
 
-    @Length(min = 3, max = 20)
     @NotNull
     private String propertyType;
     private String propertyTypeId;
@@ -75,7 +73,7 @@ public class PropertyTypeUsageType {
 
     private Boolean active;
 
-    @Length(max = 250)
+    @Size(max = 250)
     @NotNull
     private String tenantId;
 

@@ -30,7 +30,7 @@ public class GlCodeMasterValidator implements Validator {
 
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
-	
+
 	@Override
 	public boolean supports(Class<?> clazz) {
 
@@ -47,40 +47,35 @@ public class GlCodeMasterValidator implements Validator {
 			throw new RuntimeException("Invalid Object type for GlCodeMaster validator");
 		validateGlCodeMaster(glCodeMasterRequest, errors);
 	}
-	
-	
-	
 
-	public void validateGlCodeMaster(final GlCodeMasterRequest glCodeMasterRequest,Errors error) {
+	public void validateGlCodeMaster(final GlCodeMasterRequest glCodeMasterRequest, Errors error) {
 		log.debug(":::::in validator class:::::::" + glCodeMasterRequest);
-		GlCodeMasterCriteria glCodeMasterCriteria = new GlCodeMasterCriteria();
-		TaxHeadMasterCriteria taxHeadCriteria = new TaxHeadMasterCriteria();
+		GlCodeMasterCriteria glCodeMasterCriteria = null;
+		TaxHeadMasterCriteria taxHeadCriteria = null;
 		List<GlCodeMaster> glCodes = glCodeMasterRequest.getGlCodeMasters();
 		for (GlCodeMaster master : glCodes) {
-			glCodeMasterCriteria.setTenantId(master.getTenantId());
-			glCodeMasterCriteria.setService(master.getService());
-
+			if(!master.getTenantId().equalsIgnoreCase(glCodes.get(0).getTenantId()))
+				error.rejectValue("GlCodeMasters","","Tenant id should be same in all objects");
 			Set<String> codes = new HashSet<String>();
 			codes.add(master.getTaxHead());
-			glCodeMasterCriteria.setTaxHead(codes);
-			glCodeMasterCriteria.setFromDate(master.getFromDate());
-			glCodeMasterCriteria.setToDate(master.getToDate());
-			glCodeMasterCriteria.setGlCode(master.getGlCode());
+
+			glCodeMasterCriteria = GlCodeMasterCriteria.builder().tenantId(master.getTenantId())
+					.service(master.getService()).taxHead(codes).fromDate(master.getFromDate())
+					.toDate(master.getToDate()).glCode(master.getGlCode()).build();
 
 			final GlCodeMasterResponse glCodeMasterResponse = glCodeMasterService.getGlCodes(glCodeMasterCriteria,
 					glCodeMasterRequest.getRequestInfo());
 
 			if (!glCodeMasterResponse.getGlCodeMasters().isEmpty())
-				error.rejectValue("GlCodeMasters","","Record Already exist");
-//				throw new RuntimeException("Record Already exist");
+				error.rejectValue("GlCodeMasters", "", "Record Already exist");
 
-			taxHeadCriteria.setCode(codes);
-			taxHeadCriteria.setTenantId(master.getTenantId());
-			taxHeadCriteria.setService(master.getService());
+			taxHeadCriteria = TaxHeadMasterCriteria.builder().code(codes).tenantId(master.getTenantId())
+					.service(master.getService()).build();
+
 			TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadCriteria,
 					glCodeMasterRequest.getRequestInfo());
 			if (taxHeadMasterResponse.getTaxHeadMasters().isEmpty())
-				error.rejectValue("GlCodeMasters","","The TaxHead provided is invalid");
+				error.rejectValue("GlCodeMasters", "", "The TaxHead provided is invalid");
 		}
 	}
 }

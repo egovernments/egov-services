@@ -87,7 +87,7 @@ class CategoryTypeCreate extends Component {
                 console.log("response",response);
                   console.log("response object",response.CategoryTypes[0]);
                 current.setState({data:response.CategoryTypes})
-                setForm(response.CategoryTypes[0],false)
+                setForm(response.CategoryTypes[0])
             }, function(err) {
               current.props.toggleSnackbarAndSetText(true, err.message);
               current.props.setLoadingStatus('hide');
@@ -99,10 +99,10 @@ class CategoryTypeCreate extends Component {
     }
 
     componentDidMount() {
-        this.props.setForm({
-          active : true,
+      //   this.props.setForm({
+      //     active : true
+      // })
 
-      },false)
 
     }
 
@@ -194,17 +194,24 @@ class CategoryTypeCreate extends Component {
                                       floatingLabelText={"Category Type"+"*"}
                                       value={createCategoryType.name? createCategoryType.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
-                                        onChange={(e) => handleChange(e, "name", true, '')}
+                                      maxLength={100}
+                                      onChange={(e) => { createCategoryType.active = true;
+                                      handleChange(e, "name", true, /^[a-zA-Z0-9]*$/g)}}
                                       id="name"
+
                                   />
                               </Col>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
+                                      maxLength={100}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createCategoryType.description? createCategoryType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      onChange={(e) => {
+
+                                        handleChange(e, "description", false, /^[a-zA-Z0-9 ]*$/g)
+                                      }}
                                       multiLine={true}
                                       id="description"
                                   />
@@ -215,7 +222,7 @@ class CategoryTypeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
-                                    checked = {createCategoryType.active || false}
+                                    defaultChecked = {createCategoryType.active || true}
                                     onCheck = {(e, i, v) => { console.log(createCategoryType.active, i);
 
                                       var e = {
@@ -223,8 +230,9 @@ class CategoryTypeCreate extends Component {
                                           value:i
                                         }
                                       }
-                                      handleChange(e, "active", false, '')
+                                      handleChange(e, "active", true, '')
                                     }}
+
                                     id="active"
                                   />
                               </Col>
@@ -265,7 +273,7 @@ const mapDispatchToProps = dispatch => ({
       type: "RESET_STATE",
       validationData: {
         required: {
-          current: [],
+          current: ["active"],
           required: ["name","active"]
         },
         pattern: {
@@ -276,11 +284,11 @@ const mapDispatchToProps = dispatch => ({
     });
   },
 
-  setForm: (data,isFormValid) => {
+  setForm: (data) => {
     dispatch({
       type: "SET_FORM",
       data,
-      isFormValid:isFormValid,
+      isFormValid:false,
       fieldErrors: {},
       validationData: {
         required: {

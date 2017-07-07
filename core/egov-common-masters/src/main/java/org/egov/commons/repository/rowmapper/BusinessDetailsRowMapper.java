@@ -35,6 +35,7 @@ public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
 		businessDetails.setFunctionary(rs.getString("functionary"));
 		businessDetails.setFundSource(rs.getString("fundsource"));
 		businessDetails.setIsEnabled((Boolean) rs.getObject("isEnabled"));
+		businessDetails.setCallBackForApportioning((Boolean) rs.getObject("callBackForApportioning"));
 		businessDetails.setIsVoucherApproved((Boolean) rs.getObject("isVoucherApproved"));
 		businessDetails.setOrdernumber((Integer) rs.getObject("ordernumber"));
 		businessDetails.setTenantId(rs.getString("tenantId"));

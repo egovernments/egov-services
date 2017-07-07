@@ -62,4 +62,7 @@ public class PropertiesManager {
 	 
 	 @Value("${kafka.topics.update.agreement}")
 	 private String kafkaUpdateAgreementTopic;
+	 
+	 @Value("${egov.services.demand_service.taxreasonrent}")
+	 private String demandReasonRent;
 }

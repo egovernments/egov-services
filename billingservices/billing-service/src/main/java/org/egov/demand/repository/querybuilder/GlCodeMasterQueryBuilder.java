@@ -17,7 +17,7 @@ public class GlCodeMasterQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	private static final String BASE_QUERY="select * from egbs_glcodemaster";
+	private static final String BASE_QUERY="select * from egbs_glcodemaster WHERE tenantId = ? ";
 	public String getQuery(final GlCodeMasterCriteria searchGlCode, final List<Object> preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 		log.info("get query:::::::");
@@ -33,40 +33,27 @@ public class GlCodeMasterQueryBuilder {
 		if(searchGlCode.getTenantId()==null&&searchGlCode.getService()==null&&searchGlCode.getTaxHead()==null
 				&&searchGlCode.getFromDate()==null&&searchGlCode.getToDate()==null && searchGlCode.getId()==null)
 			return;
-		boolean isAppendAndClause = false;
-		selectQuery.append(" WHERE ");
-		
-		if (searchGlCode.getTenantId()!=null) {
-			isAppendAndClause=true;
-            selectQuery.append("tenantId = ? ");
-            preparedStatementValues.add(searchGlCode.getTenantId());
-        }
+        preparedStatementValues.add(searchGlCode.getTenantId());
 		
 		if (searchGlCode.getService() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" service = ?");
+			selectQuery.append(" and service = ?");
 			preparedStatementValues.add(searchGlCode.getService());
 		}
 		if (searchGlCode.getGlCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" glcode = ?");
+			selectQuery.append(" and glcode = ?");
 			preparedStatementValues.add(searchGlCode.getGlCode());
 		}
 		
 		if (searchGlCode.getId()!=null && !searchGlCode.getId().isEmpty()) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN (" + getInQuery(searchGlCode.getId()));
+			selectQuery.append(" and id IN (" + getInQuery(searchGlCode.getId()));
 		}else if (searchGlCode.getTaxHead()!=null && !searchGlCode.getTaxHead().isEmpty()) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" taxhead IN (" + getInQuery(searchGlCode.getTaxHead()));
+			selectQuery.append(" and taxhead IN (" + getInQuery(searchGlCode.getTaxHead()));
 		}
 		
 		if (searchGlCode.getFromDate() != null && searchGlCode.getToDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" fromdate >= ?");
+			selectQuery.append(" and fromdate >= ?");
 			preparedStatementValues.add(searchGlCode.getFromDate());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" todate <= ?");
+			selectQuery.append(" and todate <= ?");
 			preparedStatementValues.add(searchGlCode.getToDate());
 		}
 		
@@ -108,20 +95,10 @@ public class GlCodeMasterQueryBuilder {
 															// pageNo * pageSize
 	}
 	
-	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append("AND");
-		return true;
-	}
-
-	public String getInsertQuery() {
-		return "INSERT INTO public.egbs_glcodemaster(id, tenantid, taxhead, service, "
+	public final String InsertQuery ="INSERT INTO public.egbs_glcodemaster(id, tenantid, taxhead, service, "
 				+ "fromdate, todate, createdby,createdtime, lastmodifiedby, lastmodifiedtime,"
 				+ " glcode)VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?);";
-	}
 	
-	public String getUpdateQuery(){
-		return "UPDATE egbs_glcodemaster SET taxhead=?, service=?, fromdate=?, "
+	public final String UpdateQuery ="UPDATE egbs_glcodemaster SET taxhead=?, service=?, fromdate=?, "
 				+ "todate=?,lastmodifiedby=?, lastmodifiedtime=?, glcode=? WHERE tenantid=?;";
-	}
 }

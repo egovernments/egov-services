@@ -65,5 +65,9 @@ public class EscalationHierarchy {
 	private String tenantId;
 	
 	private AuditDetails auditDetails; 
+	
+	private Long department;
+	
+	private Long designation; 
 
 }

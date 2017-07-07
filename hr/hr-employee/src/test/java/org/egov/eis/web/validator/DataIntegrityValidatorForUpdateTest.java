@@ -42,7 +42,7 @@ public class DataIntegrityValidatorForUpdateTest {
 	private AssignmentRepository assignmentRepository;
 
 	@InjectMocks
-	private DataIntegrityValidatorForUpdate dataIntegrityValidatorForUpdate;
+	private DataIntegrityValidatorForUpdateEmployee dataIntegrityValidatorForUpdate;
 
 	@Before
 	public void setUp() throws Exception {

@@ -105,7 +105,7 @@ public class AssetService {
 		Long assetId = Long.valueOf(assetRepository.getNextAssetId().longValue());
 		assetRequest.getAsset().setId(assetId);
 
-		List<YearWiseDepreciation> yearWiseDepreciation = assetRequest.getAsset().getDepreciationRate();
+		List<YearWiseDepreciation> yearWiseDepreciation = assetRequest.getAsset().getYearWiseDepreciation();
 		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
 			if (yearWiseDepreciation != null) {
 				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {

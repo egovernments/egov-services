@@ -40,11 +40,11 @@
 
 package org.egov.eis.web.contract.factory;
 
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
-import org.springframework.stereotype.Component;
-
 import static org.springframework.util.ObjectUtils.isEmpty;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseInfoFactory {

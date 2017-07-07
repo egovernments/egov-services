@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.egov.pgr.common.contract.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
@@ -65,8 +67,13 @@ public class SevaRequest {
         serviceRequest.setCrn(complaint.getCrn());
     }
 
+    @JsonIgnore
+    public List<AttributeEntry> getAttributeValues() {
+        return this.getServiceRequest().getAttribValues();
+    }
+
     private List<String> getRoles(List<org.egov.common.contract.request.Role> roles) {
-        return roles.stream().map(role -> role.getCode()).collect(Collectors.toList());
+        return roles.stream().map(Role::getCode).collect(Collectors.toList());
     }
 
 }

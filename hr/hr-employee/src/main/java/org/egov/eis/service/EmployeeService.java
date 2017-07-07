@@ -40,24 +40,7 @@
 
 package org.egov.eis.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.ArrayUtils;
-import org.egov.eis.broker.EmployeeProducer;
-import org.egov.eis.config.PropertiesManager;
-import org.egov.eis.model.*;
-import org.egov.eis.model.enums.BloodGroup;
-import org.egov.eis.repository.*;
-import org.egov.eis.service.exception.EmployeeIdNotFoundException;
-import org.egov.eis.service.exception.UserException;
-import org.egov.eis.service.helper.EmployeeHelper;
-import org.egov.eis.service.helper.EmployeeUserMapper;
-import org.egov.eis.web.contract.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,12 +48,47 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.apache.commons.lang.ArrayUtils;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
+import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.User;
+import org.egov.eis.model.enums.BloodGroup;
+import org.egov.eis.repository.AssignmentRepository;
+import org.egov.eis.repository.DepartmentalTestRepository;
+import org.egov.eis.repository.EducationalQualificationRepository;
+import org.egov.eis.repository.EmployeeJurisdictionRepository;
+import org.egov.eis.repository.EmployeeLanguageRepository;
+import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.repository.HODDepartmentRepository;
+import org.egov.eis.repository.ProbationRepository;
+import org.egov.eis.repository.RegularisationRepository;
+import org.egov.eis.repository.ServiceHistoryRepository;
+import org.egov.eis.repository.TechnicalQualificationRepository;
+import org.egov.eis.service.exception.EmployeeIdNotFoundException;
+import org.egov.eis.service.exception.UserException;
+import org.egov.eis.service.helper.EmployeeHelper;
+import org.egov.eis.service.helper.EmployeeUserMapper;
+import org.egov.eis.web.contract.AssignmentGetRequest;
+import org.egov.eis.web.contract.EmployeeCriteria;
+import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.UserRequest;
+import org.egov.eis.web.contract.UserResponse;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class EmployeeService {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
     @Autowired
     private AssignmentService assignmentService;
@@ -145,13 +163,10 @@ public class EmployeeService {
     private EmployeeUserMapper employeeUserMapper;
 
     @Autowired
-    private EmployeeProducer employeeProducer;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     PropertiesManager propertiesManager;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
@@ -159,9 +174,9 @@ public class EmployeeService {
         // If roleCodes or userName is present, get users first, as there will be very limited results
         if (!isEmpty(employeeCriteria.getRoleCodes()) || !isEmpty(employeeCriteria.getUserName())) {
             usersList = userService.getUsers(employeeCriteria, requestInfo);
-            LOGGER.debug("usersList returned by UsersService is :: " + usersList);
+            log.debug("usersList returned by UsersService is :: " + usersList);
             if (isEmpty(usersList))
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             ids = usersList.stream().map(user -> user.getId()).collect(Collectors.toList());
             employeeCriteria.setId(ids);
         }
@@ -169,15 +184,15 @@ public class EmployeeService {
         List<EmployeeInfo> employeeInfoList = employeeRepository.findForCriteria(employeeCriteria);
 
         if (isEmpty(employeeInfoList))
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
 
         // If roleCodes or userName is not present, get employees first
         if (isEmpty(employeeCriteria.getRoleCodes()) || isEmpty(employeeCriteria.getUserName())) {
             ids = employeeInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
-            LOGGER.debug("Employee ids are :: " + ids);
+            log.debug("Employee ids are :: " + ids);
             employeeCriteria.setId(ids);
             usersList = userService.getUsers(employeeCriteria, requestInfo);
-            LOGGER.debug("usersList returned by UsersService is :: " + usersList);
+            log.debug("usersList returned by UsersService is :: " + usersList);
         }
         employeeInfoList = employeeUserMapper.mapUsersWithEmployees(employeeInfoList, usersList);
 
@@ -217,7 +232,7 @@ public class EmployeeService {
         employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
         employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 
-        LOGGER.debug("After Employee Search: " + employee);
+        log.debug("After Employee Search: " + employee);
 
         return employee;
     }
@@ -238,12 +253,8 @@ public class EmployeeService {
 
         employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-        String employeeRequestJson = null;
-        employeeRequestJson = objectMapper.writeValueAsString(employeeRequest);
-        LOGGER.info("employeeJson::" + employeeRequestJson);
-
-        employeeProducer.sendMessage(propertiesManager.getSaveEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
-                employeeRequestJson);
+        log.info("employeeRequest before sending to kafka :: " + employeeRequest);
+        kafkaTemplate.send(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
 
         return employee;
     }
@@ -296,10 +307,6 @@ public class EmployeeService {
 
         employeeHelper.populateDefaultDataForUpdate(employeeRequest);
 
-        String employeeUpdateRequestJson = null;
-
-        employeeUpdateRequestJson = objectMapper.writeValueAsString(employeeRequest);
-        LOGGER.info("employeeJson update::" + employeeUpdateRequestJson);
         AssignmentGetRequest assignmentGetRequest = AssignmentGetRequest.builder().tenantId(employee.getTenantId()).build();
         List<Assignment> assignments = assignmentService.getAssignments(employee.getId(), assignmentGetRequest);
 
@@ -320,13 +327,12 @@ public class EmployeeService {
         boolean isAssignmentDeleted = assignments.size() != employeeRequest.getEmployee().getAssignments().size();
 
         if (isPositionModified || isFromDateModified || isToDateModified || isAssignmentDeleted) {
-            employeeProducer.sendMessage(propertiesManager.getAssignmentUpdateName(), propertiesManager.getAssignmentUpdateKey(),
-                    employeeUpdateRequestJson);
+            log.info("employeeRequest before sending to kafka for updating assignments :: " + employeeRequest);
+            kafkaTemplate.send(propertiesManager.getUpdateAssignmentTopic(), employeeRequest);
         }
 
-
-        employeeProducer.sendMessage(propertiesManager.getUpdateEmployeeTopic(), propertiesManager.getEmployeeSaveKey(),
-                employeeUpdateRequestJson);
+        log.info("employeeRequest before sending to kafka for updating employee :: " + employeeRequest);
+        kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
         return employee;
     }
 
@@ -347,7 +353,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {
-        UserInfo userInfo = requestInfo.getUserInfo();
+        org.egov.common.contract.request.User userInfo = requestInfo.getUserInfo();
         EmployeeCriteria employeeCriteria = new EmployeeCriteria();
         employeeCriteria.setUserName(userInfo.getUserName());
         employeeCriteria.setTenantId(userInfo.getTenantId());

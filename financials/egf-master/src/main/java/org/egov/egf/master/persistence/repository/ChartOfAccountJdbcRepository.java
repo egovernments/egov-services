@@ -1,6 +1,7 @@
 package org.egov.egf.master.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +76,33 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 		if (chartOfAccountSearchEntity.getAccountCodePurposeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("accountCodePurpose =:accountCodePurpose");
-			paramValues.put("accountCodePurpose", chartOfAccountSearchEntity.getAccountCodePurposeId());
+
+			if (chartOfAccountSearchEntity.getGlcode() == null) {
+				List<String> s = new ArrayList<>();
+				String params1 = "select * from " + ChartOfAccountEntity.TABLE_NAME
+						+ " where accountCodePurposeId=:accountCodePurpose";
+				String params2 = "select * from " + ChartOfAccountEntity.TABLE_NAME + " where glcode like :glcodeLike";
+				paramValues.put("accountCodePurpose", chartOfAccountSearchEntity.getAccountCodePurposeId());
+				List<ChartOfAccountEntity> chartOfAccountEntities = namedParameterJdbcTemplate.query(params1,
+						paramValues, new BeanPropertyRowMapper(ChartOfAccountEntity.class));
+				for (ChartOfAccountEntity entity : chartOfAccountEntities) {
+					paramValues.put("glcodeLike", entity.getGlcode() + "%");
+					List<ChartOfAccountEntity> entities = namedParameterJdbcTemplate.query(params2, paramValues,
+							new BeanPropertyRowMapper(ChartOfAccountEntity.class));
+					for (ChartOfAccountEntity e : entities) {
+						s.add(e.getGlcode());
+					}
+
+				}
+				params.append("glcode in( :glcodeIn )");
+				paramValues.put("glcodeIn", Arrays.asList(s.toArray()));
+				paramValues.remove("accountCodePurpose");
+				paramValues.remove("glcodeLike");
+
+			} else {
+				params.append("accountCodePurposeId =:accountCodePurpose");
+				paramValues.put("accountCodePurpose", chartOfAccountSearchEntity.getAccountCodePurposeId());
+			}
 		}
 		if (chartOfAccountSearchEntity.getDescription() != null) {
 			if (params.length() > 0)
@@ -171,6 +197,26 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 	}
 
 	public ChartOfAccountEntity findById(ChartOfAccountEntity entity) {
+		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+
+		Map<String, Object> paramValues = new HashMap<>();
+
+		for (String s : list) {
+			paramValues.put(s, getValue(getField(entity, s), entity));
+		}
+
+		List<ChartOfAccountEntity> chartofaccounts = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(ChartOfAccountEntity.class));
+		if (chartofaccounts.isEmpty()) {
+			return null;
+		} else {
+			return chartofaccounts.get(0);
+		}
+
+	}
+
+	public ChartOfAccountEntity findByAccountCodePurposeId(ChartOfAccountEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();

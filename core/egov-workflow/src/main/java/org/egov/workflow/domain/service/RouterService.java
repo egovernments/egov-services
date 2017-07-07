@@ -139,27 +139,26 @@ public class RouterService {
 				pr.setBoundary(boundaryID);
 				prq.setRouterType(pr);
 				if (checkforDuplicate(prq, true)) {
-					routerRepository.createRouter(prq, true);
 					logger.info("Creating the Router Entry");
+					routerRepository.createRouter(prq, true);
 				} else {
-					routerRepository.updateRouter(prq, true);
 					logger.info("Updating the Router Entry");
+					routerRepository.updateRouter(prq, true);				
 				}
 			}
 			if (flag == 0) {
 				pr.setBoundary(boundaryID);
 				prq.setRouterType(pr);
 				if (checkforDuplicate(prq, false)) {
+					logger.info("Creating the Router Entry -- flag");
 					routerRepository.createRouter(prq, false);
-					logger.info("Creating the Router Entry");
 				} else {
+					logger.info("Updating the Router Entry -- flag");
 					routerRepository.updateRouter(prq, false);
-					logger.info("Updating the Router Entry");
 				}
 			}
 		}
 		logger.info("Persisting Router record");
-		// return routerRepository.createRouter(prq);
 		return null;
 
 	}
@@ -168,9 +167,11 @@ public class RouterService {
 		PersistRouter pr = new PersistRouter();
 		pr = routerRepository.ValidateRouter(persistRouterReq, action);
 		if (pr != null){
+			logger.info("Returning false");
 			return false;
 		}
 			else {
+				logger.info("Returning true");
 				return true;
 		}
 	}

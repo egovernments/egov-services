@@ -75,4 +75,6 @@ public class BusinessDetailsCommonModel {
 		}
 		return listOfDetailsInfo;
 	}
+
+
 }

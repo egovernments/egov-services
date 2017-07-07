@@ -69,7 +69,7 @@ public class User {
 	private Boolean active = null;
 
 	@JsonProperty("pwdExpiryDate")
-	private Long pwdExpiryDate = null;
+	private String pwdExpiryDate = null;
 
 	@JsonProperty("locale")
 	@NotNull
@@ -107,4 +107,7 @@ public class User {
 	@JsonProperty("ownerType")
 	@Size(min = 4, max = 32)
 	private String ownerType = null;
+	
+	@JsonProperty("password")
+	private String password = null;
 }

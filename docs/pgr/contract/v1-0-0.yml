@@ -930,15 +930,7 @@ definitions:
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        otp:
-          $ref: '#/definitions/Createotps'
-      required:
-        - RequestInfo
-        - otp
-###########################################################################          
-  Createotps:
-      type: object
-      properties:
+      
         mobileNumber:
           type: string
           description: mobile number for validating otp
@@ -946,26 +938,20 @@ definitions:
           type: string
           description: Unique Identifier of the tenantId to which user primarily belongs and it is mandatory field in all the end points shoiuld pass this value
       required:
+        - RequestInfo
         - tenantId
         - mobileNumber
-###########################################################################          
-  Createotpress:
-      type: object
-      properties:
-        isSuccessful:
-          type: boolean
-          description: return true if otp is valid else return false
+
+  
 ###########################################################################                    
   OTPConfigRess:
       type: object
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        otp:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/Createotpress'   
+        isSuccessful:
+          type: boolean
+          description: return true if otp is valid else return false
 ###########################################################################                      
   Service:
     type: object

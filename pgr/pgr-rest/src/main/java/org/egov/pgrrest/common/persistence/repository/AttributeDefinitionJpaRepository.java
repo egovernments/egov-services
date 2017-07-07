@@ -16,3 +16,4 @@ public interface AttributeDefinitionJpaRepository extends JpaRepository<Attribut
     List<AttributeDefinition> findByServiceCodeAndTenantId(@Param("serviceCode") String serviceCode,
                                                            @Param("tenantId") String tenantId);
 }
+

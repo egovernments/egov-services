@@ -1,10 +1,7 @@
 package org.egov.web.controller;
 
 import org.egov.Resources;
-import org.egov.domain.exception.InvalidTokenRequestException;
-import org.egov.domain.exception.InvalidTokenSearchCriteriaException;
-import org.egov.domain.exception.InvalidTokenValidateRequestException;
-import org.egov.domain.exception.TokenUpdateException;
+import org.egov.domain.exception.*;
 import org.egov.domain.model.Token;
 import org.egov.domain.model.TokenRequest;
 import org.egov.domain.model.TokenSearchCriteria;
@@ -129,6 +126,22 @@ public class OtpControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(resources.getFileContents("otpUpdateErrorResponse.json")));
     }
+
+	@Test
+	public void test_should_return_error_response_when_otp_validate_is_not_successful() throws Exception {
+		final ValidateRequest validateRequest = ValidateRequest.builder()
+				.otp(OTP_NUMBER)
+				.tenantId(TENANT_ID)
+				.identity(IDENTITY)
+				.build();
+		when(tokenService.validate(validateRequest))
+				.thenThrow(new TokenValidationFailureException());
+
+		mockMvc.perform(post("/v1/_validate").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(resources.getFileContents("validateOtpRequest.json")))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().json(resources.getFileContents("otpValidateFailureErrorResponse.json")));
+	}
 
     @Test
     public void test_should_return_error_response_when_token_request_is_not_valid() throws Exception {

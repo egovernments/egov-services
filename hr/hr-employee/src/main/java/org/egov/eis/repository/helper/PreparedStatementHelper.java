@@ -40,11 +40,11 @@
 
 package org.egov.eis.repository.helper;
 
-import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class PreparedStatementHelper {

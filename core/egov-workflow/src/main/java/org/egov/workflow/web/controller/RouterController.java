@@ -83,7 +83,7 @@ public class RouterController{
 	
 	private static final Logger logger = LoggerFactory.getLogger(RouterController.class);
 	
-	private static String[] taskAction = {"create","update"}; 
+//	private static String[] taskAction = {"create","update"}; 
 
 	@Autowired
 	private RouterService routerService;
@@ -103,11 +103,12 @@ public class RouterController{
 		}
 		logger.info("Router Request:" + routerTypeReq);
 
-		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq, taskAction[0]);
+		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
 		final RouterType routerType = routerTypeReq.getRouterType();
+		logger.info("hitting service");
 		routerService.create(routerTypeReq);
 		final List<RouterType> routerTypes = new ArrayList<>();
 		routerTypes.add(routerType);
@@ -125,7 +126,7 @@ public class RouterController{
 		}
 		logger.info("Router Request:" + routerTypeReq);
 
-		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq, taskAction[1]);
+		final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -163,32 +164,39 @@ public class RouterController{
         return getSuccessResponse(routerTypeList, requestInfo);
 
     }
-	private List<ErrorResponse> validateRouterRequest(final RouterTypeReq routerTypeReq, String action) {
+	private List<ErrorResponse> validateRouterRequest(final RouterTypeReq routerTypeReq) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(routerTypeReq, action);
+		final Error error = getError(routerTypeReq);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final RouterTypeReq routerTypeReq, String action) {
+	private Error getError(final RouterTypeReq routerTypeReq) {
 		routerTypeReq.getRouterType();
-		final List<ErrorField> errorFields = getErrorFields(routerTypeReq, action);
+		final List<ErrorField> errorFields = getErrorFields(routerTypeReq);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq, String action) {
+	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq) {
+		final List<ErrorField> errorFields = new ArrayList<>();
+		addRouterValidationErrors(routerTypeReq, errorFields);
+		addTeanantIdValidationErrors(routerTypeReq, errorFields);
+		return errorFields;
+	}
+	
+/*	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq, String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addRouterValidationErrors(routerTypeReq, errorFields);
 		addTeanantIdValidationErrors(routerTypeReq, errorFields);
 		if (action.equals(taskAction[0])) {
 			verifyUniquenessOfRequest(routerTypeReq, errorFields);
-		}
+		} 
 		return errorFields;
-	}
+	} */
 
 	private void addRouterValidationErrors(final RouterTypeReq routerTypeReq,
 			final List<ErrorField> errorFields) {
@@ -221,7 +229,7 @@ public class RouterController{
 			return;
 	}
 	
-	private void verifyUniquenessOfRequest(final RouterTypeReq routerTypeReq,
+/*	private void verifyUniquenessOfRequest(final RouterTypeReq routerTypeReq,
 			final List<ErrorField> errorFields) {
 		if (routerService.verifyUniquenessOfRequest(routerTypeReq)) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_CODE)
@@ -230,7 +238,7 @@ public class RouterController{
 			errorFields.add(errorField);
 		} else
 			return;
-	}
+	} */
 
 	private ErrorResponse populateErrors(final BindingResult errors) {
 		final ErrorResponse errRes = new ErrorResponse();

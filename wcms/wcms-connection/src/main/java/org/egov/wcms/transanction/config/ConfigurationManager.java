@@ -54,8 +54,6 @@ import lombok.ToString;
 @Order(0)
 public class ConfigurationManager {
 
-    @Value("${egov.services.workflow_service.hostname}")
-    private String workflowServiceHostName;
 
     @Value("${egov.services.workflow_service.startpath}")
     private String workflowServiceStartPath;
@@ -102,14 +100,18 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters.hostname}")
     private String waterMasterServiceBasePathTopic;
 
-    @Value("${egov.services.core_id_service.hostname}")
+    @Value("${egov.services.id_service.hostname}")
     private String idGenServiceBasePathTopic;
 
-    @Value("${egov.services.core_id_service.createpath}")
+    @Value("${egov.services.id_service.createpath}")
     private String idGenServiceCreatePathTopic;
-
+    @Value("${egov.services.workflow_service.hostname}")
+    private String commonworkflowservicebasepath;
     @Value("${id.idName}")
     private String idGenNameServiceTopic;
+    
+    @Value("${id.format}")
+    private String idGenFormatServiceTopic;
     
     @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
     private String waterMasterPropCategoryMappingTopic;

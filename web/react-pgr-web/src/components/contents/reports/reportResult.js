@@ -125,7 +125,7 @@ class ShowField extends Component {
     }
     return (
       <div className="PropertyTaxSearch">
-        {isTableShow && reportResult.hasOwnProperty("reportHeader") && reportResult.hasOwnProperty("repor") && viewTabel()}
+        {isTableShow && reportResult.hasOwnProperty("reportHeader") && reportResult.hasOwnProperty("reportData") && viewTabel()}
       </div>
     );
   }

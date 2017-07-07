@@ -180,13 +180,7 @@ public class ReceiptRepository {
 				parametersMap.put("payeeemail", receiptInfo.getBillInfo().getPayeeEmail());
 				parametersMap.put("paidby", receiptInfo.getBillInfo().getPaidBy());
 				parametersMap.put("referencenumber", billdetails.getRefNo());
-				parametersMap.put("receipttype", billdetails.getReceiptType());
-				
-				String receiptNumber = generateReceiptNumber(receiptReq);
-				logger.info("Receipt Number generated is: "+receiptNumber);
-				
-				billdetails.setReceiptNumber("receiptNumber");
-				parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
+				parametersMap.put("receipttype", billdetails.getReceiptType());							
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("businessdetails", billdetails.getBusinessDetailsCode());
 				parametersMap.put("collectiontype", billdetails.getCollectionType());
@@ -273,7 +267,7 @@ public class ReceiptRepository {
 	}
 	
 	
-	private Object getBusinessDetails(String businessDetailsCode, ReceiptReq receiptReq){
+	public Object getBusinessDetails(String businessDetailsCode, ReceiptReq receiptReq){
 		logger.info("Searching for fund aand other businessDetails based on code.");	
 		StringBuilder builder = new StringBuilder();
 		String baseUri = CollectionServiceConstants.BD_SEARCH_URI;
@@ -349,7 +343,7 @@ public class ReceiptRepository {
 		return status;
 	} */
 	
-	private String generateReceiptNumber(ReceiptReq receiptRequest){
+	public String generateReceiptNumber(ReceiptReq receiptRequest){
 		logger.info("Generating receipt number for the receipt.");	
 		
 		StringBuilder builder = new StringBuilder();

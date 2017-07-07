@@ -1,8 +1,10 @@
 package org.egov.eis.indexer.service;
 
 import java.net.URI;
+import java.util.Arrays;
 
-import org.egov.core.web.contract.RequestInfoWrapper;
+import org.egov.commons.web.contract.DepartmentResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.egov.eis.model.Designation;
 import org.egov.eis.model.EmployeeType;
@@ -23,9 +25,7 @@ import org.egov.eis.web.contract.RecruitmentTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;

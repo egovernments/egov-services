@@ -66,7 +66,7 @@ public class GlCodeMasterController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		System.out.println(":calling glcode validator::::");
-		glCodeMasterValidator.validateGlCodeMaster(glCodeMasterRequest,bindingResult);
+		glCodeMasterValidator.validate(glCodeMasterRequest,bindingResult);
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}

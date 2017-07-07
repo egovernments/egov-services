@@ -1,6 +1,8 @@
 package org.egov.collection.web.contract;
 
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,21 +12,28 @@ import lombok.ToString;
 @Getter
 @ToString
 public class BillAccountDetails   {
-  private String glcode;
-
-  private Integer order;
-
-  private String accountDescription;
-
-  private Double creditAmount;
   
-  private Double debitAmount;
+	private String glcode;
 
-  private String functionCode;
+	private Integer order;
 
-  private Boolean isActualDemand;
-  
-  private String purpose;
+	private String accountDescription;
+
+	private String functionCode;
+
+	private Boolean isActualDemand;
+    
+	private String id;
+
+	private String tenantId;
+
+	private String billDetail;
+	
+	private BigDecimal creditAmount;
+
+	private BigDecimal debitAmount;
+	
+	private Purpose purpose;
   
 }
 

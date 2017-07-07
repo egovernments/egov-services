@@ -40,10 +40,7 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import org.egov.eis.model.Regularisation;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,7 +48,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.eis.model.Regularisation;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RegularisationTableRowMapper implements RowMapper<Regularisation> {

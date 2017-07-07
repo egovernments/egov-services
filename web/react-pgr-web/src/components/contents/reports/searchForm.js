@@ -45,14 +45,14 @@ class ShowForm extends Component {
 
   handleFormFields = () => {
     let {currentThis}=this;
-    let {metaData}=this.props;
+    let {metaData,searchForm}=this.props;
     console.log(metaData);
     if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
     {
       return metaData.reportDetails.searchParams.map((item,index) =>
       {
         return (
-          <ShowField key={index} obj={item} handler={this.props.handleChange}/>
+          <ShowField key={index} obj={item}  handler={this.props.handleChange}/>
         );
       })
     }
@@ -64,7 +64,7 @@ class ShowForm extends Component {
     let {searchParams}=metaData.hasOwnProperty("reportDetails")?metaData.reportDetails:{searchParams:[]};
     let required=[];
     for (var i = 0; i < searchParams.length; i++) {
-      if (searchParams.isMandatory && searchParams.type!="singlevaluelist") {
+      if (searchParams.isMandatory) {
         required.push(searchParams.name)
       }
     }
@@ -79,98 +79,7 @@ class ShowForm extends Component {
 
       let {showTable,changeButtonText,setReportResult,searchForm,metaData}=this.props;
       let searchParams=[]
-      let resForm=[
-                    ["Nuisance by garbage tractors or trucks",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Repairs to existing footpath",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Non Receipt of Pensions (Disabled/ Old age/ Widow)",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Engineering-Others",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Death of Stray Animals",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Complaints regarding Schools",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Illegal slaughtering",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["New Drainage Connection",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ],
-                      ["Revenue-Others",
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        0,
-                        2
-                      ]
-      ]
+
 
       for (var variable in searchForm) {
         // console.log(variable);
@@ -178,16 +87,16 @@ class ShowForm extends Component {
         searchParams.push({
           name:variable,
           // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
-          value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate()):searchForm[variable]
+          input:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate()):searchForm[variable]
 
         })
       }
 
-      searchParams.push(
-        {
-            "name": "complainttype",
-            "value": "BRKNB"
-        })
+      // searchParams.push(
+      //   {
+      //       "name": "complainttype",
+      //       "value": "BRKNB"
+      //   })
 
 
       let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
@@ -230,7 +139,7 @@ class ShowForm extends Component {
         }}>
 
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {metaData.reportDetails?metaData.reportDetails
+          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {metaData.hasOwnProperty("reportDetails") ?metaData.reportDetails
 .summary:""} < /div>}/>
           <CardText style={{padding:0}}>
           <Grid>

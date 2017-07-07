@@ -21,9 +21,9 @@ ReceiptSvc->IDGenSvc: Generate receipt number
 ReceiptSvc->+KafkaQSvc: Queue for further processing
 ReceiptSvc->-CollectionClient: Create receipt response
 CollectionClient->-CitizenSvc: Invoke CitizenSvc with return URL
-note over CollectionClient,CitizenClient
-Redirection to the return url of the billing module with 
-Receipt Status and Receipt Number with Hash
+note over CollectionClient,CitizenSvc
+Invoke return url of the citizen service with 
+Receipt Status, Receipt Number and Hash value(to be implemented later)
 end note
 KafkaQSvc->ReceiptSvc: Persist receipt
 

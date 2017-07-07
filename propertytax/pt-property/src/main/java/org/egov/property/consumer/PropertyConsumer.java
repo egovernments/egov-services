@@ -94,15 +94,15 @@ public class PropertyConsumer {
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('property.create')}",
-			"#{environment.getProperty('property.update')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.approved')}",
+			"#{environment.getProperty('egov.propertytax.property.update.approved')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
-		if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("property.create"))) {
+		if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.approved"))) {
 			persisterService.addProperty(consumerRecord.value().getProperties());
 		}
 
-		else if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("property.update"))) {
+		else if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.approved"))) {
 			persisterService.updateProperty(consumerRecord.value().getProperties());
 		}
 	}

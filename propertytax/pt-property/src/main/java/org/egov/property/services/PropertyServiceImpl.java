@@ -70,11 +70,9 @@ public class PropertyServiceImpl implements PropertyService {
     public PropertyResponse createProperty(PropertyRequest propertyRequest) {
         // TODO Auto-generated method stub
         for (Property property : propertyRequest.getProperties()) {
-            // TODO [Ramki] only boundary validation is happening here, where other validations are happening?
-            propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
+             propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
             property = generateAcknowledegeNumber(property, propertyRequest.getRequestInfo());
-            // TODO [Ramki] kofka naming standard is not correct.
-            sendToKafka(environment.getProperty("user.create"), propertyRequest);
+            sendToKafka(environment.getProperty("egov.propertytax.property.userenhanced"), propertyRequest);
         }
         ResponseInfo responseInfo = responseInfoFactory
                 .createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
@@ -89,7 +87,7 @@ public class PropertyServiceImpl implements PropertyService {
         for (Property property : propertyRequest.getProperties()) {
             propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
             propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
-            sendToKafka(environment.getProperty("user.update"), propertyRequest);
+            sendToKafka(environment.getProperty("egov.propertytax.property.update.userenhanced"), propertyRequest);
         }
         return null;
     }

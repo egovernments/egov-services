@@ -65,13 +65,13 @@ public class WorkflowConsumer {
 		return factory;
 	}
 
-	@KafkaListener(topics = { "#{environment.getProperty('property.start.workflow')}",
-			"#{environment.getProperty('property.update.workflow')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.approved')}",
+			"#{environment.getProperty('egov.propertytax.property.update.approved')}" })
 	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
 
 		PropertyRequest propertyRequest = record.value();
 
-		if (record.topic().equalsIgnoreCase(environment.getProperty("property.start.workflow"))) {
+		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.approved"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
@@ -83,7 +83,7 @@ public class WorkflowConsumer {
 				ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 				workflowUtil.startWorkflow(processInstanceRequest);
 			}
-		} else if (record.topic().equals(environment.getProperty("property.update.workflow"))) {
+		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.approved"))) {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();

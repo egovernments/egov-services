@@ -98,10 +98,10 @@ public class Consumer {
 	 *  Search user
 	 *  Create user
 	 */
-	@KafkaListener(topics ={"#{environment.getProperty('validate.user')}","#{environment.getProperty('validate.update.user')}"})
+	@KafkaListener(topics ={"#{environment.getProperty('egov.propertytax.property.userenhanced')}","#{environment.getProperty('egov.propertytax.property.update.userenhanced')}"})
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) {
 		PropertyRequest propertyRequest=consumerRecord.value();
-		if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("validate.user"))){
+		if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.userenhanced"))){
 			StringBuffer createUrl=new StringBuffer();
 			createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
 			createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
@@ -148,12 +148,12 @@ public class Consumer {
 								userRequestInfo, UserResponseInfo.class);
 						user.setId(userCreateResponse.getUser().get(0).getId());
 					}
-					producer.kafkaTemplate.send(environment.getProperty("update.user"), propertyRequest);
+					producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.tax"), propertyRequest);
 				}
 			}
 		}
 
-		else if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("validate.update.user"))){
+		else if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.userenhanced"))){
 			StringBuffer createUrl=new StringBuffer();
 			createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
 			createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
@@ -188,7 +188,7 @@ public class Consumer {
 								userRequestInfo, UserResponseInfo.class);
 						user.setId(userCreateResponse.getUser().get(0).getId());
 					}
-					producer.kafkaTemplate.send(environment.getProperty("update.user"), propertyRequest);
+					producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax"), propertyRequest);
 				}
 			}
 		}

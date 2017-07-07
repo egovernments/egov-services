@@ -66,14 +66,17 @@ import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.model.enums.Purpose;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,6 +92,9 @@ public class BillService {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private ResponseFactory responseFactory;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -213,19 +219,25 @@ public class BillService {
 							.findAny().orElse(null);
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					// TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
+					
+					Purpose purpose = Purpose.CURRENT_AMOUNT;
+					
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("")
 							.creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
 							.glcode(glCodeMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand())
-							.order(taxHeadMaster.getOrder()).build();
+							.order(taxHeadMaster.getOrder()).purpose(purpose)
+							.build();
 
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
 
+			//TODO Change the business service call get it form map and another method
+			
 			BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder().
 					businessService(new HashSet<String>(Arrays.asList(businessService.split(", ")))).tenantId(tenantId).build();
-			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
+			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService
+					.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
 			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
 
 			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
@@ -301,6 +313,10 @@ public class BillService {
 		BillResponse billResponse = new BillResponse();
 		billResponse.setBill(bills);
 		return billResponse;
+	}
+
+	public BillResponse apportion(BillRequest billRequest) {
+		return new BillResponse(responseFactory.getResponseInfo(billRequest.getRequestInfo(), HttpStatus.OK), billRepository.apportion(billRequest));
 	}
 
 

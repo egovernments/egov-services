@@ -1,5 +1,6 @@
 package org.egov.demand.web.controller;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.service.BillService;
 import org.egov.demand.web.contract.BillRequest;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +36,10 @@ public class BillController {
 	@Autowired
 	private ResponseFactory responseFactory;
 
-	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
-
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody BillRequest billRequest, BindingResult bindingResult){
-		//TODO: try to give debug loggers instead info, this applied across the code base.
+
 		log.debug("create billRequest:"+billRequest);
 		
 		if (bindingResult.hasErrors()) {
@@ -67,5 +67,24 @@ public class BillController {
 		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
 		
 		return new ResponseEntity<>(billResponse,HttpStatus.CREATED);
+	}
+	
+	@PostMapping("_apportion")
+	@ResponseBody
+	public ResponseEntity<?> apportion(@RequestBody BillRequest billRequest, @PathVariable String tenantId,
+			BindingResult bindingResult) {
+
+		RequestInfo requestInfo = billRequest.getRequestInfo();
+		log.debug("genrateBill tenantId : " + tenantId);
+		log.debug("genrateBill requestInfo : " + requestInfo);
+
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
+					HttpStatus.BAD_REQUEST);
+		}
+		// billValidator.validateBillRequest(billRequest);
+		BillResponse billResponse = billService.apportion(billRequest);
+
+		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
 }

@@ -4,22 +4,29 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
 import org.egov.demand.web.contract.BillRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.demand.web.contract.BillResponse;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +34,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BillRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(BillRepository.class);
-
 	@Autowired
 	private BillQueryBuilder billQueryBuilder;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private BusinessServiceDetailRepository businessServiceDetailRepository;
 	
 	@Transactional
 	public void saveBill(BillRequest billRequest){
@@ -85,7 +96,6 @@ public class BillRepository {
 			}
 		}
 		log.debug("saveBillDeails tempBillDetails:"+billDetails);
-		//final List<BillDetail> billDetails = tempBillDetails;	
 		jdbcTemplate.batchUpdate(billQueryBuilder.INSERT_BILLDETAILS_QUERY, new BatchPreparedStatementSetter() {
 				
 			
@@ -108,6 +118,7 @@ public class BillRepository {
 				ps.setObject(12, billDetail.getTotalAmount());
 				ps.setBoolean(13, billDetail.getCallBackForApportioning());
 				ps.setBoolean(14, billDetail.getPartPaymentAllowed());
+				//TODO null check
 				ps.setString(15, StringUtils.join(billDetail.getCollectionModesNotAllowed(),","));
 				ps.setString(16, requestInfo.getUserInfo().getId().toString());
 				ps.setLong(17, new Date().getTime());
@@ -160,4 +171,62 @@ public class BillRepository {
 			}
 		});
 	}
+
+	public List<Bill> apportion(BillRequest billRequest) {
+
+		RequestInfo requestInfo = billRequest.getRequestInfo();
+		List<Bill> inputBills = billRequest.getBills();
+		List<Bill> reqBills = null;
+		BillRequest inputBillrequest = new BillRequest();
+		Map<String, BillDetail> responseBillDetailsMap = new HashMap<>();
+		inputBillrequest.setRequestInfo(requestInfo);
+
+		BusinessServiceDetailCriteria businessCriteria = BusinessServiceDetailCriteria.builder().build();
+		businessServiceDetailRepository.searchBusinessServiceDetails(businessCriteria);
+		Map<String, BusinessServiceDetail> businessServicesMap = businessServiceDetailRepository
+				.searchBusinessServiceDetails(businessCriteria).stream().filter(businessServie -> {
+					return businessServie.getCallBackForApportioning();
+				}).collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
+
+		for (String businessService : businessServicesMap.keySet()) {
+
+			String url = businessServicesMap.get(businessService).getCallBackApportionURL();
+			reqBills = new ArrayList<>();
+			for (Bill bill : inputBills) {
+
+				Bill reqBill = new Bill(bill);
+				List<BillDetail> reqbillDetails = new ArrayList<>();
+				for (BillDetail billDetail : reqBill.getBillDetails())
+					if (billDetail.getBusinessService().equalsIgnoreCase(businessService))
+						reqbillDetails.add(billDetail);
+				reqBill.setBillDetails(reqbillDetails);
+				reqBills.add(reqBill);
+			}
+			inputBillrequest.setBills(reqBills);
+			List<Bill> responseBills = restTemplate.postForObject(url, billRequest, BillResponse.class).getBill();
+			for (Bill bill : responseBills) {
+				for (BillDetail detail : bill.getBillDetails())
+					responseBillDetailsMap.put(detail.getId(), detail);
+			}
+		}
+		return getApportionedBillList(inputBills, responseBillDetailsMap);
+	}
+
+	private List<Bill> getApportionedBillList(List<Bill> inputBills, Map<String, BillDetail> responseBillDetailsMap) {
+
+		for (Bill bill : inputBills) {
+			List<BillDetail> billDetails = new ArrayList<>();
+			for (BillDetail detail : bill.getBillDetails()) {
+
+				String id = detail.getId();
+				if (id != null)
+					billDetails.add(responseBillDetailsMap.get(id));
+				else
+					billDetails.add(detail);
+			}
+			bill.setBillDetails(billDetails);
+		}
+		return inputBills;
+	}
 }
+

@@ -53,9 +53,7 @@ public class DemandQueryBuilder {
 	private DemandQueryBuilder() {
 		//private constructor to avoid instantiation
 	}
-
-	public static final String SEQ_EGBS_QUERY = "SELECT NEXTVAL('sequencename') FROM GENERATE_SERIES(1,?)";
-
+	
 	public static final String BASE_DEMAND_QUERY = "SELECT demand.id AS did,demand.consumercode AS dconsumercode,"
 			+ "demand.consumertype AS dconsumertype,demand.businessservice AS dbusinessservice,demand.owner AS downer,"
 			+ "demand.taxperiodfrom AS dtaxperiodfrom,demand.taxperiodto AS dtaxperiodto,"

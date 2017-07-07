@@ -165,9 +165,14 @@ public class DemandService {
 
 			for (DemandDetail demandDetail : demand.getDemandDetails()) {
 				DemandDetail demandDetail2 = demandDetailMap.get(demandDetail.getId());
-				demandDetail.setTaxAmount(demandDetail2.getTaxAmount());
-				demandDetail.setCollectionAmount(demandDetail2.getCollectionAmount());
-
+				BigDecimal tax = demandDetail.getTaxAmount().subtract(demandDetail2.getCollectionAmount());
+				if(tax.doubleValue()>=0){
+				demandDetail.setTaxAmount(tax);
+				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(demandDetail2.getCollectionAmount()));
+				}else{
+					
+				}
+				
 				AuditDetail demandDetailAudit = demandDetail.getAuditDetail();
 				demandDetailAudit.setLastModifiedBy(auditDetail.getLastModifiedBy());
 				demandDetailAudit.setLastModifiedTime(auditDetail.getLastModifiedTime());

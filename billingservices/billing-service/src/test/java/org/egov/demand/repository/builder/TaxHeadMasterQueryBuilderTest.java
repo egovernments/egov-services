@@ -52,7 +52,7 @@ public class TaxHeadMasterQueryBuilderTest {
 				+ ",glcode.createdby as glcreatedby, glcode.createdtime as glcreatedtime,"
 				+ " glcode.lastmodifiedby as gllastmodifiedby, glcode.lastmodifiedtime as gllastmodifiedtime "
 				+ "FROM egbs_taxheadmaster taxhead INNER Join egbs_glcodemaster glcode on taxhead.code=glcode.taxhead"
-				+ " and taxhead.tenantid=glcode.tenantid WHERE taxhead.tenantId = ? ORDER BY name LIMIT ? OFFSET ?";
+				+ " and taxhead.tenantid=glcode.tenantid WHERE taxhead.tenantId = ?  ORDER BY name LIMIT ? OFFSET ?";
 		assertEquals(queryWithTenantId,
 				taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteriaQuery, preparedStatementValues));
 
@@ -69,7 +69,7 @@ public class TaxHeadMasterQueryBuilderTest {
 				+ "service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
 				+ "lastmodifiedby, lastmodifiedtime) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-		assertEquals(queryWithTenantId, taxHeadMasterQueryBuilder.getInsertQuery());
+		assertEquals(queryWithTenantId, taxHeadMasterQueryBuilder.Insert_Query);
 	}
 	
 	@Test
@@ -79,6 +79,6 @@ public class TaxHeadMasterQueryBuilderTest {
 				+ "lastmodifiedby=?, lastmodifiedtime=?"
 				+ " WHERE tenantid=?";
 		
-		assertEquals(query, taxHeadMasterQueryBuilder.getUpdateQuery());
+		assertEquals(query, taxHeadMasterQueryBuilder.Update_Query);
 	}
 }

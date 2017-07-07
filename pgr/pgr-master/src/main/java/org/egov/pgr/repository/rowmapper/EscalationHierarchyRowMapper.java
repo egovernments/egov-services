@@ -55,6 +55,8 @@ public class EscalationHierarchyRowMapper implements RowMapper<EscalationHierarc
 		escHierarchy.setToPosition(rs.getLong("toposition"));
 		escHierarchy.setServiceCode(rs.getString("servicecode"));
 		escHierarchy.setTenantId(rs.getString("tenantid"));
+		escHierarchy.setDepartment(rs.getLong("department"));
+		escHierarchy.setDesignation(rs.getLong("designation"));
 		return escHierarchy;
 	}
 

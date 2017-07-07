@@ -79,10 +79,16 @@ public class ServiceTypeQueryBuilder {
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
 
-        if (serviceGetRequest.getTenantId() != null) {
+        if (null != serviceGetRequest.getTenantId()) {
             isAppendAndClause = true;
             selectQuery.append(" comp.tenantId = ?");
             preparedStatementValues.add(serviceGetRequest.getTenantId());
+        }
+        
+        if (null != serviceGetRequest.getCategoryId()) {
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" comp.category = ?");
+            preparedStatementValues.add(serviceGetRequest.getCategoryId());
         }
 
         if (serviceGetRequest.getId() != null) {

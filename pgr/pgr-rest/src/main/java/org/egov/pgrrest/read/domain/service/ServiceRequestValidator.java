@@ -6,3 +6,4 @@ public interface ServiceRequestValidator {
     boolean canValidate(ServiceRequest serviceRequest);
     void validate(ServiceRequest serviceRequest);
 }
+

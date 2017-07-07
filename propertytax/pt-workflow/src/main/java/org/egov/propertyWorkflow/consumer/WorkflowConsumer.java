@@ -9,8 +9,9 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.WorkFlowDetails;
-import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
+import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.RequestInfo;
+import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +33,19 @@ import org.springframework.stereotype.Service;
 @EnableKafka
 @Service
 public class WorkflowConsumer {
+
 	@Autowired
 	private WorkFlowUtil workflowUtil;
 
 	@Autowired
 	Environment environment;
 
+	@Autowired
+	WorkflowProducer workflowProducer;
+
+	/**
+	 * This method for getting consumer configuration bean
+	 */
 	@Bean
 	public Map<String, Object> consumerConfig() {
 		Map<String, Object> consumerProperties = new HashMap<String, Object>();
@@ -46,11 +54,14 @@ public class WorkflowConsumer {
 				environment.getProperty("bootstrap.server.config"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-
 		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.groupId"));
 		return consumerProperties;
 	}
 
+	/**
+	 * This method will return the consumer factory bean based on consumer
+	 * configuration
+	 */
 	@Bean
 	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
@@ -58,6 +69,9 @@ public class WorkflowConsumer {
 
 	}
 
+	/**
+	 * This bean will return kafka listner object based on consumer factory
+	 */
 	@Bean
 	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
@@ -65,39 +79,65 @@ public class WorkflowConsumer {
 		return factory;
 	}
 
-	@KafkaListener(topics = { "#{environment.getProperty('property.start.workflow')}",
-			"#{environment.getProperty('property.update.workflow')}" })
+	/**
+	 * This method will listen property object from producer and will process
+	 * the workflow
+	 * 
+	 * start workflow, update workflow
+	 */
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.approved')}",
+    "#{environment.getProperty('egov.propertytax.property.update.approved')}" })
+
 	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
 
 		PropertyRequest propertyRequest = record.value();
 
-		if (record.topic().equalsIgnoreCase(environment.getProperty("property.start.workflow"))) {
+		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.approved"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
-				WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
-				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
-				RequestInfo requestInfo = setWorkFlowRequestInfoFromPropertyRequest(propertyRequest,
-						property.getTenantId());
-				workflowDetailsRequestInfo.setRequestInfo(requestInfo);
-				workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
-				ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
-				workflowUtil.startWorkflow(processInstanceRequest);
+				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
+						propertyRequest);
+				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo);
 			}
-		} else if (record.topic().equals(environment.getProperty("property.update.workflow"))) {
+			workflowProducer.send(environment.getProperty("workflowprocess.create"), propertyRequest);
+		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.approved"))) {
+
 			for (Property property : propertyRequest.getProperties()) {
-				WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
-				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
-				workflowDetailsRequestInfo.setTenantId(property.getTenantId());
-				workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
-				RequestInfo requestInfo = setWorkFlowRequestInfoFromPropertyRequest(propertyRequest,
-						property.getTenantId());
-				workflowDetailsRequestInfo.setRequestInfo(requestInfo);
-				workflowUtil.updateWorkflow(workflowDetailsRequestInfo);
+				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
+						propertyRequest);
+				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo);
 			}
+			workflowProducer.send(environment.getProperty("workflowprocess.updatetask"), propertyRequest);
 		}
 
 	}
 
+	/**
+	 * This method will generate WorkflowDetailsRequestInfo from the Property
+	 * 
+	 * @param property
+	 * @param propertyRequest
+	 * @return workflowDetailsRequestInfo
+	 */
+	private WorkflowDetailsRequestInfo getPropertyWorkflowDetailsRequestInfo(Property property,
+			PropertyRequest propertyRequest) {
+
+		WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
+		WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
+		workflowDetailsRequestInfo.setTenantId(property.getTenantId());
+		RequestInfo requestInfo = setWorkFlowRequestInfoFromPropertyRequest(propertyRequest, property.getTenantId());
+		workflowDetailsRequestInfo.setRequestInfo(requestInfo);
+		workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
+		return workflowDetailsRequestInfo;
+	}
+
+	/**
+	 * This method will generate RequestInfo from the PropertyRequest
+	 * 
+	 * @param PropertyRequest
+	 * @param tenantId
+	 * @return RequestInfo
+	 */
 	private RequestInfo setWorkFlowRequestInfoFromPropertyRequest(PropertyRequest propertyRequest, String tenantId) {
 
 		RequestInfo requestInfo = new RequestInfo();

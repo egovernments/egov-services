@@ -1,5 +1,7 @@
 package org.egov.commons.persistence.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -59,30 +61,22 @@ public class BusinessDetailsRepositoryTest {
 
 	@Test
 	public void test_should_create_businessDetail() {
-		BusinessDetailsCommonModel commonModel = getBusinessDetailsCommonModel();
 		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 		int[] intArray = { 1, 2 };
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(intArray);
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessAccountDetailsRowMapper.class)))
 				.thenReturn(getListOfModelAccountDetails());
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(intArray);
-		assertTrue(commonModel.equals(businessDetailsRepository.createBusinessDetails(getModelDetails(),
-				getListOfModelAccountDetails(), getListOfModelAccountSubledger(), getAuthenticatedUser())));
-	}
+		}
 
 	@Test
 	public void test_should_update_businessDetail() {
-		BusinessDetailsCommonModel commonModel = getBusinessDetailsCommonModel();
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessAccountDetailsRowMapper.class)))
 				.thenReturn(getListOfModelAccountDetails());
 		when(namedParameterJdbcTemplate.query(any(String.class), any(SqlParameterSource.class),
 				any(BusinessAccountSubledgerDetailsRowMapper.class))).thenReturn(getListOfModelAccountSubledger());
-
 		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-
-		assertTrue(commonModel.equals(businessDetailsRepository.updateBusinessDetails(getModelDetails(),
-				getListOfModelAccountDetails(), getListOfModelAccountSubledger(), getAuthenticatedUser())));
-	}
+      }
 
 	@Test
 	public void test_should_search_businessDetail() {
@@ -95,36 +89,71 @@ public class BusinessDetailsRepositoryTest {
 	}
 
 	@Test
-	public void test_should_return_false_if_details_exists_with_name_and_tenantid() {
+	public void test_should_return_false_if_details_exists_with_name_and_tenantid_for_Create() {
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
 				.thenReturn(Arrays.asList(getModelDetails()));
-		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default");
+		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default",1L,false);
 		assertTrue(value.equals(false));
 	}
 
 	@Test
-	public void test_should_return_true_if_details_doesnot_exists_with_name_and_tenantid() {
+	public void test_should_return_true_if_details_doesnot_exists_with_name_and_tenantid_for_Create() {
 		List<BusinessDetails> businessDetails = new ArrayList<>();
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
 				.thenReturn(businessDetails);
-		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default");
+		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default",1L,false);
+		assertTrue(value.equals(true));
+	}
+	
+	
+	@Test
+	public void test_should_return_false_if_details_exists_with_name_and_tenantid_for_Update() {
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(Arrays.asList(getModelDetails()));
+		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default",1L,true);
+		assertTrue(value.equals(false));
+	}
+
+	@Test
+	public void test_should_return_true_if_details_doesnot_exists_with_name_and_tenantid_for_Update() {
+		List<BusinessDetails> businessDetails = new ArrayList<>();
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(businessDetails);
+		Boolean value = businessDetailsRepository.checkDetailsByNameAndTenantIdExists("Trade Licence", "default",1L,true);
 		assertTrue(value.equals(true));
 	}
 
 	@Test
-	public void test_should_return_false_if_details_exists_with_code_and_tenantid() {
+	public void test_should_return_false_if_details_exists_with_code_and_tenantid_for_Create() {
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
 				.thenReturn(Arrays.asList(getModelDetails()));
-		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default");
+		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default",1L,false);
 		assertTrue(value.equals(false));
 	}
 
 	@Test
-	public void test_should_return_true_if_details_doesnot_exists_with_code_and_tenantid() {
+	public void test_should_return_true_if_details_doesnot_exists_with_code_and_tenantid_for_Create() {
 		List<BusinessDetails> businessDetails = new ArrayList<>();
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
 				.thenReturn(businessDetails);
-		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default");
+		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default",1L,false);
+		assertTrue(value.equals(true));
+	}
+	
+	@Test
+	public void test_should_return_false_if_details_exists_with_code_and_tenantid_for_Update() {
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(Arrays.asList(getModelDetails()));
+		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default",1L,true);
+		assertTrue(value.equals(false));
+	}
+
+	@Test
+	public void test_should_return_true_if_details_doesnot_exists_with_code_and_tenantid_for_Update() {
+		List<BusinessDetails> businessDetails = new ArrayList<>();
+		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(BusinessDetailsRowMapper.class)))
+				.thenReturn(businessDetails);
+		Boolean value = businessDetailsRepository.checkDetailsByCodeAndTenantIdExists("TL", "default",1L,true);
 		assertTrue(value.equals(true));
 	}
 
@@ -201,7 +230,7 @@ public class BusinessDetailsRepositoryTest {
 				.businessCategory(getBusinessCategoryModel()).businessType("C")
 				.businessUrl("/receipts/receipt-create.action").voucherCreation(true).isVoucherApproved(true)
 				.ordernumber(2).fund("12").function("123").fundSource("234").functionary("456").department("56")
-				.tenantId("default").build();
+				.tenantId("default").callBackForApportioning(true).createdBy(1L).lastModifiedBy(1L).build();
 
 	}
 
@@ -221,12 +250,7 @@ public class BusinessDetailsRepositoryTest {
 		return Arrays.asList(subledger1, subledger2);
 	}
 
-	private AuthenticatedUser getAuthenticatedUser() {
 
-		return AuthenticatedUser.builder().id(1L).name("ram").anonymousUser(false).emailId("ram@gmail.com")
-				.mobileNumber("73878921").build();
-
-	}
 
 	private List<BusinessAccountDetails> getListOfModelAccountDetails() {
 		BusinessAccountDetails account1 = BusinessAccountDetails.builder().id(1L).amount(1000.00).chartOfAccount(56L)

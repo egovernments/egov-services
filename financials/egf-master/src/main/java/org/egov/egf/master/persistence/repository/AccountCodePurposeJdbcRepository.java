@@ -55,18 +55,18 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( accountCodePurposeSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,accountCodePurposeSearchEntity.getId());} 
-if( accountCodePurposeSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,accountCodePurposeSearchEntity.getName());} 
-
-		 
+		if (accountCodePurposeSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =: id");
+			paramValues.put("id", accountCodePurposeSearchEntity.getId());
+		}
+		if (accountCodePurposeSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =: name");
+			paramValues.put("name", accountCodePurposeSearchEntity.getName());
+		}
 
 		Pagination<AccountCodePurpose> page = new Pagination<>();
 		page.setOffSet(accountCodePurposeSearchEntity.getOffset());
@@ -82,19 +82,21 @@ paramValues.put("name" ,accountCodePurposeSearchEntity.getName());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + accountCodePurposeSearchEntity.getPageSize() + " offset "
-				+ accountCodePurposeSearchEntity.getOffset() * accountCodePurposeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + accountCodePurposeSearchEntity.getPageSize() + " offset "
+						+ accountCodePurposeSearchEntity.getOffset() * accountCodePurposeSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountCodePurposeEntity.class);
 
-		List<AccountCodePurposeEntity> accountCodePurposeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<AccountCodePurposeEntity> accountCodePurposeEntities = namedParameterJdbcTemplate
+				.query(searchQuery.toString(), paramValues, row);
 
 		page.setTotalResults(accountCodePurposeEntities.size());
 
-		List<AccountCodePurpose> accountcodepurposes = new ArrayList<AccountCodePurpose>();
+		List<AccountCodePurpose> accountcodepurposes = new ArrayList<>();
 		for (AccountCodePurposeEntity accountCodePurposeEntity : accountCodePurposeEntities) {
 
 			accountcodepurposes.add(accountCodePurposeEntity.toDomain());
@@ -107,14 +109,16 @@ paramValues.put("name" ,accountCodePurposeSearchEntity.getName());}
 	public AccountCodePurposeEntity findById(AccountCodePurposeEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<AccountCodePurposeEntity> accountcodepurposes = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<AccountCodePurposeEntity>());
+		List<AccountCodePurposeEntity> accountcodepurposes = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(AccountCodePurposeEntity.class));
+
 		if (accountcodepurposes.isEmpty()) {
 			return null;
 		} else {

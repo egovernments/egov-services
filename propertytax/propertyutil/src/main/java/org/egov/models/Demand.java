@@ -1,43 +1,47 @@
 package org.egov.models;
 
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Demand {
+    private String id;
 
-	private Integer id;
+    @NotNull
+    private String tenantId;
 
-	@NotNull
-    private String	tenantId;
-	
-	@NotNull
-	private String consumerCode;	
+    @NotNull
+    private String consumerCode;
 
-	private String consumerType;	
-	
-	@NotNull
-	private String businessService;
+    @NotNull
+    private String consumerType;
 
-	@NotNull
-	private User owner;	
+    @NotNull
+    private String businessService;
 
-	@NotNull
-	private String taxPeriodFrom;
-	
-	@NotNull
-	private String taxPeriodTo;
-	
-	@NotNull
-	private DemandDetails demandDetails;	
+    @NotNull
+    private Owner owner;
 
-	private AuditDetails auditDetails;
+    @NotNull
+    private Long taxPeriodFrom;
 
-	private Double minimumAmountPayable;	
+    @NotNull
+    private Long taxPeriodTo;
 
+    @Valid
+    @NotNull
+    private List<DemandDetail> demandDetails = new ArrayList<DemandDetail>();
+
+    private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
+
+    private AuditDetails auditDetail;
 }

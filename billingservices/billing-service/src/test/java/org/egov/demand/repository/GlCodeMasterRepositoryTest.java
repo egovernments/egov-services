@@ -47,7 +47,7 @@ public class GlCodeMasterRepositoryTest {
 		assertTrue(glCodeMaster.equals(glCodeMasterRepository.findForCriteria(new GlCodeMasterCriteria())));
 	}
 	
-	@Test
+	/*@Test
 	public void testCreateGlCodeMaster() {
 		
 		GlCodeMasterRequest glCodeMasterRequest = new GlCodeMasterRequest();
@@ -78,7 +78,7 @@ public class GlCodeMasterRepositoryTest {
 		
 		when(jdbcTemplate.batchUpdate(any(String.class),any(List.class))).thenReturn(new int[]{1});
 		assertTrue(glCodes.equals(glCodeMasterRepository.update(glCodeMasterRequest)));
-	}
+	}*/
 	
 	private GlCodeMaster getGlCodeMaster(){
 		GlCodeMaster glCodeMaster=new GlCodeMaster();

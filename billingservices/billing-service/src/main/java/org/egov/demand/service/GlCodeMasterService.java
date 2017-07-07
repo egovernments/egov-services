@@ -61,10 +61,8 @@ public class GlCodeMasterService {
 		
 		int index=0;
 		for (GlCodeMaster master: glCodeMaster) {
-			master.setId(glCodeMasterIds.get(index));
+			master.setId(glCodeMasterIds.get(index++));
 		}
-		glCodeMasterRequest.setGlCodeMasters(glCodeMaster);
-
 		logger.info("glCodeMasterRequest createAsync::" + glCodeMasterRequest);
 
 		kafkaTemplate.send(applicationProperties.getCreateGlCodeMasterTopicName(),

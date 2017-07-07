@@ -70,6 +70,10 @@ public class ServiceGetRequest {
     private String code;
 
     private Boolean active;
+    
+    private Long categoryId; 
+    
+    private String type; 
 
     @NotNull
     private String tenantId;

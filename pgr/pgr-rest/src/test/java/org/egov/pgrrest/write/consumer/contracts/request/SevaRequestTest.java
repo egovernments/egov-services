@@ -32,12 +32,6 @@ public class SevaRequestTest {
 
         assertNotNull(serviceRequestRecord);
         assertEquals("crn", serviceRequestRecord.getCRN());
-        final Date expectedEscalationDate = toDate(LocalDateTime.of(2017, 4, 1, 13, 20, 47));
-        assertEquals(expectedEscalationDate, serviceRequestRecord.getEscalationDate());
-        final Date expectedLastModifiedDate = toDate(LocalDateTime.of(2017, 4, 2, 13, 20, 47));
-        assertEquals(expectedLastModifiedDate, serviceRequestRecord.getLastModifiedDate());
-        final Date expectedCreatedDate = toDate(LocalDateTime.of(2017, 4, 1, 13, 20, 47));
-        assertEquals(expectedCreatedDate, serviceRequestRecord.getCreatedDate());
         assertEquals(Long.valueOf(29), serviceRequestRecord.getDepartment());
         assertEquals(Long.valueOf(3), serviceRequestRecord.getCreatedBy());
         assertEquals(Long.valueOf(3), serviceRequestRecord.getLastModifiedBy());

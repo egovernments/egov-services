@@ -5,15 +5,16 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessAccountDetails;
 import org.egov.commons.model.BusinessAccountSubLedgerDetails;
 import org.egov.commons.model.BusinessDetails;
@@ -55,15 +56,15 @@ public class BusinessDetailsRepository {
 	public static final String INSERT_BUSINESS_DETAILS = "Insert into eg_businessdetails"
 			+ " (id,name,isEnabled,code,businessType,businessUrl,voucherCutOffDate,"
 			+ "ordernumber,voucherCreation,isVoucherApproved,fund,department,"
-			+ "fundSource,functionary,businessCategory,function,tenantId,"
+			+ "fundSource,functionary,businessCategory,function,callBackForApportioning,tenantId,"
 			+ "createdBy,createdDate,lastModifiedBy,lastModifiedDate)" + " values (?,?,?,?,?,?,"
-			+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_BUSINESS_DETAILS = "Update eg_businessdetails"
 			+ " set name=?,isEnabled=?,code=?,businessType=?,businessUrl=?,voucherCutOffDate=?,"
 			+ "ordernumber=?,voucherCreation=?,isVoucherApproved=?,fund=?,department=?,"
-			+ "fundSource=?,functionary=?,businessCategory=?,function=?,tenantId=?,"
-			+ "lastModifiedBy=?,lastModifiedDate=? where id=?";
+			+ "fundSource=?,functionary=?,businessCategory=?,function=?,callBackForApportioning=?,"
+			+ "tenantId=?,lastModifiedBy=?,lastModifiedDate=? where id=?";
 
 	public static final String UPDATE_BUSINESS_ACCOUNT_DETAILS = "Update eg_business_accountdetails"
 			+ " set businessDetails=?,chartOfAccount=?,amount=?,tenantId=?" + " where id=?";
@@ -99,18 +100,23 @@ public class BusinessDetailsRepository {
 
 	private static final String GET_DETAILS_BY_NAME_AND_TENANTID = "Select * from eg_businessdetails"
 			+ " where name=? and tenantId=?";
+	private static final String GET_DETAILS_BY_NAME_TENANTID_AND_ID = "Select * from eg_businessdetails"
+			+ " where name=? and tenantId=? and id != ?";
+	private static final String GET_BUSINESSDETAILS_BY_CODE_AND_TENANTID_AND_ID = "Select * from eg_businessdetails"
+			+ " where code=? and tenantId=? and id != ?";
 
-	public BusinessDetailsCommonModel createBusinessDetails(BusinessDetails modelDetails,
+	public void createBusinessDetails(BusinessDetails modelDetails,
 			List<BusinessAccountDetails> listModelAccountDetails,
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger, AuthenticatedUser user) {
+			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger) {
 		Long detailsId = generateSequence("SEQ_EG_BUSINESSDETAILS");
 		Object[] obj = new Object[] { detailsId, modelDetails.getName(), modelDetails.getIsEnabled(),
 				modelDetails.getCode(), modelDetails.getBusinessType(), modelDetails.getBusinessUrl(),
 				modelDetails.getVoucherCutoffDate(), modelDetails.getOrdernumber(), modelDetails.getVoucherCreation(),
 				modelDetails.getIsVoucherApproved(), modelDetails.getFund(), modelDetails.getDepartment(),
 				modelDetails.getFundSource(), modelDetails.getFunctionary(), modelDetails.getBusinessCategory().getId(),
-				modelDetails.getFunction(), modelDetails.getTenantId(), user.getId(),
-				new Date(new java.util.Date().getTime()), user.getId(), new Date(new java.util.Date().getTime()) };
+				modelDetails.getFunction(), modelDetails.getCallBackForApportioning(), modelDetails.getTenantId(),
+				modelDetails.getCreatedBy(), new Date(new java.util.Date().getTime()), modelDetails.getLastModifiedBy(),
+				new Date(new java.util.Date().getTime()) };
 		jdbcTemplate.update(INSERT_BUSINESS_DETAILS, obj);
 		List<Object[]> batchArgs = new ArrayList<>();
 		List<Long> listOfAccountDetailsId = new ArrayList<>();
@@ -145,24 +151,23 @@ public class BusinessDetailsRepository {
 			}
 		}
 		jdbcTemplate.batchUpdate(INSERT_BUSINESS_ACCOUNT_SUBLEDGER_DETAILS, batch);
-		return new BusinessDetailsCommonModel(Collections.singletonList(modelDetails), listModelAccountDetails,
-				listModelAccountSubledger);
+
 	}
 
 	public Long generateSequence(String sequenceName) {
 		return jdbcTemplate.queryForObject("SELECT nextval('" + sequenceName + "')", Long.class);
 	}
 
-	public BusinessDetailsCommonModel updateBusinessDetails(BusinessDetails modelDetails,
+	public void updateBusinessDetails(BusinessDetails modelDetails,
 			List<BusinessAccountDetails> listModelAccountDetails,
-			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger, AuthenticatedUser user) {
+			List<BusinessAccountSubLedgerDetails> listModelAccountSubledger) {
 		Object[] obj = new Object[] { modelDetails.getName(), modelDetails.getIsEnabled(), modelDetails.getCode(),
 				modelDetails.getBusinessType(), modelDetails.getBusinessUrl(), modelDetails.getVoucherCutoffDate(),
 				modelDetails.getOrdernumber(), modelDetails.getVoucherCreation(), modelDetails.getIsVoucherApproved(),
 				modelDetails.getFund(), modelDetails.getDepartment(), modelDetails.getFundSource(),
 				modelDetails.getFunctionary(), modelDetails.getBusinessCategory().getId(), modelDetails.getFunction(),
-				modelDetails.getTenantId(), user.getId(), new Date(new java.util.Date().getTime()),
-				modelDetails.getId() };
+				modelDetails.getCallBackForApportioning(), modelDetails.getTenantId(), modelDetails.getLastModifiedBy(),
+				new Date(new java.util.Date().getTime()), modelDetails.getId() };
 		jdbcTemplate.update(UPDATE_BUSINESS_DETAILS, obj);
 		final List<Object> preparedStatementValue = new ArrayList<>();
 		preparedStatementValue.add(modelDetails.getId());
@@ -177,7 +182,7 @@ public class BusinessDetailsRepository {
 				mapOfInsertedIdsInModelAndInDB.put(accountdetail.getId(), accountDetailIdFromDB);
 				Object[] object = new Object[] { accountDetailIdFromDB, accountdetail.getBusinessDetails().getId(),
 						accountdetail.getChartOfAccount(), accountdetail.getAmount(), accountdetail.getTenantId() };
-
+				jdbcTemplate.update(INSERT_BUSINESS_ACCOUNT_DETAILS, object);
 			} else if (needsUpdate(accountdetail, accountDetailsFromDB))
 				updateAccountDetails(accountdetail);
 		}
@@ -207,8 +212,6 @@ public class BusinessDetailsRepository {
 				.collect(Collectors.toList());
 		if (!deleteSubledgerDetailsIds.isEmpty())
 			deleteSubledgerDetails(deleteSubledgerDetailsIds, modelDetails.getTenantId());
-		return new BusinessDetailsCommonModel(Collections.singletonList(modelDetails), listModelAccountDetails,
-				listModelAccountSubledger);
 
 	}
 
@@ -355,8 +358,8 @@ public class BusinessDetailsRepository {
 		for (BusinessAccountDetails accountDetail : accountDetails) {
 			subledgerDetails.add(accountDetail.getSubledgerDetails().get(0));
 		}
-		List<BusinessDetails> uniqueBusinessDetails = details.stream().collect(collectingAndThen(
-				toCollection(() -> new TreeSet<>(comparingLong(BusinessDetails::getId))), ArrayList::new));
+		List<BusinessDetails> uniqueBusinessDetails = details.stream().filter(distinctByKey(p -> p.getId()))
+				.collect(Collectors.toList());
 		List<BusinessAccountDetails> uniqueBusinessAccountDetails = accountDetails.stream()
 				.filter(accountdetail -> accountdetail.getId() != null)
 				.collect(collectingAndThen(
@@ -377,26 +380,50 @@ public class BusinessDetailsRepository {
 		return new BusinessDetailsCommonModel(businessDetails, businessAccountDetails, businessAccountSubledger);
 	}
 
-	public boolean checkDetailsByNameAndTenantIdExists(String name, String tenantId) {
+	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+		Map<Object, Boolean> map = new ConcurrentHashMap<>();
+		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+	}
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+	public boolean checkDetailsByNameAndTenantIdExists(String name, String tenantId, Long id, Boolean isUpdate) {
+		final List<Object> preparedStatementValue = new ArrayList<Object>();
+		preparedStatementValue.add(name);
+		preparedStatementValue.add(tenantId);
+		List<BusinessDetails> detailsFromDb = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		preparedStatementValues.add(name);
 		preparedStatementValues.add(tenantId);
-		List<BusinessDetails> detailsFromDb = jdbcTemplate.query(GET_DETAILS_BY_NAME_AND_TENANTID,
-				preparedStatementValues.toArray(), businessDetailsRowMapper);
+		preparedStatementValues.add(id);
+
+		if (isUpdate)
+			detailsFromDb = jdbcTemplate.query(GET_DETAILS_BY_NAME_TENANTID_AND_ID, preparedStatementValues.toArray(),
+					businessDetailsRowMapper);
+		else
+			detailsFromDb = jdbcTemplate.query(GET_DETAILS_BY_NAME_AND_TENANTID, preparedStatementValue.toArray(),
+					businessDetailsRowMapper);
 		if (!detailsFromDb.isEmpty())
 			return false;
 		else
 			return true;
+
 	}
 
-	public boolean checkDetailsByCodeAndTenantIdExists(String code, String tenantId) {
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+	public boolean checkDetailsByCodeAndTenantIdExists(String code, String tenantId, Long id, Boolean isUpdate) {
+		final List<Object> preparedStatementValue = new ArrayList<Object>();
+		preparedStatementValue.add(code);
+		preparedStatementValue.add(tenantId);
+		List<BusinessDetails> detailsFromDb = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		preparedStatementValues.add(code);
 		preparedStatementValues.add(tenantId);
-		List<BusinessDetails> detailsFromDb = jdbcTemplate.query(GET_BUSINESSDETAILS_BY_CODE_AND_TENANTID,
-				preparedStatementValues.toArray(), businessDetailsRowMapper);
+		preparedStatementValues.add(id);
+
+		if (isUpdate)
+			detailsFromDb = jdbcTemplate.query(GET_BUSINESSDETAILS_BY_CODE_AND_TENANTID_AND_ID,
+					preparedStatementValues.toArray(), businessDetailsRowMapper);
+		else
+			detailsFromDb = jdbcTemplate.query(GET_BUSINESSDETAILS_BY_CODE_AND_TENANTID,
+					preparedStatementValue.toArray(), businessDetailsRowMapper);
 		if (!detailsFromDb.isEmpty())
 			return false;
 		else

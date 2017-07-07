@@ -26,3 +26,4 @@ public class AttributeActionsDefinitionKey implements Serializable {
     @Column(name = "name")
     private String name;
 }
+

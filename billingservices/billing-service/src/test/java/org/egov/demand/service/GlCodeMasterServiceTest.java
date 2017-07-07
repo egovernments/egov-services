@@ -63,7 +63,7 @@ public class GlCodeMasterServiceTest {
 		assertEquals(glCodeMasterResponse, glCodeMasterService.getGlCodes(taxHeadMasterCriteria, new RequestInfo()));
 	}
 	
-	@Test
+	/*@Test
 	public void testCreateTest() {
 		List<GlCodeMaster> glCOde = new ArrayList<>();
 		GlCodeMaster glCodeMaster = getGlCodeMaster();
@@ -80,7 +80,7 @@ public class GlCodeMasterServiceTest {
 		when(glCodeMasterRepository.create(any(GlCodeMasterRequest.class))).thenReturn(glCOde);
 		
 		assertTrue(glCodeMasterResponse.equals(glCodeMasterService.create(glCodeMasterRequest)));
-	}
+	}*/
 	
 	@Test
 	public void testCreateAsync() {
@@ -104,7 +104,7 @@ public class GlCodeMasterServiceTest {
 		
 		assertTrue(glCodeMasterResponse.equals(glCodeMasterService.createAsync(glCodeMasterRequest)));
 	}
-	@Test
+	/*@Test
 	public void testUpdateTest() {
 		List<GlCodeMaster> glCOde = new ArrayList<>();
 		GlCodeMaster glCodeMaster = getGlCodeMaster();
@@ -121,7 +121,7 @@ public class GlCodeMasterServiceTest {
 		when(glCodeMasterRepository.update(any(GlCodeMasterRequest.class))).thenReturn(glCOde);
 		
 		assertTrue(glCodeMasterResponse.equals(glCodeMasterService.update(glCodeMasterRequest)));
-	}
+	}*/
 	
 	@Test
 	public void testUpdateAsync() {

@@ -16,14 +16,13 @@ import org.springframework.validation.Validator;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Component
 @Slf4j
-public class TaxHeadMasterValidator implements Validator{
+public class TaxHeadMasterValidator implements Validator {
 
 	@Autowired
 	private TaxHeadMasterService taxHeadMasterService;
-	
+
 	@Override
 	public boolean supports(Class<?> clazz) {
 
@@ -37,23 +36,24 @@ public class TaxHeadMasterValidator implements Validator{
 		if (target instanceof TaxHeadMasterRequest)
 			taxHeadMasterRequest = (TaxHeadMasterRequest) target;
 		else
-			throw new RuntimeException("Invalid Object type for Demand validator");
+			throw new RuntimeException("Invalid Object type for GlCodeMaster validator");
 		validateTaxHeads(taxHeadMasterRequest, errors);
 	}
-	
-	
-	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest,Errors error) {
-		log.debug(":::::in validator class:::::::"+taxHeadsRequest);
-		TaxHeadMasterCriteria taxHeadMasterCriteria=new TaxHeadMasterCriteria();
+
+	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest, Errors error) {
+		log.debug(":::::in validator class:::::::" + taxHeadsRequest);
 		List<TaxHeadMaster> taxHeads = taxHeadsRequest.getTaxHeadMasters();
-		TaxPeriodCriteria taxPeriodCriteria=new TaxPeriodCriteria();
-		int taxHeadsCount=taxHeads.size();
-		for (TaxHeadMaster master:taxHeads) {
-			taxHeadMasterCriteria.setTenantId(master.getTenantId());
-			taxHeadMasterCriteria.setName(master.getName());
-		final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria, taxHeadsRequest.getRequestInfo());
-	    if(! taxHeadMasterResponse.getTaxHeadMasters().isEmpty())
-	    	error.rejectValue("TaxHeadMasters","","Record Already exist");
+		TaxHeadMasterCriteria taxHeadMasterCriteria = null;
+
+		for (TaxHeadMaster master : taxHeads) {
+			if (!master.getTenantId().equalsIgnoreCase(taxHeads.get(0).getTenantId()))
+				error.rejectValue("TaxHeadMasters", "", "Tenant id should be same in all objects");
+			taxHeadMasterCriteria = TaxHeadMasterCriteria.builder().tenantId(master.getTenantId())
+					.name(master.getName()).build();
+			final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria,
+					taxHeadsRequest.getRequestInfo());
+			if (!taxHeadMasterResponse.getTaxHeadMasters().isEmpty())
+				error.rejectValue("TaxHeadMasters", "", "Record Already exist");
 		}
 	}
 }

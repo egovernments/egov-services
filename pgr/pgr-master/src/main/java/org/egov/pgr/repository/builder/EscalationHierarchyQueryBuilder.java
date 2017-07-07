@@ -52,7 +52,7 @@ public class EscalationHierarchyQueryBuilder {
 	
 private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchyQueryBuilder.class);
 	
-	private static final String BASE_QUERY = "SELECT tenantid, fromposition, toposition, servicecode FROM egpgr_escalation_hierarchy esc ";
+	private static final String BASE_QUERY = "SELECT tenantid, fromposition, toposition, servicecode, department, designation FROM egpgr_escalation_hierarchy esc ";
 	
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final EscalationHierarchyGetReq escHierarchy, final List preparedStatementValues) {
@@ -121,8 +121,8 @@ private static final Logger logger = LoggerFactory.getLogger(EscalationHierarchy
 	}
 	
 	public String insertEscalationHierarchy() {
-		return "INSERT INTO egpgr_escalation_hierarchy (tenantid, fromposition, toposition, servicecode, createdby, createddate) "
-				+ " values (?, ?, ?, ?, ?, ?)";
+		return "INSERT INTO egpgr_escalation_hierarchy (tenantid, fromposition, toposition, servicecode, department, designation, createdby, createddate) "
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 	}
 	
 	public String deleteEscalationHierarchy(List<EscalationHierarchy> escHierarchyList) {

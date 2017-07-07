@@ -141,7 +141,7 @@ public class AssetRepository {
 		try {
 
 			final ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(Include.NON_NULL);
+			mapper.setSerializationInclusion(Include.NON_EMPTY);
 			final Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
 			property = mapper.writeValueAsString(asset2);
@@ -162,8 +162,6 @@ public class AssetRepository {
 
 		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
 			asset.setDepreciationRate(null);
-		} else {
-			asset.setDepreciationRate(asset.getDepreciationRate());
 		}
 
 		final Location location = asset.getLocationDetails();

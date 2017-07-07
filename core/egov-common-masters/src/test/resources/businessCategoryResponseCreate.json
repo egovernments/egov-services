@@ -9,8 +9,8 @@
     "BusinessCategoryInfo":[
         {
         "id":1,
-        "name":"Collection",
-        "code":"CL",
+        "name":"Trade Licence",
+        "code":"TL",
         "active":true,
         "tenantId":"default"
         }

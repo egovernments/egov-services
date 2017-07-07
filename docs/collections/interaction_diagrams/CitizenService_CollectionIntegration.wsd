@@ -1,35 +1,20 @@
 title Interaction Diagram for Collection Integration with Citizen Service
 
-CitizenClient->+CitizenSvc: Submit Application Request
+AdminBrowser->+CitizenSvc: Submit Application Request
 CitizenSvc->+BillingSvc: Create Demand 
 BillingSvc->CitizenSvc: Response with Business Details and Application number
-CitizenClient->+CollectionClient: Redirect with BusinessDetails and Application number
-CollectionClient->+BillingSvc: Auto submit search request with BusinessDetails and Application number
-BillingSvc->CollectionClient: Response with bill generated and get the collection modes not allowed
-CollectionClient->+ReceiptSvc: Get collection modes allowed and bank List
-ReceiptSvc->+FinancialSvc: Get bank list
-note over ReceiptSvc,FinancialSvc
-    Get the list of bank for Cheque/DD
-    payments.
-end note
-FinancialSvc->-ReceiptSvc: Bank list response.
-ReceiptSvc->CollectionClient: Response with Collection modes allowed and bank list.
+CitizenSvc->AdminBrowser: Return Response with Business Details and Application number
 
-CollectionClient->ReceiptSvc: Submit payment request
-ReceiptSvc->ReceiptSvc: Validate payment request.
-ReceiptSvc->IDGenSvc: Generate receipt number
-ReceiptSvc->+KafkaQSvc: Queue for further processing
-ReceiptSvc->-CollectionClient: Create receipt response
-CollectionClient->-CitizenSvc: Invoke CitizenSvc with return URL
-note over CollectionClient,CitizenSvc
+AdminBrowser->+ReceiptSvc: [Redirect] : With BusinessDetails and Application number
+note over ReceiptSvc
+Refer BillBasedReceipt Interaction Diagram 
+For the details of Receipt Creation
+end note over 
+AdminBrowser->+BillingSvc: [Auto submit] : Search Bill request with BusinessDetails and Application number
+BillingSvc->ReceiptSvc: Request with bill generated and get the collection modes not allowed
+ReceiptSvc->ReceiptSvc : Create Receipt
+ReceiptSvc->-AdminBrowser: [Return URL] : With Created Receipt response Invoke CitizenSvc with return URL
+note over ReceiptSvc,CitizenSvc
 Invoke return url of the citizen service with 
 Receipt Status, Receipt Number and Hash value(to be implemented later)
 end note
-KafkaQSvc->ReceiptSvc: Persist receipt
-
-KafkaQSvc->WorkflowSvc: Initiate workflow
-KafkaQSvc->InstrumentSvc : Persist instrument
-KafkaQSvc->VoucherSvc: Post voucher in financials
-KafkaQSvc->BillingSvc: Updation of DCB.
-KafkaQSvc->ESSvc: Push to elastic search
-KafkaQSvc->NotificationSvc: Send email/sms

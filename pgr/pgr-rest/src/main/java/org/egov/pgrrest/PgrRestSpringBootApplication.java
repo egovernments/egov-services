@@ -7,6 +7,7 @@ import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgr.common.repository.OtpRepository;
 import org.egov.pgr.common.repository.OtpSMSRepository;
 import org.egov.pgrrest.common.persistence.repository.UserRepository;
+import org.egov.pgrrest.read.domain.service.validator.*;
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
@@ -30,6 +31,8 @@ import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -135,6 +138,17 @@ public class PgrRestSpringBootApplication {
     @Bean
     public TransportClient getTransportClient() {
         return client;
+    }
+
+    @Bean
+    public List<AttributeValueValidator> getAttributeValueValidators() {
+        return Arrays.asList(
+            new MandatoryAttributeValidator(),
+            new SingleValueAttributeValidator(),
+            new DateAttributeValidator(),
+            new IntegerAttributeValidator(),
+            new DoubleAttributeValidator()
+        );
     }
 
     public static void main(String[] args) {

@@ -17,7 +17,7 @@ public class BusinessDetailsQueryBuilder {
 	private static final String BASE_QUERY = "Select bd.id as bd_id,bd.name as bd_name,bd.businessurl as bd_url,"
 			+ "bd.isenabled as bd_enabled,bd.code as bd_code,bd.businesstype as bd_type,"
 			+ "bd.fund as bd_fund,bd.function as bd_function,bd.fundsource as bd_fundsource,"
-			+ "bd.functionary as bd_functionary,bd.department as bd_department,"
+			+ "bd.functionary as bd_functionary,bd.department as bd_department,bd.callbackforapportioning as bd_callback,"
 			+ "bd.vouchercreation as bd_vouc_creation,bd.businesscategory as bd_category,"
 			+ "bd.isvoucherapproved as bd_is_Vou_approved,bd.vouchercutoffdate as bd_vou_cutoffdate,"
 			+ "bd.ordernumber as bd_ordernumber,bd.tenantid as bd_tenant,bd.createdby as bd_createdby,"

@@ -41,6 +41,8 @@ public class BusinessDetailsRequestInfo {
 	private Boolean voucherCreation;
 
 	private Boolean isVoucherApproved;
+	
+	private Boolean callBackForApportioning;
 
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
 	private Date voucherCutoffDate;

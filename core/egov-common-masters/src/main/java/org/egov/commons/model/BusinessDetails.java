@@ -54,6 +54,8 @@ public class BusinessDetails {
 	private String fundSource;
 
 	private String functionary;
+	
+	private Boolean callBackForApportioning;
 
 	@NotNull
 	private BusinessCategory businessCategory;
@@ -76,7 +78,7 @@ public class BusinessDetails {
 
 	private Date lastModifiedDate;
 
-	public BusinessDetails(BusinessDetailsRequestInfo detailsInfo, BusinessCategory modelCategory) {
+	public BusinessDetails(BusinessDetailsRequestInfo detailsInfo, BusinessCategory modelCategory,AuthenticatedUser user) {
 		id = detailsInfo.getId();
 		name = detailsInfo.getName();
 		isEnabled = detailsInfo.getActive();
@@ -94,6 +96,9 @@ public class BusinessDetails {
 		businessCategory = modelCategory;
 		function = detailsInfo.getFunction();
 		tenantId = detailsInfo.getTenantId();
+		createdBy=user.getId();
+		lastModifiedBy=user.getId();
+		callBackForApportioning=detailsInfo.getCallBackForApportioning();
 	}
 
 	public BusinessDetails toDomainModel() {

@@ -2,19 +2,22 @@ package org.egov.commons.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.egov.commons.model.AuthenticatedUser;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.repository.BusinessCategoryRepository;
 import org.egov.commons.service.BusinessCategoryService;
+import org.egov.commons.web.contract.BusinessCategoryRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,27 +30,40 @@ public class BusinessCategoryServiceTest {
 
 	@Mock
 	private BusinessCategoryRepository businessCategoryRepository;
+	@Mock
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@InjectMocks
 	private BusinessCategoryService businessCategoryService;
+
+	@Before
+	public void before() {
+		businessCategoryService = new BusinessCategoryService(kafkaTemplate, businessCategoryRepository);
+	}
 
 	@Test
 	public void test_should_create_businessCategory() {
+		businessCategoryService.create(getBusinessCategoryModel());
+		verify(businessCategoryRepository).create(getBusinessCategoryModel());
+	}
 
-		when(businessCategoryRepository.create(getBusinessCategoryModel(), getAuthenticatedUser()))
-				.thenReturn(getBusinessCategoryModel());
-		BusinessCategory category = businessCategoryService.create(getBusinessCategoryModel(), getAuthenticatedUser());
-		assertThat(category.getCode()).isEqualTo(getBusinessCategoryModel().getCode());
-		assertThat(category.getName()).isEqualTo(getBusinessCategoryModel().getName());
+	@Test
+	public void test_should_create_businessCategory_Asynchronously() {
+		businessCategoryService.createAsync(getBusinessCategoryRequest());
+		verify(kafkaTemplate).send("egov-common-business-category-create", getBusinessCategoryRequest());
+
 	}
 
 	@Test
 	public void test_should_update_businessCategory() {
-		when(businessCategoryRepository.update("CLL", getBusinessCategoryModel(), getAuthenticatedUser()))
-				.thenReturn(getBusinessCategoryModel());
-		BusinessCategory category = businessCategoryService.update("CLL", getBusinessCategoryModel(),
-				getAuthenticatedUser());
-		assertEquals(getBusinessCategoryModel(), category);
+		businessCategoryService.update(getBusinessCategoryModelForUpdate());
+		verify(businessCategoryRepository).update(getBusinessCategoryModelForUpdate());
+	}
+
+	@Test
+	public void test_should_update_businessCategory_Asynchronously() {
+		businessCategoryService.updateAsync(getBusinessCategoryRequestForUpdate());
+		verify(kafkaTemplate).send("egov-common-business-category-update", getBusinessCategoryRequestForUpdate());
+
 	}
 
 	@Test
@@ -62,33 +78,95 @@ public class BusinessCategoryServiceTest {
 	}
 
 	@Test
-	public void test_should_verify_boolean_value_returned_isTrue_based_on_whether_nameAndtenantId_isPresent_inDB() {
-		when(businessCategoryRepository.checkCategoryByNameAndTenantIdExists("Collection", "default")).thenReturn(true);
-		Boolean value = businessCategoryService.getBusinessCategoryByNameAndTenantId("Collection", "default");
+	public void test_should_verify_boolean_value_returned_isTrue_based_on_whether_nameAndtenantId_isPresent_inDB_for_Create() {
+		when(businessCategoryRepository.checkCategoryByNameAndTenantIdExists("Trade Licence", "default", 1L, false))
+				.thenReturn(true);
+		Boolean value = businessCategoryService.getBusinessCategoryByNameAndTenantId("Trade Licence", "default", 1L,
+				false);
 		assertEquals(true, value);
 	}
 
 	@Test
-	public void test_should_verify_boolean_value_returned_isFalse_based_on_whether_nameAndtenantId_isPresent_inDB() {
-		when(businessCategoryRepository.checkCategoryByNameAndTenantIdExists("Collection", "default"))
+	public void test_should_verify_boolean_value_returned_isFalse_based_on_whether_nameAndtenantId_isPresent_inDB_for_Create() {
+		when(businessCategoryRepository.checkCategoryByNameAndTenantIdExists("Trade Licence", "default", 1L, false))
 				.thenReturn(false);
-		Boolean value = businessCategoryService.getBusinessCategoryByNameAndTenantId("Collection", "default");
+		Boolean value = businessCategoryService.getBusinessCategoryByNameAndTenantId("Trade Licence", "default", 1L,
+				false);
 		assertEquals(false, value);
 	}
 
 	@Test
-	public void test_should_verify_boolean_value_returned_isTrue_based_on_whether_codeAndtenantId_isPresent_inDB() {
-		when(businessCategoryRepository.checkCategoryByCodeAndTenantIdExists("CL", "default")).thenReturn(true);
-		Boolean value = businessCategoryService.getBusinessCategoryByCodeAndTenantId("CL", "default");
+	public void test_should_verify_boolean_value_returned_isTrue_based_on_whether_nameAndtenantId_isPresent_inDB_for_Update() {
+		when(businessCategoryRepository.checkCategoryByNameAndTenantIdExists("Trade Licence", "default", 1L, true))
+				.thenReturn(true);
+		Boolean value = businessCategoryService.getBusinessCategoryByNameAndTenantId("Trade Licence", "default", 1L,
+				true);
 		assertEquals(true, value);
 	}
 
 	@Test
-	public void test_should_verify_boolean_value_returned_isFalse_based_on_whether_codeAndtenantId_isPresent_inDB() {
-		when(businessCategoryRepository.checkCategoryByCodeAndTenantIdExists("Collection", "default"))
+	public void test_should_verify_boolean_value_returned_isFalse_based_on_whether_nameAndtenantId_isPresent_inDB_for_Update() {
+		when(businessCategoryRepository.checkCategoryByNameAndTenantIdExists("Trade Licence", "default", 1L, true))
 				.thenReturn(false);
-		Boolean value = businessCategoryService.getBusinessCategoryByCodeAndTenantId("Collection", "default");
+		Boolean value = businessCategoryService.getBusinessCategoryByNameAndTenantId("Trade Licence", "default", 1L,
+				true);
 		assertEquals(false, value);
+	}
+
+	@Test
+	public void test_should_verify_boolean_value_returned_isTrue_based_on_whether_codeAndtenantId_isPresent_inDB_for_create() {
+		when(businessCategoryRepository.checkCategoryByCodeAndTenantIdExists("TL", "default", 1L, false))
+				.thenReturn(true);
+		Boolean value = businessCategoryService.getBusinessCategoryByCodeAndTenantId("TL", "default", 1L, false);
+		assertEquals(true, value);
+	}
+
+	@Test
+	public void test_should_verify_boolean_value_returned_isFalse_based_on_whether_codeAndtenantId_isPresent_inDB_for_create() {
+		when(businessCategoryRepository.checkCategoryByCodeAndTenantIdExists("TL", "default", 1L, false))
+				.thenReturn(false);
+		Boolean value = businessCategoryService.getBusinessCategoryByCodeAndTenantId("TL", "default", 1L, false);
+		assertEquals(false, value);
+	}
+
+	@Test
+	public void test_should_verify_boolean_value_returned_isTrue_based_on_whether_codeAndtenantId_isPresent_inDB_for_update() {
+		when(businessCategoryRepository.checkCategoryByCodeAndTenantIdExists("TL", "default", 1L, true))
+				.thenReturn(true);
+		Boolean value = businessCategoryService.getBusinessCategoryByCodeAndTenantId("TL", "default", 1L, true);
+		assertEquals(true, value);
+	}
+
+	@Test
+	public void test_should_verify_boolean_value_returned_isFalse_based_on_whether_codeAndtenantId_isPresent_inDB_for_update() {
+		when(businessCategoryRepository.checkCategoryByCodeAndTenantIdExists("TL", "default", 1L, true))
+				.thenReturn(false);
+		Boolean value = businessCategoryService.getBusinessCategoryByCodeAndTenantId("TL", "default", 1L, true);
+		assertEquals(false, value);
+	}
+
+	private BusinessCategoryRequest getBusinessCategoryRequestForUpdate() {
+		User userInfo = User.builder().id(1L).build();
+		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
+				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+		org.egov.commons.web.contract.BusinessCategory category = org.egov.commons.web.contract.BusinessCategory
+				.builder().id(1L).code("TLM").name("Trade Licence").active(true).tenantId("default").build();
+		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategoryInfo(category).build();
+	}
+
+	private BusinessCategory getBusinessCategoryModelForUpdate() {
+		BusinessCategory category = BusinessCategory.builder().id(1L).code("TLM").name("Trade Licence").isactive(true)
+				.tenantId("default").build();
+		return category;
+	}
+
+	private BusinessCategoryRequest getBusinessCategoryRequest() {
+		User userInfo = User.builder().id(1L).build();
+		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
+				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+		org.egov.commons.web.contract.BusinessCategory category = org.egov.commons.web.contract.BusinessCategory
+				.builder().id(1L).code("TL").name("Trade Licence").active(true).tenantId("default").build();
+		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategoryInfo(category).build();
 	}
 
 	private List<BusinessCategory> getListOfModelBusinessCategories() {
@@ -107,16 +185,9 @@ public class BusinessCategoryServiceTest {
 	}
 
 	private BusinessCategory getBusinessCategoryModel() {
-		BusinessCategory category = BusinessCategory.builder().id(1L).code("CL").name("Collection").isactive(true)
+		BusinessCategory category = BusinessCategory.builder().id(1L).code("TL").name("Trade Licence").isactive(true)
 				.tenantId("default").build();
 		return category;
-	}
-
-	private AuthenticatedUser getAuthenticatedUser() {
-
-		return AuthenticatedUser.builder().id(1L).name("ram").anonymousUser(false).emailId("ram@gmail.com")
-				.mobileNumber("73878921").build();
-
 	}
 
 }

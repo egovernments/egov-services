@@ -36,6 +36,7 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 		businessDetails.setFunction(rs.getString("bd_function"));
 		businessDetails.setFunctionary(rs.getString("bd_functionary"));
 		businessDetails.setFundSource(rs.getString("bd_fundsource"));
+		businessDetails.setCallBackForApportioning((Boolean)rs.getObject("bd_callback"));
 		businessDetails.setIsEnabled((Boolean)rs.getObject("bd_enabled"));
 		businessDetails.setIsVoucherApproved((Boolean)rs.getObject("bd_is_Vou_approved"));
 		businessDetails.setOrdernumber((Integer)rs.getObject("bd_ordernumber"));
@@ -84,14 +85,6 @@ public class BusinessDetailsCombinedRowMapper implements RowMapper<BusinessDetai
 		details.add(accountDetails);
 	    businessDetails.setBusinessCategory(businessCategory);
 	    businessDetails.setAccountDetails(details);
-	    
-	    
-	    
-	
-		
-	
-		
-
 		
         return businessDetails;
 	}

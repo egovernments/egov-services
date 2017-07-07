@@ -57,6 +57,33 @@ const styles = {
   }
 };
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+              if(object[i].serviceName) {
+                return object[i].serviceName;
+              } else {
+                 return object[i].name;
+              }
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+
 class SearchEscalation extends Component {
     constructor(props) {
       super(props)
@@ -77,17 +104,19 @@ class SearchEscalation extends Component {
     }
 
     componentWillMount() {
+
+      $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+
       let{initForm} = this.props;
       initForm()
 
-      $('#searchTable').DataTable({
-           dom: 'lBfrtip',
-           buttons: [
-                     'excel', 'pdf', 'print'
-            ],
-            ordering: false,
-            bDestroy: true,
-      });
     }
 
     componentDidMount() {
@@ -118,19 +147,26 @@ class SearchEscalation extends Component {
 
     }
 
-    componentWillUpdate() {
-      if(flag == 1) {
-        flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
-      }
-    }
+
+ componentWillUnmount(){
+     $('#searchTable')
+     .DataTable()
+     .destroy(true);
+ };
+  
 
 
-    componentWillUnmount(){
-       $('#searchTable')
-       .DataTable()
-       .destroy(true);
-    }
+   componentDidUpdate() {
+       $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+    
+  }
 
   submitForm = (e) => {
       e.preventDefault();
@@ -144,14 +180,14 @@ class SearchEscalation extends Component {
       if(searchEscalation.designation && searchEscalation.serviceType){
 
         query = {
-          designation:searchEscalation.designation,
-          serviceCode:searchEscalation.serviceType.id
+          designation:searchEscalation.designation.id,
+          serviceId:searchEscalation.serviceType.id
          }
 
       } else if(searchEscalation.serviceType){
          
            query = {
-          serviceCode:searchEscalation.serviceType.serviceCode
+          serviceId:searchEscalation.serviceType.id
            }
       } else if(searchEscalation.designation) {
       
@@ -177,6 +213,8 @@ class SearchEscalation extends Component {
 
     render() {
 
+      var current = this;
+
       let {
         isFormValid,
         searchEscalation,
@@ -194,8 +232,8 @@ class SearchEscalation extends Component {
       		return resultList.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{val.id}</td>
-      					<td>{val.designation}</td>
+      					<td>{getNameById(current.state.grievanceTypeSource,val.id)}</td>
+      					<td>{getNameById(current.state.designationSource,val.designation)}</td>
       					<td>{val.noOfHours}</td>
       				</tr>
       			)

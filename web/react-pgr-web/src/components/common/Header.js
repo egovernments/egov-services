@@ -612,8 +612,8 @@ class Header extends Component {
     },
     {
       id:30,
-      name:'Service Group',
-      displayName:"Service Group",
+      name:'Category',
+      displayName:"Category",
       url:"",
       enabled:"true",
       orderNumber:3,
@@ -626,8 +626,8 @@ class Header extends Component {
     },
     {
       id:31,
-      name:'Create Service Group',
-      displayName:"Create",
+      name:'Create Category',
+      displayName:"Create Category",
       url:base + "pgr/createServiceGroup",
       enabled:"true",
       orderNumber:1,
@@ -639,7 +639,7 @@ class Header extends Component {
     },
     {
       id:32,
-      name:'View Service Group',
+      name:'View Category',
       displayName:"View",
       url:base + "pgr/serviceGroup/view",
       enabled:"true",
@@ -652,7 +652,7 @@ class Header extends Component {
     },
     {
       id:33,
-      name:'Update Service Group',
+      name:'Update Category',
       displayName:"Update Receiving Mode",
       url:base + "pgr/serviceGroup/edit",
       enabled:"true",

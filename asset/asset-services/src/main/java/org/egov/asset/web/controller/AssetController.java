@@ -162,8 +162,8 @@ public class AssetController {
 			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		// TODO Input field validation, need to be done.
-
+		
+		assetValidator.validateRevaluation(revaluationRequest);
 		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
 
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
@@ -179,7 +179,6 @@ public class AssetController {
 			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		// TODO Input field validation, need to be done.
 		assetValidator.validateRevaluationCriteria(revaluationCriteria);
 		
 		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
@@ -216,7 +215,6 @@ public class AssetController {
 			final ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		// TODO Input field validation, need to be done.
 		assetValidator.validateDisposalCriteria(disposalCriteria);
 		
 		final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,

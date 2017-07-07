@@ -109,12 +109,10 @@ public class EscalationHierarchyController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final EscalationHierarchy escalationHierarchy = escalationHierarchyService.createEscalationHierarchy(
+		final List<EscalationHierarchy> escalationHierarchies = escalationHierarchyService.createEscalationHierarchy(
 				applicationProperties.getCreateEscalationHierarchyTopicName(),
 				applicationProperties.getCreateEscalationHierarchyTopicKey(), escalationHierarchyRequest);
 
-		final List<EscalationHierarchy> escalationHierarchies = new ArrayList<>();
-		escalationHierarchies.add(escalationHierarchy);
 		return getSuccessResponse(escalationHierarchies, escalationHierarchyRequest.getRequestInfo());
 
 	}
@@ -134,12 +132,10 @@ public class EscalationHierarchyController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final EscalationHierarchy escalationHierarchy = escalationHierarchyService.updateEscalationHierarchy(
+		final List<EscalationHierarchy> escalationHierarchies  = escalationHierarchyService.updateEscalationHierarchy(
 				applicationProperties.getUpdateEscalationHierarchyTopicName(),
 				applicationProperties.getUpdateEscalationHierarchyTopicKey(), escalationHierarchyRequest);
 
-		final List<EscalationHierarchy> escalationHierarchies = new ArrayList<>();
-		escalationHierarchies.add(escalationHierarchy);
 		return getSuccessResponse(escalationHierarchies, escalationHierarchyRequest.getRequestInfo());
 
 	}

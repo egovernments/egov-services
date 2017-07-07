@@ -25,4 +25,11 @@ public class AssetMasterService {
 		assetStatusResponse.setAssetStatus(assetStatuses);
 		return assetStatusResponse;
 	}
+
+	public List<AssetStatus> getStatuses(final String objectName, final String code, final String tenantId) {
+		final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder().objectName(objectName).code(code)
+				.tenantId(tenantId).build();
+		return assetMasterRepository.search(assetStatusCriteria);
+
+	}
 }

@@ -43,7 +43,10 @@ public class WorkFlowUtil {
 	 */
 	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo) {
 
-		String url = environment.getProperty("workflowprocess.startUrl");
+		StringBuilder workFlowStartUrl = new StringBuilder();
+		workFlowStartUrl.append(environment.getProperty("workflowprocess.baseurl"));
+		workFlowStartUrl.append(environment.getProperty("workflowprocess.startUrl"));
+		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
 		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo);
 		ProcessInstanceResponse processInstanceResponse = null;
@@ -72,7 +75,10 @@ public class WorkFlowUtil {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
 		WorkFlowDetails workflowDetails = workflowDetailsRequestInfo.getWorkflowDetails();
-		String url = environment.getProperty("workflowprocess.updateUrl");
+		StringBuilder workFlowUpdateUrl = new StringBuilder();
+		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.baseurl"));
+		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.updateUrl"));
+		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
 		uriParams.put("id", workflowDetails.getAssignee().toString());
@@ -106,11 +112,14 @@ public class WorkFlowUtil {
 		ProcessInstance processInstance = new ProcessInstance();
 		Position assignee = new Position();
 		assignee.setId((long) workflowDetails.getAssignee());
+		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
+		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
 		processInstance.setBusinessKey(environment.getProperty("businessKey"));
-		processInstance.setType(environment.getProperty("businessKey"));
+		processInstance.setType(environment.getProperty("type"));
 		processInstance.setAssignee(assignee);
 		processInstance.setComments(environment.getProperty("create.property.comments"));
 		processInstanceRequest.setRequestInfo(requestInfo);
+		processInstanceRequest.setProcessInstance(processInstance);
 
 		return processInstanceRequest;
 	}

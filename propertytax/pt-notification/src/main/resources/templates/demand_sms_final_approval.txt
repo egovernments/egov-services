@@ -1,0 +1,2 @@
+The title is transferred from {{landOwner}} to {{name}} for the id No. {{upicNo}} based on the representation of aaaa. 
+You may collect the Title Transfer Endorsement Notice from xxxxxxx(Municipality name).

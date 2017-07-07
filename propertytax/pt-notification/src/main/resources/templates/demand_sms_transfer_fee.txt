@@ -1,0 +1,1 @@
+Dear {{name}}, Revenue inspector finalized your property document value as XXXX amount, Transfer fee to be paid is”YYY”. Please pay the transfer fee to get the Title transfer endorsement certificate.

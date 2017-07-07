@@ -24,5 +24,9 @@ public class ServiceRequestType {
     public void setServiceType(boolean isComplaintType) {
         serviceType = isComplaintType ? ServiceType.COMPLAINT : ServiceType.CITIZEN_SERVICE;
     }
+
+    public ServiceDefinitionSearchCriteria getSearchCriteria() {
+        return new ServiceDefinitionSearchCriteria(code, tenantId);
+    }
 }
 

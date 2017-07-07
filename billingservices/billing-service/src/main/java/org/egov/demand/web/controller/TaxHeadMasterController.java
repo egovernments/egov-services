@@ -66,7 +66,7 @@ public class TaxHeadMasterController {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		taxHeadMasterValidator.validateTaxHeads(taxHeadMasterRequest,bindingResult);
+		taxHeadMasterValidator.validate(taxHeadMasterRequest,bindingResult);
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}

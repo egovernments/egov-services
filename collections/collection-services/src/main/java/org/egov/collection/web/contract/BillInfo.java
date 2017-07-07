@@ -8,22 +8,33 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.collection.model.AuditDetails;
+
 
 @Setter
 @Getter
 @ToString
 public class BillInfo   {
-  private String payeeName;
+	//TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
+	private String id;
 
-  private String payeeAddress;
+	private String payeeName;
 
-  private String payeeEmail;
+	private String payeeAddress;
 
-  private String displayMessage;
+	private String payeeEmail;
+	
+	private String paidBy;
 
-  private String paidBy;
+	private Boolean isActive;
 
-  private List<BillDetails> billDetails = new ArrayList<BillDetails>();
+	private Boolean isCancelled;
+
+	private List<BillDetails> billDetails = new ArrayList<>();
+
+	private String tenantId;
+	
+	private AuditDetails auditDetails;
 
 }
 

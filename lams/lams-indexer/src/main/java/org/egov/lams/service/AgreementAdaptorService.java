@@ -29,8 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.jayway.jsonpath.internal.function.text.Concatenate;
-
 @Component
 public class AgreementAdaptorService {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementAdaptorService.class);
@@ -123,7 +121,7 @@ public class AgreementAdaptorService {
 		} catch (Exception e) {
 
 			logger.info("the exception in intsallment search :: " + e);
-			throw e;
+			throw new RuntimeException("exception in fetching current installment :" + e.getMessage());
 		}
 		if (!installmentResponse.getInstallments().isEmpty()) {
 			installment = installmentResponse.getInstallments().get(0);

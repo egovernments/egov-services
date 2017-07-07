@@ -44,13 +44,15 @@ public class BusinessCategory {
 
 	private Date lastModifiedDate;
 
-	public BusinessCategory(org.egov.commons.web.contract.BusinessCategory category) {
+	public BusinessCategory(org.egov.commons.web.contract.BusinessCategory category,AuthenticatedUser user) {
 
 		id = category.getId();
 		name = category.getName();
 		code = category.getCode();
 		isactive = category.getActive();
 		tenantId = category.getTenantId();
+		createdBy = user.getId();
+        lastModifiedBy = user.getId();
 
 	}
 

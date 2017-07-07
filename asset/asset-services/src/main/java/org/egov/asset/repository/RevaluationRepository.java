@@ -5,10 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.contract.RevaluationRequest;
+import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.repository.builder.RevaluationQueryBuilder;
 import org.egov.asset.repository.rowmapper.RevaluationRowMapper;
+import org.egov.asset.service.AssetMasterService;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,9 @@ public class RevaluationRepository {
 	@Autowired
 	private RevaluationRowMapper revaluationRowMapper;
 
+	@Autowired
+	private AssetMasterService assetMasterService;
+
 	private static final Logger logger = LoggerFactory.getLogger(RevaluationRepository.class);
 
 	public void create(final RevaluationRequest revaluationRequest) {
@@ -38,9 +43,7 @@ public class RevaluationRepository {
 
 		final String sql = RevaluationQueryBuilder.INSERT_QUERY;
 
-		String status = null;
-		if (revaluation.getStatus() != null)
-			status = revaluation.getStatus();
+		final String status = getRevaluationStatus("Revaluation", "APPROVED", revaluation.getTenantId());
 
 		final Object[] obj = new Object[] { revaluation.getId(), revaluation.getTenantId(), revaluation.getAssetId(),
 				revaluation.getCurrentCapitalizedValue(), revaluation.getTypeOfChange().toString(),
@@ -56,6 +59,11 @@ public class RevaluationRepository {
 			ex.printStackTrace();
 			logger.info("RevaluationRepository create:" + ex.getMessage());
 		}
+	}
+
+	private String getRevaluationStatus(final String objectName, final String code, final String tenantId) {
+		final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(objectName, code, tenantId);
+		return assetStatuses.get(0).getStatusValues().get(0).getCode();
 	}
 
 	public List<Revaluation> search(final RevaluationCriteria revaluationCriteria) {

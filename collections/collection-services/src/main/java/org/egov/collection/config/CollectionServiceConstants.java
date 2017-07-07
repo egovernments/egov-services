@@ -49,6 +49,9 @@ public class CollectionServiceConstants {
 	public static final String INVALID_DESIG_REQUEST = "Get designation request is invalid";
 	public static final String INVALID_USERS_REQUEST = "Get users request is invalid";
 	public static final String INVALID_WF_REQUEST = "Start Workflow request is invalid";
+	public static final String INVALID_REQ_DESC = "Some fields entered are either syntactically or logically incorrect";
+	public static final String INVALID_BD = "Fund, FundSource, Function, Department may be invalid.";
+
 
 
 	
@@ -82,7 +85,8 @@ public class CollectionServiceConstants {
 	
 	public static final String PURPOSE_MISSING_CODE = "egcl_008";
 	public static final String PURPOSE_MISSING_FIELD = "purpose";
-	public static final String PURPOSE_MISSING_MESSAGE = "Purpose is mising";
+	public static final String PURPOSE_MISSING_MESSAGE = "Purpose can only be: ARREAR_AMOUNT, CURRENT_AMOUNT, ADVANCE_AMOUNT"
+			+ "ARREAR_LATEPAYMENT_CHARGES, CURRENT_LATEPAYMENT_CHARGES, CHEQUE_BOUNCE_PENALTY, REBATE, OTHERS";
 	
 	public static final String COLLECTIONTYPE_MISSING_CODE = "egcl_009";
 	public static final String COLLECTIONTYPE_MISSING_FIELD = "collectionType";

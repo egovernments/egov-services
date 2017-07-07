@@ -67,7 +67,7 @@ public class EscalationHierarchyService {
 	@Autowired
 	private PGRProducer pgrProducer;
 	
-	public EscalationHierarchy createEscalationHierarchy(final String topic, final String key,
+	public List<EscalationHierarchy> createEscalationHierarchy(final String topic, final String key,
 			final EscalationHierarchyReq escalationHierarchyRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String escalationHierarchyValue = null;
@@ -82,13 +82,13 @@ public class EscalationHierarchyService {
 			pgrProducer.sendMessage(topic, key, escalationHierarchyValue);
 		} catch (final Exception e) {
 			logger.error("Exception while posting to kafka Queue : " + e);
-			return new EscalationHierarchy();
+			return escalationHierarchyRequest.getEscalationHierarchy();
 		}
 		logger.info("Producer successfully posted the request to Queue");
-		return new EscalationHierarchy();
+		return escalationHierarchyRequest.getEscalationHierarchy();
 	}
 	
-	public EscalationHierarchy updateEscalationHierarchy(final String topic, final String key,
+	public List<EscalationHierarchy> updateEscalationHierarchy(final String topic, final String key,
 			final EscalationHierarchyReq escalationHierarchyRequest) {
 		final ObjectMapper mapper = new ObjectMapper();
 		String escalationHierarchyValue = null;
@@ -103,10 +103,10 @@ public class EscalationHierarchyService {
 			pgrProducer.sendMessage(topic, key, escalationHierarchyValue);
 		} catch (final Exception e) {
 			logger.error("Exception while posting to kafka Queue : " + e);
-			return new EscalationHierarchy();
+			return escalationHierarchyRequest.getEscalationHierarchy();
 		}
 		logger.info("Producer successfully posted the request to Queue");
-		return new EscalationHierarchy();
+		return escalationHierarchyRequest.getEscalationHierarchy();
 	}
 	
 	public List<EscalationHierarchy> create(EscalationHierarchyReq escalationHierarchyRequest) {

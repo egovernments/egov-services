@@ -86,8 +86,8 @@ public class AssetQueryBuilder {
 			// assetcategory is mandatory
 			return;
 
-		// selectQuery.append(" WHERE");
-		boolean isAppendAndClause = true;
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
 
 		if (searchAsset.getTenantId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

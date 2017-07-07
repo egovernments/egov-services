@@ -41,29 +41,51 @@ package org.egov.commons.service;
 
 import java.util.List;
 
-import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.repository.BusinessCategoryRepository;
+import org.egov.commons.web.contract.BusinessCategoryRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class BusinessCategoryService {
-	@Autowired
-	private final BusinessCategoryRepository businessCategoryRepository;
+import lombok.extern.slf4j.Slf4j;
 
-	public BusinessCategoryService(final BusinessCategoryRepository businessCategoryRepository) {
+@Service
+@Slf4j
+public class BusinessCategoryService {
+
+	private BusinessCategoryRepository businessCategoryRepository;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+	@Autowired
+	public BusinessCategoryService(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
+			BusinessCategoryRepository businessCategoryRepository) {
+		this.kafkaTemplate = kafkaTemplate;
 		this.businessCategoryRepository = businessCategoryRepository;
 	}
 
-	public BusinessCategory create(BusinessCategory category, AuthenticatedUser user) {
-		return businessCategoryRepository.create(category, user);
+	public BusinessCategoryService(BusinessCategoryRepository businessCategoryRepository) {
+		this.businessCategoryRepository = businessCategoryRepository;
+	}
+
+	public BusinessCategoryRequest createAsync(BusinessCategoryRequest businessCategoryRequest) {
+		kafkaTemplate.send("egov-common-business-category-create", businessCategoryRequest);
+		return businessCategoryRequest;
+	}
+
+	public void create(BusinessCategory category) {
+		businessCategoryRepository.create(category);
 
 	}
 
-	public BusinessCategory update(String businessCategoryCode, BusinessCategory category, AuthenticatedUser user) {
-		return businessCategoryRepository.update(businessCategoryCode, category, user);
+	public BusinessCategoryRequest updateAsync(BusinessCategoryRequest businessCategoryRequest) {
+		kafkaTemplate.send("egov-common-business-category-update", businessCategoryRequest);
+		return businessCategoryRequest;
+	}
+
+	public void update(BusinessCategory category) {
+		businessCategoryRepository.update(category);
 	}
 
 	public List<BusinessCategory> getForCriteria(BusinessCategoryCriteria criteria) {
@@ -71,13 +93,13 @@ public class BusinessCategoryService {
 		return businessCategoryRepository.getForCriteria(criteria);
 	}
 
-	public boolean getBusinessCategoryByNameAndTenantId(String name, String tenantId) {
-		return businessCategoryRepository.checkCategoryByNameAndTenantIdExists(name, tenantId);
+	public boolean getBusinessCategoryByNameAndTenantId(String name, String tenantId, Long id, Boolean isUpdate) {
+		return businessCategoryRepository.checkCategoryByNameAndTenantIdExists(name, tenantId, id, isUpdate);
 	}
 
-	public boolean getBusinessCategoryByCodeAndTenantId(String code, String tenantId) {
+	public boolean getBusinessCategoryByCodeAndTenantId(String code, String tenantId, Long id, Boolean isUpdate) {
 
-		return businessCategoryRepository.checkCategoryByCodeAndTenantIdExists(code, tenantId);
+		return businessCategoryRepository.checkCategoryByCodeAndTenantIdExists(code, tenantId, id, isUpdate);
 	}
 
 	public BusinessCategory getBusinessCategoryByIdAndTenantId(Long id, String tenantId) {

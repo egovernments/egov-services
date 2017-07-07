@@ -1,0 +1,1 @@
+Dear {{name}}, Revision petition Application request accepted with Acknowledgement No.{{acknowledgementNo}}. Please use this number in all future communication.

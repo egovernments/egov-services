@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class BusinessDetails {
 	private Long id;
 
@@ -29,6 +31,8 @@ public class BusinessDetails {
 	private Boolean voucherCreation;
 
 	private Boolean isVoucherApproved;
+	
+	private Boolean callBackForApportioning;
 
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "UTC")
 	private Date voucherCutoffDate;

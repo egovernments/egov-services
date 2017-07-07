@@ -7,9 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.joda.time.LocalDate;
 
 
@@ -17,45 +19,63 @@ import org.joda.time.LocalDate;
 @Getter
 @ToString
 public class BillDetails   {
-  private String businessDetailsCode;
-
-  private String refNo;
-
-  private LocalDate billDate;
-
-  private String consumerCode;
-
-  private String consumerType;
-
-  private String billDescription;
-
-  private Double minimumAmount;
-
-  private Double totalAmount;
-
-  private List<String> collectionModesNotAllowed = new ArrayList<String>();
   
-  private String event;
+	private String id;
 
-  private String receiptNumber;
+	private String businessDetailsCode;
 
-  private Timestamp receiptDate;
+	private String refNo;
 
-  private String channel;
-  
-  private String voucherHeader;
-  
-  private String receiptType;
-  
-  private String collectionType;
-  
-  private String boundary;
+	private String bill;
 
-  private String reasonForCancellation;
-  
-  private String amountPaid;
+	private LocalDate billDate;
+	
+	private String billDescription;
 
-  @JsonProperty("BillAccountDetails")
-  private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();
+	private String billNumber;
+
+	private String consumerCode;
+
+	private String consumerType;
+
+	private BigDecimal minimumAmount;
+
+	private BigDecimal totalAmount;
+	
+	private BigDecimal amountPaid;
+
+	private List<String> collectionModesNotAllowed = new ArrayList<String>();
+  
+	private String event;
+
+	private String receiptNumber;
+
+	private Timestamp receiptDate;
+	
+	private String receiptType;
+
+	private String channel;
+  
+	private String voucherHeader;
+    
+	private String collectionType;
+  
+	private String boundary;
+
+	private String reasonForCancellation;
+  
+	@JsonProperty("BillAccountDetails")
+	private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();
+	
+	private String tenantId;
+	
+	private String businessService;
+
+	private String displayMessage;
+
+	private Boolean callBackForApportioning;
+
+	private Boolean partPaymentAllowed;
+
 }
 

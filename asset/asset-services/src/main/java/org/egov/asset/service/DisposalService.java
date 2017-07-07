@@ -10,6 +10,7 @@ import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
@@ -51,6 +52,9 @@ public class DisposalService {
 	@Autowired
 	private AssetService assetService;
 
+	@Autowired
+	private AssetMasterService assetMasterService;
+
 	public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
 		List<Disposal> disposals = null;
 
@@ -71,7 +75,9 @@ public class DisposalService {
 	public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
 		final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
 				disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
-		asset.setStatus("DISPOSED");
+		final List<AssetStatus> assetStatuses = assetMasterService.getStatuses("Asset Master", "DISPOSED",
+				disposalRequest.getDisposal().getTenantId());
+		asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());
 		final AssetRequest assetRequest = AssetRequest.builder().asset(asset)
 				.requestInfo(disposalRequest.getRequestInfo()).build();
 		assetService.update(assetRequest);
@@ -118,31 +124,25 @@ public class DisposalService {
 
 		final AssetCategory assetCategory = asset.getAssetCategory();
 
-		Long voucherId = null;
+		final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService.getSubledgerDetails(
+				disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
+				assetCategory.getAssetAccount());
+		final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
+				.getSubledgerDetails(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
+						disposalRequest.getDisposal().getAssetSaleAccount());
 
-		if (assetCategory != null) {
-			final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
-					.getSubledgerDetails(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-							assetCategory.getAssetAccount());
-			final List<ChartOfAccountDetailContract> subledgerDetailsForAssetSaleAccount = voucherService
-					.getSubledgerDetails(disposalRequest.getRequestInfo(), disposalRequest.getDisposal().getTenantId(),
-							disposalRequest.getDisposal().getAssetSaleAccount());
+		if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
+				&& !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
+			throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+		else {
+			final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposalRequest,
+					assetCategory);
 
-			if (subledgerDetailsForAssetAccount != null && subledgerDetailsForAssetSaleAccount != null
-					&& !subledgerDetailsForAssetAccount.isEmpty() && !subledgerDetailsForAssetSaleAccount.isEmpty())
-				throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
-			else {
-				final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposalRequest,
-						assetCategory);
+			final VoucherRequest voucherRequest = voucherService.createVoucherRequestForDisposal(disposalRequest, asset,
+					accountCodeDetails);
 
-				final VoucherRequest voucherRequest = voucherService.createVoucherRequestForDisposal(disposalRequest,
-						asset, accountCodeDetails);
-
-				voucherId = voucherService.createVoucher(voucherRequest, disposalRequest.getDisposal().getTenantId());
-			}
-		} else
-			throw new RuntimeException("Asset Category should be present for asset : " + asset.getName());
-		return voucherId;
+			return voucherService.createVoucher(voucherRequest, disposalRequest.getDisposal().getTenantId());
+		}
 
 	}
 

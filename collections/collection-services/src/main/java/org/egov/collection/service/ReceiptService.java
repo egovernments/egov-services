@@ -53,6 +53,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jayway.jsonpath.JsonPath;
+
 
 @Service
 public class ReceiptService {
@@ -76,9 +78,23 @@ public class ReceiptService {
 			String receiptNumber = receiptRepository.generateReceiptNumber(receiptReq);
 			logger.info("Receipt Number generated is: "+receiptNumber);
 			billdetails.setReceiptNumber(receiptNumber);
-		
-		}
-		
+			Object businessDetails = receiptRepository.getBusinessDetails(billdetails.getBusinessDetailsCode(), receiptReq);
+			String fund = null;
+			String fundSource = null;
+			String function = null;
+			String department = null;
+			try{
+				fund = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].fund");
+				fundSource = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].fundSource");
+				function= JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].function");
+				department = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].department");
+			}catch(Exception e){
+	        	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
+				logger.error("All business details fields are not available: "+e.getCause());
+				return null;
+			}
+        	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
+		}	
 		return receiptRepository.pushToQueue(receiptReq);
 	}
 	

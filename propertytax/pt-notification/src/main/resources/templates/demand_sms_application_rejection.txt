@@ -1,0 +1,1 @@
+Dear {{name}}, Property title transfer request with Acknowledgement No.{{acknowledgementNo}} has been Rejected. Please visit xxxxxx(municipality name) for further details.  

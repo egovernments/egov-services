@@ -108,47 +108,42 @@ public class RevaluationService {
 
 		final AssetCategory assetCategory = asset.getAssetCategory();
 
-		Long voucherId = null;
-		if (assetCategory != null) {
-			if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
-				final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
-						.getSubledgerDetails(revaluationRequest.getRequestInfo(),
-								revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
-				final List<ChartOfAccountDetailContract> subledgerDetailsForRevaluationReserverAccount = voucherService
-						.getSubledgerDetails(revaluationRequest.getRequestInfo(),
-								revaluationRequest.getRevaluation().getTenantId(),
-								assetCategory.getRevaluationReserveAccount());
+		if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
+			final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
+					.getSubledgerDetails(revaluationRequest.getRequestInfo(),
+							revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
+			final List<ChartOfAccountDetailContract> subledgerDetailsForRevaluationReserverAccount = voucherService
+					.getSubledgerDetails(revaluationRequest.getRequestInfo(),
+							revaluationRequest.getRevaluation().getTenantId(),
+							assetCategory.getRevaluationReserveAccount());
 
-				if (subledgerDetailsForAssetAccount != null && subledgerDetailsForRevaluationReserverAccount != null
-						&& !subledgerDetailsForAssetAccount.isEmpty()
-						&& !subledgerDetailsForRevaluationReserverAccount.isEmpty())
-					throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+			if (subledgerDetailsForAssetAccount != null && subledgerDetailsForRevaluationReserverAccount != null
+					&& !subledgerDetailsForAssetAccount.isEmpty()
+					&& !subledgerDetailsForRevaluationReserverAccount.isEmpty())
+				throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
 
-			} else if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
-				final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
-						.getSubledgerDetails(revaluationRequest.getRequestInfo(),
-								revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
-				final List<ChartOfAccountDetailContract> subledgerDetailsForFixedAssetWrittenOffAccount = voucherService
-						.getSubledgerDetails(revaluationRequest.getRequestInfo(),
-								revaluationRequest.getRevaluation().getTenantId(),
-								revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount());
+		} else if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
+			final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
+					.getSubledgerDetails(revaluationRequest.getRequestInfo(),
+							revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
+			final List<ChartOfAccountDetailContract> subledgerDetailsForFixedAssetWrittenOffAccount = voucherService
+					.getSubledgerDetails(revaluationRequest.getRequestInfo(),
+							revaluationRequest.getRevaluation().getTenantId(),
+							revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount());
 
-				if (subledgerDetailsForAssetAccount != null && subledgerDetailsForFixedAssetWrittenOffAccount != null
-						&& !subledgerDetailsForAssetAccount.isEmpty()
-						&& !subledgerDetailsForFixedAssetWrittenOffAccount.isEmpty())
-					throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
-			}
-			final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
-					assetCategory);
+			if (subledgerDetailsForAssetAccount != null && subledgerDetailsForFixedAssetWrittenOffAccount != null
+					&& !subledgerDetailsForAssetAccount.isEmpty()
+					&& !subledgerDetailsForFixedAssetWrittenOffAccount.isEmpty())
+				throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+		}
+		final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
+				assetCategory);
 
-			final VoucherRequest voucherRequest = voucherService.createVoucherRequestForReevalaution(revaluationRequest,
-					asset, accountCodeDetails);
+		final VoucherRequest voucherRequest = voucherService.createVoucherRequestForReevalaution(revaluationRequest,
+				asset, accountCodeDetails);
 
-			voucherId = voucherService.createVoucher(voucherRequest, revaluationRequest.getRevaluation().getTenantId());
+		return voucherService.createVoucher(voucherRequest, revaluationRequest.getRevaluation().getTenantId());
 
-			return voucherId;
-		} else
-			throw new RuntimeException("Asset Category should be present for asset : " + asset.getName());
 	}
 
 	private List<VouchercreateAccountCodeDetails> getAccountDetails(final RevaluationRequest revaluationRequest,

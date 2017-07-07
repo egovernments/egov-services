@@ -64,6 +64,8 @@ const styles = {
 };
 
 const getNameById = function(object, id, property = "") {
+
+
   if (id == "" || id == null) {
         return "";
     }
@@ -85,7 +87,13 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
-const getNameByServiceCode = function(object, serviceCode, property = "") {
+const getNameByServiceCode = function(object, serviceCode, property = "") { 
+
+
+  console.log(object);
+
+  return false;
+
   if (serviceCode == "" || serviceCode == null) {
         return "";
     }
@@ -125,11 +133,13 @@ class DefineEscalation extends Component {
 			  grievanceType:[],
 			  designations:[],
 			  departments:[],
-			  toPosition: []
+			  toPosition: [],
+        localDesignation:[]
             };
     }
 
     componentWillMount() {
+
       let{initForm} = this.props;
       initForm();
 
@@ -172,19 +182,32 @@ class DefineEscalation extends Component {
 			  departments: response.Department
 			})
         }, function(err) {
-          self.setState({
-              departments: []
-            })
-        });
+        self.setState({
+            departments: []
+          })
+      });
+
+    Api.commonApiPost("/hr-masters/designations/_search",{}).then(function(response) {
+        self.setState({localDesignation : response.Designation});
+        },function(err) {
+        console.log(err);
+    }); 
+}
+
+
+    componentDidUpdate() {
+ 
+         $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+    });
+    
     }
 
-    componentWillUpdate() {
-
-      if(flag == 1) {
-        flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
-      }
-    }
 
     componentWillUnmount(){
        $('#searchTable')
@@ -197,11 +220,9 @@ class DefineEscalation extends Component {
       let current = this;
 
       let query = {
-        id:this.props.defineEscalation.fromPosition
+        fromPosition:this.props.defineEscalation.fromPosition
       }
 	  
-	  console.log(query);
-
       Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
           console.log(response);
 
@@ -211,6 +232,7 @@ class DefineEscalation extends Component {
                 resultList: response.escalationHierarchies,
                 isSearchClicked: true
               })
+
           } else {
             current.setState({
               noData: true,
@@ -220,12 +242,13 @@ class DefineEscalation extends Component {
           console.log(error);
       })
   }
-  
+
+ 
 	handleDepartment = (e) => {
 		
 		  var currentThis = this;
 	    currentThis.setState({designation : []});
-		currentThis.setState({toPosition : []});
+		  currentThis.setState({toPosition : []});
 		
 		let query = {
 			id:e.target.value
@@ -265,7 +288,9 @@ class DefineEscalation extends Component {
 				serviceCode : this.props.defineEscalation.grievanceType,
 				tenantId : "default",
 				fromPosition : this.props.defineEscalation.fromPosition,
-				toPosition : this.props.defineEscalation.toPosition
+				toPosition : this.props.defineEscalation.toPosition,
+        department :this.props.defineEscalation.department,
+        designation :this.props.defineEscalation.designation
 			  }]
     }
 	
@@ -291,7 +316,9 @@ class DefineEscalation extends Component {
 				serviceCode : this.props.defineEscalation.grievanceType,
 				tenantId : "default",
 				fromPosition : this.props.defineEscalation.fromPosition,
-				toPosition : this.props.defineEscalation.toPosition
+				toPosition : this.props.defineEscalation.toPosition,
+        department :this.props.defineEscalation.department,
+        designation :this.props.defineEscalation.designation
 			  }]
     }
 
@@ -310,6 +337,24 @@ class DefineEscalation extends Component {
   
   editObject = (index) => {
       this.props.setForm(this.state.resultList[index])
+
+      console.log(this.state.resultList[index].department)
+      var d = {
+        target: {
+          value: this.state.resultList[index].department
+        }
+      }
+
+       var e = {
+        target: {
+          value: this.state.resultList[index].designation
+        }
+      }
+
+      
+      this.handleDepartment(d);
+
+      this.handleDesignation(e);
   }
 
   
@@ -358,12 +403,12 @@ class DefineEscalation extends Component {
       		return resultList.map(function(val, i) {
       			return (
       				<tr key={i}>
-                <td>{val.fromPosition}</td>
-      					<td>{val.grievanceType}</td>
-      					<td>{val.department}</td>
-      					<td>{val.designation}</td>
-                <td>{val.toPosition}</td>
-                <td><RaisedButton style={{margin:'15px 5px'}} label={translate("pgr.lbl.update")} onClick={() => {
+                <td>{getNameById(current.state.positionSource,val.fromPosition)}</td>
+      					<td>{val.grievanceType ? getNameById(current.state.grievanceType ,val.grievanceType) : ""}</td>
+      					<td>{getNameById(current.state.departments,val.department)}</td>
+      					<td>{getNameById(current.state.localDesignation,val.designation)}</td>
+                <td>{getNameById(current.state.positionSource,val.toPosition)}</td>
+                <td><RaisedButton primary={true} style={{margin:'15px 5px'}} label={translate("pgr.lbl.update")} onClick={() => {
 					editObject(i);
                     current.setState({editIndex:i})
                     }}/></td>
@@ -476,10 +521,10 @@ class DefineEscalation extends Component {
                     </Col>
                     <div className="clearfix"></div>
 					<Col xs={12} md={12} style={{textAlign:"center"}}>
-                        {editIndex<0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.add")} primary={true} onClick={() => {
+                        {editIndex<0 && <RaisedButton primary={true} style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.add")} primary={true} onClick={() => {
                           addEscalation();
                         }}/>}
-                        {editIndex>=0 && <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
+                        {editIndex>=0 && <RaisedButton primary={true} style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate("pgr.lbl.update")} primary={true} onClick={() => {
 
                           updateEscalation();
                         }}/>}
@@ -542,14 +587,14 @@ class DefineEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                      <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label="Search" />
 
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
                       <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
                       <CardText>
-                          <RaisedButton style={{margin:'10px 0'}} label="Add Escalation Details" labelColor={white} onClick={() => {
+                          <RaisedButton primary={true} style={{margin:'10px 0'}} label="Add Escalation Details" labelColor={white} onClick={() => {
                             this.setState({
                               isSearchClicked: true,
                               noData:false
@@ -596,8 +641,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: [],
-          required: []
+          current: ["fromPosition", "grievanceType", "department", "designation", "toPosition"] ,
+          required:["fromPosition", "grievanceType", "department", "designation", "toPosition"]
         },
         pattern: {
           current: [],

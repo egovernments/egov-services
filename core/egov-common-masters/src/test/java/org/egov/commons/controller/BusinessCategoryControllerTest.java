@@ -1,17 +1,28 @@
 package org.egov.commons.controller;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.commons.TestConfiguration;
-import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategory;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.service.BusinessCategoryService;
-import org.egov.commons.web.contract.factory.ResponseInfoFactory;
+import org.egov.commons.web.contract.BusinessCategoryRequest;
+import org.egov.commons.web.contract.factory.ResponseInfoFact;
 import org.egov.commons.web.controller.BusinessCategoryController;
-import org.egov.commons.web.errorhandlers.ErrorHandler;
+import org.egov.commons.web.errorhandlers.RequestErrorHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +32,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BusinessCategoryController.class)
@@ -43,19 +45,22 @@ public class BusinessCategoryControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private ErrorHandler errHandler;
+	private RequestErrorHandler errHandler;
 
 	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseInfoFact responseInfoFactory;
 
 	@Test
 	public void test_should_create_business_category() throws Exception {
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(getRequestInfo(), true))
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
+				.thenReturn(getResponseInfoInCaseOfFailure());
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
-		when(serviceCategoryService.getBusinessCategoryByNameAndTenantId("Collection", "default")).thenReturn(true);
-		when(serviceCategoryService.getBusinessCategoryByCodeAndTenantId("CL", "default")).thenReturn(true);
-		when(serviceCategoryService.create(getBusinessCategoryModel(), getAuthenticatedUser()))
-				.thenReturn(getBusinessCategoryModel());
+
+		when(serviceCategoryService.getBusinessCategoryByNameAndTenantId("Trade Licence", "default", 1L, false))
+				.thenReturn(true);
+		when(serviceCategoryService.getBusinessCategoryByCodeAndTenantId("TL", "default", 1L, false)).thenReturn(true);
+		when(serviceCategoryService.createAsync(getBusinessCategoryRequest())).thenReturn(getBusinessCategoryRequest());
 
 		mockMvc.perform(post("/businessCategory/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("businessCategoryRequestCreate.json"))).andExpect(status().isOk())
@@ -66,23 +71,34 @@ public class BusinessCategoryControllerTest {
 
 	@Test
 	public void test_should_update_business_category() throws Exception {
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(getRequestInfo(), true))
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
+				.thenReturn(getResponseInfoInCaseOfFailure());
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
-		when(serviceCategoryService.getBusinessCategoryByNameAndTenantId("Collection", "default")).thenReturn(true);
-		when(serviceCategoryService.getBusinessCategoryByCodeAndTenantId("CL", "default")).thenReturn(true);
-		when(serviceCategoryService.update("CLL", getBusinessCategoryModel(), getAuthenticatedUser()))
-				.thenReturn(getBusinessCategoryModel());
-
-		mockMvc.perform(post("/businessCategory/{businessCategoryCode}/_update", "CLL")
+		when(serviceCategoryService.getBusinessCategoryByNameAndTenantId("Trade Licence", "default", 1L, true))
+				.thenReturn(true);
+		when(serviceCategoryService.getBusinessCategoryByCodeAndTenantId("TLM", "default", 1L, true)).thenReturn(true);
+		when(serviceCategoryService.updateAsync(getBusinessCategoryRequestForUpdate()))
+				.thenReturn(getBusinessCategoryRequestForUpdate());
+		mockMvc.perform(post("/businessCategory/{businessCategoryCode}/_update", "TLM")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("businessCategoryRequestUpdate.json"))).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("businessCategoryResponseUpdate.json")));
 	}
 
+	private BusinessCategoryRequest getBusinessCategoryRequestForUpdate() {
+		User userInfo = User.builder().id(1L).build();
+		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
+				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+		org.egov.commons.web.contract.BusinessCategory category = org.egov.commons.web.contract.BusinessCategory
+				.builder().id(1L).code("TLM").name("Trade Licence").active(true).tenantId("default").build();
+		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategoryInfo(category).build();
+	}
+
 	@Test
 	public void test_should_get_all_business_categories_with_the_params_criteria() throws Exception {
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(getRequestInfo(), true))
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
 		when(serviceCategoryService.getForCriteria(getBusinessCriteria()))
 				.thenReturn(getListOfModelBusinessCategories());
@@ -93,6 +109,20 @@ public class BusinessCategoryControllerTest {
 						.content(getFileContents("businessCategoryRequest.json")))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("businessCategoryResponse.json")));
+	}
+
+	private ResponseInfo getResponseInfoInCaseOfFailure() {
+		return ResponseInfo.builder().apiId("org.egov.collection").ver("1.0").resMsgId("uief87324").msgId("654654")
+				.status("failed").build();
+	}
+
+	private BusinessCategoryRequest getBusinessCategoryRequest() {
+		User userInfo = User.builder().id(1L).build();
+		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
+				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+		org.egov.commons.web.contract.BusinessCategory category = org.egov.commons.web.contract.BusinessCategory
+				.builder().id(1L).code("TL").name("Trade Licence").active(true).tenantId("default").build();
+		return BusinessCategoryRequest.builder().requestInfo(requestInfo).businessCategoryInfo(category).build();
 	}
 
 	private List<BusinessCategory> getListOfModelBusinessCategories() {
@@ -110,29 +140,9 @@ public class BusinessCategoryControllerTest {
 				.sortOrder("desc").tenantId("default").build();
 	}
 
-	private RequestInfo getRequestInfo() {
-		User userInfo = User.builder().id(1L).name("ram").emailId("ram@gmail.com").mobileNumber("73878921")
-				.build();
-		return RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST").did("4354648646").key("xyz")
-				.msgId("654654").authToken("345678f").userInfo(userInfo).build();
-	}
-
-	private AuthenticatedUser getAuthenticatedUser() {
-
-		return AuthenticatedUser.builder().id(1L).name("ram").anonymousUser(false).emailId("ram@gmail.com")
-				.mobileNumber("73878921").build();
-
-	}
-
 	private ResponseInfo getResponseInfo() {
 		return ResponseInfo.builder().apiId("org.egov.collection").ver("1.0").resMsgId("uief87324").msgId("654654")
 				.status("successful").build();
-	}
-
-	private BusinessCategory getBusinessCategoryModel() {
-		BusinessCategory category = BusinessCategory.builder().id(1L).code("CL").name("Collection").isactive(true)
-				.tenantId("default").build();
-		return category;
 	}
 
 	private String getFileContents(String fileName) {

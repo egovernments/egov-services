@@ -139,7 +139,7 @@ public class PgrMasterConstants {
 
 	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_CODE = "pgr.0014";
 	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME = "code";
-	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "Combination of Code and TenantID already exisits. Even the name has to be unique";
+	public static final String SERVICETYPE_TENANTID_NAME_UNIQUE_ERROR_MESSAGE = "This Service Type already exists";
 	
 	public static final String CATEGORY_ID_MANDATORY_CODE = "pgr.0015";
 	public static final String CATEGORY_ID_MANDATORY_FIELD_NAME = "code";

@@ -1,0 +1,8 @@
+Dear {{name}}, 
+
+Revision petition Endorsement has been generated. Property tax Revised with XXXXX demand/ Property tax demand not revised. You may collect the Endorsement Notice from xxxxxx(municipality name). 
+
+Thanks,
+(Municipality Name)
+
+Note: “This is computer generated Email and does not need any signature and also please do not reply to this email”

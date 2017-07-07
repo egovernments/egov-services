@@ -1,0 +1,1 @@
+Subject: Property application approved and generated assessment No.{{upicNo}}

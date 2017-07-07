@@ -1,0 +1,1 @@
+Dear {{name}}, New Assessment Application request accepted with Acknowledgement No.{{acknowledgementNo}}. Please use this number in all future communication.

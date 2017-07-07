@@ -1,0 +1,6 @@
+Dear {{name}} Property title transfer request with Acknowledgement No.{{acknowledgementNo}} has been Rejected. Please visit xxxxxx(municipality name) for further details.  
+
+Thanks,
+MMMMM Municipal corporation/Municipality(display respective to city)
+
+Note: “This is computer generated Email and does not need any signature and also please do not reply to this email” 

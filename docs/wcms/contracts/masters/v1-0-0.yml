@@ -801,12 +801,7 @@
       
    
               
-        
-        
-              
-          
-              
-  # Document Type Vs Application Type API
+   # Document Type Vs Application Type API
     /documenttype-applicationtype/_create:
       post:
         summary: creates mapping between document type and application type
@@ -911,7 +906,7 @@
       required: false
       type: string
       minLength: 0
-      maxLength: 64
+      maxLength: 20
       
     name:
       name: name
@@ -1011,8 +1006,7 @@
           format: int64
           description: Unique identifier of the entered type, typically defined by system.
         propertyTypeId:
-          type: integer
-          format: int64
+          type: string
           description: Unique identifier of property type object
         categoryTypeId:
           type: integer
@@ -1020,7 +1014,8 @@
           description: unique identifier of category type object
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant 
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1059,8 +1054,7 @@
           format: int64
           description: Unique identifier of the entered type, typically defined by system.
         propertyTypeId:
-          type: integer
-          format: int64
+          type: string
           description: Unique identifier of property type object
         pipeSizeId:
           type: integer
@@ -1068,7 +1062,8 @@
           description: unique identifier of pipe size type object
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1107,8 +1102,7 @@
           format: int64
           description: Unique identifier of the entered type, typically defined by system.
         propertyTypeId:
-          type: integer
-          format: int64
+          type: string
           description: Unique identifier of property type object
         usageTypeId:
           type: integer
@@ -1116,7 +1110,8 @@
           description: unique identifier of property usage type object
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant 
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1162,10 +1157,6 @@
           type: string
           format: varchar
           description: unique identifier of application type object
-        documentType:
-          type: string
-          format: varchar
-          description: Unique identifier of document type object
         mandatory:
           type: boolean
           format: varchar
@@ -1176,7 +1167,8 @@
           description: TRUE for active Document Names and FALSE for inactive Document Names    
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant 
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1206,7 +1198,7 @@
          description : Unique identifier of the entered type, typically defined by system.
         code:
           description: unique code this should be assigned by system.
-          maxLength: 64
+          maxLength: 100
           enum:
             - ADDITION CONNECTION
             - CHANGE OF USE
@@ -1248,7 +1240,7 @@
          description : Unique identifier of the entered type, typically defined by system.
         code:
           description: unique code this should be assigned by system.
-          maxLength: 64
+          maxLength: 100
           enum:
             - TEMPORARY
             - PERMANENT
@@ -1297,7 +1289,7 @@
         code:
           type: string
           description: unique code this should be assigned by system.
-          maxLength: 64
+          maxLength: 20
         name: 
           type: string
           description: human readable name should be assigned by system.
@@ -1305,14 +1297,15 @@
         description: 
           type: string
           description: human readable description should be assigned by user.
-          maxLength: 100
+          maxLength: 250
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1353,7 +1346,7 @@
         code:
           type: string
           description: unique code this should be assigned by system.
-          maxLength: 64
+          maxLength: 20
         name: 
           type: string
           description: human readable name should be assigned by user.
@@ -1362,13 +1355,19 @@
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 250
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
+        - name
         - tenantId
 
   # Document Type definitions
@@ -1404,7 +1403,7 @@
         code:
           type: string
           description: unique code this can be assigned by user.
-          maxLength: 64
+          maxLength: 20
         name: 
           type: string
           description: human readable name should be assigned by user.
@@ -1412,14 +1411,15 @@
         description: 
           type: string
           description: human readable description should be assigned by user.
-          maxLength: 100
+          maxLength: 250
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant 
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1460,7 +1460,7 @@
         code:
           type: string
           description: unique code this can be assigned by user.
-          maxLength: 64
+          maxLength: 20
         sizeInMilimeter:
           type: number
           description: Unique H.S.C pipe size in milli-meters.
@@ -1470,14 +1470,15 @@
         description: 
           type: string
           description: human readable description should be assigned by user.
-          maxLength: 100
+          maxLength: 250
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1516,12 +1517,10 @@
          format: int64
          description : Unique identifier of the donation, typically defined by system.
         propertyTypeId:
-          type: integer
-          format: int64
+          type: string
           description: Unique identifier of property type object
         usageTypeId:
-          type: integer
-          format: int64
+          type: string
           description: unique identifier of property usage type object
         maxPipeSizeId:
           type: integer
@@ -1552,7 +1551,8 @@
           description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1601,7 +1601,7 @@
         code:
           type: string
           description: unique code this can be assigned by user.
-          maxLength: 64
+          maxLength: 20
         name: 
           type: string
           description: human readable name should be assigned by user.
@@ -1609,14 +1609,15 @@
         description: 
           type: string
           description: human readable description should be assigned by user.
-          maxLength: 100
+          maxLength: 250
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant 
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1661,33 +1662,31 @@
         location: 
           type: string
           description: boundary location  where storage reservoir is located should be selected.
-          maxLength: 100
         zone: 
           type: string
           description: boundary zone drop down should be displayed.
-          maxLength: 100
         ward: 
           type: string
           description: boundary ward drop down should be displayed.
-          maxLength: 100
         plantCapacity:
           type: string
           description: Water storage capacity of the plant in million litres should be entered
+          maxLength: 8
         plantType:
           type: string
           description: Type of the water plant 
-          maxLength: 100
+          maxLength: 20
         storageReservoir :
           type: string
           description: Storage Reservoir drop down should be displayed
-          maxLength: 100
         description:
           type: string
           description: human readable description should be assigned by user
-          maxLength: 100
+          maxLength: 250
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant 
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1742,33 +1741,32 @@
         location: 
           type: string
           description: boundary location  where storage reservoir is located should be selected.
-          maxLength: 100
         zone: 
           type: string
           description: boundary zone drop down should be displayed.
-          maxLength: 100
         ward: 
           type: string
           description: boundary ward drop down should be displayed.
-          maxLength: 100
         storageCapacity:
           type: string
           description: Water storage capacity of the plant in million litres should be entered
+          maxLength: 8
         numberofconnection:
           type: string
           description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
-          maxLength: 100
+          maxLength: 124
         numberofsublines:
           type: string
           description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
-          maxLength: 100
+          maxLength: 124
         numberofmainlines:
           type: string
           description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
-          maxLength: 100
+          maxLength: 124
         tenantId:
           type: string
-          description: Unique Identifier of the tenant   
+          description: Unique Identifier of the tenant
+          maxLength: 250
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

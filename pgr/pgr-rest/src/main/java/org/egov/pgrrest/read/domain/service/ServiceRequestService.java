@@ -61,6 +61,7 @@ public class ServiceRequestService {
     public void update(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
         validate(serviceRequest);
         setUserIdForAnonymousUser(contractSevaRequest);
+        enrichWithComputedFields(serviceRequest, contractSevaRequest);
         serviceRequestRepository.update(contractSevaRequest);
     }
 

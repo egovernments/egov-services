@@ -112,9 +112,10 @@ class CustomMenu extends Component {
 
   render() {
     // console.log(this.state.searchText);
-    let {menuItems, handleToggle}=this.props;
+    let {menuItems, handleToggle,actionList}=this.props;
     let {searchText,filterMenu,level,parentLevel}=this.state;
     let {menuChange,changeLevel}=this;
+    console.log(actionList);
     // console.log(menuItems.length>0?menuItems[0].title:"");
     // const constructMenu=(items)=>{
     //   // console.log(items);
@@ -141,7 +142,7 @@ class CustomMenu extends Component {
     //   return menu;
     // }
     // console.log(menuItems);
-    // console.log(parentLevel); 
+    // console.log(parentLevel);
     const checkUrl = function(item) {
       if(item.url == '/pgr/createReceivingCenter' && window.location.href.indexOf("/pgr/createReceivingCenter")>-1) {
           window.urlCheck = true;

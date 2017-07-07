@@ -17,10 +17,11 @@ public class ReportQueryBuilder {
 		
 		String baseQuery = reportDefinition.getQuery();
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
+		
 		for(SearchParam searchParam : searchParams){
 				
-			//Object value = searchParam.getValue();
-			Object value = null;
+			Object value = searchParam.getInput();
+			//Object value = null;
 			if(value instanceof Number)
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),value.toString());
 			

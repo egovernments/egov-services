@@ -20,7 +20,7 @@ ReceiptSvc->ReceiptSvc: Validate payment request.
 ReceiptSvc->IDGenSvc: Generate receipt number
 ReceiptSvc->+KafkaQSvc: Queue for further processing
 ReceiptSvc->-CollectionClient: Create receipt response
-CollectionClient->-CitizenClient: Invoke CitizenSvc with return URL
+CollectionClient->-CitizenSvc: Invoke CitizenSvc with return URL
 note over CollectionClient,CitizenClient
 Redirection to the return url of the billing module with 
 Receipt Status and Receipt Number with Hash

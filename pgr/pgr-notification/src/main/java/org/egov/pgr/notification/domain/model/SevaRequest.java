@@ -36,6 +36,7 @@ public class SevaRequest {
     private static final String USER_INFO_KEY = "userInfo";
     private static final String IN_PROGRESS_STATUS = "IN PROGRESS";
     private static final String REJECTED_STATUS = "REJECTED";
+    private static final String RESUBMIT_STATUS = "RESUBMIT";
     private static final String VALUES_POSITION_ID = "positionId";
     private static final String VALUES_ESCALATED_FLAG = "isEscalated";
     private static final String TRUE = "true";
@@ -122,6 +123,9 @@ public class SevaRequest {
     }
     public boolean isRejected() {
         return REJECTED_STATUS.equalsIgnoreCase(getStatusName());
+    }
+    public boolean isResubmited() {
+        return RESUBMIT_STATUS.equalsIgnoreCase(getStatusName());
     }
 
     @SuppressWarnings("unchecked")

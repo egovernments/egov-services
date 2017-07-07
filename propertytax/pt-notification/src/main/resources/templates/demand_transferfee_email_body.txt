@@ -1,0 +1,8 @@
+Dear {{name}}, 
+
+Revenue inspector finalized your property document value as XXXX amount, Transfer fee to be paid is”YYYY”. Please pay the transfer fee to get the Title transfer endorsement certificate.
+
+Thanks,
+MMMMM Municipal corporation/Municipality(display respective to city)
+
+Note: This is computer generated Email and does not need any signature and also please do not reply to this email

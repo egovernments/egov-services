@@ -1,0 +1,5 @@
+Dear {{citizenName}}
+Your Request for {{serviceName}} has been re-submited successfully with tracking number {{crn}}. Please use this number for all future references.
+This is a computer generated email and does not need any signature.
+Thanks,
+{{ULBName}}

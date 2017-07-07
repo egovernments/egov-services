@@ -34,7 +34,7 @@ public class BillInfo   {
 
 	private String tenantId;
 	
-	private AuditDetails auditDetail;
+	private AuditDetails auditDetails;
 
 }
 

@@ -30,6 +30,12 @@ note over BillingSvc,ReceiptSvc
 end note
 BillingSvc->ReceiptSvc : Response apportioned receipt details list.
 ReceiptSvc->IDGenSvc: Generate receipt number
+ReceiptSvc->+BusinessDetailsSvc: Fetch misc information to enrich receipt
+note over ReceiptSvc,BusinessDetailsSvc
+    Fund, Function, Department defined for Business Details
+    will be used to persist receipt.
+end note
+BusinessDetailsSvc->-ReceiptSvc: BusinessDetailsSvc
 ReceiptSvc->+KafkaQSvc: Queue for further processing
 ReceiptSvc->-Client: Create receipt response
 KafkaQSvc->ReceiptSvc: Persist receipt

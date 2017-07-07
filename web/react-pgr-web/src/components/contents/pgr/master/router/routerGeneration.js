@@ -208,8 +208,8 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr/servicecategories/v1/_search").then(function(response) {
-      	checkCountAndCall("categoryList", response.serviceTypeCategories);
+  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+      	checkCountAndCall("categoryList", response.ServiceGroups);
     }, function(err) {
     	checkCountAndCall("categoryList", []);
     });

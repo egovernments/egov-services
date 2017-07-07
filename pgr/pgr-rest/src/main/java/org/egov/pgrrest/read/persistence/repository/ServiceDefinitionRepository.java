@@ -1,6 +1,5 @@
 package org.egov.pgrrest.read.persistence.repository;
 
-import org.egov.pgrrest.common.domain.model.ComputeRuleDefinition;
 import org.egov.pgrrest.common.persistence.entity.*;
 import org.egov.pgrrest.common.persistence.repository.*;
 import org.egov.pgrrest.read.domain.exception.ServiceDefinitionNotFoundException;
@@ -82,7 +81,7 @@ public class ServiceDefinitionRepository {
             getDomainAttributeRolesDefinitions(attributeCodeToAttributeRolesMap, attributeDefinition.getCode());
         final List<org.egov.pgrrest.common.domain.model.AttributeActionsDefinition> domainAttributeActions =
             getDomainAttributeActionsDefinitions(attributeCodeToAttributeActionsMap, attributeDefinition.getCode());
-        final List<ComputeRuleDefinition> domainConstraints =
+        final List<org.egov.pgrrest.common.domain.model.ComputeRuleDefinition> domainConstraints =
             getDomainConstraintDefinitions(attributeCodeToConstraintsMap, attributeDefinition.getCode());
 
         return attributeDefinition
@@ -116,12 +115,13 @@ public class ServiceDefinitionRepository {
             .collect(Collectors.toList());
     }
 
-    private List<ComputeRuleDefinition> getDomainConstraintDefinitions(
-        Map<String, List<org.egov.pgrrest.common.persistence.entity.ComputeRuleDefinition>> attributeCodeToConstraintsMap, String attributeCode) {
+    private List<org.egov.pgrrest.common.domain.model.ComputeRuleDefinition> getDomainConstraintDefinitions(
+        Map<String, List<org.egov.pgrrest.common.persistence.entity.ComputeRuleDefinition>> attributeCodeToConstraints,
+        String attributeCode) {
         final List<org.egov.pgrrest.common.persistence.entity.ComputeRuleDefinition> entityConstraints =
-            attributeCodeToConstraintsMap.getOrDefault(attributeCode, new ArrayList<>());
+            attributeCodeToConstraints.getOrDefault(attributeCode, new ArrayList<>());
         return entityConstraints.stream()
-            .map(org.egov.pgrrest.common.persistence.entity.ComputeRuleDefinition::toDomain)
+            .map(ComputeRuleDefinition::toDomain)
             .collect(Collectors.toList());
     }
 
@@ -190,13 +190,13 @@ public class ServiceDefinitionRepository {
             .map(a -> a.getId().getCode())
             .collect(Collectors.toList());
         final String serviceCode = attributeDefinitions.get(0).getId().getServiceCode();
-        final List<org.egov.pgrrest.common.persistence.entity.ComputeRuleDefinition> actionsDefinitions = constraintDefinitionJpaRepository
+        final List<ComputeRuleDefinition> actionsDefinitions = constraintDefinitionJpaRepository
             .findBy(serviceCode, attributeCodes, tenantId);
         if (CollectionUtils.isEmpty(actionsDefinitions))
             return new HashMap<>();
 
         return actionsDefinitions.stream()
-            .collect(Collectors.groupingBy(org.egov.pgrrest.common.persistence.entity.ComputeRuleDefinition::getAttributeCode));
+            .collect(Collectors.groupingBy(ComputeRuleDefinition::getAttributeCode));
     }
 
     private List<AttributeDefinition> getAttributeDefinitions(ServiceDefinition serviceDefinition) {

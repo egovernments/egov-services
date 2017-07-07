@@ -39,7 +39,8 @@ public class ServiceRequestCustomFieldServiceTest {
     public void before() {
         final List<AttributeValueValidator> attributeValueValidators =
             Collections.singletonList(attributeValueValidator);
-        final JSScriptEngineFactory scriptEngineFactory = new JSScriptEngineFactory();
+        final JSScriptEngineFactory scriptEngineFactory =
+            new JSScriptEngineFactory("2000", "1");
         customFieldService = new ServiceRequestCustomFieldService(serviceDefinitionService,
             attributeValueValidators, scriptEngineFactory);
     }

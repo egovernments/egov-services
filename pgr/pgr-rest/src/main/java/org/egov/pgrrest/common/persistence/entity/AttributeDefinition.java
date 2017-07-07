@@ -1,7 +1,7 @@
 package org.egov.pgrrest.common.persistence.entity;
 
 import lombok.*;
-import org.egov.pgrrest.common.domain.model.*;
+import org.egov.pgrrest.common.domain.model.AttributeDataType;
 import org.egov.pgrrest.common.domain.model.AttributeActionsDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeRolesDefinition;
 import org.egov.pgrrest.common.domain.model.ComputeRuleDefinition;

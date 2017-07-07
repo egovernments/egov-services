@@ -3,11 +3,8 @@ package org.egov.pgrrest.read.domain.service.validator;
 import org.egov.pgrrest.common.domain.model.AttributeDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
-import org.egov.pgrrest.read.domain.exception.InvalidDateAttributeEntryException;
 import org.egov.pgrrest.read.domain.exception.InvalidIntegerAttributeEntryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;

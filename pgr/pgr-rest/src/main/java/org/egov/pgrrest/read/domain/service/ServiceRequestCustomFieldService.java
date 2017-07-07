@@ -1,5 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
+import delight.nashornsandbox.NashornSandbox;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.egov.pgrrest.common.domain.model.AttributeDefinition;
@@ -14,8 +15,6 @@ import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ServiceRequestCustomFieldService {
 
-    private static final String RULE_FAILED_MESSAGE = "Execution of rule name: {} with definition: {} failed";
+    private static final String RULE_FAILED_MESSAGE = "Execution of rule name: %s with definition: %s failed";
     private ServiceDefinitionService serviceDefinitionService;
     private List<AttributeValueValidator> attributeValueValidators;
     private JSScriptEngineFactory scriptEngineFactory;
@@ -52,31 +51,35 @@ public class ServiceRequestCustomFieldService {
         if (serviceDefinition.isComputedFieldsAbsent()) {
             return;
         }
-        final ScriptEngine scriptEngine = scriptEngineFactory.create();
+        final NashornSandbox scriptEngine = scriptEngineFactory.create();
         final Map<String, List<AttributeEntry>> codeToAttributeEntriesMap =
             getCodeToAttributeEntriesMap(serviceRequest);
         loadEngineWithDefinedVariables(serviceDefinition, scriptEngine, codeToAttributeEntriesMap);
-        serviceDefinition.getComputedFields().forEach(computedAttributeDefinition -> {
-            for (ComputeRuleDefinition rule : computedAttributeDefinition.getComputeRules()) {
-                final boolean isRuleApplicable = isRuleApplicable(scriptEngine, rule);
-                if (!isRuleApplicable) {
-                    continue;
-                }
+        serviceDefinition.getComputedFields()
+            .forEach(computedAttributeDefinition ->
+                computeAttribute(scriptEngine, computedAttributeDefinition, attribValues));
+    }
+
+    private void computeAttribute(NashornSandbox scriptEngine,
+                                  AttributeDefinition computedAttributeDefinition,
+                                  List<org.egov.pgr.common.contract.AttributeEntry> attribValues) {
+        for (ComputeRuleDefinition rule : computedAttributeDefinition.getComputeRules()) {
+            final boolean isRuleApplicable = isRuleApplicable(scriptEngine, rule);
+            if (isRuleApplicable) {
                 final String code = computedAttributeDefinition.getCode();
                 final org.egov.pgr.common.contract.AttributeEntry entry =
                     new org.egov.pgr.common.contract.AttributeEntry(code, rule.getValue());
                 attribValues.add(entry);
-                break;
+                return;
             }
-        });
-
+        }
     }
 
-    private boolean isRuleApplicable(ScriptEngine scriptEngine, ComputeRuleDefinition rule) {
+    private boolean isRuleApplicable(NashornSandbox scriptEngine, ComputeRuleDefinition rule) {
         try {
             return (boolean) scriptEngine.eval(rule.getRule());
-        } catch (ScriptException e) {
-            log.error(RULE_FAILED_MESSAGE, rule.getName(), rule.getRule());
+        } catch (Exception e) {
+            log.error(String.format(RULE_FAILED_MESSAGE, rule.getName(), rule.getRule()), e);
             throw new RuleEvaluationException(rule);
         }
     }
@@ -86,7 +89,7 @@ public class ServiceRequestCustomFieldService {
             .stream().collect(Collectors.groupingBy(AttributeEntry::getKey));
     }
 
-    private void loadEngineWithDefinedVariables(ServiceDefinition serviceDefinition, ScriptEngine scriptEngine,
+    private void loadEngineWithDefinedVariables(ServiceDefinition serviceDefinition, NashornSandbox scriptEngine,
                                                 Map<String, List<AttributeEntry>> codeToAttributeEntriesMap) {
         serviceDefinition.getNonComputedAttributes().forEach(attributeDefinition -> {
             final List<AttributeEntry> matchingAttributeEntries =
@@ -95,7 +98,7 @@ public class ServiceRequestCustomFieldService {
                 return;
             }
             Object parsedObject = getParsedObject(attributeDefinition, matchingAttributeEntries);
-            scriptEngine.put(attributeDefinition.getCode(), parsedObject);
+            scriptEngine.inject(attributeDefinition.getCode(), parsedObject);
         });
     }
 

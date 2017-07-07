@@ -1,29 +1,21 @@
-package org.egov.models;
-
+package org.egov.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * 
- * @author Prasad
- *
+ * status of request processing - to be enhanced in futuer to include INPROGRESS
  */
-public enum CategoryEnum {
+public enum ResponseStatusEnum {
+	SUCCESSFUL("SUCCESSFUL"),
 
-	TAX("TAX"),
-	FEE("FEE"),
-	REBATE("REBATE"),
-	ADVANCE_COLLECTION("ADVANCE_COLLECTION"),
-	PENALTY("PENALTY"),
-	FINES("FINES");
-	
-	
+	FAILED("FAILED");
+
 	private String value;
-	
-	CategoryEnum(String value) {
+
+	ResponseStatusEnum(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	@JsonValue
 	public String toString() {
@@ -31,8 +23,8 @@ public enum CategoryEnum {
 	}
 
 	@JsonCreator
-	public static CategoryEnum fromValue(String text) {
-		for (CategoryEnum b : CategoryEnum.values()) {
+	public static ResponseStatusEnum fromValue(String text) {
+		for (ResponseStatusEnum b : ResponseStatusEnum.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

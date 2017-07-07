@@ -688,24 +688,24 @@ class ServiceTypeCreate extends Component {
                                     id="hasFinancialImpact"
                                   />
                               </Col>
-                               <Col xs={12} md={3} sm={6}>
-
-                                  <Checkbox
-                                    label="Attributes"
-                                    style={styles.metadata}
-                                    checked = {createServiceType.metadata || false}
-                                    onCheck = {(e, i, v) => { console.log(createServiceType.metadata, i);
-
-                                      var e = {
-                                        target: {
-                                          value:i
-                                        }
-                                      }
-                                      handleChange(e, "metadata", false, '')
-                                    }}
-                                    id="metadata"
-                                  />
-                              </Col>
+                               {/*<Col xs={12} md={3} sm={6}>
+                               
+                                                                 <Checkbox
+                                                                   label="Attributes"
+                                                                   style={styles.metadata}
+                                                                   checked = {createServiceType.metadata || false}
+                                                                   onCheck = {(e, i, v) => { console.log(createServiceType.metadata, i);
+                               
+                                                                     var e = {
+                                                                       target: {
+                                                                         value:i
+                                                                       }
+                                                                     }
+                                                                     handleChange(e, "metadata", false, '')
+                                                                   }}
+                                                                   id="metadata"
+                                                                 />
+                                                             </Col>*/}
                               <div className="clearfix"></div>
                                 {promotionFunc()}
 

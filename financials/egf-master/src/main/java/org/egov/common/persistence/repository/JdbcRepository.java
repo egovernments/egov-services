@@ -67,7 +67,7 @@ public abstract class JdbcRepository {
 		System.out.println(allInsertQuery);
 	}
 
-	private static String insertQuery(List<String> fields, String tableName, List<String> uniqueFields) {
+	public static String insertQuery(List<String> fields, String tableName, List<String> uniqueFields) {
 		String iQuery = "insert into :tableName (:fields) values (:params) ";
 		StringBuilder fieldNames = new StringBuilder();
 		StringBuilder paramNames = new StringBuilder();
@@ -164,7 +164,8 @@ public abstract class JdbcRepository {
 			i++;
 		}
 
-		uQuery = uQuery.replace(":uniqueField", uniqueFieldNameAndParams.toString()).replace(":tableName", tableName).toString();
+		uQuery = uQuery.replace(":uniqueField", uniqueFieldNameAndParams.toString()).replace(":tableName", tableName)
+				.toString();
 		return uQuery;
 	}
 
@@ -197,7 +198,8 @@ public abstract class JdbcRepository {
 			}
 		}
 
-		uQuery = uQuery.replace(":searchFields", fieldNameAndParams.toString()).replace(":tableName", tableName).toString();
+		uQuery = uQuery.replace(":searchFields", fieldNameAndParams.toString()).replace(":tableName", tableName)
+				.toString();
 		return uQuery;
 	}
 
@@ -318,13 +320,4 @@ public abstract class JdbcRepository {
 		return page;
 	}
 
-	/*
-	 * public Pagination getPaginationNew(String searchQuery, Pagination page,
-	 * Map<String, Object> paramValues) { String countQuery =
-	 * "select count(*) from (" + searchQuery + ") as x"; Long count =
-	 * namedParameterJdbcTemplate.queryForObject(countQuery.toString(),
-	 * paramValues, Long.class); Integer totalpages = (int) Math.ceil((double)
-	 * count / page.getPageSize()); page.setTotalPages(totalpages);
-	 * page.setCurrentPage(page.getOffSet()); return page; }
-	 */
 }

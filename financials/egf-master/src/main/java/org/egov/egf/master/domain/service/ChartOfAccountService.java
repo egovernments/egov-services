@@ -30,8 +30,6 @@ public class ChartOfAccountService {
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
 
-	 
-
 	@Autowired
 	private SmartValidator validator;
 	@Autowired
@@ -88,6 +86,7 @@ public class ChartOfAccountService {
 				}
 				chartOfAccount.setParentId(parentId);
 			}
+			chartOfAccount.setMajorCode(chartOfAccount.getGlcode().substring(0, 3));
 
 		}
 

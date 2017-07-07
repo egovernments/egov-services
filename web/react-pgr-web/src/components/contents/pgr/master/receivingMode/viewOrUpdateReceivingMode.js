@@ -18,6 +18,17 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
+const $ = require('jquery');
+$.DataTable = require('datatables.net');
+const dt = require('datatables.net-bs');
+
+
+const buttons = require('datatables.net-buttons-bs');
+
+require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
+require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
+require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
+require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
 var flag = 0;
 const styles = {
@@ -59,24 +70,67 @@ class viewOrUpdateReceivingMode extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        data:''
+        data:'',
+        modify: false
       }
     }
 
     componentWillMount() {
-        var body = {}
-        let  current = this;
-        Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{},body).then(function(response){
-            console.log(response.ReceivingModeType);
-            current.setState({data:response.ReceivingModeType});
-        }).catch((error)=>{
-            console.log(error);
-        })
+      $('#searchTable').DataTable({
+             dom: 'lBfrtip',
+             buttons: [],
+              bDestroy: true,
+              language: {
+                 "emptyTable": "No Records"
+              }
+        });
     }
 
     componentDidMount() {
-     let {initForm}=this.props;
-     initForm();
+
+        let {initForm}=this.props;
+        initForm();
+        var body = {}
+        let  current = this;
+        current.props.setLoadingStatus("loading");
+        Api.commonApiPost("/pgr-master/receivingmode/v1/_search",{},body).then(function(response){
+            current.setState({
+              data:response.ReceivingModeType,
+              modify: true
+            });
+            current.props.setLoadingStatus("hide");
+        }).catch((error)=>{
+            current.setState({
+              modify: true
+            });
+            current.props.setLoadingStatus("hide");
+        })
+    }
+
+    componentWillUpdate() {
+      if(flag == 1) {
+        flag = 0;
+        $('#searchTable').dataTable().fnDestroy();
+      }
+    }
+
+    componentWillUnmount(){
+       $('#searchTable')
+       .DataTable()
+       .destroy(true);
+    }
+
+    componentDidUpdate() {
+      if(this.state.modify) {
+        $('#searchTable').DataTable({
+             dom: 'lBfrtip',
+             buttons: [],
+              bDestroy: true,
+              language: {
+                 "emptyTable": "No Records"
+              }
+        });
+      }
     }
 
     handleNavigation = (type, id) => {
@@ -109,7 +163,7 @@ class viewOrUpdateReceivingMode extends Component {
                     <Grid>
                         <Row>
                             <Col xs={12} md={12}>
-                                <Table>
+                                <Table id="searchTable">
                                     <thead>
                                         <tr>
                                           <th>#</th>
@@ -181,6 +235,10 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
+  },
+
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 })
 

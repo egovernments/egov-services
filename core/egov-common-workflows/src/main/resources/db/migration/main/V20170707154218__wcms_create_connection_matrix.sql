@@ -1,0 +1,16 @@
+INSERT into eg_wf_types (id, module, type, link, enabled, grouped, createdby, createddate, lastmodifiedby, lastmodifieddate, typefqn, displayname, version, tenantid) values (nextval('seq_eg_wf_types'),NULL, 'WaterConnection', '/wcms-web/app/wcms/connection/update-connection.html?stateId=:ID', true, false, 1, now(), 1, now(), 'org.egov.wcms.transanction.model.Connection', 'Create Connection', 0, 'default');
+
+
+INSERT INTO eg_wf_matrix (id, department, objecttype, currentstate, currentstatus, pendingactions, currentdesignation, additionalrule, nextstate, nextaction, nextdesignation, nextstatus, validactions, fromqty, toqty, fromdate, todate, tenantId) VALUES (NEXTVAL('SEQ_EG_WF_MATRIX'), 'ANY', 'WaterConnection', 'NEW', NULL, NULL, 'Senior Assistant,Junior Assistant', 'NEW CONNECTION', 'Assistant Engg Approval Pending', 'Assistant Engg Approval Pending', 'Assistant Engineer', 'Clerk Approved', 'Forward,Cancel', NULL, NULL, '2017-04-01', '2099-03-31', 'default');
+
+INSERT INTO eg_wf_matrix (id, department, objecttype, currentstate, currentstatus, pendingactions, currentdesignation, additionalrule, nextstate, nextaction, nextdesignation, nextstatus, validactions, fromqty, toqty, fromdate, todate, tenantId) VALUES (NEXTVAL('SEQ_EG_WF_MATRIX'), 'ANY', 'WaterConnection', 'Assistant Engg Approval Pending', NULL, NULL, 'Assistant Engineer', 'NEW CONNECTION', 'Assistant Engineer Approved', 'Notice Print Pending', 'Senior Assistant, Junior Assistant', 'Assistant Engineer Approved', 'Forward,Reject', NULL, NULL, '2017-04-01', '2099-03-31', 'default');
+
+
+INSERT INTO eg_wf_matrix (id, department, objecttype, currentstate, currentstatus, pendingactions, currentdesignation, additionalrule, nextstate, nextaction, nextdesignation, nextstatus, validactions, fromqty, toqty, fromdate, todate, tenantId) VALUES (NEXTVAL('SEQ_EG_WF_MATRIX'), 'ANY', 'WaterConnection', 'Assistant Engineer Approved', NULL, NULL, 'Senior Assistant, Junior Assistant', 'NEW CONNECTION', 'Commissioner approval pending', 'Notice Print Pending', 'Commissioner', 'Commissioner approval pending', 'Generate Notice,Reject', NULL, NULL, '2017-04-01', '2099-03-31', 'default');
+
+
+
+INSERT INTO eg_wf_matrix (id, department, objecttype, currentstate, currentstatus, pendingactions, currentdesignation, additionalrule, nextstate, nextaction, nextdesignation, nextstatus, validactions, fromqty, toqty, fromdate, todate, tenantId) VALUES (NEXTVAL('SEQ_EG_WF_MATRIX'), 'ANY', 'WaterConnection', 'Commissioner approval pending', NULL, NULL, 'Commissioner', 'NEW CONNECTION', 'Commissioner Approved', 'Commissioner Approved', 'Senior Assistant, Junior Assistant', 'workorder print pending', 'Approve', NULL, NULL, '2017-04-01', '2099-03-31', 'default');
+
+INSERT INTO eg_wf_matrix (id, department, objecttype, currentstate, currentstatus, pendingactions, currentdesignation, additionalrule, nextstate, nextaction, nextdesignation, nextstatus, validactions, fromqty, toqty, fromdate, todate, tenantId) VALUES (NEXTVAL('SEQ_EG_WF_MATRIX'), 'ANY', 'WaterConnection', 'Commissioner Approved', NULL, NULL, 'Senior Assistant, Junior Assistant', 'NEW CONNECTION', 'END', 'END', NULL, NULL, 'Generate WorkOrder', NULL, NULL, '2017-04-01', '2099-03-31', 'default');
+

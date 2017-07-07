@@ -44,7 +44,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved");
+    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
+    REJECTED("Rejected"), ;
 
     
     private String name;

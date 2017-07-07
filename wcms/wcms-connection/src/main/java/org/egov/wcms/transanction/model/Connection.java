@@ -108,7 +108,7 @@ public class Connection {
     private String status;
 
     @NotNull
-    private int stateId;
+    private Long stateId;
 
     @NotNull
     private double sumpCapacity;

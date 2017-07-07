@@ -161,6 +161,7 @@ class viewOrUpdateServiceType extends Component {
             checkCountAndSetState("data", []);
         })
 
+
         Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
             checkCountAndSetState("categorySource", response.ServiceGroups);
         }, function(err) {

@@ -98,10 +98,10 @@ public class EscalationTimeTypeQueryBuilder {
 			
 		}
 
-		if (0L != escalationRequest.getGrievanceType()) {
+		if (0L != escalationRequest.getServiceId()) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" escalation.complaint_type_id = ? ");
-				preparedStatementValues.add(escalationRequest.getGrievanceType());
+				preparedStatementValues.add(escalationRequest.getServiceId());
 		}
 
 		if (0L != escalationRequest.getDesignation()) {

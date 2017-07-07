@@ -46,6 +46,7 @@ public class SearchPropertyBuilder {
         StringBuffer searchPropertySql = new StringBuffer();
 
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
+        //TODO [Ramki] ownerName is user.name not user.username
         if (ownerName != null && !ownerName.isEmpty())
             userSearchRequestInfo.put("username", ownerName);
 
@@ -58,7 +59,7 @@ public class SearchPropertyBuilder {
 
         userSearchRequestInfo.put("tenantId", tenantId);
         userSearchRequestInfo.put("RequestInfo", requestInfo);
-
+        //TODO [Ramki] we can have check here when owner information is given then only do call otherwise not required.
         UserResponseInfo userResponse = restTemplate.postForObject(environment.getProperty("user.searchUrl"),
                 userSearchRequestInfo, UserResponseInfo.class);
         String Ids = "";
@@ -100,6 +101,7 @@ public class SearchPropertyBuilder {
             searchPropertySql.append(" AND puser.user_id IN (" + Ids + ")");
         
         //TODO as of now we don't have the revenue Zone ,revenue Ward,locality,houseNoBldgApt
+        //TODO [Ramki] what do you mean by we do not have revenue Zone ,revenue Ward,locality,houseNoBldgApt ?
         // So we are not putting in search
         
         /*

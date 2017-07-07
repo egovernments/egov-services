@@ -49,8 +49,10 @@ import org.egov.collection.model.Department;
 import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
+import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.DepartmentResponse;
+import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.UserResponse;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.errorhandlers.Error;
@@ -178,6 +180,44 @@ public class WorkflowController {
 	}
 	
 	
+	@PostMapping("/start")
+	@ResponseBody
+	public ResponseEntity<?> startWorkflow(
+			@RequestBody @Valid final WorkflowDetails workflowDetails, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}				
+		if(!validateTenantId(workflowDetails.getTenantId())){
+			LOGGER.info("Invalid TenantId");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		WorkflowDetails workflowDetailsObj = workflowService.pushToQueue(workflowDetails);
+				
+		if(null == workflowDetailsObj){
+			LOGGER.info("Service returned null");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.INVALID_WF_REQUEST);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			
+		}
+		
+		return new ResponseEntity<>(workflowDetailsObj, HttpStatus.OK);
+
+				
+	}
+	
+	
+	
 	
 	private ResponseEntity<?> getDeptSuccessResponse(List<Department> departments,
 			RequestInfo requestInfo) {
@@ -200,7 +240,6 @@ public class WorkflowController {
 		userResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(userResponse, HttpStatus.OK);
 	}
-
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();		

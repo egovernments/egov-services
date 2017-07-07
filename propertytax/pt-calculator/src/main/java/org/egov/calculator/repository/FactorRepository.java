@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.egov.calculator.repository.builder.FactorQueryBuilder;
 import org.egov.calculator.util.TimeStampUtil;
+import org.egov.enums.CalculationFactorTypeEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
-import org.egov.models.CalculationFactorTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;

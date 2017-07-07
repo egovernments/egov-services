@@ -29,7 +29,14 @@ public class RoleActionRepository {
 		LOGGER.info("Create Role Actions Repository::" + actionRequest);
 		final String roleActionsInsert = "insert into eg_roleaction values (?,?,?)";
 
-		List<Action> actions = actionRequest.getActions();
+		List<String> sqlStringifiedCodes = new ArrayList<>();
+        for (Action actionName : actionRequest.getActions()) 
+            sqlStringifiedCodes.add(String.format("'%s'", actionName.getName()));
+        
+		
+		final String getActionIdsBasedOnName = "select id from eg_action where name IN ("+ String.join(",", sqlStringifiedCodes) + ")";
+		
+		List<Integer>  actionList = jdbcTemplate.queryForList(getActionIdsBasedOnName, Integer.class);
 		
 		Role role = actionRequest.getRole();
 
@@ -40,26 +47,27 @@ public class RoleActionRepository {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				
-				Action action = actions.get(i);
+				int action = actionList.get(i);
 				ps.setString(1, role.getCode());
-				ps.setLong(2, action.getId());
+				ps.setLong(2, action);
 				ps.setString(3, actionRequest.getTenantId());
                 
 				RoleAction roleAction = new RoleAction();
 
-				roleAction.setActionId(action.getId());
+				roleAction.setActionId(action);
 				roleAction.setRoleCode(role.getCode());
-				roleAction.setRoleCode(actionRequest.getTenantId());
+				roleAction.setTenantId(actionRequest.getTenantId());
 				
 				roleActionList.add(roleAction);
 			}
 
 			@Override
 			public int getBatchSize() {
-				return actions.size();
+				return actionList.size();
 			}
 		});
 
 		return roleActionList;
 	}
+
 }

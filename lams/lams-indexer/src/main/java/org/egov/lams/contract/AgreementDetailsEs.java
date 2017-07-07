@@ -1,6 +1,8 @@
 package org.egov.lams.contract;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.egov.lams.model.Agreement;
@@ -8,6 +10,7 @@ import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
 import org.egov.lams.model.Boundary;
 import org.egov.lams.model.City;
+import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.Location;
 
 import lombok.AllArgsConstructor;
@@ -92,6 +95,10 @@ public class AgreementDetailsEs {
 	private String lastModifiedBy;
 	private Date lastModifiedDate;
 	private String workFlowState;
+	private BigDecimal arrearAmount;
+	private BigDecimal arrearCollection;
+	private BigDecimal currentAmount;
+	private BigDecimal currentCollection;
 
 	public void setAgreement(Agreement agreement) {
 
@@ -182,6 +189,29 @@ public class AgreementDetailsEs {
 		this.districtName = city.getDistrictName();
 		this.cityCode = city.getCode();
 		this.regionName = city.getRegionName();
+
+	}
+	
+	public void setRent(List<DemandDetails> demandDetails, Installment installment,String taxReason) {
+		BigDecimal arrearAmount = BigDecimal.ZERO;
+		BigDecimal arrearCollection = BigDecimal.ZERO;
+		BigDecimal currentAmount = BigDecimal.ZERO;
+		BigDecimal currentCollection = BigDecimal.ZERO;
+		for (DemandDetails demandDetail : demandDetails) {
+			if (demandDetail.getTaxReason().equalsIgnoreCase(taxReason)) {
+				if (demandDetail.getTaxPeriod().equals(installment.getDescription())) {
+					currentAmount = currentAmount.add(demandDetail.getTaxAmount());
+					currentCollection = currentCollection.add(demandDetail.getCollectionAmount());
+				} else {
+					arrearAmount = arrearAmount.add(demandDetail.getTaxAmount());
+					arrearCollection = arrearCollection.add(demandDetail.getCollectionAmount());
+				}
+			}
+		}
+		this.arrearAmount=arrearAmount;
+		this.arrearCollection=arrearCollection;
+		this.currentAmount=currentAmount;
+		this.currentCollection=currentCollection;
 
 	}
 

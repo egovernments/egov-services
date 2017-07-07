@@ -48,6 +48,7 @@ public class CollectionServiceConstants {
 	public static final String INVALID_DEPT_REQUEST = "Get departments request is invalid";
 	public static final String INVALID_DESIG_REQUEST = "Get designation request is invalid";
 	public static final String INVALID_USERS_REQUEST = "Get users request is invalid";
+	public static final String INVALID_WF_REQUEST = "Start Workflow request is invalid";
 
 
 	

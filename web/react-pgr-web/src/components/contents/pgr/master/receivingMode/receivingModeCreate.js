@@ -218,11 +218,20 @@ class receivingModeCreate extends Component {
                                  value: value
                                }
                              };
-                             console.log(value);
                              handleChange(e, "channels", true, "")}}
                           floatingLabelText="Channel*" >
-                              <MenuItem value={"WEB"} primaryText="WEB"/>
-                              <MenuItem value={"MOBILE"} primaryText="MOBILE"/>
+                              <MenuItem 
+                                value={"WEB"} 
+                                primaryText="WEB"
+                                insetChildren={true}
+                                checked = {receivingmodeSet.channels && receivingmodeSet.channels.indexOf("WEB") > -1}
+                              />
+                              <MenuItem 
+                                value={"MOBILE"} 
+                                primaryText="MOBILE"
+                                insetChildren={true}
+                                checked = {receivingmodeSet.channels && receivingmodeSet.channels.indexOf("MOBILE") > -1}
+                              />
                      </SelectField>
                    </Col>
                     <div className="clearfix"></div>

@@ -21,19 +21,19 @@ INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate
 
 -------------------------------------------------------------------------------------------------------
 INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby) VALUES
-(nextval('seq_servicetype_keyword'), 'PAODTDGC', 'serviceRequest', 'default', now(), 0);
+(nextval('seq_servicetype_keyword'), 'PAODTDGC', 'complaint', 'default', now(), 0);
 
 INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby) VALUES
-(nextval('seq_servicetype_keyword'), 'PAOS', 'serviceRequest', 'default', now(), 0);
+(nextval('seq_servicetype_keyword'), 'PAOS', 'complaint', 'default', now(), 0);
 
 INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby) VALUES
-(nextval('seq_servicetype_keyword'), 'PBMWHHWR', 'serviceRequest', 'default', now(), 0);
+(nextval('seq_servicetype_keyword'), 'PBMWHHWR', 'complaint', 'default', now(), 0);
 
 INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby) VALUES
-(nextval('seq_servicetype_keyword'), 'PBRKNB', 'serviceRequest', 'default', now(), 0);
+(nextval('seq_servicetype_keyword'), 'PBRKNB', 'complaint', 'default', now(), 0);
 
 INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby) VALUES
-(nextval('seq_servicetype_keyword'), 'PBPS', 'serviceRequest', 'default', now(), 0);
+(nextval('seq_servicetype_keyword'), 'PBPS', 'complaint', 'default', now(), 0);
 
 INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createddate, createdby) VALUES
-(nextval('seq_servicetype_keyword'), 'PBOG', 'serviceRequest', 'default', now(), 0);
+(nextval('seq_servicetype_keyword'), 'PBOG', 'complaint', 'default', now(), 0);

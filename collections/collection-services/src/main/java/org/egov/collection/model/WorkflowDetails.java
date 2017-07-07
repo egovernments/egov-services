@@ -41,6 +41,10 @@ package org.egov.collection.model;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -58,11 +62,21 @@ import lombok.ToString;
 @Builder
 public class WorkflowDetails {
 
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	
+	private String tenantId;
+	
+	private String receiptNumber;
+	
     @NotNull
     private long department;
 
     @NotNull
     private long designation;
+    
+    @NotNull
+    private String buisnessKey;
 
     @NotNull
     private long user;
@@ -76,5 +90,8 @@ public class WorkflowDetails {
 
     @NotNull
     private String status;
+    
+    @NotNull
+    private String state;
 
 }

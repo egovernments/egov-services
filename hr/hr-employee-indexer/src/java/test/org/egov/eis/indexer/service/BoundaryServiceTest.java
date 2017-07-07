@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.web.contract.BoundaryResponse;
-import org.egov.core.web.contract.RequestInfo;
 import org.egov.core.web.contract.RequestInfoWrapper;
-import org.egov.core.web.contract.ResponseInfo;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;

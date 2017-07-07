@@ -81,4 +81,6 @@ public class Task {
 
 	@JsonProperty("entity")
 	private String entity;
+	
+	private String tenantId;
 }

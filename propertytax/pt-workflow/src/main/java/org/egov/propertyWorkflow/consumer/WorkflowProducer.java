@@ -26,6 +26,10 @@ public class WorkflowProducer {
 	@Autowired
 	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
 
+	/**
+	 * This method will send message to the kafka queue and will process the
+	 * success or failure callback
+	 */
 	public void sendMessage(String topic, PropertyRequest propertyRequest) {
 		ListenableFuture<SendResult<String, PropertyRequest>> future = kafkaTemplate().send(topic, propertyRequest);
 		future.addCallback(new ListenableFutureCallback<SendResult<String, PropertyRequest>>() {
@@ -41,6 +45,9 @@ public class WorkflowProducer {
 		});
 	}
 
+	/**
+	 * This method will return map object for producer configuration
+	 */
 	@Bean
 	public Map<String, Object> producerConfig() {
 		Map<String, Object> producerProperties = new HashMap<String, Object>();
@@ -51,16 +58,27 @@ public class WorkflowProducer {
 		return producerProperties;
 	}
 
+	/**
+	 * This method will return producer factory bean based on producer
+	 * configuration
+	 */
 	@Bean
 	public ProducerFactory<String, PropertyRequest> producerFactory() {
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
+	/**
+	 * This method will return kafka template bean based on producer factory
+	 * bean
+	 */
 	@Bean
 	public KafkaTemplate<String, PropertyRequest> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 
+	/**
+	 * This method will send property request to kakfa producer
+	 */
 	public void send(String topic, PropertyRequest propertyRequest) {
 		kafkaTemplate.send(topic, propertyRequest);
 	}

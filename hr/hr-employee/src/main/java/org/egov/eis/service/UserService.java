@@ -40,14 +40,21 @@
 
 package org.egov.eis.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.User;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.UserSearchURLHelper;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.EmployeeCriteria;
+import org.egov.eis.web.contract.UserGetRequest;
+import org.egov.eis.web.contract.UserRequest;
+import org.egov.eis.web.contract.UserResponse;
 import org.egov.eis.web.controller.EmployeeController;
 import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.slf4j.Logger;
@@ -57,11 +64,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class UserService {

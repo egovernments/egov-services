@@ -34,7 +34,7 @@ public class DataIntegrityValidatorForCreateTest {
 	private NonVacantPositionsRepository nonVacantPositionsRepository;
 
 	@InjectMocks
-	private DataIntegrityValidatorForCreate dataIntegrityValidatorForCreate;
+	private DataIntegrityValidatorForCreateEmployee dataIntegrityValidatorForCreate;
 
 	@Before
 	public void setUp() throws Exception {

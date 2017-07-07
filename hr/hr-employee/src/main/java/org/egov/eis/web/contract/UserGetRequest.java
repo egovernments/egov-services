@@ -40,12 +40,22 @@
 
 package org.egov.eis.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
-import javax.validation.constraints.Size;
 import java.util.Collections;
 import java.util.List;
+
+import javax.validation.constraints.Size;
+
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Builder

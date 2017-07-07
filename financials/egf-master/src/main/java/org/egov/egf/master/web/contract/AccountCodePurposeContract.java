@@ -41,6 +41,7 @@ package org.egov.egf.master.web.contract;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.web.contract.AuditableContract;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -58,7 +59,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "name" })
-public class AccountCodePurposeContract {
+public class AccountCodePurposeContract extends AuditableContract {
 
 	private String id;
 

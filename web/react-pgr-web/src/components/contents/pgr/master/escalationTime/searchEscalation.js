@@ -139,19 +139,28 @@ class SearchEscalation extends Component {
 
       let {searchEscalation} = this.props;
 
-    /*  if(searchEscalation.designation && searchEscalation.designation != ''){
+      var query = {}
 
-      } else if (searchEscalation.serviceType.id && searchEscalation.serviceType.id != ''){
+      if(searchEscalation.designation && searchEscalation.serviceType){
 
-      } else {
+        query = {
+          designation:searchEscalation.designation,
+          serviceCode:searchEscalation.serviceType.id
+         }
+
+      } else if(searchEscalation.serviceType){
+         
+           query = {
+          serviceCode:searchEscalation.serviceType.serviceCode
+           }
+      } else if(searchEscalation.designation) {
+      
         let query = {
-          designation:this.props.searchEscalation.designation
+          designation:searchEscalation.designation.id
         }
-      }*/
+      } else {}
 
-      let query = {
-        designation:this.props.searchEscalation.designation
-      }
+      console.log(query)
 
       Api.commonApiPost("/workflow/escalation-hours/v1/_search",query,{}).then(function(response){
           console.log(response);
@@ -185,9 +194,9 @@ class SearchEscalation extends Component {
       		return resultList.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{val.serviceName}</td>
+      					<td>{val.id}</td>
       					<td>{val.designation}</td>
-      					<td>{val.noofhours}</td>
+      					<td>{val.noOfHours}</td>
       				</tr>
       			)
       		})
@@ -235,14 +244,14 @@ class SearchEscalation extends Component {
                                           dataSource={this.state.grievanceTypeSource}
                                           dataSourceConfig={this.state.serviceDataSourceConfig}
                                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "grievanceType")}}
-                                          value={searchEscalation.grievanceType ? searchEscalation.grievanceType : ""}
+                                          value={searchEscalation.serviceType ? searchEscalation.serviceType : ""}
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest.id
+                  	                            value: chosenRequest
                   	                          }
                   	                        };
-                  	                        handleChange(e, "grievanceType", true, "");
+                  	                        handleChange(e, "serviceType", false, "");
                   	                       }}
                                         />
                                   </Col>
@@ -260,10 +269,10 @@ class SearchEscalation extends Component {
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest.id
+                  	                            value: chosenRequest
                   	                          }
                   	                        };
-                  	                        handleChange(e, "designation", true, "");
+                  	                        handleChange(e, "designation", false, "");
                   	                       }}
                                         />
                                   </Col>
@@ -273,7 +282,7 @@ class SearchEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate("core.lbl.search")} primary={true}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit"  label={translate("core.lbl.search")} primary={true}/>
 
                   </div>
                   {viewTable()}
@@ -296,7 +305,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["position", "grievanceType"]
+          required: []
         },
         pattern: {
           current: [],

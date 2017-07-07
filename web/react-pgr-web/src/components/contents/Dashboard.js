@@ -223,7 +223,13 @@ class Dashboard extends Component {
 									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>
 									<td>{e.requestedDatetime}</td>
 									<td>{e.firstName}</td>
-									<td></td>
+									<td>
+                    {e.attribValues && e.attribValues.map((item, index)=>{
+                      if(item['key'] == 'keyword')
+                        return (item['name'] && item['name'].toLowerCase() == 'complaint' ? 'Grievance' : 'Service');
+                      })
+                    }            
+                  </td>
 									<td>{e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="status"){
                                         return(item.name)
@@ -293,7 +299,7 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} status.
+                                    })} 
                                  </CardText>
                              </Card>
                           </Col>
@@ -318,7 +324,7 @@ class Dashboard extends Component {
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
 					
-				
+				<div  className="tableLayout">
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 						 <thead>
 							<tr>
@@ -336,8 +342,9 @@ class Dashboard extends Component {
 						  {renderBody()}
 						  </tbody>
 					</Table> 
-
-         {false && this.state.localArray.map((e,i)=>{
+          </div>
+          <div className="cardLayout">
+         {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
                             
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -360,13 +367,13 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} status.
+                                    })} 
                                  </CardText>
                              </Card>
                           </Col>
                         )
                       }) }
-					
+					</div>
 					
                       
                     </Row>

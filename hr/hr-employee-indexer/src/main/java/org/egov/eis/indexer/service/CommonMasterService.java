@@ -12,7 +12,7 @@ import org.egov.commons.web.contract.CommunityResponse;
 import org.egov.commons.web.contract.DepartmentResponse;
 import org.egov.commons.web.contract.LanguageResponse;
 import org.egov.commons.web.contract.ReligionResponse;
-import org.egov.core.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

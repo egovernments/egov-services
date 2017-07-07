@@ -40,8 +40,14 @@
 
 package org.egov.eis.web.errorhandler;
 
-import lombok.*;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

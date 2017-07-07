@@ -98,7 +98,7 @@ public class TaxCalculatorConsumer {
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('propety.recieve')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.tax')}", "#{environment.getProperty('egov.propertytax.property.update.tax')}"  })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		ObjectMapper objectMapper = new ObjectMapper();

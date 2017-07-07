@@ -40,15 +40,30 @@
 
 package org.egov.eis.service.helper;
 
-import org.egov.eis.model.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.DepartmentalTest;
+import org.egov.eis.model.EducationalQualification;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
+import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.Probation;
+import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.ServiceHistory;
+import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.User;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 @Component
 public class EmployeeHelper {
@@ -97,7 +112,7 @@ public class EmployeeHelper {
 	public void populateDefaultDataForCreate(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
-		String requesterId = requestInfo.getRequesterId();
+		Long requesterId = requestInfo.getUserInfo().getId();
 		String tenantId = employee.getTenantId();
 
 		populateDefaultDataForNewEmployee(employee, requesterId);
@@ -140,11 +155,11 @@ public class EmployeeHelper {
 	public void populateDefaultDataForUpdate(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
-		String requesterId = requestInfo.getRequesterId();
+		Long requesterId = requestInfo.getUserInfo().getId();
 		// FIXME : Check - will allow us to set updated tenantId for every object, if employee tenantId is updated
 		String tenantId = employee.getTenantId();
 
-		employee.setLastModifiedBy(Long.parseLong(requesterId));
+		employee.setLastModifiedBy(requesterId);
 		employee.setLastModifiedDate((new Date()));
 
 		employee.getAssignments().forEach((assignment) -> {
@@ -158,7 +173,7 @@ public class EmployeeHelper {
 				if (education.getId() == null)
 					populateDefaultDataForNewEducation(education, requesterId, tenantId);
 				else {
-					education.setLastModifiedBy(Long.parseLong(requesterId));
+					education.setLastModifiedBy(requesterId);
 					education.setLastModifiedDate((new Date()));
 				}
 			});
@@ -168,7 +183,7 @@ public class EmployeeHelper {
 				if (test.getId() == null)
 					populateDefaultDataForNewTest(test, requesterId, tenantId);
 				else {
-					test.setLastModifiedBy(Long.parseLong(requesterId));
+					test.setLastModifiedBy(requesterId);
 					test.setLastModifiedDate((new Date()));
 				}
 			});
@@ -178,7 +193,7 @@ public class EmployeeHelper {
 				if (probation.getId() == null)
 					populateDefaultDataForNewProbation(probation, requesterId, tenantId);
 				else {
-					probation.setLastModifiedBy(Long.parseLong(requesterId));
+					probation.setLastModifiedBy(requesterId);
 					probation.setLastModifiedDate((new Date()));
 				}
 			});
@@ -188,7 +203,7 @@ public class EmployeeHelper {
 				if (regularisation.getId() == null)
 					populateDefaultDataForNewRegularisation(regularisation, requesterId, tenantId);
 				else {
-					regularisation.setLastModifiedBy(Long.parseLong(requesterId));
+					regularisation.setLastModifiedBy(requesterId);
 					regularisation.setLastModifiedDate((new Date()));
 				}
 			});
@@ -198,7 +213,7 @@ public class EmployeeHelper {
 				if (serviceHistory.getId() == null)
 					populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
 				else {
-					serviceHistory.setLastModifiedBy(Long.parseLong(requesterId));
+					serviceHistory.setLastModifiedBy(requesterId);
 					serviceHistory.setLastModifiedDate((new Date()));
 				}
 			});
@@ -208,84 +223,84 @@ public class EmployeeHelper {
 				if (technical.getId() == null)
 					populateDefaultDataForNewTechnical(technical, requesterId, tenantId);
 				else {
-					technical.setLastModifiedBy(Long.parseLong(requesterId));
+					technical.setLastModifiedBy(requesterId);
 					technical.setLastModifiedDate((new Date()));
 				}
 			});
 		}
 	}
 
-	private void populateDefaultDataForNewEmployee(Employee employee, String requesterId) {
-		employee.setCreatedBy(Long.parseLong(requesterId));
+	private void populateDefaultDataForNewEmployee(Employee employee, Long requesterId) {
+		employee.setCreatedBy(requesterId);
 		employee.setCreatedDate(new Date());
-		employee.setLastModifiedBy(Long.parseLong(requesterId));
+		employee.setLastModifiedBy(requesterId);
 		employee.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewTechnical(TechnicalQualification technical, String requesterId,
+	private void populateDefaultDataForNewTechnical(TechnicalQualification technical, Long requesterId,
 			String tenantId) {
 		technical.setId(employeeRepository.generateSequence(Sequences.TECHNICALQUALIFICATION.toString()));
 		technical.setTenantId(tenantId);
-		technical.setCreatedBy(Long.parseLong(requesterId));
+		technical.setCreatedBy(requesterId);
 		technical.setCreatedDate(new Date());
-		technical.setLastModifiedBy(Long.parseLong(requesterId));
+		technical.setLastModifiedBy(requesterId);
 		technical.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewServiceHistory(ServiceHistory serviceHistory, String requesterId,
+	private void populateDefaultDataForNewServiceHistory(ServiceHistory serviceHistory, Long requesterId,
 			String tenantId) {
 		serviceHistory.setId(employeeRepository.generateSequence(Sequences.SERVICEHISTORY.toString()));
 		serviceHistory.setTenantId(tenantId);
-		serviceHistory.setCreatedBy(Long.parseLong(requesterId));
+		serviceHistory.setCreatedBy(requesterId);
 		serviceHistory.setCreatedDate(new Date());
-		serviceHistory.setLastModifiedBy(Long.parseLong(requesterId));
+		serviceHistory.setLastModifiedBy(requesterId);
 		serviceHistory.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewRegularisation(Regularisation regularisation, String requesterId,
+	private void populateDefaultDataForNewRegularisation(Regularisation regularisation, Long requesterId,
 			String tenantId) {
 		regularisation.setId(employeeRepository.generateSequence(Sequences.REGULARISATION.toString()));
 		regularisation.setTenantId(tenantId);
-		regularisation.setCreatedBy(Long.parseLong(requesterId));
+		regularisation.setCreatedBy(requesterId);
 		regularisation.setCreatedDate(new Date());
-		regularisation.setLastModifiedBy(Long.parseLong(requesterId));
+		regularisation.setLastModifiedBy(requesterId);
 		regularisation.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewProbation(Probation probation, String requesterId, String tenantId) {
+	private void populateDefaultDataForNewProbation(Probation probation, Long requesterId, String tenantId) {
 		probation.setId(employeeRepository.generateSequence(Sequences.PROBATION.toString()));
 		probation.setTenantId(tenantId);
-		probation.setCreatedBy(Long.parseLong(requesterId));
+		probation.setCreatedBy(requesterId);
 		probation.setCreatedDate(new Date());
-		probation.setLastModifiedBy(Long.parseLong(requesterId));
+		probation.setLastModifiedBy(requesterId);
 		probation.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewTest(DepartmentalTest test, String requesterId, String tenantId) {
+	private void populateDefaultDataForNewTest(DepartmentalTest test, Long requesterId, String tenantId) {
 		test.setId(employeeRepository.generateSequence(Sequences.DEPARTMENTALTEST.toString()));
 		test.setTenantId(tenantId);
-		test.setCreatedBy(Long.parseLong(requesterId));
+		test.setCreatedBy(requesterId);
 		test.setCreatedDate(new Date());
-		test.setLastModifiedBy(Long.parseLong(requesterId));
+		test.setLastModifiedBy(requesterId);
 		test.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewEducation(EducationalQualification education, String requesterId,
+	private void populateDefaultDataForNewEducation(EducationalQualification education, Long requesterId,
 			String tenantId) {
 		education.setId(employeeRepository.generateSequence(Sequences.EDUCATIONALQUALIFICATION.toString()));
 		education.setTenantId(tenantId);
-		education.setCreatedBy(Long.parseLong(requesterId));
+		education.setCreatedBy(requesterId);
 		education.setCreatedDate(new Date());
-		education.setLastModifiedBy(Long.parseLong(requesterId));
+		education.setLastModifiedBy(requesterId);
 		education.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewAssignment(Assignment assignment, String requesterId, String tenantId) {
+	private void populateDefaultDataForNewAssignment(Assignment assignment, Long requesterId, String tenantId) {
 		assignment.setId(employeeRepository.generateSequence(Sequences.ASSIGNMENT.toString()));
 		assignment.setTenantId(tenantId);
-		assignment.setCreatedBy(Long.parseLong(requesterId));
+		assignment.setCreatedBy(requesterId);
 		assignment.setCreatedDate(new Date());
-		assignment.setLastModifiedBy(Long.parseLong(requesterId));
+		assignment.setLastModifiedBy(requesterId);
 		assignment.setLastModifiedDate((new Date()));
 		if (assignment.getHod() != null) {
 			assignment.getHod().forEach((hod) -> {
@@ -295,8 +310,8 @@ public class EmployeeHelper {
 		}
 	}
 
-	private void populateDefaultDataForUpdateAssignment(Assignment assignment, String requesterId, String tenantId) {
-		assignment.setLastModifiedBy(Long.parseLong(requesterId));
+	private void populateDefaultDataForUpdateAssignment(Assignment assignment, Long requesterId, String tenantId) {
+		assignment.setLastModifiedBy(requesterId);
 		assignment.setLastModifiedDate((new Date()));
 		// trimTimePartFromDateFields(assignment);
 		if (assignment.getDocuments() == null) {

@@ -1,15 +1,24 @@
 package org.egov.eis.service;
 
-import org.egov.eis.model.*;
-import org.egov.eis.model.enums.EntityType;
-import org.egov.eis.repository.EmployeeDocumentsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.eis.model.Assignment;
+import org.egov.eis.model.DepartmentalTest;
+import org.egov.eis.model.EducationalQualification;
+import org.egov.eis.model.Employee;
+import org.egov.eis.model.EmployeeDocument;
+import org.egov.eis.model.Nominee;
+import org.egov.eis.model.Probation;
+import org.egov.eis.model.Regularisation;
+import org.egov.eis.model.ServiceHistory;
+import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.enums.EntityType;
+import org.egov.eis.repository.EmployeeDocumentsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EmployeeDocumentsService {

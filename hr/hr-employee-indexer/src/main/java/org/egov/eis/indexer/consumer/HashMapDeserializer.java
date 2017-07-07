@@ -38,11 +38,11 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.consumers;
-
-import java.util.HashMap;
+package org.egov.eis.indexer.consumer;
 
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+
+import java.util.HashMap;
 
 @SuppressWarnings("rawtypes")
 public class HashMapDeserializer extends JsonDeserializer<HashMap> {

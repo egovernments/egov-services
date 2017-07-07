@@ -143,15 +143,11 @@ class CustomMenu extends Component {
     // console.log(menuItems);
     // console.log(parentLevel); 
     const checkUrl = function(item) {
-      console.log("HERE: " + item.url);
-      console.log("THERE: " + window.location.href.indexOf("/pgr/receivingModeCreate/update"));
       if(item.url == '/pgr/createReceivingCenter' && window.location.href.indexOf("/pgr/createReceivingCenter")>-1) {
-          console.log("OK!!!!!!")
           window.urlCheck = true;
       }
 
       if(item.url == '/pgr/receivingModeCreate' && window.location.href.indexOf("/pgr/receivingModeCreate/update")>-1) {
-          console.log("OK!!!!!!")
           window.urlCheck = true;
       }
     }
@@ -262,7 +258,7 @@ class CustomMenu extends Component {
                                       primary={true}
                                       icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}
                                       style={{...style, "marginLeft": "2px"}}
-                                      onTouchTap={()=>{changeLevel(0)}}
+                                      onTouchTap={()=>{;handleToggle(false); changeLevel(0)}}
                                     />}
         { level>0 &&  <RaisedButton
                         primary={true}

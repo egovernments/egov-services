@@ -103,6 +103,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				asset.setWidth(rs.getString("width"));
 				asset.setTotalArea(rs.getString("totalArea"));
 				asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepriciation"));
+				asset.setDepreciationRate(rs.getDouble("depreciationrate"));
 
 				final BigDecimal accumulatedDepreciation = rs.getBigDecimal("accumulateddepreciation");
 				if (accumulatedDepreciation == BigDecimal.ZERO)
@@ -168,10 +169,10 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				logger.info("AssetRowMapper asset:: " + asset);
 				map.put(assetId, asset);
 			}
-			List<YearWiseDepreciation> ywd = asset.getDepreciationRate();
+			List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
 			if (ywd == null) {
 				ywd = new ArrayList<>();
-				asset.setDepreciationRate(ywd);
+				asset.setYearWiseDepreciation(ywd);
 			}
 			YearWiseDepreciation ywdObject = new YearWiseDepreciation();
 			ywdObject.setAssetId(rs.getLong("assetid"));
@@ -180,8 +181,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 			ywdObject.setUsefulLifeInYears(rs.getLong("usefullifeinyears"));
 			ywd.add(ywdObject);
 
-			System.err.println("ywd : " + ywd);
-			asset.setDepreciationRate(ywd);
+			asset.setYearWiseDepreciation(ywd);
 		}
 		return new ArrayList<Asset>(map.values());
 	}

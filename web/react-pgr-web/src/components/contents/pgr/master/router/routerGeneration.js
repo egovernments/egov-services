@@ -208,8 +208,8 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr/servicecategories/v1/_search").then(function(response) {
-      	checkCountAndCall("categoryList", response.serviceTypeCategories);
+  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+      	checkCountAndCall("categoryList", response.ServiceGroups);
     }, function(err) {
     	checkCountAndCall("categoryList", []);
     });
@@ -434,7 +434,7 @@ class routerGeneration extends Component {
                                         key={index}
                                         insetChildren={true}
                                         primaryText={item.serviceName}
-                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.serviceCode) > -1}
+                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.id) > -1}
                                       />
 			                       ))}
                     </SelectField>

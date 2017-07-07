@@ -42,8 +42,7 @@ package org.egov.wcms.model;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -71,15 +70,15 @@ public class MeterCost {
     private Long id;
 
     @NotNull
-    @Length(min = 3, max = 20)
+    @Size(min = 3, max = 20)
     private int pipeSize;
 
     @NotNull
-    @Length(min = 3, max = 100)
+    @Size(min = 3, max = 100)
     private String meterMake;
 
     @NotNull
-    @Length(min = 3, max = 100)
+    @Size(min = 3, max = 100)
     private double amount;
 
     @NotNull
@@ -99,7 +98,7 @@ public class MeterCost {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
 
-    @Length(max = 250)
+    @Size(max = 250)
     @NotNull
     private String tenantId;
 

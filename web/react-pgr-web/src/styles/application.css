@@ -538,6 +538,14 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 }
 
 
+	.tableLayout {
+		display:block;
+	}
+
+	.cardLayout {
+		display:none;
+	}
+
 /*-- Media Query --*/
 @media screen and (max-width: 768px) {
 
@@ -636,6 +644,16 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 	.view-chart-ui-cont:nth-child(odd){background: none;}
 }
 
+@media screen and (max-width: 767px){
+	.tableLayout {
+		display:none;
+	}
+
+	.cardLayout {
+		display:block;
+	}
+}
+
 @media screen and (max-width: 480px) {
   	.head-top h1 span{display: block;}
 	.head-top h1{font-size: 12px;}
@@ -647,6 +665,10 @@ table th {
 	background-color: #3f474d !important; 
 	color: #ffffff !important;
 	font-weight: bolder;
+}
+
+table td {
+	cursor: pointer !important; 
 }
 
 .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {

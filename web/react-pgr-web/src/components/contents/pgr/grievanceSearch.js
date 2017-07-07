@@ -305,7 +305,7 @@ class grievanceSearch extends Component {
 				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive>
 			    <thead >
 			      <tr>
-			        <th>{translate("pgr.lbl.srn")}</th>
+			        <th>Grievance Number</th>
 			        <th>{translate("pgr.lbl.grievance.type")}</th>
 			        <th>{translate("core.lbl.add.name")}</th>
 			        <th>{translate("core.lbl.location")}</th>

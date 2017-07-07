@@ -273,6 +273,11 @@ public class WcmsConstants {
     public static final String DONATION_PIPESIZE_MIN_INVALID_FIELD_NAME = "minPipeSize";
     public static final String DONATION_PIPESIZE_MIN_INVALID_ERROR_MESSAGE = "Please provide valid Min Pipe Size(mm)";
     
+    public static final String DOCUMENTTYPE_INVALID_CODE = "wcms.0046";
+    public static final String DOCUMENTTYPE_INVALID_FIELD_NAME = "documentType";
+    public static final String DOCUMENTTYPE_INVALID_ERROR_MESSAGE = "Please provide valid DocumentType";
+
+    
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

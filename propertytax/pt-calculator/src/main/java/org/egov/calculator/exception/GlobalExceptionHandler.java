@@ -9,7 +9,6 @@ import java.util.Map;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;

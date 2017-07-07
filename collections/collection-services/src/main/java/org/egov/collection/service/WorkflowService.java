@@ -43,12 +43,16 @@ package org.egov.collection.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.Department;
 import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
+import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.WorkflowRepository;
+import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +69,12 @@ public class WorkflowService {
 	
 	@Autowired
 	private WorkflowRepository workflowRepository;
+	
+	@Autowired
+	private CollectionProducer collectionProducer;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 	
 	public List<Department> getDepartments(DepartmentSearchCriteria departmentSearchCriteria){
 		logger.info("DepartmentSearchCriteria:"+departmentSearchCriteria.toString());
@@ -128,5 +138,35 @@ public class WorkflowService {
 		logger.info("Position fetched is: "+position);
 		return position;
 	}
+	
+	public WorkflowDetails pushToQueue(WorkflowDetails workflowDetails) {		
+		try{
+			collectionProducer.producer(applicationProperties.getKafkaStartWorkflowTopic(),
+					applicationProperties.getKafkaStartWorkflowTopicKey(), workflowDetails);
+			
+		}catch(Exception e){
+			logger.error("Pushing to Queue FAILED! ", e.getMessage());
+			return null;
+		}
+		return workflowDetails;
+	}
+	
+	public ProcessInstanceResponse startWorkflow(WorkflowDetails workflowDetails){
+		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
+		try{
+			processInstanceResponse = workflowRepository.startWorkflow(workflowDetails);
+		}catch(Exception e){
+			logger.error("ProcessInstance id couldn't be fetched from workflow svc", e.getCause());
+		}
+		if(null == processInstanceResponse){
+			logger.error("Repository returned null processInstanceResponse");
+			return processInstanceResponse;
+
+		}
+		logger.info("Proccess Instance Id received is: "+processInstanceResponse.getProcessInstance().getId());
+		return processInstanceResponse;
+	}
+	
+	
 }
 

@@ -531,7 +531,11 @@ class Login extends Component {
                       <SelectField
                         floatingLabelText={translate('core.lbl.setlanguage')}
                         value={this.state.locale}
-                        onChange={(event, key, payload) => this.handleLocaleChange(payload)}
+                        onChange={(event, key, payload) => {
+                          this.props.setLoadingStatus("loading");
+                          this.setState({'localeready':false});
+                          this.handleLocaleChange(payload)
+                        }}
                         className="pull-right"
                       >
                         <MenuItem value={"en_IN"} primaryText="English" />

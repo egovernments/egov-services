@@ -40,12 +40,22 @@
 
 package org.egov.eis.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.builder.AssignmentQueryBuilder;
 import org.egov.eis.repository.helper.PreparedStatementHelper;
 import org.egov.eis.repository.rowmapper.AssignmentRowMapper;
 import org.egov.eis.repository.rowmapper.AssignmentTableRowMapper;
+import org.egov.eis.repository.rowmapper.EmployeeIdsRowMapper;
 import org.egov.eis.web.contract.AssignmentGetRequest;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.slf4j.Logger;
@@ -57,15 +67,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 @Transactional
@@ -80,13 +81,13 @@ public class AssignmentRepository {
 
 	public static final String UPDATE_ASSIGNMENT_QUERY = "UPDATE egeis_assignment"
 			+ " SET (positionId, fundId, functionaryId, functionId, departmentId, designationId,"
-			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber," + " lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?)" + " where id = ? and tenantId=?";
+			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?,?,?,?,?,?,?) WHERE id = ? AND tenantId=?";
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
 			+ " id, positionId, fundId, functionaryId, functionId, departmentId, designationId,"
 			+ " isPrimary, fromDate, toDate, gradeId, govtOrderNumber, createdBy, createdDate, lastModifiedBy,"
-			+ " lastModifiedDate, tenantId" + " FROM egeis_assignment" + " WHERE employeeId = ? AND tenantId = ? ";
+			+ " lastModifiedDate, tenantId FROM egeis_assignment WHERE employeeId = ? AND tenantId = ? ";
 
 	public static final String DELETE_QUERY = "DELETE FROM egeis_assignment"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
@@ -98,6 +99,9 @@ public class AssignmentRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private EmployeeIdsRowMapper employeeIdsRowMapper;
 
 	@Autowired
 	private AssignmentTableRowMapper assignmentTableRowMapper;
@@ -127,10 +131,20 @@ public class AssignmentRepository {
 
 	@Transactional(readOnly = true)
 	public List<Assignment> findForCriteria(Long employeeId, AssignmentGetRequest assignmentGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = assignmentQueryBuilder.getQuery(employeeId, assignmentGetRequest, preparedStatementValues);
-		List<Assignment> assignments = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				assignmentRowMapper);
+		Map<String, Object> namedParametersForListOfAssignmentIds = new HashMap<>();
+		String queryStrForListOfAssignmentIds = assignmentQueryBuilder.getQueryForListOfAssignmentIds(employeeId,
+				assignmentGetRequest, namedParametersForListOfAssignmentIds);
+
+		List<Long> listOfIds = namedParameterJdbcTemplate.query(queryStrForListOfAssignmentIds,
+				namedParametersForListOfAssignmentIds, employeeIdsRowMapper);
+
+		if (listOfIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		Map<String, Object> namedParameters = new HashMap<>();
+		String queryStr = assignmentQueryBuilder.getQuery(employeeId, assignmentGetRequest, namedParameters, listOfIds);
+		List<Assignment> assignments = namedParameterJdbcTemplate.query(queryStr, namedParameters, assignmentRowMapper);
 		return assignments;
 	}
 
@@ -154,9 +168,9 @@ public class AssignmentRepository {
 				ps.setDate(11, new Date(assignment.getToDate().getTime()));
 				psHelper.setLongOrNull(ps, 12, assignment.getGrade());
 				ps.setString(13, assignment.getGovtOrderNumber());
-				ps.setLong(14, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setLong(14, employeeRequest.getRequestInfo().getUserInfo().getId());
 				ps.setTimestamp(15, new Timestamp(new java.util.Date().getTime()));
-				ps.setLong(16, Long.parseLong(employeeRequest.getRequestInfo().getRequesterId()));
+				ps.setLong(16, employeeRequest.getRequestInfo().getUserInfo().getId());
 				ps.setTimestamp(17, new Timestamp(new java.util.Date().getTime()));
 				ps.setString(18, assignment.getTenantId());
 

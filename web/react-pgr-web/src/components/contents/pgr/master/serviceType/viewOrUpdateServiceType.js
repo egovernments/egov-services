@@ -18,6 +18,17 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
+const $ = require('jquery');
+$.DataTable = require('datatables.net');
+const dt = require('datatables.net-bs');
+
+
+const buttons = require('datatables.net-buttons-bs');
+
+require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
+require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
+require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
+require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
 var flag = 0;
 const styles = {
@@ -82,44 +93,89 @@ class viewOrUpdateServiceType extends Component {
       super(props);
       this.state = {
         data:'',
-        categorySource:[]
-      }
+        categorySource: [],
+        modify: false
+      };
+      this.handleNavigation = this.handleNavigation.bind(this);
+      this.setInitialState = this.setInitialState.bind(this);
+    }
+
+    setInitialState(_state) {
+      this.setState(_state);
     }
 
     componentWillMount() {
-        var body = {}
-        let  current = this;
-        Api.commonApiPost("/pgr-master/service/v1/_search",{},body).then(function(response){
-            console.log(response.Service);
-            current.setState({data:response.Service});
-        }).catch((error)=>{
-            console.log(error);
-        })
+        $('#searchTable').DataTable({
+             dom: 'lBfrtip',
+             buttons: [],
+              bDestroy: true,
+              language: {
+                 "emptyTable": "No Records"
+              }
+        });
+    }
+
+    componentWillUpdate() {
+      if(flag == 1) {
+        flag = 0;
+        $('#searchTable').dataTable().fnDestroy();
+      }
+    }
+
+    componentWillUnmount(){
+       $('#searchTable')
+       .DataTable()
+       .destroy(true);
+    }
+
+    componentDidUpdate() {
+      if(this.state.modify)
+        $('#searchTable').DataTable({
+             dom: 'lBfrtip',
+             buttons: [],
+              bDestroy: true,
+              language: {
+                 "emptyTable": "No Records"
+              }
+        });
     }
 
     componentDidMount() {
-     let {initForm}=this.props;
-     initForm();
-     _this = this;
+        let { initForm } = this.props;
+        initForm();
+        var _this = this, count = 2, _state = {};
 
-     Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
-         _this.setState({
-           categorySource: response.ServiceGroups
-         })
-     }, function(err) {
-       _this.setState({
-           categorySource: []
-         })
-     });
+        _this.props.setLoadingStatus("loading");
+        const checkCountAndSetState = function(key, res) {
+          _state[key] = res;
+          count--;
+          if(count == 0) {
+            _this.props.setLoadingStatus("hide");
+            _this.setInitialState({..._state, modify: true});
+          }
+        } 
+
+        Api.commonApiPost("/pgr-master/service/v1/_search", {}, {}).then(function(response) {
+            checkCountAndSetState("data", response.Service);
+        }).catch((error) => {
+            checkCountAndSetState("data", []);
+        })
+
+
+        Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+            checkCountAndSetState("categorySource", response.ServiceGroups);
+        }, function(err) {
+            checkCountAndSetState("categorySource", []);
+        });
     }
+
 
     handleNavigation = (type, id) => {
       this.props.history.push(type+id);
     }
 
-
-
     render() {
+      let {handleNavigation} = this;
       let {categorySource}=this.state;
       let {
         serviceTypeCreate,
@@ -145,10 +201,10 @@ class viewOrUpdateServiceType extends Component {
                     <Grid>
                         <Row>
                             <Col xs={12} md={12}>
-                                <Table>
+                                <Table id="searchTable">
                                     <thead>
                                         <tr>
-                                          <th>Sl No</th>
+                                          <th>#</th>
                                           <th>Name</th>
                                           <th>Code</th>
                                           <th>Category</th>
@@ -156,29 +212,26 @@ class viewOrUpdateServiceType extends Component {
                                           <th>Description</th>
                                           <th>SLA Hour</th>
                                           <th>Has Financial Impact</th>
-                                          <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {this.state.data && this.state.data.map((e,i)=>{
                                           return(
-                                            <tr key={i}>
+                                            <tr key={i} onClick={() => {
+                                              if(url == "/pgr/viewOrUpdateServiceType/view") {
+                                                handleNavigation("/pgr/viewServiceType/view/", e.id);
+                                              } else {
+                                                handleNavigation("/pgr/serviceTypeCreate/edit/", e.id);
+                                              }
+                                            }}>
                                               <td>{i+1}</td>
                                               <td>{e.serviceName}</td>
                                               <td>{e.serviceCode}</td>
-                                              <td>{getNameById(categorySource,e.category)}</td>
-                                              <td>{e.active?"True":"False"}</td>
+                                              <td>{getNameById(categorySource, e.category)}</td>
+                                              <td>{e.active ? "Yes" : "No"}</td>
                                               <td>{e.description}</td>
                                               <td>{e.slaHours}</td>
-                                              <td>{e.hasFinancialImpact?"True":"False"}</td>
-                                              {url == '/pgr/viewOrUpdateServiceType/view' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.view")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("/pgr/viewServiceType/view/", id);
-                                              }}/></td>}
-                                              {url == '/pgr/viewOrUpdateServiceType/edit' && <td><RaisedButton style={{margin:'0 3px'}} label={translate("pgr.lbl.edit")} onClick={()=> {
-                                                let id = e.id;
-                                                this.handleNavigation("/pgr/serviceTypeCreate/edit/", id);
-                                              }}/></td>}
+                                              <td>{e.hasFinancialImpact ? "Yes" : "No"}</td>
                                             </tr>
                                           )
                                         })}
@@ -216,7 +269,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,
@@ -224,6 +276,10 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
+  },
+
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 })
 

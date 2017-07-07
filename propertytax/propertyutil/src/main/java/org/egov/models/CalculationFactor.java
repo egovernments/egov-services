@@ -3,6 +3,7 @@ package org.egov.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.enums.CalculationFactorTypeEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;

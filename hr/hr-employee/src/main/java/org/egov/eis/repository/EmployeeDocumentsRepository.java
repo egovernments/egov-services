@@ -40,6 +40,12 @@
 
 package org.egov.eis.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.rowmapper.EmployeeDocumentsTableRowMapper;
@@ -52,12 +58,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class EmployeeDocumentsRepository {

@@ -130,8 +130,7 @@ class ServiceTypeCreate extends Component {
 
       e.preventDefault()
       var current = this;
-      console.log(this.props);
-      this
+
       var body = {
           "Service":{
            "serviceCode": this.props.createServiceType.serviceCode,
@@ -140,7 +139,6 @@ class ServiceTypeCreate extends Component {
            "active" :this.props.createServiceType.active,
            "type" :this.props.createServiceType.type,
            "keywords" :this.props.createServiceType.keywords,
-           "group" :this.props.createServiceType.group,
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
            "attributes" :this.props.createServiceType.attributes,
@@ -149,12 +147,10 @@ class ServiceTypeCreate extends Component {
            "tenantId":"default"
           }
       }
-      console.log("body",body);
 
+      current.props.setLoadingStatus('loading');
       if(this.props.match.params.id){
-
           Api.commonApiPost("/pgr-master/service/v1/"+body.Service.serviceCode+"/_update",{},body).then(function(response){
-              console.log(response);
               current.setState({
                 open: true
               });
@@ -164,7 +160,6 @@ class ServiceTypeCreate extends Component {
         	})
       } else {
           Api.commonApiPost("/pgr-master/service/v1/_create",{},body).then(function(response){
-              console.log(response);
               current.setState({
                 open: true
               });
@@ -210,14 +205,12 @@ class ServiceTypeCreate extends Component {
         buttonText
       } = this.props;
 
-console.log(createServiceType);
       let {submitForm,showCustomFieldForm,renderDelEvent,addAsset,handleOpenNClose} = this;
       let {nomineeFieldsDefination,isCustomFormVisible,showMsg,customField,assetFieldsDefination,isDataType, editIndex} = this.state;
 
 
       const viewTypes = function() {
-        console.log("createServiceType",createServiceType);
-          if( (createServiceType.attribute.datatype=="Single value list" || createServiceType.attribute.datatype== "Multi select") && (createServiceType.attribute.dataType!=undefined))
+          //if( (createServiceType.attribute.datatype=="Single value list" || createServiceType.attribute.datatype == "Multi select") && (createServiceType.attribute.dataType!=undefined)) {
           return (
               <div>
                 <div className="clearfix"></div>
@@ -298,7 +291,7 @@ console.log(createServiceType);
                       </Row>
                   </Col>
         </div>
-      )
+      )//}
       }
       const showAddNewBtn = function() {
 
@@ -505,6 +498,7 @@ console.log(createServiceType);
                     }
                 _this.props.addNestedFormData("attributes","attribute");
                 _this.props.resetObject("attribute");
+                _this.props.resetObject("dataTypes");
                 }
             }/>
           }
@@ -534,14 +528,14 @@ console.log(createServiceType);
         <div className="createServiceType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Service' : 'Create Service'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Grievance Type' : 'Create Grievance Type'} < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Service Code*"
+                                      floatingLabelText="Service Code *"
                                       value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
                                       errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
                                         onChange={(e) => handleChange(e, "serviceCode", true, '')}
@@ -552,7 +546,7 @@ console.log(createServiceType);
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("core.lbl.servicename")+"*"}
+                                      floatingLabelText={translate("core.lbl.servicename")+" *"}
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
                                       onChange={(e) => handleChange(e, "serviceName", true, '')}
@@ -595,28 +589,35 @@ console.log(createServiceType);
                                            value: value
                                          }
                                        };
-                                       console.log(value);
                                        handleChange(e, "keywords", true, "")}}
-                                    floatingLabelText="keywords*" >
-                                        <MenuItem value={"deliverable"} primaryText="deliverable"/>
-                                        <MenuItem value={"complaint"} primaryText="complaint"/>
+                                    floatingLabelText="Keywords *" >
+                                        <MenuItem 
+                                          value={"deliverable"} 
+                                          primaryText="Deliverable"
+                                          insetChildren={true}
+                                          checked={createServiceType.keywords && createServiceType.keywords.indexOf("deliverable") > -1}/>
+                                        <MenuItem 
+                                          value={"complaint"} 
+                                          primaryText="Complaint"
+                                          insetChildren={true}
+                                          checked={createServiceType.keywords && createServiceType.keywords.indexOf("complaint") > -1}/>
                                </SelectField>
                              </Col>
+                              {/*<Col xs={12} md={3} sm={6}>
+                                                                <TextField
+                                                                    fullWidth={true}
+                                                                    floatingLabelText="Group"
+                                                                    value={createServiceType.group? createServiceType.group : ""}
+                                                                    errorText={fieldErrors.group ? fieldErrors.group : ""}
+                                                                    onChange={(e) => handleChange(e, "group", false, '')}
+                                                                    multiLine={true}
+                                                                    id="group"
+                                                                />
+                                                            </Col>*/}
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Group"
-                                      value={createServiceType.group? createServiceType.group : ""}
-                                      errorText={fieldErrors.group ? fieldErrors.group : ""}
-                                      onChange={(e) => handleChange(e, "group", false, '')}
-                                      multiLine={true}
-                                      id="group"
-                                  />
-                              </Col>
-                              <Col xs={12} md={3} sm={6}>
-                                  <TextField
-                                      fullWidth={true}
-                                      floatingLabelText="SLA Hours*"
+                                      floatingLabelText="SLA Hours *"
                                       value={createServiceType.slaHours? createServiceType.slaHours : ""}
                                       errorText={fieldErrors.slaHours ? fieldErrors.slaHours : ""}
                                       onChange={(e) => handleChange(e, "slaHours", true, '')}
@@ -626,7 +627,7 @@ console.log(createServiceType);
                               </Col>
                               <Col xs={12} md={3} sm={6}>
                                     <SelectField
-                                       floatingLabelText={translate("core.category")+"*"}
+                                       floatingLabelText={translate("core.category")+" *"}
                                        fullWidth={true}
                                        value={createServiceType.category ? createServiceType.category : ""}
                                        onChange= {(e, index ,values) => {

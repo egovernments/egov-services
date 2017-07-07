@@ -4,7 +4,9 @@ package org.egov.collection.consumer;
 import java.util.HashMap;
 
 import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +30,11 @@ public class CollectionConsumer {
 	@Autowired 
 	private ReceiptService recieptService;
 	
+	@Autowired
+	private WorkflowService workflowService;
 	
-	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}" })
+	
+	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}", "${kafka.topics.workflow.start.name}" })
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 	logger.info("Record: "+record.toString());
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -38,7 +43,10 @@ public class CollectionConsumer {
 			if (topic.equals(applicationProperties.getCreateReceiptTopicName())) {
 				logger.info("Consuming create Receipt request");
 				recieptService.create(objectMapper.convertValue(record, ReceiptReq.class));
-			}		
+			}else if(topic.equals(applicationProperties.getKafkaStartWorkflowTopic())){
+				logger.info("Consuming start workflow request");
+				workflowService.startWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
+			}
 			
 		} catch (final Exception e) {
 			logger.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());

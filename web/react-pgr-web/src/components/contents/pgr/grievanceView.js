@@ -136,12 +136,27 @@ class grievanceView extends Component{
       Api.commonApiPost("/pgr-master/receivingcenter/v1/_search", {id:this.state.receivingCenter}).then(function(response)
       {
         currentThis.setState({receivingCenterName : response.ReceivingCenterType[0].name});
-        currentThis.getLocation();
+        currentThis.getWardbyId();
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
         currentThis.handleError(err.message);
       });
     }else {
+      currentThis.getWardbyId();
+    }
+  }
+  getWardbyId(){
+    if(this.state.locationId)
+      Api.commonApiGet("/egov-location/boundarys", {boundary:this.state.locationId}).then(function(response)
+      {
+        currentThis.setState({locationName : response.Boundary[0].name});
+        currentThis.getLocation();
+      },function(err) {
+        currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError(err.message);
+      });
+    else {
+      currentThis.setState({locationName : ""});
       currentThis.getLocation();
     }
   }

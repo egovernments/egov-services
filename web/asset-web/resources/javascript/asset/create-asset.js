@@ -230,7 +230,7 @@ class CreateAsset extends React.Component {
       body.Asset.assetReference = "";
       if(body.Asset.dateOfCreation) {
         var _date = body.Asset.dateOfCreation.split("-");
-        body.Asset.dateOfCreation = _date[2] + "/" + _date[1] + "/" + _date[2];
+        body.Asset.dateOfCreation = new Date(date[0], date[1]-1, date[2]).getTime();
       }
 
       $.ajax({
@@ -310,7 +310,7 @@ class CreateAsset extends React.Component {
       newAsset.assetReference = this.state.assetSet.id;
       if(newAsset.dateOfCreation) {
         var _date = newAsset.dateOfCreation.split("-");
-        newAsset.dateOfCreation = _date[2] + "/" + _date[1] + "/" + _date[2];
+        newAsset.dateOfCreation = new Date(date[0], date[1]-1, date[2]).getTime();
       }
 
       var body = {
@@ -475,6 +475,12 @@ class CreateAsset extends React.Component {
         }
       }
 
+      if(tempInfo.dateOfCreation) {
+        var date = tempInfo.dateOfCreation.split("/");
+        tempInfo.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
+      }
+
+      //return console.log(JSON.stringify(tempInfo));
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -796,7 +802,7 @@ class CreateAsset extends React.Component {
       });
       getDropdown("statusList", function(res) {
         checkCountNCall("statusList", res);
-      });
+      }, {objectname: 'Asset Master'});
       getDropdown("asset_category_type", function(res) {
         checkCountNCall("asset_category_type", res);
       });
@@ -1111,7 +1117,7 @@ class CreateAsset extends React.Component {
               if(statusBool) {
                 return list.map((item, ind) => {
                   return (<option key={ind} value={item.statusValues[0].code}>
-                          {item.statusValues[0].description}
+                          {item.statusValues[0].code}
                     </option>)
                 })
               };

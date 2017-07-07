@@ -48,15 +48,14 @@ public class GlCodeMasterRepository {
 		return glCodeMaster;
 	}
 	@Transactional
-	public List<GlCodeMaster> create(GlCodeMasterRequest glCodeMasterRequest){
+	public void create(GlCodeMasterRequest glCodeMasterRequest){
 		
 		RequestInfo requestInfo = glCodeMasterRequest.getRequestInfo();
 		List<GlCodeMaster> glCodeMasters = glCodeMasterRequest.getGlCodeMasters();
-		
 		log.debug("create requestInfo:"+ requestInfo);
 		log.debug("create glCodeMasters:"+ glCodeMasters);
 		
-		jdbcTemplate.batchUpdate(glCodeMasterQueryBuilder.getInsertQuery(), new BatchPreparedStatementSetter() {
+		jdbcTemplate.batchUpdate(glCodeMasterQueryBuilder.InsertQuery, new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
@@ -79,14 +78,13 @@ public class GlCodeMasterRepository {
 				return glCodeMasters.size();
 			}
 		});
-		return glCodeMasters;
 	}
 	
-	public List<GlCodeMaster> update(GlCodeMasterRequest glCodeMasterRequest){
+	public void update(GlCodeMasterRequest glCodeMasterRequest){
 		RequestInfo requestInfo=glCodeMasterRequest.getRequestInfo();
 		List<GlCodeMaster> glCodeMasters=glCodeMasterRequest.getGlCodeMasters();
 		log.debug("update requestInfo:"+ requestInfo);
-		jdbcTemplate.batchUpdate(glCodeMasterQueryBuilder.getUpdateQuery(),new BatchPreparedStatementSetter() {
+		jdbcTemplate.batchUpdate(glCodeMasterQueryBuilder.UpdateQuery,new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
@@ -106,6 +104,5 @@ public class GlCodeMasterRepository {
 				return glCodeMasters.size();
 			}
 		});
-		return glCodeMasters;
 	}
 }

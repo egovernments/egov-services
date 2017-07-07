@@ -21,22 +21,18 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class TaxHeadMasterService {
 
-	private static final Logger logger = LoggerFactory.getLogger(TaxHeadMasterService.class);
 
 	@Autowired
 	private ResponseFactory responseInfoFactory;
 
 	@Autowired
 	private TaxHeadMasterRepository taxHeadMasterRepository;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private TaxPeriodService taxPeriodService;
 
 	@Autowired
 	private SequenceGenService sequenceGenService;
@@ -48,13 +44,19 @@ public class TaxHeadMasterService {
 	private ApplicationProperties applicationProperties;
 
 	public TaxHeadMasterResponse getTaxHeads(TaxHeadMasterCriteria searchTaxHead, RequestInfo requestInfo) {
-		logger.info("TaxHeadMasterService getTaxHeads");
+		log.info("TaxHeadMasterService getTaxHeads");
 		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRepository.findForCriteria(searchTaxHead);
 		return getTaxHeadMasterResponse(taxHeadMaster, requestInfo);
 	}
 
 	public TaxHeadMasterResponse create(TaxHeadMasterRequest taxHeadMasterRequest) {
-		taxHeadMasterRepository.create(taxHeadMasterRequest);
+		
+		try {
+			taxHeadMasterRepository.create(taxHeadMasterRequest);
+		} catch (Exception e) {
+			log.debug("Exception occured while inserting record");
+			e.printStackTrace();
+		}
 
 		return getTaxHeadMasterResponse(taxHeadMasterRequest.getTaxHeadMasters(),
 				taxHeadMasterRequest.getRequestInfo());
@@ -67,11 +69,10 @@ public class TaxHeadMasterService {
 				applicationProperties.getTaxHeadSeqName());
 		int index = 0;
 		for (TaxHeadMaster master : taxHeadMaster) {
-			master.setId(taxHeadIds.get(index));
+			master.setId(taxHeadIds.get(index++));
 		}
-		taxHeadMasterRequest.setTaxHeadMasters(taxHeadMaster);
 
-		logger.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
+		log.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
 
 		kafkaTemplate.send(applicationProperties.getCreateTaxHeadMasterTopicName(),
 				applicationProperties.getCreateTaxHeadMasterTopicKey(), taxHeadMasterRequest);
@@ -82,7 +83,7 @@ public class TaxHeadMasterService {
 	public TaxHeadMasterResponse updateAsync(TaxHeadMasterRequest taxHeadMasterRequest) {
 		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRequest.getTaxHeadMasters();
 
-		logger.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
+		log.info("taxHeadMasterRequest createAsync::" + taxHeadMasterRequest);
 
 		kafkaTemplate.send(applicationProperties.getUpdateTaxHeadMasterTopicName(),
 				applicationProperties.getUpdateTaxHeadMasterTopicKey(), taxHeadMasterRequest);
@@ -90,8 +91,14 @@ public class TaxHeadMasterService {
 	}
 
 	public TaxHeadMasterResponse update(TaxHeadMasterRequest taxHeadMasterRequest) {
-		List<TaxHeadMaster> taxHeadMaster = taxHeadMasterRepository.update(taxHeadMasterRequest);
-		return getTaxHeadMasterResponse(taxHeadMaster, taxHeadMasterRequest.getRequestInfo());
+		
+		try {
+			taxHeadMasterRepository.update(taxHeadMasterRequest);
+		} catch (Exception e) {
+			log.debug("Exception occured while updating record");
+			e.printStackTrace();
+		}
+		return getTaxHeadMasterResponse(taxHeadMasterRequest.getTaxHeadMasters(), taxHeadMasterRequest.getRequestInfo());
 	}
 
 	private TaxHeadMasterResponse getTaxHeadMasterResponse(List<TaxHeadMaster> taxHeadMaster, RequestInfo requestInfo) {

@@ -42,7 +42,10 @@ package org.egov.wcms.transanction.service;
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WaterConnectionRepository;
+import org.egov.wcms.transanction.web.contract.ProcessInstance;
+import org.egov.wcms.transanction.web.contract.Task;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
+import org.egov.wcms.transanction.workflow.service.TransanctionWorkFlowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class WaterConnectionService {
 
     public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
+    @Autowired
+    private TransanctionWorkFlowService transanctionWorkFlowService;
 
     @Autowired
     private WaterTransactionProducer waterTransactionProducer;
@@ -76,7 +81,7 @@ public class WaterConnectionService {
         return sendRequestObjToProducer(topic, key, waterConnectionRequest, waterConnectionValue);
 
     }
-    
+
     public Connection updateWaterConnection(final String topic, final String key,
             final WaterConnectionReq waterConnectionRequest) {
         final ObjectMapper mapper = new ObjectMapper();
@@ -92,8 +97,9 @@ public class WaterConnectionService {
 
     }
 
-    protected Connection sendRequestObjToProducer(final String topic, final String key, final WaterConnectionReq waterConnectionRequest,
-            String waterConnectionValue) {
+    protected Connection sendRequestObjToProducer(final String topic, final String key,
+            final WaterConnectionReq waterConnectionRequest,
+            final String waterConnectionValue) {
         try {
 
             waterTransactionProducer.sendMessage(topic, key, waterConnectionValue);
@@ -104,26 +110,43 @@ public class WaterConnectionService {
         return waterConnectionRequest.getConnection();
     }
 
-    public Connection create(WaterConnectionReq waterConnectionRequest) {
+    public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
-           waterConnectionRepository.persistConnection(waterConnectionRequest);
+            initiateWorkFow(waterConnectionRequest);
+            waterConnectionRepository.persistConnection(waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("Persisting failed due to db exception", e);
         }
         return waterConnectionRequest.getConnection();
     }
-    public Connection update(WaterConnectionReq waterConnectionRequest) {
+
+    public Connection update(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
-           waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
+            updateWorkFlow(waterConnectionRequest);
+            waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {
             logger.error("Persisting failed due to db exception", e);
         }
         return waterConnectionRequest.getConnection();
     }
-    public Connection findByApplicationNmber(final String applicationNmber)
-    {
+
+    public Connection findByApplicationNmber(final String applicationNmber) {
         return waterConnectionRepository.findByApplicationNmber(applicationNmber);
+    }
+
+    private ProcessInstance initiateWorkFow(final WaterConnectionReq waterConnectionReq) {
+
+        final ProcessInstance pros = transanctionWorkFlowService.startWorkFlow(waterConnectionReq);
+        waterConnectionReq.getConnection().setStateId(Long.valueOf(pros.getId()));
+        return pros;
+    }
+
+    private Task updateWorkFlow(final WaterConnectionReq waterConnectionReq) {
+
+        final Task task = transanctionWorkFlowService.updateWorkFlow(waterConnectionReq);
+        waterConnectionReq.getConnection().setStateId(Long.valueOf(task.getId()));
+        return task;
     }
 }

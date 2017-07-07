@@ -68,10 +68,10 @@ public class Timeline {
     private String remarks;
 
     @NotNull
-    private User assigner;
+    private UserInfo assigner;
 
     @NotNull
-    private User asignee;
+    private UserInfo asignee;
 
     @NotNull
     private WorkflowDetails workflowDetails;

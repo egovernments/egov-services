@@ -75,7 +75,7 @@ public class EscalationTimeTypeGetReq {
     
     private long designation;
     
-    private long grievanceType;
+    private long serviceId;
     
     private boolean active;
     

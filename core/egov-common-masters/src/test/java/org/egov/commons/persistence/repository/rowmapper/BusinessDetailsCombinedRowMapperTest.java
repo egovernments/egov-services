@@ -41,6 +41,7 @@ public class BusinessDetailsCombinedRowMapperTest {
 		when(rs.getString("bd_fundsource")).thenReturn("234");
 		when(rs.getString("bd_functionary")).thenReturn("456");
 		when((Boolean) rs.getObject("bd_enabled")).thenReturn(true);
+		when((Boolean)rs.getObject("bd_callback")).thenReturn(true);
 		when((Boolean) rs.getObject("bd_is_Vou_approved")).thenReturn(true);
 		when((Integer) rs.getObject("bd_ordernumber")).thenReturn(2);
 		when(rs.getString("bd_tenant")).thenReturn("default");
@@ -74,6 +75,7 @@ public class BusinessDetailsCombinedRowMapperTest {
 		businessDetails.setName("Trade Licence");
 		businessDetails.setDepartment("56");
 		businessDetails.setFund("12");
+		businessDetails.setCallBackForApportioning(true);
 		businessDetails.setFunction("123");
 		businessDetails.setFunctionary("456");
 		businessDetails.setFundSource("234");

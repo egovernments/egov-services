@@ -160,7 +160,7 @@ class ViewEditServiceGroup extends Component {
       return(
         <div className="viewEditServiceGroup">
             <Card style={styles.marginStyle}>
-                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Service Group</div>} />
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>All Categories</div>} />
                 <CardText style={{padding:0}}>
                     <Grid>
                         <Row>

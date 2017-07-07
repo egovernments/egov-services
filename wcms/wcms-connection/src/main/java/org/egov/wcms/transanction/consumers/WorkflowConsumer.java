@@ -43,7 +43,6 @@ import java.io.IOException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.wcms.transanction.config.ConfigurationManager;
-import org.egov.wcms.transanction.service.WorkflowService;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +53,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class WorkflowConsumer {
 
-    @Autowired
-    private WorkflowService workflowService;
+   
 
     @Autowired
     private ConfigurationManager configurationManager;
@@ -78,20 +76,18 @@ public class WorkflowConsumer {
             } catch (final IOException e) {
                 LOGGER.info(e.getMessage(), e);
             }
-            if (waterConnectionRequest != null)
-                workflowService.startWorkflow(waterConnectionRequest);
         } else if (record.topic().equals(configurationManager.getKafkaUpdateworkflowTopic())) {
 
-            final ObjectMapper objectMapper = new ObjectMapper();
-            WaterConnectionReq waterConnectionRequest = null;
+            final ObjectMapper objectMapper1 = new ObjectMapper();
+            WaterConnectionReq waterConnectionRequest1 = null;
             try {
-                waterConnectionRequest = objectMapper.readValue(record.value(), WaterConnectionReq.class);
-                LOGGER.info("Water Connection Request Workflow : " + waterConnectionRequest);
+                waterConnectionRequest1 = objectMapper1.readValue(record.value(), WaterConnectionReq.class);
+                LOGGER.info("Water Connection Request Workflow : " + waterConnectionRequest1);
             } catch (final IOException e) {
                 LOGGER.info(e.getMessage(), e);
             }
-            if (waterConnectionRequest != null)
-                workflowService.updateWorkflow(waterConnectionRequest);
+           
+                //workflowService.updateWorkflow(waterConnectionRequest);
         }
 
     }

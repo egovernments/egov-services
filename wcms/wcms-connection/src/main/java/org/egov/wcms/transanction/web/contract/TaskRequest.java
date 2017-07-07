@@ -42,7 +42,7 @@ package org.egov.wcms.transanction.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.transanction.request.WorkFlowRequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -56,7 +56,7 @@ import lombok.ToString;
 public class TaskRequest {
 
     @JsonProperty("requestInfo")
-    private RequestInfo requestInfo = null;
+    private WorkFlowRequestInfo requestInfo = null;
 
     @JsonProperty("tasks")
     private List<Task> tasks = new ArrayList<>();

@@ -110,7 +110,7 @@ class ViewServiceGroup extends Component {
       return(
         <div className="viewServiceGroup">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Service Group< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Category< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>

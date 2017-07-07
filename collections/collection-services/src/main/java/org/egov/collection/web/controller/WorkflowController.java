@@ -211,9 +211,7 @@ public class WorkflowController {
 			
 		}
 		
-		return new ResponseEntity<>(workflowDetailsObj, HttpStatus.OK);
-
-				
+		return new ResponseEntity<>(workflowDetailsObj, HttpStatus.OK);				
 	}
 	
 	

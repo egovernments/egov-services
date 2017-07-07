@@ -56,6 +56,7 @@ import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.errorhandlers.Error;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,8 +134,14 @@ public class ReceiptController {
 		if(null == receiptInfo){
 			LOGGER.info("Service returned null");
 			Error error = new Error();
+			ErrorField errorField = new ErrorField();
+			List<ErrorField> errorFields = new ArrayList<>();
+			errorField.setField("businessDetailsCode");
+			errorField.setMessage(CollectionServiceConstants.INVALID_BD);
+			errorFields.add(errorField);
 			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);
-			
+			error.setDescription(CollectionServiceConstants.INVALID_REQ_DESC);
+			error.setErrorFields(errorFields);
 			ErrorResponse errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
 			

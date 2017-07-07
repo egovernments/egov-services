@@ -180,7 +180,7 @@ class ServiceGroupCreate extends Component {
         <div className="createServiceGroup">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Service Group' : 'Create Service Group'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Category' : 'Create Category'} < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>

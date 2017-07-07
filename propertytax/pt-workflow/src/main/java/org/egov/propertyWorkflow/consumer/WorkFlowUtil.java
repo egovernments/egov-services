@@ -35,9 +35,20 @@ public class WorkFlowUtil {
 	@Autowired
 	Environment environment;
 
-	public ProcessInstance startWorkflow(ProcessInstanceRequest processInstanceRequest) {
+	/**
+	 * This service method will start workflow
+	 * 
+	 * @param WorkflowDetailsRequestInfo
+	 * @return ProcessInstance
+	 */
+	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo) {
 
-		String url = environment.getProperty("workflowprocess.startUrl");
+		StringBuilder workFlowStartUrl = new StringBuilder();
+		workFlowStartUrl.append(environment.getProperty("workflowprocess.baseurl"));
+		workFlowStartUrl.append(environment.getProperty("workflowprocess.startUrl"));
+		String url = workFlowStartUrl.toString();
+		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
+		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo);
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
@@ -52,17 +63,25 @@ public class WorkFlowUtil {
 		return processInstanceResponse.getProcessInstance();
 	}
 
+	/**
+	 * This service method will update workflow
+	 * 
+	 * @param WorkflowDetailsRequestInfo
+	 * @return TaskResponse
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo)
 			throws JsonProcessingException {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
 		WorkFlowDetails workflowDetails = workflowDetailsRequestInfo.getWorkflowDetails();
-		String url = environment.getProperty("workflow.updateUrl");
+		StringBuilder workFlowUpdateUrl = new StringBuilder();
+		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.baseurl"));
+		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.updateUrl"));
+		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
-		uriParams.put("id", workflowDetails.getAction());
-		uriParams.put("id", "28");
+		uriParams.put("id", workflowDetails.getAssignee().toString());
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
@@ -74,10 +93,17 @@ public class WorkFlowUtil {
 		ResponseEntity<TaskResponse> responseEntity = restTemplate.exchange(builder.buildAndExpand(uriParams).toUri(),
 				HttpMethod.POST, requestEntity, TaskResponse.class);
 
-		return responseEntity.getBody();
+		TaskResponse taskResponse = responseEntity.getBody();
+		return taskResponse;
 	}
 
-	@SuppressWarnings("unused")
+	/**
+	 * This method will generate ProcessInstanceRequest from the
+	 * WorkflowDetailsRequestInfo
+	 * 
+	 * @param WorkflowDetailsRequestInfo
+	 * @return ProcessInstanceRequest
+	 */
 	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest) {
 
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
@@ -86,15 +112,24 @@ public class WorkFlowUtil {
 		ProcessInstance processInstance = new ProcessInstance();
 		Position assignee = new Position();
 		assignee.setId((long) workflowDetails.getAssignee());
+		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
+		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
 		processInstance.setBusinessKey(environment.getProperty("businessKey"));
-		processInstance.setType(environment.getProperty("businessKey"));
+		processInstance.setType(environment.getProperty("type"));
 		processInstance.setAssignee(assignee);
 		processInstance.setComments(environment.getProperty("create.property.comments"));
 		processInstanceRequest.setRequestInfo(requestInfo);
+		processInstanceRequest.setProcessInstance(processInstance);
 
 		return processInstanceRequest;
 	}
 
+	/**
+	 * This method will generate TaskRequest from the WorkflowDetailsRequestInfo
+	 * 
+	 * @param WorkflowDetailsRequestInfo
+	 * @return TaskRequest
+	 */
 	private TaskRequest getTaskRequest(WorkflowDetailsRequestInfo workflowDetailsRequest) {
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
 		RequestInfo requestInfo = workflowDetailsRequest.getRequestInfo();
@@ -102,10 +137,10 @@ public class WorkFlowUtil {
 		Task task = new Task();
 		Position assignee = new Position();
 		taskRequest.setRequestInfo(requestInfo);
-		task.setBusinessKey("Create Property");
+		task.setBusinessKey(environment.getProperty("businessKey"));
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
-		task.setTenantId("default");
+		task.setTenantId(workflowDetailsRequest.getTenantId());
 		assignee.setId((long) workflowDetails.getAssignee());
 		task.setAssignee(assignee);
 

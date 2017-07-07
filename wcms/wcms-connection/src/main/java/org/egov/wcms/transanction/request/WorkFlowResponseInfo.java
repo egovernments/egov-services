@@ -37,9 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.model;
-
-import javax.validation.constraints.NotNull;
+package org.egov.wcms.transanction.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,20 +46,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
 @Setter
+@Getter
 @ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Role {
+public class WorkFlowResponseInfo {
 
-    @NotNull
-    private long id;
+	private String apiId = null;
 
-    @NotNull
-    private String name;
+	private String ver = null;
+
+	private String ts = null;
+
+	private String resMsgId = null;
+
+	private String msgId = null;
+
+	private String status = null;
+
+	public WorkFlowResponseInfo apiId(final String apiId) {
+		this.apiId = apiId;
+		return this;
+	}
 
 }

@@ -55,12 +55,15 @@ public class ServiceRequestServiceTest {
     @Mock
     private ServiceRequestValidator serviceRequestValidator;
 
+    @Mock
+    private ServiceRequestCustomFieldService customFieldsService;
+
     @Before
     public void before() {
         when(serviceRequestValidator.canValidate(any())).thenReturn(true);
         final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
         serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
-            userRepository, serviceRequestTypeService, validators);
+            userRepository, serviceRequestTypeService, validators, customFieldsService);
     }
 
     @Test

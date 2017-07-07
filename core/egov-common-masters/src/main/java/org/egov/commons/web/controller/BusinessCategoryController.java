@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessCategoryCriteria;
 import org.egov.commons.service.BusinessCategoryService;
 import org.egov.commons.util.CollectionConstants;
@@ -19,11 +17,9 @@ import org.egov.commons.web.contract.BusinessCategory;
 import org.egov.commons.web.contract.BusinessCategoryGetRequest;
 import org.egov.commons.web.contract.BusinessCategoryRequest;
 import org.egov.commons.web.contract.BusinessCategoryResponse;
-import org.egov.commons.web.contract.RequestInfoWrapper;
-import org.egov.commons.web.contract.factory.ResponseInfoFactory;
-import org.egov.commons.web.errorhandlers.Error;
-import org.egov.commons.web.errorhandlers.ErrorHandler;
-import org.egov.commons.web.errorhandlers.ErrorResponse;
+import org.egov.commons.web.contract.RequestInfoWrap;
+import org.egov.commons.web.contract.factory.ResponseInfoFact;
+import org.egov.commons.web.errorhandlers.RequestErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,29 +45,26 @@ public class BusinessCategoryController {
 	private BusinessCategoryService businessCategoryService;
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	private ResponseInfoFact responseInfoFact;
 
 	@Autowired
-	private ErrorHandler errHandler;
+	private RequestErrorHandler errHandler;
 
 	@PostMapping(value = "/_create")
 	@ResponseBody
 	public ResponseEntity<?> createServiceCategory(@RequestBody BusinessCategoryRequest businessCategoryRequest,
 			final BindingResult errors) {
-		AuthenticatedUser user = businessCategoryRequest.toDomain();
 		if (errors.hasErrors()) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("businessCategoryRequest::" + businessCategoryRequest);
-		final List<ErrorResponse> errorResponses = validateBusinessCategoryRequest(businessCategoryRequest);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-		BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
-		org.egov.commons.model.BusinessCategory modelCategory = new org.egov.commons.model.BusinessCategory(category);
-		BusinessCategory categoryContract = businessCategoryService.create(modelCategory, user).toDomain();
+            List<ErrorResponse> errResponses= validateBusinessCategoryRequest(businessCategoryRequest,false);
+            if(!errResponses.isEmpty())
+            return new ResponseEntity<List<ErrorResponse>>(errResponses, HttpStatus.BAD_REQUEST);
+		BusinessCategoryRequest categoryRequest = businessCategoryService.createAsync(businessCategoryRequest);
 		return getSuccessResponse(businessCategoryRequest.getRequestInfo(),
-				Collections.singletonList(categoryContract));
+				Collections.singletonList(categoryRequest.getBusinessCategoryInfo()));
 
 	}
 
@@ -79,21 +72,17 @@ public class BusinessCategoryController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> updateServiceCategory(@RequestBody BusinessCategoryRequest businessCategoryRequest,
 			@PathVariable String businessCategoryCode, final BindingResult errors) {
-		AuthenticatedUser user = businessCategoryRequest.toDomain();
 		if (errors.hasErrors()) {
 			final ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("businessCategoryRequest::" + businessCategoryRequest);
-		final List<ErrorResponse> errorResponses = validateBusinessCategoryRequest(businessCategoryRequest);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
-		BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
-		org.egov.commons.model.BusinessCategory modelCategory = new org.egov.commons.model.BusinessCategory(category);
-		BusinessCategory categoryContract = businessCategoryService.update(businessCategoryCode, modelCategory, user)
-				.toDomain();
+		 List<ErrorResponse> errResponses= validateBusinessCategoryRequest(businessCategoryRequest,true);
+         if(!errResponses.isEmpty())
+         return new ResponseEntity<List<ErrorResponse>>(errResponses, HttpStatus.BAD_REQUEST);
+         BusinessCategoryRequest categoryRequest =  businessCategoryService.updateAsync(businessCategoryRequest);
 		return getSuccessResponse(businessCategoryRequest.getRequestInfo(),
-				Collections.singletonList(categoryContract));
+				Collections.singletonList(categoryRequest.getBusinessCategoryInfo()));
 
 	}
 
@@ -102,7 +91,7 @@ public class BusinessCategoryController {
 	public ResponseEntity<?> getAllBusinessCategories(
 			@ModelAttribute @Valid final BusinessCategoryGetRequest categoryGetRequest,
 			final BindingResult modelAttributeBindingResult,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@RequestBody @Valid final RequestInfoWrap requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
 
 		BusinessCategoryCriteria criteria = BusinessCategoryCriteria.builder().active(categoryGetRequest.getActive())
@@ -130,55 +119,60 @@ public class BusinessCategoryController {
 	private ResponseEntity<?> getSuccessResponse(RequestInfo requestInfo, List<BusinessCategory> category) {
 		BusinessCategoryResponse response = new BusinessCategoryResponse();
 		response.setBusinessCategoryInfo(category);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		ResponseInfo responseInfo = responseInfoFact.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		response.setResponseInfo(responseInfo);
 		return new ResponseEntity<BusinessCategoryResponse>(response, HttpStatus.OK);
-
 	}
 
 	private ErrorResponse populateErrors(final BindingResult errors) {
 		final ErrorResponse errRes = new ErrorResponse();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		responseInfo.setApiId("");
+		errRes.setResponseInfo(responseInfo);
 
-		final Error error = new Error();
+		final org.egov.common.contract.response.Error error = new org.egov.common.contract.response.Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors())
-			for (final FieldError fieldError : errors.getFieldErrors())
-				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+			for (final FieldError errs : errors.getFieldErrors())
+	    error.getFields().add(new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getObjectName()));
+
 		errRes.setError(error);
 		return errRes;
 	}
 
-	private List<ErrorResponse> validateBusinessCategoryRequest(final BusinessCategoryRequest businessCategoryRequest) {
-		final List<ErrorResponse> errorResponses = new ArrayList<>();
+	private List<ErrorResponse> validateBusinessCategoryRequest(final BusinessCategoryRequest businessCategoryRequest,Boolean isUpdate) {
+		final ResponseInfo responseInfo = responseInfoFact.createResponseInfoFromRequestInfo(businessCategoryRequest.getRequestInfo(), false);
+		List<ErrorResponse>errorResponses=new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(businessCategoryRequest);
+		errorResponse.setResponseInfo(responseInfo);
+		final org.egov.common.contract.response.Error error = getError(businessCategoryRequest,isUpdate);
 		errorResponse.setError(error);
-		if (!errorResponse.getErrorFields().isEmpty())
-			errorResponses.add(errorResponse);
+		if (!errorResponse.getError().getFields().isEmpty())
+		 errorResponses.add(errorResponse);
+		 return errorResponses;
+		}
 
-		return errorResponses;
+	private org.egov.common.contract.response.Error getError(final BusinessCategoryRequest businessCategoryRequest,Boolean isUpdate) {
+
+		final List<ErrorField> errorFields = getErrorFields(businessCategoryRequest,isUpdate);
+		return org.egov.common.contract.response.Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(CollectionConstants.INVALID_CATEGORY_REQUEST_MESSAGE).fields(errorFields).build();
 	}
 
-	private Error getError(final BusinessCategoryRequest businessCategoryRequest) {
-
-		final List<ErrorField> errorFields = getErrorFields(businessCategoryRequest);
-		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(CollectionConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
-	}
-
-	private List<ErrorField> getErrorFields(final BusinessCategoryRequest businessCategoryRequest) {
+	private List<ErrorField> getErrorFields(final BusinessCategoryRequest businessCategoryRequest,Boolean isUpdate) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 
 		addTenantIdValidationErrors(businessCategoryRequest, errorFields);
-		addNameValidationErrors(businessCategoryRequest, errorFields);
-		addCodeValidationErrors(businessCategoryRequest, errorFields);
+		addNameValidationErrors(businessCategoryRequest, errorFields,isUpdate);
+		addCodeValidationErrors(businessCategoryRequest, errorFields,isUpdate);
 		return errorFields;
 	}
 
 	private void addCodeValidationErrors(BusinessCategoryRequest businessCategoryRequest,
-			List<ErrorField> errorFields) {
+			List<ErrorField> errorFields,Boolean isUpdate) {
 		final BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
 		if (category.getCode() == null || category.getCode().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_CODE_MANDATORY_CODE)
@@ -186,7 +180,7 @@ public class BusinessCategoryController {
 					.field(CollectionConstants.CATEGORY_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} else if (!businessCategoryService.getBusinessCategoryByCodeAndTenantId(category.getCode(),
-				category.getTenantId())) {
+				category.getTenantId(),category.getId(),isUpdate)) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_CODE_UNIQUE_CODE)
 					.message(CollectionConstants.CATEGORY_CODE_UNIQUE_ERROR_MESSAGE)
 					.field(CollectionConstants.CATEGORY_CODE_UNIQUE_FIELD_NAME).build();
@@ -208,7 +202,7 @@ public class BusinessCategoryController {
 	}
 
 	private void addNameValidationErrors(final BusinessCategoryRequest businessCategoryRequest,
-			final List<ErrorField> errorFields) {
+			final List<ErrorField> errorFields,Boolean isUpdate) {
 		final BusinessCategory category = businessCategoryRequest.getBusinessCategoryInfo();
 		if (category.getName() == null || category.getName().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_NAME_MANDATORY_CODE)
@@ -216,7 +210,7 @@ public class BusinessCategoryController {
 					.field(CollectionConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} else if (!businessCategoryService.getBusinessCategoryByNameAndTenantId(category.getName(),
-				category.getTenantId())) {
+				category.getTenantId(),category.getId(),isUpdate)) {
 			final ErrorField errorField = ErrorField.builder().code(CollectionConstants.CATEGORY_NAME_UNIQUE_CODE)
 					.message(CollectionConstants.CATEGORY_NAME_UNIQUE_ERROR_MESSAGE)
 					.field(CollectionConstants.CATEGORY_NAME_UNIQUE_FIELD_NAME).build();

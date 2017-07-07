@@ -16,148 +16,142 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class SearchPropertyBuilder {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    Environment environment;
+	@Autowired
+	Environment environment;
 
-    @Autowired
-    RestTemplate restTemplate;
+	@Autowired
+	RestTemplate restTemplate;
 
-    public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo,
-            String tenantId,
-            Boolean active,
-            String upicNo,
-            int pageSize,
-            int pageNumber,
-            String[] sort,
-            String oldUpicNo,
-            String mobileNumber,
-            String aadhaarNumber,
-            String houseNoBldgApt,
-            int revenueZone,
-            int revenueWard,
-            int locality,
-            String ownerName,
-            int demandFrom,
-            int demandTo) {
+	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
+			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
+			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
+			String ownerName, int demandFrom, int demandTo) {
 
-        StringBuffer searchPropertySql = new StringBuffer();
+		StringBuffer searchPropertySql = new StringBuffer();
 
-        Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
-        //TODO [Ramki] ownerName is user.name not user.username
-        if (ownerName != null && !ownerName.isEmpty())
-            userSearchRequestInfo.put("username", ownerName);
+		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 
-        if (mobileNumber != null && !mobileNumber.isEmpty())
+		if (ownerName != null && !ownerName.isEmpty())
+			userSearchRequestInfo.put("user.name", ownerName);
 
-            userSearchRequestInfo.put("mobileNumber", mobileNumber);
+		if (mobileNumber != null && !mobileNumber.isEmpty())
 
-        if (aadhaarNumber != null && !aadhaarNumber.isEmpty())
-            userSearchRequestInfo.put("aadhaarNumber", aadhaarNumber);
+			userSearchRequestInfo.put("mobileNumber", mobileNumber);
 
-        userSearchRequestInfo.put("tenantId", tenantId);
-        userSearchRequestInfo.put("RequestInfo", requestInfo);
-        //TODO [Ramki] we can have check here when owner information is given then only do call otherwise not required.
-        UserResponseInfo userResponse = restTemplate.postForObject(environment.getProperty("user.searchUrl"),
-                userSearchRequestInfo, UserResponseInfo.class);
-        String Ids = "";
+		if (aadhaarNumber != null && !aadhaarNumber.isEmpty())
+			userSearchRequestInfo.put("aadhaarNumber", aadhaarNumber);
 
-        List<User> users = null;
+		userSearchRequestInfo.put("tenantId", tenantId);
+		userSearchRequestInfo.put("RequestInfo", requestInfo);
 
-        if (userResponse.getUser() != null) {
-            users = userResponse.getUser();
+		UserResponseInfo userResponse = null;
+		if (ownerName != null || mobileNumber != null || aadhaarNumber != null) {
+			userResponse = restTemplate.postForObject(environment.getProperty("user.searchUrl"), userSearchRequestInfo,
+					UserResponseInfo.class);
+		}
+		String Ids = "";
 
-            int count = 1;
+		List<User> users = null;
 
-            for (User user : users) {
-                if (count < users.size())
-                    Ids = Ids + user.getId() + ",";
-                else
-                    Ids = Ids + "" + user.getId() + "";
+		if (userResponse != null && userResponse.getUser() != null) {
+			users = userResponse.getUser();
 
-                count++;
-            }
+			int count = 1;
 
-        }
+			for (User user : users) {
+				if (count < users.size())
+					Ids = Ids + user.getId() + ",";
+				else
+					Ids = Ids + "" + user.getId() + "";
 
-        searchPropertySql.append("select * from egpt_property prop  JOIN egpt_address Addr"
-                + " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where ");
+				count++;
+			}
 
-        if (tenantId != null && !tenantId.isEmpty())
-            searchPropertySql.append("prop.tenantid='" + tenantId.trim() + "'");
+		}
 
-        if (active != null)
-            searchPropertySql.append(" AND prop.active='" + active + "'");
+		searchPropertySql.append("select * from egpt_property prop  JOIN egpt_address Addr"
+				+ " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where ");
 
-        if (upicNo != null && !upicNo.isEmpty())
-            searchPropertySql.append(" AND prop.upicnumber='" + upicNo.trim() + "'");
+		if (tenantId != null && !tenantId.isEmpty())
+			searchPropertySql.append("prop.tenantid='" + tenantId.trim() + "'");
 
-        if (oldUpicNo != null && !oldUpicNo.isEmpty())
-            searchPropertySql.append(" AND prop.oldUpicNumber='" + oldUpicNo.trim() + "'");
+		if (active != null)
+			searchPropertySql.append(" AND prop.active='" + active + "'");
 
-        if (!Ids.isEmpty())
-            searchPropertySql.append(" AND puser.user_id IN (" + Ids + ")");
-        
-        //TODO as of now we don't have the revenue Zone ,revenue Ward,locality,houseNoBldgApt
-        //TODO [Ramki] what do you mean by we do not have revenue Zone ,revenue Ward,locality,houseNoBldgApt ?
-        // So we are not putting in search
-        
-        /*
-         * if ( houseNoBldgApt!=null && !houseNoBldgApt.isEmpty() )
-         * searchPropertySql.append(" AND Addr.housenobldgapt='"+houseNoBldgApt.trim()+"'");
-         */
+		if (upicNo != null && !upicNo.isEmpty())
+			searchPropertySql.append(" AND prop.upicnumber='" + upicNo.trim() + "'");
 
-        if (sort != null && sort.length > 0) {
-            searchPropertySql.append(" ORDER BY ");
+		if (oldUpicNo != null && !oldUpicNo.isEmpty())
+			searchPropertySql.append(" AND prop.oldUpicNumber='" + oldUpicNo.trim() + "'");
 
-            // Count loop to add the coma ,
+		if (!Ids.isEmpty())
+			searchPropertySql.append(" AND puser.user_id IN (" + Ids + ")");
 
-            int orderBycount = 1;
+		// TODO as of now we don't have the revenue Zone ,revenue
+		// Ward,locality,houseNoBldgApt
+		// TODO [Ramki] what do you mean by we do not have revenue Zone ,revenue
+		// Ward,locality,houseNoBldgApt ?
+		// So we are not putting in search
 
-            StringBuffer orderByCondition = new StringBuffer();
-            for (String order : sort) {
-                if (orderBycount < sort.length)
-                    orderByCondition.append("prop." + order + ",");
-                else
-                    orderByCondition.append("prop." + order);
-                orderBycount++;
-            }
+		/**
+		 * if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty())
+		 * searchPropertySql.append(" AND Addr.housenobldgapt='" + houseNoBldgApt.trim() + "'");
+		 */
+			
 
-            if (orderBycount > 1)
-                orderByCondition.append(" asc");
+		if (sort != null && sort.length > 0) {
+			searchPropertySql.append(" ORDER BY ");
 
-            searchPropertySql.append(orderByCondition.toString());
-        }
+			// Count loop to add the coma ,
 
-        //
-        // Appending the pagination related logic,if the page size and page number is -1
-        // then we need to put the default page size and page number
-        //
+			int orderBycount = 1;
 
-        if (pageNumber == -1)
-            pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
+			StringBuffer orderByCondition = new StringBuffer();
+			for (String order : sort) {
+				if (orderBycount < sort.length)
+					orderByCondition.append("prop." + order + ",");
+				else
+					orderByCondition.append("prop." + order);
+				orderBycount++;
+			}
 
-        if (pageSize == -1)
-            pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
+			if (orderBycount > 1)
+				orderByCondition.append(" asc");
 
-        int offset = 0;
-        int limit = pageNumber * pageSize;
+			searchPropertySql.append(orderByCondition.toString());
+		}
 
-        if (pageNumber <= 1)
-            offset = (limit - pageSize);
-        else
-            offset = (limit - pageSize) + 1;
+		//
+		// Appending the pagination related logic,if the page size and page
+		// number is -1
+		// then we need to put the default page size and page number
+		//
 
-        searchPropertySql.append(" offset " + offset + " limit " + limit);
+		if (pageNumber == -1)
+			pageNumber = Integer.valueOf(environment.getProperty("default.page.number").trim());
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("Sql", searchPropertySql.toString());
-        resultMap.put("users", users);
+		if (pageSize == -1)
+			pageSize = Integer.valueOf(environment.getProperty("default.page.size").trim());
 
-        return resultMap;
+		int offset = 0;
+		int limit = pageNumber * pageSize;
 
-    }
+		if (pageNumber <= 1)
+			offset = (limit - pageSize);
+		else
+			offset = (limit - pageSize) + 1;
+
+		searchPropertySql.append(" offset " + offset + " limit " + limit);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("Sql", searchPropertySql.toString());
+		resultMap.put("users", users);
+
+		return resultMap;
+
+	}
 
 }

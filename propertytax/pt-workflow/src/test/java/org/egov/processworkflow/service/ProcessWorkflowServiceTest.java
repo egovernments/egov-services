@@ -6,9 +6,7 @@ import org.egov.models.UserAuthResponseInfo;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.PtWorkflowApplication;
 import org.egov.propertyWorkflow.consumer.WorkFlowUtil;
-import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
-import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
 import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
@@ -46,13 +44,10 @@ public class ProcessWorkflowServiceTest {
 	@Test
 	public void startWorkflowTest() {
 
-		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
+		WorkFlowDetails workflowDetails = new WorkFlowDetails();
 		RequestInfo requestInfo = new RequestInfo();
-		ProcessInstance processInstance = new ProcessInstance();
-		Position position = new Position();
 
-		position.setId(1l);
-
+		workflowDetails.setAssignee(1l);
 		requestInfo.setAction("create");
 		requestInfo.setDid("1");
 		requestInfo.setMsgId("20170310130900");
@@ -63,21 +58,17 @@ public class ProcessWorkflowServiceTest {
 		requestInfo.setVer("1.0");
 		requestInfo.setTs("27-06-2017 10:30:12");
 		requestInfo.setKey("abcdkey");
+		requestInfo.setTenantId("default");
 
-		processInstance.setBusinessKey("Create Property");
-		processInstance.setType("Property");
-		processInstance.setAssignee(position);
-		processInstance.setSenderName("manas");
-		processInstance.setComments("test");
-		processInstance.setTenantId("default");
-
-		processInstanceRequest.setRequestInfo(requestInfo);
-		processInstanceRequest.setProcessInstance(processInstance);
+		WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
+		workflowDetailsRequestInfo.setTenantId("default");
+		workflowDetailsRequestInfo.setRequestInfo(requestInfo);
+		workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
 
 		try {
 
 			requestInfo.setAuthToken(getAuthToken());
-			processInstance = workFlowUtil.startWorkflow(processInstanceRequest);
+			ProcessInstance processInstance = workFlowUtil.startWorkflow(workflowDetailsRequestInfo);
 			if (processInstance == null)
 				assertTrue(false);
 
@@ -136,7 +127,7 @@ public class ProcessWorkflowServiceTest {
 		requestInfo.setVer("1.0");
 		requestInfo.setTs("06-07-2017 10:35:54");
 		requestInfo.setKey("abcdkey");
-
+		requestInfo.setTenantId("default");
 		return requestInfo;
 	}
 

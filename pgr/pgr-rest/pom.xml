@@ -83,6 +83,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.javadelight</groupId>
+            <artifactId>delight-nashorn-sandbox</artifactId>
+            <version>0.0.12</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -139,73 +145,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>default-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>CLASS</element>
-                                    <excludes>
-                                        <exclude>org.egov.pgrrest.common.persistence.entity.*</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.AuthenticatedUser</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.AttributeEntry</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.AttributeDefinition</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.ServiceDefinition</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.ValueDefinition</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.Requester</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.contract.*</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.InvalidOtpRequestException</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.OtpValidationNotCompleteException</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.InvalidServiceRequestException</exclude>
-                                        <exclude>org.egov.pgrrest.PgrRestSpringBootApplication</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.entity.*</exclude>
-                                        <exclude>org.egov.pgrrest.common.contract.*</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.controller.*</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.service.*</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.model.*</exclude>
-                                        <exclude>org.egov.pgrrest.write.consumer.contracts.*</exclude>
-                                        <exclude>org.egov.pgrrest.write.persistence.repository.ServiceRequestWriteRepository</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.resolver.AuthenticatedUserResolver</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.SubmissionRepository</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidOtpValidationRequestExceptionAdapter</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.adapters.error.OtpValidationNotCompleteExceptionAdapter</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidServiceTypeSearchExceptionAdapter</exclude>
-                                        <exclude>org.egov.pgrrest.read.web.adapters.error.InvalidServiceTypeExceptionAdapter</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.QueryFactory</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestESRepository</exclude>
-                                        <exclude>org.egov.pgrrest.read.domain.exception.UnauthorizedAccessException
-                                        </exclude>
-                                        <exclude>org.egov.pgrrest.read.web.interceptor.CorrelationIdAwareRestTemplate
-                                        </exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceRequestTypeRepository
-                                        </exclude>
-                                        <exclude>org.egov.pgrrest.common.persistence.repository.UserRepository</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.Role</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.Role.RoleBuilder</exclude>
-                                        <exclude>org.egov.pgrrest.write.consumer.HashMapDeserializer</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.ReceivingMode</exclude>
-                                        <exclude>org.egov.pgrrest.common.domain.model.ReceivingCenter</exclude>
-                                        <exclude>org.egov.pgrrest.write.domain.model.ServiceRequestRecord</exclude>
-                                        <exclude>org.egov.pgrrest.read.persistence.repository.ServiceDefinitionRepository</exclude>
-                                    </excludes>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.90</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

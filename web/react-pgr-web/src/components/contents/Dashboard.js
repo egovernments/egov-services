@@ -226,7 +226,7 @@ class Dashboard extends Component {
 									<td>
                     {e.attribValues && e.attribValues.map((item, index)=>{
                       if(item['key'] == 'keyword')
-                        return (item['name'] == 'Complaint' ? 'Grievance' : 'Service');
+                        return (item['name'] && item['name'].toLowerCase() == 'complaint' ? 'Grievance' : 'Service');
                       })
                     }            
                   </td>

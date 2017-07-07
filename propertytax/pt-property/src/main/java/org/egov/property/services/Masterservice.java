@@ -27,7 +27,7 @@ public interface Masterservice {
 	 * 
 	 * @param tenantId
 	 * @param departmentRequest
-	 * @return
+	 * @return departmentResponseInfo
 	 */
 	public DepartmentResponseInfo createDepartmentMaster(String tenantId, DepartmentRequest departmentRequest);
 

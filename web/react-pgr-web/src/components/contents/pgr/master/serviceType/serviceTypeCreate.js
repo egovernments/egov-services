@@ -534,7 +534,7 @@ console.log(createServiceType);
         <div className="createServiceType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Service' : 'Create Service'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Grievance Type' : 'Create Grievance Type'} < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>

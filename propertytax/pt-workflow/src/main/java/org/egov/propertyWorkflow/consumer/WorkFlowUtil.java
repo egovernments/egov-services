@@ -105,7 +105,7 @@ public class WorkFlowUtil {
 		task.setBusinessKey("Create Property");
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
-		// task.setTenantId("default");
+		task.setTenantId("default");
 		assignee.setId((long) workflowDetails.getAssignee());
 		task.setAssignee(assignee);
 

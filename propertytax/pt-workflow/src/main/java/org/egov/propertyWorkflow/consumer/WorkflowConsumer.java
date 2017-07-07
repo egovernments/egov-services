@@ -10,6 +10,7 @@ import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
+import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -75,8 +76,9 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
-				workflowDetailsRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-				workflowDetailsRequestInfo.setTenantId(property.getTenantId());
+				RequestInfo requestInfo = setWorkFlowRequestInfoFromPropertyRequest(propertyRequest,
+						property.getTenantId());
+				workflowDetailsRequestInfo.setRequestInfo(requestInfo);
 				workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
 				ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 				workflowUtil.startWorkflow(processInstanceRequest);
@@ -87,10 +89,28 @@ public class WorkflowConsumer {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
 				workflowDetailsRequestInfo.setTenantId(property.getTenantId());
 				workflowDetailsRequestInfo.setWorkflowDetails(workflowDetails);
-				workflowDetailsRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
+				RequestInfo requestInfo = setWorkFlowRequestInfoFromPropertyRequest(propertyRequest,
+						property.getTenantId());
+				workflowDetailsRequestInfo.setRequestInfo(requestInfo);
 				workflowUtil.updateWorkflow(workflowDetailsRequestInfo);
 			}
 		}
 
+	}
+
+	private RequestInfo setWorkFlowRequestInfoFromPropertyRequest(PropertyRequest propertyRequest, String tenantId) {
+
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setAction(propertyRequest.getRequestInfo().getAction());
+		requestInfo.setApiId(propertyRequest.getRequestInfo().getApiId());
+		requestInfo.setAuthToken(propertyRequest.getRequestInfo().getAuthToken());
+		requestInfo.setDid(propertyRequest.getRequestInfo().getDid());
+		requestInfo.setKey(propertyRequest.getRequestInfo().getMsgId());
+		requestInfo.setRequesterId(propertyRequest.getRequestInfo().getRequesterId());
+		requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
+		requestInfo.setVer(propertyRequest.getRequestInfo().getVer());
+		requestInfo.setTenantId(tenantId);
+
+		return requestInfo;
 	}
 }

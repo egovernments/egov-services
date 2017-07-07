@@ -2,17 +2,16 @@ package org.egov.processworkflow.service;
 
 import static org.junit.Assert.assertTrue;
 
-import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
 import org.egov.models.UserAuthResponseInfo;
 import org.egov.models.WorkFlowDetails;
-import org.egov.models.WorkflowDetailsRequestInfo;
 import org.egov.propertyWorkflow.PtWorkflowApplication;
 import org.egov.propertyWorkflow.consumer.WorkFlowUtil;
 import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.ProcessInstanceRequest;
+import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.TaskResponse;
+import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +47,6 @@ public class ProcessWorkflowServiceTest {
 	public void startWorkflowTest() {
 
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		RequestInfo requestInfo = new RequestInfo();
 		ProcessInstance processInstance = new ProcessInstance();
 		Position position = new Position();
@@ -60,13 +58,11 @@ public class ProcessWorkflowServiceTest {
 		requestInfo.setMsgId("20170310130900");
 		requestInfo.setRequesterId("yosadhara");
 
-		requestInfo.setAuthToken("602a0808-fe7f-410f-b223-039616a385dd");
+		requestInfo.setAuthToken("a5dc5bc3-e15e-4bef-a140-2d946527fb0d");
 		requestInfo.setApiId("");
 		requestInfo.setVer("1.0");
-		requestInfo.setTs(1l);
+		requestInfo.setTs("27-06-2017 10:30:12");
 		requestInfo.setKey("abcdkey");
-
-		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		processInstance.setBusinessKey("Create Property");
 		processInstance.setType("Property");
@@ -75,9 +71,7 @@ public class ProcessWorkflowServiceTest {
 		processInstance.setComments("test");
 		processInstance.setTenantId("default");
 
-		requestInfoWrapper.setRequestInfo(requestInfo);
-
-		processInstanceRequest.setRequestInfo(requestInfoWrapper.getRequestInfo());
+		processInstanceRequest.setRequestInfo(requestInfo);
 		processInstanceRequest.setProcessInstance(processInstance);
 
 		try {
@@ -140,7 +134,7 @@ public class ProcessWorkflowServiceTest {
 		}
 		requestInfo.setApiId("");
 		requestInfo.setVer("1.0");
-		requestInfo.setTs(1l);
+		requestInfo.setTs("06-07-2017 10:35:54");
 		requestInfo.setKey("abcdkey");
 
 		return requestInfo;

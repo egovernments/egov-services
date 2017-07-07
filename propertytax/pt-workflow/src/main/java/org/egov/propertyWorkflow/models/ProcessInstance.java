@@ -61,4 +61,6 @@ public class ProcessInstance {
 	@Size(min = 1, max = 128)
 	@JsonProperty("senderName")
 	private String senderName;
+	
+	private String tenantId;
 }

@@ -125,9 +125,9 @@ class viewOrUpdateReceivingMode extends Component {
                                           return(
                                             <tr key={i} onClick={()=>{
 											  if(url == '/pgr/viewOrUpdateReceivingMode/view'){
-												  this.props.history.push('/pgr/viewReceivingMode/${this.props.match.params.type}/'+e.id);
+												  this.props.history.push(`/pgr/viewReceivingMode/${this.props.match.params.type}/${e.id}`);
 											  } else {
-												  this.props.history.push('/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}'+e.id);
+												  this.props.history.push(`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`);
 											  }
 											}}>
                                               <td>{i+1}</td>
@@ -135,7 +135,7 @@ class viewOrUpdateReceivingMode extends Component {
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
                                               <td>{e.channels}</td>
-                                              <td>{e.active?"True":"False"}</td>
+                                              <td>{e.active?"Yes":"No"}</td>
                                             </tr>
                                           )
                                         })}

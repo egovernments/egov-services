@@ -1,4 +1,4 @@
-package org.egov.models;
+package org.egov.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -8,12 +8,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ApplicationEnum {
 	CREATE("CREATE"),
-
-	RENEWAL("RENEWAL"),
-
-	EVICTION("EVICTION"),
-
-	CANCEL("CANCEL");
+	TITLE_TRANSFER("TITLE_TRANSFER"),
+	BIFURCATION("BIFURCATION"),
+	ALTER("ALTER"),
+	EDIT("EDIT"),
+	AMALGAMATION("AMALGAMATION");
 
 	private String value;
 

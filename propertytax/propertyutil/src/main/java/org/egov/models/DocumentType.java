@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import org.egov.enums.ApplicationEnum;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

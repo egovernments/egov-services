@@ -434,7 +434,7 @@ class routerGeneration extends Component {
                                         key={index}
                                         insetChildren={true}
                                         primaryText={item.serviceName}
-                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.serviceCode) > -1}
+                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.id) > -1}
                                       />
 			                       ))}
                     </SelectField>

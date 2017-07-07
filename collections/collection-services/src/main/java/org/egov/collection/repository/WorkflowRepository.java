@@ -183,7 +183,7 @@ public class WorkflowRepository {
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		StringBuilder uri = new StringBuilder();
 		String basePath = applicationProperties.getWorkflowServiceHostName();
-		String searchPath = applicationProperties.getWorkflowServiceSearchPath();
+		String searchPath = applicationProperties.getWorkflowServiceStartPath();
 		uri.append(basePath).append(searchPath);
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		processInstanceRequest = getProcessInstanceRequest(workflowDetails);

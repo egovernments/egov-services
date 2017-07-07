@@ -65,8 +65,10 @@ public class WorkflowDetails {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 	
+	@NotNull
 	private String tenantId;
 	
+	@NotNull
 	private String receiptNumber;
 	
     @NotNull
@@ -83,9 +85,12 @@ public class WorkflowDetails {
 
     @NotNull
     private String comments;
-
+    
     private Long initiatorPosition;
+    
     private Long assignee;
+    
+    @NotNull
     private String action;
 
     @NotNull

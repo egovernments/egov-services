@@ -267,7 +267,7 @@ public class ReceiptRepository {
 	}
 	
 	
-	private Object getBusinessDetails(String businessDetailsCode, ReceiptReq receiptReq){
+	public Object getBusinessDetails(String businessDetailsCode, ReceiptReq receiptReq){
 		logger.info("Searching for fund aand other businessDetails based on code.");	
 		StringBuilder builder = new StringBuilder();
 		String baseUri = CollectionServiceConstants.BD_SEARCH_URI;

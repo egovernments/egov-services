@@ -95,7 +95,7 @@ public class ReceiptReqValidator {
 			
 			for(BillAccountDetails billAccountDetails: billDetails.getBillAccountDetails()){
 				
-				if(null == billAccountDetails.getPurpose() || billAccountDetails.getPurpose().isEmpty()){
+				if(null == billAccountDetails.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)
 							.message(CollectionServiceConstants.PURPOSE_MISSING_MESSAGE)
 							.field(CollectionServiceConstants.PURPOSE_MISSING_FIELD).build();

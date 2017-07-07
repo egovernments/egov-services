@@ -221,9 +221,9 @@ class createRouter extends Component {
         })
     });
 
-    Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
+    Api.commonApiPost("/pgr-master/service/v1/_search", {type: "all"}).then(function(response) {
         self.setState({
-          complaintSource: response.complaintTypes
+          complaintSource: response.Service
         })
     }, function(err) {
       self.setState({

@@ -42,7 +42,6 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -71,15 +70,12 @@ import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
-import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,9 +86,6 @@ public class BillService {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private ObjectMapper objectMapper;
-	
 	@Autowired
 	private ResponseFactory responseFactory;
 
@@ -141,8 +134,10 @@ public class BillService {
 		if(billCriteria.getDemandId()!=null)
 			ids.add(billCriteria.getDemandId());
 
+		Set<String> consumerCodes = new HashSet<>();
+		consumerCodes.add(billCriteria.getConsumerCode());
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
-				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
+				consumerCode(consumerCodes).demandId(ids).
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
 
@@ -171,6 +166,7 @@ public class BillService {
 
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		Set<String> businessServices = map.keySet();
+		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
 		log.debug("prepareBill map:" +map);
 		Demand demand = demands.get(0);
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
@@ -219,11 +215,14 @@ public class BillService {
 							.findAny().orElse(null);
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					
+					//TODO fix purpose
 					Purpose purpose = Purpose.CURRENT_AMOUNT;
+					String accountDespcription = demandDetail.getTaxHeadMasterCode()+"-"+demand3.getTaxPeriodFrom()+"-"
+							+demand3.getTaxPeriodTo();
 					
-					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("")
-							.creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription(accountDespcription)
+							.crAmountToBePaid(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+							//.creditAmount())
 							.glcode(glCodeMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand())
 							.order(taxHeadMaster.getOrder()).purpose(purpose)
 							.build();
@@ -231,14 +230,8 @@ public class BillService {
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
-
-			//TODO Change the business service call get it form map and another method
-			
-			BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder().
-					businessService(new HashSet<String>(Arrays.asList(businessService.split(", ")))).tenantId(tenantId).build();
-			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService
-					.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
-			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
+			//TODO check if map is working properly for retriving businessservicedetail
+			BusinessServiceDetail businessServiceDetail = businessServiceMap.get(businessService);
 
 			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
 			

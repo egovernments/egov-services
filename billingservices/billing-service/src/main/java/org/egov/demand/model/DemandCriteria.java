@@ -62,7 +62,7 @@ public class DemandCriteria {
 	
 	//private Set<String> owner;
 	
-	private String consumerCode;
+	private Set<String> consumerCode;
 	
 	private String businessService;
 	

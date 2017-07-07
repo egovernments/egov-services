@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -155,14 +154,15 @@ public class BillRepository {
 				ps.setString(4, billAccountDetail.getGlcode());
 				ps.setObject(5, billAccountDetail.getOrder());
 				ps.setString(6, billAccountDetail.getAccountDescription());
-				ps.setObject(7, billAccountDetail.getCreditAmount());
-				ps.setObject(8, billAccountDetail.getDebitAmount());
-				ps.setObject(9, billAccountDetail.getIsActualDemand());
-				ps.setString(10, purpose);
-				ps.setString(11, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(12, new Date().getTime());
-				ps.setString(13, requestInfo.getUserInfo().getId().toString());
-				ps.setLong(14, new Date().getTime());
+				ps.setBigDecimal(7,billAccountDetail.getCrAmountToBePaid());
+				ps.setObject(8, billAccountDetail.getCreditAmount());
+				ps.setObject(9, billAccountDetail.getDebitAmount());
+				ps.setObject(10, billAccountDetail.getIsActualDemand());
+				ps.setString(11, purpose);
+				ps.setString(12, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(13, new Date().getTime());
+				ps.setString(14, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(15, new Date().getTime());
 			}
 				
 			@Override

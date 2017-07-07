@@ -111,11 +111,11 @@ public class DemandQueryBuilder {
 
 		if (demandCriteria.getDemandId() != null && !demandCriteria.getDemandId().isEmpty()) {
 			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.id IN ("+getIdQueryForStrings(demandCriteria.getDemandId()));
+			demandQueryBuilder.append("demand.id IN (" + getIdQueryForStrings(demandCriteria.getDemandId()));
 		}
 		if (ownerIds != null && !ownerIds.isEmpty()) {
 			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.owner IN ("+getIdQueryForStrings(ownerIds));
+			demandQueryBuilder.append("demand.owner IN (" + getIdQueryForStrings(ownerIds));
 		}
 		if (demandCriteria.getBusinessService() != null) {
 			addAndClause(demandQueryBuilder);
@@ -124,8 +124,8 @@ public class DemandQueryBuilder {
 		}
 		if (demandCriteria.getConsumerCode() != null) {
 			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.consumercode=?");
-			preparedStatementValues.add(demandCriteria.getConsumerCode());
+			demandQueryBuilder.append("demand.consumercode IN ("
+			+ getIdQueryForStrings(demandCriteria.getConsumerCode()));
 		}
 		if (demandCriteria.getDemandFrom() != null) {
 			addAndClause(demandQueryBuilder);

@@ -41,8 +41,10 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +54,9 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillAccountDetail;
+import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
@@ -67,6 +72,7 @@ import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.mockito.internal.util.collections.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -138,6 +144,39 @@ public class DemandService {
 		log.debug("demand detail list : " + demandDetails);
 		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
+	}
+	
+	public void updateDemandFromBill(/*TODO put reciept object here */) {
+		
+		List<Bill> bills = new ArrayList<>(); //TODO get bills from receipt object
+		String tenantId = ""; //TODO get tenantId from receipt object
+		RequestInfo requestInfo = new RequestInfo();//TODO get from receipt request
+		Set<String> consumerCodes = new HashSet<>();
+		for (Bill bill : bills) {
+			for(BillDetail billDetail : bill.getBillDetails())
+				consumerCodes.add(billDetail.getConsumerCode());
+		}
+		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
+		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		Map<String,List<DemandDetail>> detailsMap = new HashMap<>(); 
+		for (Demand demand : demands) {
+			
+			if(detailsMap.get(demand.getConsumerCode()) == null)
+				detailsMap.put(demand.getConsumerCode(), demand.getDemandDetails());
+			else{
+				detailsMap.get(demand.getConsumerCode()).addAll(demand.getDemandDetails());
+			}
+		}
+		
+		for(Bill bill : bills)
+			for(BillDetail billDetail : bill.getBillDetails()){
+				List<DemandDetail> demandDetails = detailsMap.get(billDetail.getConsumerCode());
+				for(BillAccountDetail accountDetail : billDetail.getBillAccountDetails()){
+					
+					List<String> accountdetailsArray = Arrays.asList(accountDetail.getAccountDescription().split("-"));
+					
+				}
+			}
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
@@ -259,7 +298,7 @@ public class DemandService {
 	public void update(DemandRequest demandRequest) {
 		demandRepository.update(demandRequest);
 	}
-
+	
 	private AuditDetail getAuditDetail(RequestInfo requestInfo) {
 
 		String userId = requestInfo.getUserInfo().getId().toString();

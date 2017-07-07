@@ -103,7 +103,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				asset.setWidth(rs.getString("width"));
 				asset.setTotalArea(rs.getString("totalArea"));
 				asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepriciation"));
-				asset.setDepreciationRate(rs.getDouble("depreciationrate"));
+				asset.setDepreciationRate(rs.getDouble("depriciationrate"));
 
 				final BigDecimal accumulatedDepreciation = rs.getBigDecimal("accumulateddepreciation");
 				if (accumulatedDepreciation == BigDecimal.ZERO)

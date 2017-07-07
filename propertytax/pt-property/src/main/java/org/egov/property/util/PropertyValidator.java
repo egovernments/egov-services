@@ -75,9 +75,9 @@ public class PropertyValidator {
 		PropertyLocation propertyLocation = property.getBoundary();
 		Long id;
 		//TODO do not use strings directly anywhere, create a constants and use it.
-		if (field.equalsIgnoreCase("revenueBoundary")) {
+		if (field.equalsIgnoreCase(env.getProperty("revenue.boundary"))) {
 			id = propertyLocation.getRevenueBoundary().getId();
-		} else if (field.equalsIgnoreCase("locationBoundary")) {
+		} else if (field.equalsIgnoreCase(env.getProperty("location.boundary"))) {
 			id = propertyLocation.getLocationBoundary().getId();
 		} else {
 			id = propertyLocation.getAdminBoundary().getId();

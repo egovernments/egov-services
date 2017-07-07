@@ -1,11 +1,13 @@
 package org.egov.pgrrest.read.domain.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.egov.pgrrest.common.domain.model.AttributeDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ComputeRuleDefinition;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException;
+import org.egov.pgrrest.read.domain.exception.RuleEvaluationException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
@@ -22,8 +24,10 @@ import java.util.stream.Collectors;
     Responsible for validating and computing custom fields.
  */
 @Service
+@Slf4j
 public class ServiceRequestCustomFieldService {
 
+    private static final String RULE_FAILED_MESSAGE = "Execution of rule name: {} with definition: {} failed";
     private ServiceDefinitionService serviceDefinitionService;
     private List<AttributeValueValidator> attributeValueValidators;
     private JSScriptEngineFactory scriptEngineFactory;
@@ -53,9 +57,9 @@ public class ServiceRequestCustomFieldService {
             getCodeToAttributeEntriesMap(serviceRequest);
         loadEngineWithDefinedVariables(serviceDefinition, scriptEngine, codeToAttributeEntriesMap);
         serviceDefinition.getComputedFields().forEach(computedAttributeDefinition -> {
-            for (ComputeRuleDefinition rule: computedAttributeDefinition.getComputeRules()) {
+            for (ComputeRuleDefinition rule : computedAttributeDefinition.getComputeRules()) {
                 final boolean isRuleApplicable = isRuleApplicable(scriptEngine, rule);
-                if(!isRuleApplicable) {
+                if (!isRuleApplicable) {
                     continue;
                 }
                 final String code = computedAttributeDefinition.getCode();
@@ -70,10 +74,11 @@ public class ServiceRequestCustomFieldService {
 
     private boolean isRuleApplicable(ScriptEngine scriptEngine, ComputeRuleDefinition rule) {
         try {
-			return (boolean) scriptEngine.eval(rule.getRule());
-		} catch (ScriptException e) {
-			throw new RuntimeException(e);
-		}
+            return (boolean) scriptEngine.eval(rule.getRule());
+        } catch (ScriptException e) {
+            log.error(RULE_FAILED_MESSAGE, rule.getName(), rule.getRule());
+            throw new RuleEvaluationException(rule);
+        }
     }
 
     private Map<String, List<AttributeEntry>> getCodeToAttributeEntriesMap(ServiceRequest serviceRequest) {
@@ -94,13 +99,14 @@ public class ServiceRequestCustomFieldService {
         });
     }
 
-    private Object getParsedObject(AttributeDefinition attributeDefinition, List<AttributeEntry> matchingAttributeEntries) {
+    private Object getParsedObject(AttributeDefinition attributeDefinition,
+                                   List<AttributeEntry> matchingAttributeEntries) {
         Object parsedObject;
         if (attributeDefinition.isMultiValueType()) {
-			parsedObject = getParsedObject(matchingAttributeEntries, attributeDefinition);
-		} else {
-			parsedObject = getParsedObject(matchingAttributeEntries.get(0), attributeDefinition);
-		}
+            parsedObject = getParsedObject(matchingAttributeEntries, attributeDefinition);
+        } else {
+            parsedObject = getParsedObject(matchingAttributeEntries.get(0), attributeDefinition);
+        }
         return parsedObject;
     }
 

@@ -124,14 +124,14 @@ class BulkEscalationGeneration extends Component {
       let{initForm} = this.props;
       initForm()
 
-      $('#searchTable').DataTable({
-           dom: 'lBfrtip',
-           buttons: [
-                     'excel', 'pdf', 'print'
-            ],
-            ordering: false,
-            bDestroy: true,
-      });
+       $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+        });
     }
 
     componentDidMount() {
@@ -158,18 +158,22 @@ class BulkEscalationGeneration extends Component {
         });
     }
 
-    componentWillUpdate() {
-      if(flag == 1) {
-        flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
-      }
-    }
-
     componentWillUnmount(){
        $('#searchTable')
        .DataTable()
        .destroy(true);
     }
+
+  componentDidUpdate() {
+       $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+     });
+  }
 
   submitForm = (e) => {
       e.preventDefault()
@@ -333,7 +337,7 @@ class BulkEscalationGeneration extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" primary={true}/>
                   </div>
                   {viewTable()}
               </CardText>
@@ -411,6 +415,8 @@ const mapDispatchToProps = dispatch => ({
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
     },
+
+    
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BulkEscalationGeneration);

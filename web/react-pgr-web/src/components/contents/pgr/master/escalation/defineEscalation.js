@@ -89,11 +89,6 @@ const getNameById = function(object, id, property = "") {
 
 const getNameByServiceCode = function(object, serviceCode, property = "") { 
 
-
-  console.log(object);
-
-  return false;
-
   if (serviceCode == "" || serviceCode == null) {
         return "";
     }
@@ -190,7 +185,7 @@ class DefineEscalation extends Component {
     Api.commonApiPost("/hr-masters/designations/_search",{}).then(function(response) {
         self.setState({localDesignation : response.Designation});
         },function(err) {
-        console.log(err);
+      
     }); 
 }
 
@@ -216,6 +211,10 @@ class DefineEscalation extends Component {
     }
 
   submitForm = (e) => {
+
+     let {setLoadingStatus} = this.props;
+    setLoadingStatus('loading');
+
       e.preventDefault();
       let current = this;
 
@@ -224,7 +223,7 @@ class DefineEscalation extends Component {
       }
 	  
       Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
-          console.log(response);
+           setLoadingStatus('hide');
 
           if (response.escalationHierarchies[0] != null) {
               flag = 1;
@@ -262,10 +261,12 @@ class DefineEscalation extends Component {
 		  });	
   }
   
-  	handleDesignation = (e) => {
+  handleDesignation = (e) => { 
+
+  let {setLoadingStatus} = this.props;
 		
-		var currentThis = this;
-		currentThis.setState({toPosition : []});
+		var current = this;
+		this.setState({toPosition : []});
 		
 		let query = {
 			departmentId:this.props.defineEscalation.department, 
@@ -274,7 +275,8 @@ class DefineEscalation extends Component {
 	
 		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response)
 		  {console.log(response);
-			currentThis.setState({toPosition : response.Position});
+        setLoadingStatus('hide');
+			current.setState({toPosition : response.Position});
 		  },function(err) {
 			console.log(err);
 		  });	
@@ -282,10 +284,14 @@ class DefineEscalation extends Component {
   
   
   updateEscalation = () => {
+
+    let {setLoadingStatus} = this.props;
+    setLoadingStatus('loading');
+
 		 var current = this
     var body = {
       escalationHierarchy: [ {
-				serviceCode : this.props.defineEscalation.grievanceType,
+				serviceCode : this.props.defineEscalation.serviceCode,
 				tenantId : "default",
 				fromPosition : this.props.defineEscalation.fromPosition,
 				toPosition : this.props.defineEscalation.toPosition,
@@ -297,23 +303,45 @@ class DefineEscalation extends Component {
 	//var idd = this.props.defineEscalation.fromPosition;
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
-        console.log(response);
-        current.setState({
-          resultList:[
-            ...current.state.resultList,
-            current.props.defineEscalation
-          ]
-      })
+          let query = {
+        fromPosition:current.props.defineEscalation.fromPosition
+      }
+    
+                Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
+                    setLoadingStatus('hide');
+                    if (response.escalationHierarchies[0] != null) {
+                        flag = 1;
+                        current.setState({
+                          resultList: response.escalationHierarchies,
+                          isSearchClicked: true
+                        })
+
+                    } else {
+                      current.setState({
+                        noData: true,
+                      })
+                    }
+                }).catch((error)=>{
+                    console.log(error);
+                })
+
+              current.setState((prevState)=>{
+                  prevState.editIndex=-1
+                })
     }).catch((error)=>{
         console.log(error);
     })
   }
 
   addEscalation = () => {
+
+    let {setLoadingStatus} = this.props;
+    setLoadingStatus('loading');
+
     var current = this
     var body = {
       escalationHierarchy: [ {
-				serviceCode : this.props.defineEscalation.grievanceType,
+				serviceCode : this.props.defineEscalation.serviceCode,
 				tenantId : "default",
 				fromPosition : this.props.defineEscalation.fromPosition,
 				toPosition : this.props.defineEscalation.toPosition,
@@ -323,19 +351,37 @@ class DefineEscalation extends Component {
     }
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_create",{},body).then(function(response){
-        console.log(response);
-        current.setState({
-          resultList:[
-            ...current.state.resultList,
-            current.props.defineEscalation
-          ]
-      })
+
+        let query = {
+        fromPosition:current.props.defineEscalation.fromPosition
+      }
+    
+                Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
+                    setLoadingStatus('hide');
+                    if (response.escalationHierarchies[0] != null) {
+                        flag = 1;
+                        current.setState({
+                          resultList: response.escalationHierarchies,
+                          isSearchClicked: true
+                        })
+
+                    } else {
+                      current.setState({
+                        noData: true,
+                      })
+                    }
+                }).catch((error)=>{
+                    console.log(error);
+                })
+       
     }).catch((error)=>{
         console.log(error);
     })
   }
   
   editObject = (index) => {
+      let {setLoadingStatus} = this.props;
+      setLoadingStatus('loading');
       this.props.setForm(this.state.resultList[index])
 
       console.log(this.state.resultList[index].department)
@@ -381,8 +427,6 @@ class DefineEscalation extends Component {
     render() {
 
       var current = this;
-	  
-	  console.log(this.state.toPosition);
 
       let {
         isFormValid,
@@ -394,7 +438,6 @@ class DefineEscalation extends Component {
 
       let {submitForm, localHandleChange, addEscalation, updateEscalation, editObject} = this;
 
-      console.log(this.state.resultList);
 
       let {isSearchClicked, resultList, escalationForm,  editIndex} = this.state;
 
@@ -404,12 +447,12 @@ class DefineEscalation extends Component {
       			return (
       				<tr key={i}>
                 <td>{getNameById(current.state.positionSource,val.fromPosition)}</td>
-      					<td>{val.grievanceType ? getNameById(current.state.grievanceType ,val.grievanceType) : ""}</td>
+      					<td>{val.serviceCode ? getNameByServiceCode(current.state.grievanceType ,val.serviceCode) : ""}</td>
       					<td>{getNameById(current.state.departments,val.department)}</td>
       					<td>{getNameById(current.state.localDesignation,val.designation)}</td>
                 <td>{getNameById(current.state.positionSource,val.toPosition)}</td>
-                <td><RaisedButton primary={true} style={{margin:'15px 5px'}} label={translate("pgr.lbl.update")} onClick={() => {
-					editObject(i);
+                <td><RaisedButton primary={true} style={{margin:'15px 5px'}} label={translate("pgr.lbl.edit")} onClick={() => {
+					           editObject(i);
                     current.setState({editIndex:i})
                     }}/></td>
       				</tr>
@@ -436,14 +479,14 @@ class DefineEscalation extends Component {
                         <SelectField
                            floatingLabelText="Grievance Type"
                            fullWidth={true}
-                           value={defineEscalation.grievanceType ? defineEscalation.grievanceType : ""}
+                           value={defineEscalation.serviceCode ? defineEscalation.serviceCode : ""}
                            onChange= {(e, index ,value) => {
                              var e = {
                                target: {
                                  value: value
                                }
                              };
-                             handleChange(e, "grievanceType", true, "");
+                             handleChange(e, "serviceCode", true, "");
                             }}
                           >
 						  {current.state.grievanceType && current.state.grievanceType.map((item, index)=>{
@@ -641,8 +684,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["fromPosition", "grievanceType", "department", "designation", "toPosition"] ,
-          required:["fromPosition", "grievanceType", "department", "designation", "toPosition"]
+          current: [] ,
+          required:[]
         },
         pattern: {
           current: [],

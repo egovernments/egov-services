@@ -126,14 +126,16 @@ class ViewEscalation extends Component {
       let{initForm} = this.props;
       initForm()
 
-      $('#searchTable').DataTable({
-           dom: 'lBfrtip',
-           buttons: [
-                     'excel', 'pdf', 'print'
-            ],
-            ordering: false,
-            bDestroy: true,
-      });
+       
+       $('#searchTable').DataTable({
+             dom: 'lBfrtip',
+             buttons: [],
+              bDestroy: true,
+              language: {
+                 "emptyTable": "No Records"
+              }
+        });
+
     }
 
     componentDidMount() {
@@ -162,12 +164,16 @@ class ViewEscalation extends Component {
 
     }
 
-    componentWillUpdate() {
-      if(flag == 1) {
-        flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
-      }
-    }
+   componentDidUpdate() {
+       $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+     });
+  }
 
 
     componentWillUnmount(){
@@ -177,12 +183,15 @@ class ViewEscalation extends Component {
     }
 
   submitForm = (e) => {
+
+      let{setLoadingStatus} = this.props;
+      setLoadingStatus('loading');
     
       e.preventDefault();
 
        let self = this;
 
-      let searchSetFrom = {
+    let searchSetFrom = {
 		  fromPosition: this.props.viewEscalation.position,
 		  serviceCode:this.props.viewEscalation.grievanceType
 	  };
@@ -193,7 +202,7 @@ class ViewEscalation extends Component {
 	  };
 
        Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetFrom).then(function(response) {
-		   console.log(response);
+		   setLoadingStatus('hide');
 			flag = 1;
 			for(let i=0; i<response.escalationHierarchies.length;i++){
 				   self.setState({
@@ -210,7 +219,7 @@ class ViewEscalation extends Component {
         });
 		
 		Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetTo).then(function(response) {
-			console.log(response);
+      setLoadingStatus('hide');
 			flag = 1;
 			for(let i=0; i<response.escalationHierarchies.length;i++){
 				   self.setState({
@@ -390,7 +399,12 @@ const mapDispatchToProps = dispatch => ({
       isRequired : true,
       pattern: ''
     });
-  }
+  },
+
+   setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    }
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewEscalation);

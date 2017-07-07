@@ -117,8 +117,13 @@ class DefineEscalationTime extends Component {
     }
 
     componentDidMount() {
+
+      let {setLoadingStatus} = this.props;
+      setLoadingStatus('loading');
+
       let self = this;
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
+          setLoadingStatus('hide');
           console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
@@ -161,6 +166,10 @@ class DefineEscalationTime extends Component {
     }
 
   submitForm = (e) => {
+
+       let {setLoadingStatus} = this.props;
+      setLoadingStatus('loading');
+
       e.preventDefault();
       let current = this;
 
@@ -179,6 +188,7 @@ class DefineEscalationTime extends Component {
      
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
+             setLoadingStatus('hide');
           console.log(response);
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
@@ -199,6 +209,9 @@ class DefineEscalationTime extends Component {
 
   addEscalation = () => {
 
+        let {setLoadingStatus} = this.props;
+       setLoadingStatus('loading');
+
     console.log(this.props.defineEscalationTime.grievanceType)
 
     var current = this
@@ -215,6 +228,7 @@ class DefineEscalationTime extends Component {
     }
 
     Api.commonApiPost("workflow/escalation-hours/v1/_create",{},body).then(function(response){
+      setLoadingStatus('hide');
         current.setState({
           resultList:[
             ...current.state.resultList,
@@ -228,6 +242,9 @@ class DefineEscalationTime extends Component {
   }
 
   updateEscalation = () => {
+
+       let {setLoadingStatus} = this.props;
+       setLoadingStatus('loading');
 
     var current = this
     var body = {
@@ -244,12 +261,13 @@ class DefineEscalationTime extends Component {
     var idd = this.props.defineEscalationTime.id
 
     Api.commonApiPost("workflow/escalation-hours/v1/_update/"+idd,{},body).then(function(response){
-     
+      
       let searchquery = {
         id:current.props.defineEscalationTime.grievanceType.id
       }
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
+         setLoadingStatus('hide');
           console.log("response AFTER UPDATE", response);
           if (response.EscalationTimeType[0] != null) {
               flag = 1;

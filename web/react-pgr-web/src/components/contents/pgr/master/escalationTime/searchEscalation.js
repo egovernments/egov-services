@@ -105,6 +105,10 @@ class SearchEscalation extends Component {
 
     componentWillMount() {
 
+        let{initForm, setLoadingStatus} = this.props;
+
+      setLoadingStatus('loading');
+
       $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
@@ -114,7 +118,7 @@ class SearchEscalation extends Component {
           }
     });
 
-      let{initForm} = this.props;
+    
       initForm()
 
     }
@@ -122,8 +126,12 @@ class SearchEscalation extends Component {
     componentDidMount() {
       let self = this;
 
+      let{setLoadingStatus} = this.props;
+
+
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
+        setLoadingStatus('hide');
           console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
@@ -169,6 +177,8 @@ class SearchEscalation extends Component {
   }
 
   submitForm = (e) => {
+       let{setLoadingStatus} = this.props;
+       setLoadingStatus('loading');
       e.preventDefault();
 
       let current = this;
@@ -199,6 +209,7 @@ class SearchEscalation extends Component {
       console.log(query)
 
       Api.commonApiPost("/workflow/escalation-hours/v1/_search",query,{}).then(function(response){
+          setLoadingStatus('hide');
           console.log(response);
           flag = 1;
           current.setState({
@@ -372,7 +383,11 @@ const mapDispatchToProps = dispatch => ({
       isRequired : true,
       pattern: ''
     });
-  }
+  },
+
+     setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchEscalation);

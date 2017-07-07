@@ -8,12 +8,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ApplicationEnum {
 	CREATE("CREATE"),
-
-	RENEWAL("RENEWAL"),
-
-	EVICTION("EVICTION"),
-
-	CANCEL("CANCEL");
+	TITLE_TRANSFER("TITLE_TRANSFER"),
+	BIFURCATION("BIFURCATION"),
+	ALTER("ALTER"),
+	EDIT("EDIT"),
+	AMALGAMATION("AMALGAMATION");
 
 	private String value;
 

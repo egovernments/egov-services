@@ -327,7 +327,7 @@ definitions:
     
   OwnerInfo:
     allOf: 
-    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-1-0.yml#/definitions/User'
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
     - type: object
       properties:
         isPrimaryOwner:
@@ -790,9 +790,11 @@ definitions:
         description: Application type.
         enum:
           - CREATE
-          - RENEWAL
-          - EVICTION
-          - CANCEL
+          - TITLE_TRANSFER
+          - BIFURCATION
+          - ALTER
+		  - EDIT
+		  - AMALGAMATION
           
   Document:
     type: object

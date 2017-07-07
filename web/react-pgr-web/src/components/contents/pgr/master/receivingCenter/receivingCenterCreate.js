@@ -241,6 +241,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
+                                      type="number"
                                       floatingLabelText={translate("pgr.lbl.order.no")+"*"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}

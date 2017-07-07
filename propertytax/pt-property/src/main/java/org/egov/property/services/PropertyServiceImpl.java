@@ -54,8 +54,10 @@ public class PropertyServiceImpl implements PropertyService {
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) {
 		// TODO Auto-generated method stub
 		for (Property property : propertyRequest.getProperties()) {
+			//TODO [Ramki] only boundary validation is happening here, where other validations are happening?
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
 			property = generateAcknowledegeNumber(property, propertyRequest.getRequestInfo());
+			//TODO [Ramki] kofka naming standard is not correct.
 			sendToKafka(environment.getProperty("user.create"), propertyRequest);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
@@ -142,7 +144,7 @@ public class PropertyServiceImpl implements PropertyService {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Integer demandFrom, Integer demandTo) {
-
+//TODO [Ramki] why to call service method from another service instead we can call directly this service method from controller
 		return propertySearchService.searchProperty(requestInfo, tenantId, active, upicNo, pageSize, pageNumber, sort,
 				oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard, locality, ownerName,
 				demandFrom, demandTo);

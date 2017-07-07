@@ -299,7 +299,7 @@ class Header extends Component {
       id:11,
       name:'Update Grievance Type',
       displayName:"Update Grievance Type",
-      url:base + "pgr/viewOrUpdateServiceType/update",
+      url:base + "pgr/viewOrUpdateServiceType/edit",
       enabled:"true",
       orderNumber:3,
       queryParams:"",

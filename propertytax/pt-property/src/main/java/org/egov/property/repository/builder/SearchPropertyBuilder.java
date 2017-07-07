@@ -96,8 +96,11 @@ public class SearchPropertyBuilder {
 		// Ward,locality,houseNoBldgApt ?
 		// So we are not putting in search
 
-		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty())
-			searchPropertySql.append(" AND Addr.housenobldgapt='" + houseNoBldgApt.trim() + "'");
+		/**
+		 * if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty())
+		 * searchPropertySql.append(" AND Addr.housenobldgapt='" + houseNoBldgApt.trim() + "'");
+		 */
+			
 
 		if (sort != null && sort.length > 0) {
 			searchPropertySql.append(" ORDER BY ");

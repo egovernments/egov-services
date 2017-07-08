@@ -368,8 +368,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: list://[{"Completed", "Completed"},{"Pending", "Pending"},{"Rejected",
-      "Rejected"}]
+    pattern: 'list://{"Completed": "Completed","Pending": "Pending","Rejected": "Rejected"}'
     source: seva
   query: SELECT boundary.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
     - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE
@@ -431,8 +430,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: list://[{"Completed", "Completed"},{"Pending", "Pending"},{"Rejected",
-      "Rejected"}]
+    pattern: 'list://{"Completed": "Completed","Pending": "Pending","Rejected": "Rejected"}'
     source: seva
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
     - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE
@@ -454,3 +452,4 @@ ReportDefinitions:
     dept.id = cs.department and cs.servicecode = ctype.code and cs.createddate >=
     $fromDate and cs.createddate <= $toDate and cs.tenantid = $tenantid  GROUP BY
     dept.name;
+  

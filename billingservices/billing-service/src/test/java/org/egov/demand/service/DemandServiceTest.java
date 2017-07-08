@@ -2,6 +2,7 @@ package org.egov.demand.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
@@ -80,6 +83,53 @@ public class DemandServiceTest {
 		assertEquals(demandService.create(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
 	}
 	
+	@Test
+	public void methodShouldUpdateAsync(){
+		
+		RequestInfo requestInfo=new RequestInfo();
+		
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
+		Demand demand =getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		List<DemandDetail> details = demand.getDemandDetails();
+		demands.add(demand);
+		DemandRequest demandRequest=new DemandRequest(requestInfo,demands);
+		List<String> strings = new ArrayList<>();
+		strings.add("1");
+		strings.add("2");
+		
+		when(applicationProperties.getDemandSeqName()).thenReturn("seq_egbs_demand");
+		when(applicationProperties.getDemandDetailSeqName()).thenReturn("seq_egbs_demanddetail");
+		when(sequenceGenService.getIds(demands.size(),"seq_egbs_demand")).thenReturn(strings);
+		when(sequenceGenService.getIds(details.size(),"seq_egbs_demanddetail")).thenReturn(strings);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
+		
+		assertEquals(demandService.updateAsync(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
+	}
+	
+	@Test
+	public void methodShouldUpdateCollection(){
+		
+		RequestInfo requestInfo=new RequestInfo();
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
+		Demand demand =getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandRequest demandRequest=new DemandRequest(requestInfo,demands);
+		
+		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demands);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
+		
+		assertEquals(demandService.updateCollection(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
+		
+	}
+	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
@@ -103,6 +153,7 @@ public class DemandServiceTest {
 		demand.setTaxPeriodTo(1234567890l);
 		demand.setTenantId("ap.kurnool");
 		demand.setDemandDetails(getDemandDetails());
+		demand.setAuditDetail(getAuditDetails());
 		return demand;
 	}
 
@@ -118,9 +169,22 @@ public class DemandServiceTest {
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200d));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail1.setTaxHeadMasterCode("0003");
+		
+		demandDetail.setAuditDetail(getAuditDetails());
+		demandDetail1.setAuditDetail(getAuditDetails());
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;
+	}
+	
+	public AuditDetail getAuditDetails(){
+		
+		AuditDetail auditDetail=new AuditDetail();
+		auditDetail.setCreatedBy("xyz");
+		auditDetail.setCreatedTime(2345l);
+		auditDetail.setLastModifiedBy("xyz");
+		auditDetail.setLastModifiedTime(2345l);
+		return auditDetail;
 	}
 
 	public  RequestInfo getRequestInfo() {

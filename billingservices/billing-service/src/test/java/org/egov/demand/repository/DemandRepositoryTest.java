@@ -54,6 +54,23 @@ public class DemandRepositoryTest {
 		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length);
 		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
 	}
+	
+	@Test
+	public void methodShouldUpdate(){
+		
+		Demand demand = getDemand();
+		List<DemandDetail> demandDetails = demand.getDemandDetails();
+		List<Demand> demands = new ArrayList<>();
+		demands.add(demand);
+
+		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1 });
+		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demands.size());
+
+		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1, 2 });
+		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length);
+		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
+		
+	}
 
 	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();

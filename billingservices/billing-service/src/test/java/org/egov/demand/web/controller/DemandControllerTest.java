@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Matchers.any;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -70,6 +71,42 @@ public class DemandControllerTest {
 				.andExpect(content().json(getFileContents("demandresponse.json")));
 	}
 
+	@Test
+	public void testShouldUpdateDemand()throws IOException,Exception{
+		
+		Demand demand=getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(demands);
+		demandResponse.setResponseInfo(new ResponseInfo());
+		
+		 when(demandService.updateAsync(any(DemandRequest.class))).thenReturn(new DemandResponse( getResponseInfo(getRequestInfo()),demands));
+		
+		 mockMvc.perform(post("/demand/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("demandresponse.json")));
+	}
+	
+	@Test
+	public void  testShouldUpdateCollection() throws IOException, Exception{
+		
+		Demand  demand=getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandResponse demandRespnose=new DemandResponse();
+		demandRespnose.setDemands(demands);
+		demandRespnose.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.updateCollection(any(DemandRequest.class))).thenReturn(new DemandResponse( getResponseInfo(getRequestInfo()),demands));
+		
+		 mockMvc.perform(post("/demand/collection/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("demandresponse.json")));
+	}
+	
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);
 	}

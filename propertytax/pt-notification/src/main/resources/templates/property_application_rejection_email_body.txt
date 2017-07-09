@@ -1,5 +1,0 @@
-Dear {{name}},
- 
-Property tax assessment request with Acknowledgement No.{{acknowledgementNo}} has been Rejected. Please visit xxxxxx(municipality name) for further details.  
-
-Note: “This is computer generated Email and does not need any signature and also please do not reply to this email” 

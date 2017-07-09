@@ -1,0 +1,8 @@
+Dear {{name}},
+
+ Property addition/alteration with Assessment No. {{upicNo}} approved and revised property tax is fixed @ Rs.{{propertyTax}}/- per half year w.e.f {{effectiveDate}}. You may collect the special Notice from {{municipalityName}}.
+
+Thanks,
+{{municipalityName}}
+
+Note: “This is computer generated Email and does not need any signature and also please do not reply to this email”

@@ -1,8 +1,8 @@
 Dear {{name}}, 
 
-Revision petition hearing date generated on XXXXX with venue xxxxxx on time xxxxx” please visit to convey your hearings. You may collect the Hearing Notice from xxxxxxx(Municipality name).”
+Revision petition hearing date generated on {{generatedDate}} with venue {{venueName}} on time {{time}} please visit to convey your hearings. You may collect the Hearing Notice from {{municipalityName}}.
 
 Thanks,
-(Municipality Name)
+{{municipalityName}}
 
 Note: “This is computer generated Email and does not need any signature and also please do not reply to this email” 

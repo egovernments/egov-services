@@ -1,0 +1,1 @@
+Dear {{name}}, Appeal petition Application request accepted with Acknowledgement No.{{acknowledgementNo}}. Please use this number in all future communication.

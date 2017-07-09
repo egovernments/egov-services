@@ -1,0 +1,1 @@
+Dear {{name}}, Appeal petition hearing date generated on {{generatedDate}} with venue {{venueName}} on time {{time}} please visit to convey your hearings. You may collect the Hearing Notice from {{municipalityName}}.

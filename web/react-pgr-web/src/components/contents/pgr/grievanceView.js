@@ -12,7 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../api/api';
-import {translate} from '../../common/common';
+import {translate, validate_fileupload} from '../../common/common';
 import Fields from '../../common/Fields';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import  '../../../styles/custom.css';
@@ -438,6 +438,18 @@ class grievanceView extends Component{
       });
     }
   }
+  handleUploadValidation = (e, formats) => {
+    let validFile = validate_fileupload(e.target.files, formats);
+    console.log('is valid:', validFile);
+    if(validFile === true)
+      this.props.handleUpload(e, formats);
+    else{
+      this.refs.file.value = '';
+      this.handleError(validFile);
+    }
+
+
+  }
   handleError = (msg) => {
     let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
     toggleDailogAndSetText(true, msg);
@@ -450,7 +462,8 @@ class grievanceView extends Component{
       getReceivingCenter,
       getLocation,
       renderWorkflow,
-      filesUploaded
+      filesUploaded,
+      handleUploadValidation
        } = this;
     let{
       handleChange,
@@ -752,7 +765,7 @@ class grievanceView extends Component{
               </Col>
               <Col xs={12} md={3}>
                 <div className="input-group">
-                    <input type="file" className="form-control" ref="file" onChange={(e)=>handleUpload(e)}/>
+                    <input type="file" className="form-control" ref="file" onChange={(e)=>handleUploadValidation(e, ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'])}/>
                     <span className="input-group-addon" onClick={() => this.refs.file.value = ''}><i className="glyphicon glyphicon-trash specific"></i></span>
                 </div>
               </Col>

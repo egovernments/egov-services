@@ -17,7 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import Api from '../../../api/api';
-import {translate} from '../../common/common';
+import {translate, validate_fileupload} from '../../common/common';
 
 
 const styles = {
@@ -230,7 +230,9 @@ class grievanceCreate extends Component {
 
   processCreate(userName='',userMobile='',userEmail=''){
 
+    request = {};
     var data={};
+    var finobj={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
     data['description']=this.props.grievanceCreate.description;
     data['addressId']= this.props.grievanceCreate.addressId == 0 ? '' : this.props.grievanceCreate.addressId.id;
@@ -248,8 +250,6 @@ class grievanceCreate extends Component {
     data['tenantId']='default';
     data['isAttribValuesPopulated']=true;
     data['attribValues'] = [];
-
-    var finobj = {};
 
     finobj = {
         key: 'receivingMode',
@@ -417,6 +417,15 @@ class grievanceCreate extends Component {
       this.props.REMOVE_MANDATORY('externalCRN');
   }
 
+  handleUploadValidation = (e, formats) => {
+    let validFile = validate_fileupload(e.target.files, formats);
+    console.log('is valid:', validFile);
+    if(validFile === true)
+      this.props.handleUpload(e, formats);
+    else
+      this.handleError(validFile);
+  }
+
   render() {
 
     const actions = [
@@ -449,7 +458,7 @@ class grievanceCreate extends Component {
       handleChangeNextTwo,
       buttonText
     } = this.props;
-    let {search, processCreate, isMapsEnabled, loadCRN} = this;
+    let {search, processCreate, isMapsEnabled, loadCRN, handleUploadValidation} = this;
 
     return (
       <div className="grievanceCreate">
@@ -605,7 +614,7 @@ class grievanceCreate extends Component {
                   <Row>
                     <Col xs={12} md={3}>
                       <RaisedButton label={translate('core.lbl.select.photo')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
-                          <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUpload(e)}/>
+                          <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'])}/>
                       </RaisedButton>
                     </Col>
                     <ImagePreview files={files}/>
@@ -755,7 +764,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: places[0].geometry.location.lng().toString(), isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '0', isRequired : true, pattern: ''});
   },
-  handleUpload: (e) => {
+  handleUpload: (e, formats) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})
   },
   handleChange: (e, property, isRequired, pattern) => {

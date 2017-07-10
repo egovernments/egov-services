@@ -18,7 +18,6 @@ import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.service.BudgetDetailService;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -45,7 +44,6 @@ public class BudgetDetailController {
 			throw new CustomBindException(errors);
 		}
 
-		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
@@ -55,8 +53,7 @@ public class BudgetDetailController {
 		budgetDetailContractRequest.getRequestInfo().setAction("create");
 
 		for (BudgetDetailContract budgetDetailContract : budgetDetailContractRequest.getData()) {
-			budgetDetail = new BudgetDetail();
-			model.map(budgetDetailContract, budgetDetail);
+			budgetDetail = budgetDetailContract.toDomain();
 			budgetDetail.setCreatedBy(budgetDetailContractRequest.getRequestInfo().getUserInfo());
 			budgetDetail.setLastModifiedBy(budgetDetailContractRequest.getRequestInfo().getUserInfo());
 			budgetdetails.add(budgetDetail);
@@ -64,9 +61,9 @@ public class BudgetDetailController {
 
 		budgetdetails = budgetDetailService.add(budgetdetails, errors);
 
-		for (BudgetDetail f : budgetdetails) {
+		for (BudgetDetail bd : budgetdetails) {
 			contract = new BudgetDetailContract();
-			model.map(f, contract);
+			contract.toContract(bd);
 			budgetDetailContracts.add(contract);
 		}
 
@@ -88,7 +85,6 @@ public class BudgetDetailController {
 
 		budgetDetailContractRequest.getRequestInfo().setAction("update");
 
-		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
@@ -96,8 +92,7 @@ public class BudgetDetailController {
 		List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
 
 		for (BudgetDetailContract budgetDetailContract : budgetDetailContractRequest.getData()) {
-			budgetDetail = new BudgetDetail();
-			model.map(budgetDetailContract, budgetDetail);
+			budgetDetail = budgetDetailContract.toDomain();
 			budgetDetail.setLastModifiedBy(budgetDetailContractRequest.getRequestInfo().getUserInfo());
 			budgetdetails.add(budgetDetail);
 		}
@@ -106,7 +101,7 @@ public class BudgetDetailController {
 
 		for (BudgetDetail budgetDetailObj : budgetdetails) {
 			contract = new BudgetDetailContract();
-			model.map(budgetDetailObj, contract);
+			contract.toContract(budgetDetailObj);
 			budgetDetailContracts.add(contract);
 		}
 
@@ -124,18 +119,15 @@ public class BudgetDetailController {
 			@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract, @RequestBody RequestInfo requestInfo,
 			BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		BudgetDetailSearch domain = new BudgetDetailSearch();
-		mapper.map(budgetDetailSearchContract, domain);
+		BudgetDetailSearch domain = budgetDetailSearchContract.toDomain();
 		BudgetDetailContract contract = null;
-		ModelMapper model = new ModelMapper();
 		List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
 
 		Pagination<BudgetDetail> budgetdetails = budgetDetailService.search(domain);
 
 		for (BudgetDetail budgetDetail : budgetdetails.getPagedData()) {
 			contract = new BudgetDetailContract();
-			model.map(budgetDetail, contract);
+			contract.toContract(budgetDetail);
 			budgetDetailContracts.add(contract);
 		}
 

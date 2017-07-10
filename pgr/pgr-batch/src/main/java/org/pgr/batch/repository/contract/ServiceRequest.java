@@ -21,7 +21,7 @@ import static org.egov.pgr.common.contract.AttributeValues.createOrUpdateAttribu
 @Builder
 public class ServiceRequest {
 
-	public static final String VALUES_ASSIGNEE_ID = "assignmentId";
+	public static final String VALUES_POSITION_ID = "positionId";
 	public static final String VALUES_ESCALATED_FLAG = "isEscalated";
 	public static final String VALUES_STATE_ID = "stateId";
 	public static final String STATE_DETAILS = "stateDetails";
@@ -110,7 +110,7 @@ public class ServiceRequest {
 	private List<AttributeEntry> attribValues = new ArrayList<>();
 
 	private void setAssignee(String assignee) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_ASSIGNEE_ID, assignee);
+		createOrUpdateAttributeEntry(attribValues, VALUES_POSITION_ID, assignee);
 	}
 
 	private void setStateId(String stateId) {
@@ -122,12 +122,12 @@ public class ServiceRequest {
 	}
 
 	@JsonIgnore
-	public String getAssigneeId() {
-		return getDynamicSingleValue(VALUES_ASSIGNEE_ID);
+	public String getPositionId() {
+		return getDynamicSingleValue(VALUES_POSITION_ID);
 	}
 
-	public void setAssigneeId(String assigneeId) {
-		createOrUpdateAttributeEntry(attribValues, VALUES_ASSIGNEE_ID, assigneeId);
+	public void setPositionId(String assigneeId) {
+		createOrUpdateAttributeEntry(attribValues, VALUES_POSITION_ID, assigneeId);
 	}
 
 	public void setEscalatedFlag() {
@@ -159,7 +159,7 @@ public class ServiceRequest {
 		String crn = this.getCrn();
 		Map<String, Attribute> valuesToSet = getWorkFlowRequestValues();
 		valuesToSet.put(PREVIOUS_ASSIGNEE, Attribute.asStringAttr(PREVIOUS_ASSIGNEE, getDynamicSingleValue
-				(VALUES_ASSIGNEE_ID)));
+				(VALUES_POSITION_ID)));
 
 		WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
 				.assignee(null)
@@ -207,7 +207,7 @@ public class ServiceRequest {
 	}
 
 	public boolean isNewAssigneeSameAsPreviousAssignee() {
-		return Objects.equals(getAssigneeId(), getPreviousAssignee());
+		return Objects.equals(getPositionId(), getPreviousAssignee());
 	}
 
 	private String getPreviousAssignee() {

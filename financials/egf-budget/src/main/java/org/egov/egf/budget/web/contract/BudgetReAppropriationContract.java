@@ -43,6 +43,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.budget.domain.model.BudgetDetail;
+import org.egov.egf.budget.domain.model.BudgetReAppropriation;
+import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -115,5 +118,50 @@ public class BudgetReAppropriationContract extends AuditableContract {
 	 */
 	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "IST")
 	private Date asOnDate;
+
+	public BudgetReAppropriation toDomain() {
+		BudgetReAppropriation budgetReAppropriation = new BudgetReAppropriation();
+		budgetReAppropriation.setId(this.id);
+		budgetReAppropriation.setBudgetDetailId(
+				BudgetDetail.builder().id(budgetDetail != null ? budgetDetail.getId() : null).build());
+		budgetReAppropriation.setAdditionAmount(this.additionAmount);
+		budgetReAppropriation.setDeductionAmount(this.deductionAmount);
+		budgetReAppropriation.setOriginalAdditionAmount(this.originalAdditionAmount);
+		budgetReAppropriation.setOriginalDeductionAmount(this.originalDeductionAmount);
+		budgetReAppropriation.setAnticipatoryAmount(this.anticipatoryAmount);
+		budgetReAppropriation.setStatusId(EgfStatus.builder().id(status != null ? status.getId() : null).build());
+		budgetReAppropriation.setAsOnDate(this.asOnDate);
+		budgetReAppropriation.setCreatedBy(this.createdBy);
+		budgetReAppropriation.setCreatedDate(this.createdDate);
+		budgetReAppropriation.setLastModifiedBy(this.lastModifiedBy);
+		budgetReAppropriation.setLastModifiedDate(this.lastModifiedDate);
+		budgetReAppropriation.setTenantId(this.tenantId);
+		return budgetReAppropriation;
+	}
+
+	public void toContract(BudgetReAppropriation budgetReAppropriation) {
+		this.id = budgetReAppropriation.getId();
+		if (budgetReAppropriation.getBudgetDetailId() != null) {
+			BudgetDetailContract bdContract = new BudgetDetailContract();
+			bdContract.toContract(budgetReAppropriation.getBudgetDetailId());
+			this.budgetDetail = bdContract;
+		}
+		this.additionAmount = budgetReAppropriation.getAdditionAmount();
+		this.deductionAmount = budgetReAppropriation.getDeductionAmount();
+		this.originalAdditionAmount = budgetReAppropriation.getOriginalAdditionAmount();
+		this.originalDeductionAmount = budgetReAppropriation.getOriginalDeductionAmount();
+		this.anticipatoryAmount = budgetReAppropriation.getAnticipatoryAmount();
+		if (budgetReAppropriation.getStatusId() != null)
+			this.status = EgfStatusContract.builder().id(budgetReAppropriation.getStatusId().getId())
+					.code(budgetReAppropriation.getStatusId().getCode())
+					.description(budgetReAppropriation.getStatusId().getDescription())
+					.moduleType(budgetReAppropriation.getStatusId().getModuleType()).build();
+		this.asOnDate = budgetReAppropriation.getAsOnDate();
+		this.setCreatedBy(budgetReAppropriation.getCreatedBy());
+		this.setCreatedDate(budgetReAppropriation.getCreatedDate());
+		this.setLastModifiedBy(budgetReAppropriation.getLastModifiedBy());
+		this.setLastModifiedDate(budgetReAppropriation.getLastModifiedDate());
+		this.setTenantId(budgetReAppropriation.getTenantId());
+	}
 
 }

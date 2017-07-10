@@ -12,6 +12,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Bill {
+	
+	public Bill(Bill bill) {
+
+		this.id = bill.id;
+		this.isActive = bill.isActive;
+		this.tenantId = bill.tenantId;
+		this.payeeName = bill.payeeName;
+		this.payeeEmail = bill.payeeEmail;
+		this.isCancelled = bill.isCancelled;
+		this.auditDetail = bill.auditDetail;
+		this.billDetails = bill.billDetails;
+		this.payeeAddress = bill.payeeAddress;
+	}
 	//TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
 	private String id;
 
@@ -30,5 +43,4 @@ public class Bill {
 	private String tenantId;
 	
 	private AuditDetail auditDetail;
-
 }

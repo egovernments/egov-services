@@ -99,7 +99,7 @@ public class WorkflowConsumer {
 						propertyRequest);
 				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo);
 			}
-			workflowProducer.send(environment.getProperty("workflowprocess.create"), propertyRequest);
+			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);
 		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.approved"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
@@ -107,7 +107,7 @@ public class WorkflowConsumer {
 						propertyRequest);
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo);
 			}
-			workflowProducer.send(environment.getProperty("workflowprocess.updatetask"), propertyRequest);
+			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.updated"), propertyRequest);
 		}
 
 	}

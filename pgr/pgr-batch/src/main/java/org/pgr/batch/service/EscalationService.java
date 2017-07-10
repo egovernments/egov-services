@@ -68,12 +68,12 @@ public class EscalationService {
 	private void escalate(ServiceRequest serviceRequest) {
 		try {
 			validateAndLog(serviceRequest);
-			serviceRequest.setPreviousAssignee(serviceRequest.getAssigneeId());
+			serviceRequest.setPreviousAssignee(serviceRequest.getPositionId());
 			workflowService.enrichWorkflowForEscalation(serviceRequest, getRequestInfo());
 
 			if(serviceRequest.isNewAssigneeSameAsPreviousAssignee()) {
 				log.info("Skipping escalation for CRN {} since new assignee {} is the same",
-						serviceRequest.getCrn(), serviceRequest.getAssigneeId());
+						serviceRequest.getCrn(), serviceRequest.getPositionId());
 				return;
 			}
 

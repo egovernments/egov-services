@@ -333,7 +333,6 @@ class CreateProperty extends Component {
 
     const createPropertyTax = () => {
       var body = {
-          {
     "properties": [{
         "tenantId": "default",
         "oldUpicNumber": "",
@@ -589,7 +588,6 @@ class CreateProperty extends Component {
             "lastModifiedTime": 0
         }
     }]
-}
       }
 
      Api.commonApiPost('pt-property/properties/_create', {},body).then((res)=>{

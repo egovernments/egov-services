@@ -48,13 +48,14 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum EntityType {
 	EMPLOYEE_HEADER("EMPLOYEE_HEADER", "egeis_employee","employee", "Employee"),
 	ASSIGNMENT("ASSIGNMENT", "egeis_assignment", "assignments", "Assignment"),
-	JURISDICTION("JURISDICTION", "egeis_employeejurisdiction", "jurisdictions", "Jurisdiction"),
-	SERVICE("SERVICE", "egeis_servicehistory", "serviceHistory", "Service History"),
-	TECHNICAL("TECHNICAL", "egeis_technicalqualification", "technical", "Technical Qualification"),
-	EDUCATION("EDUCATION", "egeis_educationalqualification", "education", "Educational Qualification"),
-	TEST("TEST", "egeis_departmentaltest", "test", "Departmental Test"),
+	JURISDICTION("JURISDICTION", "egeis_employeeJurisdiction", "jurisdictions", "Jurisdiction"),
+	SERVICE("SERVICE", "egeis_serviceHistory", "serviceHistory", "Service History"),
+	TECHNICAL("TECHNICAL", "egeis_technicalQualification", "technical", "Technical Qualification"),
+	EDUCATION("EDUCATION", "egeis_educationalQualification", "education", "Educational Qualification"),
+	TEST("TEST", "egeis_departmentalTest", "test", "Departmental Test"),
 	REGULARISATION("REGULARISATION", "egeis_regularisation", "regularisation", "Regularisation"),
 	PROBATION("PROBATION", "egeis_probation", "probation", "Probation"),
+	APR_DETAILS("APR_DETAILS", "egeis_aprDetails", "aprDetails", "APRDetail"),
 	NOMINEE("NOMINEE", "egeis_nominee", "nominee", "Nominee");
 
 	private String value;

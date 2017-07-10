@@ -48,14 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeRepository;
@@ -87,8 +80,7 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
         Long employeeId = employee.getId();
         String tenantId = employee.getTenantId();
 
-        // FIXME employee.getId == null or empty then throw error employee id is
-        // required
+        // FIXME employee.getId == null or empty then throw error employee id is required
         if (isEmpty(employeeId)) {
             errors.rejectValue("employee.id", "invalid",
                     "Employee Id Is Not Provided. Please Enter Employee ID");
@@ -110,6 +102,7 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
         validateRegularisation(employee.getRegularisation(), employeeId, tenantId, errors);
         validateServiceHistory(employee.getServiceHistory(), employeeId, tenantId, errors);
         validateTechnicalQualification(employee.getTechnical(), employeeId, tenantId, errors);
+        validateAPRDetails(employee.getAprDetails(), employeeId, tenantId, errors);
     }
 
     // TODO
@@ -275,6 +268,22 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
             validateEntityId(idsMap, EntityType.TECHNICAL, employeeId, tenantId, errors);
     }
 
+    private void validateAPRDetails(List<APRDetail> aprDetails, Long employeeId, String tenantId, Errors errors) {
+        if (isEmpty(aprDetails))
+            return;
+        validateIdsForAPRDetails(aprDetails, employeeId, tenantId, errors);
+    }
+
+    private void validateIdsForAPRDetails(List<APRDetail> aprDetails, Long employeeId, String tenantId, Errors errors) {
+        Map<Long, Integer> idsMap = new HashMap<>();
+        for (int index = 0; index < aprDetails.size(); index++) {
+            if (aprDetails.get(index).getId() != null)
+                idsMap.put(aprDetails.get(index).getId(), index);
+        }
+        if (!idsMap.isEmpty())
+            validateEntityId(idsMap, EntityType.APR_DETAILS, employeeId, tenantId, errors);
+    }
+
     /**
      * Checks if the given string is present in db for the given column and
      * given table.
@@ -285,14 +294,14 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
      * @param id
      * @return
      */
-    public Boolean duplicateExists(String table, String column, String value, Long id, String tenantId) {
+    private Boolean duplicateExists(String table, String column, String value, Long id, String tenantId) {
         Long idFromDb = employeeRepository.getId(table, column, value, tenantId);
         if (idFromDb == 0 || id.equals(idFromDb))
             return false;
         return true;
     }
 
-    public Boolean checkIfColumnValueIsSameInDB(String table, String column, String value, Long id, String tenantId) {
+    private Boolean checkIfColumnValueIsSameInDB(String table, String column, String value, Long id, String tenantId) {
         Long idFromDb = employeeRepository.getId(table, column, value, tenantId);
         if (id.equals(idFromDb))
             return false;

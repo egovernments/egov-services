@@ -144,6 +144,10 @@ class DefineEscalationTime extends Component {
           })
       });
     }
+	
+	componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+	}
 
     componentDidUpdate() {
       if(flag == 1) {
@@ -167,7 +171,7 @@ class DefineEscalationTime extends Component {
 
   submitForm = (e) => {
 
-       let {setLoadingStatus} = this.props;
+       let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
       setLoadingStatus('loading');
 
       e.preventDefault();
@@ -189,7 +193,6 @@ class DefineEscalationTime extends Component {
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
              setLoadingStatus('hide');
-          console.log(response);
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
               current.setState({
@@ -202,14 +205,14 @@ class DefineEscalationTime extends Component {
             })
           }
       }).catch((error)=>{
-          console.log(error);
+        toggleSnackbarAndSetText(true, error);
       })
 
   }
 
   addEscalation = () => {
 
-        let {setLoadingStatus} = this.props;
+        let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText} = this.props;
        setLoadingStatus('loading');
 
     console.log(this.props.defineEscalationTime.grievanceType)
@@ -235,15 +238,16 @@ class DefineEscalationTime extends Component {
             current.props.defineEscalationTime
           ]
       })
+	  toggleDailogAndSetText(true,"Escalation Time Created Successfully");
     }).catch((error)=>{
-      
+         toggleSnackbarAndSetText(true, error);
     })
 
   }
 
   updateEscalation = () => {
 
-       let {setLoadingStatus} = this.props;
+       let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText} = this.props;
        setLoadingStatus('loading');
 
     var current = this
@@ -265,6 +269,8 @@ class DefineEscalationTime extends Component {
       let searchquery = {
         id:current.props.defineEscalationTime.grievanceType.id
       }
+	  
+	  toggleDailogAndSetText(true,"Escalation Time Updated Successfully");
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
          setLoadingStatus('hide');
@@ -281,7 +287,7 @@ class DefineEscalationTime extends Component {
             })
           }
       }).catch((error)=>{
-         
+            toggleSnackbarAndSetText(true, error);
       })
 
 
@@ -289,7 +295,7 @@ class DefineEscalationTime extends Component {
           prevState.editIndex=-1
         })
     }).catch((error)=>{
-      
+         toggleSnackbarAndSetText(true, error);
     })
 
   }
@@ -539,7 +545,9 @@ const mapDispatchToProps = dispatch => ({
      setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-
+ toggleDailogAndSetText: (dailogState,msg) => {
+      dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
+    },
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
     },

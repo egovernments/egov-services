@@ -79,11 +79,14 @@ public class BusinessServDetailService {
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    public BusinessServiceDetailResponse searchBusinessServiceDetails(final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
-        LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");
-        final List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRepository.searchBusinessServiceDetails(businessServiceDetailCriteria);
-        return getBusinessServiceDetailResponse(businessServiceDetails, requestInfo);
-    }
+	public BusinessServiceDetailResponse searchBusinessServiceDetails(
+			final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
+		
+		LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");
+		final List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRepository
+				.searchBusinessServiceDetails(businessServiceDetailCriteria);
+		return getBusinessServiceDetailResponse(businessServiceDetails, requestInfo);
+	}
 
     public BusinessServiceDetailResponse create(BusinessServiceDetailRequest businessServiceDetailRequest) {
 

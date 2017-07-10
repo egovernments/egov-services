@@ -15,6 +15,7 @@ public class RoleRowMapper implements RowMapper<Role> {
     public Role mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         return Role.builder().name(rs.getString("r_name"))
                 .description(rs.getString("r_description"))
+                .code(rs.getString("r_code"))
                 .build();
     }
 }

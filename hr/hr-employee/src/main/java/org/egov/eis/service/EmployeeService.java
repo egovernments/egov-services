@@ -57,17 +57,7 @@ import org.egov.eis.model.EmployeeDocument;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.User;
 import org.egov.eis.model.enums.BloodGroup;
-import org.egov.eis.repository.AssignmentRepository;
-import org.egov.eis.repository.DepartmentalTestRepository;
-import org.egov.eis.repository.EducationalQualificationRepository;
-import org.egov.eis.repository.EmployeeJurisdictionRepository;
-import org.egov.eis.repository.EmployeeLanguageRepository;
-import org.egov.eis.repository.EmployeeRepository;
-import org.egov.eis.repository.HODDepartmentRepository;
-import org.egov.eis.repository.ProbationRepository;
-import org.egov.eis.repository.RegularisationRepository;
-import org.egov.eis.repository.ServiceHistoryRepository;
-import org.egov.eis.repository.TechnicalQualificationRepository;
+import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
@@ -112,6 +102,9 @@ public class EmployeeService {
     private DepartmentalTestService departmentalTestService;
 
     @Autowired
+    private APRDetailService aprDetailService;
+
+    @Autowired
     private EmployeeJurisdictionService employeeJurisdictionService;
 
     @Autowired
@@ -148,6 +141,9 @@ public class EmployeeService {
     private DepartmentalTestRepository departmentalTestRepository;
 
     @Autowired
+    private APRDetailRepository aprDetailRepository;
+
+    @Autowired
     private EmployeeJurisdictionRepository employeeJurisdictionRepository;
 
     @Autowired
@@ -166,7 +162,7 @@ public class EmployeeService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    PropertiesManager propertiesManager;
+    private PropertiesManager propertiesManager;
 
     public List<EmployeeInfo> getEmployees(EmployeeCriteria employeeCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
@@ -209,7 +205,7 @@ public class EmployeeService {
         Employee employee = employeeRepository.findById(employeeId, tenantId);
         List<Long> ids = new ArrayList<>();
         ids.add(employeeId);
-        if (employee == null)
+        if (isEmpty(employee))
             throw new EmployeeIdNotFoundException(employeeId);
 
         EmployeeCriteria employeeCriteria = EmployeeCriteria.builder().id(ids).tenantId(tenantId).build();
@@ -230,6 +226,7 @@ public class EmployeeService {
         employee.setTechnical(technicalQualificationRepository.findByEmployeeId(employeeId, tenantId));
         employee.setEducation(educationalQualificationRepository.findByEmployeeId(employeeId, tenantId));
         employee.setTest(departmentalTestRepository.findByEmployeeId(employeeId, tenantId));
+        employee.setAprDetails(aprDetailRepository.findByEmployeeId(employeeId, tenantId));
         employeeDocumentsService.populateDocumentsInRespectiveObjects(employee);
 
         log.debug("After Employee Search: " + employee);
@@ -244,7 +241,7 @@ public class EmployeeService {
 
         // FIXME : Fix a common standard for date formats in User Service.
         UserResponse userResponse = userService.createUser(userRequest);
-        ;
+
         User user = userResponse.getUser().get(0);
 
         Employee employee = employeeRequest.getEmployee();
@@ -264,32 +261,35 @@ public class EmployeeService {
         Employee employee = employeeRequest.getEmployee();
         employeeRepository.save(employee);
         employeeJurisdictionRepository.save(employee);
-        if (employee.getLanguagesKnown() != null) {
+        if (!isEmpty(employee.getLanguagesKnown())) {
             employeeLanguageRepository.save(employee);
         }
         assignmentRepository.save(employeeRequest);
         employee.getAssignments().forEach((assignment) -> {
-            if (assignment.getHod() != null) {
+            if (!isEmpty(assignment.getHod())) {
                 hodDepartmentRepository.save(assignment, employee.getTenantId());
             }
         });
-        if (employee.getServiceHistory() != null) {
+        if (!isEmpty(employee.getServiceHistory())) {
             serviceHistoryRepository.save(employeeRequest);
         }
-        if (employee.getProbation() != null) {
+        if (!isEmpty(employee.getProbation())) {
             probationRepository.save(employeeRequest);
         }
-        if (employee.getRegularisation() != null) {
+        if (!isEmpty(employee.getRegularisation())) {
             regularisationRepository.save(employeeRequest);
         }
-        if (employee.getTechnical() != null) {
+        if (!isEmpty(employee.getTechnical())) {
             technicalQualificationRepository.save(employeeRequest);
         }
-        if (employee.getEducation() != null) {
+        if (!isEmpty(employee.getEducation())) {
             educationalQualificationRepository.save(employeeRequest);
         }
-        if (employee.getTest() != null) {
+        if (!isEmpty(employee.getTest())) {
             departmentalTestRepository.save(employeeRequest);
+        }
+        if (!isEmpty(employee.getAprDetails())) {
+            aprDetailRepository.save(employeeRequest);
         }
     }
 
@@ -349,6 +349,7 @@ public class EmployeeService {
         regularisationService.update(employee);
         technicalQualificationService.update(employee);
         educationalQualificationService.update(employee);
+        aprDetailService.update(employee);
         employeeDocumentsService.update(employee);
     }
 

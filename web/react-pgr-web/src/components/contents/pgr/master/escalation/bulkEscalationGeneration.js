@@ -14,6 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import {translate} from '../../../../common/common';
 
 
 const $ = require('jquery');
@@ -164,6 +165,10 @@ class BulkEscalationGeneration extends Component {
        .destroy(true);
     }
 
+	componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+	}
+	
   componentDidUpdate() {
        $('#searchTable').DataTable({
          dom: 'lBfrtip',
@@ -266,7 +271,7 @@ class BulkEscalationGeneration extends Component {
                               <Row>
                                   <Col xs={12} md={4}>
                                         <AutoComplete
-                                          floatingLabelText="From Position"
+                                          floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -288,7 +293,7 @@ class BulkEscalationGeneration extends Component {
                                   <Col xs={12} md={4}>
                                         <SelectField
                                            multiple={true}
-                                           floatingLabelText="Grievance Type"
+                                           floatingLabelText={translate('pgr.lbl.grievance.type')+" *"}
                                            fullWidth={true}
                                            value={bulkEscalationGeneration.serviceCode ? bulkEscalationGeneration.serviceCode : ""}
                                            onChange= {(e, index ,values) => {
@@ -313,7 +318,7 @@ class BulkEscalationGeneration extends Component {
                                   </Col>
                                   <Col xs={12} md={4}>
                                       <AutoComplete
-                                          floatingLabelText="To Position"
+                                          floatingLabelText={translate('pgr.lbl.toposition')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -328,7 +333,7 @@ class BulkEscalationGeneration extends Component {
                                                 value: chosenRequest.id
                                               }
                                             };
-                                            handleChange(e, "toPosition", true, "");
+                                            handleChange(e, "toPosition", false, "");
                                            }}
                                         />
                                   </Col>
@@ -337,7 +342,7 @@ class BulkEscalationGeneration extends Component {
                       </CardText>
                   </Card>
                   <div style={{textAlign:'center'}}>
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" primary={true}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.search')} primary={true}/>
                   </div>
                   {viewTable()}
               </CardText>
@@ -359,7 +364,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["fromPosition","grievanceType" ,"toPosition"]
+          required: ["fromPosition","grievanceType"]
         },
         pattern: {
           current: [],

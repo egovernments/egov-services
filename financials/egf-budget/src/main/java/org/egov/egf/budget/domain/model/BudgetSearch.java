@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BudgetSearch extends Budget {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 }

@@ -111,7 +111,7 @@ public class TaxCalculatorConsumer {
 				calculationRequest, CalculationResponse.class);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
-		producer.send(environment.getProperty("property.send"), consumerRecord.value());
+		producer.send(environment.getProperty("egov.propertytax.property.create.approved"), consumerRecord.value());
 
 	}
 

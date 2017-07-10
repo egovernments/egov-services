@@ -10,6 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import {translate} from '../../../../common/common';
 
 
 const $ = require('jquery');
@@ -124,9 +125,7 @@ class ViewEscalation extends Component {
 
     componentWillMount() {
       let{initForm} = this.props;
-      initForm()
-
-       
+      initForm();
        $('#searchTable').DataTable({
              dom: 'lBfrtip',
              buttons: [],
@@ -135,7 +134,6 @@ class ViewEscalation extends Component {
                  "emptyTable": "No Records"
               }
         });
-
     }
 
     componentDidMount() {
@@ -293,7 +291,7 @@ class ViewEscalation extends Component {
       return(<div className="viewEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.searchesc')} < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -301,7 +299,7 @@ class ViewEscalation extends Component {
                               <Row>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          hintText="Grievance Type"
+                                          hintText={translate('pgr.lbl.grievance.type')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -322,7 +320,7 @@ class ViewEscalation extends Component {
                                   </Col>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          hintText="Position"
+                                          hintText={translate('pgr.lbl.position')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -347,7 +345,7 @@ class ViewEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" primary={true}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.search')} primary={true}/>
 
                   </div>
                   {viewTable()}

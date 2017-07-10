@@ -6,7 +6,6 @@ import org.egov.pgrrest.read.domain.model.NewDraft;
 import org.egov.pgrrest.read.domain.model.UpdateDraft;
 import org.egov.pgrrest.read.domain.service.DraftService;
 import org.egov.pgrrest.read.web.contract.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,7 +53,6 @@ public class DraftController {
     }
 
     @PostMapping("/v1/_update")
-    @ResponseStatus(HttpStatus.OK)
     public DraftResponse updateDraft(@RequestBody DraftUpdateRequest draftUpdateRequest) {
         UpdateDraft draftUpdateRequestModel = draftUpdateRequest.toDomain();
         draftService.update(draftUpdateRequestModel);
@@ -62,8 +60,8 @@ public class DraftController {
     }
 
     @PostMapping("/v1/_delete")
-    @ResponseStatus(HttpStatus.OK)
-    public DraftResponse deleteDraft(@RequestParam List<Long> draftIdList) {
+    public DraftResponse deleteDraft(@RequestBody DraftDeleteRequest draftDeleteRequest) {
+        List<Long> draftIdList = draftDeleteRequest.getIds();
         draftService.delete(draftIdList);
         return DraftResponse.builder().responseInfo(null).successful(true).build();
     }

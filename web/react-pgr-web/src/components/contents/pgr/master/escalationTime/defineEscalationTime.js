@@ -209,7 +209,7 @@ class DefineEscalationTime extends Component {
 
   addEscalation = () => {
 
-        let {setLoadingStatus} = this.props;
+        let {setLoadingStatus, toggleDailogAndSetText} = this.props;
        setLoadingStatus('loading');
 
     console.log(this.props.defineEscalationTime.grievanceType)
@@ -235,6 +235,7 @@ class DefineEscalationTime extends Component {
             current.props.defineEscalationTime
           ]
       })
+	  toggleDailogAndSetText(true,"Escalation Time Created Successfully");
     }).catch((error)=>{
       
     })
@@ -243,7 +244,7 @@ class DefineEscalationTime extends Component {
 
   updateEscalation = () => {
 
-       let {setLoadingStatus} = this.props;
+       let {setLoadingStatus, toggleDailogAndSetText} = this.props;
        setLoadingStatus('loading');
 
     var current = this
@@ -265,6 +266,8 @@ class DefineEscalationTime extends Component {
       let searchquery = {
         id:current.props.defineEscalationTime.grievanceType.id
       }
+	  
+	  toggleDailogAndSetText(true,"Escalation Time Updated Successfully");
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
          setLoadingStatus('hide');
@@ -539,7 +542,9 @@ const mapDispatchToProps = dispatch => ({
      setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-
+ toggleDailogAndSetText: (dailogState,msg) => {
+      dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
+    },
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
     },

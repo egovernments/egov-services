@@ -469,7 +469,7 @@ class DefineEscalation extends Component {
                     <Col xs={12} md={3} sm={6}>
                         <TextField
                             fullWidth={true}
-                            floatingLabelText="From Position"
+                            floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
                             value={defineEscalation.fromPosition ? getNameById(current.state.positionSource, defineEscalation.fromPosition) : ""}
                             id="name"
                             disabled={true}
@@ -477,7 +477,7 @@ class DefineEscalation extends Component {
                     </Col>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="Grievance Type"
+                           floatingLabelText={translate('pgr.lbl.grievance.type')+ " *"}
                            fullWidth={true}
                            value={defineEscalation.serviceCode ? defineEscalation.serviceCode : ""}
                            onChange= {(e, index ,value) => {
@@ -498,7 +498,7 @@ class DefineEscalation extends Component {
                     </Col>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="Department"
+                           floatingLabelText={translate('core.lbl.department') + ' *'}
                            fullWidth={true}
                            value={defineEscalation.department ? defineEscalation.department : ""}
                            onChange= {(e, index ,value) => {
@@ -521,7 +521,7 @@ class DefineEscalation extends Component {
                     </Col>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="Designation"
+                           floatingLabelText={translate('pgr.lbl.designation')+" *"}
                            fullWidth={true}
                            value={defineEscalation.designation ? defineEscalation.designation : ""}
                            onChange= {(e, index ,value) => {
@@ -543,7 +543,7 @@ class DefineEscalation extends Component {
                     </Col>
                     <Col xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="To Position"
+                           floatingLabelText={translate('pgr.lbl.toposition')+" *"}
                            fullWidth={true}
                            value={defineEscalation.toPosition ?  defineEscalation.toPosition  : ""}
                            onChange= {(e, index ,value) => {
@@ -598,7 +598,7 @@ class DefineEscalation extends Component {
       return(<div className="defineEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Create/Update Escalation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.escalation')} < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -606,7 +606,7 @@ class DefineEscalation extends Component {
                               <Row>
                                   <Col xs={12} md={4} mdPush={4}>
                                         <AutoComplete
-                                          floatingLabelText="Position"
+                                          floatingLabelText={translate('pgr.lbl.position')+" *"}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -630,14 +630,14 @@ class DefineEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label="Search" />
+                      <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={defineEscalation.fromPosition ? false: true} label={translate('core.lbl.search')} />
 
                   </div>
                   {this.state.noData &&
                     <Card style = {{textAlign:"center"}}>
                       <CardHeader title={<strong style = {{color:"#5a3e1b", paddingLeft:90}} > There is no escalation details available for the selected position. </strong>}/>
                       <CardText>
-                          <RaisedButton primary={true} style={{margin:'10px 0'}} label="Add Escalation Details" labelColor={white} onClick={() => {
+                          <RaisedButton primary={true} style={{margin:'10px 0'}} label={translate('pgr.lbl.addesc')} labelColor={white} onClick={() => {
                             this.setState({
                               isSearchClicked: true,
                               noData:false
@@ -684,8 +684,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: [] ,
-          required:[]
+          current: ["fromPosition", "grievanceType", "department", "designation", "toPosition"] ,
+          required:["fromPosition", "grievanceType", "department", "designation", "toPosition"]
         },
         pattern: {
           current: [],

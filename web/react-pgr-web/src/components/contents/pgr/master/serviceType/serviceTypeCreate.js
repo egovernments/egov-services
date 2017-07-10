@@ -123,13 +123,31 @@ class ServiceTypeCreate extends Component {
     }
 
     componentDidUpdate() {
-
+	 	  var keyword;
+	  var pgr = this.props.location.pathname.match("pgr");
+	  
+	  if(pgr){
+		  keyword = "Complaint";
+	  } else {
+		  keyword = "Complaint";
+	  }
 
     }
     submitForm = (e) => {
 
       e.preventDefault()
       var current = this;
+	  
+
+	  let keyword;
+	  let pgr = this.props.location.pathname.match("pgr");
+	  
+	  if(pgr){
+		  console.log(this.props.location.pathname, pgr);
+		  keyword = "Complaint";
+	  } else {
+		  keyword = "Deliverable";
+	  }
 
       var body = {
           "Service":{
@@ -138,7 +156,7 @@ class ServiceTypeCreate extends Component {
            "description" :this.props.createServiceType.description,
            "active" :this.props.createServiceType.active,
            "type" :this.props.createServiceType.type,
-           "keywords" :this.props.createServiceType.keywords,
+           "keywords" : keyword,
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
            "attributes" :this.props.createServiceType.attributes,
@@ -266,7 +284,7 @@ class ServiceTypeCreate extends Component {
                             <tr>
                               <th>#</th>
                               <th>Key</th>
-                              <th>Name</th>
+                              <th>{translate('core.lbl.add.name')}</th>
                               <th></th>
                             </tr>
                           </thead>
@@ -299,7 +317,7 @@ class ServiceTypeCreate extends Component {
 
           return (
 
-              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={"Add New"} labelColor={white}/>
+              <RaisedButton style={{margin:'15px 5px'}} type="button" primary="true"  onClick={()=>{showCustomFieldForm(true)}} float="right"  label={translate('pgr.lbl.create')} labelColor={white}/>
             )
 
       }
@@ -376,7 +394,7 @@ class ServiceTypeCreate extends Component {
                   <Col xs={12} md={3} sm={6}>
                       <TextField
                           fullWidth={true}
-                          floatingLabelText="Code"
+                          floatingLabelText={translate('core.lbl.code')}
                           value={createServiceType.attribute ? createServiceType.attribute.code : ""}
                           errorText={fieldErrors.attribute ? fieldErrors.attribute.code : ""}
                             onChange={(e) => handleChangeNextOne(e,"attribute" ,"code", false, "")}
@@ -406,7 +424,7 @@ class ServiceTypeCreate extends Component {
                   <Col xs={12} md={3} sm={6}>
                       <TextField
                           fullWidth={true}
-                          floatingLabelText="Description"
+                          floatingLabelText={translate('core.lbl.description')}
                           value={createServiceType.attribute ? createServiceType.attribute.description : ""}
                           errorText={fieldErrors.attribute ? fieldErrors.attribute.description : ""}
                             onChange={(e) => handleChangeNextOne(e,"attribute" ,"description", false, "")}
@@ -416,7 +434,7 @@ class ServiceTypeCreate extends Component {
 
                   <Col  xs={12} md={3} sm={6}>
                         <SelectField
-                           floatingLabelText="Required"
+                           floatingLabelText={translate('core.error.required')}
                            fullWidth={true}
                            value={createServiceType.attribute ? createServiceType.attribute.required : ""}
                            onChange= {(e, index ,values) => {
@@ -505,7 +523,7 @@ class ServiceTypeCreate extends Component {
             }/>
           }
           { (editIndex > -1) &&
-            <RaisedButton type="button" label="Save"    onClick={()=> {
+            <RaisedButton type="button" label={translate('core.lbl.save')}   onClick={()=> {
                   this.props.updateObject("owners","owner",  editIndex);
                   this.props.resetObject("owner");
                   isEditIndex(-1);
@@ -537,7 +555,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText="Service Code *"
+                                      floatingLabelText={translate('core.lbl.code') +" *"}
                                       value={createServiceType.serviceCode? createServiceType.serviceCode : ""}
                                       errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""}
                                         onChange={(e) => handleChange(e, "serviceCode", true, '')}
@@ -548,7 +566,7 @@ class ServiceTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={translate("core.lbl.servicename")+" *"}
+                                      floatingLabelText={translate("core.lbl.add.name")+" *"}
                                       value={createServiceType.serviceName? createServiceType.serviceName : ""}
                                       errorText={fieldErrors.serviceName ? fieldErrors.serviceName : ""}
                                       onChange={(e) => handleChange(e, "serviceName", true, '')}
@@ -568,54 +586,8 @@ class ServiceTypeCreate extends Component {
                                       id="description"
                                   />
                               </Col>
-							  { false && <Col xs={12} md={3} sm={6}>
-                                  <TextField
-                                      fullWidth={true}
-                                      floatingLabelText="Type"
-                                      value={createServiceType.type? createServiceType.type : ""}
-                                      errorText={fieldErrors.type ? fieldErrors.type : ""}
-                                      onChange={(e) => handleChange(e, "type", false, '')}
-                                      multiLine={true}
-                                      id="type"
-                                  />
-                              </Col>}
-                              <Col xs={12} md={3}>
-                               <SelectField
-                                    multiple="true"
-                                    errorText={fieldErrors.keywords ? fieldErrors.keywords : ""}
-                                    value={createServiceType.keywords ? createServiceType.keywords : ""}
-                                    id="Type"
-                                    onChange={(e, index, value) => {
-                                       var e = {
-                                         target: {
-                                           value: value
-                                         }
-                                       };
-                                       handleChange(e, "keywords", true, "")}}
-                                    floatingLabelText="Keywords *" >
-                                        <MenuItem 
-                                          value={"deliverable"} 
-                                          primaryText="Deliverable"
-                                          insetChildren={true}
-                                          checked={createServiceType.keywords && createServiceType.keywords.indexOf("deliverable") > -1}/>
-                                        <MenuItem 
-                                          value={"complaint"} 
-                                          primaryText="Complaint"
-                                          insetChildren={true}
-                                          checked={createServiceType.keywords && createServiceType.keywords.indexOf("complaint") > -1}/>
-                               </SelectField>
-                             </Col>
-                              {/*<Col xs={12} md={3} sm={6}>
-                                                                <TextField
-                                                                    fullWidth={true}
-                                                                    floatingLabelText="Group"
-                                                                    value={createServiceType.group? createServiceType.group : ""}
-                                                                    errorText={fieldErrors.group ? fieldErrors.group : ""}
-                                                                    onChange={(e) => handleChange(e, "group", false, '')}
-                                                                    multiLine={true}
-                                                                    id="group"
-                                                                />
-                                                            </Col>*/}
+							
+              
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}

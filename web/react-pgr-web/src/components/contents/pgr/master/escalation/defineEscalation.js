@@ -189,6 +189,10 @@ class DefineEscalation extends Component {
     }); 
 }
 
+componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+ }
+
 
     componentDidUpdate() {
  
@@ -212,7 +216,7 @@ class DefineEscalation extends Component {
 
   submitForm = (e) => {
 
-     let {setLoadingStatus} = this.props;
+     let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
     setLoadingStatus('loading');
 
       e.preventDefault();
@@ -238,14 +242,16 @@ class DefineEscalation extends Component {
             })
           }
       }).catch((error)=>{
-          console.log(error);
+         toggleSnackbarAndSetText(true, error);
       })
   }
 
  
 	handleDepartment = (e) => {
 		
-		  var currentThis = this;
+		 let {toggleSnackbarAndSetText} = this.props;
+		
+		 var currentThis = this;
 	    currentThis.setState({designation : []});
 		  currentThis.setState({toPosition : []});
 		
@@ -254,10 +260,10 @@ class DefineEscalation extends Component {
 		}
 	
 		  Api.commonApiPost("/hr-masters/designations/_search",query).then(function(response)
-		  {console.log(response);
+		  {
 			currentThis.setState({designations : response.Designation});
 		  },function(err) {
-			console.log(err);
+			toggleSnackbarAndSetText(true, err);
 		  });	
   }
   
@@ -285,7 +291,7 @@ class DefineEscalation extends Component {
   
   updateEscalation = () => {
 
-    let {setLoadingStatus} = this.props;
+    let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText} = this.props;
     setLoadingStatus('loading');
 
 		 var current = this
@@ -303,6 +309,7 @@ class DefineEscalation extends Component {
 	//var idd = this.props.defineEscalation.fromPosition;
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
+		toggleDailogAndSetText(true, "Escalation Updated Successfully");
           let query = {
         fromPosition:current.props.defineEscalation.fromPosition
       }
@@ -322,20 +329,20 @@ class DefineEscalation extends Component {
                       })
                     }
                 }).catch((error)=>{
-                    console.log(error);
+					 toggleSnackbarAndSetText(true, error);
                 })
 
               current.setState((prevState)=>{
                   prevState.editIndex=-1
                 })
     }).catch((error)=>{
-        console.log(error);
+		toggleSnackbarAndSetText(true, error);
     })
   }
 
   addEscalation = () => {
 
-    let {setLoadingStatus} = this.props;
+    let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText} = this.props;
     setLoadingStatus('loading');
 
     var current = this
@@ -351,7 +358,7 @@ class DefineEscalation extends Component {
     }
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_create",{},body).then(function(response){
-
+		toggleDailogAndSetText(true, "Escalation Created Successfully");
         let query = {
         fromPosition:current.props.defineEscalation.fromPosition
       }
@@ -371,11 +378,11 @@ class DefineEscalation extends Component {
                       })
                     }
                 }).catch((error)=>{
-                    console.log(error);
+                    toggleSnackbarAndSetText(true, error);
                 })
        
     }).catch((error)=>{
-        console.log(error);
+		toggleSnackbarAndSetText(true, error);
     })
   }
   
@@ -384,7 +391,6 @@ class DefineEscalation extends Component {
       setLoadingStatus('loading');
       this.props.setForm(this.state.resultList[index])
 
-      console.log(this.state.resultList[index].department)
       var d = {
         target: {
           value: this.state.resultList[index].department
@@ -696,7 +702,6 @@ const mapDispatchToProps = dispatch => ({
   },
   
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,
@@ -717,6 +722,10 @@ const mapDispatchToProps = dispatch => ({
   },
      setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    },
+	
+	 toggleDailogAndSetText: (dailogState,msg) => {
+      dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
     },
 
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {

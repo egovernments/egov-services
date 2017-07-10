@@ -125,9 +125,7 @@ class ViewEscalation extends Component {
 
     componentWillMount() {
       let{initForm} = this.props;
-      initForm()
-
-       
+      initForm();
        $('#searchTable').DataTable({
              dom: 'lBfrtip',
              buttons: [],
@@ -136,7 +134,6 @@ class ViewEscalation extends Component {
                  "emptyTable": "No Records"
               }
         });
-
     }
 
     componentDidMount() {

@@ -165,6 +165,10 @@ class BulkEscalationGeneration extends Component {
        .destroy(true);
     }
 
+	componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+	}
+	
   componentDidUpdate() {
        $('#searchTable').DataTable({
          dom: 'lBfrtip',

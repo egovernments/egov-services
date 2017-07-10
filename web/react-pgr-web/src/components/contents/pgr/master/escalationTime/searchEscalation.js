@@ -161,6 +161,10 @@ class SearchEscalation extends Component {
      .DataTable()
      .destroy(true);
  };
+ 
+ componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+ }
   
 
 
@@ -223,7 +227,7 @@ class SearchEscalation extends Component {
   }
 
     render() {
-
+		
       var current = this;
 
       let {

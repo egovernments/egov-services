@@ -87,6 +87,15 @@ paths:
             type: integer
           format: int64
           maxItems: 10
+        - name: employeetype
+          in: query
+          description: List of Unique Id of employee type
+          required: false
+          type: array
+          items:
+            type: integer
+          format: int64
+          maxItems: 10
         - name: familyParticularsPresent
           in: query
           description: >-

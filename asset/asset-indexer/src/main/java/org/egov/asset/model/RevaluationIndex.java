@@ -50,6 +50,13 @@ public class RevaluationIndex {
 	private Long lastModifiedDate;
 	
 	private Long voucherReference;
+	
+	private String cityName;
+	private String localName;
+	private String districtCode;
+	private String districtName;
+	private String regionName;
+	private String ulbGrade;
 
 	public void setRevaluationData(final Revaluation revaluation) {
 		tenantId = revaluation.getTenantId();

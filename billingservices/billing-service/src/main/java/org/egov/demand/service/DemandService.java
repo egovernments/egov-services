@@ -41,8 +41,10 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +54,9 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillAccountDetail;
+import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
@@ -61,6 +66,7 @@ import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
@@ -139,6 +145,67 @@ public class DemandService {
 		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
+	
+	public void updateDemandFromBill(BillRequest billRequest) {
+
+		List<Bill> bills = billRequest.getBills();
+		RequestInfo requestInfo = new RequestInfo();
+		String tenantId = bills.get(0).getTenantId();
+		Set<String> consumerCodes = new HashSet<>();
+		for (Bill bill : bills) {
+			for (BillDetail billDetail : bill.getBillDetails())
+				consumerCodes.add(billDetail.getConsumerCode());
+		}
+		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
+		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		Map<String, Demand> demandIdMap = demands.stream()
+				.collect(Collectors.toMap(Demand::getId, Function.identity()));
+		Map<String, List<Demand>> demandListMap = new HashMap<>();
+		for (Demand demand : demands) {
+
+			if (demandListMap.get(demand.getConsumerCode()) == null) {
+				List<Demand> demands2 = new ArrayList<>();
+				demands2.add(demand);
+				demandListMap.put(demand.getConsumerCode(), demands2);
+			} else
+				demandListMap.get(demand.getConsumerCode()).add(demand);
+		}
+
+		for (Bill bill : bills) {
+			for (BillDetail billDetail : bill.getBillDetails()) {
+
+				List<Demand> demands2 = demandListMap.get(billDetail.getConsumerCode());
+				Map<String, List<DemandDetail>> detailsMap = new HashMap<>();
+				for (Demand demand : demands2) {
+					for (DemandDetail demandDetail : demand.getDemandDetails()) {
+						if (detailsMap.get(demandDetail.getTaxHeadMasterCode()) == null) {
+							List<DemandDetail> demandDetails = new ArrayList<>();
+							demandDetails.add(demandDetail);
+							detailsMap.put(demandDetail.getTaxHeadMasterCode(), demandDetails);
+						} else
+							detailsMap.get(demandDetail.getTaxHeadMasterCode()).add(demandDetail);
+					}
+				}
+				for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
+
+					List<String> accDescription = Arrays.asList(accountDetail.getAccountDescription().split("-"));
+					String taxHeadCode = accDescription.get(0);
+					Long fromDate = Long.valueOf(accDescription.get(1));
+					Long toDate = Long.valueOf(accDescription.get(2));
+
+					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
+						Demand demand = demandIdMap.get(demandDetail.getDemandId());
+						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
+							BigDecimal collectedAmount = accountDetail.getCreditAmount();
+							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
+							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
+						}
+					}
+				}
+			}
+		}
+		demandRepository.update(new DemandRequest(requestInfo,demands));
+	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
 
@@ -165,9 +232,14 @@ public class DemandService {
 
 			for (DemandDetail demandDetail : demand.getDemandDetails()) {
 				DemandDetail demandDetail2 = demandDetailMap.get(demandDetail.getId());
-				demandDetail.setTaxAmount(demandDetail2.getTaxAmount());
-				demandDetail.setCollectionAmount(demandDetail2.getCollectionAmount());
-
+				BigDecimal tax = demandDetail.getTaxAmount().subtract(demandDetail2.getCollectionAmount());
+				if(tax.doubleValue()>=0){
+				demandDetail.setTaxAmount(tax);
+				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(demandDetail2.getCollectionAmount()));
+				}else{
+					//TODO throw exception
+				}
+				
 				AuditDetail demandDetailAudit = demandDetail.getAuditDetail();
 				demandDetailAudit.setLastModifiedBy(auditDetail.getLastModifiedBy());
 				demandDetailAudit.setLastModifiedTime(auditDetail.getLastModifiedTime());
@@ -254,7 +326,7 @@ public class DemandService {
 	public void update(DemandRequest demandRequest) {
 		demandRepository.update(demandRequest);
 	}
-
+	
 	private AuditDetail getAuditDetail(RequestInfo requestInfo) {
 
 		String userId = requestInfo.getUserInfo().getId().toString();

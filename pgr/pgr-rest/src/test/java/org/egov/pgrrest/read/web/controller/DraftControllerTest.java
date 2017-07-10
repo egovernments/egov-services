@@ -4,6 +4,7 @@ import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.DraftService;
+import org.egov.pgrrest.read.web.contract.DraftDeleteRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,15 +62,16 @@ public class DraftControllerTest {
 
     @Test
     public void test_to_delete_draft() throws Exception {
-        List<Long> draftIdList = Collections.singletonList(1L);
-        mockMvc.perform(post("/draft/v1/_delete?draftIdList=1")
+        List<Long> ids = Collections.singletonList(1L);
+        mockMvc.perform(post("/draft/v1/_delete")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .content(resources.getFileContents("draftSearchRequest.json")))
+            .content(resources.getFileContents("draftDeleteRequest.json")))
             .andExpect(status().isOk())
             .andExpect(content().json(resources.getFileContents("draftResponse.json")));
 
-        verify(draftService).delete(draftIdList);
+       verify(draftService).delete(ids);
     }
+
     @Test
     public void test_to_search_draft() throws Exception {
 

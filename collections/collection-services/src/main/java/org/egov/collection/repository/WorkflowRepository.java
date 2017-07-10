@@ -103,10 +103,9 @@ public class WorkflowRepository {
 	public Object getDesignations(DesignationSearchCriteria designationSearchCriteria){
 		StringBuilder builder = new StringBuilder();
 		String baseUri = CollectionServiceConstants.GET_DESIG_URI;
-		String searchCriteria="?tenantId=default";
-		String searchOnDept="&departmentId="+designationSearchCriteria.getDepartmentId(); // FIXME: hr module is yet to implement this
-		
-		builder.append(baseUri).append(searchCriteria);
+		String searchCriteria="?tenantId="+designationSearchCriteria.getTenantId();
+		String searchOnObjectType="&businessKey="+designationSearchCriteria.getBuisnessKey();
+		builder.append(baseUri).append(searchCriteria).append(searchOnObjectType);	
 		
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(designationSearchCriteria.getRequestInfo());
@@ -130,15 +129,14 @@ public class WorkflowRepository {
 		String searchOnDesig="&designationId="+userSearchCriteria.getDesignationId();
 		
 		builder.append(baseUri).append(searchCriteria);
-		if(null != userSearchCriteria.getDepartmentId() && null != userSearchCriteria.getDesignationId()){
-			builder.append(searchOnDept).append(searchOnDesig);
-		}else{
-			if(null != userSearchCriteria.getDepartmentId())
-				builder.append(searchOnDept);
-			else if(null != userSearchCriteria.getDesignationId())
-				builder.append(searchOnDesig);
+		
+		if(0L != userSeachCriteriaWrapper.getUserSearchCriteria().getDepartmentId()){
+			builder.append(searchOnDept);
 		}
-				
+		if(0L != userSeachCriteriaWrapper.getUserSearchCriteria().getDesignationId()){
+			builder.append(searchOnDesig);
+		}
+		
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(userSeachCriteriaWrapper.getRequestInfo());
 		logger.info("URI: "+builder.toString());

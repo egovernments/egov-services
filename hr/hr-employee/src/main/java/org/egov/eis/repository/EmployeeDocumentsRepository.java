@@ -107,7 +107,6 @@ public class EmployeeDocumentsRepository {
 	private EmployeeDocumentsUpdateTableRowMapper employeeDocumentsUpdateTableRowMapper;
 
 	public void save(Long employeeId, List<String> documents, String referenceType, Long referenceId, String tenantId) {
-		System.err.println("documents: " + documents);
 		jdbcTemplate.batchUpdate(INSERT_EMPLOYEE_DOCUMENTS_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {

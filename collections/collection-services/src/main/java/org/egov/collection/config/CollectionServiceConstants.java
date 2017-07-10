@@ -102,7 +102,7 @@ public class CollectionServiceConstants {
 	public static final String STATUS_SEARCH_URI = "egov-micro-dev.egovernments.org/collection/collectionStatus/_search";
 	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate";
 	public static final String GET_DEPT_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/departments/_search";
-	public static final String GET_DESIG_URI = "http://egov-micro-dev.egovernments.org/egov-hr-masters/designations/_search";
+	public static final String GET_DESIG_URI = "http://egov-micro-dev.egovernments.org/egov-common-workflows/designations/_search";
 	public static final String GET_USERS_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/_search";
 	public static final String GET_POSITION_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/";
 	public static final String GET_POSITION_URI_APPEND = "/positions/_search";

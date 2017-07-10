@@ -60,9 +60,9 @@ import lombok.ToString;
 public class UserSearchCriteria {
 	
 	
-    private Long designationId;
+    private long designationId;
     
-    private Long departmentId;
+    private long departmentId;
     
     private String tenantId;
 

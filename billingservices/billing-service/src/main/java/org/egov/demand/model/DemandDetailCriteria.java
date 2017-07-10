@@ -63,5 +63,5 @@ public class DemandDetailCriteria {
 	
 	private Long periodTo;
 	
-	private Set<String> detailsIds;
+	private Set<String> detailsId;
 }

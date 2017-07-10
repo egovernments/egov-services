@@ -20,7 +20,7 @@ import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.repository.PropertyRepository;
-import org.egov.property.util.PropertyValidator;
+import org.egov.property.utility.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;

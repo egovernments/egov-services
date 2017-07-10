@@ -55,8 +55,12 @@ public class DraftRepository {
         return DraftResult.builder().drafts(drafts).build();
     }
 
-    public void deleteDraft(List<Long> draftIdList) {
+    public void delete(List<Long> draftIdList) {
         draftJpaRepository.deleteByIdList(draftIdList);
+    }
+
+    public void delete(long draftId) {
+        draftJpaRepository.delete(draftId);
     }
 
     public void updateDraft(UpdateDraft draftUpdateRequest) {

@@ -26,6 +26,8 @@ public class BillAccountDetail {
 	private Integer order;
 
 	private String accountDescription;
+	
+	private BigDecimal crAmountToBePaid;
 
 	private BigDecimal creditAmount;
 

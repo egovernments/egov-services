@@ -6,6 +6,9 @@ import java.util.List;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.Depreciation;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
@@ -33,10 +36,12 @@ import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.property.exception.DuplicateIdException;
 import org.egov.property.exception.InvalidInputException;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.PropertyMasterRepository;
+import org.egov.property.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,10 +90,16 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(floorType);
-			Long createdTime = new Date().getTime();
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(floorType.getTenantId(),
+					floorType.getCode(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, null);
+			if (isExists)
+				throw new DuplicateIdException(floorTypeRequest.getRequestInfo());
+
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(floorType);
+				Long createdTime = new Date().getTime();
+
 				Long id = propertyMasterRepository.saveFloorType(floorType, data);
 				floorType.setId(id);
 				floorType.getAuditDetails().setCreatedTime(createdTime);
@@ -110,9 +121,16 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(floorType);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(floorType.getTenantId(),
+					floorType.getCode(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, floorType.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(floorTypeRequest.getRequestInfo());
+
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(floorType);
+
 				Long updatedTime = new Date().getTime();
 				floorType = propertyMasterRepository.updateFloorType(floorType, data);
 				floorType.getAuditDetails().setLastModifiedTime(updatedTime);
@@ -155,10 +173,16 @@ public class MasterServiceImpl implements Masterservice {
 	public WoodTypeResponse createWoodType(WoodTypeRequest woodTypeRequest, String tenantId) throws Exception {
 
 		for (WoodType woodType : woodTypeRequest.getWoodTypes()) {
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(woodType);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(woodType.getTenantId(),
+					woodType.getCode(), ConstantUtility.WOOD_TYPE_TABLE_NAME, null);
+			if (isExists)
+				throw new DuplicateIdException(woodTypeRequest.getRequestInfo());
 
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(woodType);
+
 				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveWoodType(woodType, data);
 				woodType.setId(id);
@@ -181,9 +205,17 @@ public class MasterServiceImpl implements Masterservice {
 	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest) throws Exception {
 
 		for (WoodType woodType : woodTypeRequest.getWoodTypes()) {
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(woodType);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(woodType.getTenantId(),
+					woodType.getCode(), ConstantUtility.WOOD_TYPE_TABLE_NAME, woodType.getId());
+			if (isExists)
+				throw new DuplicateIdException(woodTypeRequest.getRequestInfo());
+
 			try {
+
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(woodType);
+
 				Long updatedTime = new Date().getTime();
 				woodType = propertyMasterRepository.updateWoodType(woodType, data);
 				woodType.getAuditDetails().setLastModifiedTime(updatedTime);
@@ -224,9 +256,18 @@ public class MasterServiceImpl implements Masterservice {
 	public RoofTypeResponse createRoofype(RoofTypeRequest roofTypeRequest, String tenantId) throws Exception {
 
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(roofType);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(roofType.getTenantId(),
+					roofType.getCode(), ConstantUtility.ROOF_TYPE_TABLE_NAME, null);
+
+			if (isExists)
+				throw new DuplicateIdException(roofTypeRequest.getRequestInfo());
+
 			try {
+
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(roofType);
+
 				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveRoofType(roofType, data);
 				roofType.setId(id);
@@ -248,9 +289,18 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest) throws Exception {
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(roofType);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(roofType.getTenantId(),
+					roofType.getCode(), ConstantUtility.ROOF_TYPE_TABLE_NAME, roofType.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(roofTypeRequest.getRequestInfo());
+
 			try {
+
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(roofType);
+
 				Long updatedTime = new Date().getTime();
 				roofType = propertyMasterRepository.updateRoofType(roofType, data);
 				roofType.getAuditDetails().setLastModifiedTime(updatedTime);
@@ -277,6 +327,11 @@ public class MasterServiceImpl implements Masterservice {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
 			String data = gson.toJson(department);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(department.getTenantId(),
+					department.getCode(), ConstantUtility.DEPARTMENT_TABLE_NAME, null);
+			if (isExists)
+				throw new DuplicateIdException(departmentRequest.getRequestInfo());
 
 			Long createdTime = new Date().getTime();
 			Long id = propertyMasterRepository.saveDepartment(tenantId, department, data);
@@ -313,6 +368,12 @@ public class MasterServiceImpl implements Masterservice {
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
 			String data = gson.toJson(department);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(department.getTenantId(),
+					department.getCode(), ConstantUtility.DEPARTMENT_TABLE_NAME, department.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(departmentRequest.getRequestInfo());
 
 			department = propertyMasterRepository.updateDepartment(department, data, department.getId());
 			department.getAuditDetails().setLastModifiedTime(modifiedTime);
@@ -355,6 +416,11 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (OccuapancyMaster occuapancy : occuapancyMasterRequest.getOccuapancyMasters()) {
 
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(occuapancy.getTenantId(),
+					occuapancy.getCode(), ConstantUtility.OCCUPANCY_TABLE_NAME, null);
+			if (isExists)
+				throw new DuplicateIdException(occuapancyMasterRequest.getRequestInfo());
+
 			Long createdTime = new Date().getTime();
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -386,6 +452,11 @@ public class MasterServiceImpl implements Masterservice {
 		Long modifiedTime = new Date().getTime();
 
 		for (OccuapancyMaster occuapancyMaster : occuapancyRequest.getOccuapancyMasters()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(occuapancyMaster.getTenantId(),
+					occuapancyMaster.getCode(), ConstantUtility.OCCUPANCY_TABLE_NAME, occuapancyMaster.getId());
+			if (isExists)
+				throw new DuplicateIdException(occuapancyRequest.getRequestInfo());
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
@@ -434,6 +505,12 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (PropertyType propertyType : propertyTypeRequest.getPropertyTypes()) {
 
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(propertyType.getTenantId(),
+					propertyType.getCode(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
+
+			if (isExists)
+				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
+
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(propertyType);
 			Long createdTime = new Date().getTime();
@@ -461,6 +538,12 @@ public class MasterServiceImpl implements Masterservice {
 		Long modifiedTime = new Date().getTime();
 
 		for (PropertyType propertyType : propertyTypeRequest.getPropertyTypes()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(propertyType.getTenantId(),
+					propertyType.getCode(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, propertyType.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
@@ -506,11 +589,16 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (UsageMaster usageMaster : usageMasterRequest.getUsageMasters()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
+					usageMaster.getCode(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
 
-			String data = gson.toJson(usageMaster);
+			if (isExists)
+				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(usageMaster);
+
 				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveUsageMaster(usageMaster, data);
 				usageMaster.setId(id);
@@ -519,7 +607,6 @@ public class MasterServiceImpl implements Masterservice {
 				usageMaster.getAuditDetails().setLastModifiedTime(createdTime);
 
 			} catch (Exception e) {
-
 				throw new InvalidInputException(usageMasterRequest.getRequestInfo());
 			}
 
@@ -541,10 +628,15 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (UsageMaster usageMaster : usageMasterRequest.getUsageMasters()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(usageMaster);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
+					usageMaster.getCode(), ConstantUtility.USAGE_TYPE_TABLE_NAME, usageMaster.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(usageMaster);
 
 				Long updatedTime = new Date().getTime();
 
@@ -553,7 +645,6 @@ public class MasterServiceImpl implements Masterservice {
 				usageMaster.getAuditDetails().setLastModifiedTime(updatedTime);
 
 			} catch (Exception e) {
-
 				throw new InvalidInputException(usageMasterRequest.getRequestInfo());
 			}
 		}
@@ -593,10 +684,16 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (WallType wallType : wallTypeRequest.getWallTypes()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(wallType);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(wallType.getTenantId(),
+					wallType.getCode(), ConstantUtility.WALL_TYPE_TABLE_NAME, null);
+
+			if (isExists)
+				throw new DuplicateIdException(wallTypeRequest.getRequestInfo());
 
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(wallType);
+
 				Long createTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveWallTypes(wallType, data);
 				wallType.setId(id);
@@ -624,10 +721,15 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (WallType wallType : wallTypeRequest.getWallTypes()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(wallType);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(wallType.getTenantId(),
+					wallType.getCode(), ConstantUtility.WALL_TYPE_TABLE_NAME, wallType.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(wallTypeRequest.getRequestInfo());
 
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(wallType);
 
 				Long updatedTime = new Date().getTime();
 
@@ -636,7 +738,6 @@ public class MasterServiceImpl implements Masterservice {
 				wallType.getAuditDetails().setLastModifiedTime(updatedTime);
 
 			} catch (Exception e) {
-
 				throw new InvalidInputException(wallTypeRequest.getRequestInfo());
 			}
 		}
@@ -679,11 +780,17 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (StructureClass structureClass : structureClassRequest.getStructureClasses()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(structureClass.getTenantId(),
+					structureClass.getCode(), ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, null);
 
-			String data = gson.toJson(structureClass);
+			if (isExists)
+				throw new DuplicateIdException(structureClassRequest.getRequestInfo());
 
 			try {
+
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(structureClass);
+
 				Long createdTime = new Date().getTime();
 				Long id = propertyMasterRepository.saveStructureClsses(tenantId, structureClass, data);
 				structureClass.setId(id);
@@ -691,7 +798,6 @@ public class MasterServiceImpl implements Masterservice {
 				structureClass.getAuditDetails().setLastModifiedTime(createdTime);
 
 			} catch (Exception e) {
-
 				throw new InvalidInputException(structureClassRequest.getRequestInfo());
 			}
 		}
@@ -713,10 +819,15 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (StructureClass structureClass : structureClassRequest.getStructureClasses()) {
 
-			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-			String data = gson.toJson(structureClass);
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(structureClass.getTenantId(),
+					structureClass.getCode(), ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, structureClass.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(structureClassRequest.getRequestInfo());
 
 			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(structureClass);
 
 				Long updatedTime = new Date().getTime();
 
@@ -725,7 +836,6 @@ public class MasterServiceImpl implements Masterservice {
 				structureClass.getAuditDetails().setLastModifiedTime(updatedTime);
 
 			} catch (Exception e) {
-
 				throw new InvalidInputException(structureClassRequest.getRequestInfo());
 			}
 		}
@@ -740,6 +850,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
 			Integer offSet) {
@@ -752,11 +863,99 @@ public class MasterServiceImpl implements Masterservice {
 			structureClassResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
 
 		return structureClassResponse;
+
+	}
+
+	@Override
+	public DepreciationResponse createDepreciation(String tenantId, DepreciationRequest depreciationRequest)
+			throws Exception {
+
+		for (Depreciation depreciation : depreciationRequest.getDepreciations()) {
+
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(depreciation);
+
+			Boolean isExists = checkCodeAndTenatIdExists(depreciation.getTenantId(), depreciation.getCode(),
+					ConstantUtility.DEPRECIATION_TABLE_NAME, null);
+
+			if (isExists)
+				throw new DuplicateIdException(depreciationRequest.getRequestInfo());
+
+			try {
+				Long id = propertyMasterRepository.createDepreciation(depreciation, data);
+				depreciation.setId(id);
+
+			}
+
+			catch (Exception e) {
+				throw new InvalidInputException(depreciationRequest.getRequestInfo());
+			}
+		}
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(depreciationRequest.getRequestInfo(), true);
+		depreciationResponse.setResponseInfo(responseInfo);
+		depreciationResponse.setDepreciations(depreciationRequest.getDepreciations());
+
+		return depreciationResponse;
+	}
+
+	@Override
+	public DepreciationResponse updateDepreciation(DepreciationRequest depreciationRequest) throws Exception {
+
+		for (Depreciation depreciation : depreciationRequest.getDepreciations()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(depreciation.getTenantId(),
+					depreciation.getCode(), ConstantUtility.DEPRECIATION_TABLE_NAME, depreciation.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(depreciationRequest.getRequestInfo());
+
+			try {
+
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(depreciation);
+
+				Long updatedTime = new Date().getTime();
+
+				propertyMasterRepository.updateDepreciation(depreciation, data);
+				depreciation.getAuditDetails().setLastModifiedTime(updatedTime);
+
+			} catch (Exception e) {
+				throw new InvalidInputException(depreciationRequest.getRequestInfo());
+			}
+		}
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(depreciationRequest.getRequestInfo(), true);
+		depreciationResponse.setResponseInfo(responseInfo);
+		depreciationResponse.setDepreciations(depreciationRequest.getDepreciations());
+
+		return depreciationResponse;
+	}
+
+	@Override
+	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset)
+			throws Exception {
+
+		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(tenantId, ids, fromYear, toYear,
+				code, nameLocal, pageSize, offset);
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		depreciationResponse.setResponseInfo(responseInfo);
+		depreciationResponse.setDepreciations(depreciations);
+		return depreciationResponse;
+	}
+
+	public Boolean checkCodeAndTenatIdExists(String tenantId, String code, String tableName, Long id) {
+
+		return propertyMasterRepository.checkWhetherRecordExits(tenantId, code, tableName, id);
 
 	}
 }

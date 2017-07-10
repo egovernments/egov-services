@@ -22,6 +22,7 @@ public class ServiceRequestService {
     private ServiceRequestTypeService serviceRequestTypeService;
     private List<ServiceRequestValidator> validators;
     private ServiceRequestCustomFieldService customFieldService;
+    private DraftService draftService;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
@@ -29,13 +30,15 @@ public class ServiceRequestService {
                                  UserRepository userRepository,
                                  ServiceRequestTypeService serviceRequestTypeService,
                                  List<ServiceRequestValidator> validators,
-                                 ServiceRequestCustomFieldService customFieldService) {
+                                 ServiceRequestCustomFieldService customFieldService,
+                                 DraftService draftService) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
         this.serviceRequestTypeService = serviceRequestTypeService;
         this.validators = validators;
         this.customFieldService = customFieldService;
+        this.draftService = draftService;
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
@@ -56,6 +59,7 @@ public class ServiceRequestService {
         setUserIdForAnonymousUser(contractSevaRequest);
         enrichWithComputedFields(serviceRequest, contractSevaRequest);
         serviceRequestRepository.save(contractSevaRequest);
+        deleteDraft(serviceRequest);
     }
 
     public void update(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
@@ -63,6 +67,7 @@ public class ServiceRequestService {
         setUserIdForAnonymousUser(contractSevaRequest);
         enrichWithComputedFields(serviceRequest, contractSevaRequest);
         serviceRequestRepository.update(contractSevaRequest);
+        deleteDraft(serviceRequest);
     }
 
     private void enrichWithComputedFields(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
@@ -105,6 +110,14 @@ public class ServiceRequestService {
 
     private User getAnonymousUser(String tenantId) {
         return userRepository.getUserByUserName(ANONYMOUS_USER_NAME, tenantId);
+    }
+
+    private void deleteDraft(ServiceRequest serviceRequest) {
+        final Long draftId = serviceRequest.getDraftId();
+        if (draftId == null) {
+            return;
+        }
+        draftService.delete(draftId);
     }
 
 }

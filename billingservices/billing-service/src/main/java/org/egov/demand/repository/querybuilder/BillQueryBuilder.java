@@ -16,8 +16,8 @@ public class BillQueryBuilder {
 			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail "
-			+"(id,tenantid,billdetail,glcode,orderno,accountdescription,creditamount,debitamount,isactualdemand,purpose,"
+			+"(id,tenantid,billdetail,glcode,orderno,accountdescription,cramounttobepaid,creditamount,debitamount,isactualdemand,purpose,"
 			+ "createdby,createddate,lastmodifiedby,lastmodifieddate)"
-			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 }

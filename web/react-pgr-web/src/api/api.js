@@ -17,7 +17,7 @@ var authToken = localStorage.getItem("token");
 var requestInfo = {
     "apiId": "org.egov.pt",
     "ver": "1.0",
-    "ts": "01-04-2017 01:01:01",
+    "ts": "10-03-2017 00:00:00",
     "action": "asd",
     "did": "4354648646",
     "key": "xyz",
@@ -32,17 +32,20 @@ var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false) => {
         var url = context;
+
+        console.log("queryObject",queryObject);
         if (!doNotOverride)
             url += "?tenantId=" + tenantId;
         else
             url += "?"
         for (var variable in queryObject) {
-            if (typeof queryObject[variable] != "undefined") {
+            if (typeof(queryObject[variable]) != "undefined" && (queryObject[variable] != "" ) ) {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
         requestInfo.authToken = localStorage.getItem("token");
         body["RequestInfo"] = requestInfo;
+
         return instance.post(url, body).then(function(response) {
             return response.data;
         }).catch(function(response) {

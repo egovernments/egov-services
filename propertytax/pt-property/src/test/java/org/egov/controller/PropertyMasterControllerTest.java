@@ -16,6 +16,9 @@ import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.Depreciation;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
@@ -1076,6 +1079,107 @@ public class PropertyMasterControllerTest {
 		}
 
 		assertTrue(Boolean.TRUE);
+
+	}
+
+	@Test
+	public void createDepreciationTest() {
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		List<Depreciation> depreciations = new ArrayList<>();
+		Depreciation depreciation = new Depreciation();
+		depreciation.setTenantId("kiran");
+		depreciation.setCode("pra");
+
+		AuditDetails auditDetails = new AuditDetails();
+		depreciation.setAuditDetails(auditDetails);
+
+		depreciationResponse.setResponseInfo(new ResponseInfo());
+		depreciations.add(depreciation);
+		depreciationResponse.setDepreciations(depreciations);
+
+		try {
+			when(masterService.createDepreciation(anyString(), any(DepreciationRequest.class)))
+					.thenReturn(depreciationResponse);
+			mockMvc.perform(post("/property/depreciations/_create").param("tenantId", "kiran")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createDepreciationRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createDepreciationResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyDepreciationTest() {
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		List<Depreciation> depreciations = new ArrayList<>();
+		Depreciation depreciation = new Depreciation();
+		depreciation.setTenantId("kiranprasad");
+		depreciation.setId(5l);
+		depreciation.setCode("pra");
+
+		AuditDetails auditDetails = new AuditDetails();
+		depreciation.setAuditDetails(auditDetails);
+
+		depreciationResponse.setResponseInfo(new ResponseInfo());
+		depreciations.add(depreciation);
+		depreciationResponse.setDepreciations(depreciations);
+
+		try {
+			when(masterService.updateDepreciation(any(DepreciationRequest.class))).thenReturn(depreciationResponse);
+			mockMvc.perform(post("/property/depreciations/_update").param("tenantId", "kiranprasad")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("updateDepreciationRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateDepreciationResponse.json")));
+		}
+
+		catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+	}
+
+	@Test
+	public void searchDepreciationTest() {
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		List<Depreciation> depreciations = new ArrayList<>();
+		Depreciation depreciation = new Depreciation();
+		depreciation.setTenantId("default");
+		depreciation.setId(4l);
+		depreciation.setCode("prasad");
+
+		AuditDetails auditDetails = new AuditDetails();
+		depreciation.setAuditDetails(auditDetails);
+
+		depreciationResponse.setResponseInfo(new ResponseInfo());
+		depreciations.add(depreciation);
+		depreciationResponse.setDepreciations(depreciations);
+
+		try {
+			when(masterService.searchDepreciation(any(RequestInfo.class), anyString(), any(Integer[].class),
+					any(Integer.class), any(Integer.class), anyString(), anyString(), any(Integer.class),
+					any(Integer.class))).thenReturn(depreciationResponse);
+			mockMvc.perform(post("/property/depreciations/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDepreciationRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchDepreciationResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
 
 	}
 

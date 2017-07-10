@@ -1,9 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.read.domain.model.DraftCreateRequest;
-import org.egov.pgrrest.read.domain.model.DraftCreateResponse;
-import org.egov.pgrrest.read.domain.model.DraftSearchResponse;
-import org.egov.pgrrest.read.domain.model.DraftUpdateRequest;
+import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.persistence.repository.DraftRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +14,16 @@ public class DraftService {
         this.draftRepository = draftRepository;
     }
 
-    public DraftCreateResponse save(DraftCreateRequest draftCreateRequest) {
-        DraftCreateResponse draftCreateResponse = draftRepository.saveDraft(draftCreateRequest);
-        return DraftCreateResponse.builder().id(draftCreateResponse.getId()).build();
+    public long save(NewDraft newDraft) {
+        return draftRepository.saveDraft(newDraft);
     }
 
-    public DraftSearchResponse getDrafts(Long userId, String serviceCode, String tenantId) {
-        return draftRepository.getDrafts(userId, serviceCode, tenantId);
+    public DraftResult getDrafts(DraftSearchCriteria searchCriteria) {
+        return draftRepository.getDrafts(searchCriteria);
     }
 
-    public void update(DraftUpdateRequest draftUpdateRequest) {
-        draftRepository.updateDraft(draftUpdateRequest);
+    public void update(UpdateDraft updateDraft) {
+        draftRepository.updateDraft(updateDraft);
     }
 
     public void delete(List<Long> draftIdList) {

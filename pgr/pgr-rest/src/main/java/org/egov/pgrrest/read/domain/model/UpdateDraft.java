@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class DraftUpdateRequest {
+public class UpdateDraft {
     private Long id;
     private HashMap<String, Object> draft;
 }

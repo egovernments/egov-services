@@ -11,8 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class DraftSearchResponse {
-
-    private List<Draft> draftResponses;
-
+public class DraftResult {
+    private List<Draft> drafts;
 }

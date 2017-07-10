@@ -10,13 +10,9 @@ import org.egov.common.contract.response.ResponseInfo;
 @Builder
 public class DraftCreateResponse {
     private ResponseInfo responseInfo;
+    private long id;
 
-    private boolean successful;
-
-    private Long id;
-
-    public DraftCreateResponse(org.egov.pgrrest.read.domain.model.DraftCreateResponse draftCreateResponse) {
-        this.id = draftCreateResponse.getId();
-        this.successful = true;
+    public DraftCreateResponse(long id) {
+        this.id = id;
     }
 }

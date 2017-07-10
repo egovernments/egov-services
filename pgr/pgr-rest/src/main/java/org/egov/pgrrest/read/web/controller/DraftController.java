@@ -1,12 +1,11 @@
 package org.egov.pgrrest.read.web.controller;
 
-import org.egov.pgrrest.read.domain.model.DraftCreateRequest;
-import org.egov.pgrrest.read.domain.model.DraftCreateResponse;
+import org.egov.pgrrest.read.domain.model.DraftResult;
+import org.egov.pgrrest.read.domain.model.DraftSearchCriteria;
+import org.egov.pgrrest.read.domain.model.NewDraft;
+import org.egov.pgrrest.read.domain.model.UpdateDraft;
 import org.egov.pgrrest.read.domain.service.DraftService;
-import org.egov.pgrrest.read.web.contract.DraftResponse;
-import org.egov.pgrrest.read.web.contract.DraftSearchResponse;
-import org.egov.pgrrest.read.web.contract.DraftUpdateRequest;
-import org.egov.pgrrest.read.web.contract.RequestInfoBody;
+import org.egov.pgrrest.read.web.contract.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,26 +23,40 @@ public class DraftController {
     }
 
     @PostMapping("/v1/_create")
-    @ResponseStatus(HttpStatus.OK)
-    public org.egov.pgrrest.read.web.contract.DraftCreateResponse saveDraft(@RequestBody org.egov.pgrrest.read.web.contract.DraftCreateRequest draftCreateRequest) {
-        DraftCreateRequest draftCreateRequestModel = draftCreateRequest.toDomain();
-        DraftCreateResponse draftCreateResponse = draftService.save(draftCreateRequestModel);
-        return new org.egov.pgrrest.read.web.contract.DraftCreateResponse(draftCreateResponse);
+    public DraftCreateResponse saveDraft(@RequestBody DraftCreateRequest draftCreateRequest) {
+        NewDraft newDraftModel = draftCreateRequest.toDomain();
+        long draftId = draftService.save(newDraftModel);
+        return new DraftCreateResponse(draftId);
     }
 
     @PostMapping("/v1/_search")
-    @ResponseStatus(HttpStatus.OK)
     public DraftSearchResponse searchDraft(@RequestBody RequestInfoBody requestInfoBody,
                                            @RequestParam(value = "serviceCode", required = false) String serviceCode,
                                            @RequestParam String tenantId) {
-        org.egov.pgrrest.read.domain.model.DraftSearchResponse draftSearchResponse = draftService.getDrafts(requestInfoBody.getRequestInfo().getUserInfo().getId(), serviceCode, tenantId);
-        return DraftSearchResponse.builder().responseInfo(null).drafts(draftSearchResponse.getDraftResponses().stream().map(org.egov.pgrrest.read.web.contract.Draft::new).collect(Collectors.toList())).build();
+        final DraftSearchCriteria searchCriteria = DraftSearchCriteria.builder()
+            .userId(requestInfoBody.getUserId())
+            .serviceCode(serviceCode)
+            .tenantId(tenantId)
+            .build();
+        DraftResult draftSearchResponse =
+            draftService.getDrafts(searchCriteria);
+        final List<Draft> contractDrafts = convertToContract(draftSearchResponse);
+        return DraftSearchResponse.builder()
+            .responseInfo(null)
+            .drafts(contractDrafts)
+            .build();
+    }
+
+    private List<Draft> convertToContract(DraftResult draftSearchResponse) {
+        return draftSearchResponse.getDrafts().stream()
+            .map(Draft::new)
+            .collect(Collectors.toList());
     }
 
     @PostMapping("/v1/_update")
     @ResponseStatus(HttpStatus.OK)
     public DraftResponse updateDraft(@RequestBody DraftUpdateRequest draftUpdateRequest) {
-        org.egov.pgrrest.read.domain.model.DraftUpdateRequest draftUpdateRequestModel = draftUpdateRequest.toDomain();
+        UpdateDraft draftUpdateRequestModel = draftUpdateRequest.toDomain();
         draftService.update(draftUpdateRequestModel);
         return DraftResponse.builder().responseInfo(null).successful(true).build();
     }

@@ -144,6 +144,7 @@ public class ReportService {
 			List<Object> objects = new ArrayList<>();
 			Map<String, Object> map = maps.get(i);
 			for (SourceColumn sourceColm : columns) {
+				
 				objects.add(map.get(sourceColm.getName()));
 			}
 			lists.add(objects);

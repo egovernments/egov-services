@@ -46,12 +46,14 @@ import java.util.List;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.Department;
 import org.egov.collection.model.DepartmentSearchCriteria;
+import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.WorkflowRepository;
+import org.egov.collection.web.contract.Designation;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,24 +94,32 @@ public class WorkflowService {
 		return departments;
 	}
 	
-/*	public List<Department> getDesignations(RequestInfo requestInfo){
-		List<Department> departments = new ArrayList<>();
-		Object response = workflowRepository.getDepartments(requestInfo);
+	public List<Designation> getDesignations(DesignationSearchCriteria designationSearchCriteria){
+		List<Designation> designation = new ArrayList<>();
+		if(null == designationSearchCriteria.getBuisnessKey() ||designationSearchCriteria.getBuisnessKey().isEmpty()){
+			designation = null;
+			return designation;		
+		}
+		Object response = workflowRepository.getDesignations(designationSearchCriteria);
 		try{
-			departments.addAll(JsonPath.read(response, "$.Department"));
+			designation.addAll(JsonPath.read(response, "$.Designations"));
 		}catch(Exception e){
 			logger.error("Zero departments returned from the service: "+e.getCause());
-			departments = null;
-			return departments;
+			designation = null;
+			return designation;
 		}
-		logger.info("Departments received: "+departments.toString());
+		logger.info("Designations received: "+designation.toString());
 
-		return departments;
-	} */
+		return designation;
+	}
 
 	public List<EmployeeInfo> getUsers(UserSearchCriteriaWrapper userSeachCriteriaWrapper){
 		logger.info("UserSearchCriteria:"+userSeachCriteriaWrapper.toString());
 		List<EmployeeInfo> users = new ArrayList<>();
+		if(0L == userSeachCriteriaWrapper.getUserSearchCriteria().getDepartmentId() && 
+				0L == userSeachCriteriaWrapper.getUserSearchCriteria().getDesignationId()){
+			return null;
+		}
 		Object response = workflowRepository.getUsers(userSeachCriteriaWrapper);
 		try{
 			users.addAll(JsonPath.read(response, "$.Employee"));
@@ -123,13 +133,13 @@ public class WorkflowService {
 		return users;
 	}
 	
-	public String getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
+	public Long getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
 		logger.info("PositionSearchCriteria:"+positionSearchCriteriaWrapper.toString());
 
-		String position = null;
+		Long position = null;
 		Object response = workflowRepository.getPositionForUser(positionSearchCriteriaWrapper);
 		try{
-			position = JsonPath.read(response, "$.Position[0].name");
+			position = JsonPath.read(response, "$.Position[0].id");
 		}catch(Exception e){
 			logger.error("No position returned from the service: "+e.getCause());
 			position = null;

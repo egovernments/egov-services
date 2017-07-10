@@ -58,5 +58,7 @@ public class DesignationSearchCriteria {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 	
-    private Long departmentId;
+    private String buisnessKey;
+    
+    private String tenantId;
 }

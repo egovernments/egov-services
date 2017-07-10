@@ -46,6 +46,10 @@ public class ServiceDefinition {
         return getAttributesOfType(AttributeDataType.DATE);
     }
 
+    public List<AttributeDefinition> getNonComputedDateTimeAttributes() {
+        return getAttributesOfType(AttributeDataType.DATE_TIME);
+    }
+
     public List<AttributeDefinition> getNonComputedIntegerAttributes() {
         return getAttributesOfType(AttributeDataType.INTEGER);
     }

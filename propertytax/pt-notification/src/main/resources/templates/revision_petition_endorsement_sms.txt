@@ -1,1 +1,1 @@
-Dear {{name}}, Revision petition Endorsement has been generated. You may collect the Endorsement Notice from xxxxxx(municipality name). 
+Dear {{name}}, Revision petition Endorsement has been generated. You may collect the Endorsement Notice from {{municipalityName}}.

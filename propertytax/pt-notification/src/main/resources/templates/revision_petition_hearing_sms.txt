@@ -1,1 +1,1 @@
-Dear {{name}}, Revision petition hearing date generated on XXXXX with venue xxxxxx on time xxxxx” please visit to convey your hearings. You may collect the Hearing Notice from xxxxxxx(Municipality name).”
+Dear {{name}}, Revision petition hearing date generated on {{generatedDate}} with venue {{venueName}} on time {{time}} please visit to convey your hearings. You may collect the Hearing Notice from {{municipalityName}}.

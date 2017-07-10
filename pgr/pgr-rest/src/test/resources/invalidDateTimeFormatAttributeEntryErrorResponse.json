@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Invalid date time data type format.",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.INVALID_DATE_TIME_DATA_TYPE_FORMAT",
+                "message": "Invalid date time data type format.",
+                "field": "serviceRequest.attribValues.name=incidentTime"
+            }
+        ]
+    }
+}

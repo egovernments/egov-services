@@ -55,8 +55,6 @@ public class NotificationService {
 
 				propertyMessage.put("name", user.getName());
 				propertyMessage.put("tenantId", user.getTenantId());
-				propertyMessage.put("name", user.getName());
-				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
 				String message = notificationUtil.buildSmsMessage(environment.getProperty("demand.sms.acknowledgement"),

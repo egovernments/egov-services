@@ -1,0 +1,1 @@
+package org.egov.pgrrest.read.web.contract;import lombok.*;import org.egov.common.contract.response.ResponseInfo;import java.util.List;@Getter@Setter@AllArgsConstructor@NoArgsConstructor@Builderpublic class DraftSearchResponse {    private ResponseInfo responseInfo;    private List<Draft> drafts;    }

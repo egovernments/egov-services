@@ -154,6 +154,7 @@ class ServiceTypeCreate extends Component {
               current.setState({
                 open: true
               });
+              current.props.setLoadingStatus('hide');
           }, function(err) {
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');
@@ -163,6 +164,7 @@ class ServiceTypeCreate extends Component {
               current.setState({
                 open: true
               });
+              current.props.setLoadingStatus('hide');
           }, function(err) {
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');

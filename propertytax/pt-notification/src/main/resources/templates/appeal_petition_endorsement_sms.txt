@@ -1,0 +1,1 @@
+Dear {{name}}, Appeal petition Endorsement has been generated. You may collect the Hearing Notice from {{municipalityName}}.

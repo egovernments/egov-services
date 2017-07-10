@@ -802,7 +802,7 @@ class CreateAsset extends React.Component {
       });
       getDropdown("statusList", function(res) {
         checkCountNCall("statusList", res);
-      }, {objectname: 'Asset Master'});
+      }, {objectName: 'Asset Master'});
       getDropdown("asset_category_type", function(res) {
         checkCountNCall("asset_category_type", res);
       });

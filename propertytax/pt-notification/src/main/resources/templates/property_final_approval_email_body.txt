@@ -1,9 +1,0 @@
-Dear {{name}} 
-
-Property tax assessed with Assessment No. {{upicNo}} and the property tax is fixed @ Rs.xxxxx/- per half year w.e.f xxxxxxxxxxx. You may collect the special Notice from xxxxxxx(Municipality name).”
-
-
-Thanks,
-Municipality Name
-
-Note: “This is computer generated Email and does not need any signature and also please do not reply to this email” 

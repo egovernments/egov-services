@@ -58,8 +58,9 @@ import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.web.contract.BillAccountDetails;
-import org.egov.collection.web.contract.BillDetails;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -146,11 +147,12 @@ public class ReceiptRepository {
 		String statusCode = null;
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		
-		for(BillDetails billdetails: receiptInfo.getBillInfo().getBillDetails()){	
+		for(BillDetailsWrapper billdetailsWrapper: receiptInfo.getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){	
 			
 			//TODO: Trigger Apportioning logic from billingservice if the amountPaid is less than the totalAmount
 			
-			if(billdetails.getCollectionType().equals("ONLINE")){
+			BillDetail billdetails = billdetailsWrapper.getBillDetails();
+			if(billdetailsWrapper.getCollectionType().equals("ONLINE")){
 				statusCode = "PENDING";
 			}else{
 				statusCode = "TO BE SUBMITTED";
@@ -158,7 +160,7 @@ public class ReceiptRepository {
 			logger.info("StatusCode: "+statusCode);
 			final Map<String, Object> parametersMap = new HashMap<>();
 			
-			Object businessDetails = getBusinessDetails(billdetails.getBusinessDetailsCode(), receiptReq);
+			Object businessDetails = getBusinessDetails(billdetailsWrapper.getBusinessDetailsCode(), receiptReq);
 			String fund = null;
 			String fundSource = null;
 			String function = null;
@@ -175,27 +177,27 @@ public class ReceiptRepository {
         	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
         	
         	if(((null != fund && null != fundSource) && null != function) && null != department){
-				parametersMap.put("payeename", receiptInfo.getBillInfo().getPayeeName());
-				parametersMap.put("payeeaddress", receiptInfo.getBillInfo().getPayeeAddress());
-				parametersMap.put("payeeemail", receiptInfo.getBillInfo().getPayeeEmail());
-				parametersMap.put("paidby", receiptInfo.getBillInfo().getPaidBy());
-				parametersMap.put("referencenumber", billdetails.getRefNo());
-				parametersMap.put("receipttype", billdetails.getReceiptType());							
-				parametersMap.put("receiptdate", billdetails.getReceiptDate());
-				parametersMap.put("businessdetails", billdetails.getBusinessDetailsCode());
-				parametersMap.put("collectiontype", billdetails.getCollectionType());
-				parametersMap.put("reasonforcancellation", billdetails.getReasonForCancellation());
+				parametersMap.put("payeename", receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeName());
+				parametersMap.put("payeeaddress", receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeAddress());
+				parametersMap.put("payeeemail", receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeEmail());
+				parametersMap.put("paidby", receiptInfo.getBillInfoWrapper().getBillInfo().getPaidBy());
+				parametersMap.put("referencenumber", billdetailsWrapper.getRefNo());
+				parametersMap.put("receipttype", billdetailsWrapper.getReceiptType());							
+				parametersMap.put("receiptdate", billdetailsWrapper.getReceiptDate());
+				parametersMap.put("businessdetails", billdetailsWrapper.getBusinessDetailsCode());
+				parametersMap.put("collectiontype", billdetailsWrapper.getCollectionType());
+				parametersMap.put("reasonforcancellation", billdetailsWrapper.getReasonForCancellation());
 				parametersMap.put("minimumamount", billdetails.getMinimumAmount());
 				parametersMap.put("totalamount", billdetails.getTotalAmount());
 				parametersMap.put("collmodesnotallwd", billdetails.getCollectionModesNotAllowed().toString());
 				parametersMap.put("consumercode", billdetails.getConsumerCode());
-				parametersMap.put("channel", billdetails.getChannel());
+				parametersMap.put("channel", billdetailsWrapper.getChannel());
 				parametersMap.put("fund", fund);
 				parametersMap.put("fundsource", fundSource);
 				parametersMap.put("function", function);
 				parametersMap.put("department", department);
-				parametersMap.put("boundary", billdetails.getBoundary());
-				parametersMap.put("voucherheader", billdetails.getVoucherHeader());
+				parametersMap.put("boundary", billdetailsWrapper.getBoundary());
+				parametersMap.put("voucherheader", billdetailsWrapper.getVoucherHeader());
 				parametersMap.put("depositedbranch", receiptInfo.getBankAccount().getBankBranch().getName());
 				parametersMap.put("createdby", receiptInfo.getAuditDetails().getCreatedBy());
 				parametersMap.put("createddate", receiptInfo.getAuditDetails().getCreatedDate());
@@ -221,13 +223,13 @@ public class ReceiptRepository {
 				}
 				
 				String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
-				Long receiptHeader = jdbcTemplate.queryForObject(receiptHeaderIdQuery, new Object[] {receiptInfo.getBillInfo().getPayeeName(),
-						receiptInfo.getBillInfo().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
+				Long receiptHeader = jdbcTemplate.queryForObject(receiptHeaderIdQuery, new Object[] {receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeName(),
+						receiptInfo.getBillInfoWrapper().getBillInfo().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
 				
 				Map<String, Object>[] parametersReceiptDetails = (Map<String, Object>[]) new Map[billdetails.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;
 	
-				for(BillAccountDetails billAccountDetails: billdetails.getBillAccountDetails()){
+				for(BillAccountDetail billAccountDetails: billdetails.getBillAccountDetails()){
 					final Map<String, Object> parameterMap = new HashMap<>();
 					if(validateGLCode(billAccountDetails.getGlcode(), receiptReq.getTenantId(), receiptReq.getRequestInfo())){
 						parameterMap.put("chartofaccount", billAccountDetails.getGlcode());
@@ -258,7 +260,7 @@ public class ReceiptRepository {
 					return isInsertionSuccessfull;
 				}		
 		}else{
-			logger.error("BuisnessDetails unavailable for the code: "+billdetails.getBusinessDetailsCode());
+			logger.error("BuisnessDetails unavailable for the code: "+billdetailsWrapper.getBusinessDetailsCode());
 			logger.error("Record COULDN'T BE PERSISTED");
 		}
 	 }  	

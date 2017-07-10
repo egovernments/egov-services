@@ -2,7 +2,6 @@ package org.egov.asset.model;
 
 import java.util.List;
 
-import org.egov.asset.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ public class AssetCriteria {
 	private String code;
 	private Long assetCategory;
 	private Long department;
-	private Status status;
+	private String status;
 	private Long locality;
 	private Long zone;
 	private Long revenueWard;
@@ -30,7 +29,7 @@ public class AssetCriteria {
 	private Long electionWard;
 	private Long doorNo;
 	private Long pinCode;
-	
+
 	private String tenantId;
 	private Long size;
 	private Long offset;

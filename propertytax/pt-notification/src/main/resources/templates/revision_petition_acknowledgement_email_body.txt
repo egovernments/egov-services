@@ -1,0 +1,8 @@
+Dear {{name}}, 
+
+Revision petition Application request accepted with Acknowledgement No.{{acknowledgementNo}}. Please use this number in all future communication.
+
+Thanks,
+{{municipalityName}}
+
+Note: “This is computer generated Email and does not need any signature and also please do not reply to this email”

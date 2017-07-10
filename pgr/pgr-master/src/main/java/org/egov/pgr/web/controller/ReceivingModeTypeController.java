@@ -233,8 +233,19 @@ public class ReceivingModeTypeController {
 					.message(PgrMasterConstants.RECEIVINGMODE_UNQ_ERROR_MESSAGE)
 					.field(PgrMasterConstants.RECEIVINGMODE_CODE_UNQ_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else
-			return;
+		}
+
+		if (errorFields.size() == 0) {
+			if (flag && modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
+					receivingMode.getTenantId())) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_CODE)
+						.message(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE)
+						.field(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+		}
+		return;
 	}
 
 	private void addChannelValidationErrors(final ReceivingModeTypeReq receivingModeRequest,

@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Invalid double data type format.",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.INVALID_DOUBLE_DATA_TYPE_FORMAT",
+                "message": "Invalid double data type format.",
+                "field": "serviceRequest.attribValues.name=cost"
+            }
+        ]
+    }
+}

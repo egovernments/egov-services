@@ -3,7 +3,7 @@ package org.egov.lams.service;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import static org.springframework.util.ObjectUtils.isEmpty;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementDetailsEs;
 import org.egov.lams.contract.AgreementIndex;
@@ -65,24 +65,27 @@ public class AgreementAdaptorService {
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		AgreementDetailsEs agreementDetailsEs = new AgreementDetailsEs();
 		AgreementIndex agreementIndex = new AgreementIndex();
+		Demand agreementDemand = new Demand();
 		
 		Asset asset = assetRepository.getAsset(agreement.getAsset().getId(),agreement.getTenantId());
 		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId(),agreement.getTenantId(),requestInfo);
 		City city = tenantRepository.fetchTenantByCode(agreement.getTenantId());
-		Demand agreementDemand = demandRepository.getDemandBySearch(agreement.getDemands().get(0), agreement.getTenantId());
-				
+		if(agreement.getDemands() != null){
+		agreementDemand = demandRepository.getDemandBySearch(agreement.getDemands().get(0), agreement.getTenantId());
+		agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
+		}
 		agreementDetailsEs.setAsset(asset);
 		agreementDetailsEs.setAgreement(agreement);
 		agreementDetailsEs.setAllottee(allottee);
 		agreementDetailsEs.setCity(city);
 		agreementDetailsEs.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
+		if(!isEmpty(agreementDemand))
 		logger.info("setting rent details");
 		agreementDetailsEs.setRent(agreementDemand.getDemandDetails(),getCurrentInstallment(agreement),propertiesManager.getDemandReasonRent());
 		logger.info("rent details are added to indexer");
+		
 		agreementIndex.setAgreementDetails(agreementDetailsEs);
-		if(agreementDemand != null)
-		agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
-		//boundaryRepository.getBoundary(); FIXME make call to city controller
+		
 		return agreementIndex;
 	}
 	

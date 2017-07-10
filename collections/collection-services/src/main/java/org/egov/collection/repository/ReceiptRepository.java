@@ -58,8 +58,8 @@ import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.web.contract.BillAccountDetails;
-import org.egov.collection.web.contract.BillDetails;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
@@ -151,7 +151,7 @@ public class ReceiptRepository {
 			
 			//TODO: Trigger Apportioning logic from billingservice if the amountPaid is less than the totalAmount
 			
-			BillDetails billdetails = billdetailsWrapper.getBillDetails();
+			BillDetail billdetails = billdetailsWrapper.getBillDetails();
 			if(billdetailsWrapper.getCollectionType().equals("ONLINE")){
 				statusCode = "PENDING";
 			}else{
@@ -229,7 +229,7 @@ public class ReceiptRepository {
 				Map<String, Object>[] parametersReceiptDetails = (Map<String, Object>[]) new Map[billdetails.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;
 	
-				for(BillAccountDetails billAccountDetails: billdetails.getBillAccountDetails()){
+				for(BillAccountDetail billAccountDetails: billdetails.getBillAccountDetails()){
 					final Map<String, Object> parameterMap = new HashMap<>();
 					if(validateGLCode(billAccountDetails.getGlcode(), receiptReq.getTenantId(), receiptReq.getRequestInfo())){
 						parameterMap.put("chartofaccount", billAccountDetails.getGlcode());

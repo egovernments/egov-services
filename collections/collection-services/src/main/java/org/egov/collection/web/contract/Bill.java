@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Getter
 @Setter
 @ToString
-public class BillInfo   {
+public class Bill   {
 	//TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
 	private String id;
 
@@ -32,7 +32,7 @@ public class BillInfo   {
 
 	private Boolean isCancelled;
 
-	private List<BillDetails> billDetails = new ArrayList<>(); //for billing-service
+	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
 	
 	@JsonProperty("BillDetailsWrapper")
 	private List<BillDetailsWrapper> billDetailsWrapper = new ArrayList<>(); //for collection-service

@@ -45,7 +45,7 @@ import java.util.List;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.BillDetails;
+import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;

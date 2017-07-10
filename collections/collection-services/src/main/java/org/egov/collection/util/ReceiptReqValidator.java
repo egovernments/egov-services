@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.web.contract.BillAccountDetails;
-import org.egov.collection.web.contract.BillDetails;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
@@ -66,7 +66,7 @@ public class ReceiptReqValidator {
 		}
 		
 		for(BillDetailsWrapper billDetailsWrapper:  receipt.getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){
-			BillDetails billDetails = billDetailsWrapper.getBillDetails();
+			BillDetail billDetails = billDetailsWrapper.getBillDetails();
 			if(null == billDetailsWrapper.getReceiptType()|| billDetailsWrapper.getReceiptType().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)
@@ -95,7 +95,7 @@ public class ReceiptReqValidator {
 				errorFields.add(errorField);
 			}	
 			
-			for(BillAccountDetails billAccountDetails: billDetails.getBillAccountDetails()){
+			for(BillAccountDetail billAccountDetails: billDetails.getBillAccountDetails()){
 				
 				if(null == billAccountDetails.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)

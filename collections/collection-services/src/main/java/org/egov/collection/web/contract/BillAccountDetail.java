@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class BillAccountDetails   {
+public class BillAccountDetail   {
   
 	private String glcode;
 

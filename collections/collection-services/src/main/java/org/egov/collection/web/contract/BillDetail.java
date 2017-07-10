@@ -17,7 +17,7 @@ import org.joda.time.LocalDate;
 @Setter
 @Getter
 @ToString
-public class BillDetails   {
+public class BillDetail   {
   
 	private String id;
 
@@ -39,8 +39,8 @@ public class BillDetails   {
 	
 	private List<String> collectionModesNotAllowed = new ArrayList<String>();
     
-	@JsonProperty("BillAccountDetails")
-	private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();//for billing-service
+	@JsonProperty("BillAccountDetail")
+	private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();//for billing-service
 	
 	@JsonProperty("BillAccountDetailsWrapper")
 	private List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();//for collection-service
@@ -51,10 +51,7 @@ public class BillDetails   {
 
 	private String displayMessage;
 
-	private Boolean callBackForApportioning;
-
-	private Boolean partPaymentAllowed;
-	
+	private Boolean callBackForApportioning;	
 
 }
 

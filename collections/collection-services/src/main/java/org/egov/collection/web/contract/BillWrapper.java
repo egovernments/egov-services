@@ -9,8 +9,8 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class BillInfoWrapper {
+public class BillWrapper {
 
-	@JsonProperty("BillInfo")
-	private BillInfo billInfo;
+	@JsonProperty("Bill")
+	private Bill billInfo;
 }

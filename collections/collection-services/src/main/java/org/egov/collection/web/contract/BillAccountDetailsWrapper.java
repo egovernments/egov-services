@@ -11,9 +11,6 @@ import lombok.ToString;
 @ToString
 public class BillAccountDetailsWrapper {
 
-	@JsonProperty("BillAccountDetails")
-	private BillAccountDetails billAccountDetails;
-	
-	private String functionCode;
-
+	@JsonProperty("BillAccountDetail")
+	private BillAccountDetail billAccountDetails;
 }

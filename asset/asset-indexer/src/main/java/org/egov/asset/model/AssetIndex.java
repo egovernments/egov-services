@@ -31,6 +31,7 @@ public class AssetIndex {
 	private String assetCategoryType;
 	private Long assetCategoryparentId;
 	private String assetCategoryparentName;
+	private Double assetCategoryDepreciationRate;
 	private String depreciationMethod;
 
 	private String assetDetails;
@@ -60,92 +61,100 @@ public class AssetIndex {
 	private String totalArea;
 	private String assetAttributes;
 
-	public void setAssetData(Asset asset) {
-		this.tenantId = asset.getTenantId();
-		this.assetId = asset.getId();
-		this.assetName = asset.getName();
-		this.assetCode = asset.getCode();
+	private Boolean enableYearWiseDepreciation;
+	private Double depreciationRate;
 
-		AssetCategory assetCategory = asset.getAssetCategory();
-		this.assetCategoryId = assetCategory.getId();
-		this.assetCategoryName = assetCategory.getName();
-		this.assetCategoryCode = assetCategory.getCode();
-		this.assetCategoryparentId = assetCategory.getParent();
+	private String yearWiseDepreciation;
 
-		// Todo parent name
+	public void setAssetData(final Asset asset) {
+		tenantId = asset.getTenantId();
+		assetId = asset.getId();
+		assetName = asset.getName();
+		assetCode = asset.getCode();
+
+		final AssetCategory assetCategory = asset.getAssetCategory();
+		assetCategoryId = assetCategory.getId();
+		assetCategoryName = assetCategory.getName();
+		assetCategoryCode = assetCategory.getCode();
+		assetCategoryparentId = assetCategory.getParent();
+		assetCategoryDepreciationRate = assetCategory.getDepreciationRate();
+
 		if (assetCategory.getDepreciationMethod() != null)
-			this.depreciationMethod = assetCategory.getDepreciationMethod().toString();
+			depreciationMethod = assetCategory.getDepreciationMethod().toString();
 
 		if (asset.getModeOfAcquisition() != null)
-			this.modeOfAcquisition = asset.getModeOfAcquisition().toString();
+			modeOfAcquisition = asset.getModeOfAcquisition().toString();
 
 		if (asset.getStatus() != null)
-			this.status = asset.getStatus().toString();
+			status = asset.getStatus();
 
-		this.assetDetails = asset.getAssetDetails();
-		this.description = asset.getDescription();
-		this.dateOfCreation = asset.getDateOfCreation();
-		this.remarks = asset.getRemarks();
-		this.length = asset.getLength();
-		this.width = asset.getWidth();
-		this.totalArea = asset.getTotalArea();
-		String property = null;
+		assetDetails = asset.getAssetDetails();
+		description = asset.getDescription();
+		dateOfCreation = asset.getDateOfCreation();
+		remarks = asset.getRemarks();
+		length = asset.getLength();
+		width = asset.getWidth();
+		totalArea = asset.getTotalArea();
+		final ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(Include.NON_NULL);
-			Asset asset2 = new Asset();
+			final Asset asset2 = new Asset();
 			asset2.setAssetAttributes(asset.getAssetAttributes());
-			property = objectMapper.writeValueAsString(asset2);
-		} catch (JsonProcessingException e) {
+			assetAttributes = objectMapper.writeValueAsString(asset2);
+		} catch (final JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
-		this.assetAttributes = property;
 		setAssetDepartment(asset.getDepartment());
+
+		enableYearWiseDepreciation = asset.getEnableYearWiseDepreciation();
+		depreciationRate = asset.getDepreciationRate();
+
+		try {
+			yearWiseDepreciation = objectMapper.writeValueAsString(asset.getYearWiseDepreciation());
+		} catch (final JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	public void setAssetDepartment(Department department) {
-
-		this.departmentId = department.getId();
-		this.departmentName = department.getName();
-		this.departmentCode = department.getCode();
-
+	public void setAssetDepartment(final Department department) {
+		departmentId = department.getId();
+		departmentName = department.getName();
+		departmentCode = department.getCode();
 	}
 
-	public void setAssetLocation(Location location, Map<Long, Boundary> map) {
-
-		this.locality = location.getLocality();
-		Boundary locationBoundary = map.get(location.getLocality());
+	public void setAssetLocation(final Location location, final Map<Long, Boundary> map) {
+		locality = location.getLocality();
+		final Boundary locationBoundary = map.get(location.getLocality());
 		if (locationBoundary != null)
-			this.localityName = locationBoundary.getName();
+			localityName = locationBoundary.getName();
 
-		this.zone = location.getZone();
-		Boundary zoneBoundary = map.get(location.getZone());
+		zone = location.getZone();
+		final Boundary zoneBoundary = map.get(location.getZone());
 		if (zoneBoundary != null)
-			this.zoneName = map.get(location.getZone()).getName();
+			zoneName = map.get(location.getZone()).getName();
 
-		this.revenueWard = location.getRevenueWard();
-		Boundary revenueWardBoundary = map.get(location.getRevenueWard());
+		revenueWard = location.getRevenueWard();
+		final Boundary revenueWardBoundary = map.get(location.getRevenueWard());
 		if (revenueWardBoundary != null)
-			this.revenueWardName = map.get(location.getRevenueWard()).getName();
+			revenueWardName = map.get(location.getRevenueWard()).getName();
 
-		this.block = location.getBlock();
-		Boundary blockBoundary = map.get(location.getBlock());
+		block = location.getBlock();
+		final Boundary blockBoundary = map.get(location.getBlock());
 		if (blockBoundary != null)
-			this.blockName = map.get(location.getBlock()).getName();
+			blockName = map.get(location.getBlock()).getName();
 
-		this.street = location.getStreet();
-		Boundary streetBoundary = map.get(location.getStreet());
+		street = location.getStreet();
+		final Boundary streetBoundary = map.get(location.getStreet());
 		if (streetBoundary != null)
-			this.streetName = map.get(location.getStreet()).getName();
+			streetName = map.get(location.getStreet()).getName();
 
-		this.electionWard = location.getElectionWard();
-		Boundary electionWardBoundary = map.get(location.getElectionWard());
+		electionWard = location.getElectionWard();
+		final Boundary electionWardBoundary = map.get(location.getElectionWard());
 		if (electionWardBoundary != null)
-			this.electionWardName = map.get(location.getElectionWard()).getName();
+			electionWardName = map.get(location.getElectionWard()).getName();
 
-		this.doorNo = location.getDoorNo();
-		this.pinCode = location.getPinCode();
-
+		doorNo = location.getDoorNo();
+		pinCode = location.getPinCode();
 	}
 
 }

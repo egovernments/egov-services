@@ -2,6 +2,8 @@ package org.egov.property.api;
 
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
 import org.egov.models.OccuapancyMasterRequest;
@@ -524,6 +526,60 @@ public class PropertyMasterController {
 	public UsageMasterResponse updateUsageMaster(@RequestBody UsageMasterRequest usageMasterRequest) throws Exception {
 
 		return masterService.updateUsageMaster(usageMasterRequest);
+	}
+
+	/**
+	 * This will create the depreciation
+	 * 
+	 * @param tenantId
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/depreciations/_create", method = RequestMethod.POST)
+	public DepreciationResponse createDepreciation(@RequestParam(required = true) String tenantId,
+			@RequestBody DepreciationRequest depreciationRequest) throws Exception {
+		return masterService.createDepreciation(tenantId, depreciationRequest);
+	}
+
+	/**
+	 * This will update the depreciation based on the given object
+	 * 
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/depreciations/_update", method = RequestMethod.POST)
+	public DepreciationResponse updateDepreciation(@RequestBody DepreciationRequest depreciationRequest)
+			throws Exception {
+		return masterService.updateDepreciation(depreciationRequest);
+
+	}
+
+	/**
+	 * This will search the depreciations based on the given inputs.
+	 * 
+	 * @param requestInfoWrapper
+	 * @param tenantId
+	 * @param ids
+	 * @param fromYear
+	 * @param toYear
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offset
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/depreciations/_search", method = RequestMethod.POST)
+	public DepreciationResponse searchDepreciation(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
+			@RequestParam(required = false) Integer fromYear, @RequestParam(required = false) Integer toYear,
+			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offset)
+			throws Exception {
+		return masterService.searchDepreciation(requestInfoWrapper.getRequestInfo(), tenantId, ids, fromYear, toYear,
+				code, nameLocal, pageSize, offset);
 	}
 
 }

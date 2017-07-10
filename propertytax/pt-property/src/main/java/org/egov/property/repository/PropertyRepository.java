@@ -34,7 +34,7 @@ import org.egov.property.repository.builder.SearchPropertyBuilder;
 import org.egov.property.repository.builder.UnitBuilder;
 import org.egov.property.repository.builder.UserBuilder;
 import org.egov.property.repository.builder.VacantLandDetailBuilder;
-import org.egov.property.util.TimeStampUtil;
+import org.egov.property.utility.TimeStampUtil;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

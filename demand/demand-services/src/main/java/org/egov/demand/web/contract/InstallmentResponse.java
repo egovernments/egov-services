@@ -22,6 +22,6 @@ public class InstallmentResponse {
 	@JsonProperty("ResponseInfo")
 	ResponseInfo responseInfo;
 
-	@JsonProperty("DemandReason")
+	@JsonProperty("Installments")
 	private List<Installment> installments = new ArrayList<Installment>();
 }

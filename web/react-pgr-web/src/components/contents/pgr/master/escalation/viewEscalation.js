@@ -254,9 +254,9 @@ class ViewEscalation extends Component {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		         <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
-                    <th>Grievance Type</th>
-                    <th>From Position</th>
-                    <th>To Position</th>
+                    <th>{translate('pgr.lbl.grievance.type')}</th>
+                    <th>{translate('pgr.lbl.fromposition')}</th>
+                    <th>{translate('pgr.lbl.toposition')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>

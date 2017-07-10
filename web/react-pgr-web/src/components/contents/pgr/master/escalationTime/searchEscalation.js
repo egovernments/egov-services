@@ -278,7 +278,7 @@ class SearchEscalation extends Component {
       return(<div className="searchEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation Time< /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate('pgr.lbl.escalationtime')}< /div>} />
               <CardText>
                   <Card>
                       <CardText>

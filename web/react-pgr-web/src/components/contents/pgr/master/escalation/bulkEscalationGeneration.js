@@ -300,14 +300,14 @@ class BulkEscalationGeneration extends Component {
       	  if(isSearchClicked)
       		return (
    	        <Card>
-   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} > Search Result </strong>}/>
+   	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} >{translate('pgr.lbl.result')}</strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
-   		              <th>Grievance Type</th>
-   		              <th>From Position</th>
-   		              <th>To Position</th>
+   		              <th>{translate('pgr.lbl.grievance.type')}</th>
+   		              <th>{translate('pgr.lbl.fromposition')}</th>
+   		              <th>{translate('pgr.lbl.toposition')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -328,7 +328,7 @@ class BulkEscalationGeneration extends Component {
       return(<div className="bulkEscalationGeneration">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Bulk Escalation Generation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > translate('pgr.lbl.bueg') < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -486,9 +486,7 @@ const mapDispatchToProps = dispatch => ({
     },
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
-    },
-
-    
+    }, 
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BulkEscalationGeneration);

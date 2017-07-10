@@ -83,6 +83,7 @@ public class CustomControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidDateAttributeEntryException.class)
+
     public ErrorResponse handleInvalidDateAttributeEntryException(InvalidDateAttributeEntryException ex) {
         return new InvalidDateAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
     }
@@ -103,5 +104,23 @@ public class CustomControllerAdvice {
     @ExceptionHandler(InvalidDoubleAttributeEntryException.class)
     public ErrorResponse handleInvalidDoubleAttributeEntryException(InvalidDoubleAttributeEntryException ex) {
         return new InvalidDoubleAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MalformedDraftException.class)
+    public ErrorResponse handleMalformedDraftException(MalformedDraftException ex) {
+        return new MalformedDraftExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DraftReadException.class)
+    public ErrorResponse handleDraftReadException(MalformedDraftException ex) {
+        return new DraftReadExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(DraftNotFoundException.class)
+    public ErrorResponse handleDraftNotFoundException(DraftNotFoundException ex) {
+        return new DraftNotFoundExceptionAdapter().adapt(null);
     }
 }

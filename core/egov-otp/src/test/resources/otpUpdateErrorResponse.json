@@ -4,6 +4,12 @@
     "code": 500,
     "message": "OTP update unsuccessful",
     "description": null,
-    "fields": []
+    "fields": [
+      {
+        "code": "OTP.UPDATE_FAILED",
+        "message": "OTP update unsuccessful",
+        "field": ""
+      }
+    ]
   }
 }

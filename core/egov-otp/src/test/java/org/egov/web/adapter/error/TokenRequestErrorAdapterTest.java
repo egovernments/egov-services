@@ -1,8 +1,8 @@
 package org.egov.web.adapter.error;
 
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.domain.model.TokenRequest;
-import org.egov.web.contract.ErrorField;
-import org.egov.web.contract.ErrorResponse;
 import org.junit.Test;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class TokenRequestErrorAdapterTest {
         final ErrorResponse errorResponse = errorAdapter.adapt(tokenRequest);
 
         assertNotNull(errorResponse);
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("OTP.IDENTITY_MANDATORY", errorFields.get(0).getCode());
@@ -36,7 +36,7 @@ public class TokenRequestErrorAdapterTest {
         final ErrorResponse errorResponse = errorAdapter.adapt(tokenRequest);
 
         assertNotNull(errorResponse);
-        final List<ErrorField> errorFields = errorResponse.getErrorFields();
+        final List<ErrorField> errorFields = errorResponse.getError().getFields();
         assertNotNull(errorFields);
         assertEquals(1, errorFields.size());
         assertEquals("OTP.TENANT_ID_MANDATORY", errorFields.get(0).getCode());

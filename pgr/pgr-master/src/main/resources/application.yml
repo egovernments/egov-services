@@ -251,7 +251,7 @@ ReportDefinitions:
   summary: Functionary Report grouped by Functionary Name - based on a date period
   version: 1.0.0
   sourceColumns:
-  - name: name
+  - name: employeename
     label: reports.pgr.functionary.name
     type: string
     source: egpgr_user
@@ -326,7 +326,7 @@ ReportDefinitions:
     (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
     precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,
     egpgr_complainttype ctype, egeis_assignment ass, eg_user us WHERE cs.positionid
-    = ass.employeeid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.createddate >= $fromDate and
+    = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.createddate >= $fromDate and
     cs.createddate <= $toDate GROUP BY us.username;
 - reportName: AgeingByBoundary
   summary: Ageing report by boundary
@@ -386,10 +386,10 @@ ReportDefinitions:
     cs.lastmodifieddate - cs.createddate) / 86400::double precision) >= 0::double
     precision AND (date_part('epoch'::text, cs.lastmodifieddate - cs.createddate)
     / 86400::double precision) <= 2::double precision THEN 1 ELSE NULL::integer END)
-    AS lsthn2 FROM egpgr_complainttype ctype, submission cs LEFT JOIN eg_boundary
-    boundary ON cs.latitude::numeric = boundary.latitude AND cs.longitude::numeric
-    = boundary.longitude and cs.servicecode = ctype.code WHERE cs.createddate >= $fromDate and cs.createddate <= $toDate
-    and cs.tenantid = $tenantid AND cs.status::text = 'COMPLETED' GROUP BY boundary.name;
+    AS lsthn2 FROM egpgr_complainttype ctype, submission cs,eg_boundary
+    boundary where cs.latitude = boundary.latitude AND cs.longitude
+    = boundary.longitude and cs.servicecode = ctype.code and cs.createddate >= $fromDate and cs.createddate <= $toDate
+    and cs.tenantid = $tenantid AND cs.status=$grievancestatustype GROUP BY boundary.name;
 - reportName: AgeingByDepartment
   summary: Ageing report by department
   version: 1.0.0

@@ -69,6 +69,41 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: name
+          in: query
+          required: false
+          description: The full name of the user.
+          type: string
+          minLength: 3
+          maxLength: 100
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: mobileNumber
+          in: query
+          required: false
+          description: Mobile number ofuser the user
+          type: string
+          maxLength: 10
+          pattern: "[0-9]"
+          exclusiveMinimum: false
+          exclusiveMaximum: true
+        - name: aadhaarNumber
+          in: query
+          required: false
+          description: Aadhaar number of the user
+          type: string
+          pattern: "[0-9]"
+          maxLength: 12
+          exclusiveMinimum: false
+          exclusiveMaximum: true
+        - name: pan
+          in: query
+          required: false
+          description: PAN number of the user
+          type: string
+          maxLength: 100
+          exclusiveMinimum: false
+          exclusiveMaximum: true
         - name: roleCodes
           in: query
           required: false

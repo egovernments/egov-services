@@ -20,7 +20,7 @@ public interface DraftJpaRepository extends JpaRepository<Draft, Long> {
 
     @Modifying
     @Transactional
-    @Query("delete from Draft d where d.id in :draftIdList")
-    void deleteByIdList(@Param("draftIdList") List<Long> draftIdList);
+    @Query("delete from Draft d where d.id in :ids")
+    void deleteByIdList(@Param("ids") List<Long> draftIdList);
 
 }

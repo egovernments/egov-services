@@ -1,0 +1,18 @@
+{
+    "RequestInfo": {
+        "apiId": "org.egov.pt",
+        "ver": "1.0",
+        "ts": "01-04-2017 01:01:01",
+        "action": "asd",
+        "did": "4354648646",
+        "key": "xyz",
+        "msgId": "654654",
+        "requesterId": "61",
+        "userInfo": {
+            "id": 73
+        }
+    },
+    "ids": [
+        1
+    ]
+}

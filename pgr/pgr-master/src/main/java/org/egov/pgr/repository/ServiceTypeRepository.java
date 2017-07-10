@@ -75,7 +75,7 @@ public class ServiceTypeRepository {
 	public ServiceRequest persistServiceType(final ServiceRequest serviceRequest) {
 		LOGGER.info("Service Type Request::" + serviceRequest);
 		final String complaintInsert = serviceTypeQueryBuilder.insertComplaintTypeQuery();
-		boolean active = true;
+		boolean active = (null != serviceRequest.getService().getActive() ? serviceRequest.getService().getActive() : true);
 		final Object[] object = new Object[] { serviceRequest.getService().getServiceName(),
 				serviceRequest.getService().getServiceCode(), serviceRequest.getService().getDescription(), active, serviceRequest.getService().getSlaHours(),
 				serviceRequest.getService().getTenantId(), serviceRequest.getService().getType(),
@@ -146,7 +146,7 @@ public class ServiceTypeRepository {
         final String serviceTypeUpdate = ServiceTypeQueryBuilder.updateServiceTypeQuery();
         final ServiceType serviceType = serviceRequest.getService();
         final Object[] obj = new Object[] { serviceType.getServiceName(),
-        		serviceType.getDescription(), serviceType.getCategory(), serviceType.isActive(), serviceType.isHasFinancialImpact(), serviceRequest.getRequestInfo().getUserInfo().getId(), 
+        		serviceType.getDescription(), serviceType.getCategory(), serviceType.getActive(), serviceType.isHasFinancialImpact(), serviceRequest.getRequestInfo().getUserInfo().getId(), 
                 new Date(new java.util.Date().getTime()), serviceType.getServiceCode(), serviceType.getTenantId() };
         jdbcTemplate.update(serviceTypeUpdate, obj);
         final String valueRemove = ServiceTypeQueryBuilder.removeValueQuery();

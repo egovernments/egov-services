@@ -160,6 +160,7 @@ public class ServiceTypeRowMapper implements RowMapper<ServiceType> {
 			serviceType.setCategory(rs.getInt("category"));
 			serviceType.setHasFinancialImpact(rs.getBoolean("hasfinancialimpact"));
 			serviceType.setSlaHours(rs.getInt("slahours"));
+			serviceType.setActive(rs.getBoolean("isactive"));
 		} catch (Exception e) {
 			LOGGER.error("Encountered an Exception while creating Service Type Object using Result Set " + e);
 		}

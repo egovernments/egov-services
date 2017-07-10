@@ -18,6 +18,9 @@ import org.egov.models.Boundary;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.Depreciation;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
 import org.egov.models.Floor;
@@ -1329,7 +1332,7 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("property.create"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.create.approved"), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1591,9 +1594,129 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("property.update"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.update.approved"), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void createDepreciation() {
+
+		DepreciationRequest depreciationRequest = new DepreciationRequest();
+		depreciationRequest.setRequestInfo(getRequestInfoObject());
+
+		String tenantId = "123";
+		Depreciation depreciation = new Depreciation();
+		List<Depreciation> depreciations = new ArrayList<>();
+		depreciation.setTenantId("123");
+		depreciation.setNameLocal("prasad");
+		depreciation.setFromYear(2017);
+		depreciation.setCode("456");
+		depreciation.setToyear(2016);
+		depreciation.setDescription("Intial loading");
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("prasad");
+		auditDetails.setLastModifiedBy("pranav");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+
+		depreciation.setAuditDetails(auditDetails);
+		depreciations.add(depreciation);
+
+		depreciationRequest.setDepreciations(depreciations);
+		DepreciationResponse depreciationResponse = null;
+
+		try {
+			depreciationResponse = masterService.createDepreciation(tenantId, depreciationRequest);
+		} catch (Exception e) {
+
+			assertTrue(false);
+		}
+
+		if (depreciationResponse.getDepreciations().size() == 0) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyDepreciation() {
+
+		DepreciationRequest depreciationRequest = new DepreciationRequest();
+		depreciationRequest.setRequestInfo(getRequestInfoObject());
+
+		Depreciation depreciation = new Depreciation();
+		List<Depreciation> depreciations = new ArrayList<>();
+		depreciation.setId(1l);
+		depreciation.setTenantId("12345");
+		depreciation.setNameLocal("prasad");
+		depreciation.setFromYear(2017);
+		depreciation.setCode("4567");
+		depreciation.setToyear(2016);
+		depreciation.setDescription("Intial loading");
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("pankaj");
+		auditDetails.setLastModifiedBy("paku");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+
+		depreciation.setAuditDetails(auditDetails);
+		depreciations.add(depreciation);
+
+		depreciationRequest.setDepreciations(depreciations);
+		DepreciationResponse depreciationResponse = null;
+
+		try {
+			depreciationResponse = masterService.updateDepreciation(depreciationRequest);
+		} catch (Exception e) {
+
+			assertTrue(false);
+		}
+
+		if (depreciationResponse == null)
+			assertTrue(false);
+
+		if (depreciationResponse.getDepreciations().size() == 0)
+			assertTrue(false);
+
+		assertTrue(true);
+	}
+
+	@Test
+	public void searchDepreciations() {
+
+		String tenantId = "12345";
+		Integer[] ids = new Integer[] { 1, 2, 7 };
+
+		Integer fromYear = 2017;
+		Integer toYear = 2016;
+		String code = "4567";
+		String nameLocal = "prasad";
+		Integer pageSize = 20;
+		Integer offset = 0;
+
+		DepreciationResponse depreciationResponse = null;
+
+		try {
+			depreciationResponse = masterService.searchDepreciation(getRequestInfoObject(), tenantId, ids, fromYear,
+					toYear, code, nameLocal, pageSize, offset);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (depreciationResponse == null)
+			assertTrue(false);
+
+		if (depreciationResponse.getDepreciations().size() == 0) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+
 	}
 }

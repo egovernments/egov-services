@@ -55,7 +55,7 @@ public class DraftServiceTest {
     public void testShouldDeleteDraft() {
         List<Long> draftIdList = Collections.singletonList(1L);
         draftService.delete(draftIdList);
-        verify(draftRepository).deleteDraft(draftIdList);
+        verify(draftRepository).delete(draftIdList);
     }
 
     private NewDraft saveDraftRequest() {

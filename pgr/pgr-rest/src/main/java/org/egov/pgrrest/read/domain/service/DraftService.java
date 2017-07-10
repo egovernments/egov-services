@@ -27,6 +27,10 @@ public class DraftService {
     }
 
     public void delete(List<Long> draftIdList) {
-        draftRepository.deleteDraft(draftIdList);
+        draftRepository.delete(draftIdList);
+    }
+
+    public void delete(long draftId) {
+        draftRepository.delete(draftId);
     }
 }

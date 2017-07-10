@@ -1,4 +1,4 @@
-package org.egov.property.util;
+package org.egov.property.utility;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

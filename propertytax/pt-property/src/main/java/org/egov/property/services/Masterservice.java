@@ -2,6 +2,8 @@ package org.egov.property.services;
 
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
 import org.egov.models.OccuapancyMasterRequest;
@@ -362,5 +364,45 @@ public interface Masterservice {
 	 * @throws Exception
 	 */
 	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) throws Exception;
+
+	/**
+	 * This will create the depreciations based on the given object
+	 * 
+	 * @param tenantId
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	public DepreciationResponse createDepreciation(String tenantId, DepreciationRequest depreciationRequest)
+			throws Exception;
+
+	/**
+	 * This will update the depreciations based on the given depreciation object
+	 * 
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	public DepreciationResponse updateDepreciation(DepreciationRequest depreciationRequest) throws Exception;
+
+	/**
+	 * 
+	 * This will search the depreciations based on the given input parameters
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param fromYear
+	 * @param toYear
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offset
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset)
+			throws Exception;
 
 }

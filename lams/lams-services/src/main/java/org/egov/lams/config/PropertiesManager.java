@@ -31,9 +31,6 @@ public class PropertiesManager {
 
 	@Value("${egov.services.allottee_service.createpath}")
 	private String allotteeServiceCreatePAth;
-	
-	@Value("${egov.services.lams.ulb_number}")
-	private String ulbNumber;
 
 	@Value("${egov.services.lams.agreementnumber_sequence}")
 	private String agreementNumberSequence;
@@ -154,6 +151,9 @@ public class PropertiesManager {
 	
 	@Value("${commons.workflow.cancel.action}")
 	public String commonsWorkflowCancelAction;
+	
+	@Value("${egov.services.tenant.host}")
+	public String tenantServiceHostName;
 	
 	@Value("${app.timezone}")
 	public String timeZone;

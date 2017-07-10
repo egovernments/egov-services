@@ -47,11 +47,15 @@ import javax.validation.Valid;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.Department;
 import org.egov.collection.model.DepartmentSearchCriteria;
+import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.DepartmentResponse;
+import org.egov.collection.web.contract.Designation;
+import org.egov.collection.web.contract.DesignationResponse;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.UserResponse;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
@@ -73,7 +77,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("receipt-workflow")
+@RequestMapping("/receipt-workflow")
 public class WorkflowController {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ReceiptController.class);
@@ -118,7 +122,7 @@ public class WorkflowController {
 		return getDeptSuccessResponse(departments, departmentSearchCriteria.getRequestInfo());
 	}
 	
-/*	@PostMapping("/designations/_search")
+	@PostMapping("/designations/_search")
 	@ResponseBody
 	public ResponseEntity<?> getDesignations(
 			@RequestBody @Valid final DesignationSearchCriteria designationSearchCriteria, BindingResult errors) {
@@ -127,10 +131,18 @@ public class WorkflowController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}	
-		
-		List<Department> departments = workflowService.getDepartments(designationSearchCriteria.getRequestInfo());
+		if(!validateTenantId(designationSearchCriteria.getTenantId())){
+			LOGGER.info("Invalid TenantId");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		List<Designation> designations = workflowService.getDesignations(designationSearchCriteria);
 				
-		if(null == departments){
+		if(null == designations){
 			LOGGER.info("Service returned null");
 			Error error = new Error();
 			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);
@@ -141,8 +153,8 @@ public class WorkflowController {
 			
 		}
 				
-		return getDeptSuccessResponse(departments, designationSearchCriteria.getRequestInfo());
-	} */
+		return getDesigSuccessResponse(designations, designationSearchCriteria.getRequestInfo());
+	} 
 	
 	
 	@PostMapping("/users/_search")
@@ -198,6 +210,9 @@ public class WorkflowController {
 			
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
+		PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
+		positionSearchCriteriaWrapper.getPositionSearchCriteria().setEmployeeId(workflowDetails.getUser());
+		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
 		WorkflowDetails workflowDetailsObj = workflowService.pushToQueue(workflowDetails);
 				
 		if(null == workflowDetailsObj){
@@ -213,10 +228,7 @@ public class WorkflowController {
 		
 		return new ResponseEntity<>(workflowDetailsObj, HttpStatus.OK);				
 	}
-	
-	
-	
-	
+		
 	private ResponseEntity<?> getDeptSuccessResponse(List<Department> departments,
 			RequestInfo requestInfo) {
 		LOGGER.info("Building success response.");
@@ -239,6 +251,17 @@ public class WorkflowController {
 		return new ResponseEntity<>(userResponse, HttpStatus.OK);
 	}
 
+	private ResponseEntity<?> getDesigSuccessResponse(List<Designation> designations,
+			RequestInfo requestInfo) {
+		LOGGER.info("Building success response.");
+		DesignationResponse designationResponse = new DesignationResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		designationResponse.setDesignations(designations);
+		designationResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<>(designationResponse, HttpStatus.OK);
+	}
+	
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();		
 		Error error = new Error();

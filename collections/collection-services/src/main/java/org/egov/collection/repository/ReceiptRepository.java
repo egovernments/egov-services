@@ -289,7 +289,7 @@ public class ReceiptRepository {
 		return response;
 	}
 	
-	private boolean validateGLCode(String glcode, String tenantId,  RequestInfo requestInfo ){
+	public boolean validateGLCode(String glcode, String tenantId,  RequestInfo requestInfo ){
 		logger.info("Validating if the glcode exists in the financials system.");	
 		boolean isCodeValid = true;
 		

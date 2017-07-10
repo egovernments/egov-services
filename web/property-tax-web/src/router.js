@@ -13,7 +13,7 @@ import Occupancy from './components/contents/Occupancy';
 import MutationReason from './components/contents/MutationReason';
 import BuildingClassification from './components/contents/BuildingClassification';
 
-import CruProperty from './components/contents/CruProperty';
+import CreateProperty from './components/contents/CreateProperty';
 
 import CreateVacantLand from'./components/contents/CreateVacantLand'
 
@@ -33,7 +33,7 @@ const Main = () => (
       <Route exact path='/property-type' component={PropertyType}/>
       <Route exact path='/mutation-reason' component={MutationReason}/>
       <Route exact path='/building-classification' component={BuildingClassification}/>
-      <Route exact path='/cru-property' component={CruProperty}/>
+      <Route exact path='/create-property' component={CreateProperty}/>
     </Switch>
   </main>
 )

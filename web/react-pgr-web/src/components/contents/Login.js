@@ -165,6 +165,7 @@ class Login extends Component {
    }
 
    loginRequest (e) {
+	var current = this;
     this.props.setLoadingStatus('loading');
 	   e.preventDefault();
       var self = this, props = this.props;
@@ -196,6 +197,7 @@ class Login extends Component {
         props.login(false, response.data.access_token, response.data.UserRequest);
 
       }).catch(function(response) {
+		  current.props.setLoadingStatus('hide');
         self.setState({
           errorMsg: "Please check your username and password"
         });

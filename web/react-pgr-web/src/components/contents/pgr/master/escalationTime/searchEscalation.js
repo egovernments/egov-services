@@ -118,7 +118,6 @@ class SearchEscalation extends Component {
           }
     });
 
-    
       initForm()
 
     }
@@ -127,8 +126,6 @@ class SearchEscalation extends Component {
       let self = this;
 
       let{setLoadingStatus} = this.props;
-
-
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
         setLoadingStatus('hide');
@@ -168,7 +165,7 @@ class SearchEscalation extends Component {
   
 
 
-   componentDidUpdate() {
+ componentDidUpdate() {
        $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],

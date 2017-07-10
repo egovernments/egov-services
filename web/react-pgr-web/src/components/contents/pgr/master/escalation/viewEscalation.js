@@ -161,6 +161,10 @@ class ViewEscalation extends Component {
       });
 
     }
+	
+		componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+	}
 
    componentDidUpdate() {
        $('#searchTable').DataTable({
@@ -189,46 +193,22 @@ class ViewEscalation extends Component {
 
        let self = this;
 
-    let searchSetFrom = {
+	let searchSetFrom = {
 		  fromPosition: this.props.viewEscalation.position,
-		  serviceCode:this.props.viewEscalation.grievanceType
+		  serviceCode: this.props.viewEscalation.grievanceType
 	  };
 	  
-	   let searchSetTo = {
-		  toPosition: this.props.viewEscalation.position,
-		  serviceCode:this.props.viewEscalation.grievanceType
-	  };
 
        Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetFrom).then(function(response) {
 		   setLoadingStatus('hide');
 			flag = 1;
-			for(let i=0; i<response.escalationHierarchies.length;i++){
 				   self.setState({
-						searchResult: [
-							...self.state.searchResult,
-							response.escalationHierarchies[i]
-						],
+						searchResult: response.escalationHierarchies,
 						isSearchClicked: true
 					  });
-			}
+
       
         }, function(err) {
-            console.log(err);
-        });
-		
-		Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetTo).then(function(response) {
-      setLoadingStatus('hide');
-			flag = 1;
-			for(let i=0; i<response.escalationHierarchies.length;i++){
-				   self.setState({
-						searchResult: [
-							...self.state.searchResult,
-							response.escalationHierarchies[i]
-						],
-						isSearchClicked: true
-					  });
-			}
-		  }, function(err) {
             console.log(err);
         });
    
@@ -314,7 +294,7 @@ class ViewEscalation extends Component {
                   	                            value: chosenRequest.serviceCode
                   	                          }
                   	                        };
-                  	                        handleChange(e, "grievanceType", true, "");
+                  	                        handleChange(e, "grievanceType", false, "");
                   	                       }}
                                         />
                                   </Col>
@@ -335,7 +315,7 @@ class ViewEscalation extends Component {
                   	                            value: chosenRequest.id
                   	                          }
                   	                        };
-                  	                        handleChange(e, "position", true, "");
+                  	                        handleChange(e, "position", false, "");
                   	                       }}
                                         />
                                   </Col>
@@ -345,7 +325,7 @@ class ViewEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.search')} primary={true}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit"  label={translate('core.lbl.search')} primary={true}/>
 
                   </div>
                   {viewTable()}
@@ -368,7 +348,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["position", "grievanceType"]
+          required: []
         },
         pattern: {
           current: [],

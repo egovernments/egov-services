@@ -179,6 +179,65 @@ class BulkEscalationGeneration extends Component {
           }
      });
   }
+  
+  updateToPosition = () => {
+	  
+	let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, bulkEscalationGeneration} = this.props;  
+	
+	var current = this;
+    
+	var body = {
+      escalationHierarchy: []
+    }
+	
+			setLoadingStatus("loading");
+	  
+	  if(bulkEscalationGeneration.serviceCode) {
+		  
+		for(let i = 0;i<bulkEscalationGeneration.serviceCode.length;i++) {
+			var Data = {
+				serviceCode : bulkEscalationGeneration.serviceCode[i],
+				tenantId : "default",
+				fromPosition : bulkEscalationGeneration.fromPosition,
+				toPosition : bulkEscalationGeneration.toPosition,
+			}
+			body.escalationHierarchy.push(Data);
+		}
+	  }
+
+    Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
+		setLoadingStatus("hide");
+		toggleDailogAndSetText(true, "To Position Updated Successfully");
+          let query = {
+			fromPosition:bulkEscalationGeneration.fromPosition,
+			serviceCode : bulkEscalationGeneration.serviceCode
+		}
+    
+                Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
+                    setLoadingStatus('hide');
+                    if (response.escalationHierarchies[0] != null) {
+                        flag = 1;
+                        current.setState({
+                          searchResult: response.escalationHierarchies,
+                          isSearchClicked: true
+                        })
+
+                    } else {
+                      current.setState({
+                        noData: true,
+                      })
+                    }
+                }).catch((error)=>{
+					 toggleSnackbarAndSetText(true, error);
+                })
+
+              current.setState((prevState)=>{
+                  prevState.editIndex=-1
+                })
+    }).catch((error)=>{
+		toggleSnackbarAndSetText(true, error);
+    })
+  }
 
   submitForm = (e) => {
       e.preventDefault()
@@ -189,7 +248,10 @@ class BulkEscalationGeneration extends Component {
 
       setLoadingStatus("loading");
 
-      let searchSet = this.props.bulkEscalationGeneration;
+      let searchSet = {
+		  fromPosition : this.props.bulkEscalationGeneration.fromPosition,
+		  serviceCode: this.props.bulkEscalationGeneration.serviceCode
+	  }
       
         Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSet).then(function(response) {
             setLoadingStatus("hide");
@@ -200,9 +262,7 @@ class BulkEscalationGeneration extends Component {
           }); 
         }, function(err) {
             toggleSnackbarAndSetText(true, err)
-        });
-        
-     
+        }); 
   }
 
     render() {
@@ -255,6 +315,11 @@ class BulkEscalationGeneration extends Component {
    		          </tbody>
    		        </Table>
    		       </CardText>
+			   <div style={{textAlign:'center'}}>
+				  <RaisedButton style={{margin:'15px 5px'}} type="button" label={translate('core.lbl.save')} primary={true} onClick={()=>{
+					  self.updateToPosition();
+				  }}/>
+			   </div>
    		    </Card>
    		)
       }
@@ -318,7 +383,7 @@ class BulkEscalationGeneration extends Component {
                                   </Col>
                                   <Col xs={12} md={4}>
                                       <AutoComplete
-                                          floatingLabelText={translate('pgr.lbl.toposition')}
+                                          floatingLabelText={translate('pgr.lbl.toposition')+" *"}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -333,7 +398,7 @@ class BulkEscalationGeneration extends Component {
                                                 value: chosenRequest.id
                                               }
                                             };
-                                            handleChange(e, "toPosition", false, "");
+                                            handleChange(e, "toPosition", true, "");
                                            }}
                                         />
                                   </Col>
@@ -364,7 +429,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["fromPosition","grievanceType"]
+          required: ["fromPosition","grievanceType", "toPosition"]
         },
         pattern: {
           current: [],
@@ -416,7 +481,9 @@ const mapDispatchToProps = dispatch => ({
    setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-
+	 toggleDailogAndSetText: (dailogState,msg) => {
+      dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
+    },
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
     },

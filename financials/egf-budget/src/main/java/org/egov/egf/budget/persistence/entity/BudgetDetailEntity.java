@@ -7,6 +7,7 @@ import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
+import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FundContract;
@@ -71,7 +72,7 @@ public class BudgetDetailEntity extends AuditableEntity {
 		budgetDetail.setDocumentNumber(this.documentNumber);
 		budgetDetail.setUniqueNo(this.uniqueNo);
 		budgetDetail.setPlanningPercent(this.planningPercent);
-		// budgetDetail.setStatus(EgfStatus.builder().id(statusId).build());
+		budgetDetail.setStatusId(EgfStatus.builder().id(statusId).build());
 		return budgetDetail;
 	}
 

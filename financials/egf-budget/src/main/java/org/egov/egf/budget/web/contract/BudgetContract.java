@@ -40,6 +40,8 @@
 package org.egov.egf.budget.web.contract;
 
 import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.budget.domain.model.Budget;
+import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
@@ -145,5 +147,52 @@ public class BudgetContract extends AuditableContract {
 	 * of the details. However the status at budget detail also exist.
 	 */
 	private EgfStatusContract status;
+
+	public Budget toDomain() {
+		Budget budget = new Budget();
+		budget.setId(this.id);
+		budget.setName(this.name);
+		budget.setFinancialYearId(financialYear);
+		budget.setEstimationType(this.estimationType);
+		budget.setParentId(Budget.builder().id(parent != null ? parent.getId() : null).build());
+		budget.setDescription(this.description);
+		budget.setIsActiveBudget(this.isActiveBudget);
+		budget.setIsPrimaryBudget(this.isPrimaryBudget);
+		budget.setMaterializedPath(this.materializedPath);
+		budget.setReferenceBudgetId(
+				Budget.builder().id(referenceBudget != null ? referenceBudget.getId() : null).build());
+		budget.setDocumentNumber(this.documentNumber);
+		budget.setStatusId(EgfStatus.builder().id(status != null ? status.getId() : null).build());
+		budget.setCreatedBy(this.createdBy);
+		budget.setCreatedDate(this.createdDate);
+		budget.setLastModifiedBy(this.lastModifiedBy);
+		budget.setLastModifiedDate(this.lastModifiedDate);
+		budget.setTenantId(this.tenantId);
+		return budget;
+	}
+
+	public void toContract(Budget budget) {
+		this.id = budget.getId();
+		this.name = budget.getName();
+		this.financialYear = FinancialYearContract.builder()
+				.id(budget.getFinancialYearId() != null ? budget.getFinancialYearId().getId() : null).build();
+		this.estimationType = budget.getEstimationType();
+		this.parent = BudgetContract.builder().id(budget.getParentId() != null ? budget.getParentId().getId() : null)
+				.build();
+		this.description = budget.getDescription();
+		this.isActiveBudget = budget.getIsActiveBudget();
+		this.isPrimaryBudget = budget.getIsPrimaryBudget();
+		this.materializedPath = budget.getMaterializedPath();
+		this.referenceBudget = BudgetContract.builder()
+				.id(budget.getReferenceBudgetId() != null ? budget.getReferenceBudgetId().getId() : null).build();
+		this.documentNumber = budget.getDocumentNumber();
+		this.status = EgfStatusContract.builder().id(budget.getStatusId() != null ? budget.getStatusId().getId() : null)
+				.build();
+		this.setCreatedBy(budget.getCreatedBy());
+		this.setCreatedDate(budget.getCreatedDate());
+		this.setLastModifiedBy(budget.getLastModifiedBy());
+		this.setLastModifiedDate(budget.getLastModifiedDate());
+		this.setTenantId(budget.getTenantId());
+	}
 
 }

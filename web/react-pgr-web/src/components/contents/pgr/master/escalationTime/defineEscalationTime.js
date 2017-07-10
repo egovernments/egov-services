@@ -124,7 +124,6 @@ class DefineEscalationTime extends Component {
       let self = this;
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
           setLoadingStatus('hide');
-          console.log(response);
           self.setState({
             grievanceTypeSource: response.complaintTypes
           })
@@ -170,26 +169,18 @@ class DefineEscalationTime extends Component {
     }
 
   submitForm = (e) => {
-
+	  
        let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+	   
       setLoadingStatus('loading');
 
       e.preventDefault();
       let current = this;
 
-      let query;
-
-      if(this.props.defineEscalationTime.grievanceType.id){
-        query = {
+  
+       let query = {
         id:this.props.defineEscalationTime.grievanceType.id
         }
-      } else {
-          query = {
-        id:this.props.defineEscalationTime.grievanceType
-       }
-      }
-
-     
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
              setLoadingStatus('hide');
@@ -212,16 +203,14 @@ class DefineEscalationTime extends Component {
 
   addEscalation = () => {
 
-        let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText} = this.props;
+        let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText, emptyProperty} = this.props;
        setLoadingStatus('loading');
-
-    console.log(this.props.defineEscalationTime.grievanceType)
 
     var current = this
     var body = {
       EscalationTimeType:{
         grievancetype:{
-          id: this.props.defineEscalationTime.grievanceType
+          id: this.props.defineEscalationTime.grievanceType.id
         },
         noOfHours:this.props.defineEscalationTime.noOfHours,
         designation:this.props.defineEscalationTime.designation,
@@ -231,14 +220,32 @@ class DefineEscalationTime extends Component {
     }
 
     Api.commonApiPost("workflow/escalation-hours/v1/_create",{},body).then(function(response){
-      setLoadingStatus('hide');
-        current.setState({
-          resultList:[
-            ...current.state.resultList,
-            current.props.defineEscalationTime
-          ]
-      })
+      
 	  toggleDailogAndSetText(true,"Escalation Time Created Successfully");
+	  emptyProperty('noOfHours');
+	emptyProperty('designation');
+	  let searchquery = {
+        id:current.props.defineEscalationTime.grievanceType.id
+      }
+	  	  
+      Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
+         setLoadingStatus('hide');
+      
+          if (response.EscalationTimeType[0] != null) {
+              flag = 1;
+              current.setState({
+                resultList: response.EscalationTimeType,
+                isSearchClicked: true
+              })
+          } else {
+            current.setState({
+              noData: true,
+            })
+          }
+      }).catch((error)=>{
+            toggleSnackbarAndSetText(true, error);
+      })
+
     }).catch((error)=>{
          toggleSnackbarAndSetText(true, error);
     })
@@ -247,7 +254,7 @@ class DefineEscalationTime extends Component {
 
   updateEscalation = () => {
 
-       let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText} = this.props;
+       let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText, emptyProperty} = this.props;
        setLoadingStatus('loading');
 
     var current = this
@@ -271,10 +278,12 @@ class DefineEscalationTime extends Component {
       }
 	  
 	  toggleDailogAndSetText(true,"Escalation Time Updated Successfully");
+	  emptyProperty('noOfHours');
+	emptyProperty('designation');
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",searchquery,{}).then(function(response){
          setLoadingStatus('hide');
-          console.log("response AFTER UPDATE", response);
+         
           if (response.EscalationTimeType[0] != null) {
               flag = 1;
               current.setState({
@@ -327,11 +336,8 @@ class DefineEscalationTime extends Component {
 
       let {submitForm, localHandleChange, addEscalation, deleteObject, editObject, updateEscalation} = this;
 
-      console.log(this.state.escalationForm, this.state.resultList);
 
       let {isSearchClicked, resultList, escalationForm, designation, editIndex} = this.state;
-
-      console.log(resultList);
 
       const renderBody = function() {
       	  if(resultList && resultList.length)
@@ -448,7 +454,7 @@ class DefineEscalationTime extends Component {
                                           onNewRequest={(chosenRequest, index) => {
                   	                        var e = {
                   	                          target: {
-                  	                            value: chosenRequest.id
+                  	                            value: chosenRequest
                   	                          }
                   	                        };
                   	                        handleChange(e, "grievanceType", true, "");
@@ -529,7 +535,6 @@ const mapDispatchToProps = dispatch => ({
   },
 
   handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
     dispatch({
       type: "HANDLE_CHANGE",
       property,
@@ -537,6 +542,24 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
+  },
+  
+  emptyProperty: (property) => {
+	  dispatch({
+		  type: "EMPTY_PROPERTY",
+		  property,
+		  isFormValid:false,
+		  validationData: {
+        required: {
+          current: ["grievanceType"],
+          required: ["designation", "noOfHours", "grievanceType"]
+        },
+        pattern: {
+          current: [],
+          required: [ "noOfHours"]
+        }
+		  }
+		});
   },
 
   handleAutoCompleteKeyUp : (e) => {

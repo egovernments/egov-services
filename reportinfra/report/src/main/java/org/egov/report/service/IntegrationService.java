@@ -55,6 +55,9 @@ public class IntegrationService {
 					String[] pairs = url.split(",");
 					for(String str: pairs){
 						String[] keyValue = str.split(":");
+						System.out.println("KeyName is "+keyValue[0]);
+						System.out.println("KeyName is "+keyValue[1]);
+						
 						map.put(keyValue[0], keyValue[1]);
 					}
 					columnDetail.setDefaultValue(map);

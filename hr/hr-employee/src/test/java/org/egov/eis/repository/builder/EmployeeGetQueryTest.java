@@ -163,88 +163,69 @@ public class EmployeeGetQueryTest {
 					put("employeeStatuses", Arrays.asList(1L));
 				}}
 		}, {
-				// Test 11: Passing tenantId, familyParticularsPresent in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").familyParticularsPresent(true).build(),
+				// Test 11: Passing tenantId, empty list of employeeTypes in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").employeeType(new ArrayList<>()).build(),
 				expectedQueries[11],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
 				}}
 		}, {
-				// Test 12: Passing tenantId, familyParticularsPresent in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").familyParticularsPresent(false).build(),
+				// Test 12: Passing tenantId, employeeTypes in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").employeeType(Arrays.asList(1L)).build(),
 				expectedQueries[12],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
+					put("employeeTypes", Arrays.asList(1L));
 				}}
 		}, {
-				// Test 13: Passing tenantId, sortBy in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").sortBy("e.code").build(),
+				// Test 13: Passing tenantId, familyParticularsPresent in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").familyParticularsPresent(true).build(),
 				expectedQueries[13],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
 				}}
 		}, {
-				// Test 14: Passing tenantId, sortOrder in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").sortOrder("DESC").build(),
+				// Test 14: Passing tenantId, familyParticularsPresent in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").familyParticularsPresent(false).build(),
 				expectedQueries[14],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
 				}}
 		}, {
-				// Test 15: Passing tenantId, sortBy, sortOrder in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").sortBy("e.code").sortOrder("DESC").build(),
+				// Test 15: Passing tenantId, sortBy in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").sortBy("e.code").build(),
 				expectedQueries[15],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
 				}}
 		}, {
-				// Test 16: Passing tenantId, id, code, departmentId, designationId, positionId, asOnDate, isPrimary,
-				// employeeStatus, familyParticularsPresent in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").id(Arrays.asList(1L, 2L)).code("EMP01")
-						.departmentId(1L).designationId(1L).positionId(1L).asOnDate(new Date()).isPrimary(true)
-						.employeeStatus(Arrays.asList(1L)).familyParticularsPresent(true).build(),
+				// Test 16: Passing tenantId, sortOrder in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").sortOrder("DESC").build(),
 				expectedQueries[16],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
-					put("code", "EMP01");
-					put("departmentId", 1L);
-					put("designationId", 1L);
-					put("positionId", 1L);
-					put("asOnDate", new Date());
-					put("isPrimary", true);
-					put("employeeStatuses", Arrays.asList(1L));
 				}}
 		}, {
-				// Test 17: Passing tenantId, id, code, departmentId, designationId, positionId, asOnDate, isPrimary,
-				// employeeStatus, familyParticularsPresent in Search Criteria
-				EmployeeCriteria.builder().tenantId("default").id(Arrays.asList(1L, 2L)).code("EMP01")
-						.departmentId(1L).designationId(1L).positionId(1L).asOnDate(new Date()).isPrimary(true)
-						.employeeStatus(Arrays.asList(1L)).familyParticularsPresent(false).build(),
+				// Test 17: Passing tenantId, sortBy, sortOrder in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").sortBy("e.code").sortOrder("DESC").build(),
 				expectedQueries[17],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
 					put("ids", Arrays.asList(1L, 2L));
-					put("code", "EMP01");
-					put("departmentId", 1L);
-					put("designationId", 1L);
-					put("positionId", 1L);
-					put("asOnDate", new Date());
-					put("isPrimary", true);
-					put("employeeStatuses", Arrays.asList(1L));
 				}}
 		}, {
-				// Test 18: Passing tenantId, id, code, departmentId, designationId, positionId, asOnDate, isPrimary,
-				// employeeStatus, familyParticularsPresent, sortBy, sortOrder in Search Criteria
+				// Test 18: Passing tenantId, ids, code, departmentId, designationId, positionId, asOnDate, isPrimary,
+				// employeeStatuses, employeeTypes, familyParticularsPresent in Search Criteria
 				EmployeeCriteria.builder().tenantId("default").id(Arrays.asList(1L, 2L)).code("EMP01")
 						.departmentId(1L).designationId(1L).positionId(1L).asOnDate(new Date()).isPrimary(true)
-						.employeeStatus(Arrays.asList(1L)).familyParticularsPresent(true).sortBy("e.code")
-						.sortOrder("DESC").build(),
+						.employeeStatus(Arrays.asList(1L)).employeeType(Arrays.asList(1L))
+						.familyParticularsPresent(true).build(),
 				expectedQueries[18],
 				new HashMap<String, Object>() {{
 					put("tenantId", "default");
@@ -256,6 +237,47 @@ public class EmployeeGetQueryTest {
 					put("asOnDate", new Date());
 					put("isPrimary", true);
 					put("employeeStatuses", Arrays.asList(1L));
+					put("employeeTypes", Arrays.asList(1L));
+				}}
+		}, {
+				// Test 19: Passing tenantId, ids, code, departmentId, designationId, positionId, asOnDate, isPrimary,
+				// employeeStatuses, employeeTypes, familyParticularsPresent in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").id(Arrays.asList(1L, 2L)).code("EMP01")
+						.departmentId(1L).designationId(1L).positionId(1L).asOnDate(new Date()).isPrimary(true)
+						.employeeStatus(Arrays.asList(1L)).employeeType(Arrays.asList(1L))
+						.familyParticularsPresent(false).build(),
+				expectedQueries[19],
+				new HashMap<String, Object>() {{
+					put("tenantId", "default");
+					put("ids", Arrays.asList(1L, 2L));
+					put("code", "EMP01");
+					put("departmentId", 1L);
+					put("designationId", 1L);
+					put("positionId", 1L);
+					put("asOnDate", new Date());
+					put("isPrimary", true);
+					put("employeeStatuses", Arrays.asList(1L));
+					put("employeeTypes", Arrays.asList(1L));
+				}}
+		}, {
+				// Test 20: Passing tenantId, ids, code, departmentId, designationId, positionId, asOnDate, isPrimary,
+				// employeeStatuses, employeeTypes, familyParticularsPresent, sortBy, sortOrder in Search Criteria
+				EmployeeCriteria.builder().tenantId("default").id(Arrays.asList(1L, 2L)).code("EMP01")
+						.departmentId(1L).designationId(1L).positionId(1L).asOnDate(new Date()).isPrimary(true)
+						.employeeStatus(Arrays.asList(1L)).employeeType(Arrays.asList(1L))
+						.familyParticularsPresent(true).sortBy("e.code").sortOrder("DESC").build(),
+				expectedQueries[20],
+				new HashMap<String, Object>() {{
+					put("tenantId", "default");
+					put("ids", Arrays.asList(1L, 2L));
+					put("code", "EMP01");
+					put("departmentId", 1L);
+					put("designationId", 1L);
+					put("positionId", 1L);
+					put("asOnDate", new Date());
+					put("isPrimary", true);
+					put("employeeStatuses", Arrays.asList(1L));
+					put("employeeTypes", Arrays.asList(1L));
 				}}
 		}};
 

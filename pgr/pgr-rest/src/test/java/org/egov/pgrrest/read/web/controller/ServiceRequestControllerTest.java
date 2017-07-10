@@ -7,10 +7,7 @@ import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.common.domain.model.Requester;
 import org.egov.pgrrest.common.domain.model.UserType;
 import org.egov.pgrrest.common.persistence.repository.UserRepository;
-import org.egov.pgrrest.read.domain.exception.InvalidAttributeEntryException;
-import org.egov.pgrrest.read.domain.exception.ServiceRequestIdMandatoryException;
-import org.egov.pgrrest.read.domain.exception.TenantIdMandatoryException;
-import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
+import org.egov.pgrrest.read.domain.exception.*;
 import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.ServiceRequestService;
 import org.egov.pgrrest.read.domain.service.UpdateServiceRequestEligibilityService;
@@ -68,6 +65,66 @@ public class ServiceRequestControllerTest {
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(resources.getFileContents("tenantIdMandatoryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_date_time_format_in_attribute_entry_is_invalid_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new InvalidDateTimeAttributeEntryException("incidentTime")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("invalidDateTimeFormatAttributeEntryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_date_format_in_attribute_entry_is_invalid_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new InvalidDateAttributeEntryException("dateOfBirth")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("invalidDateFormatAttributeEntryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_integer_format_in_attribute_entry_is_invalid_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new InvalidIntegerAttributeEntryException("itemCount")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("invalidIntegerFormatAttributeEntryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_double_format_in_attribute_entry_is_invalid_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        doThrow(new InvalidDoubleAttributeEntryException("cost")).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("invalidDoubleFormatAttributeEntryErrorResponse.json")));
     }
 
     @Test

@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Invalid date data type format.",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.INVALID_DATE_DATA_TYPE_FORMAT",
+                "message": "Invalid date data type format.",
+                "field": "serviceRequest.attribValues.name=dateOfBirth"
+            }
+        ]
+    }
+}

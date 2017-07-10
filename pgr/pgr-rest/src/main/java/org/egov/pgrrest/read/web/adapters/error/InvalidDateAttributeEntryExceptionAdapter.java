@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvalidDoubleAttributeEntryExceptionAdapter implements ErrorAdapter<String> {
+public class InvalidDateAttributeEntryExceptionAdapter implements ErrorAdapter<String> {
 
-    private static final String MESSAGE = "Invalid double data type format.";
-    private static final String CODE = "PGR.INVALID_DOUBLE_DATA_TYPE_FORMAT";
+    private static final String MESSAGE = "Invalid date data type format.";
+    private static final String CODE = "PGR.INVALID_DATE_DATA_TYPE_FORMAT";
     private static final String FIELD_NAME = "serviceRequest.attribValues.name=%s";
 
     @Override

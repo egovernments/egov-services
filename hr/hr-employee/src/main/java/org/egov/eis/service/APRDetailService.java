@@ -14,7 +14,7 @@ import java.util.List;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
-public class APRDetailsService {
+public class APRDetailService {
 
 	@Autowired
 	private APRDetailRepository aprDetailRepository;
@@ -23,10 +23,10 @@ public class APRDetailsService {
 	private EmployeeDocumentsRepository employeeDocumentsRepository;
 
 	public void update(Employee employee) {
-		if (isEmpty(employee.getAPRDetails()))
+		if (isEmpty(employee.getAprDetails()))
 			return;
 		List<APRDetail> aprDetails = aprDetailRepository.findByEmployeeId(employee.getId(), employee.getTenantId());
-		employee.getAPRDetails().forEach((aprDetail) -> {
+		employee.getAprDetails().forEach((aprDetail) -> {
 			if (needsInsert(aprDetail, aprDetails)) {
 				aprDetailRepository.insert(aprDetail, employee.getId());
 			} else if (needsUpdate(aprDetail, aprDetails)) {
@@ -34,7 +34,7 @@ public class APRDetailsService {
 				aprDetailRepository.update(aprDetail);
 			}
 		});
-		deleteAPRDetailsInDBThatAreNotInInput(employee.getAPRDetails(), aprDetails, employee.getId(),
+		deleteAPRDetailsInDBThatAreNotInInput(employee.getAprDetails(), aprDetails, employee.getId(),
 				employee.getTenantId());
 	}
 

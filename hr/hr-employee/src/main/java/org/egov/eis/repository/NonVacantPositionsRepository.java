@@ -73,11 +73,6 @@ public class NonVacantPositionsRepository {
 		List<Long> positionIds = jdbcTemplate.queryForList(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY,
 				searchConditions, Long.class);
 
-		System.err.println(SEARCH_ASSIGNMENT_FOR_POSITION_IDS_QUERY);
-
-		for(int i = 0; i < searchConditions.length; i++)
-			System.err.println(searchConditions[i]);
-
 		return positionIds;
 	}
 

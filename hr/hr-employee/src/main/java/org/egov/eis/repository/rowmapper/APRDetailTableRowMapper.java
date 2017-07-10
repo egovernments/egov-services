@@ -49,12 +49,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
-public class APRDetailsTableRowMapper implements RowMapper<APRDetail> {
+public class APRDetailTableRowMapper implements RowMapper<APRDetail> {
 
 	@Override
 	public APRDetail mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
@@ -68,6 +69,7 @@ public class APRDetailsTableRowMapper implements RowMapper<APRDetail> {
 				.createdBy((Long) rs.getObject("createdBy"))
 				.lastModifiedBy((Long) rs.getObject("lastModifiedBy"))
 				.tenantId(rs.getString("tenantId"))
+				.documents(new ArrayList<>())
 				.build();
 
 		try {

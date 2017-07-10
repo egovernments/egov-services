@@ -42,7 +42,7 @@ package org.egov.eis.repository;
 
 import org.egov.eis.model.APRDetail;
 import org.egov.eis.model.enums.EntityType;
-import org.egov.eis.repository.rowmapper.APRDetailsTableRowMapper;
+import org.egov.eis.repository.rowmapper.APRDetailTableRowMapper;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -62,10 +62,10 @@ import java.util.Map;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
-public class APRDetailsRepository {
+public class APRDetailRepository {
 
     public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT id, yearOfSubmission, detailsSubmitted,"
-            + " dateOfSubmission, remarks, documents, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
+            + " dateOfSubmission, remarks, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
             + " FROM egeis_aprDetails WHERE employeeId = ? AND tenantId = ?";
 
     public static final String INSERT_APR_DETAILS_QUERY = "INSERT INTO egeis_aprDetails"
@@ -86,7 +86,7 @@ public class APRDetailsRepository {
     private EmployeeDocumentsRepository documentsRepository;
 
     @Autowired
-    private APRDetailsTableRowMapper aprDetailsRowMapper;
+    private APRDetailTableRowMapper aprDetailRowMapper;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -99,7 +99,7 @@ public class APRDetailsRepository {
     }
 
     public void save(EmployeeRequest employeeRequest) {
-        List<APRDetail> aprDetails = employeeRequest.getEmployee().getAPRDetails();
+        List<APRDetail> aprDetails = employeeRequest.getEmployee().getAprDetails();
         jdbcTemplate.batchUpdate(INSERT_APR_DETAILS_QUERY, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -150,7 +150,7 @@ public class APRDetailsRepository {
 
     public List<APRDetail> findByEmployeeId(Long id, String tenantId) {
         try {
-            return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[]{id, tenantId}, aprDetailsRowMapper);
+            return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[]{id, tenantId}, aprDetailRowMapper);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

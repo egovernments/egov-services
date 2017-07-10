@@ -85,7 +85,7 @@ public class Probation {
 
 	private String remarks;
 
-	private List<String> documents = new ArrayList<String>();
+	private List<String> documents = new ArrayList<>();
 
 	private Long createdBy;
 

@@ -54,11 +54,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Data
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class APRDetails {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class APRDetail {
 
 	private Long id;
 
@@ -75,7 +79,7 @@ public class APRDetails {
 	@Size(max=1024)
 	private String remarks;
 
-	private List<String> documents = new ArrayList<>();
+	private List<String> documents;
 
 	private Long createdBy;
 
@@ -91,4 +95,16 @@ public class APRDetails {
 
 	private String tenantId;
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof APRDetail)) return false;
+
+		APRDetail aprDetail = (APRDetail) o;
+
+		if (!isEmpty(yearOfSubmission) && !yearOfSubmission.equals(aprDetail.yearOfSubmission)) return false;
+		if (!isEmpty(detailsSubmitted) && !detailsSubmitted.equals(aprDetail.detailsSubmitted)) return false;
+		if (!isEmpty(dateOfSubmission) && !dateOfSubmission.equals(aprDetail.dateOfSubmission)) return false;
+		return (!isEmpty(remarks) && remarks.equals(aprDetail.remarks));
+	}
 }

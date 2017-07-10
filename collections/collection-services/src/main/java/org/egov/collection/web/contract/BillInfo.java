@@ -10,9 +10,11 @@ import java.util.List;
 
 import org.egov.collection.model.AuditDetails;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Setter
+
 @Getter
+@Setter
 @ToString
 public class BillInfo   {
 	//TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
@@ -30,7 +32,11 @@ public class BillInfo   {
 
 	private Boolean isCancelled;
 
-	private List<BillDetails> billDetails = new ArrayList<>();
+	private List<BillDetails> billDetails = new ArrayList<>(); //for billing-service
+	
+	@JsonProperty("BillDetailsWrapper")
+	private List<BillDetailsWrapper> billDetailsWrapper = new ArrayList<>(); //for collection-service
+
 
 	private String tenantId;
 	

@@ -3,6 +3,7 @@ package org.egov.collection.web.contract;
 
 import java.math.BigDecimal;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,8 +20,6 @@ public class BillAccountDetails   {
 
 	private String accountDescription;
 
-	private String functionCode;
-
 	private Boolean isActualDemand;
     
 	private String id;
@@ -34,6 +33,6 @@ public class BillAccountDetails   {
 	private BigDecimal debitAmount;
 	
 	private Purpose purpose;
-  
+	  
 }
 

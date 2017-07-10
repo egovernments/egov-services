@@ -46,6 +46,7 @@ import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.BillDetails;
+import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class ReceiptService {
 	public Receipt pushToQueue(ReceiptReq receiptReq){
 		logger.info("Pushing recieptdetail to kafka queue");
 		
-		for(BillDetails billdetails: receiptReq.getReceipt().getBillInfo().getBillDetails()){	
+		for(BillDetailsWrapper billdetails: receiptReq.getReceipt().getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){	
 			String receiptNumber = receiptRepository.generateReceiptNumber(receiptReq);
 			logger.info("Receipt Number generated is: "+receiptNumber);
 			billdetails.setReceiptNumber(receiptNumber);

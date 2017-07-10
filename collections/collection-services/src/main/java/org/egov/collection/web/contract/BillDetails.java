@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +20,6 @@ import org.joda.time.LocalDate;
 public class BillDetails   {
   
 	private String id;
-
-	private String businessDetailsCode;
-
-	private String refNo;
 
 	private String bill;
 
@@ -42,30 +37,13 @@ public class BillDetails   {
 
 	private BigDecimal totalAmount;
 	
-	private BigDecimal amountPaid;
-
 	private List<String> collectionModesNotAllowed = new ArrayList<String>();
-  
-	private String event;
-
-	private String receiptNumber;
-
-	private Timestamp receiptDate;
-	
-	private String receiptType;
-
-	private String channel;
-  
-	private String voucherHeader;
     
-	private String collectionType;
-  
-	private String boundary;
-
-	private String reasonForCancellation;
-  
 	@JsonProperty("BillAccountDetails")
-	private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();
+	private List<BillAccountDetails> billAccountDetails = new ArrayList<BillAccountDetails>();//for billing-service
+	
+	@JsonProperty("BillAccountDetailsWrapper")
+	private List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();//for collection-service
 	
 	private String tenantId;
 	
@@ -76,6 +54,7 @@ public class BillDetails   {
 	private Boolean callBackForApportioning;
 
 	private Boolean partPaymentAllowed;
+	
 
 }
 

@@ -22,9 +22,11 @@ public class Receipt   {
 
   private String instrumentHeader;
   
-  @JsonProperty("BillInfo")
-  private BillInfo billInfo;
+  private BillInfo bill; //for billing-service
   
+  @JsonProperty("BillInfoWrapper")
+  private BillInfoWrapper billInfoWrapper; //for collection-service
+
   @JsonProperty("Bank")
   private Bank bank;
   

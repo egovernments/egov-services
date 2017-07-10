@@ -66,13 +66,13 @@ import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.mockito.internal.util.collections.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -146,37 +146,65 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	
-	public void updateDemandFromBill(/*TODO put reciept object here */) {
-		
-		List<Bill> bills = new ArrayList<>(); //TODO get bills from receipt object
-		String tenantId = ""; //TODO get tenantId from receipt object
-		RequestInfo requestInfo = new RequestInfo();//TODO get from receipt request
+	public void updateDemandFromBill(BillRequest billRequest) {
+
+		List<Bill> bills = billRequest.getBills();
+		RequestInfo requestInfo = new RequestInfo();
+		String tenantId = bills.get(0).getTenantId();
 		Set<String> consumerCodes = new HashSet<>();
 		for (Bill bill : bills) {
-			for(BillDetail billDetail : bill.getBillDetails())
+			for (BillDetail billDetail : bill.getBillDetails())
 				consumerCodes.add(billDetail.getConsumerCode());
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
-		Map<String,List<DemandDetail>> detailsMap = new HashMap<>(); 
+		Map<String, Demand> demandIdMap = demands.stream()
+				.collect(Collectors.toMap(Demand::getId, Function.identity()));
+		Map<String, List<Demand>> demandListMap = new HashMap<>();
 		for (Demand demand : demands) {
-			
-			if(detailsMap.get(demand.getConsumerCode()) == null)
-				detailsMap.put(demand.getConsumerCode(), demand.getDemandDetails());
-			else{
-				detailsMap.get(demand.getConsumerCode()).addAll(demand.getDemandDetails());
-			}
+
+			if (demandListMap.get(demand.getConsumerCode()) == null) {
+				List<Demand> demands2 = new ArrayList<>();
+				demands2.add(demand);
+				demandListMap.put(demand.getConsumerCode(), demands2);
+			} else
+				demandListMap.get(demand.getConsumerCode()).add(demand);
 		}
-		
-		for(Bill bill : bills)
-			for(BillDetail billDetail : bill.getBillDetails()){
-				List<DemandDetail> demandDetails = detailsMap.get(billDetail.getConsumerCode());
-				for(BillAccountDetail accountDetail : billDetail.getBillAccountDetails()){
-					
-					List<String> accountdetailsArray = Arrays.asList(accountDetail.getAccountDescription().split("-"));
-					
+
+		for (Bill bill : bills) {
+			for (BillDetail billDetail : bill.getBillDetails()) {
+
+				List<Demand> demands2 = demandListMap.get(billDetail.getConsumerCode());
+				Map<String, List<DemandDetail>> detailsMap = new HashMap<>();
+				for (Demand demand : demands2) {
+					for (DemandDetail demandDetail : demand.getDemandDetails()) {
+						if (detailsMap.get(demandDetail.getTaxHeadMasterCode()) == null) {
+							List<DemandDetail> demandDetails = new ArrayList<>();
+							demandDetails.add(demandDetail);
+							detailsMap.put(demandDetail.getTaxHeadMasterCode(), demandDetails);
+						} else
+							detailsMap.get(demandDetail.getTaxHeadMasterCode()).add(demandDetail);
+					}
+				}
+				for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
+
+					List<String> accDescription = Arrays.asList(accountDetail.getAccountDescription().split("-"));
+					String taxHeadCode = accDescription.get(0);
+					Long fromDate = Long.valueOf(accDescription.get(1));
+					Long toDate = Long.valueOf(accDescription.get(2));
+
+					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
+						Demand demand = demandIdMap.get(demandDetail.getDemandId());
+						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
+							BigDecimal collectedAmount = accountDetail.getCreditAmount();
+							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
+							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
+						}
+					}
 				}
 			}
+		}
+		demandRepository.update(new DemandRequest(requestInfo,demands));
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
@@ -209,7 +237,7 @@ public class DemandService {
 				demandDetail.setTaxAmount(tax);
 				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(demandDetail2.getCollectionAmount()));
 				}else{
-					
+					//TODO throw exception
 				}
 				
 				AuditDetail demandDetailAudit = demandDetail.getAuditDetail();

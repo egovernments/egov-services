@@ -74,6 +74,7 @@ import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.number.money.CurrencyUnitFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -215,10 +216,23 @@ public class BillService {
 							.findAny().orElse(null);
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					//TODO fix purpose
-					Purpose purpose = Purpose.CURRENT_AMOUNT;
-					String accountDespcription = demandDetail.getTaxHeadMasterCode()+"-"+demand3.getTaxPeriodFrom()+"-"
-							+demand3.getTaxPeriodTo();
+					Long currDate = new Date().getTime();
+					Purpose purpose = null;
+					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
+					
+					//TODO check with ghanshyam
+					if(taxHeadCode.equalsIgnoreCase(Purpose.REBATE.toString()))
+						purpose = Purpose.REBATE;
+					else if (demand2.getTaxPeriodFrom() <= currDate && demand2.getTaxPeriodTo() >= currDate) {
+						purpose = Purpose.CURRENT_AMOUNT;
+					} else if (currDate < demand2.getTaxPeriodFrom()) {
+						purpose = Purpose.ARREAR_AMOUNT;
+					} else if (currDate > demand2.getTaxPeriodTo()) {
+						purpose = Purpose.ADVANCE_AMOUNT;
+					}
+					
+					String accountDespcription = taxHeadCode+"-"+demand2.getTaxPeriodFrom()+"-"
+							+demand2.getTaxPeriodTo();
 					
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription(accountDespcription)
 							.crAmountToBePaid(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
@@ -298,8 +312,7 @@ public class BillService {
 	private Map<String, BusinessServiceDetail> getBusinessService(Set<String> businessService, String tenantId, RequestInfo requestInfo) {
 		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService.searchBusinessServiceDetails(BusinessServiceDetailCriteria.builder().businessService(businessService).tenantId(tenantId).build(), requestInfo)
 				.getBusinessServiceDetails();
-		Map<String, BusinessServiceDetail> map = businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
-		return map;
+		return businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
 	}
 	
 	public BillResponse getBillResponse(List<Bill> bills) {
@@ -311,7 +324,4 @@ public class BillService {
 	public BillResponse apportion(BillRequest billRequest) {
 		return new BillResponse(responseFactory.getResponseInfo(billRequest.getRequestInfo(), HttpStatus.OK), billRepository.apportion(billRequest));
 	}
-
-
-
 }

@@ -101,7 +101,6 @@ public class BillRepository {
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				BillDetail billDetail = billDetails.get(index);
-					
 
 				ps.setString(1, billDetail.getId());
 				ps.setString(2, billDetail.getTenantId());
@@ -117,21 +116,22 @@ public class BillRepository {
 				ps.setObject(12, billDetail.getTotalAmount());
 				ps.setBoolean(13, billDetail.getCallBackForApportioning());
 				ps.setBoolean(14, billDetail.getPartPaymentAllowed());
-				//TODO null check
-				ps.setString(15, StringUtils.join(billDetail.getCollectionModesNotAllowed(),","));
+				List<String> collectionModesNotAllowed = billDetail.getCollectionModesNotAllowed();
+				if (collectionModesNotAllowed.isEmpty())
+					ps.setString(15, null);
+				else
+					ps.setString(15, StringUtils.join(billDetail.getCollectionModesNotAllowed(), ","));
 				ps.setString(16, requestInfo.getUserInfo().getId().toString());
 				ps.setLong(17, new Date().getTime());
 				ps.setString(18, requestInfo.getUserInfo().getId().toString());
 				ps.setLong(19, new Date().getTime());
 			}
-
 				
 			@Override
 			public int getBatchSize() {
 				return billDetails.size();
 			}
 		});
-		
 		saveBillAccountDetail(billAccountDetails, requestInfo);
 	}
 	

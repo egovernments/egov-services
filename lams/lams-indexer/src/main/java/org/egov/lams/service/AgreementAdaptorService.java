@@ -76,7 +76,9 @@ public class AgreementAdaptorService {
 		agreementDetailsEs.setAllottee(allottee);
 		agreementDetailsEs.setCity(city);
 		agreementDetailsEs.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
+		logger.info("setting rent details");
 		agreementDetailsEs.setRent(agreementDemand.getDemandDetails(),getCurrentInstallment(agreement),propertiesManager.getDemandReasonRent());
+		logger.info("rent details are added to indexer");
 		agreementIndex.setAgreementDetails(agreementDetailsEs);
 		if(agreementDemand != null)
 		agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
@@ -126,6 +128,7 @@ public class AgreementAdaptorService {
 		}
 		if (!installmentResponse.getInstallments().isEmpty()) {
 			installment = installmentResponse.getInstallments().get(0);
+			logger.info("current installment is :" + installment.getDescription());
 		}
 		return installment;
 	}

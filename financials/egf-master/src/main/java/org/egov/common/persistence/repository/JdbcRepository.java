@@ -210,9 +210,7 @@ public abstract class JdbcRepository {
 		while (ob1 != null) {
 			try {
 				val = declaredField.get(obj);
-				if (val != null) {
-					break;
-				}
+				break;
 			} catch (Exception e) {
 				if (ob1.getClass().getSuperclass() != null) {
 					ob1 = ob1.getClass().getSuperclass();

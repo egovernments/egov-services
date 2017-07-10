@@ -80,4 +80,34 @@ public class CustomControllerAdvice {
     public ErrorResponse handleInvalidAttributeEntryException(InvalidAttributeEntryException ex) {
         return new InvalidAttributeEntryExceptionAdapter().adapt(ex.getField());
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InvalidAttributeDataTypeException.class)
+    public ErrorResponse handleInvalidAttributeDataTypeException(InvalidAttributeDataTypeException ex) {
+        return null;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDateAttributeEntryException.class)
+    public ErrorResponse handleInvalidDateAttributeEntryException(InvalidDateAttributeEntryException ex) {
+        return null;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDateTimeAttributeEntryException.class)
+    public ErrorResponse handleInvalidDateTimeAttributeEntryException(InvalidDateTimeAttributeEntryException ex) {
+        return null;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidIntegerAttributeEntryException.class)
+    public ErrorResponse handleInvalidIntegerAttributeEntryException(InvalidIntegerAttributeEntryException ex) {
+        return null;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDoubleAttributeEntryException.class)
+    public ErrorResponse handleInvalidDoubleAttributeEntryException(InvalidDoubleAttributeEntryException ex) {
+        return new InvalidDoubleAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
+    }
 }

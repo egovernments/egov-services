@@ -334,6 +334,7 @@ definitions:
          - SYSTEM
          - CFC_COUNTER
          - CITIZEN
+         - DATA_ENTRY
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

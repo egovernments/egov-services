@@ -24,63 +24,67 @@ public class DraftRepository {
         this.objectMapper = objectMapper;
     }
 
-    public DraftCreateResponse saveDraft(DraftCreateRequest draftCreateRequest) {
-        org.egov.pgrrest.read.persistence.entity.Draft draftEntity = createDraft(draftCreateRequest);
-        return DraftCreateResponse.builder().id(draftEntity.getId()).build();
+    public long saveDraft(NewDraft newDraft) {
+        final HashMap<String, Object> draft = newDraft.getDraft();
+        String createDraft = convertToString(draft);
+        org.egov.pgrrest.read.persistence.entity.Draft draftEntity = org.egov.pgrrest.read.persistence.entity.Draft
+            .builder()
+            .serviceCode(newDraft.getServiceCode())
+            .tenantId(newDraft.getTenantId())
+            .userId(newDraft.getUserId())
+            .draft(createDraft)
+            .build();
+        draftJpaRepository.save(draftEntity);
+        return draftEntity.getId();
     }
 
-    public DraftSearchResponse getDrafts(Long userId, String serviceCode, String tenantId) {
-        List<org.egov.pgrrest.read.persistence.entity.Draft> draftsFromDb = getDraftsFromDb(userId, serviceCode, tenantId);
-        TypeReference<HashMap<String, Object>> typereference = new TypeReference<HashMap<String, Object>>() {
+    public DraftResult getDrafts(DraftSearchCriteria searchCriteria) {
+        List<org.egov.pgrrest.read.persistence.entity.Draft> entityDrafts = fetchDrafts(searchCriteria);
+        TypeReference<HashMap<String, Object>> typeReference = new TypeReference<HashMap<String, Object>>() {
         };
 
-        List<Draft> drafts = draftsFromDb.stream().map(draft -> {
+        List<Draft> drafts = entityDrafts.stream().map(draft -> {
             try {
-                HashMap<String, Object> readValue = objectMapper.readValue(draft.getDraft(), typereference);
+                HashMap<String, Object> readValue = objectMapper.readValue(draft.getDraft(), typeReference);
                 return new Draft(draft.getId(), readValue);
             } catch (IOException e) {
                 throw new DraftReadException(e);
             }
         }).collect(Collectors.toList());
 
-        return DraftSearchResponse.builder().draftResponses(drafts).build();
+        return DraftResult.builder().drafts(drafts).build();
     }
-
 
     public void deleteDraft(List<Long> draftIdList) {
         draftJpaRepository.deleteByIdList(draftIdList);
     }
 
-    public void updateDraft(DraftUpdateRequest draftUpdateRequest) {
-        org.egov.pgrrest.read.persistence.entity.Draft draftFromDB = draftJpaRepository.findOne(draftUpdateRequest.getId());
-        String updateDraft = convertToString(draftUpdateRequest.getDraft());
+    public void updateDraft(UpdateDraft draftUpdateRequest) {
+        org.egov.pgrrest.read.persistence.entity.Draft draftFromDB = draftJpaRepository
+            .findOne(draftUpdateRequest.getId());
         if (draftFromDB != null) {
+            String updateDraft = convertToString(draftUpdateRequest.getDraft());
             draftFromDB.setDraft(updateDraft);
             draftJpaRepository.save(draftFromDB);
         }
     }
 
-    private org.egov.pgrrest.read.persistence.entity.Draft createDraft(DraftCreateRequest draftCreateRequest) {
-        String createDraft = convertToString(draftCreateRequest.getDraft());
-        org.egov.pgrrest.read.persistence.entity.Draft draft = org.egov.pgrrest.read.persistence.entity.Draft.builder().serviceCode(draftCreateRequest.getServiceCode()).tenantId(draftCreateRequest.getTenantId()).userId(draftCreateRequest.getUserId()).draft(createDraft).build();
-        draftJpaRepository.save(draft);
-        return draft;
+    private List<org.egov.pgrrest.read.persistence.entity.Draft> fetchDrafts(DraftSearchCriteria searchCriteria) {
+        if (searchCriteria.getServiceCode() == null) {
+            return draftJpaRepository
+                .findByUserIdAndTenantId(searchCriteria.getUserId(), searchCriteria.getTenantId());
+        } else {
+            return draftJpaRepository
+                .findByUserIdAndServiceCodeAndTenantId(searchCriteria.getUserId(), searchCriteria.getServiceCode(),
+                    searchCriteria.getTenantId());
+        }
     }
 
-    private List<org.egov.pgrrest.read.persistence.entity.Draft> getDraftsFromDb(Long userId, String serviceCode, String tenantId) {
-        if (null == serviceCode) {
-            return draftJpaRepository.findByUserIdAndTenantId(userId, tenantId);
-        } else
-            return draftJpaRepository.findByUserIdAndServiceCodeAndTenantId(userId, serviceCode, tenantId);
-    }
-
-    private String convertToString(Object object) {
-        String draftMapper = null;
+    private String convertToString(HashMap<String, Object> object) {
         try {
-            draftMapper = objectMapper.writeValueAsString(object);
+            return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new MalformedDraftException(e);
         }
-        return draftMapper;
     }
 }

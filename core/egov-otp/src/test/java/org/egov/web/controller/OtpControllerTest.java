@@ -167,16 +167,4 @@ public class OtpControllerTest {
                 .andExpect(content().json(resources.getFileContents("invalidOtpSearchResponse.json")));
     }
 
-    @Test
-    public void test_should_error_message_when_unhandled_exception_occurs() throws Exception {
-        final TokenRequest tokenRequest = new TokenRequest("", "");
-        final String expectedMessage = "exception message";
-        when(tokenService.create(tokenRequest)).thenThrow(new RuntimeException(expectedMessage));
-
-        mockMvc.perform(post("/v1/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(resources.getFileContents("invalidOtpRequest.json")))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string(expectedMessage));
-    }
-
 }

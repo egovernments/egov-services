@@ -1,6 +1,7 @@
 package org.egov.pgrrest.read.web.contract;
 
 import lombok.*;
+import org.egov.pgrrest.read.domain.model.UpdateDraft;
 
 import java.util.HashMap;
 
@@ -13,7 +14,7 @@ public class DraftUpdateRequest {
     private Long id;
     private HashMap<String, Object> draft;
 
-    public org.egov.pgrrest.read.domain.model.DraftUpdateRequest toDomain() {
-        return org.egov.pgrrest.read.domain.model.DraftUpdateRequest.builder().id(id).draft(draft).build();
+    public UpdateDraft toDomain() {
+        return UpdateDraft.builder().id(id).draft(draft).build();
     }
 }

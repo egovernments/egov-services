@@ -58,7 +58,6 @@ import org.egov.pgr.web.contract.ReceivingModeTypeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -177,5 +176,28 @@ public class ReceivingModeTypeRepository {
 
 		return true;
 	}
+	
+	public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+
+		// preparedStatementValues.add(id);
+		preparedStatementValues.add(tenantId);
+		String query = "";
+		if (null != name && name != "") {
+
+			preparedStatementValues.add(name);
+			query = ReceivingModeTypeQueryBuilder.checkReceivinModeTypeByName();
+
+		}
+
+		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!ceneterTypes.isEmpty())
+			return true;
+
+		return false;
+	}
+	
+	
 
 }

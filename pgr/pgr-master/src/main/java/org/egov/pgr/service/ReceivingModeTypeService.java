@@ -82,6 +82,12 @@ public class ReceivingModeTypeService {
     public boolean checkReceivingModeTypeByNameAndCode(final String code,final String name, final String tenantId) {
         return receivingModeRepository.checkReceivingModeTypeByNameAndCode(code,name,tenantId);
     }
+    
+    public boolean checkReceivingModeTypeByName(final String code,final String name, final String tenantId) {
+        return receivingModeRepository.checkReceivingModeTypeByName(code,name,tenantId);
+    }
+    
+    
 	
 
 	public ReceivingModeType sendMessage(String topic, String key, final ReceivingModeTypeReq modeTypeRequest) {

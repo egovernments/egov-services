@@ -5,17 +5,12 @@ import lombok.*;
 import java.util.HashMap;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class DraftCreateRequest {
+public class NewDraft {
     private Long userId;
-
     private String tenantId;
-
     private String serviceCode;
-
     private HashMap<String, Object> draft;
 }
+

@@ -26,7 +26,7 @@ export function validate_fileupload(files, formats){
         if(filesize <= filelimit){
           //console.log('file size validation success');
         }else {
-          return 'File size exceeds '+filelimit/1024/1024+' MB';
+          return 'File size exceeds 5MB';
         }
       }else {
         return 'Allowed file formats is '+formats+'';

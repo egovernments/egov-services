@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.common.domain.model.UserType;
@@ -40,11 +41,17 @@ public class RequestInfoBody {
     }
 
     @JsonIgnore
+    public long getUserId() {
+        return getRequestInfo().getUserInfo().getId();
+    }
+
+    @JsonIgnore
     private User getUserInfo() {
         return requestInfo.getUserInfo();
     }
 
     private List<String> getRoles(List<org.egov.common.contract.request.Role> roles) {
-        return roles.stream().map(role -> role.getCode()).collect(Collectors.toList());
+        return roles.stream().map(Role::getCode).collect(Collectors.toList());
     }
+
 }

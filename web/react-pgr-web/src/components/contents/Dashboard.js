@@ -94,12 +94,14 @@ class Dashboard extends Component {
 			      localArray: response.serviceRequests,
             hasData:true
           });
+		   current.props.setLoadingStatus('hide');
       }).catch((error)=>{
           current.setState({
             serviceRequests: [],
 			      localArray:[],
             hasData:true
           });
+		  current.props.setLoadingStatus('hide');
       })
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
@@ -127,8 +129,10 @@ class Dashboard extends Component {
                   localArray:[],
                    hasData:false
                 });
+				current.props.setLoadingStatus('hide');
             })
         } else {
+			current.props.setLoadingStatus('hide');
             currentUser.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
         }
       })

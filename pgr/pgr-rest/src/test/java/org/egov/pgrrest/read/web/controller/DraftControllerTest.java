@@ -2,11 +2,8 @@ package org.egov.pgrrest.read.web.controller;
 
 import org.egov.pgrrest.Resources;
 import org.egov.pgrrest.TestConfiguration;
-import org.egov.pgrrest.read.domain.model.Draft;
-import org.egov.pgrrest.read.domain.model.DraftCreateRequest;
-import org.egov.pgrrest.read.domain.model.DraftSearchResponse;
+import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.domain.service.DraftService;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,7 +38,7 @@ public class DraftControllerTest {
     @Test
     public void test_to_create_draft() throws Exception {
 
-        when(draftService.save(getCreateDraftRequest())).thenReturn(getCreateDraftResponse());
+        when(draftService.save(getCreateDraftRequest())).thenReturn(1L);
 
         mockMvc.perform(post("/draft/v1/_create")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -67,7 +61,7 @@ public class DraftControllerTest {
 
     @Test
     public void test_to_delete_draft() throws Exception {
-        List<Long> draftIdList = Arrays.asList(1L);
+        List<Long> draftIdList = Collections.singletonList(1L);
         mockMvc.perform(post("/draft/v1/_delete?draftIdList=1")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(resources.getFileContents("draftSearchRequest.json")))
@@ -79,7 +73,8 @@ public class DraftControllerTest {
     @Test
     public void test_to_search_draft() throws Exception {
 
-        when(draftService.getDrafts(73L, "NOC", "default")).thenReturn(getDraftSearchresponse());
+        final DraftSearchCriteria searchCriteria = new DraftSearchCriteria(73L, "NOC", "default");
+        when(draftService.getDrafts(searchCriteria)).thenReturn(getDraftSearchResponse());
 
         mockMvc.perform(post("/draft/v1/_search?tenantId=default&serviceCode=NOC")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -88,20 +83,20 @@ public class DraftControllerTest {
             .andExpect(content().json(resources.getFileContents("draftSearchResponse.json")));
     }
 
-    private DraftCreateRequest getCreateDraftRequest() {
-        return DraftCreateRequest.builder().userId(73L).tenantId("tenantId").draft(getDraft()).serviceCode("NOC").build();
+    private NewDraft getCreateDraftRequest() {
+        return NewDraft.builder().userId(73L).tenantId("tenantId").draft(getDraft()).serviceCode("NOC").build();
     }
 
-    private org.egov.pgrrest.read.domain.model.DraftUpdateRequest getUpdateDraftRequest() {
-        return org.egov.pgrrest.read.domain.model.DraftUpdateRequest.builder().id(1L).draft(getDraft()).build();
+    private UpdateDraft getUpdateDraftRequest() {
+        return UpdateDraft.builder().id(1L).draft(getDraft()).build();
     }
 
     private org.egov.pgrrest.read.domain.model.DraftCreateResponse getCreateDraftResponse() {
         return org.egov.pgrrest.read.domain.model.DraftCreateResponse.builder().id(1L).build();
     }
 
-    private DraftSearchResponse getDraftSearchresponse() {
-        return DraftSearchResponse.builder().draftResponses(getDraftSearch()).build();
+    private DraftResult getDraftSearchResponse() {
+        return DraftResult.builder().drafts(getDraftSearch()).build();
     }
 
     private List<Draft> getDraftSearch() {

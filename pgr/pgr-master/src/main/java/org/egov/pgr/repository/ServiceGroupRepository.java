@@ -108,6 +108,7 @@ public class ServiceGroupRepository {
 		String checkQuery = serviceGroupQueryBuilder.checkIfAvailable();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getCode());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
 		

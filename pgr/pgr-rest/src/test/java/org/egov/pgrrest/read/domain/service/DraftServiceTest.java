@@ -1,9 +1,6 @@
 package org.egov.pgrrest.read.domain.service;
 
-import org.egov.pgrrest.read.domain.model.DraftCreateRequest;
-import org.egov.pgrrest.read.domain.model.DraftCreateResponse;
-import org.egov.pgrrest.read.domain.model.DraftSearchResponse;
-import org.egov.pgrrest.read.domain.model.DraftUpdateRequest;
+import org.egov.pgrrest.read.domain.model.*;
 import org.egov.pgrrest.read.persistence.repository.DraftRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -31,23 +25,24 @@ public class DraftServiceTest {
 
     @Test
     public void testShouldReturnDraft() {
-        final DraftSearchResponse expectedDraft = getDraftSearchResponse();
+        final DraftResult expectedDraft = getDraftSearchResponse();
 
-        when(draftRepository.getDrafts(1L, "NOC", "default")).thenReturn(getDraftSearchResponse());
+        final DraftSearchCriteria searchCriteria = new DraftSearchCriteria(1L, "NOC", "default");
+        when(draftRepository.getDrafts(searchCriteria))
+            .thenReturn(getDraftSearchResponse());
 
-        final org.egov.pgrrest.read.domain.model.DraftSearchResponse actualDraft = draftService.getDrafts(1L, "NOC", "default");
+        final DraftResult actualDraft = draftService.getDrafts(searchCriteria);
         assertEquals(actualDraft, expectedDraft);
-        assertEquals(1L, actualDraft.getDraftResponses().get(0).getId().longValue());
+        assertEquals(1L, actualDraft.getDrafts().get(0).getId().longValue());
     }
 
     @Test
     public void testShouldSaveDraft() {
-        final DraftCreateResponse expectedResponse = getSaveDraftResponse();
+        when(draftRepository.saveDraft(saveDraftRequest())).thenReturn(1L);
 
-        when(draftRepository.saveDraft(saveDraftRequest())).thenReturn(getSaveDraftResponse());
+        final long id = draftService.save(saveDraftRequest());
 
-        final DraftCreateResponse actualDraft = draftService.save(saveDraftRequest());
-        assertEquals(expectedResponse, actualDraft);
+        assertEquals(1L, id);
     }
 
     @Test
@@ -58,30 +53,29 @@ public class DraftServiceTest {
 
     @Test
     public void testShouldDeleteDraft() {
-        List<Long> draftIdList = Arrays.asList(1L);
+        List<Long> draftIdList = Collections.singletonList(1L);
         draftService.delete(draftIdList);
         verify(draftRepository).deleteDraft(draftIdList);
     }
 
-    private DraftCreateRequest saveDraftRequest() {
-        return DraftCreateRequest.builder().serviceCode("NOC").tenantId("default").draft(getDraftData()).build();
+    private NewDraft saveDraftRequest() {
+        return NewDraft.builder().serviceCode("NOC").tenantId("default").draft(getDraftData()).build();
     }
 
-    private DraftUpdateRequest updateDraftRequest() {
-        return DraftUpdateRequest.builder().id(1L).draft(getDraftData()).build();
+    private UpdateDraft updateDraftRequest() {
+        return UpdateDraft.builder().id(1L).draft(getDraftData()).build();
     }
 
-    private DraftCreateResponse getSaveDraftResponse() {
-        return DraftCreateResponse.builder().id(1L).build();
-    }
-
-    private org.egov.pgrrest.read.domain.model.DraftSearchResponse getDraftSearchResponse() {
+    private DraftResult getDraftSearchResponse() {
         List<org.egov.pgrrest.read.domain.model.Draft> drafts = new ArrayList<org.egov.pgrrest.read.domain.model.Draft>();
 
-        org.egov.pgrrest.read.domain.model.Draft draftModel = org.egov.pgrrest.read.domain.model.Draft.builder().id(1L).draft(getDraftData()).build();
+        org.egov.pgrrest.read.domain.model.Draft draftModel = org.egov.pgrrest.read.domain.model.Draft.builder()
+            .id(1L)
+            .draft(getDraftData())
+            .build();
         drafts.add(draftModel);
 
-        return org.egov.pgrrest.read.domain.model.DraftSearchResponse.builder().draftResponses(drafts).build();
+        return DraftResult.builder().drafts(drafts).build();
     }
 
     private HashMap<String, Object> getDraftData() {

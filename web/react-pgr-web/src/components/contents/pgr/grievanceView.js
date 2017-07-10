@@ -374,7 +374,7 @@ class grievanceView extends Component{
 
     if(result.length > 0){
       for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
-        if(req_obj.serviceRequest.attribValues[i]['key'] == key){
+        if(req_obj.serviceRequest.attribValues[i]['key'] === key){
           req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView[key];
         }
       }
@@ -440,7 +440,7 @@ class grievanceView extends Component{
   }
   handleUploadValidation = (e, formats) => {
     let validFile = validate_fileupload(e.target.files, formats);
-    console.log('is valid:', validFile);
+    //console.log('is valid:', validFile);
     if(validFile === true)
       this.props.handleUpload(e, formats);
     else{
@@ -482,7 +482,7 @@ class grievanceView extends Component{
     currentThis = this;
     const actions = [
       <FlatButton
-        label="Ok"
+        label={translate('core.lbl.ok')}
         primary={true}
         onTouchTap={this.handleClose}
       />
@@ -656,7 +656,7 @@ class grievanceView extends Component{
           </CardText>
         </Card>
       </Grid>
-      { (this.state.isUpdateAllowed && localStorage.getItem('type') == 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') == 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
+      { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
@@ -674,7 +674,7 @@ class grievanceView extends Component{
                   )) : ''}
                 </SelectField>
               </Col>
-              { localStorage.getItem('type') == 'EMPLOYEE' ?
+              { localStorage.getItem('type') === 'EMPLOYEE' ?
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
                   handleChange(value, "serviceCode", false, "")}}>
@@ -684,7 +684,7 @@ class grievanceView extends Component{
                   )) : ''}
                 </SelectField>
               </Col> : "" }
-              { localStorage.getItem('type') == 'EMPLOYEE' ?
+              { localStorage.getItem('type') === 'EMPLOYEE' ?
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText="Ward *" maxHeight={200} value={grievanceView.locationId ? grievanceView.locationId : this.state.locationId}  onChange={(event, key, value) => {
                   handleWard(value, "locationId", false, "")}}>
@@ -694,7 +694,7 @@ class grievanceView extends Component{
                   )) : ''}
                 </SelectField>
               </Col>: ""}
-              { localStorage.getItem('type') == 'EMPLOYEE' ?
+              { localStorage.getItem('type') === 'EMPLOYEE' ?
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.childLocationId ? grievanceView.childLocationId : this.state.childLocationId}  onChange={(event, key, value) => {
                   handleLocality(value, "childLocationId", true, "")}}>
@@ -705,7 +705,7 @@ class grievanceView extends Component{
                 </SelectField>
               </Col> : "" }
             </Row>
-            { localStorage.getItem('type') == 'EMPLOYEE' ?
+            { localStorage.getItem('type') === 'EMPLOYEE' ?
             <Row>
               <Col xs={12} md={3}>
                 <SelectField fullWidth={true} floatingLabelText="Forward to Department" maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
@@ -741,11 +741,11 @@ class grievanceView extends Component{
             </Row>
 
             : "" }
-            { localStorage.getItem('type') == 'EMPLOYEE' ?
+            { localStorage.getItem('type') === 'EMPLOYEE' ?
             <Row>
               {loadServiceDefinition()}
             </Row> : ''}
-            { localStorage.getItem('type') == 'CITIZEN' && (this.state.status == 'COMPLETED' || currentThis.state.status == 'REJECTED') ?
+            { localStorage.getItem('type') === 'CITIZEN' && (this.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED') ?
             <Row>
               <Col xs={12} md={3}>
                 <h4>Feedback</h4>
@@ -758,7 +758,7 @@ class grievanceView extends Component{
                   handleChange(newValue, "approvalComments", true, "") }} errorText={fieldErrors.approvalComments ? fieldErrors.approvalComments : ""}/>
               </Col>
             </Row>
-            { localStorage.getItem('type') == 'EMPLOYEE' ?
+            { localStorage.getItem('type') === 'EMPLOYEE' ?
             <Row>
               <Col xs={12} md={3}>
                 <h4>{translate('core.documents')}</h4>

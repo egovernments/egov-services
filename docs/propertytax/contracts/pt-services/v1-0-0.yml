@@ -910,6 +910,8 @@ definitions:
         format: date
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
     required:
      - trasferReason
      - departmentGuidelineValue

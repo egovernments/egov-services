@@ -130,7 +130,7 @@ class EmployeeSearch extends React.Component {
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + "Search Employee for " + titleCase(getUrlVars()["value"]));
     var type = getUrlVars()["type"];
     var id = getUrlVars()["id"];
-    var count = 1, _state = {}, _this = this;
+    var count = 5, _state = {}, _this = this;
 
     const checkCountAndCall = function(key, res) {
       _state[key] = res;

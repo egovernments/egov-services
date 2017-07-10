@@ -195,7 +195,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
  
-  /properties/_transfer:
+  /properties/transfer/_create:
     post:
       description: Title tranfer of the property with the new owner details.
       parameters:
@@ -216,8 +216,29 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Transfer
+        
+  /properties/transfer/_update:
+    post:
+      description: Updation of Title tranfer of the property with the new owner details.
+      parameters:
+        - name: transferRequest
+          in: body
+          description: Request header of the Tranfer Request.
+          required: true
+          schema:
+            $ref: '#/definitions/TitalTranferRequest'
+      responses:
+        '200':
+          description: Title Tranfer successful
+          schema:
+            $ref: '#/definitions/TitalTranferResponse'
+        '400':
+          description: Title Tranfer failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Transfer
 
-      
 definitions:
 ########################################################
 #RequestInfo and ResponseInfo object should be reffered from Common.

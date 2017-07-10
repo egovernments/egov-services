@@ -1,7 +1,6 @@
 /* global google */
 import _ from "lodash";
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import withScriptjs from "react-google-maps/lib/async/withScriptjs";
 import SearchBox from 'react-google-maps/lib/places/SearchBox';
@@ -78,9 +77,20 @@ export default class SimpleMap extends Component {
   }
 
   handleBoundsChanged() {
+    let tempArray = [];
+    tempArray.push(this._map.getCenter())
+
+    // Add a marker for each place returned from search bar
+    const markers = tempArray.map(place => ({
+      position: this._map.getCenter(),
+    }));
+
+    // Set markers; set map center to first search result
+    const mapCenter = markers.length > 0 ? markers[0].position : this.state.center;
+
     this.setState({
-      bounds: this._map.getBounds(),
-      center: this._map.getCenter(),
+      center: mapCenter,
+      markers
     });
   }
 
@@ -101,7 +111,7 @@ export default class SimpleMap extends Component {
 
     this.setState({
       center: mapCenter,
-      markers,
+      markers
     });
   }
 
@@ -121,10 +131,10 @@ export default class SimpleMap extends Component {
         }
         center={this.state.center}
         onMapMounted={this.handleMapMounted}
-        onBoundsChanged={this.handleBoundsChanged}
+        onBoundsChanged={()=>{this.handleBoundsChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng()) }}
         onSearchBoxMounted={this.handleSearchBoxMounted}
         bounds={this.state.bounds}
-        onPlacesChanged={()=>{ this.handlePlacesChanged(); this.props.handler(this._searchBox.getPlaces())}}
+        onPlacesChanged={()=>{ this.handlePlacesChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng())}}
         markers={this.state.markers}
       />
     );

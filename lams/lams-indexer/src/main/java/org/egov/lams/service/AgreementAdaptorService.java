@@ -67,13 +67,13 @@ public class AgreementAdaptorService {
 		
 		Asset asset = assetRepository.getAsset(agreement.getAsset().getId(),agreement.getTenantId());
 		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId(),agreement.getTenantId(),requestInfo);
-		//City city = tenantRepository.fetchTenantByCode(agreement.getTenantId());
+		City city = tenantRepository.fetchTenantByCode(agreement.getTenantId());
 		Demand agreementDemand = demandRepository.getDemandBySearch(agreement.getDemands().get(0), agreement.getTenantId());
 				
 		agreementDetailsEs.setAsset(asset);
 		agreementDetailsEs.setAgreement(agreement);
 		agreementDetailsEs.setAllottee(allottee);
-		//agreementDetailsEs.setCity(city);
+		agreementDetailsEs.setCity(city);
 		agreementDetailsEs.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
 		agreementDetailsEs.setRent(agreementDemand.getDemandDetails(),getCurrentInstallment(agreement),propertiesManager.getDemandReasonRent());
 		agreementIndex.setAgreementDetails(agreementDetailsEs);

@@ -213,18 +213,27 @@ public class GrievanceTypeController {
     }
     
     private void addGrievanceNameValidationErrors(final ServiceRequest serviceTypeRequest,
-            final List<ErrorField> errorFields) {
-        final ServiceType service = serviceTypeRequest.getService();
-        if (service.getServiceName() == null || service.getServiceName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(PgrMasterConstants.GRIEVANCETYPE_NAME_MANDATORY_CODE)
-                    .message(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-       } else
-            return;
-    }
+			final List<ErrorField> errorFields) {
+		final ServiceType service = serviceTypeRequest.getService();
+		if (service.getServiceName() == null || service.getServiceName().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder()
+					.code(PgrMasterConstants.GRIEVANCETYPE_NAME_MANDATORY_CODE)
+					.message(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(PgrMasterConstants.GRIEVANCETYPE_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+		if (errorFields.size() == 0) {
+			if (serviceTypeService.checkComplaintNameIfExists(serviceTypeRequest.getService().getServiceName(),
+					serviceTypeRequest.getService().getTenantId())) {
+				final ErrorField errorField = ErrorField.builder()
+						.code(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_CODE)
+						.message(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE)
+						.field(PgrMasterConstants.GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+		}
+		return;
+	}
 
     private void addTeanantIdValidationErrors(final ServiceRequest serviceTypeRequest,
             final List<ErrorField> errorFields) {

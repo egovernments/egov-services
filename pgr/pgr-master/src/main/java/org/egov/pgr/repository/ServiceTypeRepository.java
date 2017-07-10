@@ -193,7 +193,18 @@ public class ServiceTypeRepository {
 		if (!serviceTypes.isEmpty())
 			return true;
 		return false;
-		
+	}
+	
+	public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(serviceName);
+		preparedStatementValues.add(tenantId);
+		final String query = ServiceTypeQueryBuilder.checkServiceNameIfExists();
+		final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!serviceTypes.isEmpty())
+			return true;
+		return false;
 	}
 
     public List<ServiceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {

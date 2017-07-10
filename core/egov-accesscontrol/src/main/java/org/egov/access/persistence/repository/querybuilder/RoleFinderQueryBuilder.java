@@ -8,7 +8,7 @@ import java.util.List;
 public class RoleFinderQueryBuilder implements BaseQueryBuilder {
     private RoleSearchCriteria criteria;
     private List<String> filters = new ArrayList<>();
-    private String BASE_QUERY = "SELECT r.name as r_name, r.description as r_description from eg_ms_role r";
+    private String BASE_QUERY = "SELECT r.name as r_name,r.code as r_code, r.description as r_description from eg_ms_role r";
 
     public RoleFinderQueryBuilder(RoleSearchCriteria criteria) {
         this.criteria = criteria;

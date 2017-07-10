@@ -19,14 +19,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class ActionRequest {
 
+public class ActionRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
     private List<String> roleCodes;
     private List<Long> featureIds;
     private String tenantId;
-    
+    private Boolean enabled;
     private List<Action> actions;
 
     public ActionSearchCriteria toDomain() {

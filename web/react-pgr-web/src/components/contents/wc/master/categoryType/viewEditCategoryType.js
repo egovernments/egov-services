@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField';
 import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
+import Checkbox from 'material-ui/Checkbox';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
@@ -101,10 +102,6 @@ class searchRouter extends Component {
             text: 'name',
             value: 'id'
           },
-          complaintSourceConfig: {
-            text: 'serviceName',
-            value: 'serviceCode'
-          },
           complaintSource: [],
           boundarySource: [],
           boundaryTypeList: [],
@@ -130,7 +127,6 @@ class searchRouter extends Component {
     $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          ordering: false,
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -148,7 +144,6 @@ class searchRouter extends Component {
     $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          ordering: false,
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -157,49 +152,7 @@ class searchRouter extends Component {
   }
 
   componentDidMount() {
-    var self = this, count = 4, _state = {};
-    const checkCountAndCall = function(key, res) {
-      _state[key] = res;
-      count--;
-      if(count == 0) {
-        self.setInitialState(_state);
-        self.props.setLoadingStatus("hide");
-      }
-    }
 
-    this.props.initForm();
-    self.props.setLoadingStatus("loading");
-    Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
-        checkCountAndCall("boundaryTypeList", response.BoundaryType);
-    }, function(err) {
-        checkCountAndCall("boundaryTypeList", []);
-    });
-
-    Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
-        checkCountAndCall("boundaryInitialList", response.Boundary);
-    }, function(err) {
-        checkCountAndCall("boundaryInitialList", []);
-    });
-    Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
-      checkCountAndCall("positionSource", response.Position);
-    }, function(err) {
-        checkCountAndCall("positionSource", []);
-    });
-
-    Api.commonApiPost("/pgr/services/v1/_search", {type:'all'}).then(function(response) {
-       checkCountAndCall("complaintSource", response.complaintTypes);
-    },function(err) {
-       checkCountAndCall("complaintSource", []);
-    });
-  }
-
-  loadBoundaries = (value)=> {
-     var self = this;
-     Api.commonApiPost("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
-       self.setState({boundarySource : response.Boundary});
-     },function(err) {
-
-     });
   }
 
   search = e => {
@@ -207,10 +160,10 @@ class searchRouter extends Component {
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms-masters/categorytype/_search/", searchSet).then(function(response) {
       flag = 1;
       self.setState({
-        resultList: response.RouterTypRes,
+        resultList: response.CategoryTypes,
         isSearchClicked: true
       });
       self.props.setLoadingStatus("hide");
@@ -221,7 +174,7 @@ class searchRouter extends Component {
   }
 
   handleNavigation = (id) => {
-    this.props.history.push("/pgr/createRouter/" + this.props.match.params.type + "/" + id);
+    this.props.history.push("/wc/viewCategoryType/" + this.props.match.params.type + "/" + id);
   }
 
   render() {
@@ -232,13 +185,12 @@ class searchRouter extends Component {
       handleChange
     } = this.props;
     let {
-      loadBoundaries,
+
       search,
       handleNavigation
     } = this;
     let {
         allSourceConfig,
-        complaintSourceConfig,
         complaintSource,
         boundarySource,
         boundaryTypeList,
@@ -254,11 +206,10 @@ class searchRouter extends Component {
       return resultList.map(function(val, i) {
         return (
           <tr key={i} onClick={() => {handleNavigation(val.id)}}>
-            <td>{i+1}</td>
-            <td>{val.service ? val.service.serviceName : ""}</td>
-            <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>
-            <td>{getNameById(boundaryInitialList, val.boundary.boundaryType)}</td>
-            <td>{getNameById(positionSource, val.position)}</td>
+            <td>{val.code}</td>
+            <td>{val.name}</td>
+            <td>{val.description}</td>
+            <td>{val.active? 'true' : 'false'}</td>
           </tr>
         )
       })
@@ -273,11 +224,10 @@ class searchRouter extends Component {
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
              <thead>
                 <tr>
-                  <th>#</th>
-                  <th>{translate("pgr.lbl.grievance.type")}</th>
-                  <th>{translate("pgr.lbl.boundarytype")}</th>
-                  <th>{translate("pgr.lbl.boundary")}</th>
-                  <th>{translate("pgr.lbl.position")}</th>
+                   <th>{translate("core.lbl.code")}</th>
+                   <th>{translate("core.lbl.add.name")}</th>
+                   <th>{translate("core.lbl.description")}</th>
+                   <th>{translate("pgr.lbl.active")} </th>
                 </tr>
               </thead>
               <tbody>
@@ -293,63 +243,41 @@ class searchRouter extends Component {
       <div className="searchRouter">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Grievance Router </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Category Type </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
-                   <Col xs={12} md={8}>
-                    <AutoComplete
-                        hintText=""
-                        floatingLabelText={translate("pgr.lbl.grievance.type")}
-                        filter={AutoComplete.caseInsensitiveFilter}
-                        fullWidth={true}
-                        dataSource={this.state.complaintSource}
-                        dataSourceConfig={this.state.complaintSourceConfig}
-                        menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceid")}}
-                        value={routerSearchSet.serviceid}
-                        onNewRequest={(chosenRequest, index) => {
-                          var e = {
-                            target: {
-                              value: chosenRequest.id
-                            }
-                          };
-                          handleChange(e, "serviceid", true, "");
-                         }}
-                        />
-                   </Col>
-                   <Col xs={12} md={8}>
-                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
-                            var e = {target: {value: val}};
-                            loadBoundaries(val);
-                            handleChange(e, "boundaryType", true, "")}}>
-                            {boundaryTypeList.map((item, index) => (
-                                      <MenuItem value={item.id} key={index} primaryText={item.name} />
-                                  ))}
-                     </SelectField>
-                   </Col>
-                   <Col xs={12} md={8}>
-                    <AutoComplete
-                        hintText=""
-                        floatingLabelText={translate("pgr.lbl.boundary")}
-                        filter={AutoComplete.caseInsensitiveFilter}
-                        fullWidth={true}
-                        dataSource={this.state.boundarySource}
-                        dataSourceConfig={this.state.allSourceConfig}
-                        menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundaryid")}}
-                        value={routerSearchSet.boundaryid}
-                        onNewRequest={(chosenRequest, index) => {
-                          var e = {
-                            target: {
-                              value: chosenRequest.id
-                            }
-                          };
-                          handleChange(e, "boundaryid", true, "");
-                         }}
-                        />
-                   </Col>
-                  </Row>
+                     <Col xs={12} md={3} sm={6}>
+                         <TextField
+                             fullWidth={true}
+                             floatingLabelText={"Category Type"+"*"}
+                             value={routerSearchSet.name}
+                             maxLength={100}
+                             onChange={(e) => {
+                             handleChange(e, "name", true, /^[a-zA-Z0-9]*$/g)}}
+                             id="name"
+                         />
+                     </Col>
+                     <div className="clearfix"></div>
+                     <Col xs={12} md={3} sm={6}>
+                       <Checkbox
+                           label={translate("pgr.lbl.active")}
+                           style={styles.checkbox}
+
+                           onCheck = {(e, i, v) => {
+
+                             var e = {
+                               target: {
+                                 value:i
+                               }
+                             }
+                             handleChange(e, "active", true, '')
+                           }}
+
+                           id="active"
+                         />
+                     </Col>
+                    </Row>
                  </Grid>
               </CardText>
            </Card>

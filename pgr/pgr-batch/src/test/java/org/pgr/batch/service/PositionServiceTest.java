@@ -30,7 +30,7 @@ public class PositionServiceTest {
         final String tenantId = "tenantId";
         when(serviceRequest.getTenantId()).thenReturn(tenantId);
         final long assigneeId = 2L;
-        when(serviceRequest.getAssigneeId()).thenReturn(String.valueOf(assigneeId));
+        when(serviceRequest.getPositionId()).thenReturn(String.valueOf(assigneeId));
         final Position position = new Position(designationId, departmentId);
         when(positionRepository.getDesignationIdForAssignee(tenantId, assigneeId)).thenReturn(position);
 

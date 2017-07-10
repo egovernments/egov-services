@@ -15,7 +15,7 @@ public class PositionService {
 
     public void enrichRequestWithPosition(ServiceRequest serviceRequest) {
         final Position position = positionRepository
-            .getDesignationIdForAssignee(serviceRequest.getTenantId(), Long.valueOf(serviceRequest.getAssigneeId()));
+            .getDesignationIdForAssignee(serviceRequest.getTenantId(), Long.valueOf(serviceRequest.getPositionId()));
         serviceRequest.update(position);
     }
 }

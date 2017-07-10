@@ -16,6 +16,7 @@ import org.egov.lams.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
+import org.egov.lams.model.City;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.repository.AllotteeRepository;

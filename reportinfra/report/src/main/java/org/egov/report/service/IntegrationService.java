@@ -50,7 +50,14 @@ public class IntegrationService {
 				
 				if(url != null && url.startsWith("list://")){
 					//consider this as fixed value and send this after removing list://
-					columnDetail.setDefaultValue(url.substring(7));
+					url = url.substring(7);
+					Map<Object, Object> map = new HashMap<>();
+					String[] pairs = url.split(",");
+					for(String str: pairs){
+						String[] keyValue = str.split(":");
+						map.put(keyValue[0], keyValue[1]);
+					}
+					columnDetail.setDefaultValue(map);
 				}else{
 					String res = restTemplate.postForObject(url,requestInfo, String.class);
 					LOGGER.info("res:"+res);

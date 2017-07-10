@@ -793,8 +793,8 @@ definitions:
           - TITLE_TRANSFER
           - BIFURCATION
           - ALTER
-		  - EDIT
-		  - AMALGAMATION
+          - EDIT
+          - AMALGAMATION
           
   Document:
     type: object
@@ -956,3 +956,4 @@ parameters:
 tags:
   - name: Property
     description: APIs required for property.
+

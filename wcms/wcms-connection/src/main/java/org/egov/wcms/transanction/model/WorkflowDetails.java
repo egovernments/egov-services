@@ -58,7 +58,7 @@ public class WorkflowDetails {
 
     private long department;
 
-    private long designation;
+    private long designation; 
 
     private long approver;
 

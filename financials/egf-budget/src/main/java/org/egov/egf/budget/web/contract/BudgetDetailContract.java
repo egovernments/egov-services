@@ -204,25 +204,20 @@ public class BudgetDetailContract extends AuditableContract {
 	public BudgetDetail toDomain() {
 		BudgetDetail budgetDetail = new BudgetDetail();
 		budgetDetail.setId(this.id);
-		budgetDetail.setBudgetGroupId(
-				BudgetGroupContract.builder().id(budgetGroup != null ? budgetGroup.getId() : null).build());
+		budgetDetail.setBudgetGroupId(budgetGroup);
 		budgetDetail.setBudgetId(Budget.builder().id(budget != null ? budget.getId() : null).build());
 		budgetDetail.setOriginalAmount(this.originalAmount);
 		budgetDetail.setApprovedAmount(this.approvedAmount);
 		budgetDetail.setBudgetAvailable(this.budgetAvailable);
 		budgetDetail.setAnticipatoryAmount(this.anticipatoryAmount);
-		budgetDetail.setUsingDepartmentId(
-				DepartmentContract.builder().id(usingDepartment != null ? usingDepartment.getId() : null).build());
-		budgetDetail.setExecutingDepartmentId(DepartmentContract.builder()
-				.id(executingDepartment != null ? executingDepartment.getId() : null).build());
-		budgetDetail.setFunctionId(FunctionContract.builder().id(function != null ? function.getId() : null).build());
-		budgetDetail.setSchemeId(SchemeContract.builder().id(scheme != null ? scheme.getId() : null).build());
-		budgetDetail.setFundId(FundContract.builder().id(fund != null ? fund.getId() : null).build());
-		budgetDetail
-				.setSubSchemeId(SubSchemeContract.builder().id(subScheme != null ? subScheme.getId() : null).build());
-		budgetDetail.setFunctionaryId(
-				FunctionContract.builder().id(functionary != null ? functionary.getId() : null).build());
-		budgetDetail.setBoundaryId(BoundaryContract.builder().id(boundary != null ? boundary.getId() : null).build());
+		budgetDetail.setUsingDepartmentId(usingDepartment);
+		budgetDetail.setExecutingDepartmentId(usingDepartment);
+		budgetDetail.setFunctionId(function);
+		budgetDetail.setSchemeId(scheme);
+		budgetDetail.setFundId(fund);
+		budgetDetail.setSubSchemeId(subScheme);
+		budgetDetail.setFunctionaryId(functionary);
+		budgetDetail.setBoundaryId(boundary);
 		budgetDetail.setMaterializedPath(this.materializedPath);
 		budgetDetail.setDocumentNumber(this.documentNumber);
 		budgetDetail.setUniqueNo(this.uniqueNo);
@@ -239,8 +234,11 @@ public class BudgetDetailContract extends AuditableContract {
 	public void toContract(BudgetDetail budgetDetail) {
 		this.id = budgetDetail.getId();
 		this.budgetGroup = budgetDetail.getBudgetGroupId() != null ? budgetDetail.getBudgetGroupId() : null;
-		this.budget = BudgetContract.builder()
-				.id(budgetDetail.getBudgetId() != null ? budgetDetail.getBudgetId().getId() : null).build();
+		if (budgetDetail.getBudgetId() != null) {
+			BudgetContract bContract = new BudgetContract();
+			bContract.toContract(budgetDetail.getBudgetId());
+			this.budget = bContract;
+		}
 		this.originalAmount = budgetDetail.getOriginalAmount();
 		this.approvedAmount = budgetDetail.getApprovedAmount();
 		this.budgetAvailable = budgetDetail.getBudgetAvailable();

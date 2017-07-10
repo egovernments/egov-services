@@ -174,20 +174,35 @@ public class BudgetContract extends AuditableContract {
 	public void toContract(Budget budget) {
 		this.id = budget.getId();
 		this.name = budget.getName();
-		this.financialYear = FinancialYearContract.builder()
-				.id(budget.getFinancialYearId() != null ? budget.getFinancialYearId().getId() : null).build();
+		if (budget.getFinancialYearId() != null)
+			this.financialYear = FinancialYearContract.builder().id(budget.getFinancialYearId().getId())
+					.active(budget.getFinancialYearId().getActive())
+					.endingDate(budget.getFinancialYearId().getEndingDate())
+					.finYearRange(budget.getFinancialYearId().getFinYearRange())
+					.isActiveForPosting(budget.getFinancialYearId().getIsActiveForPosting())
+					.isClosed(budget.getFinancialYearId().getIsClosed())
+					.startingDate(budget.getFinancialYearId().getStartingDate())
+					.transferClosingBalance(budget.getFinancialYearId().getTransferClosingBalance()).build();
 		this.estimationType = budget.getEstimationType();
-		this.parent = BudgetContract.builder().id(budget.getParentId() != null ? budget.getParentId().getId() : null)
-				.build();
+		if (budget.getParentId() != null) {
+			BudgetContract bContract = new BudgetContract();
+			bContract.toContract(budget.getParentId());
+			this.parent = bContract;
+		}
 		this.description = budget.getDescription();
 		this.isActiveBudget = budget.getIsActiveBudget();
 		this.isPrimaryBudget = budget.getIsPrimaryBudget();
 		this.materializedPath = budget.getMaterializedPath();
-		this.referenceBudget = BudgetContract.builder()
-				.id(budget.getReferenceBudgetId() != null ? budget.getReferenceBudgetId().getId() : null).build();
+		if (budget.getReferenceBudgetId() != null) {
+			BudgetContract bContract = new BudgetContract();
+			bContract.toContract(budget.getReferenceBudgetId());
+			this.referenceBudget = bContract;
+		}
 		this.documentNumber = budget.getDocumentNumber();
-		this.status = EgfStatusContract.builder().id(budget.getStatusId() != null ? budget.getStatusId().getId() : null)
-				.build();
+		if (budget.getStatusId() != null)
+			this.status = EgfStatusContract.builder().id(budget.getStatusId().getId())
+					.code(budget.getStatusId().getCode()).description(budget.getStatusId().getDescription())
+					.moduleType(budget.getStatusId().getModuleType()).build();
 		this.setCreatedBy(budget.getCreatedBy());
 		this.setCreatedDate(budget.getCreatedDate());
 		this.setLastModifiedBy(budget.getLastModifiedBy());

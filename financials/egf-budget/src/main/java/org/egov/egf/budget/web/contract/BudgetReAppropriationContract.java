@@ -141,16 +141,21 @@ public class BudgetReAppropriationContract extends AuditableContract {
 
 	public void toContract(BudgetReAppropriation budgetReAppropriation) {
 		this.id = budgetReAppropriation.getId();
-		this.budgetDetail = BudgetDetailContract.builder().id(budgetReAppropriation.getBudgetDetailId() != null
-				? budgetReAppropriation.getBudgetDetailId().getId() : null).build();
+		if (budgetReAppropriation.getBudgetDetailId() != null) {
+			BudgetDetailContract bdContract = new BudgetDetailContract();
+			bdContract.toContract(budgetReAppropriation.getBudgetDetailId());
+			this.budgetDetail = bdContract;
+		}
 		this.additionAmount = budgetReAppropriation.getAdditionAmount();
 		this.deductionAmount = budgetReAppropriation.getDeductionAmount();
 		this.originalAdditionAmount = budgetReAppropriation.getOriginalAdditionAmount();
 		this.originalDeductionAmount = budgetReAppropriation.getOriginalDeductionAmount();
 		this.anticipatoryAmount = budgetReAppropriation.getAnticipatoryAmount();
-		this.status = EgfStatusContract.builder()
-				.id(budgetReAppropriation.getStatusId() != null ? budgetReAppropriation.getStatusId().getId() : null)
-				.build();
+		if (budgetReAppropriation.getStatusId() != null)
+			this.status = EgfStatusContract.builder().id(budgetReAppropriation.getStatusId().getId())
+					.code(budgetReAppropriation.getStatusId().getCode())
+					.description(budgetReAppropriation.getStatusId().getDescription())
+					.moduleType(budgetReAppropriation.getStatusId().getModuleType()).build();
 		this.asOnDate = budgetReAppropriation.getAsOnDate();
 		this.setCreatedBy(budgetReAppropriation.getCreatedBy());
 		this.setCreatedDate(budgetReAppropriation.getCreatedDate());

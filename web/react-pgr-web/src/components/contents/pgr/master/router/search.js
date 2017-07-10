@@ -210,6 +210,12 @@ class searchRouter extends Component {
     e.preventDefault();
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
+    if(!searchSet.serviceid)
+      delete searchSet.serviceid;
+    if(!searchSet.boundaryid)
+      delete searchSet.boundaryid;
+    if(searchSet.boundaryType)
+      delete searchSet.boundaryType;
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
       flag = 1;

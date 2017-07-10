@@ -20,6 +20,7 @@ public class GrievancePersistenceListener {
     public void processMessage(HashMap<String, Object> sevaRequestMap) {
         SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
         complaintWriteService.updateOrInsert(sevaRequest.toDomain());
+        complaintWriteService.pushToThirdPartySystem(sevaRequest);
     }
 
 }

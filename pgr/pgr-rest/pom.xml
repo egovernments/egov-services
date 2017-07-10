@@ -193,6 +193,8 @@
                                         <exclude>org.egov.pgrrest.common.domain.model.ReceivingMode</exclude>
                                         <exclude>org.egov.pgrrest.common.domain.model.ReceivingCenter</exclude>
                                         <exclude>org.egov.pgrrest.write.domain.model.ServiceRequestRecord</exclude>
+                                        <exclude>org.egov.pgrrest.read.persistence.repository.IntegrationMessageQueueRepository</exclude>
+                                        <exclude>org.egov.pgrrest.write.domain.service.ServiceRequestWriteService</exclude>
                                         <exclude>org.egov.pgrrest.read.persistence.repository.ServiceDefinitionRepository</exclude>
                                     </excludes>
                                     <limits>

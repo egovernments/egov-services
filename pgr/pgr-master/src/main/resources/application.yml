@@ -430,7 +430,7 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
-    pattern: 'list://{"COMPLETED": "COMPLETED","PENDING": "PENDING","REJECTED": "REJECTED"}'
+    pattern: 'list://COMPLETED: "COMPLETED",PENDING: "PENDING",REJECTED: "REJECTED"'
     source: seva
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
     - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE

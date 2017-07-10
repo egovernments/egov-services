@@ -26,7 +26,7 @@ public class JSScriptEngineFactoryTest {
     }
 
     @Test
-    public void test_should_execute_date_diff_in_days_function() {
+    public void test_should_return_date_difference_as_2_days() {
         nashornSandbox.inject("date1", new LocalDate(2017, 7, 25));
         nashornSandbox.inject("date2", new LocalDate(2017, 7 , 27));
         final Object result = nashornSandbox.eval("dateDifferenceInDays(date1, date2)");

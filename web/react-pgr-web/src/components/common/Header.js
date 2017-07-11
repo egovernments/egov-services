@@ -95,7 +95,13 @@ const RightIcon = (props) => {
     );
   } else {
     return(
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+      <div>
+        <i onClick={()=>{
+          props.setRoute("/");
+        }} className="material-icons" 
+           style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+      </div>
     )
 
   }

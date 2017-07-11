@@ -4,7 +4,7 @@ import org.springframework.core.env.Environment;
 
 public class TracerProperties {
 
-    private static final String DETAILED_TRACING_FLAG = "org.egov.detailed.tracing.enabled";
+    private static final String DETAILED_TRACING_FLAG = "tracer.detailed.tracing.enabled";
     private static final String PROPERTY_PLACEHOLDER_PREFIX = "${";
     private static final String PROPERTY_PLACEHOLDER_SUFFIX = "}";
     private static final String REPLACEMENT_STRING = "";

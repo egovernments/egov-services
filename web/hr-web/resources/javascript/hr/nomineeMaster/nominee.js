@@ -155,7 +155,8 @@ class Nominee extends React.Component{
       })
   }
 
-    handleChange(e,name) {
+  handleChange(e, name) {
+    var self = this, val = e.target.value;
       if(name === "nominated") {
       this.setState({
         nomineeSet:{
@@ -171,30 +172,35 @@ class Nominee extends React.Component{
       }
     })
   } else if (name === "bank"){
-      try {
-        var branchList = commonApiPost("egf-masters", "bankbranches", "_search", {
+      commonApiPost("egf-masters", "bankbranches", "_search", {
           tenantId,
-          "bank.id": e.target.value
-        }).responseJSON["bankBranches"] || [];
-      } catch (e) {
-        console.log(e);
-        var branchList :[];
-      }
-      this.setState({
-        branchList,
-        nomineeSet:{
-            ...this.state.nomineeSet,
-              [name]:e.target.value,
-
-        }
+          "bank": val
+      }, function(err, res) {
+          if(res) {
+            self.setState({
+              branchList: res.bankBranches,
+              nomineeSet:{
+                ...self.state.nomineeSet,
+                [name]: val
+              }
+            })
+          } else {
+              self.setState({
+                branchList: [],
+                nomineeSet:{
+                  ...self.state.nomineeSet,
+                  [name]: val
+                }
+              })
+          }
       })
     } else {
-      this.setState({
-        nomineeSet:{
-          ...this.state.nomineeSet,
-          [name]:e.target.value
-        }
-      })
+        this.setState({
+          nomineeSet:{
+            ...this.state.nomineeSet,
+            [name]: val
+          }
+        })
     }
   }
 
@@ -249,7 +255,7 @@ class Nominee extends React.Component{
           })
        });
 
-      var count = 3, _state = {}, _this = this;
+      var count = 4, _state = {}, _this = this;
 
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
@@ -264,6 +270,14 @@ class Nominee extends React.Component{
 
       getDropdown("bank", function(res) {
         checkCountAndCall("bankList", res);
+      })
+
+      getDropdown("gender", function(res) {
+        checkCountAndCall("genderList", res);
+      })
+
+      getDropdown("relation", function(res) {
+        checkCountAndCall("relationList", res);
       })
 
       getCommonMasterById("hr-employee","employees", id, function(err, res) {
@@ -392,12 +406,9 @@ class Nominee extends React.Component{
     let mode=getUrlVars()["type"];
     let {name,gender,dateOfBirth,code,maritalStatus,relationship,bank,bankBranch,bankAccount,nominated,employed}=this.state.nomineeSet;
 
-    const renderOption=function(list)
-    {
-        if(list)
-        {
-            return list.map((item, ind)=>
-            {
+    const renderOption = function(list) {
+        if(list) {
+            return list.map((item, ind) => {
                 return (<option key={ind} value={typeof item == "object" ? item.id : item}>
                         {typeof item == "object" ? item.name : item}
                   </option>)
@@ -602,7 +613,7 @@ class Nominee extends React.Component{
     }
     const showNoteMsg = function() {
       if(showMsg) {
-        return (<p className="text-danger">ALl mandatory field are required.</p>)
+        return (<p className="text-danger">All * marked field are required.</p>)
       } else
         return "";
     }

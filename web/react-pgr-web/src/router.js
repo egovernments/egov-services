@@ -37,6 +37,14 @@ import CategoryTypeCreate from './components/contents/wc/master/categoryType/cat
 import ViewEditCategoryType from './components/contents/wc/master/categoryType/viewEditCategoryType';
 import ViewCategoryType from './components/contents/wc/master/categoryType/viewCategoryType';
 
+import WaterSourceTypeCreate from './components/contents/wc/master/waterSourceType/waterSourceTypeCreate';
+import ViewEditWaterSourceType from './components/contents/wc/master/waterSourceType/viewEditWaterSourceType';
+import ViewWaterSourceType from './components/contents/wc/master/waterSourceType/viewWaterSourceType';
+
+import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyTypeCreate';
+import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
+import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
+
 const base = "";
 
 const Main = () => {
@@ -89,6 +97,19 @@ const Main = () => {
         <Route exact path={base+'/wc/categoryType/view'} component={ViewEditCategoryType}/>
         <Route exact path={base+'/wc/categoryType/edit'} component={ViewEditCategoryType}/>
         <Route exact path={base+'/wc/viewCategoryType/:id'} component={ViewCategoryType}/>
+
+
+        <Route exact path={base+'/wc/createWaterSourceType'} component={WaterSourceTypeCreate}/>
+        <Route exact name="createWaterSourceType" path={base+'/wc/createWaterSourceType/:id?'} component={WaterSourceTypeCreate}/>
+        <Route exact path={base+'/wc/waterSourceType/view'} component={ViewEditWaterSourceType}/>
+        <Route exact path={base+'/wc/waterSourceType/edit'} component={ViewEditWaterSourceType}/>
+        <Route exact path={base+'/wc/viewWaterSourceType/:id'} component={ViewWaterSourceType}/>
+
+        <Route exact path={base+'/wc/createSupplyType'} component={SupplyTypeCreate}/>
+        <Route exact name="createSupplyType" path={base+'/wc/createSupplyType/:id?'} component={SupplyTypeCreate}/>
+        <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
+        <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
+        <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
 
 
     </Switch>

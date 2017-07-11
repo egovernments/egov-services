@@ -94,7 +94,7 @@ const styles = {
 };
 
 var flag = 0;
-class searchCategoryType extends Component {
+class searchWaterSourceType extends Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -160,7 +160,7 @@ class searchCategoryType extends Component {
   search = e => {
     e.preventDefault();
     var self = this;
-    var searchSet = Object.assign({}, self.props.categoryTypeSearchSet);
+    var searchSet = Object.assign({}, self.props.waterSourceTypeSearchSet);
 
     if(searchSet.active==false){
         searchSet.active=false;
@@ -170,10 +170,10 @@ class searchCategoryType extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms-masters/categorytype/_search/", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms-masters/sourcetype/_search", searchSet).then(function(response) {
       flag = 1;
       self.setState({
-        resultList: response.CategoryTypes,
+        resultList: response.waterSourceType,
         isSearchClicked: true
       });
 
@@ -188,17 +188,17 @@ class searchCategoryType extends Component {
   handleNavigation = (id) => {
       let url = this.props.location.pathname;
       console.log("url",url);
-      if(url == '/wc/categoryType/view'){
-           this.props.history.push('/wc/viewCategoryType/'+id);
+      if(url == '/wc/waterSourceType/view'){
+           this.props.history.push('/wc/viewWaterSourceType/'+id);
        } else {
-           this.props.history.push('/wc/createCategoryType/'+id);
+           this.props.history.push('/wc/createWaterSourceType/'+id);
       }
   }
 
   render() {
     _this = this;
     let {
-      categoryTypeSearchSet,
+      waterSourceTypeSearchSet,
       handleAutoCompleteKeyUp,
       handleChange
     } = this.props;
@@ -220,7 +220,7 @@ class searchCategoryType extends Component {
     } = this.state;
  let url;
 
-console.log("categoryTypeSearchSet",categoryTypeSearchSet);
+console.log("waterSourceTypeSearchSet",waterSourceTypeSearchSet);
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
@@ -260,20 +260,20 @@ console.log("categoryTypeSearchSet",categoryTypeSearchSet);
    }
 
     return (
-      <div className="searchCategoryType">
+      <div className="searchWaterSourceType">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Category Type </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Water Source Type </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
                      <Col xs={12} md={3} sm={6}>
                          <TextField
                              fullWidth={true}
-                             floatingLabelText={"Category Type"+"*"}
-                             value={categoryTypeSearchSet.name? categoryTypeSearchSet.name: ""}
+                             floatingLabelText={"Water Source Type"+"*"}
+                             value={waterSourceTypeSearchSet.name? waterSourceTypeSearchSet.name: ""}
                              maxLength={100}
-                             onChange={(e) => { categoryTypeSearchSet.active = true;
+                             onChange={(e) => { waterSourceTypeSearchSet.active = true;
                              handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
                              id="name"
                          />
@@ -283,7 +283,7 @@ console.log("categoryTypeSearchSet",categoryTypeSearchSet);
                        <Checkbox
                            label={translate("pgr.lbl.active")}
                            style={styles.checkbox}
-                           defaultChecked = {categoryTypeSearchSet.active || true}
+                           defaultChecked = {waterSourceTypeSearchSet.active || true}
                            onCheck = {(e, i, v) => {
 
                              var e = {
@@ -314,7 +314,7 @@ console.log("categoryTypeSearchSet",categoryTypeSearchSet);
 }
 
 const mapStateToProps = state => {
-  return ({categoryTypeSearchSet: state.form.form});
+  return ({waterSourceTypeSearchSet: state.form.form});
 };
 const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
@@ -347,4 +347,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(searchCategoryType);
+export default connect(mapStateToProps, mapDispatchToProps)(searchWaterSourceType);

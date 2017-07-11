@@ -1,24 +1,9 @@
 package org.egov.eis.indexer.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.egov.commons.model.Category;
-import org.egov.commons.model.Community;
-import org.egov.commons.model.Department;
-import org.egov.commons.model.Language;
-import org.egov.commons.model.Religion;
-import org.egov.commons.web.contract.CategoryResponse;
-import org.egov.commons.web.contract.CommunityResponse;
-import org.egov.commons.web.contract.DepartmentResponse;
-import org.egov.commons.web.contract.LanguageResponse;
-import org.egov.commons.web.contract.ReligionResponse;
-import org.egov.core.web.contract.RequestInfoWrapper;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.commons.model.*;
+import org.egov.commons.web.contract.*;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.indexer.config.PropertiesManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +14,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommonMasterServiceTest {

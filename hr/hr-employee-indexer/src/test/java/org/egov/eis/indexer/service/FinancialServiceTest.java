@@ -8,7 +8,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.core.web.contract.RequestInfoWrapper;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.egf.persistence.queue.contract.Bank;
 import org.egov.egf.persistence.queue.contract.BankBranch;
 import org.egov.egf.persistence.queue.contract.BankBranchResponse;

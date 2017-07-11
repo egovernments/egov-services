@@ -114,6 +114,8 @@ public class AssetService {
 					depreciationRate.setAssetId(assetId);
 				}
 			}
+		} else {
+			assetRequest.getAsset().setEnableYearWiseDepreciation(false);
 		}
 
 		// TODO validate assetcategory for an asset

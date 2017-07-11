@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.egov.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -42,7 +41,7 @@ public class Producer {
 	 * configuration
 	 */
 	@Bean
-	public ProducerFactory<String, PropertyRequest> producerFactory() {
+	public ProducerFactory<String, Object> producerFactory() {
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
@@ -51,7 +50,7 @@ public class Producer {
 	 * bean
 	 */
 	@Bean
-	public KafkaTemplate<String, PropertyRequest> kafkaTemplate() {
+	public KafkaTemplate<String, Object> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 }

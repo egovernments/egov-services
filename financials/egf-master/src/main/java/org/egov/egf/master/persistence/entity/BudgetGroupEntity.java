@@ -40,8 +40,8 @@ public class BudgetGroupEntity extends AuditableEntity {
 		budgetGroup.setMajorCode(ChartOfAccount.builder().id(majorCodeId).build());
 		budgetGroup.setMaxCode(ChartOfAccount.builder().id(maxCodeId).build());
 		budgetGroup.setMinCode(ChartOfAccount.builder().id(minCodeId).build());
-	//	budgetGroup.setAccountType(BudgetAccountType.builder().id(accountTypeId).build());
-	//	budgetGroup.setBudgetingType(BudgetingType.builder().id(budgetingTypeId).build());
+		budgetGroup.setAccountType(accountTypeId != null ? BudgetAccountType.valueOf(accountTypeId) : null);
+		budgetGroup.setBudgetingType(budgetingTypeId != null ? BudgetingType.valueOf(budgetingTypeId) : null);
 		budgetGroup.setActive(this.active);
 		return budgetGroup;
 	}
@@ -54,8 +54,9 @@ public class BudgetGroupEntity extends AuditableEntity {
 		this.majorCodeId = budgetGroup.getMajorCode() != null ? budgetGroup.getMajorCode().getId() : null;
 		this.maxCodeId = budgetGroup.getMaxCode() != null ? budgetGroup.getMaxCode().getId() : null;
 		this.minCodeId = budgetGroup.getMinCode() != null ? budgetGroup.getMinCode().getId() : null;
-		//this.accountTypeId = budgetGroup.getAccountType() != null ? budgetGroup.getAccountType().getId() : null;
-	//	this.budgetingTypeId = budgetGroup.getBudgetingType() != null ? budgetGroup.getBudgetingType().getId() : null;
+		this.accountTypeId = budgetGroup.getAccountType() != null ? budgetGroup.getAccountType().toString() : null;
+		this.budgetingTypeId = budgetGroup.getBudgetingType() != null ? budgetGroup.getBudgetingType().toString()
+				: null;
 		this.active = budgetGroup.getActive();
 		return this;
 	}

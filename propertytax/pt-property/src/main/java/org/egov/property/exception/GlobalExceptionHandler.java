@@ -172,7 +172,21 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		}
-
+		 else if (ex instanceof PropertyUnderWorkflowException) {
+                     Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                             ((PropertyUnderWorkflowException)ex).getCustomMsg(), ex.getMessage(), null);
+                     ResponseInfo responseInfo = new ResponseInfo();
+                     responseInfo.setApiId(((PropertyUnderWorkflowException) ex).getRequestInfo().getApiId());
+                     responseInfo.setVer(((PropertyUnderWorkflowException) ex).getRequestInfo().getVer());
+                     responseInfo.setMsgId(((PropertyUnderWorkflowException) ex).getRequestInfo().getMsgId());
+                     responseInfo.setTs(new Date().getTime());
+                     responseInfo.setStatus(environment.getProperty("failed"));
+                     List<Error> errorList = new ArrayList<Error>();
+                     errorList.add(error);
+                     return new ErrorRes(responseInfo, errorList);
+             }
+		
+		
 		else {
 			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());

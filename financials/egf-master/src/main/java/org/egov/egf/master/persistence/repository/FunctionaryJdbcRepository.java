@@ -55,31 +55,33 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( functionarySearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,functionarySearchEntity.getId());} 
-if( functionarySearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,functionarySearchEntity.getCode());} 
-if( functionarySearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,functionarySearchEntity.getName());} 
-if( functionarySearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,functionarySearchEntity.getActive());} 
-
-		 
+		if (functionarySearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", functionarySearchEntity.getId());
+		}
+		if (functionarySearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", functionarySearchEntity.getCode());
+		}
+		if (functionarySearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", functionarySearchEntity.getName());
+		}
+		if (functionarySearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", functionarySearchEntity.getActive());
+		}
 
 		Pagination<Functionary> page = new Pagination<>();
-		page.setOffSet(functionarySearchEntity.getOffset());
+		page.setOffSet(functionarySearchEntity.getOffSet());
 		page.setPageSize(functionarySearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -92,15 +94,16 @@ paramValues.put("active" ,functionarySearchEntity.getActive());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + functionarySearchEntity.getPageSize() + " offset "
-				+ functionarySearchEntity.getOffset() * functionarySearchEntity.getPageSize());
+				+ functionarySearchEntity.getOffSet() * functionarySearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FunctionaryEntity.class);
 
-		List<FunctionaryEntity> functionaryEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<FunctionaryEntity> functionaryEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(functionaryEntities.size());
 
@@ -116,15 +119,15 @@ paramValues.put("active" ,functionarySearchEntity.getActive());}
 
 	public FunctionaryEntity findById(FunctionaryEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<FunctionaryEntity> functionaries = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FunctionaryEntity>());
+		List<FunctionaryEntity> functionaries = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(FunctionaryEntity.class));
 		if (functionaries.isEmpty()) {
 			return null;
 		} else {

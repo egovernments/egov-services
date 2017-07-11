@@ -55,4 +55,8 @@ public class TitleTransfer {
     private AuditDetails auditDetails;
 
     private WorkFlowDetails workFlowDetails;
+    
+    private String applicationNo;
+    
+    private String tenantId;
 }

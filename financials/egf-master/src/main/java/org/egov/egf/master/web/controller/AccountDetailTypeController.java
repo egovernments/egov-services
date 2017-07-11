@@ -128,9 +128,9 @@ public class AccountDetailTypeController {
 		ModelMapper mapper = new ModelMapper();
 		AccountDetailTypeSearch domain = new AccountDetailTypeSearch();
 		mapper.map(accountDetailTypeSearchContract, domain);
-		AccountDetailTypeContract contract = null;
+		AccountDetailTypeContract contract ;
 		ModelMapper model = new ModelMapper();
-		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<AccountDetailTypeContract>();
+		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
 
 		Pagination<AccountDetailType> accountdetailtypes = accountDetailTypeService.search(domain);
 

@@ -730,12 +730,6 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - name: demandId
-          in: query
-          description: Primary key of Demand object.
-          required: false
-          type: integer
-          format: int64
         - name: billId
           in: query
           description: Id(s) of the Bill(s) to be returned
@@ -755,7 +749,7 @@ paths:
           type: boolean
         - name: billType
           in: query
-          description: Bill type. Auto or manual
+          description: Bill type. AUTO or MANUAL
           required: false
           type: string
         - name: consumerCode
@@ -784,7 +778,7 @@ paths:
   # tenantId should be passed in query param.
   ######################################################
     post:
-      description: Creates a Bill for collections. By default active bill will be created. Along with tenantId, any one parameter is mandatory.
+      description: Creates a Bill for collections. By default active bill will be created. Along with tenantId, any one parameter is mandatory. The bill type is AUTO here.
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -836,7 +830,7 @@ paths:
   # Validate tenantId before persisting.
   ######################################################
     post:
-      description: Creates a bill along with its list of bill details
+      description: Creates a bill along with its list of bill details. The bill type is MANUAL here.
       parameters:
         - name: bill
           in: body
@@ -946,6 +940,7 @@ definitions:
       - demandDetails
       - consumerCode
       - businessService
+      - minimumAmountPayable
       - tenantId
       
   DemandDetails:
@@ -1151,6 +1146,13 @@ definitions:
         type: integer
         format: int64
         description: Id of the bill
+      type:
+        type: string
+        format: int64
+        description: Type of a bill auto or manual.
+        enum:
+          - AUTO
+          - MANUAL
       payeeName:
         type: string
         description: Consumer name for whom the bill is generated.

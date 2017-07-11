@@ -147,7 +147,7 @@ public class ReceiptRepository {
 		String statusCode = null;
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		
-		for(BillDetailsWrapper billdetailsWrapper: receiptInfo.getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){	
+		for(BillDetailsWrapper billdetailsWrapper: receiptInfo.getBillInfoWrapper().getBillDetailsWrapper()){	
 			
 			//TODO: Trigger Apportioning logic from billingservice if the amountPaid is less than the totalAmount
 			
@@ -180,7 +180,7 @@ public class ReceiptRepository {
 				parametersMap.put("payeename", receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeName());
 				parametersMap.put("payeeaddress", receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeAddress());
 				parametersMap.put("payeeemail", receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeEmail());
-				parametersMap.put("paidby", receiptInfo.getBillInfoWrapper().getBillInfo().getPaidBy());
+				parametersMap.put("paidby", receiptInfo.getBillInfoWrapper().getPaidBy());
 				parametersMap.put("referencenumber", billdetailsWrapper.getRefNo());
 				parametersMap.put("receipttype", billdetailsWrapper.getReceiptType());							
 				parametersMap.put("receiptdate", billdetailsWrapper.getReceiptDate());
@@ -224,7 +224,7 @@ public class ReceiptRepository {
 				
 				String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
 				Long receiptHeader = jdbcTemplate.queryForObject(receiptHeaderIdQuery, new Object[] {receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeName(),
-						receiptInfo.getBillInfoWrapper().getBillInfo().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
+						receiptInfo.getBillInfoWrapper().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
 				
 				Map<String, Object>[] parametersReceiptDetails = (Map<String, Object>[]) new Map[billdetails.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;

@@ -55,51 +55,57 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( financialYearSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,financialYearSearchEntity.getId());} 
-if( financialYearSearchEntity.getFinYearRange()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "finYearRange =: finYearRange");
-paramValues.put("finYearRange" ,financialYearSearchEntity.getFinYearRange());} 
-if( financialYearSearchEntity.getStartingDate()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "startingDate =: startingDate");
-paramValues.put("startingDate" ,financialYearSearchEntity.getStartingDate());} 
-if( financialYearSearchEntity.getEndingDate()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "endingDate =: endingDate");
-paramValues.put("endingDate" ,financialYearSearchEntity.getEndingDate());} 
-if( financialYearSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,financialYearSearchEntity.getActive());} 
-if( financialYearSearchEntity.getIsActiveForPosting()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isActiveForPosting =: isActiveForPosting");
-paramValues.put("isActiveForPosting" ,financialYearSearchEntity.getIsActiveForPosting());} 
-if( financialYearSearchEntity.getIsClosed()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isClosed =: isClosed");
-paramValues.put("isClosed" ,financialYearSearchEntity.getIsClosed());} 
-if( financialYearSearchEntity.getTransferClosingBalance()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "transferClosingBalance =: transferClosingBalance");
-paramValues.put("transferClosingBalance" ,financialYearSearchEntity.getTransferClosingBalance());} 
-
-		 
+		if (financialYearSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", financialYearSearchEntity.getId());
+		}
+		if (financialYearSearchEntity.getFinYearRange() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("finYearRange =:finYearRange");
+			paramValues.put("finYearRange", financialYearSearchEntity.getFinYearRange());
+		}
+		if (financialYearSearchEntity.getStartingDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("startingDate =:startingDate");
+			paramValues.put("startingDate", financialYearSearchEntity.getStartingDate());
+		}
+		if (financialYearSearchEntity.getEndingDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("endingDate =:endingDate");
+			paramValues.put("endingDate", financialYearSearchEntity.getEndingDate());
+		}
+		if (financialYearSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", financialYearSearchEntity.getActive());
+		}
+		if (financialYearSearchEntity.getIsActiveForPosting() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isActiveForPosting =:isActiveForPosting");
+			paramValues.put("isActiveForPosting", financialYearSearchEntity.getIsActiveForPosting());
+		}
+		if (financialYearSearchEntity.getIsClosed() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isClosed =:isClosed");
+			paramValues.put("isClosed", financialYearSearchEntity.getIsClosed());
+		}
+		if (financialYearSearchEntity.getTransferClosingBalance() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("transferClosingBalance =:transferClosingBalance");
+			paramValues.put("transferClosingBalance", financialYearSearchEntity.getTransferClosingBalance());
+		}
 
 		Pagination<FinancialYear> page = new Pagination<>();
-		page.setOffSet(financialYearSearchEntity.getOffset());
+		page.setOffSet(financialYearSearchEntity.getOffSet());
 		page.setPageSize(financialYearSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -112,19 +118,20 @@ paramValues.put("transferClosingBalance" ,financialYearSearchEntity.getTransferC
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + financialYearSearchEntity.getPageSize() + " offset "
-				+ financialYearSearchEntity.getOffset() * financialYearSearchEntity.getPageSize());
+				+ financialYearSearchEntity.getOffSet() * financialYearSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FinancialYearEntity.class);
 
-		List<FinancialYearEntity> financialYearEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<FinancialYearEntity> financialYearEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(financialYearEntities.size());
 
-		List<FinancialYear> financialyears = new ArrayList<FinancialYear>();
+		List<FinancialYear> financialyears = new ArrayList<>();
 		for (FinancialYearEntity financialYearEntity : financialYearEntities) {
 
 			financialyears.add(financialYearEntity.toDomain());
@@ -136,15 +143,15 @@ paramValues.put("transferClosingBalance" ,financialYearSearchEntity.getTransferC
 
 	public FinancialYearEntity findById(FinancialYearEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<FinancialYearEntity> financialyears = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FinancialYearEntity>());
+		List<FinancialYearEntity> financialyears = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(FinancialYearEntity.class));
 		if (financialyears.isEmpty()) {
 			return null;
 		} else {

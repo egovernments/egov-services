@@ -41,10 +41,7 @@ public class BillDetail   {
     
 	@JsonProperty("BillAccountDetail")
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();//for billing-service
-	
-	@JsonProperty("BillAccountDetailsWrapper")
-	private List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();//for collection-service
-	
+		
 	private String tenantId;
 	
 	private String businessService;

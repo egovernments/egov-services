@@ -301,6 +301,7 @@ public class StateHistory implements Serializable {
                 .createdDate(this.getCreatedDate())
                 .id(this.getId().toString())
                 .status(this.getValue())
+                .lastupdatedSince(this.getLastModifiedDate())
                 .description(this.getNatureOfTask())
                 .owner(this.getOwnerPosition().toString())
                 .details(this.extraInfo == null ? "" : this.extraInfo)

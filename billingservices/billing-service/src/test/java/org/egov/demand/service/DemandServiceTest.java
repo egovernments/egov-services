@@ -1,23 +1,36 @@
 package org.egov.demand.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.Bill;
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
+import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
+import org.egov.demand.repository.OwnerRepository;
+import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.web.contract.BillRequest;
+import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
@@ -47,6 +60,12 @@ public class DemandServiceTest {
 	
 	@Mock
 	private ResponseFactory responseInfoFactory;
+	
+	@Mock
+	private OwnerRepository ownerRepository;
+	
+	@Mock
+	private DemandEnrichmentUtil demandEnrichmentUtil;
 	
 	@Test
 	public void methodShouldCreateDemand(){
@@ -80,12 +99,128 @@ public class DemandServiceTest {
 		assertEquals(demandService.create(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
 	}
 	
+	@Test
+	public void methodShouldUpdateAsync(){
+		
+		RequestInfo requestInfo=new RequestInfo();
+		
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
+		Demand demand =getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		List<DemandDetail> details = demand.getDemandDetails();
+		demands.add(demand);
+		DemandRequest demandRequest=new DemandRequest(requestInfo,demands);
+		List<String> strings = new ArrayList<>();
+		strings.add("1");
+		strings.add("2");
+		
+		when(applicationProperties.getDemandSeqName()).thenReturn("seq_egbs_demand");
+		when(applicationProperties.getDemandDetailSeqName()).thenReturn("seq_egbs_demanddetail");
+		when(sequenceGenService.getIds(demands.size(),"seq_egbs_demand")).thenReturn(strings);
+		when(sequenceGenService.getIds(details.size(),"seq_egbs_demanddetail")).thenReturn(strings);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
+		
+		assertEquals(demandService.updateAsync(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
+	}
+	
+	/*@Test
+	public void testShouldUpdateDemandFromBill(){
+		BillRequest billRequest=new BillRequest();
+		Bill bill=getBill();
+		billRequest.getBills().add(bill);
+		
+		Demand demand =getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		
+		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demands);
+		doNothing().when(demandRepository).update(any(DemandRequest.class));
+		
+		assertTrue(demandResponse.equals(billService.createAsync(billRequest)));
+	}*/
+	
+	@Test
+	public void methodShouldUpdateCollection(){
+		
+		RequestInfo requestInfo=new RequestInfo();
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
+		Demand demand =getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandRequest demandRequest=new DemandRequest(requestInfo,demands);
+		
+		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demands);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED)).thenReturn(getResponseInfo(requestInfo));
+		
+		assertEquals(demandService.updateCollection(demandRequest), new DemandResponse(getResponseInfo(requestInfo),demands));
+		
+	}
+	
+	@Test
+	public void methodShouldGetDemands(){
+		RequestInfo requestInfo=new RequestInfo();
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
+		Owner owner=getOwner();
+		List<Owner> owners=new ArrayList<Owner>();
+		owners.add(owner);
+		
+		Demand demand =getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(demands);
+		
+		DemandCriteria demandCriteria=DemandCriteria.builder().tenantId("ap.kurnool").mobileNumber("1234").email("xyz@abc.com").build();
+		when(ownerRepository.getOwners(any(UserSearchRequest.class))).thenReturn(owners);
+		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demands);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
+		when(demandEnrichmentUtil.enrichOwners(any(List.class),any(List.class))).thenReturn(demands);
+		
+		assertEquals(demandService.getDemands(demandCriteria,any()), demandResponse);
+	
+	}
+	
+	@Test
+	public void testShouldGetDemandDetails(){
+		RequestInfo requestInfo=new RequestInfo();
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		DemandDetailResponse demandDetailResponse=new DemandDetailResponse();
+		List<DemandDetail> demandDetails=getDemandDetails();
+		demandDetailResponse.setDemandDetails(demandDetails);
+		
+		when(demandRepository.getDemandDetails(any(DemandDetailCriteria.class))).thenReturn(demandDetails);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
+		
+		assertEquals(demandService.getDemandDetails(any(DemandDetailCriteria.class),any(RequestInfo.class)), demandDetailResponse);
+	}
+	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setVer(requestInfo.getVer());
 		return responseInfo;
+	}
+	
+	public Bill getBill(){
+		Bill bill=new Bill();
+		
+		bill.setAuditDetail(getAuditDetails());
+		bill.setTenantId("ap.kurnool");
+		bill.setId("12");
+		
+		return bill;
 	}
 
 	public  Demand getDemand() {
@@ -103,6 +238,7 @@ public class DemandServiceTest {
 		demand.setTaxPeriodTo(1234567890l);
 		demand.setTenantId("ap.kurnool");
 		demand.setDemandDetails(getDemandDetails());
+		demand.setAuditDetail(getAuditDetails());
 		return demand;
 	}
 
@@ -118,9 +254,34 @@ public class DemandServiceTest {
 		demandDetail1.setTaxAmount(BigDecimal.valueOf(200d));
 		demandDetail1.setCollectionAmount(BigDecimal.ZERO);
 		demandDetail1.setTaxHeadMasterCode("0003");
+		
+		demandDetail.setAuditDetail(getAuditDetails());
+		demandDetail1.setAuditDetail(getAuditDetails());
 		demandDetails.add(demandDetail);
 		demandDetails.add(demandDetail1);
 		return demandDetails;
+	}
+	
+	public AuditDetail getAuditDetails(){
+		
+		AuditDetail auditDetail=new AuditDetail();
+		auditDetail.setCreatedBy("xyz");
+		auditDetail.setCreatedTime(2345l);
+		auditDetail.setLastModifiedBy("xyz");
+		auditDetail.setLastModifiedTime(2345l);
+		return auditDetail;
+	}
+	
+	public Owner getOwner(){
+		Owner owner=new Owner();
+		
+		owner.setAadhaarNumber("1234");
+		owner.setEmailId("xyz@abc.com");
+		owner.setId(1l);
+		owner.setMobileNumber("1234");
+		owner.setName("qwert");
+		
+		return owner;
 	}
 
 	public  RequestInfo getRequestInfo() {

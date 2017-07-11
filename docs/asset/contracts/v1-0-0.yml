@@ -1021,7 +1021,7 @@ definitions:
 
   AssetRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Assets:
           $ref: '#/definitions/Asset'
@@ -1029,7 +1029,7 @@ definitions:
  
   AssetResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Assets:
         type: array
@@ -1040,7 +1040,7 @@ definitions:
     
   AssetCategoryRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       AssetCategory:
           $ref: '#/definitions/AssetCategory'
@@ -1048,7 +1048,7 @@ definitions:
   
   AssetCategoryResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       AssetCategory:
         type: array
@@ -1058,7 +1058,7 @@ definitions:
     
   RevaluationRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Revaluation:
           $ref: '#/definitions/Revaluation'
@@ -1066,7 +1066,7 @@ definitions:
  
   RevaluationResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Revaluations:
         type: array
@@ -1076,7 +1076,7 @@ definitions:
     
   DisposalRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Disposal:
           $ref: '#/definitions/Disposal'
@@ -1084,7 +1084,7 @@ definitions:
  
   DisposalResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Disposal:
         type: array
@@ -1094,7 +1094,7 @@ definitions:
     
   AssetCurrentValueResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       AssetCurrentValue:
         type: array

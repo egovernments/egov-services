@@ -58,14 +58,14 @@ public class ReceiptReqValidator {
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBillInfoWrapper().getBillInfo().getPaidBy() || receipt.getBillInfoWrapper().getBillInfo().getPaidBy().isEmpty()){
+		if(null == receipt.getBillInfoWrapper().getPaidBy() || receipt.getBillInfoWrapper().getPaidBy().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAID_BY_MISSING_CODE)
 					.message(CollectionServiceConstants.PAID_BY_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAID_BY_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-		for(BillDetailsWrapper billDetailsWrapper:  receipt.getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){
+		for(BillDetailsWrapper billDetailsWrapper:  receipt.getBillInfoWrapper().getBillDetailsWrapper()){
 			BillDetail billDetails = billDetailsWrapper.getBillDetails();
 			if(null == billDetailsWrapper.getReceiptType()|| billDetailsWrapper.getReceiptType().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)

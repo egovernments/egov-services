@@ -269,7 +269,14 @@ class createRouter extends Component {
 
     self.props.setLoadingStatus('loading');
   	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
-  		//self.props.initForm();
+  		if(!self.props.routerCreateSet.id) {
+        self.props.initForm();
+        searchTextCom = "";
+        searchTextBoun = "";
+        searchTextPos = "";
+      }
+
+      //self.props.initForm();
   		self.setState({
   			open: true
   		});

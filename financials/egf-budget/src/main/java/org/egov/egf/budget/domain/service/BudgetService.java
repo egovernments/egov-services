@@ -6,10 +6,13 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
+import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.repository.BudgetRepository;
 import org.egov.egf.budget.web.contract.BudgetContract;
+import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.master.web.contract.repository.FinancialYearContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +33,12 @@ public class BudgetService {
 
 	@Autowired
 	private SmartValidator validator;
+
 	@Autowired
 	private BudgetRepository budgetRepository;
-	/*
-	 * @Autowired private FinancialYearContractRepository
-	 * financialYearContractRepository;
-	 */
+
+	@Autowired
+	private FinancialYearContractRepository financialYearContractRepository;
 
 	public BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {
 
@@ -69,15 +72,18 @@ public class BudgetService {
 
 	public List<Budget> fetchRelated(List<Budget> budgets) {
 		for (Budget budget : budgets) {
+
 			// fetch related items
-			/*
-			 * if (budget.getFinancialYear() != null) { FinancialYearContract
-			 * financialYear = financialYearContractRepository
-			 * .findById(budget.getFinancialYear()); if (financialYear == null)
-			 * { throw new InvalidDataException("financialYear",
-			 * "financialYear.invalid", " Invalid financialYear"); }
-			 * budget.setFinancialYear(financialYear); }
-			 */
+
+			if (budget.getFinancialYearId() != null) {
+				CommonResponse<FinancialYearContract> result = financialYearContractRepository
+						.getFinancialYearById(budget.getFinancialYearId().getId(), "500", "0", null);
+				if (result == null || result.getData() == null || result.getData().isEmpty()) {
+					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
+				}
+				budget.setFinancialYearId(result.getData().get(0));
+			}
+
 			if (budget.getParentId() != null && budget.getParentId().getId() != null
 					&& !budget.getParentId().getId().isEmpty() && budget.getParentId().getTenantId() != null
 					&& !budget.getParentId().getTenantId().isEmpty()) {

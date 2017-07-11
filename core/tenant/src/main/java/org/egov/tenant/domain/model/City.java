@@ -29,6 +29,7 @@ public class City {
     private Date lastModifiedDate;
     private String shapeFileLocation;
     private String captcha;
+    private String code;
    
 
     public boolean isValid() {

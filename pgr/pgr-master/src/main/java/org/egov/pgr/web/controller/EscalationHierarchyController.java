@@ -212,21 +212,28 @@ public class EscalationHierarchyController {
 
 	private void fromtopositioncheck(final EscalationHierarchyReq escalationHierarchyRequest,
 			final List<ErrorField> errorFields) {
-		for(int i=0 ;i<escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
-		if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition()
-				|| escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition() <= 0L) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.FROMPOSITION_MANDATORY_CODE)
-					.message(PgrMasterConstants.FROMPOSITION_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.FROMPOSITION_MANADATORY_FIELD_NAME).build();
-			errorFields.add(errorField);
-		}
-		if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()
-				|| escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition() <= 0L) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TOPOSITION_MANDATORY_CODE)
-					.message(PgrMasterConstants.TOPOSITION_MANADATORY_ERROR_MESSAGE)
-					.field(PgrMasterConstants.TOPOSITION_MANDATORY_CODE).build();
-			errorFields.add(errorField);
-		}
+		for (int i = 0; i < escalationHierarchyRequest.getEscalationHierarchy().size(); i++) {
+			if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition()
+					|| escalationHierarchyRequest.getEscalationHierarchy().get(i).getFromPosition() <= 0L) {
+				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.FROMPOSITION_MANDATORY_CODE)
+						.message(PgrMasterConstants.FROMPOSITION_MANADATORY_ERROR_MESSAGE)
+						.field(PgrMasterConstants.FROMPOSITION_MANADATORY_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+			if (null == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()
+					|| escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition() <= 0L) {
+				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TOPOSITION_MANDATORY_CODE)
+						.message(PgrMasterConstants.TOPOSITION_MANADATORY_ERROR_MESSAGE)
+						.field(PgrMasterConstants.TOPOSITION_MANDATORY_CODE).build();
+				errorFields.add(errorField);
+			}
+			if (escalationHierarchyRequest.getEscalationHierarchy().get(i)
+					.getFromPosition() == escalationHierarchyRequest.getEscalationHierarchy().get(i).getToPosition()) {
+				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.FROMTOPOSITION_UNIQUE_CODE)
+						.message(PgrMasterConstants.FROMTOPOSITION_UNIQUE_ERROR_MESSAGE)
+						.field(PgrMasterConstants.FROMTOPOSITION_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
 		}
 	}
 

@@ -128,9 +128,9 @@ public class AccountDetailKeyController {
 		ModelMapper mapper = new ModelMapper();
 		AccountDetailKeySearch domain = new AccountDetailKeySearch();
 		mapper.map(accountDetailKeySearchContract, domain);
-		AccountDetailKeyContract contract = null;
+		AccountDetailKeyContract contract ;
 		ModelMapper model = new ModelMapper();
-		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<AccountDetailKeyContract>();
+		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<>();
 
 		Pagination<AccountDetailKey> accountdetailkeys = accountDetailKeyService.search(domain);
 

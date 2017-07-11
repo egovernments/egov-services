@@ -5,7 +5,7 @@
 
     <groupId>org.egov.services</groupId>
     <artifactId>tracer</artifactId>
-    <version>0.17.1</version>
+    <version>0.18.0</version>
     <packaging>jar</packaging>
 
     <name>tracer</name>

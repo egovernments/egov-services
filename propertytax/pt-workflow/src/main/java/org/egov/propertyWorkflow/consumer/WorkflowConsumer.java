@@ -1,5 +1,7 @@
 package org.egov.propertyWorkflow.consumer;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +100,7 @@ public class WorkflowConsumer {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
 				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo);
+				property.getPropertyDetail().setStateId(processInstance.getId());
 			}
 			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);
 		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.approved"))) {
@@ -105,7 +108,8 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo);
+				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo, property);
+				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 			}
 			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.updated"), propertyRequest);
 		}
@@ -147,7 +151,12 @@ public class WorkflowConsumer {
 		requestInfo.setDid(propertyRequest.getRequestInfo().getDid());
 		requestInfo.setKey(propertyRequest.getRequestInfo().getMsgId());
 		requestInfo.setRequesterId(propertyRequest.getRequestInfo().getRequesterId());
-		requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
+		//TODO temporary fix for date format and need to replace with actual ts value
+		String dateValue = null;
+		Date date = new Date();
+		dateValue = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(date);
+		requestInfo.setTs(dateValue);
+		//requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
 		requestInfo.setVer(propertyRequest.getRequestInfo().getVer());
 		requestInfo.setTenantId(tenantId);
 

@@ -1,9 +1,10 @@
 package org.egov.lams.service;
 
-import java.util.Date;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import static org.springframework.util.ObjectUtils.isEmpty;
+
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.contract.AgreementDetailsEs;
 import org.egov.lams.contract.AgreementIndex;
@@ -11,7 +12,6 @@ import org.egov.lams.contract.AgreementRequest;
 import org.egov.lams.contract.DemandDetailsEs;
 import org.egov.lams.contract.Installment;
 import org.egov.lams.contract.InstallmentResponse;
-import org.egov.lams.contract.InstallmentSearchCriteria;
 import org.egov.lams.contract.RequestInfo;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -24,6 +24,7 @@ import org.egov.lams.repository.AssetRepository;
 import org.egov.lams.repository.BoundaryRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.TenantRepository;
+import org.egov.lams.repository.helper.InstallmetHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,9 @@ public class AgreementAdaptorService {
 	
 	@Autowired
 	private TenantRepository tenantRepository;
+	
+	@Autowired
+	private InstallmetHelper installmetHelper;
 	/***
 	 * method to create agreementdetails object and populate values
 	 * 
@@ -79,11 +83,11 @@ public class AgreementAdaptorService {
 		agreementDetailsEs.setAllottee(allottee);
 		agreementDetailsEs.setCity(city);
 		agreementDetailsEs.setBoundaryDetails(asset.getLocationDetails(), boundaryRepository.getBoundariesById(agreement,asset));
-		if(!isEmpty(agreementDemand))
+		if(!isEmpty(agreementDemand)){
 		logger.info("setting rent details");
-		agreementDetailsEs.setRent(agreementDemand.getDemandDetails(),getCurrentInstallment(agreement),propertiesManager.getDemandReasonRent());
+		agreementDetailsEs.setRent(agreementDemand.getDemandDetails(),getCurrentInstallment(agreementRequest),propertiesManager.getDemandReasonRent());
 		logger.info("rent details are added to indexer");
-		
+		}
 		agreementIndex.setAgreementDetails(agreementDetailsEs);
 		
 		return agreementIndex;
@@ -108,20 +112,16 @@ public class AgreementAdaptorService {
 	}).collect(Collectors.toList());
   }
 	
-	private Installment getCurrentInstallment(Agreement agreement) {
+	private Installment getCurrentInstallment(AgreementRequest agreementRequest) {
 		InstallmentResponse installmentResponse;
 		Installment installment = new Installment();
-		InstallmentSearchCriteria installmentSearchCriteria = new InstallmentSearchCriteria();
 		String installmentUrl = propertiesManager.getDemandServiceHostName()
-				+ propertiesManager.getDemandInstallmentSearchPath();
-		installmentSearchCriteria.setCurrentDate(new Date());
-		installmentSearchCriteria.setTenantId(agreement.getTenantId());
-		installmentSearchCriteria.setInstallmentType(agreement.getPaymentCycle().toString());
-		installmentSearchCriteria.setModule(propertiesManager.getModuleName());
+				+ propertiesManager.getDemandInstallmentSearchPath()
+				+ installmetHelper.getInstallmentUrlParams(agreementRequest);
 
 		try {
 			logger.info(" intsallment search url :: " + installmentUrl);
-			installmentResponse = restTemplate.postForObject(installmentUrl, installmentSearchCriteria,
+			installmentResponse = restTemplate.postForObject(installmentUrl, agreementRequest.getRequestInfo(),
 					InstallmentResponse.class);
 
 		} catch (Exception e) {

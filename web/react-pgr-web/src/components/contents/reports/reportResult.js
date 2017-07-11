@@ -30,6 +30,17 @@ class ShowField extends Component {
 
 
 
+   componentWillMount()
+   {
+     $('#searchTable').DataTable({
+       dom: 'lBfrtip',
+       buttons: [],
+        bDestroy: true,
+        language: {
+           "emptyTable": "No Records"
+        }
+      });
+   }
 
   componentWillUnmount()
   {
@@ -48,8 +59,7 @@ class ShowField extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-      if (true) {
+  componentDidUpdate() {  
           $('#reportTable').DataTable({
             dom: 'lBfrtip',
             buttons: [
@@ -59,7 +69,6 @@ class ShowField extends Component {
              bDestroy: true,
 
           });
-      }
   }
 
   render() {

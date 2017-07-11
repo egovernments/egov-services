@@ -482,7 +482,6 @@ class grievanceCreate extends Component {
   render() {
 
     //console.log(this.state.customAddress);
-    //console.log(this.props.grievanceCreate.addressId);
     const actions = [
       <FlatButton
         label={translate('pgr.lbl.view')}
@@ -646,6 +645,7 @@ class grievanceCreate extends Component {
                     <Col xs={12} md={6}>
                       <AutoComplete
                         hintText="Type your location or select it from maps"
+                        ref="autocomplete"
                         floatingLabelText={translate('pgr.lbl.grievance.location')}
                         filter={AutoComplete.noFilter}
                         fullWidth={true}
@@ -653,14 +653,18 @@ class grievanceCreate extends Component {
                         dataSourceConfig={this.state.boundarySourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={handleAutoCompleteKeyUp}
-                        value={grievanceCreate.addressId ? grievanceCreate.addressId : ''}
+                        value={grievanceCreate.addressId}
                         onNewRequest={(chosenRequest, index) => {
-                        var e = {
-                          target: {
-                            value: chosenRequest
+                          if(index === -1){
+                            this.refs['autocomplete'].setState({searchText:''});
+                          }else {
+                            var e = {
+                              target: {
+                                value: chosenRequest
+                              }
+                            };
+                            handleChange(e, "addressId", false, "");
                           }
-                        };
-                        handleChange(e, "addressId", false, "");
                        }}
                       />
                     </Col>
@@ -712,7 +716,6 @@ class grievanceCreate extends Component {
 }
 
   const mapStateToProps = state => {
-    //console.log(state.form.form)
     //console.log(state.form.isFormValid)
     return ({grievanceCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
   }
@@ -818,10 +821,10 @@ const mapDispatchToProps = dispatch => ({
       lngfromimage : undefined,
       addressfromimage : undefined
     });
-    //console.log('Map change:', lat, lng);
     dispatch({type: "HANDLE_CHANGE", property:'lat', value: lat, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: lng, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : false, pattern: ''});
+    _this.refs['autocomplete'].setState({searchText:''});
   },
   handleUpload: (e, formats) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})

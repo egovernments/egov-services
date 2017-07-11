@@ -83,17 +83,7 @@ export default(state = defaultState, action) => {
           }
         }
 
-        case "UPDATE_NESTED_OBJECT":
-
-          state.form[action.objectName][action.objectArray][state.editIndex]=state.form[action.object]
-
-            return {
-              ...state,
-              form: {
-                ...state.form,
-              [action.objectName]: state.form[action.objectName][action.objectArray].map((e,i) => e )
-              }
-            }
+      
 
     case "EDIT_OBJECT":
 
@@ -132,20 +122,42 @@ export default(state = defaultState, action) => {
       }
 
       case "DELETE_NESTED_OBJECT":
-
+		
         return {
           ...state,
           form: {
             ...state.form,
-            [action.property]:{
-              ...state.form[action.property],
-              [action.propertyOne]:[
-                ...state.form[action.property][action.propertyOne].slice(0, action.index),
-                ...state.form[action.property][action.propertyOne].slice(action.index+1)
-              ]
-            }
+			[action.property]: state.form[action.property].map((e,i) => {
+				
+				if(e.uniquePosition == action.position){
+					e.units.splice(action.subPosition,1)
+				}
+				return e;
+			} )
+				
           }
         }
+		
+	  case "UPDATE_NESTED_OBJECT":
+	  
+		var object = state.form[action.propertyOne]	;	
+
+		 return {
+          ...state,
+          form: {
+            ...state.form,
+			[action.property]: state.form[action.property].map((e,i) => {
+				console.log(e.uniquePosition,action.position);
+				if(e.uniquePosition == action.position){
+					
+					e.units[action.subPosition] = object;
+					console.log('boom', object, e.units[action.subPosition]);
+				}
+				return e;
+			})
+				
+          }
+		}
 
 
     case "SET_FORM":

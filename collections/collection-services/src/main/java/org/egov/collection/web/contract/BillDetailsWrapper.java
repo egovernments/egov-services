@@ -2,6 +2,8 @@ package org.egov.collection.web.contract;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -40,5 +42,8 @@ public class BillDetailsWrapper {
 	private String reasonForCancellation;
 	
 	private BigDecimal amountPaid;
+	
+	@JsonProperty("BillAccountDetailsWrapper")
+	private List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();//for collection-service
 
 }

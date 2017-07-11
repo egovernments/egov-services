@@ -210,6 +210,7 @@ public class WorkflowController {
 			
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
+		
 		PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
 		positionSearchCriteriaWrapper.getPositionSearchCriteria().setEmployeeId(workflowDetails.getUser());
 		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));

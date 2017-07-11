@@ -75,7 +75,7 @@ public class ReceiptService {
 	public Receipt pushToQueue(ReceiptReq receiptReq){
 		logger.info("Pushing recieptdetail to kafka queue");
 		
-		for(BillDetailsWrapper billdetails: receiptReq.getReceipt().getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){	
+		for(BillDetailsWrapper billdetails: receiptReq.getReceipt().getBillInfoWrapper().getBillDetailsWrapper()){	
 			String receiptNumber = receiptRepository.generateReceiptNumber(receiptReq);
 			logger.info("Receipt Number generated is: "+receiptNumber);
 			billdetails.setReceiptNumber(receiptNumber);

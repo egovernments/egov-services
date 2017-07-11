@@ -157,7 +157,7 @@ class ServiceTypeCreate extends Component {
            "active" :this.props.createServiceType.active,
            "type" :this.props.createServiceType.type,
            "keywords": [
-                "Complaint"
+                "Complaintx"
               ],
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,

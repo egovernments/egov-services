@@ -141,6 +141,7 @@ class routerGeneration extends Component {
 
   loadGrievanceType(value){
      var self = this;
+     self.props.handleChange({target: {value: ""}}, "complaintTypes", true, "");
      Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
        self.setState({typeList : response.complaintTypes});
@@ -151,6 +152,7 @@ class routerGeneration extends Component {
 
   loadBoundaries(value) {
   	 var self = this;
+     self.props.handleChange({target: {value: ""}}, "boundaries", true, "");
      Api.commonApiPost("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
        self.setState({boundariesList : response.Boundary});
      },function(err) {
@@ -215,19 +217,19 @@ class routerGeneration extends Component {
     });
 
 	  Api.commonApiPost("egov-location/boundarytypes/getByHierarchyType", {hierarchyTypeName: "ADMINISTRATION"}).then(function(response) {
-      	checkCountAndCall("boundaryTypeList", response.BoundaryType);
+      	checkCountAndCall("boundaryTypeList", response ? response.BoundaryType : []);
     }, function(err) {
     	checkCountAndCall("boundaryTypeList", []);
     });
 
     Api.commonApiPost("/hr-masters/positions/_search").then(function(response) {
-        checkCountAndCall("positionSource", response.Position);
+        checkCountAndCall("positionSource", response ? response.Position : []);
     }, function(err) {
         checkCountAndCall("positionSource", []);
     });
 
     Api.commonApiGet("/egov-location/boundarys", {"Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
-       checkCountAndCall("boundaryInitialList", response.Boundary);
+       checkCountAndCall("boundaryInitialList", response ? response.Boundary : []);
     },function(err) {
        checkCountAndCall("boundaryInitialList", []);
     });

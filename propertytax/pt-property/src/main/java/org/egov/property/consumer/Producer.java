@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.egov.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,22 +14,21 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * This class will use for sending property object to kafka server
  * 
- * @author Prasad Khandagale
+ * @author S Anilkumar
  */
 @Configuration
 @Service
-public class TaxCalculatorProducer {
+public class Producer {
 
 	@Autowired
 	private Environment environment;
 
 	@Autowired
-	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
+	KafkaTemplate<String, Object> kafkaTemplate;
 
 	/**
 	 * This method will return map object for producer configuration
@@ -49,7 +47,7 @@ public class TaxCalculatorProducer {
 	 * configuration
 	 */
 	@Bean
-	public ProducerFactory<String, PropertyRequest> producerFactory() {
+	public ProducerFactory<String, Object> producerFactory() {
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
@@ -59,17 +57,8 @@ public class TaxCalculatorProducer {
 	 */
 
 	@Bean
-	public KafkaTemplate<String, PropertyRequest> kafkaTemplate() {
+	public KafkaTemplate<String, Object> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
-	}
-
-	/**
-	 * This will be create rest template and returns rest object
-	 * 
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
 	}
 
 	/**
@@ -77,7 +66,7 @@ public class TaxCalculatorProducer {
 	 * name of topic propertyRequest:PropertyRequest object
 	 */
 
-	public void send(String topic, PropertyRequest propertyRequest) {
-		kafkaTemplate.send(topic, propertyRequest);
+	public void send(String topic, Object producerRecord) {
+		kafkaTemplate.send(topic, producerRecord);
 	}
 }

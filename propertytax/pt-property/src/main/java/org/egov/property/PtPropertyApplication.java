@@ -4,6 +4,7 @@ import org.egov.models.ResponseInfoFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
@@ -26,5 +27,12 @@ public class PtPropertyApplication {
 		return new ResponseInfoFactory();
 	}
 
+	/**
+	 * This method will create rest template object
+	 */
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 
 }

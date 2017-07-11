@@ -18,7 +18,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -41,10 +40,7 @@ public class TaxCalculatorConsumer {
 	Environment environment;
 
 	@Autowired
-	PropertyProducer producer;
-
-	@Autowired
-	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
+	Producer producer;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -54,7 +50,8 @@ public class TaxCalculatorConsumer {
 		Map<String, Object> consumerProperties = new HashMap<String, Object>();
 		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
 				environment.getProperty("auto.offset.reset.config"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka.config.bootstrap_server_config"));
+		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+				environment.getProperty("kafka.config.bootstrap_server_config"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "boundary");
@@ -84,21 +81,14 @@ public class TaxCalculatorConsumer {
 	}
 
 	/**
-	 * This method will create rest template object
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-
-	/**
 	 * receive method
 	 * 
 	 * @param PropertyRequest
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.tax')}", "#{environment.getProperty('egov.propertytax.property.update.tax')}"  })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.tax')}",
+			"#{environment.getProperty('egov.propertytax.property.update.tax')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -106,9 +96,10 @@ public class TaxCalculatorConsumer {
 		CalculationRequest calculationRequest = new CalculationRequest();
 		calculationRequest.setRequestInfo(consumerRecord.value().getRequestInfo());
 		calculationRequest.setProperty(property);
-		String url=environment.getProperty("egov.services.pt_calculator.hostname")+environment.getProperty("egov.services.pt_calculator.calculatorpath");
-		CalculationResponse calculationResponse = restTemplate.postForObject(url,
-				calculationRequest, CalculationResponse.class);
+		String url = environment.getProperty("egov.services.pt_calculator.hostname")
+				+ environment.getProperty("egov.services.pt_calculator.calculatorpath");
+		CalculationResponse calculationResponse = restTemplate.postForObject(url, calculationRequest,
+				CalculationResponse.class);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
 		producer.send(environment.getProperty("egov.propertytax.property.create.approved"), consumerRecord.value());

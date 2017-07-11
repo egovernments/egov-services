@@ -1,4 +1,3 @@
-
 package org.egov.property.consumer;
 
 import java.util.HashMap;
@@ -37,7 +36,7 @@ public class PropertyConsumer {
 	Environment environment;
 
 	@Autowired
-	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
+	KafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	PersisterService persisterService;
@@ -50,7 +49,8 @@ public class PropertyConsumer {
 		Map<String, Object> consumerProperties = new HashMap<String, Object>();
 		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
 				environment.getProperty("auto.offset.reset.config"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka.config.bootstrap_server_config"));
+		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+				environment.getProperty("kafka.config.bootstrap_server_config"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "boundary");
@@ -80,14 +80,6 @@ public class PropertyConsumer {
 	}
 
 	/**
-	 * This method will create rest template object
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-
-	/**
 	 * receive method
 	 * 
 	 * @param PropertyRequest
@@ -98,11 +90,13 @@ public class PropertyConsumer {
 			"#{environment.getProperty('egov.propertytax.property.update.approved')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
-		if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow.started"))) {
+		if (consumerRecord.topic()
+				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow.started"))) {
 			persisterService.addProperty(consumerRecord.value().getProperties());
 		}
 
-		else if (consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.approved"))) {
+		else if (consumerRecord.topic()
+				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.approved"))) {
 			persisterService.updateProperty(consumerRecord.value().getProperties());
 		}
 	}

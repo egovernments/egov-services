@@ -41,7 +41,7 @@ class CustomMenu extends Component {
       items:[]
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.setWrapperRef = this.setWrapperRef.bind(this);   
+    this.setWrapperRef = this.setWrapperRef.bind(this);
   }
 
   setWrapperRef(node) {
@@ -190,7 +190,7 @@ class CustomMenu extends Component {
             if (item.level==level) {
               if (item.url) {
                 return(
-                  <Link   key={index} to={item.url} >
+                  <Link  key={index} to={item.url} >
                     <MenuItem
 
 

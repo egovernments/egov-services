@@ -46,7 +46,7 @@ class ShowForm extends Component {
   handleFormFields = () => {
     let {currentThis}=this;
     let {metaData,searchForm}=this.props;
-    console.log(metaData);
+    // console.log(metaData);
     if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
     {
       return metaData.reportDetails.searchParams.map((item,index) =>
@@ -71,6 +71,7 @@ class ShowForm extends Component {
     initForm();
     setForm(required);
   }
+
 
 
   search(e)
@@ -132,7 +133,7 @@ class ShowForm extends Component {
     } = this.props;
     let {search} = this;
     // console.log(metaData);
-    console.log(searchForm);
+    // console.log(searchForm);
     return (
       <div className="searchForm">
         <form onSubmit={(e) => {
@@ -140,8 +141,8 @@ class ShowForm extends Component {
         }}>
 
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {metaData.hasOwnProperty("reportDetails") ?metaData.reportDetails
-.summary:""} < /div>}/>
+          <CardHeader style={{paddingBottom:0}} title={metaData.hasOwnProperty("reportDetails") ?metaData.reportDetails
+.summary:""}/>
           <CardText style={{padding:0}}>
           <Grid>
             <Row>

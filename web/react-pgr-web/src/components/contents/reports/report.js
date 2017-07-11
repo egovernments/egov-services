@@ -109,7 +109,7 @@ class Report extends Component {
   {
     let {setMetaData}=this.props;
 
-    console.log(this.props.match.params.reportName);
+    // console.log(this.props.match.params.reportName);
 
     //Call api
     // setMetaData(metaData);
@@ -122,6 +122,30 @@ class Report extends Component {
     });
     //call boundsdadary service fetch wards,location,zone data
   }
+
+
+  componentDidUpdate()
+  {
+    let {setMetaData}=this.props;
+
+
+      let response=Api.commonApiPost("pgr-master/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
+      {
+        // console.log(response)
+        setMetaData(response)
+      },function(err) {
+          console.log(err);
+      });
+    
+    // console.log(this.props.match.params.reportName);
+
+    // Call api
+
+
+  }
+
+
+
 
 
   render() {

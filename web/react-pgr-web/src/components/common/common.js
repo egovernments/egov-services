@@ -37,3 +37,17 @@ export function validate_fileupload(files, formats){
   }
   return true;
 }
+
+
+export function format_lat_long(latorlong)
+{
+	var loc_arry = latorlong.split(",");
+	var degree= parseFloat(loc_arry[0]);
+	var minutes= parseFloat(loc_arry[1]);
+	var seconds= parseFloat(loc_arry[2]);
+
+	//formula is degree+((minutes*60)+seconds/3600)
+	var formatted = degree+((minutes*60)+seconds)/3600;
+
+	return formatted;
+}

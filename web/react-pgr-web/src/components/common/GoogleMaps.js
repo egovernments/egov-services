@@ -51,21 +51,22 @@ const AsyncGettingStartedExampleGoogleMap = _.flowRight(
 
 export default class SimpleMap extends Component {
 
-  state = {
-    bounds: null,
-    center: {
-      lat: 15.82223689,
-      lng: 78.02439864,
-    },
-    markers: [{
-      position: {
-        lat: 15.82223689,
-        lng: 78.02439864,
-      },
-      key: `Kurnool`,
-      defaultAnimation: 2,
-    }],
-  };
+  constructor(props){
+    super(props);
+    this.state={};
+  }
+
+  componentDidMount(){
+    this.setState({center : {lat : 15.82223689, lng : 78.02439864}});
+    this.setState({markers : [{position:{lat : 15.82223689, lng : 78.02439864}}]});
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.lat || nextProps.lng){
+      this.setState({center : {lat : nextProps.lat, lng : nextProps.lng}});
+      this.setState({markers : [{position:{lat : nextProps.lat, lng : nextProps.lng}}]});
+    }
+  }
 
   handleMapMounted = this.handleMapMounted.bind(this);
   handleBoundsChanged = this.handleBoundsChanged.bind(this);
@@ -115,7 +116,9 @@ export default class SimpleMap extends Component {
     });
   }
 
+
   render() {
+
     return (
       <AsyncGettingStartedExampleGoogleMap
         googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDrxvgg2flbGdU9Fxn6thCbNf3VhLnxuFY"
@@ -131,7 +134,7 @@ export default class SimpleMap extends Component {
         }
         center={this.state.center}
         onMapMounted={this.handleMapMounted}
-        onBoundsChanged={()=>{this.handleBoundsChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng()) }}
+        onBoundsChanged={()=>{this.handleBoundsChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng())}}
         onSearchBoxMounted={this.handleSearchBoxMounted}
         bounds={this.state.bounds}
         onPlacesChanged={()=>{ this.handlePlacesChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng())}}

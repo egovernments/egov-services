@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {EXIF} from 'exif-js';
 import {withRouter} from 'react-router-dom';
 import ImagePreview from '../../common/ImagePreview.js';
 import SimpleMap from '../../common/GoogleMaps.js';
@@ -17,8 +18,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import Api from '../../../api/api';
-import {translate, validate_fileupload} from '../../common/common';
-
+import {translate, validate_fileupload, format_lat_long} from '../../common/common';
+var axios = require('axios');
 
 const styles = {
   headerStyle : {
@@ -208,10 +209,10 @@ class grievanceCreate extends Component {
         {
           if(response.Boundary.length === 0){
             _this.setState({loadingstatus:'hide'});
-            _this.handleError('Please select valid location on maps or Type your location in grievance location');
+            _this.handleError('Location selected is out of the city boundary');
           }else{
             //usual createGrievance
-            this.initialCreateBasedonType();
+            _this.initialCreateBasedonType();
           }
         },function(err) {
           _this.handleError(err.message);
@@ -255,7 +256,7 @@ class grievanceCreate extends Component {
     var finobj={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
     data['description']=this.props.grievanceCreate.description;
-    data['addressId']= this.props.grievanceCreate.addressId == 0 ? '' : this.props.grievanceCreate.addressId.id;
+    data['addressId']= this.props.grievanceCreate.addressId ? this.props.grievanceCreate.addressId.id : '';
     data['lat']=this.props.grievanceCreate.lat;
     data['lng']=this.props.grievanceCreate.lng;
     data['address']=this.props.grievanceCreate.address;
@@ -352,6 +353,8 @@ class grievanceCreate extends Component {
     Api.commonApiPost("/pgr/seva/v1/_create",{},request).then(function(createresponse)
     {
 
+      console.log(JSON.stringify(createresponse));
+
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});
       var ack = translate('pgr.msg.servicerequest.underprocess')+'. '+translate('pgr.lbl.srn')+' is '+srn+'. '+translate('pgr.msg.future.reference')+'.';
@@ -440,14 +443,46 @@ class grievanceCreate extends Component {
   handleUploadValidation = (e, formats) => {
     let validFile = validate_fileupload(e.target.files, formats);
     //console.log('is valid:', validFile);
-    if(validFile === true)
+    if(validFile === true){
+      EXIF.getData(e.target.files[0], function() {
+        var imagelat = EXIF.getTag(this, "GPSLatitude"),
+        imagelongt = EXIF.getTag(this, "GPSLongitude");
+        if(imagelat && imagelongt){
+          var formatted_lat = format_lat_long(imagelat.toString());
+          var formatted_long = format_lat_long(imagelongt.toString());
+          if(formatted_lat && formatted_long){
+            axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true')
+            .then(function (response) {
+              //console.log(response.data.results[0].formatted_address);
+              _this.setState({
+                latfromimage : formatted_lat,
+                lngfromimage : formatted_long,
+                customAddress : response.data.results[0].formatted_address
+              });
+              _this.props.handleMap(formatted_lat, formatted_long, "address");
+            });
+          }
+        }
+      });
       this.props.handleUpload(e, formats);
+    }
     else
       this.handleError(validFile);
   }
 
+  getAddress = (lat, lng) =>{
+    axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
+      .then(function (response) {
+        _this.setState({
+          customAddress : response.data.results[0].formatted_address
+        });
+      });
+  }
+
   render() {
 
+    //console.log(this.state.customAddress);
+    //console.log(this.props.grievanceCreate.addressId);
     const actions = [
       <FlatButton
         label={translate('pgr.lbl.view')}
@@ -478,7 +513,7 @@ class grievanceCreate extends Component {
       handleChangeNextTwo,
       buttonText
     } = this.props;
-    let {search, processCreate, isMapsEnabled, loadCRN, handleUploadValidation} = this;
+    let {search, processCreate, isMapsEnabled, loadCRN, handleUploadValidation, getAddress} = this;
 
     return (
       <div className="grievanceCreate">
@@ -611,22 +646,21 @@ class grievanceCreate extends Component {
                     <Col xs={12} md={6}>
                       <AutoComplete
                         hintText="Type your location or select it from maps"
-                        floatingLabelText={translate('pgr.lbl.grievance.location')+' *'}
+                        floatingLabelText={translate('pgr.lbl.grievance.location')}
                         filter={AutoComplete.noFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.boundarySourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={handleAutoCompleteKeyUp}
-                        errorText={fieldErrors.addressId ? fieldErrors.addressId : ""}
-                        value={grievanceCreate.addressId ? grievanceCreate.addressId : ""}
+                        value={grievanceCreate.addressId ? grievanceCreate.addressId : ''}
                         onNewRequest={(chosenRequest, index) => {
                         var e = {
                           target: {
                             value: chosenRequest
                           }
                         };
-                        handleChange(e, "addressId", true, "");
+                        handleChange(e, "addressId", false, "");
                        }}
                       />
                     </Col>
@@ -643,7 +677,7 @@ class grievanceCreate extends Component {
                   <Row>
                     <Col md={12}>
                       <div style={{width: '100%', height: 400}}>
-                        <SimpleMap  markers={[]} handler={(lat, lng)=>{this.props.handleMap(lat, lng, "address")}}/>
+                        <SimpleMap lat={this.state.latfromimage} lng={this.state.lngfromimage}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
                       </div>
                     </Col>
                   </Row> : ''}
@@ -687,11 +721,11 @@ const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
     var requiredArray = [];
     if(type == 'CITIZEN'){
-      requiredArray = ["serviceCategory","serviceCode","description","addressId"]
+      requiredArray = ["serviceCategory","serviceCode","description"]
     }else if(type == 'EMPLOYEE'){
-      requiredArray = ["receivingMode","firstName","phone","serviceCategory","serviceCode","description","addressId"]
+      requiredArray = ["receivingMode","firstName","phone","serviceCategory","serviceCode","description"]
     }else{
-      requiredArray = ["firstName","phone","serviceCategory","serviceCode","description","addressId"]
+      requiredArray = ["firstName","phone","serviceCategory","serviceCode","description"]
     }
 
     var patternarray = ["phone","email","description"];
@@ -740,7 +774,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleAutoCompleteKeyUp : (e) => {
     var currentThis = _this;
-    dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : true, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : false, pattern: ''});
     if(e.target.value){
       Api.commonApiGet("/egov-location/boundarys/getLocationByLocationName", {locationName : e.target.value}).then(function(response)
       {
@@ -779,10 +813,15 @@ const mapDispatchToProps = dispatch => ({
 
   },
   handleMap: (lat, lng, field) => {
-    console.log(lat, lng);
+    _this.setState({
+      latfromimage : undefined,
+      lngfromimage : undefined,
+      addressfromimage : undefined
+    });
+    //console.log('Map change:', lat, lng);
     dispatch({type: "HANDLE_CHANGE", property:'lat', value: lat, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: lng, isRequired : false, pattern: ''});
-    dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '0', isRequired : true, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : false, pattern: ''});
   },
   handleUpload: (e, formats) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})

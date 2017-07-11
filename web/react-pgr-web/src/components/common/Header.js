@@ -102,7 +102,7 @@ const RightIcon = (props) => {
       <div>
         <i onClick={()=>{
           props.setRoute("/");
-        }} className="material-icons" 
+        }} className="material-icons"
            style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
       </div>
@@ -829,11 +829,10 @@ const mapStateToProps = state => ({
     // isDialogOpen: state.form.dialogOpen,
     // msg: state.form.msg,
     showMenu: state.common.showMenu,
-<<<<<<< HEAD
-    actionList:state.common.actionList
-=======
+    actionList:state.common.actionList,
+
     showHome: state.common.showHome
->>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
+
 });
 
 // this.props.appLoaded

@@ -178,20 +178,39 @@ public class RouterQueryBuilder {
 		return completeQuery.toString();
 	}
 	
+	public String checkCombinationExistsQuery(RouterTypeReq routerTypeReq){ 
+		String query = " SELECT count(*) FROM egpgr_router WHERE tenantid = '" + routerTypeReq.getRouterType().getTenantId() + "' AND position = " + routerTypeReq.getRouterType().getPosition(); 
+		RouterType rType = routerTypeReq.getRouterType();
+		StringBuilder builder = new StringBuilder(query);
+		if(null != rType.getServices()) { 
+			builder.append(" AND complainttypeid IN ("); 
+			for(int i = 0 ; i < rType.getServices().size() ; i++ ){
+				if(i==0 && i==rType.getServices().size()-1) {
+					builder.append(rType.getServices().get(i).getId());
+				} else if(i== rType.getServices().size()-1) { 
+					builder.append(rType.getServices().get(i).getId());
+				} else {
+					builder.append(","+rType.getServices().get(i).getId());
+				}
+			}
+			builder.append(")");
+		}
+		if(null != rType.getBoundaries()) { 
+			builder.append(" AND bndryid IN ("); 
+			for(int i = 0 ; i < rType.getBoundaries().size() ; i++ ){
+				if(i==0 && i==rType.getBoundaries().size()-1) {
+					builder.append(rType.getBoundaries().get(i).getBoundaryType());
+				} else if(i== rType.getBoundaries().size()-1) { 
+					builder.append(rType.getBoundaries().get(i).getBoundaryType());
+				} else {
+					builder.append(","+rType.getBoundaries().get(i).getBoundaryType());
+				}
+			}
+			builder.append(")");
+		}
+		return builder.toString();
+	}
 	
-	/* Query not to be removed till the SEARCH API is complete
-	 * SELECT * FROM egpgr_router router LEFT JOIN egpgr_complainttype comp ON router.complainttypeid = comp.id
-			LEFT JOIN service_definition sdef ON sdef.code = comp.code 
-			LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode
-			LEFT JOIN value_definition vdef ON vdef.attributecode = adef.code
-			WHERE 
-			router.tenantid = ?
-			AND
-			router.boundaryid = ?
-			AND 
-			comp.id = ? 
-			AND 
-			router.position = ? */
 
 	
 

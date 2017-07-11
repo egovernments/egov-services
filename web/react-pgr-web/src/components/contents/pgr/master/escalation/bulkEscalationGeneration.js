@@ -328,7 +328,7 @@ class BulkEscalationGeneration extends Component {
       return(<div className="bulkEscalationGeneration">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > translate('pgr.lbl.bueg') < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.bueg')} < /div>} />
               <CardText>
                   <Card>
                       <CardText>

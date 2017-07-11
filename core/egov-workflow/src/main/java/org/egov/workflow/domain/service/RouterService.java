@@ -180,6 +180,10 @@ public class RouterService {
 		return routerRepository.verifyUniquenessOfRequest(routerTypeReq);
 	}
 	
+	public boolean checkCombinationExists(RouterTypeReq routerTypeReq) { 
+		return routerRepository.checkCombinationExists(routerTypeReq); 
+	}
+	
 
 	/*public RouterType createRouter(final String topic, final String key,
 			final RouterTypeReq routerTypeReq) {

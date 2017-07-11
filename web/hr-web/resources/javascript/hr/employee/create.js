@@ -2619,14 +2619,18 @@ function loadUI() {
 }
 
 $(document).ready(function() {
-                if (window.opener && window.opener.document) {
-                    var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
-                    if (logo_ele && logo_ele[0]) {
-                        document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
-                    }
+            if (window.opener && window.opener.document) {
+                var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
+                if (logo_ele && logo_ele[0]) {
+                    document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
                 }
-                if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
+            }
+            if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
 
+
+            $("#assignmentDetailsModalOpenBtn").on('click', function() {
+                $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', false);
+            })
             getDropdown("employeeType", function(res) {
                 employeeType = res;
                 checkCount();

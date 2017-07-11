@@ -260,6 +260,14 @@ class Dashboard extends Component {
 							/>
 						</Col>
                       {this.state.localArray && this.state.localArray.map((e,i)=>{
+						  
+							var priority;
+							var triColor = "#fff";
+							e.attribValues.map((item,index)=>{
+							  if(item.key =="PRIORITY"){
+								triColor = item.name
+							  }
+							})
 						  						  
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -274,7 +282,7 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target=""><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>
@@ -327,7 +335,16 @@ class Dashboard extends Component {
 					</Table> 
           </div>
           <div className="cardLayout">
+		
          {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
+			 
+			 	var priority;
+							var triColor = "#fff";
+							e.attribValues.map((item,index)=>{
+							  if(item.key =="PRIORITY"){
+								triColor = item.name
+							  }
+							})
                             
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -342,7 +359,7 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target=""><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>

@@ -5,9 +5,9 @@ def build(path, ci_image){
         build_wkflo = load("${path}/build.wkflo")
         build_wkflo.build(path, ci_image)
     } else if (docker_file_exists) {
-        return this
-    } else {
         defaultMavenBuild(path, ci_image)
+    } else {
+        return
     }
 }
 

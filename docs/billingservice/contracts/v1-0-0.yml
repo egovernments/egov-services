@@ -946,6 +946,7 @@ definitions:
       - demandDetails
       - consumerCode
       - businessService
+      - minimumAmountPayable
       - tenantId
       
   DemandDetails:

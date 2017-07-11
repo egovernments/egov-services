@@ -58,18 +58,18 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		if (accountCodePurposeSearchEntity.getId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("id =: id");
+			params.append("id =:id");
 			paramValues.put("id", accountCodePurposeSearchEntity.getId());
 		}
 		if (accountCodePurposeSearchEntity.getName() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("name =: name");
+			params.append("name =:name");
 			paramValues.put("name", accountCodePurposeSearchEntity.getName());
 		}
 
 		Pagination<AccountCodePurpose> page = new Pagination<>();
-		page.setOffSet(accountCodePurposeSearchEntity.getOffset());
+		page.setOffSet(accountCodePurposeSearchEntity.getOffSet());
 		page.setPageSize(accountCodePurposeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -87,7 +87,7 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":pagination",
 				"limit " + accountCodePurposeSearchEntity.getPageSize() + " offset "
-						+ accountCodePurposeSearchEntity.getOffset() * accountCodePurposeSearchEntity.getPageSize());
+						+ accountCodePurposeSearchEntity.getOffSet() * accountCodePurposeSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountCodePurposeEntity.class);
 
@@ -108,7 +108,6 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 
 	public AccountCodePurposeEntity findById(AccountCodePurposeEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

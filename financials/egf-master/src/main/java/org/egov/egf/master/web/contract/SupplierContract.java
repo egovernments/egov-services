@@ -92,7 +92,6 @@ public class SupplierContract extends AuditableContract {
 	@Length(max = 25)
 	private String registationNo;
 
-	@Length(max = 25)
 	private BankAccountContract bankAccount;
 
 	@Length(max = 12)

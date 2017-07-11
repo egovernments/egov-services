@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class FinancialYearSearch extends FinancialYear {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 }

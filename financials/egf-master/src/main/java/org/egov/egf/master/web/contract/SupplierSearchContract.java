@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class SupplierSearchContract extends SupplierContract {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 }

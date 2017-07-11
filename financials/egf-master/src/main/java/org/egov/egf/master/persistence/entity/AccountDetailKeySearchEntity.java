@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class AccountDetailKeySearchEntity extends AccountDetailKeyEntity {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 
 	@Override
 	public AccountDetailKey toDomain() {
@@ -27,7 +27,7 @@ public class AccountDetailKeySearchEntity extends AccountDetailKeyEntity {
 	public AccountDetailKeySearchEntity toEntity(AccountDetailKeySearch accountDetailKeySearch) {
 		super.toEntity((AccountDetailKey) accountDetailKeySearch);
 		this.pageSize = accountDetailKeySearch.getPageSize();
-		this.offset = accountDetailKeySearch.getOffset();
+		this.offSet = accountDetailKeySearch.getOffSet();
 		return this;
 	}
 

@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class FunctionSearchEntity extends FunctionEntity {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 
 	@Override
 	public Function toDomain() {
@@ -27,7 +27,7 @@ public class FunctionSearchEntity extends FunctionEntity {
 	public FunctionSearchEntity toEntity(FunctionSearch functionSearch) {
 		super.toEntity((Function) functionSearch);
 		this.pageSize = functionSearch.getPageSize();
-		this.offset = functionSearch.getOffset();
+		this.offSet = functionSearch.getOffSet();
 		return this;
 	}
 

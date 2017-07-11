@@ -55,26 +55,27 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( accountDetailKeySearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,accountDetailKeySearchEntity.getId());} 
-if( accountDetailKeySearchEntity.getKey()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "key =: key");
-paramValues.put("key" ,accountDetailKeySearchEntity.getKey());} 
-if( accountDetailKeySearchEntity.getAccountDetailTypeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "accountDetailType =: accountDetailType");
-paramValues.put("accountDetailType" ,accountDetailKeySearchEntity.getAccountDetailTypeId());} 
-
-		 
+		if (accountDetailKeySearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", accountDetailKeySearchEntity.getId());
+		}
+		if (accountDetailKeySearchEntity.getKey() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("key =:key");
+			paramValues.put("key", accountDetailKeySearchEntity.getKey());
+		}
+		if (accountDetailKeySearchEntity.getAccountDetailTypeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("accountDetailType =:accountDetailType");
+			paramValues.put("accountDetailType", accountDetailKeySearchEntity.getAccountDetailTypeId());
+		}
 
 		Pagination<AccountDetailKey> page = new Pagination<>();
-		page.setOffSet(accountDetailKeySearchEntity.getOffset());
+		page.setOffSet(accountDetailKeySearchEntity.getOffSet());
 		page.setPageSize(accountDetailKeySearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -87,19 +88,20 @@ paramValues.put("accountDetailType" ,accountDetailKeySearchEntity.getAccountDeta
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + accountDetailKeySearchEntity.getPageSize() + " offset "
-				+ accountDetailKeySearchEntity.getOffset() * accountDetailKeySearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination", "limit " + accountDetailKeySearchEntity.getPageSize()
+				+ " offset " + accountDetailKeySearchEntity.getOffSet() * accountDetailKeySearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountDetailKeyEntity.class);
 
-		List<AccountDetailKeyEntity> accountDetailKeyEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<AccountDetailKeyEntity> accountDetailKeyEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(accountDetailKeyEntities.size());
 
-		List<AccountDetailKey> accountdetailkeys = new ArrayList<AccountDetailKey>();
+		List<AccountDetailKey> accountdetailkeys = new ArrayList<>();
 		for (AccountDetailKeyEntity accountDetailKeyEntity : accountDetailKeyEntities) {
 
 			accountdetailkeys.add(accountDetailKeyEntity.toDomain());
@@ -111,15 +113,15 @@ paramValues.put("accountDetailType" ,accountDetailKeySearchEntity.getAccountDeta
 
 	public AccountDetailKeyEntity findById(AccountDetailKeyEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<AccountDetailKeyEntity> accountdetailkeys = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<AccountDetailKeyEntity>());
+		List<AccountDetailKeyEntity> accountdetailkeys = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(AccountDetailKeyEntity.class));
 		if (accountdetailkeys.isEmpty()) {
 			return null;
 		} else {

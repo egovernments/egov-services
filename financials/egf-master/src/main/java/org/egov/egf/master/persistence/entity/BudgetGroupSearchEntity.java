@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class BudgetGroupSearchEntity extends BudgetGroupEntity {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 
 	@Override
 	public BudgetGroup toDomain() {
@@ -27,7 +27,7 @@ public class BudgetGroupSearchEntity extends BudgetGroupEntity {
 	public BudgetGroupSearchEntity toEntity(BudgetGroupSearch budgetGroupSearch) {
 		super.toEntity((BudgetGroup) budgetGroupSearch);
 		this.pageSize = budgetGroupSearch.getPageSize();
-		this.offset = budgetGroupSearch.getOffset();
+		this.offSet = budgetGroupSearch.getOffSet();
 		return this;
 	}
 

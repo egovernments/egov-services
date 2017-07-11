@@ -5,26 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.models.Address;
-import org.egov.models.AuditDetails;
-import org.egov.models.Document;
+import org.egov.models.*;
 import org.egov.models.Error;
-import org.egov.models.ErrorRes;
-import org.egov.models.Floor;
-import org.egov.models.IdGenerationRequest;
-import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdRequest;
-import org.egov.models.Property;
-import org.egov.models.PropertyDetail;
-import org.egov.models.PropertyLocation;
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
-import org.egov.models.Unit;
-import org.egov.models.User;
-import org.egov.models.VacantLandDetail;
 import org.egov.property.consumer.PropertyProducer;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.PropertySearchException;
@@ -114,9 +96,9 @@ public class PropertyServiceImpl implements PropertyService {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
 		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
+        idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.basepath"));
 		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
-
-		// generating acknowledgement number for all properties
+        // generating acknowledgement number for all properties
 
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
@@ -148,8 +130,7 @@ public class PropertyServiceImpl implements PropertyService {
 					property.getPropertyDetail().setApplicationNo(idResponse.getIdResponses().get(0).getId());
 			}
 		}
-
-		return property;
+        return property;
 	}
 
 	/**
@@ -350,5 +331,6 @@ public class PropertyServiceImpl implements PropertyService {
 
 		}
 		return userList;
-	}
+    }
+
 }

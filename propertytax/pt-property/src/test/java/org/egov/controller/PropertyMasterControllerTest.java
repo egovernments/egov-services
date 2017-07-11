@@ -22,6 +22,9 @@ import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMaster;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
@@ -1186,6 +1189,104 @@ public class PropertyMasterControllerTest {
 	private String getFileContents(String fileName) throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		return new String(Files.readAllBytes(new File(classLoader.getResource(fileName).getFile()).toPath()));
+	}
+
+	@Test
+	public void createMutationMasterTest() {
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("default");
+		mutationMaster.setCode("prasad");
+
+		AuditDetails auditDetails = new AuditDetails();
+		mutationMaster.setAuditDetails(auditDetails);
+
+		mutationMasterResponse.setResponseInfo(new ResponseInfo());
+		mutationMasters.add(mutationMaster);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+
+		try {
+			when(masterService.createMutationMater(anyString(), any(MutationMasterRequest.class)))
+					.thenReturn(mutationMasterResponse);
+			mockMvc.perform(post("/property/mutationmasters/_create").param("tenantId", "kiran")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createMutationMasterRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyMutationMasterTest() {
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("tenantid");
+		mutationMaster.setCode("code");
+
+		AuditDetails auditDetails = new AuditDetails();
+		mutationMaster.setAuditDetails(auditDetails);
+
+		mutationMasterResponse.setResponseInfo(new ResponseInfo());
+		mutationMasters.add(mutationMaster);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+
+		try {
+
+			when(masterService.updateMutationMaster(any(MutationMasterRequest.class)))
+					.thenReturn(mutationMasterResponse);
+			mockMvc.perform(post("/property/mutationmasters/_update").param("tenantId", "kiran")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateMutationMasterRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void searchMutationMasterTest() {
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("tenantid");
+		mutationMaster.setCode("name");
+
+		AuditDetails auditDetails = new AuditDetails();
+		mutationMaster.setAuditDetails(auditDetails);
+
+		mutationMasterResponse.setResponseInfo(new ResponseInfo());
+		mutationMasters.add(mutationMaster);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+		try {
+			when(masterService.searchMutationMaster(any(RequestInfo.class), anyString(), any(Integer[].class),
+					anyString(), anyString(), anyString(), any(Integer.class), any(Integer.class)))
+							.thenReturn(mutationMasterResponse);
+			mockMvc.perform(post("/property/mutationmasters/_search").param("tenantId", "tenantid")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchMutationMasterRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
 	}
 
 }

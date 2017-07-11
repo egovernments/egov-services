@@ -12,6 +12,9 @@ import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMaster;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
@@ -957,5 +960,88 @@ public class MasterServiceImpl implements Masterservice {
 
 		return propertyMasterRepository.checkWhetherRecordExits(tenantId, code, tableName, id);
 
+	}
+
+	@Override
+	public MutationMasterResponse createMutationMater(String tenantId, MutationMasterRequest mutationMasterRequest)
+			throws Exception {
+		mutationMasterRequest.getMutationMasters().forEach(muatation -> {
+
+			Boolean isExists = checkCodeAndTenatIdExists(muatation.getTenantId(), muatation.getCode(),
+					ConstantUtility.MUTATION_MASTER_TABLE_NAME, null);
+
+			if (isExists)
+				throw new DuplicateIdException(mutationMasterRequest.getRequestInfo());
+
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(muatation);
+
+			try {
+				Long id = propertyMasterRepository.createMutationMaster(muatation, data);
+				muatation.setId(id);
+			} catch (Exception e) {
+				throw new InvalidInputException(mutationMasterRequest.getRequestInfo());
+			}
+
+		});
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(mutationMasterRequest.getRequestInfo(), true);
+		mutationMasterResponse.setResponseInfo(responseInfo);
+		mutationMasterResponse.setMutationMasters(mutationMasterRequest.getMutationMasters());
+
+		return mutationMasterResponse;
+	}
+
+	@Override
+	public MutationMasterResponse updateMutationMaster(MutationMasterRequest mutationMasterRequest) throws Exception {
+
+		mutationMasterRequest.getMutationMasters().forEach(mutation -> {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(mutation.getTenantId(),
+					mutation.getCode(), ConstantUtility.DEPRECIATION_TABLE_NAME, mutation.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(mutationMasterRequest.getRequestInfo());
+
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(mutation);
+
+			try {
+				propertyMasterRepository.updateMutationMaster(mutation, data);
+			} catch (Exception e) {
+				throw new InvalidInputException(mutationMasterRequest.getRequestInfo());
+			}
+
+		});
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(mutationMasterRequest.getRequestInfo(), true);
+		mutationMasterResponse.setResponseInfo(responseInfo);
+		mutationMasterResponse.setMutationMasters(mutationMasterRequest.getMutationMasters());
+
+		return mutationMasterResponse;
+	}
+
+	@Override
+	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
+
+		List<MutationMaster> mutationMasters = null;
+		try {
+			mutationMasters = propertyMasterRepository.searchMutation(tenantId, ids, name, code, nameLocal, pageSize,
+					offSet);
+		} catch (Exception e) {
+			throw new InvalidInputException(requestInfo);
+		}
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		mutationMasterResponse.setResponseInfo(responseInfo);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+
+		return mutationMasterResponse;
 	}
 }

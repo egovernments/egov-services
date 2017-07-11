@@ -55,81 +55,93 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( supplierSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,supplierSearchEntity.getId());} 
-if( supplierSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,supplierSearchEntity.getCode());} 
-if( supplierSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,supplierSearchEntity.getName());} 
-if( supplierSearchEntity.getAddress()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "address =: address");
-paramValues.put("address" ,supplierSearchEntity.getAddress());} 
-if( supplierSearchEntity.getMobile()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "mobile =: mobile");
-paramValues.put("mobile" ,supplierSearchEntity.getMobile());} 
-if( supplierSearchEntity.getEmail()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "email =: email");
-paramValues.put("email" ,supplierSearchEntity.getEmail());} 
-if( supplierSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,supplierSearchEntity.getDescription());} 
-if( supplierSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,supplierSearchEntity.getActive());} 
-if( supplierSearchEntity.getPanNo()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "panNo =: panNo");
-paramValues.put("panNo" ,supplierSearchEntity.getPanNo());} 
-if( supplierSearchEntity.getTinNo()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "tinNo =: tinNo");
-paramValues.put("tinNo" ,supplierSearchEntity.getTinNo());} 
-if( supplierSearchEntity.getRegistationNo()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "registationNo =: registationNo");
-paramValues.put("registationNo" ,supplierSearchEntity.getRegistationNo());} 
-if( supplierSearchEntity.getBankAccountId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "bankAccount =: bankAccount");
-paramValues.put("bankAccount" ,supplierSearchEntity.getBankAccountId());} 
-if( supplierSearchEntity.getIfscCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "ifscCode =: ifscCode");
-paramValues.put("ifscCode" ,supplierSearchEntity.getIfscCode());} 
-if( supplierSearchEntity.getBankId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "bank =: bank");
-paramValues.put("bank" ,supplierSearchEntity.getBankId());} 
-
-		 
+		if (supplierSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", supplierSearchEntity.getId());
+		}
+		if (supplierSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", supplierSearchEntity.getCode());
+		}
+		if (supplierSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", supplierSearchEntity.getName());
+		}
+		if (supplierSearchEntity.getAddress() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("address =:address");
+			paramValues.put("address", supplierSearchEntity.getAddress());
+		}
+		if (supplierSearchEntity.getMobile() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("mobile =:mobile");
+			paramValues.put("mobile", supplierSearchEntity.getMobile());
+		}
+		if (supplierSearchEntity.getEmail() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("email =:email");
+			paramValues.put("email", supplierSearchEntity.getEmail());
+		}
+		if (supplierSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", supplierSearchEntity.getDescription());
+		}
+		if (supplierSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", supplierSearchEntity.getActive());
+		}
+		if (supplierSearchEntity.getPanNo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("panNo =:panNo");
+			paramValues.put("panNo", supplierSearchEntity.getPanNo());
+		}
+		if (supplierSearchEntity.getTinNo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("tinNo =:tinNo");
+			paramValues.put("tinNo", supplierSearchEntity.getTinNo());
+		}
+		if (supplierSearchEntity.getRegistationNo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("registationNo =:registationNo");
+			paramValues.put("registationNo", supplierSearchEntity.getRegistationNo());
+		}
+		if (supplierSearchEntity.getBankAccountId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("bankAccount =:bankAccount");
+			paramValues.put("bankAccount", supplierSearchEntity.getBankAccountId());
+		}
+		if (supplierSearchEntity.getIfscCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("ifscCode =:ifscCode");
+			paramValues.put("ifscCode", supplierSearchEntity.getIfscCode());
+		}
+		if (supplierSearchEntity.getBankId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("bank =:bank");
+			paramValues.put("bank", supplierSearchEntity.getBankId());
+		}
 
 		Pagination<Supplier> page = new Pagination<>();
-		page.setOffSet(supplierSearchEntity.getOffset());
+		page.setOffSet(supplierSearchEntity.getOffSet());
 		page.setPageSize(supplierSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -142,19 +154,20 @@ paramValues.put("bank" ,supplierSearchEntity.getBankId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + supplierSearchEntity.getPageSize() + " offset "
-				+ supplierSearchEntity.getOffset() * supplierSearchEntity.getPageSize());
+				+ supplierSearchEntity.getOffSet() * supplierSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SupplierEntity.class);
 
-		List<SupplierEntity> supplierEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<SupplierEntity> supplierEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+				row);
 
 		page.setTotalResults(supplierEntities.size());
 
-		List<Supplier> suppliers = new ArrayList<Supplier>();
+		List<Supplier> suppliers = new ArrayList<>();
 		for (SupplierEntity supplierEntity : supplierEntities) {
 
 			suppliers.add(supplierEntity.toDomain());
@@ -166,15 +179,15 @@ paramValues.put("bank" ,supplierSearchEntity.getBankId());}
 
 	public SupplierEntity findById(SupplierEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<SupplierEntity> suppliers = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<SupplierEntity>());
+		List<SupplierEntity> suppliers = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(SupplierEntity.class));
 		if (suppliers.isEmpty()) {
 			return null;
 		} else {

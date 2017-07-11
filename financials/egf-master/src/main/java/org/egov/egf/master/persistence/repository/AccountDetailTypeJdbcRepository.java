@@ -55,41 +55,45 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( accountDetailTypeSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,accountDetailTypeSearchEntity.getId());} 
-if( accountDetailTypeSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,accountDetailTypeSearchEntity.getName());} 
-if( accountDetailTypeSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,accountDetailTypeSearchEntity.getDescription());} 
-if( accountDetailTypeSearchEntity.getTableName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "tableName =: tableName");
-paramValues.put("tableName" ,accountDetailTypeSearchEntity.getTableName());} 
-if( accountDetailTypeSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,accountDetailTypeSearchEntity.getActive());} 
-if( accountDetailTypeSearchEntity.getFullyQualifiedName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "fullyQualifiedName =: fullyQualifiedName");
-paramValues.put("fullyQualifiedName" ,accountDetailTypeSearchEntity.getFullyQualifiedName());} 
-
-		 
+		if (accountDetailTypeSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", accountDetailTypeSearchEntity.getId());
+		}
+		if (accountDetailTypeSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", accountDetailTypeSearchEntity.getName());
+		}
+		if (accountDetailTypeSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", accountDetailTypeSearchEntity.getDescription());
+		}
+		if (accountDetailTypeSearchEntity.getTablename() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("tableName =:tableName");
+			paramValues.put("tableName", accountDetailTypeSearchEntity.getTablename());
+		}
+		if (accountDetailTypeSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", accountDetailTypeSearchEntity.getActive());
+		}
+		if (accountDetailTypeSearchEntity.getFullyQualifiedName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("fullyQualifiedName =:fullyQualifiedName");
+			paramValues.put("fullyQualifiedName", accountDetailTypeSearchEntity.getFullyQualifiedName());
+		}
 
 		Pagination<AccountDetailType> page = new Pagination<>();
-		page.setOffSet(accountDetailTypeSearchEntity.getOffset());
+		page.setOffSet(accountDetailTypeSearchEntity.getOffSet());
 		page.setPageSize(accountDetailTypeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -102,19 +106,20 @@ paramValues.put("fullyQualifiedName" ,accountDetailTypeSearchEntity.getFullyQual
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + accountDetailTypeSearchEntity.getPageSize() + " offset "
-				+ accountDetailTypeSearchEntity.getOffset() * accountDetailTypeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination", "limit " + accountDetailTypeSearchEntity.getPageSize()
+				+ " offset " + accountDetailTypeSearchEntity.getOffSet() * accountDetailTypeSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountDetailTypeEntity.class);
 
-		List<AccountDetailTypeEntity> accountDetailTypeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<AccountDetailTypeEntity> accountDetailTypeEntities = namedParameterJdbcTemplate
+				.query(searchQuery.toString(), paramValues, row);
 
 		page.setTotalResults(accountDetailTypeEntities.size());
 
-		List<AccountDetailType> accountdetailtypes = new ArrayList<AccountDetailType>();
+		List<AccountDetailType> accountdetailtypes = new ArrayList<>();
 		for (AccountDetailTypeEntity accountDetailTypeEntity : accountDetailTypeEntities) {
 
 			accountdetailtypes.add(accountDetailTypeEntity.toDomain());
@@ -126,15 +131,15 @@ paramValues.put("fullyQualifiedName" ,accountDetailTypeSearchEntity.getFullyQual
 
 	public AccountDetailTypeEntity findById(AccountDetailTypeEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<AccountDetailTypeEntity> accountdetailtypes = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<AccountDetailTypeEntity>());
+		List<AccountDetailTypeEntity> accountdetailtypes = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(AccountDetailTypeEntity.class));
 		if (accountdetailtypes.isEmpty()) {
 			return null;
 		} else {

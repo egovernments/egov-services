@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class EgfStatusSearchContract extends EgfStatusContract {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 }

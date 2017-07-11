@@ -115,7 +115,7 @@ public class BankJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<Bank> page = new Pagination<>();
-		page.setOffSet(bankSearchEntity.getOffset());
+		page.setOffSet(bankSearchEntity.getOffSet());
 		page.setPageSize(bankSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -132,7 +132,7 @@ public class BankJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + bankSearchEntity.getPageSize() + " offset "
-				+ bankSearchEntity.getOffset() * bankSearchEntity.getPageSize());
+				+ bankSearchEntity.getOffSet() * bankSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BankEntity.class);
 

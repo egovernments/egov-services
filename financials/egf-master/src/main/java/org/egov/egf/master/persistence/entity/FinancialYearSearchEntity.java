@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class FinancialYearSearchEntity extends FinancialYearEntity {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 
 	@Override
 	public FinancialYear toDomain() {
@@ -27,7 +27,7 @@ public class FinancialYearSearchEntity extends FinancialYearEntity {
 	public FinancialYearSearchEntity toEntity(FinancialYearSearch financialYearSearch) {
 		super.toEntity((FinancialYear) financialYearSearch);
 		this.pageSize = financialYearSearch.getPageSize();
-		this.offset = financialYearSearch.getOffset();
+		this.offSet = financialYearSearch.getOffSet();
 		return this;
 	}
 

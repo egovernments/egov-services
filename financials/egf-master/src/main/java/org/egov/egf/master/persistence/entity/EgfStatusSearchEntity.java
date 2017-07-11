@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class EgfStatusSearchEntity extends EgfStatusEntity {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 
 	@Override
 	public EgfStatus toDomain() {
@@ -27,7 +27,7 @@ public class EgfStatusSearchEntity extends EgfStatusEntity {
 	public EgfStatusSearchEntity toEntity(EgfStatusSearch egfStatusSearch) {
 		super.toEntity((EgfStatus) egfStatusSearch);
 		this.pageSize = egfStatusSearch.getPageSize();
-		this.offset = egfStatusSearch.getOffset();
+		this.offSet = egfStatusSearch.getOffSet();
 		return this;
 	}
 

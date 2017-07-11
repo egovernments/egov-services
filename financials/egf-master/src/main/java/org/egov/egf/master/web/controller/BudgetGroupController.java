@@ -48,9 +48,9 @@ public class BudgetGroupController {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetGroupContract> budgetGroupResponse = new CommonResponse<>();
 		List<BudgetGroup> budgetgroups = new ArrayList<>();
-		BudgetGroup budgetGroup = null;
-		List<BudgetGroupContract> budgetGroupContracts = new ArrayList<BudgetGroupContract>();
-		BudgetGroupContract contract = null;
+		BudgetGroup budgetGroup;
+		List<BudgetGroupContract> budgetGroupContracts = new ArrayList<>();
+		BudgetGroupContract contract;
 
 		budgetGroupContractRequest.getRequestInfo().setAction("create");
 
@@ -90,9 +90,9 @@ public class BudgetGroupController {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetGroupContract> budgetGroupResponse = new CommonResponse<>();
 		List<BudgetGroup> budgetgroups = new ArrayList<>();
-		BudgetGroup budgetGroup = null;
-		BudgetGroupContract contract = null;
-		List<BudgetGroupContract> budgetGroupContracts = new ArrayList<BudgetGroupContract>();
+		BudgetGroup budgetGroup;
+		BudgetGroupContract contract;
+		List<BudgetGroupContract> budgetGroupContracts = new ArrayList<>();
 
 		for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getData()) {
 			budgetGroup = new BudgetGroup();

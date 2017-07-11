@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class FunctionSearchContract extends FunctionContract {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 }

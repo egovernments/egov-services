@@ -21,7 +21,7 @@ public class AccountDetailTypeEntity extends AuditableEntity {
 	private String id;
 	private String name;
 	private String description;
-	private String tableName;
+	private String tablename;
 	private Boolean active;
 	private String fullyQualifiedName;
 
@@ -31,7 +31,7 @@ public class AccountDetailTypeEntity extends AuditableEntity {
 		accountDetailType.setId(this.id);
 		accountDetailType.setName(this.name);
 		accountDetailType.setDescription(this.description);
-		accountDetailType.setTableName(this.tableName);
+		accountDetailType.setTableName(this.tablename);
 		accountDetailType.setActive(this.active);
 		accountDetailType.setFullyQualifiedName(this.fullyQualifiedName);
 		return accountDetailType;
@@ -42,7 +42,7 @@ public class AccountDetailTypeEntity extends AuditableEntity {
 		this.id = accountDetailType.getId();
 		this.name = accountDetailType.getName();
 		this.description = accountDetailType.getDescription();
-		this.tableName = accountDetailType.getTableName();
+		this.tablename = accountDetailType.getTableName();
 		this.active = accountDetailType.getActive();
 		this.fullyQualifiedName = accountDetailType.getFullyQualifiedName();
 		return this;

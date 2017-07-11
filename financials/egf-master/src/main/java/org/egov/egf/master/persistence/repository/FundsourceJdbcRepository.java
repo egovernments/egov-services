@@ -55,51 +55,57 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( fundsourceSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,fundsourceSearchEntity.getId());} 
-if( fundsourceSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,fundsourceSearchEntity.getCode());} 
-if( fundsourceSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,fundsourceSearchEntity.getName());} 
-if( fundsourceSearchEntity.getType()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "type =: type");
-paramValues.put("type" ,fundsourceSearchEntity.getType());} 
-if( fundsourceSearchEntity.getParentId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "fundSource =: fundSource");
-paramValues.put("fundSource" ,fundsourceSearchEntity.getParentId());} 
-if( fundsourceSearchEntity.getLlevel()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "llevel =: llevel");
-paramValues.put("llevel" ,fundsourceSearchEntity.getLlevel());} 
-if( fundsourceSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,fundsourceSearchEntity.getActive());} 
-if( fundsourceSearchEntity.getIsParent()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isParent =: isParent");
-paramValues.put("isParent" ,fundsourceSearchEntity.getIsParent());} 
-
-		 
+		if (fundsourceSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", fundsourceSearchEntity.getId());
+		}
+		if (fundsourceSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", fundsourceSearchEntity.getCode());
+		}
+		if (fundsourceSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", fundsourceSearchEntity.getName());
+		}
+		if (fundsourceSearchEntity.getType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("type =:type");
+			paramValues.put("type", fundsourceSearchEntity.getType());
+		}
+		if (fundsourceSearchEntity.getParentId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("fundSource =:fundSource");
+			paramValues.put("fundSource", fundsourceSearchEntity.getParentId());
+		}
+		if (fundsourceSearchEntity.getLlevel() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("llevel =:llevel");
+			paramValues.put("llevel", fundsourceSearchEntity.getLlevel());
+		}
+		if (fundsourceSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", fundsourceSearchEntity.getActive());
+		}
+		if (fundsourceSearchEntity.getIsParent() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isParent =:isParent");
+			paramValues.put("isParent", fundsourceSearchEntity.getIsParent());
+		}
 
 		Pagination<Fundsource> page = new Pagination<>();
-		page.setOffSet(fundsourceSearchEntity.getOffset());
+		page.setOffSet(fundsourceSearchEntity.getOffSet());
 		page.setPageSize(fundsourceSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
@@ -112,15 +118,16 @@ paramValues.put("isParent" ,fundsourceSearchEntity.getIsParent());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + fundsourceSearchEntity.getPageSize() + " offset "
-				+ fundsourceSearchEntity.getOffset() * fundsourceSearchEntity.getPageSize());
+				+ fundsourceSearchEntity.getOffSet() * fundsourceSearchEntity.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FundsourceEntity.class);
 
-		List<FundsourceEntity> fundsourceEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<FundsourceEntity> fundsourceEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(fundsourceEntities.size());
 
@@ -137,14 +144,15 @@ paramValues.put("isParent" ,fundsourceSearchEntity.getIsParent());}
 	public FundsourceEntity findById(FundsourceEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<FundsourceEntity> fundsources = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FundsourceEntity>());
+		List<FundsourceEntity> fundsources = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(FundsourceEntity.class));
 		if (fundsources.isEmpty()) {
 			return null;
 		} else {

@@ -92,7 +92,6 @@ public class Supplier extends Auditable {
 	@Length(max = 25)
 	private String registationNo;
 
-	@Length(max = 25)
 	private BankAccount bankAccount;
 
 	@Length(max = 12)

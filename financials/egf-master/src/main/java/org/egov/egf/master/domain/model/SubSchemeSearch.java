@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class SubSchemeSearch extends SubScheme {
 	private Integer pageSize;
-	private Integer offset;
+	private Integer offSet;
 }

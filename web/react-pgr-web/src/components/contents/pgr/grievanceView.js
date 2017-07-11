@@ -255,7 +255,7 @@ class grievanceView extends Component{
         return (
           <Row style={styles.addBorderBottom} key={index}>
             <Col xs={12} md={2}>
-              {workflow.created_Date}
+              {workflow.last_updated}
             </Col>
             <Col xs={12} md={2}>
               {workflow.sender_name}

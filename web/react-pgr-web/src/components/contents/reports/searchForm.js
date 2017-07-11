@@ -64,7 +64,7 @@ class ShowForm extends Component {
     let {searchParams}=metaData.hasOwnProperty("reportDetails")?metaData.reportDetails:{searchParams:[]};
     let required=[];
     for (var i = 0; i < searchParams.length; i++) {
-      if (searchParams.isMandatory) {
+      if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
         required.push(searchParams.name)
       }
     }
@@ -77,7 +77,7 @@ class ShowForm extends Component {
   {
     e.preventDefault();
 
-      let {showTable,changeButtonText,setReportResult,searchForm,metaData}=this.props;
+      let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag}=this.props;
       let searchParams=[]
 
 
@@ -103,6 +103,7 @@ class ShowForm extends Component {
       {
         // console.log(response)
         setReportResult(response)
+        setFlag(1);
       },function(err) {
           console.log(err);
       });
@@ -131,7 +132,7 @@ class ShowForm extends Component {
     } = this.props;
     let {search} = this;
     // console.log(metaData);
-    // console.log(searchForm);
+    console.log(searchForm);
     return (
       <div className="searchForm">
         <form onSubmit={(e) => {
@@ -149,7 +150,7 @@ class ShowForm extends Component {
           </Grid>
           </CardText>
         </Card>
-        <RaisedButton type="submit" disabled={!isFormValid}  label={buttonText} />
+        <RaisedButton type="submit" disabled={false}  label={buttonText} />
         </form>
 
       </div>
@@ -161,6 +162,7 @@ const mapStateToProps = state => ({searchForm: state.form.form, fieldErrors: sta
 
 const mapDispatchToProps = dispatch => ({
   setForm: (required=[],pattern=[]) => {
+    console.log(required);
     dispatch({
       type: "SET_FORM",
       form:{},
@@ -230,6 +232,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setReportResult:(reportResult)=>{
     dispatch({type:"SET_REPORT_RESULT",reportResult})
+  },
+  setFlag:(flag)=>{
+      dispatch({type:"SET_FLAG",flag})
   }
 });
 

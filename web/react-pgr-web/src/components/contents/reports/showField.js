@@ -18,7 +18,7 @@ export default class ShowField extends Component
   renderFields = (obj) =>{
     //console.log('came to renderfields',obj.code);
     let des = translate(obj.label);
-    let mandatory = (obj.isMandatory == true) ? " *" : ""
+    let mandatory = obj.hasOwnProperty("isMandatory")?(obj.isMandatory? " *" : ""):"*";
     let description = des + mandatory;
 
     let dropDownData=[];
@@ -43,13 +43,13 @@ export default class ShowField extends Component
       case "string":
         return (
           <Col xs={12} md={3}>
-            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory, '')} />
+            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, mandatory=="*"?true:false, '')} />
           </Col>
         );
       case "number":
         return(
           <Col xs={12} md={3}>
-            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory, /^[+-]?\d+(\.\d+)?$/)}   />
+            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, mandatory=="*"?true:false, /^[+-]?\d+(\.\d+)?$/)}   />
           </Col>
         );
       case "date" :
@@ -62,7 +62,7 @@ export default class ShowField extends Component
                   value:object
                 }
               }
-              this.props.handler(e, obj.name, obj.isMandatory, '')
+              this.props.handler(e, obj.name, mandatory=="*"?true:false, '')
 
             }}/>
           {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
@@ -78,7 +78,7 @@ export default class ShowField extends Component
                     value:object
                   }
                 }
-                this.props.handler(e, obj.name, obj.isMandatory, '')
+                this.props.handler(e, obj.name, mandatory=="*"?true:false, '')
 
               }}/>
             {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
@@ -96,7 +96,7 @@ export default class ShowField extends Component
                   value
                 }
               }
-              this.props.handler(e, obj.name, obj.isMandatory, "")
+              this.props.handler(e, obj.name, mandatory=="*"?true:false, "")
             }} maxHeight={200} >
             {dropDownData.map((dd, index) => (
                 <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />

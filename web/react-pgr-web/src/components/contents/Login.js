@@ -128,9 +128,10 @@ class Login extends Component {
    }
 
    componentDidMount() {
-     let {initForm, setLoadingStatus} = this.props;
+     let {initForm, setLoadingStatus, setHome} = this.props;
      initForm();
      setLoadingStatus("loading");
+     setHome(false);
      this.handleLocaleChange(this.state.locale);
 	 
 	 
@@ -285,9 +286,11 @@ class Login extends Component {
    }
 
    searchGrievance = (e) => {
-     let {history} = this.props;
-     if(this.state.srn)
-      history.push("/pgr/viewGrievance/"+this.state.srn);
+     let {setRoute, setHome} = this.props;
+     if(this.state.srn) {
+        setRoute("/pgr/viewGrievance/"+this.state.srn);
+        setHome(true);
+     }
    }
 
    validateOTP() {
@@ -522,7 +525,6 @@ class Login extends Component {
         return false;
       }
 	  
-	  console.log(credential);
 
         return(
           <div>
@@ -848,7 +850,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-  }
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  setHome: (showHome) => dispatch({type: "SET_HOME", showHome})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -6,7 +6,8 @@ const defaultState = {
   route: '',
   complaintsLength: 0,
   pleaseWait: false,
-  showMenu: false
+  showMenu: false,
+  showHome: false
 };
 
 export default (state = defaultState, action) => {
@@ -47,6 +48,11 @@ export default (state = defaultState, action) => {
         route: action.route,
         redirectTo: action.route,
 
+      }
+    case 'SET_HOME':
+      return {
+        ...state,
+        showHome: action.showHome
       }
     case 'GET_LENGTH':
       return {

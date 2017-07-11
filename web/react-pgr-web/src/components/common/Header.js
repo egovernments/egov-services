@@ -46,7 +46,7 @@ const Logo = () => {
 }
 
 const RightIcon = (props) => {
-  // console.log(props);
+  //console.log(props);
   if (props.token) {
     return (
       <div>
@@ -93,6 +93,10 @@ const RightIcon = (props) => {
 
       </div>
     );
+  } else if(window.location.hash == "#/") {
+    return(
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+    )
   } else {
     return(
       <div>
@@ -714,12 +718,13 @@ class Header extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="Header">
         <AppBar title={<div><Logo/> Egovernments </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
-                iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
+                iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
           {/*<div id="menu"></div>*/}
@@ -758,7 +763,8 @@ const mapStateToProps = state => ({
     pleaseWait: state.common.pleaseWait,
     // isDialogOpen: state.form.dialogOpen,
     // msg: state.form.msg,
-    showMenu: state.common.showMenu
+    showMenu: state.common.showMenu,
+    showHome: state.common.showHome
 });
 
 // this.props.appLoaded

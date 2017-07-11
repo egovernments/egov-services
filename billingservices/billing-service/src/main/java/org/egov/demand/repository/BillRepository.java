@@ -15,6 +15,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
 import org.egov.demand.web.contract.BillRequest;
@@ -44,6 +45,11 @@ public class BillRepository {
 	
 	@Autowired
 	private BusinessServiceDetailRepository businessServiceDetailRepository;
+	
+	public List<Bill> getBills(BillSearchCriteria billSearchCriteria){
+		
+		return null;
+	}
 	
 	@Transactional
 	public void saveBill(BillRequest billRequest){

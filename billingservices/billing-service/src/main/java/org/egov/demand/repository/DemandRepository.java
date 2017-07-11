@@ -72,10 +72,13 @@ public class DemandRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	@Autowired
+	private DemandQueryBuilder demandQueryBuilder;
+	
 	public List<Demand> getDemands(DemandCriteria demandCriteria, Set<String> ownerIds) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String searchDemandQuery = DemandQueryBuilder.getDemandQuery(demandCriteria, ownerIds, preparedStatementValues);
+		String searchDemandQuery = demandQueryBuilder.getDemandQuery(demandCriteria, ownerIds, preparedStatementValues);
 		return jdbcTemplate.query(searchDemandQuery, preparedStatementValues.toArray(), new DemandRowMapper());
 	}
 

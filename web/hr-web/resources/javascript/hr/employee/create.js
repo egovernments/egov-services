@@ -1479,6 +1479,7 @@ function markEditIndex(index = -1, modalName = "", object = "", fromServer) {
                 } else {
 
                     if(object == "assignments" && fromServer) {
+                        $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', false);
                         $("#assignments\\.fromDate").attr('disabled', true);
 
                         if(employee[object][editIndex].toDate) {

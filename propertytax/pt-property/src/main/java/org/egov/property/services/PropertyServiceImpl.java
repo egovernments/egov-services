@@ -375,8 +375,8 @@ public class PropertyServiceImpl implements PropertyService {
                         titleTransferRequest.getTitleTransfer().getTenantId(), titleTransferRequest.getRequestInfo());
 
                 titleTransferRequest.getTitleTransfer().setApplicationNo(acknowldgeMentNumber);
-                titleTransferProducer.send(environment.getProperty("egov.propertytax.property.title.transfer"),
-                        titleTransferRequest);
+     /*           titleTransferProducer.send(environment.getProperty("egov.propertytax.property.title.transfer"),
+                        titleTransferRequest);*/
                 titleTransferResponse = new TitleTransferResponse();
                 titleTransferResponse.setResponseInfo(
                         responseInfoFactory.createResponseInfoFromRequestInfo(titleTransferRequest.getRequestInfo(), true));

@@ -7,11 +7,8 @@ const defaultState = {
   complaintsLength: 0,
   pleaseWait: false,
   showMenu: false,
-<<<<<<< HEAD
-  actionList:JSON.parse(localStorage.getItem("modules")) || []
-=======
+  actionList:JSON.parse(localStorage.getItem("modules")) || [],
   showHome: false
->>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 };
 
 export default (state = defaultState, action) => {

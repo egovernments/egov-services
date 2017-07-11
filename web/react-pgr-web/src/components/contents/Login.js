@@ -541,12 +541,7 @@ class Login extends Component {
 
         return false;
       }
-<<<<<<< HEAD
 
-	  console.log(credential);
-=======
-	  
->>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 
         return(
           <div>
@@ -873,14 +868,11 @@ const mapDispatchToProps = dispatch => ({
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   },
-<<<<<<< HEAD
   setActionList:(actionList)=>{
     dispatch({type:"SET_ACTION_LIST",actionList});
-  }
-=======
+  },
   setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
   setHome: (showHome) => dispatch({type: "SET_HOME", showHome})
->>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

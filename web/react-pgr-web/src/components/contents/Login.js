@@ -448,6 +448,7 @@ class Login extends Component {
      let {history, setHome} = this.props;
      history.push('/pgr/createGrievance');
      setHome(true);
+     
    }
 
    render() {

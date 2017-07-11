@@ -1226,16 +1226,10 @@ public class PropertyMasterRepository {
 				return ps;
 			}
 		};
-		Long id = 0l;
-
 		final KeyHolder holder = new GeneratedKeyHolder();
-		try {
+	
 			jdbcTemplate.update(psc, holder);
 			return Long.valueOf(holder.getKey().intValue());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return id;
 
 	}
 

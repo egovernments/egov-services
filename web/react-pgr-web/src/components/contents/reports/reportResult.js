@@ -6,6 +6,8 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 
 import Api from '../../../api/api';
+import {translate} from '../../common/common';
+
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -59,7 +61,7 @@ class ShowField extends Component {
     }
   }
 
-  componentDidUpdate() {  
+  componentDidUpdate() {
           $('#reportTable').DataTable({
             dom: 'lBfrtip',
             buttons: [
@@ -95,7 +97,7 @@ class ShowField extends Component {
               {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
               {
                 return (
-                  <th key={i}>{item.label}</th>
+                  <th key={i}>{translate(item.label)}</th>
                 )
               })}
             {/*

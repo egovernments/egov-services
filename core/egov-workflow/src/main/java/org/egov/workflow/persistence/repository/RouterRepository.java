@@ -229,7 +229,20 @@ public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean s
 		return false ;
 	}
 	
-	
+	public boolean checkCombinationExists(RouterTypeReq routerTypeReq) {
+		String finalQuery = routerQueryBuilder.checkCombinationExistsQuery(routerTypeReq); 
+		LOGGER.info("Verification Query : " + finalQuery);
+		List<Integer> count = jdbcTemplate.queryForList(finalQuery, Integer.class);
+		LOGGER.info("Count: "+ count.toString());
+		if(count.size() > 0){ 
+			if(count.get(0) > 0) {
+				return true; 
+			} else {
+				return false;
+			}
+		}
+		return false ;
+	}
 	
 
 }

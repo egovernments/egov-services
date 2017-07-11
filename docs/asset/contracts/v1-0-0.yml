@@ -7,10 +7,17 @@ swagger: '2.0'
 info:
   title: Asset API
   description: EGovAsset Management aims to improve the efficiency of the Asset Management operations in the ULB.This document covers.
-   </br><h1>Create Asset Category
-   </br>Get Asset Category
-   </br>Create New Asset. 
-   </br>Get Asset.</h1>
+   <h2><b>
+   </br>1.Create New Asset Category.
+   </br>2.Search for Asset Categories based on search parameter.
+   </br>3.Create New Asset for a Asset Category. 
+   </br>4.Search for Asset based on search parameter.
+   </br>5.Revalution of existing asset.
+   </br>6.Search for reevaluated asset.
+   </br>7.Sale/Dispose of an existing asset.
+   </br>8.Search for Sale/Disposed asset.
+   </br>9.Get current value of an asset.
+   </b></h2>
   contact:
     name:  Ghanshyam rawat
     email: ghanshyam.rawat@riflexions.com
@@ -148,19 +155,12 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
-  /assets/_update/{code}:
+  /assets/_update:
     post:
       summary: Update existing Asset.
       description: The asset master is the database of all the assets owned by the ULB. Each asset belongs to a category. The attributes of the asset category are inherited by the assets within that category. This API allow user to update the existing asset property.
       parameters:
-        
-        - name: code
-          in: path
-          required: true
-          description: The unique code of the asset.
-          type: integer
-          format: int64
-          
+      
         - name: Asset
           in: body
           description: Details for the new Asset.
@@ -171,7 +171,7 @@ paths:
         - Asset
       responses:
         '201':
-          description: Asset created
+          description: Asset Updated Successfully
           schema:
             $ref: '#/definitions/AssetResponse'
         '400':
@@ -200,7 +200,7 @@ paths:
         - AssetCategory
       responses:
         '201':
-          description: Asset created
+          description: Asset Category Created Successfully
           schema:
             $ref: '#/definitions/AssetCategoryResponse'
         '400':
@@ -255,7 +255,7 @@ paths:
         - AssetCategory
       responses:
         '200':
-          description: returns list of Asset.
+          description: Returns list of Asset category.
           schema:
             $ref: '#/definitions/AssetCategoryResponse'
         '400':
@@ -263,9 +263,9 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /assets/reevaluate/_search:
+  /assets/revaluation/_search:
     post:
-      summary: Get list of Asset based on below parameter.
+      summary: Get list of reevaluated Asset based on below parameter.
       description: >
         Provides a list of asset for given different input params.
       parameters:
@@ -299,6 +299,18 @@ paths:
             type: integer
           format: int64
           maxItems: 100
+        - name: fromDate
+          in: query
+          description: Get revaluted asset from Date of reevalueation. mandatory if todate is not null.
+          required: false
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          description: Get revaluted asset from Date of reevalueation. mandatory if fromdate is not null.
+          required: false
+          type: integer
+          format: int64
       tags:
         - Revaluation
       responses:
@@ -311,7 +323,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         
-  /assets/reevaluate/_create:
+  /assets/revaluation/_create:
     post:
       summary: Reevaluate the asset.
       description: Reevaluate the asset, after revaluation asset value will be change, it can be increase or decrease. Revaluation is applicable if the asset status is Capitalized.
@@ -326,7 +338,7 @@ paths:
         - Revaluation
       responses:
         '201':
-          description: Asset is Reevaluated.
+          description: Asset is Reevaluated successfully.
           schema:
             $ref: '#/definitions/RevaluationResponse'
         '400':
@@ -334,18 +346,11 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
-  /assets/reevaluate/{id}/_update:
+  /assets/revaluation/_update:
     post:
       summary: Update existing Reevaluated Asset.
       description: Update existing Reevaluated Asset.
       parameters:
-        
-        - name: id
-          in: path
-          required: true
-          description: The unique revaluation id.
-          type: integer
-          format: int64
           
         - name: Revaluation
           in: body
@@ -384,7 +389,7 @@ paths:
         - Disposal
       responses:
         '201':
-          description: Asset is Reevaluated.
+          description: Asset is Dispose/sale.
           schema:
             $ref: '#/definitions/DisposalResponse'
         '400':
@@ -421,13 +426,25 @@ paths:
           maxItems: 100
         - name: assetId
           in: query
-          description: Pass List of Unique Asset id then the API will returns list of dispose asset. Maximum length of the input list is 100.
+          description: Pass List of Unique Asset id then the API will returns list of dispose asset. Maximum length of the input list is 100. if id list is not null then api ignore assetid.
           required: false
           type: array
           items: 
             type: integer
           format: int64
           maxItems: 100
+        - name: fromDate
+          in: query
+          description: Get dispose/Sold asset from Date of disposal/sale. it is mandatory if todate is not null.
+          required: false
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          description: Get dispose/Sold asset from Date of disposal/sale. it is mandatory if fromdate is not null.
+          required: false
+          type: integer
+          format: int64
       tags:
         - Disposal
       responses:
@@ -477,7 +494,49 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
         
-        
+  /assetstatuses/_search:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown 
+      summary: Get the list of statuses for each object defined in the system for entire Asset module.
+      description: |
+        Get the status list for a particular object/entity in the HR module.
+      # This is array of GET operation parameters:
+      parameters:
+        - name: requestInfo
+          in: body
+          description: Commmon request info for getting status.
+          required: true
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: objectName
+          in: query
+          description: Name of the object/entity for which status is searched for.
+          required: false
+          type: string
+          maxLength: 5
+        - name: code
+          in: query
+          description: Name of the status code.
+          required: false
+          type: string
+          maxLength: 20
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response.
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: '#/definitions/AssetStatus'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags: 
+       - Set Up      
   
 definitions:
   Asset:
@@ -516,17 +575,7 @@ definitions:
 
       status:
         type: string
-        description: enumeration.
-        enum:
-          - CWIP
-          - Cancelled
-          - Capitalized
-          - Created
-          - Disposed
-          - Retired
-          - Revaluated
-          - Sold
-      
+        description: asset status from assetstatus master for Object name "Asset Master".
       grossValue:
         type: integer
         format: double
@@ -541,12 +590,12 @@ definitions:
       dateOfCreation:
         type: string
         format: date
-        description: timestamp.
+        description: Date of asset creation.
       locationDetails:
         $ref: '#/definitions/Location'
       remarks:
         type: string
-        description: asset remarks
+        description: asset remarks.
       length:
         type: string
         description: Length of the Land and Shop assets.
@@ -558,20 +607,27 @@ definitions:
         description: Total area of Land and Shop assets.
       version:
         type: string
-        description: version of the assetcategory against which asset is created.
+        description: version of the assetcategory for which asset is created.
       assetReference:
         description: Parent asset id for an asset.
         type: integer
         format: int64
+      enableYearWiseDepreciation:
+        description: Enable the year wise Depreciation for an asset. if the value is true then refer the Depreciation rate from yearWiseDepreciationRate object else refer to depreciationRate of asset.
+        type: boolean
       assetAttributes:
         type: array
         items:
          $ref: '#/definitions/Attributes'
       depreciationRate:
+        type: integer
+        format: double
+        description: gross value of the asset, applicable only if the status is Capitalized
+      yearWiseDepreciationRate:
         type: array
-        description: Multiple rows can be specified for each  asset category, but there should not be an overlap in the rates for the same financial year.
+        description: Multiple rows can be specified for each  asset category, but there should not be an overlap in the rates for the same financial year.It is required if enableYearWiseDepreciation is true, if enableYearWiseDepreciation if false then refer Depreciation from depreciationRate of asset.
         items:
-          $ref: '#/definitions/DepreciationMetaData'
+          $ref: '#/definitions/YearWiseDepreciation'
       
   Attributes:
     type: object
@@ -675,18 +731,22 @@ definitions:
       - name
       - revaluationReserveAccount
  
- # need clarification about the DepreciationMetaData
-  DepreciationMetaData:
+ # Year wise depreciation is applicable, if enable year wise Depreciation is true.
+  YearWiseDepreciation:
     type: object
     properties:
     #depreciationRate will be float
       depreciationRate:
         type: integer
-        format: int64
-        description: Depreciation rate of the asset should be entered, It will be a float value.
+        format: double
+        description: Rate of Depreciation for asset , It will be a float value.
       financialYear:      
         type: string
         description: Required if depreciation rate is specified,Options are the list of financial years.
+      assetId:      
+        type: integer
+        format: int64
+        description: id of the asset for which depreciation is required.
       usefulLifeInYears:      
         type: integer
         format: int64
@@ -801,9 +861,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       status:
         type: string
-        description: enumartion.
-        enum:
-          - Active  
+        description: asset status from assetstatus master for Object name "Revaluation".
     required:
       - tenantId
       - assetId
@@ -860,16 +918,17 @@ definitions:
         enum:
           - SALE
           - DISPOSAL
-      profitVoucherReference:
-        type: string
-        description: profit Voucher Number for the asset .
-      lossVoucherReference:
-        type: string
-        description: profit Voucher Number for the asset.
+      profLossVoucherReference:
+        type: integer
+        format: int64
+        description: profit and loss Voucher id for the asset .
       assetSaleAccount:
         type: integer
         format: int64
         description: Select the Asset Sale account code- populate it based on purpose code from financials detailed code master.
+      status:
+        type: string
+        description: asset status from assetstatus master for Object name "Disposal".
       auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
           
@@ -922,10 +981,47 @@ definitions:
         type: integer
         format: double
         description: calculate the current value of the asset as gross value - accumulated depreciation +or- reevaulation value.
+  
+  AssetStatus:
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: Unique id for ulb.
+      objectName:
+        type: string
+        description: The Name of the object for which statuses are defined.
+        minLength: 3
+        maxLength: 50
+      values:
+        type: array
+        items:
+          $ref: '#/definitions/StatusValue'
+        description: List of status for each object name.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+    required:
+      - objectName
+      - values
+  
+  StatusValue:
+    type: object
+    properties:
+      code:
+        type: string
+        description: The unique status code.
+        minLength: 3
+        maxLength: 20
+      description:
+        type: string
+        description: The description of the status.
+        minLength: 3
+        maxLength: 250
+   
 
   AssetRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Assets:
           $ref: '#/definitions/Asset'
@@ -933,7 +1029,7 @@ definitions:
  
   AssetResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Assets:
         type: array
@@ -944,7 +1040,7 @@ definitions:
     
   AssetCategoryRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       AssetCategory:
           $ref: '#/definitions/AssetCategory'
@@ -952,7 +1048,7 @@ definitions:
   
   AssetCategoryResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       AssetCategory:
         type: array
@@ -962,7 +1058,7 @@ definitions:
     
   RevaluationRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Revaluation:
           $ref: '#/definitions/Revaluation'
@@ -970,7 +1066,7 @@ definitions:
  
   RevaluationResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       Revaluations:
         type: array
@@ -980,17 +1076,17 @@ definitions:
     
   DisposalRequest:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      Revaluation:
+      Disposal:
           $ref: '#/definitions/Disposal'
     type: object      
  
   DisposalResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      Revaluations:
+      Disposal:
         type: array
         items:
           $ref: '#/definitions/Disposal'
@@ -998,13 +1094,11 @@ definitions:
     
   AssetCurrentValueResponse:
     properties:
-      ResposneInfo:
+      ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      Revaluations:
+      AssetCurrentValue:
         type: array
         items:
           $ref: '#/definitions/AssetCurrentValue'
     type: object  
-  
-    
   

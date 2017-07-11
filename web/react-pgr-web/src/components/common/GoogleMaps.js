@@ -57,15 +57,11 @@ export default class SimpleMap extends Component {
   }
 
   componentDidMount(){
-    this.setState({center : {lat : 15.82223689, lng : 78.02439864}});
-    this.setState({markers : [{position:{lat : 15.82223689, lng : 78.02439864}}]});
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.lat || nextProps.lng){
       this.setState({center : {lat : nextProps.lat, lng : nextProps.lng}});
       this.setState({markers : [{position:{lat : nextProps.lat, lng : nextProps.lng}}]});
-    }
   }
 
   handleMapMounted = this.handleMapMounted.bind(this);

@@ -143,6 +143,17 @@ class grievanceCreate extends Component {
     console.log(localStorage.getItem('type'));
     var currentThis = this;
 
+    //Get City details for tenant
+    Api.commonApiPost("/tenant/v1/tenant/_search",{code : localStorage.getItem('tenant') || 'default'}).then(function(response)
+    {
+      currentThis.setState({
+        citylat:response.tenant[0].city.latitude,
+        citylng:response.tenant[0].city.longitude
+      })
+    },function(err) {
+      currentThis.handleError(err.message);
+    });
+
     //OTP enabled for tenant
     if(localStorage.getItem('type') === null){
       Api.commonApiPost("/pgr-master/OTPConfig/_search").then(function(response)
@@ -202,9 +213,11 @@ class grievanceCreate extends Component {
   search(e)
   {
       e.preventDefault();
+      //console.log('Initial Position:',this.state.citylat, this.state.citylng);
+      //console.log('Changed Position:',this.props.grievanceCreate.lat, this.props.grievanceCreate.lng);
       this.setState({loadingstatus:'loading'});
-      if(this.props.grievanceCreate.lat !== '0.0' || this.props.grievanceCreate.lng !== '0.0'){
-        //validate with API
+      //validate with API
+      if(this.props.grievanceCreate.lat && this.props.grievanceCreate.lng){
         Api.commonApiGet("/egov-location/boundarys",{'boundary.latitude' : this.props.grievanceCreate.lat, 'boundary.longitude' : this.props.grievanceCreate.lng, 'boundary.tenantId' : localStorage.getItem('tenantId') || 'default'}).then(function(response)
         {
           if(response.Boundary.length === 0){
@@ -217,12 +230,11 @@ class grievanceCreate extends Component {
         },function(err) {
           _this.handleError(err.message);
         });
-      }else {
+      }else{
         //usual createGrievance
         this.initialCreateBasedonType();
       }
       //console.log(this.props.grievanceCreate);
-
   }
 
   initialCreateBasedonType = () => {
@@ -257,8 +269,8 @@ class grievanceCreate extends Component {
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
     data['description']=this.props.grievanceCreate.description;
     data['addressId']= this.props.grievanceCreate.addressId ? this.props.grievanceCreate.addressId.id : '';
-    data['lat']=this.props.grievanceCreate.lat;
-    data['lng']=this.props.grievanceCreate.lng;
+    data['lat']= this.props.grievanceCreate.addressId ? '' : this.props.grievanceCreate.lat;
+    data['lng']= this.props.grievanceCreate.addressId ? '' :this.props.grievanceCreate.lng;
     data['address']=this.props.grievanceCreate.address;
     data['serviceRequestId']='';
     data['firstName']=this.props.grievanceCreate.firstName ? this.props.grievanceCreate.firstName : userName;
@@ -454,11 +466,6 @@ class grievanceCreate extends Component {
             axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true')
             .then(function (response) {
               //console.log(response.data.results[0].formatted_address);
-              _this.setState({
-                latfromimage : formatted_lat,
-                lngfromimage : formatted_long,
-                customAddress : response.data.results[0].formatted_address
-              });
               _this.props.handleMap(formatted_lat, formatted_long, "address");
             });
           }
@@ -482,6 +489,7 @@ class grievanceCreate extends Component {
   render() {
 
     //console.log(this.state.customAddress);
+    //console.log(this.props.grievanceCreate.addressId);
     const actions = [
       <FlatButton
         label={translate('pgr.lbl.view')}
@@ -681,7 +689,7 @@ class grievanceCreate extends Component {
                   <Row>
                     <Col md={12}>
                       <div style={{width: '100%', height: 400}}>
-                        <SimpleMap lat={this.state.latfromimage} lng={this.state.lngfromimage}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
+                        <SimpleMap lat={this.props.grievanceCreate.lat ? this.props.grievanceCreate.lat : this.state.citylat} lng={this.props.grievanceCreate.lng ? this.props.grievanceCreate.lng : this.state.citylng}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
                       </div>
                     </Col>
                   </Row> : ''}
@@ -816,11 +824,6 @@ const mapDispatchToProps = dispatch => ({
 
   },
   handleMap: (lat, lng, field) => {
-    _this.setState({
-      latfromimage : undefined,
-      lngfromimage : undefined,
-      addressfromimage : undefined
-    });
     dispatch({type: "HANDLE_CHANGE", property:'lat', value: lat, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: lng, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : false, pattern: ''});
@@ -832,8 +835,8 @@ const mapDispatchToProps = dispatch => ({
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
     if(property === 'addressId'){
-      dispatch({type: "HANDLE_CHANGE", property:'lat', value: '0.0', isRequired : false, pattern: ''});
-      dispatch({type: "HANDLE_CHANGE", property:'lng', value: '0.0', isRequired : false, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property:'lat', value: '', isRequired : false, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property:'lng', value: '', isRequired : false, pattern: ''});
     }
   },
   toggleDailogAndSetText: (dailogState,msg) => {

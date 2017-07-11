@@ -12,21 +12,25 @@ try {
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
+
+        def docker_file_exists = fileExists("${path}/Dockerfile")
+
         code_builder = load("jenkins/code_builder.groovy")
-        archiver = load("jenkins/archiver.groovy")
-        image_builder = load("jenkins/image_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
         currentBuild.displayName = "${BUILD_ID}-${commit_id}"
 
-        code_builder.build(path, ci_image)
-
-        archiver.archiveArtifacts(["${path}/target/*.jar", "${path}/target/*.html"])
-
-        image_builder.build(module_name, service_name, commit_id)
-
-        image_builder.publish(service_name, commit_id)
-
-        image_builder.clean(service_name, commit_id)
+        if (!docker_file_exists) {
+          code_builder.build(path, ci_image)
+        }
+        else {
+          archiver = load("jenkins/archiver.groovy")
+          image_builder = load("jenkins/image_builder.groovy")
+          code_builder.build(path, ci_image)
+          archiver.archiveArtifacts(["${path}/target/*.jar", "${path}/target/*.html"])
+          image_builder.build(module_name, service_name, commit_id)
+          image_builder.publish(service_name, commit_id)
+          image_builder.clean(service_name, commit_id)
+        }
     }
 } catch (e) {
     node{
@@ -35,4 +39,3 @@ try {
         throw e
     }
 }
-

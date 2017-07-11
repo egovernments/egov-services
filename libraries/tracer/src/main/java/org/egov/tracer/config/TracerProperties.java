@@ -8,6 +8,8 @@ public class TracerProperties {
     private static final String PROPERTY_PLACEHOLDER_PREFIX = "${";
     private static final String PROPERTY_PLACEHOLDER_SUFFIX = "}";
     private static final String REPLACEMENT_STRING = "";
+    private static final String UTC = "UTC";
+    private static final String TIME_ZONE_PROPERTY = "app.timezone";
 
     private Environment environment;
 
@@ -17,6 +19,10 @@ public class TracerProperties {
 
     public boolean isDetailedTracingEnabled() {
         return environment.getProperty(DETAILED_TRACING_FLAG, Boolean.class, true);
+    }
+
+    public String getTimeZone() {
+        return environment.getProperty(TIME_ZONE_PROPERTY, UTC);
     }
 
     public boolean isDetailedTracingDisabled() {

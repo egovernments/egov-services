@@ -241,7 +241,6 @@ public class RouterController{
 					.field(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_FIELD_NAME).build();
 			errorFields.add(errorField);
 		} 
-			return;
 	}
 	
 /*	private void verifyUniquenessOfRequest(final RouterTypeReq routerTypeReq,

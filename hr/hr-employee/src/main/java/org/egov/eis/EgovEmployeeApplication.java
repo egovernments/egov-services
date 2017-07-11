@@ -83,7 +83,6 @@ public class EgovEmployeeApplication {
     public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        //mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
         objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
         converter.setObjectMapper(objectMapper);
         return converter;

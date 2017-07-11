@@ -300,7 +300,6 @@ definitions:
       zone/word/block:
         type: string
         description: Zone or Word of the Applicant.
-        
   Asset:
     type: object
     properties:
@@ -326,7 +325,94 @@ definitions:
       zone/word/block:
         type: string
         description: Zone or Word of the Applicant.
-      
+  Demand:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of a timeline object
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant.
+      consumerCode: 
+        type: string
+        description: unique application Number of Module.
+      consumerType: 
+        type: string
+        description: application Type of application.
+      businessService: 
+        type: string
+        description: module name 
+      taxPeriodFrom:
+        type: string
+        description: installment starting date from which date we are calculationg charges.
+      taxPeriodTo:
+        type: string
+        description: installment ending date till which date we are calculation charges.
+      minimumAmountPayable:
+        type: number
+        format: double
+        description: minimal amount to pay.
+      owner:
+        $ref: "#/definitions/Owner"
+      demandDetails:
+        type: array
+        items:
+          $ref: "#/definitions/DemandDetail"
+      auditDetails:
+       $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+          
+  DemandDetail: 
+    type: object 
+    properties: 
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of a timeline object.
+      taxHeadMasterCode:
+        type: string
+        description: code of demand reason matser
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      tenantId:
+        type: string
+        description: name of tenant 
+      taxAmount:
+        type: number
+        description: taxAmount to be paid for demand reason
+      collectionAmount:
+        type: number
+        description: collected amount for demand reason
+      demandid:
+        type: string
+        description: id of demand 
+        
+  Owner:
+    type: object
+    properties:
+      tenantId:
+        type: string
+        description: name of tenant
+      userName:
+        type: string
+        description: userName of user
+      name:
+        type: string
+        description: name of owner
+      mobileNumber:
+       type: string
+       description: mobile number of Owner
+      emailId:
+       type: string
+       description: emailid of owner
+      aadhaarNumber:
+       type: string
+       description: aadharnumber of owner.
+      permanentAddress:
+       type: string
+       description: permenant address of owner.
+
   LegacyConnectionTypeReq:
       type: object
       properties:
@@ -588,6 +674,8 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/DocumentOwner"
+      demand:
+        $ref: "#/definitions/Demand"
       timelines:
         type: array
         items:

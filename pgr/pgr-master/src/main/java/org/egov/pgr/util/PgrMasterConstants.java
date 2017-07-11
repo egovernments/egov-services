@@ -177,6 +177,10 @@ public class PgrMasterConstants {
 	public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE="Entered ReceivingMode Name Already Exist.";
 	public static final String RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME="name";
 	
+	public static final String FROMTOPOSITION_UNIQUE_CODE = "pgr.0018";
+	public static final String FROMTOPOSITION_UNIQUE_ERROR_MESSAGE = "From Position and To Position cannot be same";
+	public static final String FROMTOPOSITION_UNIQUE_FIELD_NAME = "toPosition";
+	
 	
 	
 	public String getErrorMessage(final String property) {

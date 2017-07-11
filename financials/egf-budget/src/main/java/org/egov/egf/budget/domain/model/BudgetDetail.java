@@ -41,6 +41,8 @@ package org.egov.egf.budget.domain.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.domain.model.Auditable;
 import org.egov.common.master.web.contract.BoundaryContract;
 import org.egov.common.master.web.contract.DepartmentContract;
@@ -64,9 +66,9 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonPropertyOrder({ "id", "budgetGroupId", "budgetId", "originalAmount", "approvedAmount", "budgetAvailable",
-	"anticipatoryAmount", "usingDepartmentId", "executingDepartmentId", "functionId", "schemeId", "fundId", "subSchemeId",
-	"functionaryId", "boundaryId", "materializedPath", "documentNumber", "uniqueNo",
-	"planningPercent", "status" })
+		"anticipatoryAmount", "usingDepartmentId", "executingDepartmentId", "functionId", "schemeId", "fundId",
+		"subSchemeId", "functionaryId", "boundaryId", "materializedPath", "documentNumber", "uniqueNo",
+		"planningPercent", "status" })
 public class BudgetDetail extends Auditable {
 
 	/*
@@ -80,12 +82,14 @@ public class BudgetDetail extends Auditable {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
+	@NotNull
 	private BudgetGroupContract budgetGroupId;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure
 	 * defined.
 	 */
+	@NotNull
 	private Budget budgetId;
 
 	/*

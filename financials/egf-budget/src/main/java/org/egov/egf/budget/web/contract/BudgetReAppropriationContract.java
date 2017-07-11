@@ -42,6 +42,8 @@ package org.egov.egf.budget.web.contract;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
@@ -76,6 +78,7 @@ public class BudgetReAppropriationContract extends AuditableContract {
 	 * budgetDetail is the reference given for budget re appropriation to
 	 * identify for witch budget line item this appropriation is doing.
 	 */
+	@NotNull
 	private BudgetDetailContract budgetDetail;
 
 	/*

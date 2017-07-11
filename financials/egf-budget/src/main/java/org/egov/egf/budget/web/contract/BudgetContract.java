@@ -39,6 +39,8 @@
  */
 package org.egov.egf.budget.web.contract;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.EgfStatus;
@@ -85,6 +87,7 @@ public class BudgetContract extends AuditableContract {
 	 * financialYear is the attribute to identify to which year the
 	 * BudgetContract belongs is tagged.
 	 */
+	@NotNull
 	private FinancialYearContract financialYear;
 
 	/*
@@ -121,6 +124,7 @@ public class BudgetContract extends AuditableContract {
 	 * isPrimaryBudgetContract is the flag that identifies the root budget.
 	 * (which has no parent).
 	 */
+	@NotNull
 	private Boolean isPrimaryBudget;
 
 	/*

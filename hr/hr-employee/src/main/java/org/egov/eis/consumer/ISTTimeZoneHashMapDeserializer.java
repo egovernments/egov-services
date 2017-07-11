@@ -55,7 +55,7 @@ public class ISTTimeZoneHashMapDeserializer extends JsonDeserializer<HashMap> {
 
     private static ObjectMapper getObjectMapper() {
         final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         return objectMapper;
     }
 }

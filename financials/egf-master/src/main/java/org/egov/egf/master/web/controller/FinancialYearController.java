@@ -122,8 +122,8 @@ public class FinancialYearController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FinancialYearContract> search(
-			@ModelAttribute FinancialYearSearchContract financialYearSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			@ModelAttribute FinancialYearSearchContract financialYearSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FinancialYearSearch domain = new FinancialYearSearch();

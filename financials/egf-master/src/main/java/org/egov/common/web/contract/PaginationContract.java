@@ -43,8 +43,12 @@ import javax.validation.constraints.Max;
 
 import org.egov.common.domain.model.Pagination;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class PaginationContract {
 

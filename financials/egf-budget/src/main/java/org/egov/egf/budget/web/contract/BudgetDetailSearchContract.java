@@ -23,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BudgetDetailSearchContract extends BudgetDetailContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	public BudgetDetailSearch toDomain() {
 		BudgetDetailSearch budgetDetailSearch = new BudgetDetailSearch();
@@ -63,7 +63,7 @@ public class BudgetDetailSearchContract extends BudgetDetailContract {
 		budgetDetailSearch.setLastModifiedDate(this.getLastModifiedDate());
 		budgetDetailSearch.setTenantId(this.getTenantId());
 		budgetDetailSearch.setPageSize(this.pageSize);
-		budgetDetailSearch.setOffSet(this.offSet);
+		budgetDetailSearch.setOffset(this.offset);
 		return budgetDetailSearch;
 	}
 
@@ -102,6 +102,6 @@ public class BudgetDetailSearchContract extends BudgetDetailContract {
 		this.setLastModifiedDate(budgetDetailSearch.getLastModifiedDate());
 		this.setTenantId(budgetDetailSearch.getTenantId());
 		this.setPageSize(budgetDetailSearch.getPageSize());
-		this.setOffSet(budgetDetailSearch.getOffSet());
+		this.setOffset(budgetDetailSearch.getOffset());
 	}
 }

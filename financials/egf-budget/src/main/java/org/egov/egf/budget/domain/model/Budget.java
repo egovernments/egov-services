@@ -43,6 +43,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
 import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,7 +57,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "parent", "referenceBudget", "status" }, callSuper = false)
+@EqualsAndHashCode(exclude = { "financialYearId", "parentId", "referenceBudgetId", "statusId" }, callSuper = false)
 public class Budget extends Auditable {
 
 	/**
@@ -76,6 +77,7 @@ public class Budget extends Auditable {
 	 * department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
 	 * department level.
 	 */
+	@Length(max = 250)
 	private String name;
 
 	/**
@@ -105,6 +107,7 @@ public class Budget extends Auditable {
 	 * "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
 	 * department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
 	 */
+	@Length(max = 250)
 	private String description;
 
 	/**
@@ -124,6 +127,7 @@ public class Budget extends Auditable {
 	/**
 	 * materializedPath is unique data by hierarchy level.
 	 */
+	@Length(max = 10)
 	private String materializedPath;
 
 	/**

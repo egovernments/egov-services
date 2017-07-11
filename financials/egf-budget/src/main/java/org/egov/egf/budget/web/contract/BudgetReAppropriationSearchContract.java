@@ -17,7 +17,7 @@ import lombok.Setter;
 
 public class BudgetReAppropriationSearchContract extends BudgetReAppropriationContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	public BudgetReAppropriationSearch toDomain() {
 		BudgetReAppropriationSearch budgetReAppropriationSearch = new BudgetReAppropriationSearch();
@@ -38,7 +38,7 @@ public class BudgetReAppropriationSearchContract extends BudgetReAppropriationCo
 		budgetReAppropriationSearch.setLastModifiedDate(this.getLastModifiedDate());
 		budgetReAppropriationSearch.setTenantId(this.getTenantId());
 		budgetReAppropriationSearch.setPageSize(this.pageSize);
-		budgetReAppropriationSearch.setOffset(this.offSet);
+		budgetReAppropriationSearch.setOffset(this.offset);
 		return budgetReAppropriationSearch;
 	}
 
@@ -60,6 +60,6 @@ public class BudgetReAppropriationSearchContract extends BudgetReAppropriationCo
 		this.setLastModifiedDate(budgetReAppropriationSearch.getLastModifiedDate());
 		this.setTenantId(budgetReAppropriationSearch.getTenantId());
 		this.setPageSize(budgetReAppropriationSearch.getPageSize());
-		this.setOffSet(budgetReAppropriationSearch.getOffset());
+		this.setOffset(budgetReAppropriationSearch.getOffset());
 	}
 }

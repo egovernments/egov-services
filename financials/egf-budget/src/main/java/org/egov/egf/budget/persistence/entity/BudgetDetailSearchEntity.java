@@ -26,7 +26,7 @@ public class BudgetDetailSearchEntity extends BudgetDetailEntity {
 	public BudgetDetailSearchEntity toEntity(BudgetDetailSearch budgetDetailSearch) {
 		super.toEntity(budgetDetailSearch);
 		this.pageSize = budgetDetailSearch.getPageSize();
-		this.offset = budgetDetailSearch.getOffSet();
+		this.offset = budgetDetailSearch.getOffset();
 		return this;
 	}
 

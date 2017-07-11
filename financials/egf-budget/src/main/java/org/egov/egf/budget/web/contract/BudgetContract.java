@@ -46,6 +46,7 @@ import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -81,6 +82,7 @@ public class BudgetContract extends AuditableContract {
 	 * department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
 	 * department level.
 	 */
+	@Length(max = 250)
 	private String name;
 
 	/*
@@ -111,6 +113,7 @@ public class BudgetContract extends AuditableContract {
 	 * (ENG-Engineering department,RE- Revision Estimate,Rev-Revenue,2017-18:
 	 * financial year)
 	 */
+	@Length(max = 250)
 	private String description;
 
 	/*
@@ -130,6 +133,7 @@ public class BudgetContract extends AuditableContract {
 	/*
 	 * materializedPath is unique data by hierarchy level.
 	 */
+	@Length(max = 10)
 	private String materializedPath;
 
 	/*

@@ -55,6 +55,7 @@ import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -168,6 +169,7 @@ public class BudgetDetailContract extends AuditableContract {
 	 * materializedPath is unique data by hierarchy level.This data is created
 	 * internally
 	 */
+	@Length(max = 10)
 	private String materializedPath;
 
 	/*
@@ -189,6 +191,7 @@ public class BudgetDetailContract extends AuditableContract {
 	 * group. Ex - Fund, Function, dept and Group. This data is internal to the
 	 * system.
 	 */
+	@Length(max = 32)
 	private String uniqueNo;
 
 	/*

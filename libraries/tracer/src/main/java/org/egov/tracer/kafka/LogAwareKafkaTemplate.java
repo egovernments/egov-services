@@ -3,6 +3,7 @@ package org.egov.tracer.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.tracer.config.ObjectMapperFactory;
 import org.egov.tracer.config.TracerProperties;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -32,10 +33,11 @@ public class LogAwareKafkaTemplate<K, V> {
     private ObjectMapper objectMapper;
 
     public LogAwareKafkaTemplate(TracerProperties tracerProperties,
-                                 KafkaTemplate<K, V> kafkaTemplate) {
+                                 KafkaTemplate<K, V> kafkaTemplate,
+                                 ObjectMapperFactory objectMapperFactory) {
         this.tracerProperties = tracerProperties;
         this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapperFactory.create();
     }
 
     public SendResult<K, V> send(String topic, V value) {

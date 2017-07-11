@@ -1,0 +1,22 @@
+{
+   "RequestInfo": {
+        "apiId": "emp",
+        "ver": "1.0",
+        "ts": "10032017",
+        "action": "create",
+        "did": "1",
+        "key": "abcdkey",
+        "msgId": "20170310130900",
+        "requesterId": "rajesh",
+        "authToken": "a7b9a4fe-431b-4517-a38e-8ac3436fb880"
+
+    },
+    "mutationMasters":[{
+    	"tenantId":"default",
+    	"code":"prasad",
+         "auditDetails":{
+      	"createdBy":null,
+      	"lastModifiedBy":null
+      }
+    }]
+}

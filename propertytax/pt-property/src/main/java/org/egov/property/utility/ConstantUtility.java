@@ -2,8 +2,7 @@ package org.egov.property.utility;
 
 /**
  * 
- * @author Prasad 
- * This class will have all the constants that will be used in
+ * @author Prasad This class will have all the constants that will be used in
  *         the master's & property as well
  */
 public class ConstantUtility {
@@ -29,5 +28,7 @@ public class ConstantUtility {
 	public static final String WALL_TYPE_TABLE_NAME = "egpt_mstr_walltype";
 
 	public static final String STRUCTURE_CLASS_TABLE_NAME = "egpt_mstr_structureclass";
+
+	public static final String MUTATION_MASTER_TABLE_NAME = "egpt_mutation_master";
 
 }

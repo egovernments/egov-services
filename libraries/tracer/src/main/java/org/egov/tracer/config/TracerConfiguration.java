@@ -27,18 +27,26 @@ public class TracerConfiguration {
     }
 
     @Bean
-    public KafkaListenerLoggingAspect kafkaListenerLoggingAspect(TracerProperties tracerProperties) {
-        return new KafkaListenerLoggingAspect(tracerProperties);
+    public KafkaListenerLoggingAspect kafkaListenerLoggingAspect(TracerProperties tracerProperties,
+                                                                 ObjectMapperFactory objectMapperFactory) {
+        return new KafkaListenerLoggingAspect(tracerProperties, objectMapperFactory);
     }
 
     @Bean
-    public LoggingListenerFactory loggingListenerFactory(TracerProperties tracerProperties) {
-        return new LoggingListenerFactory(tracerProperties);
+    public LoggingListenerFactory loggingListenerFactory(TracerProperties tracerProperties,
+                                                         ObjectMapperFactory objectMapperFactory) {
+        return new LoggingListenerFactory(tracerProperties, objectMapperFactory);
     }
 
     @Bean
-    public LoggingKafkaTemplateFactory loggingKafkaTemplateFactory(TracerProperties tracerProperties) {
-        return new LoggingKafkaTemplateFactory(tracerProperties);
+    public ObjectMapperFactory objectMapperFactory(TracerProperties tracerProperties) {
+        return new ObjectMapperFactory(tracerProperties);
+    }
+
+    @Bean
+    public LoggingKafkaTemplateFactory loggingKafkaTemplateFactory(TracerProperties tracerProperties,
+                                                                   ObjectMapperFactory objectMapperFactory) {
+        return new LoggingKafkaTemplateFactory(tracerProperties, objectMapperFactory);
     }
 
     @Bean(name = "logAwareRestTemplate")
@@ -54,9 +62,11 @@ public class TracerConfiguration {
     @Bean
     @ConditionalOnProperty(name = "org.egov.correlation.body.filter.disabled",
         havingValue = "false", matchIfMissing = true)
-    public FilterRegistrationBean correlationIdFilter() {
+    public FilterRegistrationBean correlationIdFilter(ObjectMapperFactory objectMapperFactory) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new CorrelationIdFilter(inboundHttpRequestBodyLoggingEnabled));
+        final CorrelationIdFilter correlationIdFilter =
+            new CorrelationIdFilter(inboundHttpRequestBodyLoggingEnabled, objectMapperFactory);
+        registration.setFilter(correlationIdFilter);
         registration.addUrlPatterns("/*");
         registration.setName("correlationIdFilter");
         registration.setOrder(1);

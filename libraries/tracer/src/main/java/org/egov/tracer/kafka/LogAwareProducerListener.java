@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.egov.tracer.config.ObjectMapperFactory;
 import org.egov.tracer.config.TracerProperties;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.util.ObjectUtils;
@@ -24,9 +25,10 @@ public class LogAwareProducerListener<K, V> implements ProducerListener<K, V> {
         "Sending of message to topic: %s, partition: %s, body: %s with key: %s failed.";
     private TracerProperties tracerProperties;
 
-    public LogAwareProducerListener(TracerProperties tracerProperties) {
+    public LogAwareProducerListener(TracerProperties tracerProperties,
+                                    ObjectMapperFactory objectMapperFactory) {
         this.tracerProperties = tracerProperties;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapperFactory.create();
     }
 
     @Override

@@ -1,0 +1,14 @@
+{
+    "responseInfo": {
+    },
+    "mutationMasters": [
+        {
+            "tenantId": "tenantid",
+            "code":"code",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null
+            }
+        }
+    ]
+}

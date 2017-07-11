@@ -3,6 +3,7 @@ package org.egov.propertyWorkflow.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.egov.models.Property;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
@@ -70,18 +71,17 @@ public class WorkFlowUtil {
 	 * @return TaskResponse
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo)
+	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, Property property)
 			throws JsonProcessingException {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
-		WorkFlowDetails workflowDetails = workflowDetailsRequestInfo.getWorkflowDetails();
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
 		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.baseurl"));
 		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.updateUrl"));
 		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
-		uriParams.put("id", workflowDetails.getAssignee().toString());
+		uriParams.put("id", property.getPropertyDetail().getStateId());
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
@@ -112,6 +112,7 @@ public class WorkFlowUtil {
 		ProcessInstance processInstance = new ProcessInstance();
 		Position assignee = new Position();
 		assignee.setId((long) workflowDetails.getAssignee());
+		//TODO temporary fix for required fields of processInstance and need to replace with actual values
 		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
 		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
 		processInstance.setBusinessKey(environment.getProperty("businessKey"));

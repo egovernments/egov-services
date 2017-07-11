@@ -24,6 +24,7 @@ public class City {
     private Double latitude;
     private String shapeFileLocation;
     private String captcha;
+    private String code;
     
     
 
@@ -38,6 +39,7 @@ public class City {
         this.ulbGrade = city.getUlbGrade();
         this.shapeFileLocation= city.getShapeFileLocation();
         this.captcha = city.getCaptcha();
+        this.code = city.getCode();
     }
 
     @JsonIgnore
@@ -53,6 +55,7 @@ public class City {
             .latitude(latitude)
             .shapeFileLocation(shapeFileLocation)
             .captcha(captcha)
+            .code(code)
             .build();
     }
 }

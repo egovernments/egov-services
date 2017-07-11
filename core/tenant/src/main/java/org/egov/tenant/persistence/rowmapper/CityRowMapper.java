@@ -29,6 +29,7 @@ public class CityRowMapper implements RowMapper<City> {
                 .lastModifiedDate(resultSet.getTimestamp(LAST_MODIFIED_DATE))
                 .shapeFileLocation(resultSet.getString(SHAPEFILE_LOCATION))
                 .captcha(resultSet.getString(CAPTCHA))
+                .code(resultSet.getString(CODE))
                 .build();
     }
 }

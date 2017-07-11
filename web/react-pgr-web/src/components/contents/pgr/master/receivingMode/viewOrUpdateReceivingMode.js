@@ -163,7 +163,7 @@ class viewOrUpdateReceivingMode extends Component {
                     <Grid>
                         <Row>
                             <Col xs={12} md={12}>
-                                <Table id="searchTable">
+                                <Table id="searchTable" bordered responsive>
                                     <thead>
                                         <tr>
                                           <th>#</th>

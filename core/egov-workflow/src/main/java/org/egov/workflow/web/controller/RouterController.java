@@ -178,7 +178,7 @@ public class RouterController{
 		routerTypeReq.getRouterType();
 		final List<ErrorField> errorFields = getErrorFields(routerTypeReq);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
+				.message(PgrMasterConstants.INVALID_ROUTER_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
 	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq) {

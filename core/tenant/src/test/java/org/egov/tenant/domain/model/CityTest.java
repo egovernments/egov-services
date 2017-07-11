@@ -20,6 +20,7 @@ public class CityTest {
             .latitude(75.443)
             .shapeFileLocation("shapeFileLocation")
             .captcha("captcha")
+            .code("code")
             .build();
 
         assertThat(city.isValid()).isFalse();
@@ -40,6 +41,7 @@ public class CityTest {
             .latitude(75.443)
             .shapeFileLocation("shapeFileLocation")
             .captcha("captcha")
+            .code("code")
             .build();
 
         assertThat(city.isValid()).isFalse();

@@ -47,6 +47,7 @@ public class CityRepositoryTest {
             .latitude(75.234)
             .shapeFileLocation("shapeFileLocation")
             .captcha("captcha")
+            .code("code")
             .build();
 
         cityRepository.save(city, "AP.KURNOOL");
@@ -63,6 +64,7 @@ public class CityRepositoryTest {
         assertThat(row.get(ULB_GRADE)).isEqualTo("municipality");
         assertThat(row.get(SHAPEFILE_LOCATION)).isEqualTo("shapeFileLocation");
         assertThat(row.get(CAPTCHA)).isEqualTo("captcha");
+        assertThat(row.get(CODE)).isEqualTo("code");
     }
 
     @Test
@@ -88,6 +90,7 @@ public class CityRepositoryTest {
         assertThat(city.getLastModifiedBy()).isEqualTo(1L);
         assertThat(city.getShapeFileLocation()).isEqualTo("shapeFileLocation");
         assertThat(city.getCaptcha()).isEqualTo("captcha");
+        assertThat(city.getCode()).isEqualTo("1016");
     }
 
     class CityResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
@@ -111,8 +114,8 @@ public class CityRepositoryTest {
                     put(LAST_MODIFIED_BY, resultSet.getLong(LAST_MODIFIED_BY));
                     put(LAST_MODIFIED_DATE, resultSet.getString(LAST_MODIFIED_DATE));
                     put(SHAPEFILE_LOCATION, resultSet.getString(SHAPEFILE_LOCATION));
-                    put(CAPTCHA,resultSet.getString(CAPTCHA));
-                   
+                    put(CAPTCHA,resultSet.getString(CAPTCHA));    
+                    put(CODE,resultSet.getString(CODE));
                     
                 }};
 
@@ -137,6 +140,7 @@ public class CityRepositoryTest {
             .latitude(75.234)
             .shapeFileLocation("shapeFileLocation")
             .captcha("captcha")
+            .code("code")
             .build();
 
         cityRepository.update(city, "AP.KURNOOL");
@@ -153,6 +157,8 @@ public class CityRepositoryTest {
         assertThat(row.get(ULB_GRADE)).isEqualTo("municipality");
         assertThat(row.get(SHAPEFILE_LOCATION)).isNotNull();
         assertThat(row.get(CAPTCHA)).isNotNull();
+        assertThat(row.get(CODE)).isNotNull();
+        
     }
 
 }

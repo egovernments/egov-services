@@ -14,11 +14,11 @@ import static org.egov.tenant.persistence.entity.City.*;
 public class CityRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final String INSERT_QUERY = "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, ulbgrade, createdby, createddate, lastmodifiedby, lastmodifieddate,shapefilelocation,captcha) " +
-        "VALUES (nextval('seq_city'), :name, :localname, :districtcode, :districtname, :regionname, :longitude, :latitude, :tenantcode, :ulbgrade, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate,:shapefilelocation, :captcha)";
+    private final String INSERT_QUERY = "INSERT INTO city(id, name, localname, districtcode, districtname, regionname, longitude, latitude, tenantcode, ulbgrade, createdby, createddate, lastmodifiedby, lastmodifieddate,shapefilelocation,captcha,code) " +
+        "VALUES (nextval('seq_city'), :name, :localname, :districtcode, :districtname, :regionname, :longitude, :latitude, :tenantcode, :ulbgrade, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate,:shapefilelocation, :captcha, :code)";
     
     private final String UPDATE_QUERY = "update city set  name =:name, localname = :localname, districtcode = :districtcode, districtname = :districtname, regionname = :regionname, longitude = :longitude, latitude =:latitude, ulbgrade = :ulbgrade, "
-    		+" lastmodifiedby =:lastmodifiedby, lastmodifieddate =:lastmodifieddate, shapefilelocation=:shapefilelocation, captcha = :captcha" 
+    		+" lastmodifiedby =:lastmodifiedby, lastmodifieddate =:lastmodifieddate, shapefilelocation=:shapefilelocation, captcha = :captcha, code = :code" 
             +" where tenantcode = :tenantcode ";
     
         
@@ -47,6 +47,7 @@ public class CityRepository {
             put(LAST_MODIFIED_DATE, city.getLastModifiedDate());
             put(SHAPEFILE_LOCATION,city.getShapeFileLocation());
             put(CAPTCHA, city.getCaptcha());
+            put(CODE, city.getCode());
         }};
 
         namedParameterJdbcTemplate.update(INSERT_QUERY, parametersMap);
@@ -68,6 +69,7 @@ public class CityRepository {
             put(LAST_MODIFIED_DATE, city.getLastModifiedDate());
             put(SHAPEFILE_LOCATION,city.getShapeFileLocation());
             put(CAPTCHA, city.getCaptcha());
+            put(CODE, city.getCode());
             put(TENANT_CODE, tenantCode);
             
         }};

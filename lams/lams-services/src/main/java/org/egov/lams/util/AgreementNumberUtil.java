@@ -29,7 +29,7 @@ public class AgreementNumberUtil {
 	public String generateAgrementNumber(String tenantId) {
 		//FIXME ulb number should come form request info
 		//String ulbNumber = propertiesManager.getUlbNumber();
-		Tenant tenant = tenantRepository.fetchTenantByCode(tenantId);
+		City city = tenantRepository.fetchTenantByCode(tenantId);
 		String agreementNumberSequence = propertiesManager.getAgreementNumberSequence();
 		String lamsPrefix = propertiesManager.getLamsPrefix();
 		String sql = "SELECT nextval('" + agreementNumberSequence + "')";
@@ -39,7 +39,7 @@ public class AgreementNumberUtil {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		Integer year = localDateTime.getYear();
 		baseValue.append('-' + year.toString().substring(2, 4));
-		baseValue.append('-' + tenant.getCode());
+		baseValue.append('-' + city.getCode());
 		Long resultSet = null;
 		try{
 			//replace it with a generic agreement repository which will take query, input object,response object

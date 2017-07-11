@@ -38,9 +38,23 @@ class CustomMenu extends Component {
       level:0,
       parentLevel:0,
     }
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.setWrapperRef = this.setWrapperRef.bind(this);   
   }
 
+  setWrapperRef(node) {
+    this.wrapperRef = node;
+  }
 
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside(event) {
+      if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+          this.props.handleToggle(false);
+      }
+  }
 
   componentDidUpdate()
   {
@@ -239,7 +253,7 @@ class CustomMenu extends Component {
     }
     // console.log(constructMenu(menuItems.length>0?menuItems[0].items:[]));
     return (
-      <div className="custom-menu" style={style}>
+      <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           {
             <TextField
                hintText = "&nbsp;&nbsp;Quick Find"

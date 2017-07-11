@@ -39,7 +39,11 @@
  */
 package org.egov.egf.budget.web.contract;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.budget.domain.model.Budget;
+import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
@@ -83,6 +87,7 @@ public class BudgetContract extends AuditableContract {
 	 * financialYear is the attribute to identify to which year the
 	 * BudgetContract belongs is tagged.
 	 */
+	@NotNull
 	private FinancialYearContract financialYear;
 
 	/*
@@ -119,6 +124,7 @@ public class BudgetContract extends AuditableContract {
 	 * isPrimaryBudgetContract is the flag that identifies the root budget.
 	 * (which has no parent).
 	 */
+	@NotNull
 	private Boolean isPrimaryBudget;
 
 	/*
@@ -145,5 +151,67 @@ public class BudgetContract extends AuditableContract {
 	 * of the details. However the status at budget detail also exist.
 	 */
 	private EgfStatusContract status;
+
+	public Budget toDomain() {
+		Budget budget = new Budget();
+		budget.setId(this.id);
+		budget.setName(this.name);
+		budget.setFinancialYearId(financialYear);
+		budget.setEstimationType(this.estimationType);
+		budget.setParentId(Budget.builder().id(parent != null ? parent.getId() : null).build());
+		budget.setDescription(this.description);
+		budget.setIsActiveBudget(this.isActiveBudget);
+		budget.setIsPrimaryBudget(this.isPrimaryBudget);
+		budget.setMaterializedPath(this.materializedPath);
+		budget.setReferenceBudgetId(
+				Budget.builder().id(referenceBudget != null ? referenceBudget.getId() : null).build());
+		budget.setDocumentNumber(this.documentNumber);
+		budget.setStatusId(EgfStatus.builder().id(status != null ? status.getId() : null).build());
+		budget.setCreatedBy(this.createdBy);
+		budget.setCreatedDate(this.createdDate);
+		budget.setLastModifiedBy(this.lastModifiedBy);
+		budget.setLastModifiedDate(this.lastModifiedDate);
+		budget.setTenantId(this.tenantId);
+		return budget;
+	}
+
+	public void toContract(Budget budget) {
+		this.id = budget.getId();
+		this.name = budget.getName();
+		if (budget.getFinancialYearId() != null)
+			this.financialYear = FinancialYearContract.builder().id(budget.getFinancialYearId().getId())
+					.active(budget.getFinancialYearId().getActive())
+					.endingDate(budget.getFinancialYearId().getEndingDate())
+					.finYearRange(budget.getFinancialYearId().getFinYearRange())
+					.isActiveForPosting(budget.getFinancialYearId().getIsActiveForPosting())
+					.isClosed(budget.getFinancialYearId().getIsClosed())
+					.startingDate(budget.getFinancialYearId().getStartingDate())
+					.transferClosingBalance(budget.getFinancialYearId().getTransferClosingBalance()).build();
+		this.estimationType = budget.getEstimationType();
+		if (budget.getParentId() != null) {
+			BudgetContract bContract = new BudgetContract();
+			bContract.toContract(budget.getParentId());
+			this.parent = bContract;
+		}
+		this.description = budget.getDescription();
+		this.isActiveBudget = budget.getIsActiveBudget();
+		this.isPrimaryBudget = budget.getIsPrimaryBudget();
+		this.materializedPath = budget.getMaterializedPath();
+		if (budget.getReferenceBudgetId() != null) {
+			BudgetContract bContract = new BudgetContract();
+			bContract.toContract(budget.getReferenceBudgetId());
+			this.referenceBudget = bContract;
+		}
+		this.documentNumber = budget.getDocumentNumber();
+		if (budget.getStatusId() != null)
+			this.status = EgfStatusContract.builder().id(budget.getStatusId().getId())
+					.code(budget.getStatusId().getCode()).description(budget.getStatusId().getDescription())
+					.moduleType(budget.getStatusId().getModuleType()).build();
+		this.setCreatedBy(budget.getCreatedBy());
+		this.setCreatedDate(budget.getCreatedDate());
+		this.setLastModifiedBy(budget.getLastModifiedBy());
+		this.setLastModifiedDate(budget.getLastModifiedDate());
+		this.setTenantId(budget.getTenantId());
+	}
 
 }

@@ -132,6 +132,8 @@ class searchRouter extends Component {
              "emptyTable": "No Records"
           }
     });
+    let {initForm}=this.props;
+          initForm();
   }
 
   componentWillUnmount(){
@@ -157,8 +159,17 @@ class searchRouter extends Component {
 
   search = e => {
     e.preventDefault();
+      console.log( this.props.routerSearchSet);
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
+    console.log("searchSet",searchSet);
+    if(searchSet.active==false){
+        searchSet.active=false;
+    }else{
+      searchSet.active=true;
+    }
+
+    searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/wcms-masters/categorytype/_search/", searchSet).then(function(response) {
       flag = 1;
@@ -166,15 +177,23 @@ class searchRouter extends Component {
         resultList: response.CategoryTypes,
         isSearchClicked: true
       });
+
       self.props.setLoadingStatus("hide");
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message);
       self.props.setLoadingStatus("hide");
     })
+
   }
 
   handleNavigation = (id) => {
-    this.props.history.push("/wc/viewCategoryType/" + this.props.match.params.type + "/" + id);
+      let url = this.props.location.pathname;
+      console.log("url",url);
+      if(url == '/wc/categoryType/view'){
+           this.props.history.push('/wc/viewCategoryType/'+id);
+       } else {
+           this.props.history.push('/wc/createCategoryType/'+id);
+      }
   }
 
   render() {
@@ -200,12 +219,14 @@ class searchRouter extends Component {
         boundaryInitialList,
         positionSource
     } = this.state;
+ let url;
 
+console.log("routerSearchSet",routerSearchSet);
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
         return (
-          <tr key={i} onClick={() => {handleNavigation(val.id)}}>
+          <tr key={i} onClick={() => {handleNavigation(val.id,url)}}>
             <td>{val.code}</td>
             <td>{val.name}</td>
             <td>{val.description}</td>
@@ -251,10 +272,10 @@ class searchRouter extends Component {
                          <TextField
                              fullWidth={true}
                              floatingLabelText={"Category Type"+"*"}
-                             value={routerSearchSet.name}
+                             value={routerSearchSet.name? routerSearchSet.name: ""}
                              maxLength={100}
-                             onChange={(e) => {
-                             handleChange(e, "name", true, /^[a-zA-Z0-9]*$/g)}}
+                             onChange={(e) => { routerSearchSet.active = true;
+                             handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
                              id="name"
                          />
                      </Col>
@@ -263,7 +284,7 @@ class searchRouter extends Component {
                        <Checkbox
                            label={translate("pgr.lbl.active")}
                            style={styles.checkbox}
-
+                           defaultChecked = {routerSearchSet.active || true}
                            onCheck = {(e, i, v) => {
 
                              var e = {
@@ -302,7 +323,7 @@ const mapDispatchToProps = dispatch => ({
         type: "RESET_STATE",
         validationData: {
           required: {
-            current: [],
+            current: ["active"],
             required: []
           },
           pattern: {

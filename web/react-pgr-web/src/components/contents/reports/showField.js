@@ -22,6 +22,7 @@ export default class ShowField extends Component
     let description = des + mandatory;
 
     let dropDownData=[];
+    obj.defaultValue=typeof(obj.defaultValue)=="object"?obj.defaultValue:JSON.parse(obj.defaultValue)
     for (var variable in obj.defaultValue) {
       // console.log(variable);
 

@@ -12,7 +12,6 @@ import org.egov.egf.budget.domain.repository.BudgetRepository;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -55,9 +54,8 @@ public class FinancialBudgetServiceListener {
 					new TypeReference<CommonRequest<BudgetContract>>() {
 					});
 
-			ModelMapper mapper = new ModelMapper();
 			for (BudgetContract budgetContract : request.getData()) {
-				Budget domain = mapper.map(budgetContract, Budget.class);
+				Budget domain = budgetContract.toDomain();
 				budgetRepository.save(domain);
 			}
 
@@ -73,9 +71,8 @@ public class FinancialBudgetServiceListener {
 					new TypeReference<CommonRequest<BudgetContract>>() {
 					});
 
-			ModelMapper mapper = new ModelMapper();
 			for (BudgetContract budgetContract : request.getData()) {
-				Budget domain = mapper.map(budgetContract, Budget.class);
+				Budget domain = budgetContract.toDomain();
 				budgetRepository.update(domain);
 			}
 
@@ -91,9 +88,8 @@ public class FinancialBudgetServiceListener {
 					new TypeReference<CommonRequest<BudgetDetailContract>>() {
 					});
 
-			ModelMapper mapper = new ModelMapper();
 			for (BudgetDetailContract budgetDetailContract : request.getData()) {
-				BudgetDetail domain = mapper.map(budgetDetailContract, BudgetDetail.class);
+				BudgetDetail domain = budgetDetailContract.toDomain();
 				budgetDetailRepository.save(domain);
 			}
 
@@ -111,9 +107,8 @@ public class FinancialBudgetServiceListener {
 					new TypeReference<CommonRequest<BudgetDetailContract>>() {
 					});
 
-			ModelMapper mapper = new ModelMapper();
 			for (BudgetDetailContract budgetDetailContract : request.getData()) {
-				BudgetDetail domain = mapper.map(budgetDetailContract, BudgetDetail.class);
+				BudgetDetail domain = budgetDetailContract.toDomain();
 				budgetDetailRepository.update(domain);
 			}
 
@@ -129,9 +124,8 @@ public class FinancialBudgetServiceListener {
 					new TypeReference<CommonRequest<BudgetReAppropriationContract>>() {
 					});
 
-			ModelMapper mapper = new ModelMapper();
 			for (BudgetReAppropriationContract budgetReAppropriationContract : request.getData()) {
-				BudgetReAppropriation domain = mapper.map(budgetReAppropriationContract, BudgetReAppropriation.class);
+				BudgetReAppropriation domain = budgetReAppropriationContract.toDomain();
 				budgetReAppropriationRepository.save(domain);
 			}
 
@@ -148,9 +142,8 @@ public class FinancialBudgetServiceListener {
 					new TypeReference<CommonRequest<BudgetReAppropriationContract>>() {
 					});
 
-			ModelMapper mapper = new ModelMapper();
 			for (BudgetReAppropriationContract budgetReAppropriationContract : request.getData()) {
-				BudgetReAppropriation domain = mapper.map(budgetReAppropriationContract, BudgetReAppropriation.class);
+				BudgetReAppropriation domain = budgetReAppropriationContract.toDomain();
 				budgetReAppropriationRepository.update(domain);
 			}
 

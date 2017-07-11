@@ -78,14 +78,19 @@ public class BudgetService {
 			 * "financialYear.invalid", " Invalid financialYear"); }
 			 * budget.setFinancialYear(financialYear); }
 			 */
-			if (budget.getParentId() != null) {
+			if (budget.getParentId() != null && budget.getParentId().getId() != null
+					&& !budget.getParentId().getId().isEmpty() && budget.getParentId().getTenantId() != null
+					&& !budget.getParentId().getTenantId().isEmpty()) {
 				Budget parent = budgetRepository.findById(budget.getParentId());
 				if (parent == null) {
 					throw new InvalidDataException("parent", "parent.invalid", " Invalid parent");
 				}
 				budget.setParentId(parent);
 			}
-			if (budget.getReferenceBudgetId() != null) {
+			if (budget.getReferenceBudgetId() != null && budget.getReferenceBudgetId().getId() != null
+					&& !budget.getReferenceBudgetId().getId().isEmpty()
+					&& budget.getReferenceBudgetId().getTenantId() != null
+					&& !budget.getReferenceBudgetId().getTenantId().isEmpty()) {
 				Budget referenceBudget = budgetRepository.findById(budget.getReferenceBudgetId());
 				if (referenceBudget == null) {
 					throw new InvalidDataException("referenceBudget", "referenceBudget.invalid",

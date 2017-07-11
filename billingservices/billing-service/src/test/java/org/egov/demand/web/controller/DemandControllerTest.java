@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Matchers.any;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,10 +15,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
+import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.Owner;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.util.FileUtils;
+import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
@@ -70,6 +74,77 @@ public class DemandControllerTest {
 				.andExpect(content().json(getFileContents("demandresponse.json")));
 	}
 
+	@Test
+	public void testShouldUpdateDemand()throws IOException,Exception{
+		
+		Demand demand=getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(demands);
+		demandResponse.setResponseInfo(new ResponseInfo());
+		
+		 when(demandService.updateAsync(any(DemandRequest.class))).thenReturn(new DemandResponse( getResponseInfo(getRequestInfo()),demands));
+		
+		 mockMvc.perform(post("/demand/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("demandresponse.json")));
+	}
+	
+	@Test
+	public void  testShouldUpdateCollection() throws IOException, Exception{
+		
+		Demand  demand=getDemand();
+		List<Demand> demands=new ArrayList<Demand>();
+		demands.add(demand);
+		DemandResponse demandRespnose=new DemandResponse();
+		demandRespnose.setDemands(demands);
+		demandRespnose.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.updateCollection(any(DemandRequest.class))).thenReturn(new DemandResponse( getResponseInfo(getRequestInfo()),demands));
+		
+		 mockMvc.perform(post("/demand/collection/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("demandrequest.json"))).andExpect(status().isCreated())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("demandresponse.json")));
+	}
+	
+	@Test
+	public void testShouldSearchDemand() throws IOException, Exception{
+		List<Demand> demand=new ArrayList<Demand>();
+		demand.add(getDemand());
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(demand);
+		demandResponse.setResponseInfo(new ResponseInfo());
+		
+		when(demandService.getDemands(any(DemandCriteria.class),any(RequestInfo.class))).thenReturn(new DemandResponse( getResponseInfo(getRequestInfo()),demand));
+		
+		mockMvc.perform(post("/demand/_search").param("tenantId", "ap.kurnool")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("demandresponse.json")));
+		
+	}
+	
+	@Test
+	public void testShouldSearchDemandDetails() throws IOException, Exception{
+		
+		DemandDetailResponse demandDetailResponse=new DemandDetailResponse();
+		demandDetailResponse.setDemandDetails(getDemandDetails());
+		demandDetailResponse.setResponseInfo(new ResponseInfo());
+
+		when(demandService.getDemandDetails(any(DemandDetailCriteria.class),any(RequestInfo.class))).thenReturn(new DemandDetailResponse( getResponseInfo(getRequestInfo()),getDemandDetails()));
+		
+		mockMvc.perform(post("/demand/demanddetail/_search").param("tenantId", "ap.kurnool")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("demandDetailsResponse.json")));
+		
+	}
+	
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);
 	}

@@ -16,9 +16,15 @@ import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.Depreciation;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMaster;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
@@ -1079,9 +1085,208 @@ public class PropertyMasterControllerTest {
 
 	}
 
+	@Test
+	public void createDepreciationTest() {
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		List<Depreciation> depreciations = new ArrayList<>();
+		Depreciation depreciation = new Depreciation();
+		depreciation.setTenantId("kiran");
+		depreciation.setCode("pra");
+
+		AuditDetails auditDetails = new AuditDetails();
+		depreciation.setAuditDetails(auditDetails);
+
+		depreciationResponse.setResponseInfo(new ResponseInfo());
+		depreciations.add(depreciation);
+		depreciationResponse.setDepreciations(depreciations);
+
+		try {
+			when(masterService.createDepreciation(anyString(), any(DepreciationRequest.class)))
+					.thenReturn(depreciationResponse);
+			mockMvc.perform(post("/property/depreciations/_create").param("tenantId", "kiran")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("createDepreciationRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createDepreciationResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyDepreciationTest() {
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		List<Depreciation> depreciations = new ArrayList<>();
+		Depreciation depreciation = new Depreciation();
+		depreciation.setTenantId("kiranprasad");
+		depreciation.setId(5l);
+		depreciation.setCode("pra");
+
+		AuditDetails auditDetails = new AuditDetails();
+		depreciation.setAuditDetails(auditDetails);
+
+		depreciationResponse.setResponseInfo(new ResponseInfo());
+		depreciations.add(depreciation);
+		depreciationResponse.setDepreciations(depreciations);
+
+		try {
+			when(masterService.updateDepreciation(any(DepreciationRequest.class))).thenReturn(depreciationResponse);
+			mockMvc.perform(post("/property/depreciations/_update").param("tenantId", "kiranprasad")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("updateDepreciationRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateDepreciationResponse.json")));
+		}
+
+		catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+	}
+
+	@Test
+	public void searchDepreciationTest() {
+
+		DepreciationResponse depreciationResponse = new DepreciationResponse();
+		List<Depreciation> depreciations = new ArrayList<>();
+		Depreciation depreciation = new Depreciation();
+		depreciation.setTenantId("default");
+		depreciation.setId(4l);
+		depreciation.setCode("prasad");
+
+		AuditDetails auditDetails = new AuditDetails();
+		depreciation.setAuditDetails(auditDetails);
+
+		depreciationResponse.setResponseInfo(new ResponseInfo());
+		depreciations.add(depreciation);
+		depreciationResponse.setDepreciations(depreciations);
+
+		try {
+			when(masterService.searchDepreciation(any(RequestInfo.class), anyString(), any(Integer[].class),
+					any(Integer.class), any(Integer.class), anyString(), anyString(), any(Integer.class),
+					any(Integer.class))).thenReturn(depreciationResponse);
+			mockMvc.perform(post("/property/depreciations/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDepreciationRequest.json")))
+					.andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchDepreciationResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+
+	}
+
 	private String getFileContents(String fileName) throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		return new String(Files.readAllBytes(new File(classLoader.getResource(fileName).getFile()).toPath()));
+	}
+
+	@Test
+	public void createMutationMasterTest() {
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("default");
+		mutationMaster.setCode("prasad");
+
+		AuditDetails auditDetails = new AuditDetails();
+		mutationMaster.setAuditDetails(auditDetails);
+
+		mutationMasterResponse.setResponseInfo(new ResponseInfo());
+		mutationMasters.add(mutationMaster);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+
+		try {
+			when(masterService.createMutationMater(anyString(), any(MutationMasterRequest.class)))
+					.thenReturn(mutationMasterResponse);
+			mockMvc.perform(post("/property/mutationmasters/_create").param("tenantId", "kiran")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createMutationMasterRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyMutationMasterTest() {
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("tenantid");
+		mutationMaster.setCode("code");
+
+		AuditDetails auditDetails = new AuditDetails();
+		mutationMaster.setAuditDetails(auditDetails);
+
+		mutationMasterResponse.setResponseInfo(new ResponseInfo());
+		mutationMasters.add(mutationMaster);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+
+		try {
+
+			when(masterService.updateMutationMaster(any(MutationMasterRequest.class)))
+					.thenReturn(mutationMasterResponse);
+			mockMvc.perform(post("/property/mutationmasters/_update").param("tenantId", "kiran")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateMutationMasterRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void searchMutationMasterTest() {
+
+		MutationMasterResponse mutationMasterResponse = new MutationMasterResponse();
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("tenantid");
+		mutationMaster.setCode("name");
+
+		AuditDetails auditDetails = new AuditDetails();
+		mutationMaster.setAuditDetails(auditDetails);
+
+		mutationMasterResponse.setResponseInfo(new ResponseInfo());
+		mutationMasters.add(mutationMaster);
+		mutationMasterResponse.setMutationMasters(mutationMasters);
+		try {
+			when(masterService.searchMutationMaster(any(RequestInfo.class), anyString(), any(Integer[].class),
+					anyString(), anyString(), anyString(), any(Integer.class), any(Integer.class)))
+							.thenReturn(mutationMasterResponse);
+			mockMvc.perform(post("/property/mutationmasters/_search").param("tenantId", "tenantid")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchMutationMasterRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
 	}
 
 }

@@ -42,7 +42,6 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +56,7 @@ import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -66,17 +66,17 @@ import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.model.enums.Purpose;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
-import org.egov.demand.web.contract.BusinessServiceDetailResponse;
 import org.egov.demand.web.contract.DemandResponse;
+import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -88,7 +88,7 @@ public class BillService {
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
-	private ObjectMapper objectMapper;
+	private ResponseFactory responseFactory;
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -110,6 +110,10 @@ public class BillService {
 	
 	@Autowired
 	private GlCodeMasterService glCodeMasterService;
+
+	public List<Bill> getBills(BillSearchCriteria billSearchCriteria){
+		return billRepository.getBills(billSearchCriteria);
+	}
 
 	public BillResponse createAsync(BillRequest billRequest) {
 
@@ -135,8 +139,10 @@ public class BillService {
 		if(billCriteria.getDemandId()!=null)
 			ids.add(billCriteria.getDemandId());
 
+		Set<String> consumerCodes = new HashSet<>();
+		consumerCodes.add(billCriteria.getConsumerCode());
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
-				consumerCode(billCriteria.getConsumerCode()).demandId(ids).
+				consumerCode(consumerCodes).demandId(ids).
 				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
 				tenantId(billCriteria.getTenantId()).build();
 
@@ -165,6 +171,7 @@ public class BillService {
 
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		Set<String> businessServices = map.keySet();
+		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
 		log.debug("prepareBill map:" +map);
 		Demand demand = demands.get(0);
 		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
@@ -213,20 +220,36 @@ public class BillService {
 							.findAny().orElse(null);
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					// TODO //taxHeadMaster.getGlCode() FIXME remove getglcode
-					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription("")
-							.creditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+					Long currDate = new Date().getTime();
+					Purpose purpose = null;
+					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
+					
+					//TODO check with ghanshyam
+					if(taxHeadCode.equalsIgnoreCase(Purpose.REBATE.toString()))
+						purpose = Purpose.REBATE;
+					else if (demand2.getTaxPeriodFrom() <= currDate && demand2.getTaxPeriodTo() >= currDate) {
+						purpose = Purpose.CURRENT_AMOUNT;
+					} else if (currDate < demand2.getTaxPeriodFrom()) {
+						purpose = Purpose.ARREAR_AMOUNT;
+					} else if (currDate > demand2.getTaxPeriodTo()) {
+						purpose = Purpose.ADVANCE_AMOUNT;
+					}
+					
+					String accountDespcription = taxHeadCode+"-"+demand2.getTaxPeriodFrom()+"-"
+							+demand2.getTaxPeriodTo();
+					
+					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription(accountDespcription)
+							.crAmountToBePaid(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
+							//.creditAmount())
 							.glcode(glCodeMaster.getGlCode()).isActualDemand(taxHeadMaster.getIsActualDemand())
-							.order(taxHeadMaster.getOrder()).build();
+							.order(taxHeadMaster.getOrder()).purpose(purpose)
+							.build();
 
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
-
-			BusinessServiceDetailCriteria businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder().
-					businessService(new HashSet<String>(Arrays.asList(businessService.split(", ")))).tenantId(tenantId).build();
-			BusinessServiceDetailResponse businessServiceDetailResponse = businessServDetailService.searchBusinessServiceDetails(businessServiceDetailCriteria, requestInfo);
-			BusinessServiceDetail businessServiceDetail = businessServiceDetailResponse.getBusinessServiceDetails().get(0);
+			//TODO check if map is working properly for retriving businessservicedetail
+			BusinessServiceDetail businessServiceDetail = businessServiceMap.get(businessService);
 
 			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
 			
@@ -293,8 +316,7 @@ public class BillService {
 	private Map<String, BusinessServiceDetail> getBusinessService(Set<String> businessService, String tenantId, RequestInfo requestInfo) {
 		List<BusinessServiceDetail> businessServiceDetails = businessServDetailService.searchBusinessServiceDetails(BusinessServiceDetailCriteria.builder().businessService(businessService).tenantId(tenantId).build(), requestInfo)
 				.getBusinessServiceDetails();
-		Map<String, BusinessServiceDetail> map = businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
-		return map;
+		return businessServiceDetails.stream().collect(Collectors.toMap(BusinessServiceDetail::getBusinessService, Function.identity()));
 	}
 	
 	public BillResponse getBillResponse(List<Bill> bills) {
@@ -303,6 +325,7 @@ public class BillService {
 		return billResponse;
 	}
 
-
-
+	public BillResponse apportion(BillRequest billRequest) {
+		return new BillResponse(responseFactory.getResponseInfo(billRequest.getRequestInfo(), HttpStatus.OK), billRepository.apportion(billRequest));
+	}
 }

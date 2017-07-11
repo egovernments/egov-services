@@ -1,0 +1,14 @@
+{
+    "responseInfo": {
+    },
+    "mutationMasters": [
+        {
+            "tenantId": "default",
+            "code": "prasad",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null
+            }
+        }
+    ]
+}

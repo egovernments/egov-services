@@ -100,4 +100,10 @@ public class ApplicationProperties {
 
 	@Value("${kafka.topics.update.disposal}")
 	private String updateAssetDisposalTopicName;
+
+	@Value("${egov.services.tenant.host}")
+	private String tenantServiceHostName;
+
+	@Value("${egov.services.tenant.search.path}")
+	private String tenantServiceSearchPath;
 }

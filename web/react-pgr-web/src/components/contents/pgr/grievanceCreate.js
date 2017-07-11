@@ -202,30 +202,50 @@ class grievanceCreate extends Component {
   {
       e.preventDefault();
       this.setState({loadingstatus:'loading'});
-      let type = this.state.type;
-      if(type == 'CITIZEN'){
-        var userArray = [], userRequest={};
-        userArray.push(localStorage.getItem('id'));
-        userRequest['id']=userArray;
-        userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
-        let userInfo = Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse)
+      if(this.props.grievanceCreate.lat !== '0.0' || this.props.grievanceCreate.lng !== '0.0'){
+        //validate with API
+        Api.commonApiGet("/egov-location/boundarys",{'boundary.latitude' : this.props.grievanceCreate.lat, 'boundary.longitude' : this.props.grievanceCreate.lng, 'boundary.tenantId' : localStorage.getItem('tenantId') || 'default'}).then(function(response)
         {
-          var userName = userResponse.user[0].name;
-  				var userMobile = userResponse.user[0].mobileNumber;
-  				var userEmail = userResponse.user[0].emailId;
-          _this.processCreate(userName,userMobile,userEmail);
+          if(response.Boundary.length === 0){
+            _this.setState({loadingstatus:'hide'});
+            _this.handleError('Please select valid location on maps or Type your location in grievance location');
+          }else{
+            //usual createGrievance
+            this.initialCreateBasedonType();
+          }
         },function(err) {
-          _this.setState({loadingstatus:'hide'});
           _this.handleError(err.message);
         });
-      }else if(type == 'EMPLOYEE'){
-        _this.processCreate();
-      }else{
-        _this.processCreate();
+      }else {
+        //usual createGrievance
+        this.initialCreateBasedonType();
       }
-      let {showTable,changeButtonText}=this.props;
       //console.log(this.props.grievanceCreate);
 
+  }
+
+  initialCreateBasedonType = () => {
+    let type = this.state.type;
+    if(type == 'CITIZEN'){
+      var userArray = [], userRequest={};
+      userArray.push(localStorage.getItem('id'));
+      userRequest['id']=userArray;
+      userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
+      let userInfo = Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse)
+      {
+        var userName = userResponse.user[0].name;
+        var userMobile = userResponse.user[0].mobileNumber;
+        var userEmail = userResponse.user[0].emailId;
+        _this.processCreate(userName,userMobile,userEmail);
+      },function(err) {
+        _this.setState({loadingstatus:'hide'});
+        _this.handleError(err.message);
+      });
+    }else if(type == 'EMPLOYEE'){
+      _this.processCreate();
+    }else{
+      _this.processCreate();
+    }
   }
 
   processCreate(userName='',userMobile='',userEmail=''){
@@ -759,6 +779,7 @@ const mapDispatchToProps = dispatch => ({
 
   },
   handleMap: (lat, lng, field) => {
+    console.log(lat, lng);
     dispatch({type: "HANDLE_CHANGE", property:'lat', value: lat, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: lng, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '0', isRequired : true, pattern: ''});
@@ -772,10 +793,6 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '0.0', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '0.0', isRequired : false, pattern: ''});
     }
-  },
-  changeButtonText:(text)=>
-  {
-    dispatch({type:"BUTTON_TEXT",text});
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

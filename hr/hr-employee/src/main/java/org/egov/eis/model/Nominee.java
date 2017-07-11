@@ -127,7 +127,6 @@ public class Nominee {
 		if (!name.equals(nominee.name)) return false;
 		if (gender != nominee.gender) return false;
 		if (!dateOfBirth.equals(nominee.dateOfBirth)) return false;
-		if (relationship != nominee.relationship) return false;
-		return tenantId.equals(nominee.tenantId);
+		return (relationship == nominee.relationship);
 	}
 }

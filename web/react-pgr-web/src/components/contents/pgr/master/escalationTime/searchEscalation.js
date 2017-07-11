@@ -118,7 +118,6 @@ class SearchEscalation extends Component {
           }
     });
 
-    
       initForm()
 
     }
@@ -127,8 +126,6 @@ class SearchEscalation extends Component {
       let self = this;
 
       let{setLoadingStatus} = this.props;
-
-
 
       Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
         setLoadingStatus('hide');
@@ -161,10 +158,14 @@ class SearchEscalation extends Component {
      .DataTable()
      .destroy(true);
  };
+ 
+ componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+ }
   
 
 
-   componentDidUpdate() {
+ componentDidUpdate() {
        $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
@@ -223,7 +224,7 @@ class SearchEscalation extends Component {
   }
 
     render() {
-
+		
       var current = this;
 
       let {
@@ -277,7 +278,7 @@ class SearchEscalation extends Component {
       return(<div className="searchEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation Time< /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >{translate('pgr.lbl.escalationtime')}< /div>} />
               <CardText>
                   <Card>
                       <CardText>

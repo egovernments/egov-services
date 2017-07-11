@@ -1,7 +1,5 @@
 package org.egov.asset.service;
 
-import org.egov.asset.config.ApplicationProperties;
-import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AuditDetails;
@@ -11,12 +9,12 @@ import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationIndex;
 import org.egov.asset.model.Scheme;
 import org.egov.asset.model.SubScheme;
+import org.egov.asset.model.Tenant;
 import org.egov.asset.repository.RevaluationIndexRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class RevaluationIndexService {
@@ -27,10 +25,7 @@ public class RevaluationIndexService {
 	private RevaluationIndexRepository revaluationIndexRepository;
 
 	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
+	private AssetIndexCommonService assetIndexCommonService;
 
 	public void postAssetRevaluation(final RevaluationRequest revaluationRequest) {
 		if (revaluationRequest != null) {
@@ -42,7 +37,6 @@ public class RevaluationIndexService {
 	}
 
 	private RevaluationIndex prepareRevaluationIndex(final RevaluationRequest revaluationRequest) {
-
 		final RevaluationIndex revaluationIndex = new RevaluationIndex();
 		final Revaluation revaluation = revaluationRequest.getRevaluation();
 		revaluationIndex.setRevaluationData(revaluation);
@@ -52,11 +46,12 @@ public class RevaluationIndexService {
 		setFundData(revaluationIndex, revaluation);
 		setFunctionData(revaluationIndex, revaluation);
 		setAuditDetails(revaluationIndex, revaluation);
+		setTenantProperties(revaluationIndex, revaluation.getTenantId());
 		return revaluationIndex;
 	}
 
 	private void setFunctionData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-		final Function function = getFunctionData(revaluation);
+		final Function function = assetIndexCommonService.getFunctionData(revaluation);
 		if (function != null) {
 			revaluationIndex.setFunctionId(function.getId());
 			revaluationIndex.setFunctionCode(function.getCode());
@@ -65,7 +60,7 @@ public class RevaluationIndexService {
 	}
 
 	private void setFundData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-		final Fund fund = getFundData(revaluation);
+		final Fund fund = assetIndexCommonService.getFundData(revaluation);
 		if (fund != null) {
 			revaluationIndex.setFundId(fund.getId());
 			revaluationIndex.setFundCode(fund.getCode());
@@ -74,7 +69,7 @@ public class RevaluationIndexService {
 	}
 
 	private void setSchemeData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-		final Scheme scheme = getSchemeData(revaluation);
+		final Scheme scheme = assetIndexCommonService.getSchemeData(revaluation);
 		if (scheme != null) {
 			revaluationIndex.setSchemeId(scheme.getId());
 			revaluationIndex.setSchemeCode(scheme.getCode());
@@ -83,7 +78,7 @@ public class RevaluationIndexService {
 	}
 
 	private void setSubSchemeData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-		final SubScheme subscheme = getSubSchemeData(revaluation);
+		final SubScheme subscheme = assetIndexCommonService.getSubSchemeData(revaluation);
 		if (subscheme != null) {
 			revaluationIndex.setSubSchemeId(subscheme.getId());
 			revaluationIndex.setSubSchemeCode(subscheme.getCode());
@@ -92,65 +87,12 @@ public class RevaluationIndexService {
 	}
 
 	private void setAssetData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
-		final Asset asset = getAssetData(revaluation.getAssetId(), revaluation.getTenantId());
+		final Asset asset = assetIndexCommonService.getAssetData(revaluation.getAssetId(), revaluation.getTenantId());
 		if (asset != null) {
 			revaluationIndex.setAssetId(asset.getId());
 			revaluationIndex.setAssetCode(asset.getCode());
 			revaluationIndex.setAssetName(asset.getName());
 		}
-	}
-
-	private Asset getAssetData(final Long assetId, final String tenantId) {
-		final String url = applicationProperties.getAssetServiceHostName()
-				+ applicationProperties.getAssetServiceSearchPath() + "?&tenantId=" + tenantId + "&id="
-				+ assetId.toString();
-		LOGGER.info("asset search url :: " + url);
-		final Asset asset = restTemplate.postForObject(url, new RequestInfo(), Asset.class);
-		LOGGER.info("asset object :: " + asset);
-
-		return asset;
-	}
-
-	private SubScheme getSubSchemeData(final Revaluation revaluation) {
-		final String url = applicationProperties.getEgfServiceHostName()
-				+ applicationProperties.getEgfServiceSubSchemesSearchPath() + "?&tenantId=" + revaluation.getTenantId()
-				+ "&id=" + revaluation.getSubScheme().toString();
-		LOGGER.info("subscheme url :: " + url);
-		final SubScheme subScheme = restTemplate.postForObject(url, new RequestInfo(), SubScheme.class);
-		LOGGER.info("subscheme object :: " + subScheme);
-		return subScheme;
-	}
-
-	private Scheme getSchemeData(final Revaluation revaluation) {
-		final String url = applicationProperties.getEgfServiceHostName()
-				+ applicationProperties.getEgfServiceSchemesSearchPath() + "?&tenantId=" + revaluation.getTenantId()
-				+ "&id=" + revaluation.getScheme().toString();
-		LOGGER.info("scheme url :: " + url);
-		final Scheme scheme = restTemplate.postForObject(url, new RequestInfo(), Scheme.class);
-		LOGGER.info("scheme object :: " + scheme);
-		return scheme;
-	}
-
-	private Fund getFundData(final Revaluation revaluation) {
-		final String url = applicationProperties.getEgfServiceHostName()
-				+ applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + revaluation.getTenantId()
-				+ "&id=" + revaluation.getFund().toString();
-		LOGGER.info("fund url :: " + url);
-		final Fund fund = restTemplate.postForObject(url, new RequestInfo(), Fund.class);
-		LOGGER.info("fund object :: " + fund);
-
-		return fund;
-	}
-
-	private Function getFunctionData(final Revaluation revaluation) {
-		final String url = applicationProperties.getEgfServiceHostName()
-				+ applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + revaluation.getTenantId()
-				+ "&id=" + revaluation.getFunction().toString();
-		LOGGER.info("function url :: " + url);
-		final Function function = restTemplate.postForObject(url, new RequestInfo(), Function.class);
-		LOGGER.info("function object :: " + function);
-
-		return function;
 	}
 
 	private void setAuditDetails(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
@@ -161,5 +103,15 @@ public class RevaluationIndexService {
 			revaluationIndex.setLastModifiedBy(ad.getLastModifiedBy());
 			revaluationIndex.setLastModifiedDate(ad.getLastModifiedDate());
 		}
+	}
+
+	private void setTenantProperties(final RevaluationIndex revaluationIndex, final String code) {
+		final Tenant tenant = assetIndexCommonService.getTenantData(code).get(0);
+		revaluationIndex.setCityName(tenant.getCity().getName());
+		revaluationIndex.setUlbGrade(tenant.getCity().getUlbGrade());
+		revaluationIndex.setLocalName(tenant.getCity().getLocalName());
+		revaluationIndex.setDistrictCode(tenant.getCity().getDistrictCode());
+		revaluationIndex.setDistrictName(tenant.getCity().getDistrictName());
+		revaluationIndex.setRegionName(tenant.getCity().getRegionName());
 	}
 }

@@ -41,9 +41,14 @@ package org.egov.egf.budget.web.contract;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.master.web.contract.BoundaryContract;
 import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.budget.domain.model.Budget;
+import org.egov.egf.budget.domain.model.BudgetDetail;
+import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
@@ -66,8 +71,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonPropertyOrder({ "id", "budgetGroup", "budget", "originalAmount", "approvedAmount", "budgetAvailable",
 		"anticipatoryAmount", "usingDepartment", "executingDepartment", "function", "scheme", "fund", "subScheme",
-		"functionary", "boundary", "materializedPath", "documentNumber", "uniqueNo",
-		"planningPercent", "status" })
+		"functionary", "boundary", "materializedPath", "documentNumber", "uniqueNo", "planningPercent", "status" })
 public class BudgetDetailContract extends AuditableContract {
 
 	/*
@@ -81,12 +85,14 @@ public class BudgetDetailContract extends AuditableContract {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
+	@NotNull
 	private BudgetGroupContract budgetGroup;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure
 	 * defined.
 	 */
+	@NotNull
 	private BudgetContract budget;
 
 	/*
@@ -168,7 +174,8 @@ public class BudgetDetailContract extends AuditableContract {
 	 * budgetReAppropriations is the reference to the re appropriations made for
 	 * the given budget line item
 	 */
-//	private Set<BudgetReAppropriation> budgetReAppropriations = new HashSet<BudgetReAppropriation>(0);
+	// private Set<BudgetReAppropriation> budgetReAppropriations = new
+	// HashSet<BudgetReAppropriation>(0);
 
 	/*
 	 * documentNumber is the reference number to identify the attachments made
@@ -197,5 +204,69 @@ public class BudgetDetailContract extends AuditableContract {
 	 * status gives the current status of the budget line item. (detailed level)
 	 */
 	private EgfStatusContract status;
+
+	public BudgetDetail toDomain() {
+		BudgetDetail budgetDetail = new BudgetDetail();
+		budgetDetail.setId(this.id);
+		budgetDetail.setBudgetGroupId(budgetGroup);
+		budgetDetail.setBudgetId(Budget.builder().id(budget != null ? budget.getId() : null).build());
+		budgetDetail.setOriginalAmount(this.originalAmount);
+		budgetDetail.setApprovedAmount(this.approvedAmount);
+		budgetDetail.setBudgetAvailable(this.budgetAvailable);
+		budgetDetail.setAnticipatoryAmount(this.anticipatoryAmount);
+		budgetDetail.setUsingDepartmentId(usingDepartment);
+		budgetDetail.setExecutingDepartmentId(usingDepartment);
+		budgetDetail.setFunctionId(function);
+		budgetDetail.setSchemeId(scheme);
+		budgetDetail.setFundId(fund);
+		budgetDetail.setSubSchemeId(subScheme);
+		budgetDetail.setFunctionaryId(functionary);
+		budgetDetail.setBoundaryId(boundary);
+		budgetDetail.setMaterializedPath(this.materializedPath);
+		budgetDetail.setDocumentNumber(this.documentNumber);
+		budgetDetail.setUniqueNo(this.uniqueNo);
+		budgetDetail.setPlanningPercent(this.planningPercent);
+		budgetDetail.setStatusId(EgfStatus.builder().id(status != null ? status.getId() : null).build());
+		budgetDetail.setCreatedBy(this.createdBy);
+		budgetDetail.setCreatedDate(this.createdDate);
+		budgetDetail.setLastModifiedBy(this.lastModifiedBy);
+		budgetDetail.setLastModifiedDate(this.lastModifiedDate);
+		budgetDetail.setTenantId(this.tenantId);
+		return budgetDetail;
+	}
+
+	public void toContract(BudgetDetail budgetDetail) {
+		this.id = budgetDetail.getId();
+		this.budgetGroup = budgetDetail.getBudgetGroupId() != null ? budgetDetail.getBudgetGroupId() : null;
+		if (budgetDetail.getBudgetId() != null) {
+			BudgetContract bContract = new BudgetContract();
+			bContract.toContract(budgetDetail.getBudgetId());
+			this.budget = bContract;
+		}
+		this.originalAmount = budgetDetail.getOriginalAmount();
+		this.approvedAmount = budgetDetail.getApprovedAmount();
+		this.budgetAvailable = budgetDetail.getBudgetAvailable();
+		this.anticipatoryAmount = budgetDetail.getAnticipatoryAmount();
+		this.usingDepartment = budgetDetail.getUsingDepartmentId() != null ? budgetDetail.getUsingDepartmentId() : null;
+		this.executingDepartment = budgetDetail.getExecutingDepartmentId() != null
+				? budgetDetail.getExecutingDepartmentId() : null;
+		this.function = budgetDetail.getFunctionId() != null ? budgetDetail.getFunctionId() : null;
+		this.scheme = budgetDetail.getSchemeId() != null ? budgetDetail.getSchemeId() : null;
+		this.fund = budgetDetail.getFundId() != null ? budgetDetail.getFundId() : null;
+		this.subScheme = budgetDetail.getSubSchemeId() != null ? budgetDetail.getSubSchemeId() : null;
+		this.functionary = budgetDetail.getFunctionaryId() != null ? budgetDetail.getFunctionaryId() : null;
+		this.boundary = budgetDetail.getBoundaryId() != null ? budgetDetail.getBoundaryId() : null;
+		this.materializedPath = budgetDetail.getMaterializedPath();
+		this.documentNumber = budgetDetail.getDocumentNumber();
+		this.uniqueNo = budgetDetail.getUniqueNo();
+		this.planningPercent = budgetDetail.getPlanningPercent();
+		this.status = EgfStatusContract.builder()
+				.id(budgetDetail.getStatusId() != null ? budgetDetail.getStatusId().getId() : null).build();
+		this.setCreatedBy(budgetDetail.getCreatedBy());
+		this.setCreatedDate(budgetDetail.getCreatedDate());
+		this.setLastModifiedBy(budgetDetail.getLastModifiedBy());
+		this.setLastModifiedDate(budgetDetail.getLastModifiedDate());
+		this.setTenantId(budgetDetail.getTenantId());
+	}
 
 }

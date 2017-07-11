@@ -44,6 +44,18 @@ export default(state = defaultState, action) => {
                   [action.object]:null
                 }
               }
+			  
+	case "EMPTY_PROPERTY":
+		
+		return {
+			...state,
+			form:{
+				...state.form,
+				[action.property]:null
+			},
+			validationData: action.validationData,
+			isFormValid: action.isFormValid
+		}
 
 
     case "UPDATE_OBJECT":

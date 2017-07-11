@@ -17,7 +17,6 @@ import org.pgr.batch.service.model.SevaRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -72,7 +71,7 @@ public class EscalationDateServiceTest {
                 .build();
 
         serviceRequest.setDesignation("designationId");
-        serviceRequest.setAssigneeId("2");
+        serviceRequest.setPositionId("2");
 
         return new SevaRequest(null,serviceRequest);
     }

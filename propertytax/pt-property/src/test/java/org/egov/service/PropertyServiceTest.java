@@ -18,12 +18,18 @@ import org.egov.models.Boundary;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.Depreciation;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
 import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMaster;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
@@ -1329,7 +1335,7 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("property.create"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.create.approved"), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1591,9 +1597,230 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("property.update"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.update.approved"), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void createDepreciation() {
+
+		DepreciationRequest depreciationRequest = new DepreciationRequest();
+		depreciationRequest.setRequestInfo(getRequestInfoObject());
+
+		String tenantId = "123";
+		Depreciation depreciation = new Depreciation();
+		List<Depreciation> depreciations = new ArrayList<>();
+		depreciation.setTenantId("123");
+		depreciation.setNameLocal("prasad");
+		depreciation.setFromYear(2017);
+		depreciation.setCode("456");
+		depreciation.setToyear(2016);
+		depreciation.setDescription("Intial loading");
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("prasad");
+		auditDetails.setLastModifiedBy("pranav");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+
+		depreciation.setAuditDetails(auditDetails);
+		depreciations.add(depreciation);
+
+		depreciationRequest.setDepreciations(depreciations);
+		DepreciationResponse depreciationResponse = null;
+
+		try {
+			depreciationResponse = masterService.createDepreciation(tenantId, depreciationRequest);
+		} catch (Exception e) {
+
+			assertTrue(false);
+		}
+
+		if (depreciationResponse.getDepreciations().size() == 0) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyDepreciation() {
+
+		DepreciationRequest depreciationRequest = new DepreciationRequest();
+		depreciationRequest.setRequestInfo(getRequestInfoObject());
+
+		Depreciation depreciation = new Depreciation();
+		List<Depreciation> depreciations = new ArrayList<>();
+		depreciation.setId(1l);
+		depreciation.setTenantId("12345");
+		depreciation.setNameLocal("prasad");
+		depreciation.setFromYear(2017);
+		depreciation.setCode("4567");
+		depreciation.setToyear(2016);
+		depreciation.setDescription("Intial loading");
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("pankaj");
+		auditDetails.setLastModifiedBy("paku");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+
+		depreciation.setAuditDetails(auditDetails);
+		depreciations.add(depreciation);
+
+		depreciationRequest.setDepreciations(depreciations);
+		DepreciationResponse depreciationResponse = null;
+
+		try {
+			depreciationResponse = masterService.updateDepreciation(depreciationRequest);
+		} catch (Exception e) {
+
+			assertTrue(false);
+		}
+
+		if (depreciationResponse == null)
+			assertTrue(false);
+
+		if (depreciationResponse.getDepreciations().size() == 0)
+			assertTrue(false);
+
+		assertTrue(true);
+	}
+
+	@Test
+	public void searchDepreciations() {
+
+		String tenantId = "12345";
+		Integer[] ids = new Integer[] { 1, 2, 7 };
+
+		Integer fromYear = 2017;
+		Integer toYear = 2016;
+		String code = "4567";
+		String nameLocal = "prasad";
+		Integer pageSize = 20;
+		Integer offset = 0;
+
+		DepreciationResponse depreciationResponse = null;
+
+		try {
+			depreciationResponse = masterService.searchDepreciation(getRequestInfoObject(), tenantId, ids, fromYear,
+					toYear, code, nameLocal, pageSize, offset);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (depreciationResponse == null)
+			assertTrue(false);
+
+		if (depreciationResponse.getDepreciations().size() == 0) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void createMutationTest() {
+
+		MutationMasterRequest mutationMasterRequest = new MutationMasterRequest();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("123");
+		mutationMaster.setCode("456");
+		mutationMaster.setName("prasad");
+		mutationMaster.setNameLocal("pranav");
+		mutationMaster.setDescription("description");
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("pankaj");
+		auditDetails.setLastModifiedBy("paku");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+		mutationMaster.setAuditDetails(auditDetails);
+
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		mutationMasters.add(mutationMaster);
+		String tenantId = "123";
+
+		mutationMasterRequest.setRequestInfo(getRequestInfoObject());
+		mutationMasterRequest.setMutationMasters(mutationMasters);
+
+		MutationMasterResponse mutationMasterResponse = null;
+
+		try {
+			mutationMasterResponse = masterService.createMutationMater(tenantId, mutationMasterRequest);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (mutationMasterResponse != null && mutationMasterResponse.getMutationMasters().size() > 0)
+			assertTrue(true);
+
+		else
+			assertTrue(false);
+
+	}
+
+	@Test
+	public void modifyMutationMaster() {
+
+		MutationMasterRequest mutationMasterRequest = new MutationMasterRequest();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("1234");
+		mutationMaster.setCode("4567");
+		mutationMaster.setName("pankaj");
+		mutationMaster.setNameLocal("paku");
+		mutationMaster.setDescription("description");
+		mutationMaster.setId(1l);
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("pankaj");
+		auditDetails.setLastModifiedBy("paku");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+		mutationMaster.setAuditDetails(auditDetails);
+
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		mutationMasters.add(mutationMaster);
+
+		mutationMasterRequest.setRequestInfo(getRequestInfoObject());
+		mutationMasterRequest.setMutationMasters(mutationMasters);
+
+		MutationMasterResponse mutationMasterResponse = null;
+
+		try {
+			mutationMasterResponse = masterService.updateMutationMaster(mutationMasterRequest);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (mutationMasterResponse != null && mutationMasterResponse.getMutationMasters().size() > 0)
+			assertTrue(true);
+
+		else
+			assertTrue(false);
+
+	}
+
+	@Test
+	public void searchMutationMaster() {
+		String tenantId = "1234";
+		String code = "4567";
+		MutationMasterResponse mutationMasterResponse = null;
+
+		try {
+			mutationMasterResponse = masterService.searchMutationMaster(getRequestInfoObject(), tenantId, null, null,
+					code, null, null, null);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (mutationMasterResponse != null && mutationMasterResponse.getMutationMasters().size() > 0) {
+			assertTrue(true);
+		} else
+			assertTrue(false);
 	}
 }

@@ -50,7 +50,9 @@ public class ReportApp{
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	try {
 
-	//Resource resource = resourceLoader.getResource("file:/home/lenovo/Desktop/application.yml");
+	/*Resource resource = resourceLoader.getResource("file:/ws/egov-services/pgr/pgr-master/src/main/resources/application.yml");
+	File file = resource.getFile();
+	ReportDefinitions reportDefinitions = mapper.readValue(file, ReportDefinitions.class);*/
 	// Resource resource =
 	// resourceLoader.getResource("file:"+env.getproperty("report.yaml.path"));
     //Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));

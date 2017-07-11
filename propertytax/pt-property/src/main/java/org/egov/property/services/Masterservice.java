@@ -2,8 +2,12 @@ package org.egov.property.services;
 
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
 import org.egov.models.PropertyTypeRequest;
@@ -362,5 +366,82 @@ public interface Masterservice {
 	 * @throws Exception
 	 */
 	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) throws Exception;
+
+	/**
+	 * This will create the depreciations based on the given object
+	 * 
+	 * @param tenantId
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	public DepreciationResponse createDepreciation(String tenantId, DepreciationRequest depreciationRequest)
+			throws Exception;
+
+	/**
+	 * This will update the depreciations based on the given depreciation object
+	 * 
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	public DepreciationResponse updateDepreciation(DepreciationRequest depreciationRequest) throws Exception;
+
+	/**
+	 * 
+	 * This will search the depreciations based on the given input parameters
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param fromYear
+	 * @param toYear
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offset
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset)
+			throws Exception;
+
+	/**
+	 * This will create the mutation master based on the given mutation master
+	 * request
+	 * 
+	 * @param tenantId
+	 * @param mutationMasterRequest
+	 * @return {@link MutationMasterResponse}
+	 */
+	public MutationMasterResponse createMutationMater(String tenantId, MutationMasterRequest mutationMasterRequest)
+			throws Exception;
+
+	/**
+	 * This will update the mutation master based on the given mutation master
+	 * request
+	 * 
+	 * @param mutationMasterRequest
+	 * @return {@link MutationMasterResponse}
+	 */
+
+	public MutationMasterResponse updateMutationMaster(MutationMasterRequest mutationMasterRequest) throws Exception;
+
+	/**
+	 * This will search the mutation master based on the given parameters
+	 * 
+	 * @param requestInfoWrapper
+	 * @param tenatId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return {@link MutationMasterResponse}
+	 */
+	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo, String tenatId, Integer[] ids,
+			String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
 }

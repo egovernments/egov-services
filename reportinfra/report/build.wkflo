@@ -6,4 +6,4 @@ def build(path, ci_image) {
     }
  }
 
- return this;
+return this;

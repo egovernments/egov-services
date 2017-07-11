@@ -1,18 +1,16 @@
 package org.egov.asset.service;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.DisposalRequest;
-import org.egov.asset.contract.RequestInfo;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalIndex;
+import org.egov.asset.model.Tenant;
 import org.egov.asset.repository.DisposalIndexRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class DisposalIndexService {
@@ -22,10 +20,7 @@ public class DisposalIndexService {
 	private DisposalIndexRepository disposalIndexRepository;
 
 	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
+	private AssetIndexCommonService assetIndexCommonService;
 
 	public void postAssetDisposal(final DisposalRequest disposalRequest) {
 		if (disposalRequest != null) {
@@ -42,11 +37,12 @@ public class DisposalIndexService {
 		disposalIndex.setDisposalData(disposal);
 		setAssetData(disposalIndex, disposal);
 		setAuditDetails(disposalIndex, disposal);
+		setTenantProperties(disposalIndex, disposal.getTenantId());
 		return disposalIndex;
 	}
 
-	private void setAssetData(final DisposalIndex disposalIndex, final Disposal disposal) {
-		final Asset asset = getAssetData(disposal.getAssetId(), disposal.getTenantId());
+	public void setAssetData(final DisposalIndex disposalIndex, final Disposal disposal) {
+		final Asset asset = assetIndexCommonService.getAssetData(disposal.getAssetId(), disposal.getTenantId());
 		if (asset != null) {
 			disposalIndex.setAssetId(asset.getId());
 			disposalIndex.setAssetCode(asset.getCode());
@@ -54,18 +50,7 @@ public class DisposalIndexService {
 		}
 	}
 
-	private Asset getAssetData(final Long assetId, final String tenantId) {
-		final String url = applicationProperties.getAssetServiceHostName()
-				+ applicationProperties.getAssetServiceSearchPath() + "?&tenantId=" + tenantId + "&id="
-				+ assetId.toString();
-		LOGGER.info("asset search url :: " + url);
-		final Asset asset = restTemplate.postForObject(url, new RequestInfo(), Asset.class);
-		LOGGER.info("asset object :: " + asset);
-
-		return asset;
-	}
-
-	private void setAuditDetails(final DisposalIndex disposalIndex, final Disposal disposal) {
+	public void setAuditDetails(final DisposalIndex disposalIndex, final Disposal disposal) {
 		final AuditDetails ad = disposal.getAuditDetails();
 		if (ad != null) {
 			disposalIndex.setCreatedBy(ad.getCreatedBy());
@@ -74,4 +59,15 @@ public class DisposalIndexService {
 			disposalIndex.setLastModifiedDate(ad.getLastModifiedDate());
 		}
 	}
+
+	private void setTenantProperties(final DisposalIndex disposalIndex, final String code) {
+		final Tenant tenant = assetIndexCommonService.getTenantData(code).get(0);
+		disposalIndex.setCityName(tenant.getCity().getName());
+		disposalIndex.setUlbGrade(tenant.getCity().getUlbGrade());
+		disposalIndex.setLocalName(tenant.getCity().getLocalName());
+		disposalIndex.setDistrictCode(tenant.getCity().getDistrictCode());
+		disposalIndex.setDistrictName(tenant.getCity().getDistrictName());
+		disposalIndex.setRegionName(tenant.getCity().getRegionName());
+	}
+
 }

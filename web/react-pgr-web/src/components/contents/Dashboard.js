@@ -48,7 +48,6 @@ const styles = {
   }
 };
 
-
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -78,15 +77,23 @@ class Dashboard extends Component {
 
     if(currentUser.type=="CITIZEN") {
       Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(response){
+          for(var i=0; i<response.serviceRequests.length; i++) {
+            var d1 = response.serviceRequests[i].requestedDatetime.split(" ")[0].split("-");
+            var d11 = response.serviceRequests[i].requestedDatetime.split(" ")[1].split(":");
+            response.serviceRequests[i].clientTime = new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime();
+          }
+
           response.serviceRequests.sort(function(s1, s2) {
               var d1 = s1.requestedDatetime.split(" ")[0].split("-");
-              var d2 = s2.requestedDatetime.split(" ")[0].split("-");
-              if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
-                return 1;
-              } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
-                return -1;
-              }
-              return 0;
+                  var d11 = s1.requestedDatetime.split(" ")[1].split(":");
+                  var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+                  var d22 = s2.requestedDatetime.split(" ")[1].split(":");
+                  if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() < new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
+                    return 1;
+                  } else if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() > new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
+                    return -1;
+                  }
+                  return 0;
             })
 
           current.setState({
@@ -108,16 +115,25 @@ class Dashboard extends Component {
             
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
           Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
+                for(var i=0; i<response.serviceRequests.length; i++) {
+                  var d1 = response.serviceRequests[i].requestedDatetime.split(" ")[0].split("-");
+                  var d11 = response.serviceRequests[i].requestedDatetime.split(" ")[1].split(":");
+                  response.serviceRequests[i].clientTime = new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime();
+                }
+
                 response.serviceRequests.sort(function(s1, s2) {
                   var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+                  var d11 = s1.requestedDatetime.split(" ")[1].split(":");
                   var d2 = s2.requestedDatetime.split(" ")[0].split("-");
-                  if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                  var d22 = s2.requestedDatetime.split(" ")[1].split(":");
+                  if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() < new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
                     return 1;
-                  } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                  } else if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() > new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
                     return -1;
                   }
                   return 0;
                 })
+
                 current.setState({
                   serviceRequests: response.serviceRequests,
                   localArray:response.serviceRequests,
@@ -204,7 +220,7 @@ class Dashboard extends Component {
 								}}>
 									<td>{i+1}</td>
 									<td  style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</td>
-									<td>{e.requestedDatetime}</td>
+									<td><span style={{"display": "none"}}>{e.clientTime}</span>{e.requestedDatetime}</td>
 									<td>{e.firstName}</td>
 									<td>
                     {e.attribValues && e.attribValues.map((item, index)=>{
@@ -260,6 +276,14 @@ class Dashboard extends Component {
 							/>
 						</Col>
                       {this.state.localArray && this.state.localArray.map((e,i)=>{
+						  
+							var priority;
+							var triColor = "#fff";
+							e.attribValues.map((item,index)=>{
+							  if(item.key =="PRIORITY"){
+								triColor = item.name
+							  }
+							})
 						  						  
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -274,7 +298,7 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target=""><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>
@@ -327,7 +351,16 @@ class Dashboard extends Component {
 					</Table> 
           </div>
           <div className="cardLayout">
+		
          {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
+			 
+			 	var priority;
+							var triColor = "#fff";
+							e.attribValues.map((item,index)=>{
+							  if(item.key =="PRIORITY"){
+								triColor = item.name
+							  }
+							})
                             
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
@@ -342,7 +375,7 @@ class Dashboard extends Component {
                                  />
 
                                  <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target="">{e.serviceRequestId}</Link>}
+                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target=""><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</Link>}
                                    subtitle={e.requestedDatetime}
                                  />
                                  <CardText>

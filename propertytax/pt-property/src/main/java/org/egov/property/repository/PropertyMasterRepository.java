@@ -6,9 +6,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.egov.models.Department;
+import org.egov.models.Depreciation;
 import org.egov.models.FloorType;
+import org.egov.models.MutationMaster;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.PropertyType;
 import org.egov.models.RequestInfo;
@@ -19,13 +20,16 @@ import org.egov.models.WallType;
 import org.egov.models.WoodType;
 import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
+import org.egov.property.repository.builder.DepreciationBuilder;
 import org.egov.property.repository.builder.FloorTypeBuilder;
+import org.egov.property.repository.builder.MutationMasterBuilder;
 import org.egov.property.repository.builder.OccuapancyQueryBuilder;
 import org.egov.property.repository.builder.PropertyTypesBuilder;
 import org.egov.property.repository.builder.RoofTypeBuilder;
 import org.egov.property.repository.builder.SearchMasterBuilder;
 import org.egov.property.repository.builder.StructureClassesBuilder;
 import org.egov.property.repository.builder.UsageMasterBuilder;
+import org.egov.property.repository.builder.UtilityBuilder;
 import org.egov.property.repository.builder.WallTypesBuilder;
 import org.egov.property.repository.builder.WoodTypeBuilder;
 import org.postgresql.util.PGobject;
@@ -1074,5 +1078,214 @@ public class PropertyMasterRepository {
 
 		return structureClasses;
 
+	}
+
+	/**
+	 * This will check whether any record exists with the given tenantId & code
+	 * in database or not
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkWhetherRecordExits(String tenantId, String code, String tableName, Long id) {
+
+		Boolean isExists = Boolean.TRUE;
+
+		String query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
+
+		int count = 0;
+		try {
+
+			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
+
+	}
+
+	@Transactional
+	public Long createDepreciation(Depreciation depreciation, String data) {
+
+		String insertDepreciationQuery = DepreciationBuilder.INSERT_DEPRECIATION_QUERY;
+		Long createdTime = new Date().getTime();
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+
+				final PreparedStatement ps = connection.prepareStatement(insertDepreciationQuery,
+						new String[] { "id" });
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+
+				ps.setString(1, depreciation.getTenantId());
+				ps.setString(2, depreciation.getCode());
+				ps.setObject(3, jsonObject);
+				ps.setString(4, depreciation.getAuditDetails().getCreatedBy());
+				ps.setString(5, depreciation.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, createdTime);
+				ps.setLong(7, createdTime);
+
+				return ps;
+			}
+		};
+
+		final KeyHolder holder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(psc, holder);
+
+		return Long.valueOf(holder.getKey().intValue());
+
+	}
+
+	@Transactional
+	public void updateDepreciation(Depreciation depreciation, String data) {
+
+		String updateDepreciation = DepreciationBuilder.UPDATE_DEPRECIATION_QUERY;
+		Long updatedTime = new Date().getTime();
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(updateDepreciation);
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+
+				ps.setString(1, depreciation.getTenantId());
+				ps.setString(2, depreciation.getCode());
+				ps.setObject(3, jsonObject);
+				ps.setString(4, depreciation.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, updatedTime);
+				ps.setLong(6, depreciation.getId());
+				return ps;
+			}
+		};
+		Long createdTime = jdbcTemplate.queryForObject(DepreciationBuilder.SELECT_DEPRECIATION_CREATETIME,
+				new Object[] { depreciation.getId() }, Long.class);
+
+		jdbcTemplate.update(psc);
+		depreciation.getAuditDetails().setCreatedTime(createdTime);
+
+	}
+
+	public List<Depreciation> searchDepreciations(String tenantId, Integer[] ids, Integer fromYear, Integer toYear,
+			String code, String nameLocal, Integer pageSize, Integer offset) {
+
+		String searchDepreciationSql = DepreciationBuilder.searchQuery(tenantId, ids, fromYear, toYear, code, nameLocal,
+				pageSize, offset);
+
+		List<Depreciation> depreciations = jdbcTemplate.query(searchDepreciationSql,
+				new BeanPropertyRowMapper(Depreciation.class));
+
+		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+		for (Depreciation depreciation : depreciations) {
+
+			Depreciation usageData = gson.fromJson(depreciation.getData(), Depreciation.class);
+
+			depreciation.setAuditDetails(usageData.getAuditDetails());
+			depreciation.setDescription(usageData.getDescription());
+			depreciation.setNameLocal(usageData.getNameLocal());
+		}
+
+		return depreciations;
+	}
+
+	@Transactional
+	public Long createMutationMaster(MutationMaster mutationMaster, String data) {
+		String insertMuationQuery = MutationMasterBuilder.INSERT_MUTATTION_QUERY;
+		Long createdTime = new Date().getTime();
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+
+				final PreparedStatement ps = connection.prepareStatement(insertMuationQuery, new String[] { "id" });
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+
+				ps.setString(1, mutationMaster.getTenantId());
+				ps.setString(2, mutationMaster.getCode());
+				ps.setString(3, mutationMaster.getName());
+				ps.setObject(4, jsonObject);
+				ps.setString(5, mutationMaster.getAuditDetails().getCreatedBy());
+				ps.setString(6, mutationMaster.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, createdTime);
+				ps.setLong(8, createdTime);
+
+				return ps;
+			}
+		};
+		final KeyHolder holder = new GeneratedKeyHolder();
+	
+			jdbcTemplate.update(psc, holder);
+			return Long.valueOf(holder.getKey().intValue());
+
+	}
+
+	@Transactional
+	public void updateMutationMaster(MutationMaster mutationMaster, String data) {
+
+		String updateMutation = MutationMasterBuilder.UPDATE_MUTATION_QUERY;
+		Long updatedTime = new Date().getTime();
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(updateMutation);
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setType("jsonb");
+				jsonObject.setValue(data);
+
+				ps.setString(1, mutationMaster.getTenantId());
+				ps.setString(2, mutationMaster.getCode());
+				ps.setString(3, mutationMaster.getName());
+				ps.setObject(4, jsonObject);
+				ps.setString(5, mutationMaster.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, updatedTime);
+				ps.setLong(7, mutationMaster.getId());
+				return ps;
+			}
+		};
+
+		Long createdTime = jdbcTemplate.queryForObject(MutationMasterBuilder.SELECT_MUTATION_CREATETIME,
+				new Object[] { mutationMaster.getId() }, Long.class);
+
+		jdbcTemplate.update(psc);
+		mutationMaster.getAuditDetails().setCreatedTime(createdTime);
+
+	}
+
+	public List<MutationMaster> searchMutation(String tenantId, Integer[] ids, String name, String code,
+			String nameLocal, Integer pageSize, Integer offSet) {
+
+		String searchMutationQuery = MutationMasterBuilder.searchQuery(tenantId, ids, code, name, nameLocal, pageSize,
+				offSet);
+
+		List<MutationMaster> mutationMasters = jdbcTemplate.query(searchMutationQuery,
+				new BeanPropertyRowMapper(MutationMaster.class));
+
+		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+		mutationMasters.forEach(mutation -> {
+
+			MutationMaster data = gson.fromJson(mutation.getData(), MutationMaster.class);
+
+			mutation.setAuditDetails(data.getAuditDetails());
+			mutation.setDescription(data.getDescription());
+			mutation.setNameLocal(data.getNameLocal());
+
+		});
+
+		return mutationMasters;
 	}
 }

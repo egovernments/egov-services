@@ -1,4 +1,4 @@
-package org.egov.property.util;
+package org.egov.property.utility;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;

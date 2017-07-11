@@ -1,5 +1,8 @@
 package org.egov.demand.repository.querybuilder;
 
+import java.util.List;
+
+import org.egov.demand.model.BillSearchCriteria;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +19,23 @@ public class BillQueryBuilder {
 			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail "
-			+"(id,tenantid,billdetail,glcode,orderno,accountdescription,creditamount,debitamount,isactualdemand,purpose,"
+			+"(id,tenantid,billdetail,glcode,orderno,accountdescription,cramounttobepaid,creditamount,debitamount,isactualdemand,purpose,"
 			+ "createdby,createddate,lastmodifiedby,lastmodifieddate)"
-			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	
+	public static final String BILL_BASE_QUERY = ""; 
+	
+	
+	public String getBillQuery(BillSearchCriteria billSearchCriteria,List<Object> preparedStatementValues){
+		
+		StringBuilder billQuery = new StringBuilder(BILL_BASE_QUERY);
+		
+		billQuery.append("bill.tenantid=?");
+		preparedStatementValues.add(billSearchCriteria.getTenantId());
+		
+		
+		
+		return billQuery.toString();
+	}
 
 }

@@ -66,6 +66,13 @@ public class AssetIndex {
 
 	private String yearWiseDepreciation;
 
+	private String cityName;
+	private String localName;
+	private String districtCode;
+	private String districtName;
+	private String regionName;
+	private String ulbGrade;
+
 	public void setAssetData(final Asset asset) {
 		tenantId = asset.getTenantId();
 		assetId = asset.getId();

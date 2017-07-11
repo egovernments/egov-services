@@ -39,22 +39,20 @@
  */
 package org.egov.demand.repository.querybuilder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.enums.Type;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
 public class DemandQueryBuilder {
-
-	private DemandQueryBuilder() {
-		//private constructor to avoid instantiation
-	}
-
-	public static final String SEQ_EGBS_QUERY = "SELECT NEXTVAL('sequencename') FROM GENERATE_SERIES(1,?)";
 
 	public static final String BASE_DEMAND_QUERY = "SELECT demand.id AS did,demand.consumercode AS dconsumercode,"
 			+ "demand.consumertype AS dconsumertype,demand.businessservice AS dbusinessservice,demand.owner AS downer,"
@@ -104,85 +102,100 @@ public class DemandQueryBuilder {
 			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?,tenantid=? WHERE id=? AND tenantid=?;";
 
-	public static String getDemandQuery(DemandCriteria demandCriteria,Set<String> ownerIds, List<Object> preparedStatementValues) {
+	public String getDemandQuery(DemandCriteria demandCriteria,Set<String> ownerIds, List<Object> preparedStatementValues) {
 
-		StringBuilder demandQueryBuilder = new StringBuilder(BASE_DEMAND_QUERY);
+		StringBuilder demandQuery = new StringBuilder(BASE_DEMAND_QUERY);
 
-		demandQueryBuilder.append("demand.tenantid=?");
+		demandQuery.append("demand.tenantid=?");
 		preparedStatementValues.add(demandCriteria.getTenantId());
 
 		if (demandCriteria.getDemandId() != null && !demandCriteria.getDemandId().isEmpty()) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.id IN ("+getIdQueryForStrings(demandCriteria.getDemandId()));
+			addAndClause(demandQuery);
+			demandQuery.append("demand.id IN (" + getIdQueryForStrings(demandCriteria.getDemandId()));
 		}
 		if (ownerIds != null && !ownerIds.isEmpty()) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.owner IN ("+getIdQueryForStrings(ownerIds));
+			addAndClause(demandQuery);
+			demandQuery.append("demand.owner IN (" + getIdQueryForStrings(ownerIds));
 		}
 		if (demandCriteria.getBusinessService() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.businessservice=?");
+			addAndClause(demandQuery);
+			demandQuery.append("demand.businessservice=?");
 			preparedStatementValues.add(demandCriteria.getBusinessService());
 		}
 		if (demandCriteria.getConsumerCode() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.consumercode=?");
-			preparedStatementValues.add(demandCriteria.getConsumerCode());
+			addAndClause(demandQuery);
+			demandQuery.append("demand.consumercode IN ("
+			+ getIdQueryForStrings(demandCriteria.getConsumerCode()));
 		}
 		if (demandCriteria.getDemandFrom() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demanddetail.taxamount>=?");
+			addAndClause(demandQuery);
+			demandQuery.append("demanddetail.taxamount>=?");
 			preparedStatementValues.add(demandCriteria.getDemandFrom());
 		}
 		if (demandCriteria.getDemandTo() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demanddetail.taxamount<=?");
+			addAndClause(demandQuery);
+			demandQuery.append("demanddetail.taxamount<=?");
 			preparedStatementValues.add(demandCriteria.getDemandTo());
 		}
-		//TODO add the type criteria using due current and arrear logic not priority
-		/*if (demandCriteria.getType() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.type=?");
-			preparedStatementValues.add(demandCriteria.getType());
-		}*/
-		addOrderByClause(demandQueryBuilder, DEMAND_QUERY_ORDER_BY_CLAUSE);
-		addPagingClause(demandQueryBuilder, preparedStatementValues);
+		if (demandCriteria.getType() != null) {
+			if (demandCriteria.getType().equals(Type.CURRENT)) {
+				addAndClause(demandQuery);
+				Long currDate = new Date().getTime();
+				demandQuery.append("demand.taxperiodfrom<=?");
+				preparedStatementValues.add(currDate);
+				addAndClause(demandQuery);
+				demandQuery.append("demand.taxperiodto>=?");
+				demandQuery.append(currDate);
+				
+			} else if (demandCriteria.getType().equals(Type.ARREARS)) {
+				addAndClause(demandQuery);
+				demandQuery.append("demand.taxperiodto<?");
+			}
+		}
+		addOrderByClause(demandQuery, DEMAND_QUERY_ORDER_BY_CLAUSE);
+		addPagingClause(demandQuery, preparedStatementValues);
 
-		log.info("the query String for demand : " + demandQueryBuilder.toString());
-		return demandQueryBuilder.toString();
+		log.info("the query String for demand : " + demandQuery.toString());
+		return demandQuery.toString();
 	}
 
 	public static String getDemandDetailQuery(DemandDetailCriteria demandDetailCriteria,
 			List<Object> preparedStatementValues) {
 
-		StringBuilder demandQueryBuilder = new StringBuilder(BASE_DEMAND_DETAIL_QUERY);
+		StringBuilder demandDetailQuery = new StringBuilder(BASE_DEMAND_DETAIL_QUERY);
 
-		demandQueryBuilder.append("demanddetail.tenantid=?");
+		demandDetailQuery.append("demanddetail.tenantid=?");
 		preparedStatementValues.add(demandDetailCriteria.getTenantId());
 
 		if (demandDetailCriteria.getDemandId() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demanddetail.demandid=?");
+			addAndClause(demandDetailQuery);
+			demandDetailQuery.append("demanddetail.demandid=?");
 			preparedStatementValues.add(demandDetailCriteria.getDemandId());
 		}
 		if (demandDetailCriteria.getTaxHeadCode() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demanddetail.taxheadcode=?");
+			addAndClause(demandDetailQuery);
+			demandDetailQuery.append("demanddetail.taxheadcode=?");
 			preparedStatementValues.add(demandDetailCriteria.getTaxHeadCode());
 		}
-		//TODO period from and period to , list of demanddeetailsid
-		/*if (demandDetailCriteria.getPeriod() != null) {
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.taxPeriodFrom<=?");
-			preparedStatementValues.add(demandDetailCriteria.getPeriod());
-			addAndClause(demandQueryBuilder);
-			demandQueryBuilder.append("demand.taxPeriodTo>=?");
-			preparedStatementValues.add(demandDetailCriteria.getPeriod());
-		}*/
-		addOrderByClause(demandQueryBuilder, BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE);
-		addPagingClause(demandQueryBuilder, preparedStatementValues);
-		log.info("the query String for demand detail: " + demandQueryBuilder.toString());
-		return demandQueryBuilder.toString();
+		if (demandDetailCriteria.getPeriodFrom() != null) {
+			addAndClause(demandDetailQuery);
+			demandDetailQuery.append("demand.taxPeriodFrom=?");
+			preparedStatementValues.add(demandDetailCriteria.getPeriodFrom());
+		}
+		if(demandDetailCriteria.getPeriodTo() != null){
+			addAndClause(demandDetailQuery);
+			demandDetailQuery.append("demand.taxPeriodTo=?");
+			preparedStatementValues.add(demandDetailCriteria.getPeriodTo());
+		}
+		if(demandDetailCriteria.getDetailsId() !=null && 
+				!demandDetailCriteria.getDetailsId().isEmpty()){
+			addAndClause(demandDetailQuery);
+			demandDetailQuery.append("demanddetail.id IN (" +getIdQueryForStrings(demandDetailCriteria.getDetailsId()));
+		}
+		addOrderByClause(demandDetailQuery, BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE);
+		addPagingClause(demandDetailQuery, preparedStatementValues);
+		log.info("the query String for demand detail: " + demandDetailQuery.toString());
+		return demandDetailQuery.toString();
 	}
 
 	private static void addOrderByClause(StringBuilder demandQueryBuilder,String columnName) {

@@ -159,6 +159,18 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 
+		} else if (ex instanceof DuplicateIdException) {
+			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+					environment.getProperty("invalid.code.token"), null, null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateIdException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(environment.getProperty("failed"));
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
 		}
 
 		else {

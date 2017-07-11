@@ -128,12 +128,13 @@ class Login extends Component {
    }
 
    componentDidMount() {
-     let {initForm, setLoadingStatus} = this.props;
+     let {initForm, setLoadingStatus, setHome} = this.props;
      initForm();
      setLoadingStatus("loading");
+     setHome(false);
      this.handleLocaleChange(this.state.locale);
-	 
-	 
+
+
    }
 
    componentWillUnmount() {
@@ -145,7 +146,7 @@ class Login extends Component {
    }
 
    componentDidUpdate(prevProps, prevState) {
-		
+
    }
 
    handleLocaleChange = (value) => {
@@ -169,6 +170,7 @@ class Login extends Component {
     this.props.setLoadingStatus('loading');
 	   e.preventDefault();
       var self = this, props = this.props;
+      let {setActionList}=this.props;
       self.setState({
           errorMsg: ""
       })
@@ -195,6 +197,22 @@ class Login extends Component {
 				localStorage.setItem("id", response.data.UserRequest.id);
 				localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
         props.login(false, response.data.access_token, response.data.UserRequest);
+
+        let roleCodes=[];
+        for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
+          roleCodes.push(response.data.UserRequest.roles[i].code);
+        }
+
+        Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response)
+        {
+          // console.log(response)
+          localStorage.setItem("modules", JSON.stringify(response.modules));
+          setActionList(response.modules)
+        },function(err) {
+            console.log(err);
+        });
+
+
 
       }).catch(function(response) {
 		  current.props.setLoadingStatus('hide');
@@ -285,9 +303,11 @@ class Login extends Component {
    }
 
    searchGrievance = (e) => {
-     let {history} = this.props;
-     if(this.state.srn)
-      history.push("/pgr/viewGrievance/"+this.state.srn);
+     let {setRoute, setHome} = this.props;
+     if(this.state.srn) {
+        setRoute("/pgr/viewGrievance/"+this.state.srn);
+        setHome(true);
+     }
    }
 
    validateOTP() {
@@ -521,8 +541,7 @@ class Login extends Component {
 
         return false;
       }
-	  
-	  console.log(credential);
+
 
         return(
           <div>
@@ -548,7 +567,7 @@ class Login extends Component {
               </Row>
               <Row style={styles.marginTop}>
                   <Col xs={12} md={6} mdPush={6} style={styles.marginBottom}>
-					<form autoComplete="on" onSubmit={(e) => { 
+					<form autoComplete="on" onSubmit={(e) => {
 					loginRequest(e)}}>
                     <Card>
                       <CardText>
@@ -556,7 +575,7 @@ class Login extends Component {
                               <Col lg={12}>
                               <h4>{translate('core.lbl.signin')}</h4>
                                 <Col lg={12}>
-                                <TextField  
+                                <TextField
                                     floatingLabelText={translate('core.lbl.addmobilenumber/login')}
                                     style={styles.fullWidth}
                                     errorText={fieldErrors.username
@@ -848,7 +867,12 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-  }
+  },
+  setActionList:(actionList)=>{
+    dispatch({type:"SET_ACTION_LIST",actionList});
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  setHome: (showHome) => dispatch({type: "SET_HOME", showHome})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

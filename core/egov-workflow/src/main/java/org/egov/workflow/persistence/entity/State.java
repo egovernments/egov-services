@@ -269,6 +269,7 @@ public class State extends AbstractAuditable<Long> {
                 comments(this.comments == null ? "" : this.comments)
                 .createdDate(this.getCreatedDate())
                 .id(this.getId().toString())
+                .lastupdatedSince(this.getLastModifiedDate())
                 .status(this.getValue())
                 .description(this.getNatureOfTask())
                 .owner(this.getOwnerPosition().toString())

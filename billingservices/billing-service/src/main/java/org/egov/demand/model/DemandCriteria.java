@@ -44,6 +44,8 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.demand.model.enums.Type;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -62,7 +64,7 @@ public class DemandCriteria {
 	
 	//private Set<String> owner;
 	
-	private String consumerCode;
+	private Set<String> consumerCode;
 	
 	private String businessService;
 	
@@ -70,7 +72,7 @@ public class DemandCriteria {
 	
 	private BigDecimal demandTo;
 	
-	private String type;
+	private Type type;
 	
 	private String mobileNumber;
 	

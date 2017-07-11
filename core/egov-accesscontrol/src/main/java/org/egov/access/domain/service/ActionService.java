@@ -61,9 +61,9 @@ public class ActionService {
     }
     
     
-    public List<Module> getAllActionsBasedOnRoles(final ActionRequest actionRequest){
+    public List<Module> getAllActionsBasedOnRoles(final ActionRequest actionRequest,final Boolean enabled){
     	
-    	return actionRepository.getAllActionsBasedOnRoles(actionRequest).getModules();
+    	return actionRepository.getAllActionsBasedOnRoles(actionRequest,enabled).getModules();
     	
     }
 }

@@ -2,8 +2,12 @@ package org.egov.property.api;
 
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepreciationRequest;
+import org.egov.models.DepreciationResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
 import org.egov.models.PropertyTypeRequest;
@@ -524,6 +528,116 @@ public class PropertyMasterController {
 	public UsageMasterResponse updateUsageMaster(@RequestBody UsageMasterRequest usageMasterRequest) throws Exception {
 
 		return masterService.updateUsageMaster(usageMasterRequest);
+	}
+
+	/**
+	 * This will create the depreciation
+	 * 
+	 * @param tenantId
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/depreciations/_create", method = RequestMethod.POST)
+	public DepreciationResponse createDepreciation(@RequestParam(required = true) String tenantId,
+			@RequestBody DepreciationRequest depreciationRequest) throws Exception {
+		return masterService.createDepreciation(tenantId, depreciationRequest);
+	}
+
+	/**
+	 * This will update the depreciation based on the given object
+	 * 
+	 * @param depreciationRequest
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/depreciations/_update", method = RequestMethod.POST)
+	public DepreciationResponse updateDepreciation(@RequestBody DepreciationRequest depreciationRequest)
+			throws Exception {
+		return masterService.updateDepreciation(depreciationRequest);
+
+	}
+
+	/**
+	 * This will search the depreciations based on the given inputs.
+	 * 
+	 * @param requestInfoWrapper
+	 * @param tenantId
+	 * @param ids
+	 * @param fromYear
+	 * @param toYear
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offset
+	 * @return {@link DepreciationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/depreciations/_search", method = RequestMethod.POST)
+	public DepreciationResponse searchDepreciation(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
+			@RequestParam(required = false) Integer fromYear, @RequestParam(required = false) Integer toYear,
+			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offset)
+			throws Exception {
+		return masterService.searchDepreciation(requestInfoWrapper.getRequestInfo(), tenantId, ids, fromYear, toYear,
+				code, nameLocal, pageSize, offset);
+	}
+
+	/**
+	 * This will create the mutation master based on the given mutation master
+	 * request
+	 * 
+	 * @param tenantId
+	 * @param mutationMasterRequest
+	 * @return {@link MutationMasterResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/mutationmasters/_create", method = RequestMethod.POST)
+	public MutationMasterResponse createMutationMater(@RequestParam(required = true) String tenantId,
+			@RequestBody MutationMasterRequest mutationMasterRequest) throws Exception {
+
+		return masterService.createMutationMater(tenantId, mutationMasterRequest);
+
+	}
+
+	/**
+	 * This will update the mutation master based on the given mutation master
+	 * request
+	 * 
+	 * @param mutationMasterRequest
+	 * @return {@link MutationMasterResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/mutationmasters/_update", method = RequestMethod.POST)
+	public MutationMasterResponse updateMutationMaster(@RequestBody MutationMasterRequest mutationMasterRequest)
+			throws Exception {
+		return masterService.updateMutationMaster(mutationMasterRequest);
+	}
+
+	/**
+	 * This will search the mutation master based on the given parameters
+	 * 
+	 * @param requestInfoWrapper
+	 * @param tenatId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return {@link MutationMasterResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/mutationmasters/_search", method = RequestMethod.POST)
+	public MutationMasterResponse searchMutationMaster(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
+			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
+			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer offSet) throws Exception {
+		return masterService.searchMutationMaster(requestInfoWrapper.getRequestInfo(), tenantId, ids, name, code,
+				nameLocal, pageSize, offSet);
+
 	}
 
 }

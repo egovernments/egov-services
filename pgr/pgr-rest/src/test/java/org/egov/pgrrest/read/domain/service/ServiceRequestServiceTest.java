@@ -58,12 +58,15 @@ public class ServiceRequestServiceTest {
     @Mock
     private ServiceRequestCustomFieldService customFieldsService;
 
+    @Mock
+    private DraftService draftService;
+
     @Before
     public void before() {
         when(serviceRequestValidator.canValidate(any())).thenReturn(true);
         final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
         serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
-            userRepository, serviceRequestTypeService, validators, customFieldsService);
+            userRepository, serviceRequestTypeService, validators, customFieldsService, draftService);
     }
 
     @Test
@@ -75,6 +78,32 @@ public class ServiceRequestServiceTest {
         serviceRequestService.save(serviceRequest, sevaRequest);
 
         verify(serviceRequestValidator, times(1)).validate(serviceRequest);
+    }
+
+    @Test
+    public void test_should_delete_draft_when_present_on_save() {
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getDraftId()).thenReturn(3L);
+        when(serviceRequest.getAuthenticatedUser()).thenReturn(getCitizen());
+        final SevaRequest sevaRequest = getSevaRequest();
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+
+        serviceRequestService.save(serviceRequest, sevaRequest);
+
+        verify(draftService).delete(3L);
+    }
+
+    @Test
+    public void test_should_not_delete_draft_when_draft_not_present_on_save() {
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getDraftId()).thenReturn(null);
+        when(serviceRequest.getAuthenticatedUser()).thenReturn(getCitizen());
+        final SevaRequest sevaRequest = getSevaRequest();
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+
+        serviceRequestService.save(serviceRequest, sevaRequest);
+
+        verify(draftService, times(0)).delete(any());
     }
 
     @Test
@@ -91,6 +120,40 @@ public class ServiceRequestServiceTest {
         serviceRequestService.update(serviceRequest, sevaRequest);
 
         verify(serviceRequestValidator, times(1)).validate(serviceRequest);
+    }
+
+    @Test
+    public void test_should_delete_draft_when_present_on_update() {
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getDraftId()).thenReturn(4L);
+        when(serviceRequest.getAuthenticatedUser()).thenReturn(getCitizen());
+        when(serviceRequest.getTenantId()).thenReturn("tenantId");
+        final SevaRequest sevaRequest = getSevaRequest();
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
+        when(submissionRepository.getPosition(serviceRequest.getCrn(), serviceRequest.getTenantId()))
+            .thenReturn(1L);
+
+        serviceRequestService.update(serviceRequest, sevaRequest);
+
+        verify(draftService).delete(4L);
+    }
+
+    @Test
+    public void test_should_not_delete_draft_when_draft_not_present_on_update() {
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getDraftId()).thenReturn(null);
+        when(serviceRequest.getAuthenticatedUser()).thenReturn(getCitizen());
+        when(serviceRequest.getTenantId()).thenReturn("tenantId");
+        final SevaRequest sevaRequest = getSevaRequest();
+        when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
+        when(employeeRepository.getEmployeeById(1L, "tenantId")).thenReturn(getEmployee());
+        when(submissionRepository.getPosition(serviceRequest.getCrn(), serviceRequest.getTenantId()))
+            .thenReturn(1L);
+
+        serviceRequestService.update(serviceRequest, sevaRequest);
+
+        verify(draftService, times(0)).delete(any());
     }
 
     @Test

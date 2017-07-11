@@ -1,3 +1,5 @@
+SELECT setval('seq_egpgr_complaintstatus_mapping',(select max(id)+1 from egpgr_complaintstatus_mapping));
+
 INSERT INTO service_status values(nextval('seq_service_status'),'RESUBMIT',0,'default','DS-RESUBMIT');
 
 --keyword_service_status table data--

@@ -1,26 +1,37 @@
 package org.egov.demand.repository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.model.Demand;
+import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
+import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.Owner;
+import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
+import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
+import org.egov.demand.repository.rowmapper.DemandRowMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 
-@RunWith(SpringRunner.class)
+@RunWith(PowerMockRunner.class)
 public class DemandRepositoryTest {
 
 	public static final String DEMAND_INSERT_QUERY = "INSERT INTO egbs_demand "
@@ -37,7 +48,43 @@ public class DemandRepositoryTest {
 
 	@InjectMocks
 	private DemandRepository demandRepository;
+	
+	@Mock
+	private DemandQueryBuilder demandQueryBuilder;
 
+	
+	@Test
+	@PrepareForTest({DemandQueryBuilder.class})
+	public void testShouldGetDemands(){
+		Demand demand = getDemand();
+		List<Demand> demands = new ArrayList<>();
+		demands.add(demand);
+		String query ="";
+		PowerMockito.mockStatic(DemandQueryBuilder.class);
+		
+		 PowerMockito.when(demandQueryBuilder.getDemandQuery(any(DemandCriteria.class),any(Set.class),any(List.class))).thenReturn(query);
+		
+		 when(jdbcTemplate.query(any(String.class),any(Object[].class),any(DemandRowMapper.class))).thenReturn(demands);
+
+		 assertTrue(demands.equals(demandRepository.getDemands(new DemandCriteria(),new HashSet<String>())));
+
+	}
+	
+	@Test
+	@PrepareForTest({DemandQueryBuilder.class})
+	public void testShouldGetDemandDetails(){
+		List<DemandDetail> demandDetails = getDemandDetails();
+		
+		String query ="";
+		PowerMockito.mockStatic(DemandQueryBuilder.class);
+		
+		 PowerMockito.when(demandQueryBuilder.getDemandDetailQuery(any(DemandDetailCriteria.class),any(List.class))).thenReturn(query);
+		
+		 when(jdbcTemplate.query(any(String.class), any(Object[].class), any(DemandDetailRowMapper.class))).thenReturn(demandDetails);
+		assertTrue(demandDetails.equals(demandRepository.getDemandDetails(new DemandDetailCriteria())));
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void methodSaveCreateDemand() {
@@ -53,6 +100,25 @@ public class DemandRepositoryTest {
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1, 2 });
 		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length);
 		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
+	}
+	
+	
+	
+	@Test
+	public void methodShouldUpdate(){
+		
+		Demand demand = getDemand();
+		List<DemandDetail> demandDetails = demand.getDemandDetails();
+		List<Demand> demands = new ArrayList<>();
+		demands.add(demand);
+
+		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1 });
+		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demands.size());
+
+		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(new int[] { 1, 2 });
+		System.err.println(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length);
+		assertEquals(jdbcTemplate.batchUpdate(any(String.class), any(List.class)).length, demandDetails.size());
+		
 	}
 
 	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {

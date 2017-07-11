@@ -78,7 +78,7 @@ public class ServiceType {
     
     private boolean metadata;
     
-    private boolean active;
+    private Boolean active;
     
     private String type;
     

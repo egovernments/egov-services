@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Employee;
@@ -77,11 +78,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
     private EmployeeService employeeService;
@@ -132,7 +132,7 @@ public class EmployeeController {
         try {
             employeesList = employeeService.getEmployees(employeeCriteria, requestInfo);
         } catch (Exception exception) {
-            LOGGER.error("Error while processing request " + employeeCriteria, exception);
+            log.error("Error while processing request " + employeeCriteria, exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
@@ -164,7 +164,7 @@ public class EmployeeController {
         try {
             employeesList = employeeService.getLoggedInEmployee(requestInfo);
         } catch (Exception exception) {
-            LOGGER.error("Error occurred while processing request for logged in employee:", exception);
+            log.error("Error occurred while processing request for logged in employee:", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
@@ -199,12 +199,12 @@ public class EmployeeController {
         try {
             employee = employeeService.getEmployee(employeeGetRequest.getId(), employeeGetRequest.getTenantId(),
                     requestInfo);
-            System.out.println("employee=" + employee);
+            log.debug("employee=" + employee);
         } catch (EmployeeIdNotFoundException idNotFoundException) {
-            LOGGER.error("Error while processing request " + employeeGetRequest.getId(), idNotFoundException);
+            log.error("Error while processing request " + employeeGetRequest.getId(), idNotFoundException);
             return errorHandler.getResponseEntityForInvalidEmployeeId(requestInfo);
         } catch (Exception exception) {
-            LOGGER.error("Error while processing request " + employeeGetRequest.getId(), exception);
+            log.error("Error while processing request " + employeeGetRequest.getId(), exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
         return getSuccessResponseForGet(employee, requestInfo);
@@ -221,7 +221,7 @@ public class EmployeeController {
     @PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
-        LOGGER.debug("employeeRequest::" + employeeRequest);
+        log.debug("employeeRequest::" + employeeRequest);
 
         ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
         if (errorResponseEntity != null)
@@ -231,10 +231,10 @@ public class EmployeeController {
         try {
             employee = employeeService.createAsync(employeeRequest);
         } catch (UserException ue) {
-            LOGGER.error("Error while processing request ", ue);
+            log.error("Error while processing request ", ue);
             return errorHandler.getResponseEntityForUserErrors(ue);
         } catch (Exception exception) {
-            LOGGER.error("Error while processing request ", exception);
+            log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
         }
         return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
@@ -251,7 +251,7 @@ public class EmployeeController {
     @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
-        LOGGER.debug("employeeRequest::" + employeeRequest);
+        log.debug("employeeRequest::" + employeeRequest);
 
         ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
         if (errorResponseEntity != null)
@@ -261,10 +261,10 @@ public class EmployeeController {
         try {
             employee = employeeService.updateAsync(employeeRequest);
         } catch (UserException ue) {
-            LOGGER.error("Error while processing request ", ue);
+            log.error("Error while processing request ", ue);
             return errorHandler.getResponseEntityForUserErrors(ue);
         } catch (Exception exception) {
-            LOGGER.error("Error while processing request ", exception);
+            log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
         }
         return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
@@ -312,7 +312,6 @@ public class EmployeeController {
     private ResponseEntity<?> getSuccessResponseForSearch(List<EmployeeInfo> employeesList, RequestInfo requestInfo) {
         EmployeeInfoResponse employeeInfoResponse = new EmployeeInfoResponse();
         employeeInfoResponse.setEmployees(employeesList);
-        System.out.println("employeesList=" + employeesList);
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         employeeInfoResponse.setResponseInfo(responseInfo);

@@ -196,7 +196,7 @@ class CategoryTypeCreate extends Component {
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       maxLength={100}
                                       onChange={(e) => { createCategoryType.active = true;
-                                      handleChange(e, "name", true, /^[a-zA-Z0-9]*$/g)}}
+                                      handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
                                       id="name"
 
                                   />
@@ -204,7 +204,7 @@ class CategoryTypeCreate extends Component {
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      maxLength={100}
+                                      maxLength={250}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createCategoryType.description? createCategoryType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
@@ -230,7 +230,7 @@ class CategoryTypeCreate extends Component {
                                           value:i
                                         }
                                       }
-                                      handleChange(e, "active", true, '')
+                                      handleChange(e, "active", false, '')
                                     }}
 
                                     id="active"
@@ -246,8 +246,9 @@ class CategoryTypeCreate extends Component {
 
               </div>
           </form>
+
           <Dialog
-               title={this.state.id != '' ? "Category Type Updated Successfully" : "Category Type Added Successfully"}
+               title={this.state.id != '' ? "Category Type "+createCategoryType.name+" Updated Successfully" : "Category Type "+createCategoryType.name+" Created Successfully"}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -292,8 +293,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["name","active"],
-          required: ["name","active"]
+          current: ["name"],
+          required: ["name"]
         },
         pattern: {
           current: [],

@@ -10,6 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import {translate} from '../../../../common/common';
 
 
 const $ = require('jquery');
@@ -124,16 +125,15 @@ class ViewEscalation extends Component {
 
     componentWillMount() {
       let{initForm} = this.props;
-      initForm()
-
-      $('#searchTable').DataTable({
-           dom: 'lBfrtip',
-           buttons: [
-                     'excel', 'pdf', 'print'
-            ],
-            ordering: false,
-            bDestroy: true,
-      });
+      initForm();
+       $('#searchTable').DataTable({
+             dom: 'lBfrtip',
+             buttons: [],
+              bDestroy: true,
+              language: {
+                 "emptyTable": "No Records"
+              }
+        });
     }
 
     componentDidMount() {
@@ -161,13 +161,21 @@ class ViewEscalation extends Component {
       });
 
     }
+	
+		componentWillUpdate() {
+	  $('#searchTable').dataTable().fnDestroy();
+	}
 
-    componentWillUpdate() {
-      if(flag == 1) {
-        flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
-      }
-    }
+   componentDidUpdate() {
+       $('#searchTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+     });
+  }
 
 
     componentWillUnmount(){
@@ -177,51 +185,30 @@ class ViewEscalation extends Component {
     }
 
   submitForm = (e) => {
+
+      let{setLoadingStatus} = this.props;
+      setLoadingStatus('loading');
     
       e.preventDefault();
 
        let self = this;
 
-      let searchSetFrom = {
+	let searchSetFrom = {
 		  fromPosition: this.props.viewEscalation.position,
-		  serviceCode:this.props.viewEscalation.grievanceType
+		  serviceCode: this.props.viewEscalation.grievanceType
 	  };
 	  
-	   let searchSetTo = {
-		  toPosition: this.props.viewEscalation.position,
-		  serviceCode:this.props.viewEscalation.grievanceType
-	  };
 
        Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetFrom).then(function(response) {
-		   console.log(response);
+		   setLoadingStatus('hide');
 			flag = 1;
-			for(let i=0; i<response.escalationHierarchies.length;i++){
 				   self.setState({
-						searchResult: [
-							...self.state.searchResult,
-							response.escalationHierarchies[i]
-						],
+						searchResult: response.escalationHierarchies,
 						isSearchClicked: true
 					  });
-			}
+
       
         }, function(err) {
-            console.log(err);
-        });
-		
-		Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSetTo).then(function(response) {
-			console.log(response);
-			flag = 1;
-			for(let i=0; i<response.escalationHierarchies.length;i++){
-				   self.setState({
-						searchResult: [
-							...self.state.searchResult,
-							response.escalationHierarchies[i]
-						],
-						isSearchClicked: true
-					  });
-			}
-		  }, function(err) {
             console.log(err);
         });
    
@@ -267,9 +254,9 @@ class ViewEscalation extends Component {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		         <thead style={{backgroundColor:"#f2851f",color:"white"}}>
    		            <tr>
-                    <th>Grievance Type</th>
-                    <th>From Position</th>
-                    <th>To Position</th>
+                    <th>{translate('pgr.lbl.grievance.type')}</th>
+                    <th>{translate('pgr.lbl.fromposition')}</th>
+                    <th>{translate('pgr.lbl.toposition')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -284,7 +271,7 @@ class ViewEscalation extends Component {
       return(<div className="viewEscalation">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
           <Card  style={styles.marginStyle}>
-              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > Search Escalation < /div>} />
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.searchesc')} < /div>} />
               <CardText>
                   <Card>
                       <CardText>
@@ -292,7 +279,7 @@ class ViewEscalation extends Component {
                               <Row>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          hintText="Grievance Type"
+                                          hintText={translate('pgr.lbl.grievance.type')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -307,13 +294,13 @@ class ViewEscalation extends Component {
                   	                            value: chosenRequest.serviceCode
                   	                          }
                   	                        };
-                  	                        handleChange(e, "grievanceType", true, "");
+                  	                        handleChange(e, "grievanceType", false, "");
                   	                       }}
                                         />
                                   </Col>
                                   <Col xs={12} md={6}>
                                         <AutoComplete
-                                          hintText="Position"
+                                          hintText={translate('pgr.lbl.position')}
                                           fullWidth={true}
                                           filter={function filter(searchText, key) {
                                                     return key.toLowerCase().includes(searchText.toLowerCase());
@@ -328,7 +315,7 @@ class ViewEscalation extends Component {
                   	                            value: chosenRequest.id
                   	                          }
                   	                        };
-                  	                        handleChange(e, "position", true, "");
+                  	                        handleChange(e, "position", false, "");
                   	                       }}
                                         />
                                   </Col>
@@ -338,7 +325,7 @@ class ViewEscalation extends Component {
                   </Card>
                   <div style={{textAlign:'center'}}>
 
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Search" primary={true}/>
+                      <RaisedButton style={{margin:'15px 5px'}} type="submit"  label={translate('core.lbl.search')} primary={true}/>
 
                   </div>
                   {viewTable()}
@@ -361,7 +348,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["position", "grievanceType"]
+          required: []
         },
         pattern: {
           current: [],
@@ -390,7 +377,12 @@ const mapDispatchToProps = dispatch => ({
       isRequired : true,
       pattern: ''
     });
-  }
+  },
+
+   setLoadingStatus: (loadingStatus) => {
+      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+    }
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewEscalation);

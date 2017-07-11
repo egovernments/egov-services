@@ -22,6 +22,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Getter
 public class ServiceRequest {
     private static final String PROCESSING_FEE = "PROCESSING_FEE";
+    private static final String DRAFT_ID = "draftId";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -123,6 +124,15 @@ public class ServiceRequest {
 
     public boolean isProcessingFeePresent() {
         return attributeEntries.stream().anyMatch(a -> PROCESSING_FEE.equals(a.getKey()));
+    }
+
+    public Long getDraftId() {
+        return attributeEntries.stream()
+            .filter(attributeEntry -> DRAFT_ID.equals(attributeEntry.getKey()))
+            .map(AttributeEntry::getCode)
+            .findFirst()
+            .map(Long::valueOf)
+            .orElse(null);
     }
 
     public boolean descriptionLength() {

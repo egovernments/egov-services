@@ -1,0 +1,15 @@
+{
+    "responseInfo": {
+    },
+    "depreciations": [
+        {
+            "id": 5,
+            "tenantId": "kiranprasad",
+            "code": "pra",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy":null
+            }
+        }
+    ]
+}

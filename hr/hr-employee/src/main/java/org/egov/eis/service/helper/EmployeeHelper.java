@@ -48,22 +48,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.EmployeeInfo;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
-import org.egov.eis.model.User;
+import org.egov.eis.model.*;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeHelper {
@@ -73,13 +65,14 @@ public class EmployeeHelper {
 
 	private enum Sequences {
 		ASSIGNMENT("seq_egeis_assignment"),
-		DEPARTMENTALTEST("seq_egeis_departmentaltest"),
-		EDUCATIONALQUALIFICATION("seq_egeis_educationalqualification"),
-		HODDEPARTMENT("seq_egeis_hoddepartment"),
+		DEPARTMENTAL_TEST("seq_egeis_departmentalTest"),
+		EDUCATIONAL_QUALIFICATION("seq_egeis_educationalQualification"),
+		HOD_DEPARTMENT("seq_egeis_hodDepartment"),
 		PROBATION("seq_egeis_probation"),
 		REGULARISATION("seq_egeis_regularisation"),
-		SERVICEHISTORY("seq_egeis_servicehistory"),
-		TECHNICALQUALIFICATION("seq_egeis_technicalqualification");
+		SERVICE_HISTORY("seq_egeis_serviceHistory"),
+		TECHNICAL_QUALIFICATION("seq_egeis_technicalQualification"),
+		APR_DETAILS("seq_egeis_aprDetails");
 
 		String sequenceName;
 
@@ -93,13 +86,16 @@ public class EmployeeHelper {
 		}
 	}
 
+/*
 	public String getEmployeeCode(Long id) {
 		return "EMP" + id;
 	}
+*/
 
 	public UserRequest getUserRequest(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = new UserRequest();
-		userRequest.setRequestInfo(employeeRequest.getRequestInfo());
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		userRequest.setRequestInfo(requestInfo);
 		User user = employeeRequest.getEmployee().getUser();
 		// FIXME : password hard-coded
 		user.setPassword("12345678");
@@ -113,41 +109,46 @@ public class EmployeeHelper {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		Long requesterId = requestInfo.getUserInfo().getId();
-		String tenantId = employee.getTenantId();
+		String tenantId = employeeRequest.getEmployee().getTenantId();
 
-		populateDefaultDataForNewEmployee(employee, requesterId);
+		populateDefaultDataForNewEmployee(employee, requesterId, tenantId);
 
 		employee.getAssignments().forEach((assignment) -> {
 			populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
 		});
-		if (employee.getEducation() != null) {
+		if (!isEmpty(employee.getEducation())) {
 			employee.getEducation().forEach((education) -> {
 				populateDefaultDataForNewEducation(education, requesterId, tenantId);
 			});
 		}
-		if (employee.getTest() != null) {
+		if (!isEmpty(employee.getTest())) {
 			employee.getTest().forEach((test) -> {
 				populateDefaultDataForNewTest(test, requesterId, tenantId);
 			});
 		}
-		if (employee.getProbation() != null) {
+		if (!isEmpty(employee.getProbation())) {
 			employee.getProbation().forEach((probation) -> {
 				populateDefaultDataForNewProbation(probation, requesterId, tenantId);
 			});
 		}
-		if (employee.getRegularisation() != null) {
+		if (!isEmpty(employee.getRegularisation())) {
 			employee.getRegularisation().forEach((regularisation) -> {
 				populateDefaultDataForNewRegularisation(regularisation, requesterId, tenantId);
 			});
 		}
-		if (employee.getServiceHistory() != null) {
+		if (!isEmpty(employee.getServiceHistory())) {
 			employee.getServiceHistory().forEach((serviceHistory) -> {
 				populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
 			});
 		}
-		if (employee.getTechnical() != null) {
+		if (!isEmpty(employee.getTechnical())) {
 			employee.getTechnical().forEach((technical) -> {
 				populateDefaultDataForNewTechnical(technical, requesterId, tenantId);
+			});
+		}
+		if (!isEmpty(employee.getAprDetails())) {
+			employee.getAprDetails().forEach((aprDetail) -> {
+				populateDefaultDataForNewAPRDetail(aprDetail, requesterId, tenantId);
 			});
 		}
 	}
@@ -156,21 +157,21 @@ public class EmployeeHelper {
 		Employee employee = employeeRequest.getEmployee();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();
 		Long requesterId = requestInfo.getUserInfo().getId();
-		// FIXME : Check - will allow us to set updated tenantId for every object, if employee tenantId is updated
-		String tenantId = employee.getTenantId();
+		// FIXME : Check - will allow us to set updated tenantId for every new object, if requester tenantId is updated
+		String tenantId = employeeRequest.getEmployee().getTenantId();
 
 		employee.setLastModifiedBy(requesterId);
 		employee.setLastModifiedDate((new Date()));
 
 		employee.getAssignments().forEach((assignment) -> {
-			if (assignment.getId() == null)
+			if (isEmpty(assignment.getId()))
 				populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
 			else
 				populateDefaultDataForUpdateAssignment(assignment, requesterId, tenantId);
 		});
-		if (employee.getEducation() != null) {
+		if (!isEmpty(employee.getEducation())) {
 			employee.getEducation().forEach((education) -> {
-				if (education.getId() == null)
+				if (isEmpty(education.getId()))
 					populateDefaultDataForNewEducation(education, requesterId, tenantId);
 				else {
 					education.setLastModifiedBy(requesterId);
@@ -178,9 +179,9 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getTest() != null) {
+		if (!isEmpty(employee.getTest())) {
 			employee.getTest().forEach((test) -> {
-				if (test.getId() == null)
+				if (isEmpty(test.getId()))
 					populateDefaultDataForNewTest(test, requesterId, tenantId);
 				else {
 					test.setLastModifiedBy(requesterId);
@@ -188,9 +189,9 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getProbation() != null) {
+		if (!isEmpty(employee.getProbation())) {
 			employee.getProbation().forEach((probation) -> {
-				if (probation.getId() == null)
+				if (isEmpty(probation.getId()))
 					populateDefaultDataForNewProbation(probation, requesterId, tenantId);
 				else {
 					probation.setLastModifiedBy(requesterId);
@@ -198,9 +199,9 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getRegularisation() != null) {
+		if (!isEmpty(employee.getRegularisation())) {
 			employee.getRegularisation().forEach((regularisation) -> {
-				if (regularisation.getId() == null)
+				if (isEmpty(regularisation.getId()))
 					populateDefaultDataForNewRegularisation(regularisation, requesterId, tenantId);
 				else {
 					regularisation.setLastModifiedBy(requesterId);
@@ -208,9 +209,9 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getServiceHistory() != null) {
+		if (!isEmpty(employee.getServiceHistory())) {
 			employee.getServiceHistory().forEach((serviceHistory) -> {
-				if (serviceHistory.getId() == null)
+				if (isEmpty(serviceHistory.getId()))
 					populateDefaultDataForNewServiceHistory(serviceHistory, requesterId, tenantId);
 				else {
 					serviceHistory.setLastModifiedBy(requesterId);
@@ -218,9 +219,9 @@ public class EmployeeHelper {
 				}
 			});
 		}
-		if (employee.getTechnical() != null) {
+		if (!isEmpty(employee.getTechnical())) {
 			employee.getTechnical().forEach((technical) -> {
-				if (technical.getId() == null)
+				if (isEmpty(technical.getId()))
 					populateDefaultDataForNewTechnical(technical, requesterId, tenantId);
 				else {
 					technical.setLastModifiedBy(requesterId);
@@ -228,18 +229,38 @@ public class EmployeeHelper {
 				}
 			});
 		}
+		if (!isEmpty(employee.getAprDetails())) {
+			employee.getAprDetails().forEach((aprDetail) -> {
+				if (isEmpty(aprDetail.getId()))
+					populateDefaultDataForNewAPRDetail(aprDetail, requesterId, tenantId);
+				else {
+					aprDetail.setLastModifiedBy(requesterId);
+					aprDetail.setLastModifiedDate((new Date()));
+				}
+			});
+		}
 	}
 
-	private void populateDefaultDataForNewEmployee(Employee employee, Long requesterId) {
+	private void populateDefaultDataForNewEmployee(Employee employee, Long requesterId, String tenantId) {
+		employee.setTenantId(tenantId);
 		employee.setCreatedBy(requesterId);
 		employee.setCreatedDate(new Date());
 		employee.setLastModifiedBy(requesterId);
 		employee.setLastModifiedDate((new Date()));
 	}
 
+	private void populateDefaultDataForNewAPRDetail(APRDetail aprDetail, Long requesterId, String tenantId) {
+		aprDetail.setId(employeeRepository.generateSequence(Sequences.APR_DETAILS.toString()));
+		aprDetail.setTenantId(tenantId);
+		aprDetail.setCreatedBy(requesterId);
+		aprDetail.setCreatedDate(new Date());
+		aprDetail.setLastModifiedBy(requesterId);
+		aprDetail.setLastModifiedDate((new Date()));
+	}
+
 	private void populateDefaultDataForNewTechnical(TechnicalQualification technical, Long requesterId,
 			String tenantId) {
-		technical.setId(employeeRepository.generateSequence(Sequences.TECHNICALQUALIFICATION.toString()));
+		technical.setId(employeeRepository.generateSequence(Sequences.TECHNICAL_QUALIFICATION.toString()));
 		technical.setTenantId(tenantId);
 		technical.setCreatedBy(requesterId);
 		technical.setCreatedDate(new Date());
@@ -249,7 +270,7 @@ public class EmployeeHelper {
 
 	private void populateDefaultDataForNewServiceHistory(ServiceHistory serviceHistory, Long requesterId,
 			String tenantId) {
-		serviceHistory.setId(employeeRepository.generateSequence(Sequences.SERVICEHISTORY.toString()));
+		serviceHistory.setId(employeeRepository.generateSequence(Sequences.SERVICE_HISTORY.toString()));
 		serviceHistory.setTenantId(tenantId);
 		serviceHistory.setCreatedBy(requesterId);
 		serviceHistory.setCreatedDate(new Date());
@@ -277,7 +298,7 @@ public class EmployeeHelper {
 	}
 
 	private void populateDefaultDataForNewTest(DepartmentalTest test, Long requesterId, String tenantId) {
-		test.setId(employeeRepository.generateSequence(Sequences.DEPARTMENTALTEST.toString()));
+		test.setId(employeeRepository.generateSequence(Sequences.DEPARTMENTAL_TEST.toString()));
 		test.setTenantId(tenantId);
 		test.setCreatedBy(requesterId);
 		test.setCreatedDate(new Date());
@@ -287,7 +308,7 @@ public class EmployeeHelper {
 
 	private void populateDefaultDataForNewEducation(EducationalQualification education, Long requesterId,
 			String tenantId) {
-		education.setId(employeeRepository.generateSequence(Sequences.EDUCATIONALQUALIFICATION.toString()));
+		education.setId(employeeRepository.generateSequence(Sequences.EDUCATIONAL_QUALIFICATION.toString()));
 		education.setTenantId(tenantId);
 		education.setCreatedBy(requesterId);
 		education.setCreatedDate(new Date());
@@ -302,9 +323,9 @@ public class EmployeeHelper {
 		assignment.setCreatedDate(new Date());
 		assignment.setLastModifiedBy(requesterId);
 		assignment.setLastModifiedDate((new Date()));
-		if (assignment.getHod() != null) {
+		if (!isEmpty(assignment.getHod())) {
 			assignment.getHod().forEach((hod) -> {
-				hod.setId(employeeRepository.generateSequence(Sequences.HODDEPARTMENT.toString()));
+				hod.setId(employeeRepository.generateSequence(Sequences.HOD_DEPARTMENT.toString()));
 				hod.setTenantId(tenantId);
 			});
 		}
@@ -314,13 +335,13 @@ public class EmployeeHelper {
 		assignment.setLastModifiedBy(requesterId);
 		assignment.setLastModifiedDate((new Date()));
 		// trimTimePartFromDateFields(assignment);
-		if (assignment.getDocuments() == null) {
+		if (isEmpty(assignment.getDocuments())) {
 			assignment.setDocuments(new ArrayList<>());
 		}
-		if (assignment.getHod() != null) {
+		if (!isEmpty(assignment.getHod())) {
 			assignment.getHod().forEach((hod) -> {
-				if (hod.getId() == null)
-					hod.setId(employeeRepository.generateSequence(Sequences.HODDEPARTMENT.toString()));
+				if (isEmpty(hod.getId()))
+					hod.setId(employeeRepository.generateSequence(Sequences.HOD_DEPARTMENT.toString()));
 				hod.setTenantId(tenantId);
 			});
 		}

@@ -58,7 +58,7 @@ public class ActionController {
 	@PostMapping(value = "_list")
 	public ActionSearchResponse getAllActionsBasedOnRoles(@RequestBody final ActionRequest actionRequest) {
 
-		List<Module> moduleList = actionService.getAllActionsBasedOnRoles(actionRequest);
+		List<Module> moduleList = actionService.getAllActionsBasedOnRoles(actionRequest,actionRequest.getEnabled());
 
 		return getListSuccessResponse(actionRequest.getRequestInfo(),moduleList);
 

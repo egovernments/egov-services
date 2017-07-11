@@ -5,16 +5,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.eis.model.Assignment;
-import org.egov.eis.model.DepartmentalTest;
-import org.egov.eis.model.EducationalQualification;
-import org.egov.eis.model.Employee;
-import org.egov.eis.model.EmployeeDocument;
-import org.egov.eis.model.Nominee;
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.Regularisation;
-import org.egov.eis.model.ServiceHistory;
-import org.egov.eis.model.TechnicalQualification;
+import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeDocumentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +84,13 @@ public class EmployeeDocumentsService {
 				if (serviceHistory.getDocuments() == null)
 					serviceHistory.setDocuments(new ArrayList<>());
 				updateDocuments(serviceHistory.getDocuments(), EntityType.SERVICE, serviceHistory.getId(),
+						documentsFromDb, employee.getId(), employee.getTenantId());
+			});
+		if (!isEmpty(employee.getAprDetails()))
+			employee.getAprDetails().forEach((aprDetail) -> {
+				if (aprDetail.getDocuments() == null)
+					aprDetail.setDocuments(new ArrayList<>());
+				updateDocuments(aprDetail.getDocuments(), EntityType.APR_DETAILS, aprDetail.getId(),
 						documentsFromDb, employee.getId(), employee.getTenantId());
 			});
 	}
@@ -186,6 +184,12 @@ public class EmployeeDocumentsService {
 				for (Probation probation : employee.getProbation())
 					if (probation.getId().equals(document.getReferenceId()))
 						probation.getDocuments().add(document.getDocument());
+				break;
+			case APR_DETAILS:
+				for (APRDetail aprDetail : employee.getAprDetails()) {
+					if (aprDetail.getId().equals(document.getReferenceId()))
+						aprDetail.getDocuments().add(document.getDocument());
+				}
 				break;
 			default:
 				break;

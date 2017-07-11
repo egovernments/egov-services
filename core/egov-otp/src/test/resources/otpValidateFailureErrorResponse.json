@@ -4,6 +4,12 @@
     "code": 400,
     "message": "OTP validation unsuccessful",
     "description": null,
-    "fields": []
+    "fields": [
+      {
+        "code": "OTP.VALIDATION_UNSUCCESSFUL",
+        "message": "OTP validation unsuccessful",
+        "field": "otp.otp"
+      }
+    ]
   }
 }

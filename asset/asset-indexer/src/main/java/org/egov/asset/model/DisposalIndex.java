@@ -37,6 +37,15 @@ public class DisposalIndex {
 	private Long createdDate;
 	private String lastModifiedBy;
 	private Long lastModifiedDate;
+	
+	private Long voucherReference;
+	
+	private String cityName;
+	private String localName;
+	private String districtCode;
+	private String districtName;
+	private String regionName;
+	private String ulbGrade;
 
 	public void setDisposalData(final Disposal disposal) {
 		tenantId = disposal.getTenantId();
@@ -51,6 +60,7 @@ public class DisposalIndex {
 		saleValue = disposal.getSaleValue();
 		transactionType = disposal.getTransactionType().toString();
 		assetSaleAccount = disposal.getAssetSaleAccount();
+		voucherReference = disposal.getVoucherReference();
 	}
 
 }

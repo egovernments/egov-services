@@ -103,14 +103,14 @@ public class Consumer {
 		PropertyRequest propertyRequest=consumerRecord.value();
 		if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.userenhanced"))){
 			StringBuffer createUrl=new StringBuffer();
-			createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-			createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-			createUrl.append(environment.getProperty("egov.services.allottee_service.createpath"));
+			createUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+			createUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+			createUrl.append(environment.getProperty("egov.services.egov_user.createpath"));
 
 			StringBuffer searchUrl=new StringBuffer();
-			searchUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-			searchUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-			searchUrl.append(environment.getProperty("egov.services.allottee_service.searchpath"));
+			searchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+			searchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+			searchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
 
 
 			for(Property property:propertyRequest.getProperties()){
@@ -155,23 +155,23 @@ public class Consumer {
 
 		else if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.userenhanced"))){
 			StringBuffer createUrl=new StringBuffer();
-			createUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-			createUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-			createUrl.append(environment.getProperty("egov.services.allottee_service.createpath"));
+			createUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+			createUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+			createUrl.append(environment.getProperty("egov.services.egov_user.createpath"));
 
 			StringBuffer searchUrl=new StringBuffer();
-			searchUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-			searchUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-			searchUrl.append(environment.getProperty("egov.services.allottee_service.searchpath"));
+			searchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+			searchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+			searchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
 
 
 			for(Property property:propertyRequest.getProperties()){
 				for(User user: property.getOwners()){
 					if(user.getId() !=null){
 						StringBuffer updateUrl=new StringBuffer();
-						updateUrl.append(environment.getProperty("egov.services.allottee_service.hostname"));
-						updateUrl.append(environment.getProperty("egov.services.allottee_service.basepath"));
-						updateUrl.append(environment.getProperty("egov.services.allottee_service.updatepath"));
+						updateUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+						updateUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+						updateUrl.append(environment.getProperty("egov.services.egov_user.updatepath"));
 						//update user
 						UserRequestInfo userRequestInfo=new UserRequestInfo();
 						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());

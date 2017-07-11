@@ -1,0 +1,18 @@
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.grievancecell','Register via grievance cell','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.recoverpswd','Recover Password','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.sendotp','Send Recovery OTP','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.recoverylink','Recovery link or OTP will be sent to your registered email / mobile','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.otpnumber','Enter OTP Sent To Your Mobile Number','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.verify','Verify','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.loginreqrd','Mobile Number / Login ID is required','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.otprqrd','OTP is required','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.passwdrqrd','Password is required','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.tencharacter','Min: 10 Characters','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.selectmap','Type your location or select it from maps','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.fiftychar','File name length should not exceed 50 characters','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.fivemb','File size exceeds 5MB','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.formatallowed','Allowed file formats is','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.selectpos','Select position to whom it is forwarded','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.frwddept','Forward to Department','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.frwddesgn','Forward to Designation','default','PGR',1);
+insert into message (id,locale,code,message,tenantid,module,createdby) values(nextval('SEQ_MESSAGE'),'en_IN','pgr.lbl.frwdpos','Forward to Position','default','PGR',1);

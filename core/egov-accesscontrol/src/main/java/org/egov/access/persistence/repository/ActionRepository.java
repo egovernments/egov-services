@@ -44,13 +44,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import org.egov.access.domain.model.Action;
 import org.egov.access.persistence.repository.querybuilder.ActionQueryBuilder;
-import org.egov.access.persistence.repository.rowmapper.RoleActionServiceRowMapper;
+import org.egov.access.persistence.repository.rowmapper.ActionSearchRowMapper;
+import org.egov.access.persistence.repository.rowmapper.ModuleSearchRowMapper;
 import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.access.web.contract.action.ActionService;
 import org.egov.access.web.contract.action.Module;
@@ -66,7 +66,6 @@ import org.springframework.stereotype.Repository;
 public class ActionRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ActionRepository.class);
-
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -187,70 +186,196 @@ public class ActionRepository {
 
 	}
 
-	public ActionService getAllActionsBasedOnRoles(ActionRequest actionRequest){
-		
-		
-		StringBuilder queryBuilder = new StringBuilder();
-		
-				
-	queryBuilder.append("SELECT service.id as serviceId,service.code as serviceCode, service.name as serviceNmae,service.contextroot as serviceContextRoot,"+ 
-				"service.displayName as serviceDisplayName,service.parentmodule as serviceParentModule , "+
-				"action.id as actionId,action.name as actionName,action.url as actionUrl,action.servicecode as actionServiceCode, "+ 
-				"action.queryparams as actionQueryParams, action.parentmodule as actionParentModule,action.displayname as actionDisplayName "+
-				"FROM service service LEFT JOIN eg_action action ON service.code = action.servicecode LEFT JOIN eg_roleaction roleaction ON roleaction.actionid = action.id where ");
-				
-	
-		
+	public ActionService getAllActionsBasedOnRoles(ActionRequest actionRequest, Boolean enabled) {
+
+		StringBuilder allservicesQueryBuilder = new StringBuilder();
+		StringBuilder actionQueryBuilder = new StringBuilder();
+		StringBuilder servicesQueryBuilder = new StringBuilder();
+
+		ActionService service = new ActionService();
+
+		service.setModules(new ArrayList<Module>());
+		ModuleSearchRowMapper moduleRowMapper = new ModuleSearchRowMapper();
+
+		ActionSearchRowMapper actionRowMapper = new ActionSearchRowMapper();
+
+		List<Module> moduleList = null;
+
 		List<String> sqlStringifiedCodes = new ArrayList<>();
-        for (String roleName : actionRequest.getRoleCodes()) {
-            sqlStringifiedCodes.add(String.format("'%s'", roleName));
-        }
-        queryBuilder.append(" roleaction.rolecode IN (" + String.join(",", sqlStringifiedCodes) + ")");
-        
-        queryBuilder.append(" and service.tenantid = '"+ actionRequest.getTenantId()+"'");
-        
-        queryBuilder.append(" UNION ");
-        
-        queryBuilder.append(" SELECT service.id as serviceId,service.code as serviceCode, service.name as serviceNmae,service.contextroot as serviceContextRoot, "+
-				"service.displayName as serviceDisplayName,service.parentmodule as serviceParentModule ,"+ 
-				"subtable.id as actionId,subtable.name as actionName,subtable.url as actionUrl,subtable.servicecode as actionServiceCode, "+
-				"subtable.queryparams as actionQueryParams, subtable.parentmodule as actionParentModule,subtable.displayname as actionDisplayName "+
-				"FROM service service LEFT JOIN "+
-				"(SELECT * FROM eg_action action LEFT JOIN eg_roleaction roleaction ON roleaction.actionid = action.id where ");
-        
-        queryBuilder.append(" roleaction.rolecode IN (" + String.join(",", sqlStringifiedCodes) + "))");
-        
-        queryBuilder.append(" subtable ON service.code = subtable.servicecode where service.tenantid = '"+actionRequest.getTenantId()+ "'"+
-							" AND service.id IN (SELECT NULLIF(serv.parentmodule, '')::int FROM eg_action action LEFT JOIN eg_roleaction roleaction ON roleaction.actionid = action.id LEFT JOIN service serv ON "+ 
-							"action.servicecode = serv.code where");
-        
-        queryBuilder.append(" roleaction.rolecode IN (" + String.join(",", sqlStringifiedCodes) + "))");
-        
-                   
-      ///  queryBuilder.append("and  roleaction.tenantid = '"+ actionRequest.getTenantId()+"'");
-        
-       // queryBuilder.append(" order by action.id"); 
-		
-        RoleActionServiceRowMapper roleActionserviceRowMapper = new RoleActionServiceRowMapper();
-        LOGGER.info("Query : " + queryBuilder.toString());
-        jdbcTemplate.query(queryBuilder.toString(), roleActionserviceRowMapper);
-        
-        return prepareActionServiceList(roleActionserviceRowMapper);
-	}
-
-
-	private ActionService prepareActionServiceList(RoleActionServiceRowMapper rowMapper) {
-	ActionService actionService = new ActionService();
-		List<Module> moduleList = new ArrayList<>();
-		Iterator<Entry<Long, Module>> moduleMapItr = rowMapper.moduleMap.entrySet().iterator();
-		while(moduleMapItr.hasNext()){ 
-			Entry<Long, Module> entry= moduleMapItr.next();
-			moduleList.add(entry.getValue());
+		for (String roleName : actionRequest.getRoleCodes()) {
+			sqlStringifiedCodes.add(String.format("'%s'", roleName));
 		}
-		actionService.setModules(moduleList);
-		return actionService; 
+
+		actionQueryBuilder.append(
+				"select id,name,displayname,servicecode,url,queryparams from eg_action action where id IN(select actionid from eg_roleaction roleaction where");
+
+		actionQueryBuilder.append(" roleaction.rolecode IN ( select code from eg_ms_role where code in ("
+				+ String.join(",", sqlStringifiedCodes) + "))" + "and roleaction.tenantid = '"
+				+ actionRequest.getTenantId() + "' ) ");
+
+		if (enabled != null)
+			actionQueryBuilder.append(" and enabled='" + enabled + "'");
+
+		jdbcTemplate.query(actionQueryBuilder.toString(), actionRowMapper);
+		Map<String, List<Action>> actionMap = actionRowMapper.actionMap;
+
+		if (actionMap.size() > 0) {
+
+			servicesQueryBuilder.append(
+					"select id,name,code,parentmodule,displayname from service service where service.code in (select DISTINCT(action.servicecode) from eg_roleaction roleaction,eg_action action where ");
+			servicesQueryBuilder.append(" roleaction.rolecode IN (" + String.join(",", sqlStringifiedCodes) + ")"
+					+ "and roleaction.tenantid = '" + actionRequest.getTenantId() + "'");
+			if (enabled != null)
+				servicesQueryBuilder.append(" and enabled='" + enabled + "'");
+
+			servicesQueryBuilder.append(" and action.id = roleaction.actionid) and service.tenantid = '"
+					+ actionRequest.getTenantId() + "'");
+			if (enabled != null)
+				servicesQueryBuilder.append("  and service.enabled='" + enabled + "'");
+
+			moduleList = jdbcTemplate.query(servicesQueryBuilder.toString(), moduleRowMapper);
+
+		}
+
+		List<String> moduleCodes = null;
+
+		if (moduleList != null && moduleList.size() > 0) {
+
+			moduleCodes = new ArrayList<>();
+			for (Module module : moduleList) {
+				moduleCodes.add(String.format("'%s'", module.getId()));
+			}
+		}
+
+		List<Module> allServiceList = null;
+
+		if (moduleCodes != null && moduleCodes.size() > 0) {
+
+			allservicesQueryBuilder.append("(WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
+					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
+					+ " id IN (" + String.join(",", moduleCodes) + ") UNION ALL"
+					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
+					+ " FROM nodes s2, service s1 WHERE CAST(s1.parentmodule as bigint) = s2.id");
+
+			if (enabled != null) {
+
+				allservicesQueryBuilder.append(" and s1.tenantid = '" + actionRequest.getTenantId()
+						+ "' and s1.enabled ='" + actionRequest.getEnabled() + "')");
+
+			} else {
+				allservicesQueryBuilder.append(" and s1.tenantid = '" + actionRequest.getTenantId() + "')");
+			}
+
+			allservicesQueryBuilder.append(" SELECT * FROM nodes)" + " UNION"
+					+ " (WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
+					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
+					+ " id IN (" + String.join(",", moduleCodes) + ") UNION ALL"
+					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
+					+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id"
+					+ " and s1.tenantid = '" + actionRequest.getTenantId() + "')" + " SELECT * FROM nodes);");
+
+			allServiceList = jdbcTemplate.query(allservicesQueryBuilder.toString(), moduleRowMapper);
+		}
+
+		LOGGER.info("Action Query : " + actionQueryBuilder.toString());
+		LOGGER.info("services Query : " + servicesQueryBuilder.toString());
+		LOGGER.info("All Services Query : " + allservicesQueryBuilder.toString());
+
+		if (allServiceList != null && allServiceList.size() > 0) {
+
+			List<Module> rootModules = prepareListOfServices(allServiceList, actionMap);
+
+			for (Module module : rootModules) {
+
+				getSubmodule(module, allServiceList, actionMap);
+
+			}
+
+			removeMainModuleDoesnotExistActions(rootModules);
+
+			service.setModules(rootModules);
+		}
+
+		return service;
 	}
-	
+
+	private List<Module> prepareListOfServices(List<Module> moduleList, Map<String, List<Action>> actionMap) {
+
+		List<Module> mainModules = new ArrayList<Module>();
+
+		for (Module module : moduleList) {
+
+			if (module.getParentModule() == null || module.getParentModule().isEmpty()) {
+
+				List<Module> subModule = new ArrayList<Module>();
+				if (actionMap.containsKey(module.getCode())) {
+
+					module.setActionList(actionMap.get(module.getCode()));
+				}
+
+				module.setSubModules(subModule);
+
+				mainModules.add(module);
+
+			}
+		}
+
+		return mainModules;
+	}
+
+	private Module getSubmodule(Module module, List<Module> allModules, Map<String, List<Action>> actionMap) {
+
+		if (module.getSubModules().size() != 0) {
+
+			List<Module> subModuleList = new ArrayList<Module>();
+
+			module.setSubModules(subModuleList);
+		}
+
+		for (Module module1 : allModules) {
+
+			if (module.getId().toString().equals(module1.getParentModule())) {
+
+				if (actionMap.containsKey(module.getCode())) {
+
+					module.setActionList(actionMap.get(module.getCode()));
+				}
+
+				module.getSubModules().add(module1);
+
+			}
+
+		}
+
+		if (module.getSubModules().size() != 0) {
+
+			for (Module sub : module.getSubModules()) {
+
+				List<Module> subModuleList = new ArrayList<Module>();
+
+				sub.setSubModules(subModuleList);
+				getSubmodule(sub, allModules, actionMap);
+			}
+		}
+
+		return module;
+	}
+
+	private void removeMainModuleDoesnotExistActions(List<Module> modules) {
+
+		if (modules.size() > 0) {
+
+			for (int i = 0; i < modules.size(); i++) {
+
+				if (modules.get(i).getSubModules() != null && modules.get(i).getSubModules().size() == 0
+						&& modules.get(i).getActionList() == null) {
+
+					modules.remove(i);
+				}
+
+			}
+		}
+
+	}
+
 }
-
-

@@ -7,7 +7,11 @@ const defaultState = {
   complaintsLength: 0,
   pleaseWait: false,
   showMenu: false,
+<<<<<<< HEAD
   actionList:JSON.parse(localStorage.getItem("modules")) || []
+=======
+  showHome: false
+>>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 };
 
 export default (state = defaultState, action) => {
@@ -48,6 +52,11 @@ export default (state = defaultState, action) => {
         route: action.route,
         redirectTo: action.route,
 
+      }
+    case 'SET_HOME':
+      return {
+        ...state,
+        showHome: action.showHome
       }
     case 'GET_LENGTH':
       return {

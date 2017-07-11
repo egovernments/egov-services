@@ -1,0 +1,1 @@
+The title is transferred from {{oldOwner}} to {{newOwner}} for the id No. {{propertyId}} based on the representation of {{details}}. You may collect the Title Transfer Endorsement Notice from {{municipalityName}}.

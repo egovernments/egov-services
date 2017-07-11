@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.web.contract.BillAccountDetails;
-import org.egov.collection.web.contract.BillDetails;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
@@ -50,50 +51,51 @@ public class ReceiptReqValidator {
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBillInfo().getPayeeName() || receipt.getBillInfo().getPayeeName().isEmpty()){
+		if(null == receipt.getBillInfoWrapper().getBillInfo().getPayeeName() || receipt.getBillInfoWrapper().getBillInfo().getPayeeName().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAYEE_NAME_MISSING_CODE)
 					.message(CollectionServiceConstants.PAYEE_NAME_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAYEE_NAME_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBillInfo().getPaidBy() || receipt.getBillInfo().getPaidBy().isEmpty()){
+		if(null == receipt.getBillInfoWrapper().getBillInfo().getPaidBy() || receipt.getBillInfoWrapper().getBillInfo().getPaidBy().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAID_BY_MISSING_CODE)
 					.message(CollectionServiceConstants.PAID_BY_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAID_BY_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-		for(BillDetails billDetails:  receipt.getBillInfo().getBillDetails()){
-			if(null == billDetails.getReceiptType()|| billDetails.getReceiptType().isEmpty()){
+		for(BillDetailsWrapper billDetailsWrapper:  receipt.getBillInfoWrapper().getBillInfo().getBillDetailsWrapper()){
+			BillDetail billDetails = billDetailsWrapper.getBillDetails();
+			if(null == billDetailsWrapper.getReceiptType()|| billDetailsWrapper.getReceiptType().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.RECEIPT_TYPE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetails.getReceiptDate()){
+			if(null == billDetailsWrapper.getReceiptDate()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_DATE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_DATE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.RECEIPT_DATE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetails.getCollectionType() || billDetails.getCollectionType().isEmpty() ){
+			if(null == billDetailsWrapper.getCollectionType() || billDetailsWrapper.getCollectionType().isEmpty() ){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLLECTIONTYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.COLLECTIONTYPE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.COLLECTIONTYPE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetails.getBusinessDetailsCode() || billDetails.getBusinessDetailsCode().isEmpty()){
+			if(null == billDetailsWrapper.getBusinessDetailsCode() || billDetailsWrapper.getBusinessDetailsCode().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BD_CODE_MISSING_CODE)
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.BD_CODE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}	
 			
-			for(BillAccountDetails billAccountDetails: billDetails.getBillAccountDetails()){
+			for(BillAccountDetail billAccountDetails: billDetails.getBillAccountDetails()){
 				
 				if(null == billAccountDetails.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)

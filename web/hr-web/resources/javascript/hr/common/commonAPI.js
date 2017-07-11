@@ -10,6 +10,7 @@ else {
 }
 
 tenantId = tenantIds[tenantId] || "ap." + tenantId;
+
 var authToken = localStorage.getItem("auth-token");
 var now = new Date();
 var year = now.getFullYear();
@@ -560,6 +561,34 @@ function getDropdown(name, cb, params) {
                 })
             } else {
                 cb(JSON.parse(localStorage.getItem("leaveTypes")));
+            }
+            break;
+        case 'gender':
+            if (!localStorage.getItem("gender") || localStorage.getItem("gender") == "undefined") {
+                getCommonMaster("egov-common-masters", "genders", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("gender", JSON.stringify(res["Gender"]));
+                        cb(res["Gender"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("gender")));
+            }
+            break;
+        case 'relation':
+            if (!localStorage.getItem("relation") || localStorage.getItem("relation") == "undefined") {
+                getCommonMaster("egov-common-masters", "genders", function(err, res) {
+                    if (res) {
+                        localStorage.setItem("relation", JSON.stringify(res["Relationship"]));
+                        cb(res["Relationship"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("relation")));
             }
             break;
     }

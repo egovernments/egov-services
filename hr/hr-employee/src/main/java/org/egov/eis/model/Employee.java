@@ -49,6 +49,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.egov.eis.model.enums.MaritalStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -116,11 +117,11 @@ public class Employee {
 	@Valid
 	@NotNull
 	@Size(min=1)
-	private List<Assignment> assignments = new ArrayList<Assignment>();
+	private List<Assignment> assignments = new ArrayList<>();
 
 	@NotNull
 	@Size(min=1)
-	private List<Long> jurisdictions = new ArrayList<Long>();
+	private List<Long> jurisdictions = new ArrayList<>();
 
 	private Long motherTongue;
 
@@ -134,7 +135,7 @@ public class Employee {
 
 	private Boolean medicalReportProduced;
 
-	private List<Long> languagesKnown = new ArrayList<Long>();
+	private List<Long> languagesKnown = new ArrayList<>();
 
 	@Valid
 	@NotNull
@@ -157,24 +158,28 @@ public class Employee {
 	private String placeOfBirth;
 
 	@Valid
-	private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
+	private List<ServiceHistory> serviceHistory = new ArrayList<>();
 
 	@Valid
-	private List<Probation> probation = new ArrayList<Probation>();
+	private List<Probation> probation = new ArrayList<>();
 
 	@Valid
-	private List<Regularisation> regularisation = new ArrayList<Regularisation>();
+	private List<Regularisation> regularisation = new ArrayList<>();
 
 	@Valid
-	private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
+	private List<TechnicalQualification> technical = new ArrayList<>();
 
 	@Valid
-	private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
+	private List<EducationalQualification> education = new ArrayList<>();
 
 	@Valid
-	private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
+	private List<DepartmentalTest> test = new ArrayList<>();
 
-	private List<String> documents = new ArrayList<String>();
+	@Valid
+	@JsonProperty("APRDetails")
+	private List<APRDetail> aprDetails = new ArrayList<>();
+
+	private List<String> documents = new ArrayList<>();
 
 	private Long createdBy;
 

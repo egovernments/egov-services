@@ -128,9 +128,10 @@ class Login extends Component {
    }
 
    componentDidMount() {
-     let {initForm, setLoadingStatus} = this.props;
+     let {initForm, setLoadingStatus, setHome} = this.props;
      initForm();
      setLoadingStatus("loading");
+     setHome(false);
      this.handleLocaleChange(this.state.locale);
 
 
@@ -165,6 +166,7 @@ class Login extends Component {
    }
 
    loginRequest (e) {
+	var current = this;
     this.props.setLoadingStatus('loading');
 	   e.preventDefault();
       var self = this, props = this.props;
@@ -213,6 +215,7 @@ class Login extends Component {
 
 
       }).catch(function(response) {
+		  current.props.setLoadingStatus('hide');
         self.setState({
           errorMsg: "Please check your username and password"
         });
@@ -300,9 +303,11 @@ class Login extends Component {
    }
 
    searchGrievance = (e) => {
-     let {history} = this.props;
-     if(this.state.srn)
-      history.push("/pgr/viewGrievance/"+this.state.srn);
+     let {setRoute, setHome} = this.props;
+     if(this.state.srn) {
+        setRoute("/pgr/viewGrievance/"+this.state.srn);
+        setHome(true);
+     }
    }
 
    validateOTP() {
@@ -536,8 +541,12 @@ class Login extends Component {
 
         return false;
       }
+<<<<<<< HEAD
 
 	  console.log(credential);
+=======
+	  
+>>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 
         return(
           <div>
@@ -864,9 +873,14 @@ const mapDispatchToProps = dispatch => ({
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   },
+<<<<<<< HEAD
   setActionList:(actionList)=>{
     dispatch({type:"SET_ACTION_LIST",actionList});
   }
+=======
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+  setHome: (showHome) => dispatch({type: "SET_HOME", showHome})
+>>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

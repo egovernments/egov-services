@@ -42,6 +42,8 @@ package org.egov.egf.budget.domain.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.domain.model.Auditable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -74,6 +76,7 @@ public class BudgetReAppropriation extends Auditable {
 	 * identify for witch budget line item this appropriation is doing.
 	 */
 	@JsonIgnore
+	@NotNull
 	private BudgetDetail budgetDetailId;
 
 	/*

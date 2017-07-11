@@ -119,7 +119,7 @@ public class EmployeeQueryBuilder {
 				&& isEmpty(employeeCriteria.getDepartmentId()) && isEmpty(employeeCriteria.getIsPrimary())
 				&& isEmpty(employeeCriteria.getDesignationId()) && isEmpty(employeeCriteria.getPositionId())
 				&& isEmpty(employeeCriteria.getAsOnDate()) && isEmpty(employeeCriteria.getEmployeeStatus())
-				&& isEmpty(employeeCriteria.getFamilyParticularsPresent())) {
+				&& isEmpty(employeeCriteria.getEmployeeType()) && isEmpty(employeeCriteria.getFamilyParticularsPresent())) {
 			return;
 		}
 
@@ -164,6 +164,11 @@ public class EmployeeQueryBuilder {
 		if (!isEmpty(employeeCriteria.getEmployeeStatus())) {
 			selectQuery.append(" AND e.employeeStatus IN (:employeeStatuses)");
 			namedParameters.put("employeeStatuses", employeeCriteria.getEmployeeStatus());
+		}
+
+		if (!isEmpty(employeeCriteria.getEmployeeType())) {
+			selectQuery.append(" AND e.employeeTypeId IN (:employeeTypes)");
+			namedParameters.put("employeeTypes", employeeCriteria.getEmployeeType());
 		}
 
 		if (!isEmpty(employeeCriteria.getFamilyParticularsPresent())) {

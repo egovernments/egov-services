@@ -17,7 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import Api from '../../../api/api';
-import {translate} from '../../common/common';
+import {translate, validate_fileupload} from '../../common/common';
 
 
 const styles = {
@@ -202,35 +202,57 @@ class grievanceCreate extends Component {
   {
       e.preventDefault();
       this.setState({loadingstatus:'loading'});
-      let type = this.state.type;
-      if(type == 'CITIZEN'){
-        var userArray = [], userRequest={};
-        userArray.push(localStorage.getItem('id'));
-        userRequest['id']=userArray;
-        userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
-        let userInfo = Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse)
+      if(this.props.grievanceCreate.lat !== '0.0' || this.props.grievanceCreate.lng !== '0.0'){
+        //validate with API
+        Api.commonApiGet("/egov-location/boundarys",{'boundary.latitude' : this.props.grievanceCreate.lat, 'boundary.longitude' : this.props.grievanceCreate.lng, 'boundary.tenantId' : localStorage.getItem('tenantId') || 'default'}).then(function(response)
         {
-          var userName = userResponse.user[0].name;
-  				var userMobile = userResponse.user[0].mobileNumber;
-  				var userEmail = userResponse.user[0].emailId;
-          _this.processCreate(userName,userMobile,userEmail);
+          if(response.Boundary.length === 0){
+            _this.setState({loadingstatus:'hide'});
+            _this.handleError('Please select valid location on maps or Type your location in grievance location');
+          }else{
+            //usual createGrievance
+            this.initialCreateBasedonType();
+          }
         },function(err) {
-          _this.setState({loadingstatus:'hide'});
           _this.handleError(err.message);
         });
-      }else if(type == 'EMPLOYEE'){
-        _this.processCreate();
-      }else{
-        _this.processCreate();
+      }else {
+        //usual createGrievance
+        this.initialCreateBasedonType();
       }
-      let {showTable,changeButtonText}=this.props;
       //console.log(this.props.grievanceCreate);
 
   }
 
+  initialCreateBasedonType = () => {
+    let type = this.state.type;
+    if(type == 'CITIZEN'){
+      var userArray = [], userRequest={};
+      userArray.push(localStorage.getItem('id'));
+      userRequest['id']=userArray;
+      userRequest['tenantId']=localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
+      let userInfo = Api.commonApiPost("/user/v1/_search",{},userRequest).then(function(userResponse)
+      {
+        var userName = userResponse.user[0].name;
+        var userMobile = userResponse.user[0].mobileNumber;
+        var userEmail = userResponse.user[0].emailId;
+        _this.processCreate(userName,userMobile,userEmail);
+      },function(err) {
+        _this.setState({loadingstatus:'hide'});
+        _this.handleError(err.message);
+      });
+    }else if(type == 'EMPLOYEE'){
+      _this.processCreate();
+    }else{
+      _this.processCreate();
+    }
+  }
+
   processCreate(userName='',userMobile='',userEmail=''){
 
+    request = {};
     var data={};
+    var finobj={};
     data['serviceCode']=this.props.grievanceCreate.serviceCode;
     data['description']=this.props.grievanceCreate.description;
     data['addressId']= this.props.grievanceCreate.addressId == 0 ? '' : this.props.grievanceCreate.addressId.id;
@@ -248,8 +270,6 @@ class grievanceCreate extends Component {
     data['tenantId']='default';
     data['isAttribValuesPopulated']=true;
     data['attribValues'] = [];
-
-    var finobj = {};
 
     finobj = {
         key: 'receivingMode',
@@ -315,7 +335,7 @@ class grievanceCreate extends Component {
         if(response.isSuccessful){
           {currentThis.handleOTPOpen()}
         }else {
-          currentThis.handleError('Sending OTP failed');
+          currentThis.handleError(translate('core.error.opt.generation'));
         }
       },function(err) {
         currentThis.setState({loadingstatus:'hide'});
@@ -340,11 +360,11 @@ class grievanceCreate extends Component {
 
       if(currentThis.props.files){
         if(currentThis.props.files.length === 0){
-          console.log('create succesfully done. No file uploads');
+          //console.log('create succesfully done. No file uploads');
           currentThis.setState({loadingstatus:'hide'});
           {currentThis.handleOpen()}
         }else{
-          console.log('create succesfully done. still file upload pending');
+          //console.log('create succesfully done. still file upload pending');
           for(let i=0;i<currentThis.props.files.length;i++){
             //this.props.files.length[i]
             let formData = new FormData();
@@ -355,7 +375,7 @@ class grievanceCreate extends Component {
             Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
             {
               if(i === (currentThis.props.files.length - 1)){
-                console.log('All files succesfully uploaded');
+                //console.log('All files succesfully uploaded');
                 currentThis.setState({loadingstatus:'hide'});
                 {currentThis.handleOpen()}
               }
@@ -417,18 +437,27 @@ class grievanceCreate extends Component {
       this.props.REMOVE_MANDATORY('externalCRN');
   }
 
+  handleUploadValidation = (e, formats) => {
+    let validFile = validate_fileupload(e.target.files, formats);
+    //console.log('is valid:', validFile);
+    if(validFile === true)
+      this.props.handleUpload(e, formats);
+    else
+      this.handleError(validFile);
+  }
+
   render() {
 
     const actions = [
       <FlatButton
-        label="Proceed to view"
+        label={translate('pgr.lbl.view')}
         primary={true}
         onTouchTap={this.handleView}
       />,
     ];
     const otpActions = [
       <FlatButton
-        label="Ok"
+        label={translate('core.lbl.ok')}
         primary={true}
         onTouchTap={this.validateOTP}
       />,
@@ -449,7 +478,7 @@ class grievanceCreate extends Component {
       handleChangeNextTwo,
       buttonText
     } = this.props;
-    let {search, processCreate, isMapsEnabled, loadCRN} = this;
+    let {search, processCreate, isMapsEnabled, loadCRN, handleUploadValidation} = this;
 
     return (
       <div className="grievanceCreate">
@@ -457,13 +486,13 @@ class grievanceCreate extends Component {
         <form autoComplete="off" onSubmit={(e) => {
           search(e)
         }}>
-          {this.state.type == 'EMPLOYEE' || this.state.type == null ?
+          {this.state.type === 'EMPLOYEE' || this.state.type === null ?
             <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.contact.information')}< /div>}/>
                 <CardText style={{padding:0}}>
                   <Grid>
                     <Row>
-                      {this.state.type == 'EMPLOYEE' ?
+                      {this.state.type === 'EMPLOYEE' ?
                         <Col xs={12} md={3}>
                           <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
                             var e = {
@@ -480,7 +509,7 @@ class grievanceCreate extends Component {
                           </SelectField>
                         </Col> : ''
                       }
-                      {grievanceCreate.receivingMode == 'MANUAL' ?
+                      {grievanceCreate.receivingMode === 'MANUAL' ?
                         loadReceivingCenterDD('receivingCenter')
                          : ''
                       }
@@ -530,7 +559,7 @@ class grievanceCreate extends Component {
                     <Col xs={12} md={12} style={{textAlign:'center'}}>
                       <FlatButton
                         primary= {true}
-                        label="OR"
+                        label={translate('core.lbl.or')}
                         disabled = {true}
                       />
                     </Col>
@@ -605,7 +634,7 @@ class grievanceCreate extends Component {
                   <Row>
                     <Col xs={12} md={3}>
                       <RaisedButton label={translate('core.lbl.select.photo')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
-                          <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUpload(e)}/>
+                          <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'])}/>
                       </RaisedButton>
                     </Col>
                     <ImagePreview files={files}/>
@@ -614,7 +643,7 @@ class grievanceCreate extends Component {
                   <Row>
                     <Col md={12}>
                       <div style={{width: '100%', height: 400}}>
-                        <SimpleMap  markers={[]} handler={(places)=>{this.props.handleMap(places, "address")}}/>
+                        <SimpleMap  markers={[]} handler={(lat, lng)=>{this.props.handleMap(lat, lng, "address")}}/>
                       </div>
                     </Col>
                   </Row> : ''}
@@ -635,12 +664,12 @@ class grievanceCreate extends Component {
         {this.state.acknowledgement}
         </Dialog>
         <Dialog
-          title="OTP"
+          title={translate('core.lbl.otp')}
           actions={otpActions}
           modal={true}
           open={this.state.openOTP}
         >
-          <TextField fullWidth={true} hintText="OTP" errorText="" onChange={(event, newString) => this.setState({otpValue : newString})} />
+          <TextField fullWidth={true} hintText={translate('core.msg.enter.otp')} errorText="" onChange={(event, newString) => this.setState({otpValue : newString})} />
         </Dialog>
         </div>
       </div>
@@ -749,13 +778,13 @@ const mapDispatchToProps = dispatch => ({
     });
 
   },
-  handleMap: (places, field) => {
-    //console.log(places[0].geometry.location.lat().toString(), places[0].geometry.location.lng().toString());
-    dispatch({type: "HANDLE_CHANGE", property:'lat', value: places[0].geometry.location.lat().toString(), isRequired : false, pattern: ''});
-    dispatch({type: "HANDLE_CHANGE", property:'lng', value: places[0].geometry.location.lng().toString(), isRequired : false, pattern: ''});
+  handleMap: (lat, lng, field) => {
+    console.log(lat, lng);
+    dispatch({type: "HANDLE_CHANGE", property:'lat', value: lat, isRequired : false, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property:'lng', value: lng, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '0', isRequired : true, pattern: ''});
   },
-  handleUpload: (e) => {
+  handleUpload: (e, formats) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})
   },
   handleChange: (e, property, isRequired, pattern) => {
@@ -764,10 +793,6 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '0.0', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '0.0', isRequired : false, pattern: ''});
     }
-  },
-  changeButtonText:(text)=>
-  {
-    dispatch({type:"BUTTON_TEXT",text});
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

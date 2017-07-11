@@ -6,6 +6,7 @@ import java.util.Date;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
+import org.egov.egf.budget.domain.model.EgfStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +41,7 @@ public class BudgetReAppropriationEntity extends AuditableEntity {
 		budgetReAppropriation.setOriginalAdditionAmount(this.originalAdditionAmount);
 		budgetReAppropriation.setOriginalDeductionAmount(this.originalDeductionAmount);
 		budgetReAppropriation.setAnticipatoryAmount(this.anticipatoryAmount);
-		// budgetReAppropriation.setStatus(EgfStatus.builder().id(statusId).build());
+		budgetReAppropriation.setStatusId(EgfStatus.builder().id(statusId).build());
 		budgetReAppropriation.setAsOnDate(this.asOnDate);
 		return budgetReAppropriation;
 	}

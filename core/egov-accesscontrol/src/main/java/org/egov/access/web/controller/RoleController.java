@@ -53,10 +53,19 @@ public class RoleController {
 	@PostMapping(value = "_search")
 	public RoleResponse getRoles(@RequestParam(value = "code", required = false) String code,
 			@RequestBody final RoleRequest roleRequest) {
-		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder()
-				.codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).build();
+		
+		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(new ArrayList<String>()).build();
+
+		if(code!=null && !code.isEmpty()){
+			
+			 roleSearchCriteria = RoleSearchCriteria.builder()
+						.codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).build();
+		}
+
 		List<Role> roles = roleService.getRoles(roleSearchCriteria);
 		return getSuccessResponse(roles);
+		
+		
 	}
 
 	private RoleResponse getSuccessResponse(final List<Role> roles) {

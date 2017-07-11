@@ -1281,7 +1281,7 @@ function updateTable(tableName, modalName, object) {
                 $(tableName).append(`<td data-label=${"documents"}>
                                         ${employee[object][i]["documents"]?employee[object][i]["documents"].length:""}
                                     </td>`)
-                closeTR(tableName, modalName, object, i);
+                closeTR(tableName, modalName, object, i, employee[object][i]["fromServer"]);
             });
         } else if (object == "jurisdictions") {
             commonApiGet("egov-location", "boundarys", "", {
@@ -1397,12 +1397,18 @@ function updateTable(tableName, modalName, object) {
     }
 }
 
-function closeTR(tableName, modalName, object, i) {
+function closeTR(tableName, modalName, object, i, fromUpdateBool) {
     if (getUrlVars()["type"] != "view") {
-        $(tableName).append(`<td data-label="Action">
+        if(fromUpdateBool) {
+            $(tableName).append(`<td data-label="Action">
+                    <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}', '${fromUpdateBool}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
+                  </td>`);
+        } else {
+            $(tableName).append(`<td data-label="Action">
                     <button type="button" onclick="markEditIndex(${i},'${modalName}','${object}')" class="btn btn-default btn-action"><span class="glyphicon glyphicon-pencil"></span></button>
                     <button type="button" onclick="commonDeleteFunction('${tableName}','${modalName}','${object}',${i})" class="btn btn-default btn-action"><span class="glyphicon glyphicon-trash"></span></button>
                   </td>`);
+        }
     } else {
         $(tableName).append(`<td data-label="Action">
                     NA
@@ -1422,7 +1428,7 @@ function getHodDetails(object) {
 }
 
 //common edit mark index - tested123
-function markEditIndex(index = -1, modalName = "", object = "") {
+function markEditIndex(index = -1, modalName = "", object = "", fromServer) {
     editIndex = index;
     $('#' + modalName).modal('show');
     //assignments  details modal when it edit modalName
@@ -1471,6 +1477,19 @@ function markEditIndex(index = -1, modalName = "", object = "") {
                         }
                     });
                 } else {
+
+                    if(object == "assignments" && fromServer) {
+                        $("#assignments\\.fromDate").attr('disabled', true);
+
+                        if(employee[object][editIndex].toDate) {
+                            var date = employee[object][editIndex].toDate.split("/");
+                            if(new Date().getTime() > employee[object][editIndex].fromToDate) {
+                                $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', true);
+                                $("#assignments\\.toDate").attr('disabled', false);
+                            }
+                        }
+                    }
+
                     employeeSubObject[object] = Object.assign({}, employee[object][editIndex]);
                     for (var key in employeeSubObject[object]) {
                         if (key == "documents")
@@ -1599,7 +1618,7 @@ function setPositionId(commonObject, employeeSubObject) {
 
     $(`#assignments\\.position`).autocomplete({
         source: _positions,
-        minLength: 2,
+        minLength: 0,
         change: function(e, ui) {
             for(var k=0; k<commonObject["assignments_position"].length; k++) {
                 if(commonObject["assignments_position"][k].name == ui.item.value) {
@@ -1609,6 +1628,10 @@ function setPositionId(commonObject, employeeSubObject) {
             }
         }
     })
+
+    $(`#assignments\\.position`).focus(function() {
+        $(this).autocomplete("search", $(this).val());
+    });
 }
 
 function showAndPrint(currentEmployee) {
@@ -1617,6 +1640,11 @@ function showAndPrint(currentEmployee) {
     $("#user\\.userName").prop("disabled", true);
     printValue("", currentEmployee);
     displayFiles(employee);
+    for(var i=0; i<employee.assignments.length; i++) {
+        employee.assignments[i].fromServer = true;
+        var date = employee.assignments[i].toDate.split("/");
+        employee.assignments[i].fromToDate = new Date(date[2], date[1]-1, date[0]).getTime();
+    }
 
     if (currentEmployee["assignments"].length > 0) {
         updateTable("#agreementTableBody", 'assignmentDetailModal', "assignments")
@@ -2518,6 +2546,10 @@ function loadUI() {
 
                             if (getUrlVars()["type"] == "update") {
                                 checkNRemoveFile();
+                            }
+
+                            for(var k=0; k<employee["assignments"].length; k++) {
+                                delete employee["assignments"][k].fromServer;
                             }
 
                             //Upload files if any

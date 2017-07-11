@@ -169,6 +169,15 @@ public class PgrMasterConstants {
 	public static final String SERVICEGROUP_CODENAME_ERROR_MESSAGE = "Service Group Code or Name already exists";
 	public static final String SERVICEGROUP_CODENAME_FIELD_NAME = "name";
 	
+	public static final String GRIEVANCETYPE_NAME_UNIQUE_CODE = "pgr.00016";
+	public static final String GRIEVANCETYPE_NAME_UNIQUE_FIELD_NAME = "serviceName";
+	public static final String GRIEVANCETYPE_NAME_UNIQUE_ERROR_MESSAGE = "Complaint Type Name already exists";
+	
+	public static final String RECEIVINGMODE_NAME_UNIQUE_CODE ="pgr.0017";
+	public static final String RECEIVINGMODE_NAME_UNIQUE_ERROR_MESSAGE="Entered ReceivingMode Name Already Exist.";
+	public static final String RECEIVINGMODE_NAME_UNIQUE_FIELD_NAME="name";
+	
+	
 	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);

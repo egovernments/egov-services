@@ -1,0 +1,12 @@
+{
+    "RequestInfo": {
+        "userInfo": {
+            "id": 73
+        }
+    },
+    "tenantId": "tenantId",
+    "serviceCode": "NOC",
+    "draft": {
+        "serviceCode": "BRKNB"
+    }
+}

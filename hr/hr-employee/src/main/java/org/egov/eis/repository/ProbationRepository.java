@@ -40,6 +40,17 @@
 
 package org.egov.eis.repository;
 
+import org.egov.eis.model.Probation;
+import org.egov.eis.model.enums.EntityType;
+import org.egov.eis.repository.rowmapper.ProbationTableRowMapper;
+import org.egov.eis.web.contract.EmployeeRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -48,38 +59,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.eis.model.Probation;
-import org.egov.eis.model.enums.EntityType;
-import org.egov.eis.repository.rowmapper.ProbationTableRowMapper;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
-
 @Component
 public class ProbationRepository {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ProbationRepository.class);
-
 	public static final String INSERT_PROBATION_QUERY = "INSERT INTO egeis_probation"
-			+ " (id, employeeId, designationId, declaredOn, orderNo, orderDate, remarks,"
-			+ " createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " (id, employeeId, designationId, declaredOn, orderNo, orderDate, remarks, createdBy, createdDate,"
+			+ " lastModifiedBy, lastModifiedDate, tenantId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_PROBATION_QUERY = "UPDATE egeis_probation"
-			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks," + "lastModifiedBy, lastModifiedDate)"
-			+ " = (?,?,?,?,?,?,?)" + "WHERE id = ? and tenantId=?";
+			+ " SET (designationId, declaredOn, orderNo, orderDate, remarks, lastModifiedBy, lastModifiedDate)"
+			+ " = (?,?,?,?,?,?,?) WHERE id = ? and tenantId=?";
 
 	public static final String SELECT_BY_EMPLOYEEID_QUERY = "SELECT"
-			+ " id,designationid, declaredon, orderno,orderdate, remarks, createdby,"
-			+ " createddate, lastmodifiedby, lastmodifieddate,tenantId" + " FROM egeis_probation"
-			+ " WHERE employeeId = ? AND tenantId = ? ";
-	
+			+ " id, designationid, declaredon, orderno, orderdate, remarks, createdby, createddate, lastmodifiedby,"
+			+ " lastmodifieddate,tenantId FROM egeis_probation WHERE employeeId = ? AND tenantId = ? ";
+
 	public static final String DELETE_QUERY = "DELETE FROM egeis_probation"
 			+ " WHERE id IN (:id) AND employeeId = :employeeId AND tenantId = :tenantId";
 	
@@ -156,17 +150,16 @@ public class ProbationRepository {
 
 	public List<Probation> findByEmployeeId(Long id, String tenantId) {
 		try {
-			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId },
-					probationRowMapper);
+			return jdbcTemplate.query(SELECT_BY_EMPLOYEEID_QUERY, new Object[] { id, tenantId }, probationRowMapper);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
 
-	public void delete(List<Long> probationsIdsToDelete, Long employeeId, String tenantId) {
+	public void delete(List<Long> probationIdsToDelete, Long employeeId, String tenantId) {
 		 
 		Map<String, Object> namedParameters = new HashMap<>();
-		namedParameters.put("id", probationsIdsToDelete );
+		namedParameters.put("id", probationIdsToDelete );
 		namedParameters.put("employeeId", employeeId);
 		namedParameters.put("tenantId", tenantId);
 		

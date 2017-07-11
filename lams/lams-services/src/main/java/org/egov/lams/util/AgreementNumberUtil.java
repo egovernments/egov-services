@@ -3,6 +3,9 @@ package org.egov.lams.util;
 import java.time.LocalDateTime;
 
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.model.City;
+import org.egov.lams.repository.TenantRepository;
+import org.egov.lams.web.contract.Tenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,14 @@ public class AgreementNumberUtil {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+	
+	@Autowired
+	private TenantRepository tenantRepository;
 
-	public String generateAgrementNumber() {
-
+	public String generateAgrementNumber(String tenantId) {
 		//FIXME ulb number should come form request info
-		String ulbNumber = propertiesManager.getUlbNumber();
+		//String ulbNumber = propertiesManager.getUlbNumber();
+		Tenant tenant = tenantRepository.fetchTenantByCode(tenantId);
 		String agreementNumberSequence = propertiesManager.getAgreementNumberSequence();
 		String lamsPrefix = propertiesManager.getLamsPrefix();
 		String sql = "SELECT nextval('" + agreementNumberSequence + "')";
@@ -33,7 +39,7 @@ public class AgreementNumberUtil {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		Integer year = localDateTime.getYear();
 		baseValue.append('-' + year.toString().substring(2, 4));
-		baseValue.append('-' + ulbNumber);
+		baseValue.append('-' + tenant.getCode());
 		Long resultSet = null;
 		try{
 			//replace it with a generic agreement repository which will take query, input object,response object

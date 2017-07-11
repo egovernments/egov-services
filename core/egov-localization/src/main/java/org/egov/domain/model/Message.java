@@ -19,7 +19,9 @@ public class Message {
     private MessageIdentity messageIdentity;
 
     public boolean isMoreSpecificComparedTo(Message otherMessage) {
-        return messageIdentity.equals(otherMessage.getMessageIdentity());
+        final Tenant otherTenant = otherMessage.getMessageIdentity().getTenant();
+        return messageIdentity.getTenant()
+            .isMoreSpecificComparedTo(otherTenant);
     }
 
     public String getCode() {

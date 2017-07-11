@@ -60,9 +60,7 @@ class Dashboard extends Component {
     };
 }
   componentWillMount() {
-
-    
-	  
+ 
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
@@ -96,12 +94,14 @@ class Dashboard extends Component {
 			      localArray: response.serviceRequests,
             hasData:true
           });
+		   current.props.setLoadingStatus('hide');
       }).catch((error)=>{
           current.setState({
             serviceRequests: [],
 			      localArray:[],
             hasData:true
           });
+		  current.props.setLoadingStatus('hide');
       })
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
@@ -129,8 +129,10 @@ class Dashboard extends Component {
                   localArray:[],
                    hasData:false
                 });
+				current.props.setLoadingStatus('hide');
             })
         } else {
+			current.props.setLoadingStatus('hide');
             currentUser.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
         }
       })
@@ -151,19 +153,16 @@ class Dashboard extends Component {
     if(this.state.hasData){
        $('#searchTable').DataTable({
         "initComplete": function(settings, json) {
-   self.props.setLoadingStatus('hide');
-  },
+            self.props.setLoadingStatus('hide');
+         },
          dom: 'lBfrtip',
          buttons: [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
           }
-    });
-       
-
-    }
-    
+     });
+    }  
   }
   
   localHandleChange = (string) => {
@@ -198,17 +197,6 @@ class Dashboard extends Component {
 				  }
 				})
 				
-			/*	switch (priority) {
-					case "PRIORITY-1":
-						triColor = "Red";
-						break;
-					case "PRIORITY-2":
-						triColor = "Yellow";
-						break;	
-					case "PRIORITY-3":
-						triColor = "Green";
-						break;			
-				}	*/
 			 
 		  return(
 								<tr key={i} style={{ cursor:'pointer'}} onClick={()=>{

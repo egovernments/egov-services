@@ -48,6 +48,15 @@ public class RevaluationIndex {
 	private Long createdDate;
 	private String lastModifiedBy;
 	private Long lastModifiedDate;
+	
+	private Long voucherReference;
+	
+	private String cityName;
+	private String localName;
+	private String districtCode;
+	private String districtName;
+	private String regionName;
+	private String ulbGrade;
 
 	public void setRevaluationData(final Revaluation revaluation) {
 		tenantId = revaluation.getTenantId();
@@ -61,7 +70,8 @@ public class RevaluationIndex {
 		reasonForRevaluation = revaluation.getReasonForRevaluation();
 		fixedAssetsWrittenOffAccount = revaluation.getFixedAssetsWrittenOffAccount();
 		comments = revaluation.getComments();
-		status = revaluation.getStatus().toString();
+		status = revaluation.getStatus();
+		voucherReference = revaluation.getVoucherReference();
 	}
 
 }

@@ -142,7 +142,7 @@ public class AgreementService {
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			kafkaTopic = propertiesManager.getSaveAgreementTopic();
 			agreement.setStatus(Status.ACTIVE);
-			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 			agreement.setAgreementDate(agreement.getCommencementDate());
 		} else {
 			kafkaTopic = propertiesManager.getStartWorkflowTopic();
@@ -207,7 +207,7 @@ public class AgreementService {
 					agreement.setStatus(Status.ACTIVE);
 					agreement.setAgreementDate(new Date());
 					if (agreement.getAgreementNumber() == null) {
-						agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber());
+						agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 					}
 				updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),agreementRequest.getRequestInfo());
 				} else if ("Approve".equalsIgnoreCase(workFlowDetails.getAction()) && (agreement.getAction().equals(Action.EVICTION))) {

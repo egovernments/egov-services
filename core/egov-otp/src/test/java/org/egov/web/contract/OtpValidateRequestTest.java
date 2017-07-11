@@ -1,5 +1,6 @@
 package org.egov.web.contract;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.ValidateRequest;
 import org.junit.Test;
 

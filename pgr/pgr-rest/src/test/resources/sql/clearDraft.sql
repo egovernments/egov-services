@@ -1,0 +1,1 @@
+DELETE FROM cs_draft;

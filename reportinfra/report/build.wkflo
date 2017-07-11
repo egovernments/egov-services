@@ -4,6 +4,8 @@ def build(path, ci_image) {
             sh "cd ${path}; mvn clean test verify deploy -s settings.xml -Dnexus.user=${env.NEXUS_USER} -Dnexus.password=${env.NEXUS_PASSWORD}";
         }
     }
+    currentBuild.result = 'SUCCESS'
+    System.exit(0)
  }
 
- return this;
+ return;

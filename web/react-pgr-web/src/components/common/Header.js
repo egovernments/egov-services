@@ -46,7 +46,7 @@ const Logo = () => {
 }
 
 const RightIcon = (props) => {
-  // console.log(props);
+  //console.log(props);
   if (props.token) {
     return (
       <div>
@@ -93,9 +93,19 @@ const RightIcon = (props) => {
 
       </div>
     );
-  } else {
+  } else if(window.location.hash == "#/") {
     return(
       <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+    )
+  } else {
+    return(
+      <div>
+        <i onClick={()=>{
+          props.setRoute("/");
+        }} className="material-icons" 
+           style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+      </div>
     )
 
   }
@@ -773,12 +783,13 @@ class Header extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="Header">
         <AppBar title={<div><Logo/> Egovernments </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
-                iconElementRight={< RightIcon token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
+                iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
           {/*<div id="menu"></div>*/}
@@ -818,7 +829,11 @@ const mapStateToProps = state => ({
     // isDialogOpen: state.form.dialogOpen,
     // msg: state.form.msg,
     showMenu: state.common.showMenu,
+<<<<<<< HEAD
     actionList:state.common.actionList
+=======
+    showHome: state.common.showHome
+>>>>>>> ee2caaea2a20e424ad696b20695b20949bf5d89e
 });
 
 // this.props.appLoaded

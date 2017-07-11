@@ -142,7 +142,7 @@ public class BudgetJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination", "limit " + budgetSearchEntity.getPageSize() + " offset "
@@ -170,7 +170,9 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			Object value = getValue(getField(entity, s), entity);
+			if (null != value)
+				preparedStatementValues.add(value);
 		}
 
 		List<BudgetEntity> budgets = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),

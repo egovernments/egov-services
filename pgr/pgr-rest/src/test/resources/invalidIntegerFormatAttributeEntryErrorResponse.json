@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Invalid integer data type format.",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.INVALID_INTEGER_DATA_TYPE_FORMAT",
+                "message": "Invalid integer data type format.",
+                "field": "serviceRequest.attribValues.name=itemCount"
+            }
+        ]
+    }
+}

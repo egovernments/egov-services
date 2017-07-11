@@ -52,7 +52,7 @@ public class BillingServiceConsumer {
 	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
 			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}",
-			"${kafka.topics.update.glCodeMaster}",
+			"${kafka.topics.update.glCodeMaster}","{kafka.topics.receipt.update.demand}",
 			"${kafka.topics.create.businessservicedetail.name}", "${kafka.topics.update.businessservicedetail.name}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
@@ -62,6 +62,8 @@ public class BillingServiceConsumer {
 				demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
 			else if (applicationProperties.getUpdateDemandTopic().equals(topic))
 				demandService.update(objectMapper.convertValue(consumerRecord, DemandRequest.class));
+			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
+				demandService.updateDemandFromBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
 			else if (topic.equals(applicationProperties.getCreateBillTopic()))
 				billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
 			else if (applicationProperties.getCreateTaxHeadMasterTopicName().equals(topic))

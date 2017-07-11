@@ -124,5 +124,9 @@ public class ServiceTypeService {
     public boolean checkServiceCodeIfExists(final String serviceCode, final String tenantId) {
     	return grievanceRepository.checkServiceCodeIfExists(serviceCode, tenantId);
     }
+    
+    public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId) { 
+    	return grievanceRepository.checkComplaintNameIfExists(serviceName, tenantId); 
+    }
 
 }

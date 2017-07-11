@@ -51,7 +51,6 @@ import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
 import org.egov.models.User;
-import org.egov.models.UserDetails;
 import org.egov.models.VacantLandDetail;
 import org.egov.models.WallType;
 import org.egov.models.WallTypeRequest;
@@ -1135,7 +1134,6 @@ public class PropertyServiceTest {
 			User owner = new User();
 			owner.setTenantId("default");
 			owner.setUserName("Anil");
-			owner.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
 			owner.setSalutation("testing");
 			owner.setName("anil");
 			owner.setGender("male");
@@ -1158,33 +1156,25 @@ public class PropertyServiceTest {
 
 			owner.setAuditDetails(auditDetails);
 
-			UserDetails userDetails = new UserDetails();
-
-			userDetails.setFirstName("Anil");
-			userDetails.setMiddleName("Kumar");
-			userDetails.setLastName("Sandrapati");
-			userDetails.setDob("25/09/1989");
-			userDetails.setAltContactNumber("9874562134");
-			userDetails.setFatherName("svs");
-			userDetails.setHusbandName("not applicable");
-			userDetails.setBloodGroup("O+");
-			userDetails.setPan("stvt5854k");
-			userDetails.setPermanentAddress("eluru");
-			userDetails.setPermanentCity("eluru");
-			userDetails.setPermanentPincode("534001");
-			userDetails.setCorrespondenceCity("Hyderabad");
-			userDetails.setCorrespondencePincode("500004");
-			userDetails.setCorrespondenceAddress("Khirathabad");
-			userDetails.setSignature("S Anilkumar");
-			userDetails.setIdentificationMark("mole on right hand");
-			userDetails.setPhoto("anil.png");
+			owner.setDob("25/09/1989");
+			owner.setAltContactNumber("9874562134");
+			owner.setFatherOrHusbandName("not applicable");
+			owner.setBloodGroup("O+");
+			owner.setPan("stvt5854k");
+			owner.setPermanentAddress("eluru");
+			owner.setPermanentCity("eluru");
+			owner.setPermanentPincode("534001");
+			owner.setCorrespondenceCity("Hyderabad");
+			owner.setCorrespondencePincode("500004");
+			owner.setCorrespondenceAddress("Khirathabad");
+			owner.setSignature("S Anilkumar");
+			owner.setIdentificationMark("mole on right hand");
+			owner.setPhoto("anil.png");
 
 			owner.setIsPrimaryOwner(true);
 			owner.setIsSecondaryOwner(true);
 			owner.setOwnerShipPercentage((double) 10);
 			owner.setOwnerType("Sandrapati Anilkumar");
-
-			owner.setUserDetails(userDetails);
 
 			property.setOwners(owners);
 
@@ -1394,7 +1384,6 @@ public class PropertyServiceTest {
 			owner.setId((long) 1);
 			owner.setTenantId("default");
 			owner.setUserName("Anilkumar");
-			owner.setAuthToken("08db73a8-945e-4164-94e3-63ccef7856d4");
 			owner.setSalutation("testing");
 			owner.setName("anil");
 			owner.setGender("male");
@@ -1416,33 +1405,25 @@ public class PropertyServiceTest {
 
 			owner.setAuditDetails(auditDetails);
 
-			UserDetails userDetails = new UserDetails();
-
-			userDetails.setFirstName("Anil Kumar");
-			userDetails.setMiddleName("Kumar");
-			userDetails.setLastName("Sandrapati");
-			userDetails.setDob("25/09/1989");
-			userDetails.setAltContactNumber("9874562134");
-			userDetails.setFatherName("svs");
-			userDetails.setHusbandName("not applicable");
-			userDetails.setBloodGroup("O+");
-			userDetails.setPan("stvt5854k");
-			userDetails.setPermanentAddress("eluru");
-			userDetails.setPermanentCity("eluru");
-			userDetails.setPermanentPincode("534001");
-			userDetails.setCorrespondenceCity("Hyderabad");
-			userDetails.setCorrespondencePincode("500004");
-			userDetails.setCorrespondenceAddress("Khirathabad");
-			userDetails.setSignature("S Anilkumar");
-			userDetails.setIdentificationMark("mole on right hand");
-			userDetails.setPhoto("anil.png");
+			owner.setDob("25/09/1989");
+			owner.setAltContactNumber("9874562134");
+			owner.setFatherOrHusbandName("svs");
+			owner.setBloodGroup("O+");
+			owner.setPan("stvt5854k");
+			owner.setPermanentAddress("eluru");
+			owner.setPermanentCity("eluru");
+			owner.setPermanentPincode("534001");
+			owner.setCorrespondenceCity("Hyderabad");
+			owner.setCorrespondencePincode("500004");
+			owner.setCorrespondenceAddress("Khirathabad");
+			owner.setSignature("S Anilkumar");
+			owner.setIdentificationMark("mole on right hand");
+			owner.setPhoto("anil.png");
 
 			owner.setIsPrimaryOwner(true);
 			owner.setIsSecondaryOwner(true);
 			owner.setOwnerShipPercentage((double) 10);
 			owner.setOwnerType("Sandrapati Anilkumar");
-
-			owner.setUserDetails(userDetails);
 
 			property.setOwners(owners);
 

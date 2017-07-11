@@ -24,9 +24,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-	@JsonProperty("tenantId")
-	@NotNull
-	private String tenantId = null;
 
 	@JsonProperty("id")
 	private Long id = null;
@@ -34,8 +31,8 @@ public class User {
 	@JsonProperty("userName")
 	private String userName = null;
 
-	@JsonProperty("authToken")
-	private String authToken = null;
+	@JsonProperty("password")
+	private String password = null;
 
 	@JsonProperty("salutation")
 	@Size(max = 5)
@@ -59,14 +56,49 @@ public class User {
 	@Size(max = 128)
 	private String emailId = null;
 
+	@JsonProperty("altContactNumber")
+	@Size(max = 16)
+	private String altContactNumber = null;
+
+	@JsonProperty("pan")
+	@Size(max = 10)
+	private String pan = null;
+
 	@JsonProperty("aadhaarNumber")
 	@Pattern(regexp = "[0-9]")
 	@Size(max = 12)
 	private String aadhaarNumber = null;
 
+	@JsonProperty("permanentAddress")
+	@Size(max = 300)
+	private String permanentAddress = null;
+
+	@JsonProperty("permanentCity")
+	@Size(max = 300)
+	private String permanentCity = null;
+
+	@JsonProperty("permanentPincode")
+	@Size(max = 6)
+	private String permanentPincode = null;
+
+	@JsonProperty("correspondenceCity")
+	@Size(max = 50)
+	private String correspondenceCity = null;
+
+	@JsonProperty("correspondencePincode")
+	@Size(max = 6)
+	private String correspondencePincode = null;
+
+	@JsonProperty("correspondenceAddress")
+	@Size(max = 300)
+	private String correspondenceAddress = null;
+
 	@JsonProperty("active")
 	@NotNull
 	private Boolean active = null;
+
+	@JsonProperty("dob")
+	private String dob = null;
 
 	@JsonProperty("pwdExpiryDate")
 	private String pwdExpiryDate = null;
@@ -81,6 +113,9 @@ public class User {
 	@Size(max = 20)
 	private String type = null;
 
+	@JsonProperty("signature")
+	private String signature = null;
+
 	@JsonProperty("accountLocked")
 	private Boolean accountLocked = false;
 
@@ -88,12 +123,30 @@ public class User {
 	@Valid
 	private List<Role> roles = new ArrayList<Role>();
 
-	@JsonProperty("userDetails")
-	@Valid
-	private UserDetails userDetails = null;
+	@JsonProperty("fatherOrHusbandName")
+	@Size(max = 100)
+	private String fatherOrHusbandName = null;
+
+	@JsonProperty("bloodGroup")
+	@Size(max = 3)
+	private String bloodGroup = null;
+
+	@JsonProperty("identificationMark")
+	@Size(max = 300)
+	private String identificationMark = null;
+
+	@JsonProperty("photo")
+	private String photo = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+
+	@JsonProperty("otpReference")
+	private AuditDetails otpReference = null;
+
+	@JsonProperty("tenantId")
+	@NotNull
+	private String tenantId = null;
 
 	@JsonProperty("isPrimaryOwner")
 	private Boolean isPrimaryOwner = null;
@@ -107,7 +160,5 @@ public class User {
 	@JsonProperty("ownerType")
 	@Size(min = 4, max = 32)
 	private String ownerType = null;
-	
-	@JsonProperty("password")
-	private String password = null;
+
 }

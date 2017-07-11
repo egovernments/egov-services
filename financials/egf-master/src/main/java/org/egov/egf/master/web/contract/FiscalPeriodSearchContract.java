@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class FiscalPeriodSearchContract extends FiscalPeriodContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

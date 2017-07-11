@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class BankBranchSearch extends BankBranch {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

@@ -105,8 +105,10 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<FinancialYear> page = new Pagination<>();
-		page.setOffSet(financialYearSearchEntity.getOffSet());
-		page.setPageSize(financialYearSearchEntity.getPageSize());
+		if (financialYearSearchEntity.getOffset() != null)
+			page.setOffset(financialYearSearchEntity.getOffset());
+		if (financialYearSearchEntity.getPageSize() != null)
+			page.setPageSize(financialYearSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -121,8 +123,8 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + financialYearSearchEntity.getPageSize() + " offset "
-				+ financialYearSearchEntity.getOffSet() * financialYearSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FinancialYearEntity.class);
 

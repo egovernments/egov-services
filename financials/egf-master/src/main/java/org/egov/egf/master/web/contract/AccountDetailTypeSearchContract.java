@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class AccountDetailTypeSearchContract extends AccountDetailTypeContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

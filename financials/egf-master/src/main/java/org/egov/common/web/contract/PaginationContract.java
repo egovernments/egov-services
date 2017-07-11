@@ -64,12 +64,12 @@ public class PaginationContract {
 
 	private Integer currentPage;
 
-	private Integer offSet;
+	private Integer offset;
 
 	public PaginationContract(Pagination<?> page) {
 		this.pageSize = page.getPageSize();
 		this.currentPage = page.getCurrentPage();
-		this.offSet = page.getOffSet();
+		this.offset = page.getOffset();
 		this.totalPages = page.getTotalPages();
 		this.totalResults = page.getTotalResults();
 

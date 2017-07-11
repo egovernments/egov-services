@@ -105,8 +105,10 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<SubScheme> page = new Pagination<>();
-		page.setOffSet(subSchemeSearchEntity.getOffSet());
-		page.setPageSize(subSchemeSearchEntity.getPageSize());
+		if (subSchemeSearchEntity.getOffset() != null)
+			page.setOffset(subSchemeSearchEntity.getOffset());
+		if (subSchemeSearchEntity.getPageSize() != null)
+			page.setPageSize(subSchemeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -121,8 +123,8 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + subSchemeSearchEntity.getPageSize() + " offset "
-				+ subSchemeSearchEntity.getOffSet() * subSchemeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SubSchemeEntity.class);
 

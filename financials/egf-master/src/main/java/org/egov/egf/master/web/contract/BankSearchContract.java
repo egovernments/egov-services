@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class BankSearchContract extends BankContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

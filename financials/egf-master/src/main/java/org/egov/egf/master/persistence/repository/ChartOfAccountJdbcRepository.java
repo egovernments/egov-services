@@ -160,8 +160,10 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<ChartOfAccount> page = new Pagination<>();
-		page.setOffSet(chartOfAccountSearchEntity.getOffSet());
-		page.setPageSize(chartOfAccountSearchEntity.getPageSize());
+		if (chartOfAccountSearchEntity.getOffset() != null)
+			page.setOffset(chartOfAccountSearchEntity.getOffset());
+		if (chartOfAccountSearchEntity.getPageSize() != null)
+			page.setPageSize(chartOfAccountSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -176,8 +178,8 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + chartOfAccountSearchEntity.getPageSize()
-				+ " offset " + chartOfAccountSearchEntity.getOffSet() * chartOfAccountSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(ChartOfAccountEntity.class);
 

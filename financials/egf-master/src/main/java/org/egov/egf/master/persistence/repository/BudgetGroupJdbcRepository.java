@@ -111,8 +111,10 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<BudgetGroup> page = new Pagination<>();
-		page.setOffSet(budgetGroupSearchEntity.getOffSet());
-		page.setPageSize(budgetGroupSearchEntity.getPageSize());
+		if (budgetGroupSearchEntity.getOffset() != null)
+			page.setOffset(budgetGroupSearchEntity.getOffset());
+		if (budgetGroupSearchEntity.getPageSize() != null)
+			page.setPageSize(budgetGroupSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -127,8 +129,8 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + budgetGroupSearchEntity.getPageSize() + " offset "
-				+ budgetGroupSearchEntity.getOffSet() * budgetGroupSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BudgetGroupEntity.class);
 

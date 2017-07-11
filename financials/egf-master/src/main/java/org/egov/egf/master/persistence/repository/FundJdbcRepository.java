@@ -59,8 +59,10 @@ public class FundJdbcRepository extends JdbcRepository {
 		// implement jdbc specfic search
 
 		Pagination<Fund> page = new Pagination<>();
-		page.setOffSet(fundSearchEntity.getOffset());
-		page.setPageSize(fundSearchEntity.getPageSize());
+		if (fundSearchEntity.getOffset() != null)
+			page.setOffset(fundSearchEntity.getOffset());
+		if (fundSearchEntity.getPageSize() != null)
+			page.setPageSize(fundSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -75,8 +77,8 @@ public class FundJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + fundSearchEntity.getPageSize() + " offset "
-				+ fundSearchEntity.getOffset() * fundSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FundEntity.class);
 

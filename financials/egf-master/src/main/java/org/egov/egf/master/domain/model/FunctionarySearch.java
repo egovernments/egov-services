@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class FunctionarySearch extends Functionary {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

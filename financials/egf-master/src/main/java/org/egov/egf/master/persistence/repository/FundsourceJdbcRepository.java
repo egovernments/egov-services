@@ -105,8 +105,10 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<Fundsource> page = new Pagination<>();
-		page.setOffSet(fundsourceSearchEntity.getOffSet());
-		page.setPageSize(fundsourceSearchEntity.getPageSize());
+		if (fundsourceSearchEntity.getOffset() != null)
+			page.setOffset(fundsourceSearchEntity.getOffset());
+		if (fundsourceSearchEntity.getPageSize() != null)
+			page.setPageSize(fundsourceSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -121,8 +123,8 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + fundsourceSearchEntity.getPageSize() + " offset "
-				+ fundsourceSearchEntity.getOffSet() * fundsourceSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FundsourceEntity.class);
 

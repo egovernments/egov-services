@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class BankBranchSearchEntity extends BankBranchEntity {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	@Override
 	public BankBranch toDomain() {
@@ -27,7 +27,7 @@ public class BankBranchSearchEntity extends BankBranchEntity {
 	public BankBranchSearchEntity toEntity(BankBranchSearch bankBranchSearch) {
 		super.toEntity((BankBranch) bankBranchSearch);
 		this.pageSize = bankBranchSearch.getPageSize();
-		this.offSet = bankBranchSearch.getOffSet();
+		this.offset = bankBranchSearch.getOffset();
 		return this;
 	}
 

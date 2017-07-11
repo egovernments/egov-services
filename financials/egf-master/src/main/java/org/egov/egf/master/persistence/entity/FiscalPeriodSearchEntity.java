@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class FiscalPeriodSearchEntity extends FiscalPeriodEntity {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	@Override
 	public FiscalPeriod toDomain() {
@@ -27,7 +27,7 @@ public class FiscalPeriodSearchEntity extends FiscalPeriodEntity {
 	public FiscalPeriodSearchEntity toEntity(FiscalPeriodSearch fiscalPeriodSearch) {
 		super.toEntity((FiscalPeriod) fiscalPeriodSearch);
 		this.pageSize = fiscalPeriodSearch.getPageSize();
-		this.offSet = fiscalPeriodSearch.getOffSet();
+		this.offset = fiscalPeriodSearch.getOffset();
 		return this;
 	}
 

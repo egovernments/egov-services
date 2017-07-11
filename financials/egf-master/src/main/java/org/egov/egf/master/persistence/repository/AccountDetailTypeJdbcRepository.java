@@ -93,8 +93,10 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<AccountDetailType> page = new Pagination<>();
-		page.setOffSet(accountDetailTypeSearchEntity.getOffSet());
-		page.setPageSize(accountDetailTypeSearchEntity.getPageSize());
+		if (accountDetailTypeSearchEntity.getOffset() != null)
+			page.setOffset(accountDetailTypeSearchEntity.getOffset());
+		if (accountDetailTypeSearchEntity.getPageSize() != null)
+			page.setPageSize(accountDetailTypeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -109,8 +111,8 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + accountDetailTypeSearchEntity.getPageSize()
-				+ " offset " + accountDetailTypeSearchEntity.getOffSet() * accountDetailTypeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountDetailTypeEntity.class);
 

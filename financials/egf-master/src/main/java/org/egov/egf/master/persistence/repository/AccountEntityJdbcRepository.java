@@ -93,8 +93,10 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<AccountEntity> page = new Pagination<>();
-		page.setOffSet(accountEntitySearchEntity.getOffSet());
-		page.setPageSize(accountEntitySearchEntity.getPageSize());
+		if (accountEntitySearchEntity.getOffset() != null)
+			page.setOffset(accountEntitySearchEntity.getOffset());
+		if (accountEntitySearchEntity.getPageSize() != null)
+			page.setPageSize(accountEntitySearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -109,8 +111,8 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + accountEntitySearchEntity.getPageSize() + " offset "
-				+ accountEntitySearchEntity.getOffSet() * accountEntitySearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountEntityEntity.class);
 

@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class ChartOfAccountSearchEntity extends ChartOfAccountEntity {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	@Override
 	public ChartOfAccount toDomain() {
@@ -27,7 +27,7 @@ public class ChartOfAccountSearchEntity extends ChartOfAccountEntity {
 	public ChartOfAccountSearchEntity toEntity(ChartOfAccountSearch chartOfAccountSearch) {
 		super.toEntity((ChartOfAccount) chartOfAccountSearch);
 		this.pageSize = chartOfAccountSearch.getPageSize();
-		this.offSet = chartOfAccountSearch.getOffSet();
+		this.offset = chartOfAccountSearch.getOffset();
 		return this;
 	}
 

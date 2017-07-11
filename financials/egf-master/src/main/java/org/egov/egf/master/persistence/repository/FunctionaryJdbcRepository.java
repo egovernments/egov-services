@@ -81,8 +81,10 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<Functionary> page = new Pagination<>();
-		page.setOffSet(functionarySearchEntity.getOffSet());
-		page.setPageSize(functionarySearchEntity.getPageSize());
+		if (functionarySearchEntity.getOffset() != null)
+			page.setOffset(functionarySearchEntity.getOffset());
+		if (functionarySearchEntity.getPageSize() != null)
+			page.setPageSize(functionarySearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -97,8 +99,8 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + functionarySearchEntity.getPageSize() + " offset "
-				+ functionarySearchEntity.getOffSet() * functionarySearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FunctionaryEntity.class);
 

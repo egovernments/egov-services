@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class FundsourceSearchContract extends FundsourceContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

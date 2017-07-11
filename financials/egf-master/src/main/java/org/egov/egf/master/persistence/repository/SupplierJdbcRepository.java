@@ -141,8 +141,10 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<Supplier> page = new Pagination<>();
-		page.setOffSet(supplierSearchEntity.getOffSet());
-		page.setPageSize(supplierSearchEntity.getPageSize());
+		if (supplierSearchEntity.getOffset() != null)
+			page.setOffset(supplierSearchEntity.getOffset());
+		if (supplierSearchEntity.getPageSize() != null)
+			page.setPageSize(supplierSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -157,8 +159,8 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + supplierSearchEntity.getPageSize() + " offset "
-				+ supplierSearchEntity.getOffSet() * supplierSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SupplierEntity.class);
 

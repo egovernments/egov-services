@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class ChartOfAccountDetailSearch extends ChartOfAccountDetail {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

@@ -111,8 +111,10 @@ public class SchemeJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<Scheme> page = new Pagination<>();
-		page.setOffSet(schemeSearchEntity.getOffSet());
-		page.setPageSize(schemeSearchEntity.getPageSize());
+		if (schemeSearchEntity.getOffset() != null)
+			page.setOffset(schemeSearchEntity.getOffset());
+		if (schemeSearchEntity.getPageSize() != null)
+			page.setPageSize(schemeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -127,8 +129,8 @@ public class SchemeJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + schemeSearchEntity.getPageSize() + " offset "
-				+ schemeSearchEntity.getOffSet() * schemeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SchemeEntity.class);
 

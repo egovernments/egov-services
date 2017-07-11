@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class AccountCodePurposeSearchEntity extends AccountCodePurposeEntity {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	@Override
 	public AccountCodePurpose toDomain() {
@@ -27,7 +27,7 @@ public class AccountCodePurposeSearchEntity extends AccountCodePurposeEntity {
 	public AccountCodePurposeSearchEntity toEntity(AccountCodePurposeSearch accountCodePurposeSearch) {
 		super.toEntity((AccountCodePurpose) accountCodePurposeSearch);
 		this.pageSize = accountCodePurposeSearch.getPageSize();
-		this.offSet = accountCodePurposeSearch.getOffSet();
+		this.offset = accountCodePurposeSearch.getOffset();
 		return this;
 	}
 

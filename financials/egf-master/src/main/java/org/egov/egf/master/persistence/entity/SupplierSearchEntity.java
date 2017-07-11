@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class SupplierSearchEntity extends SupplierEntity {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	@Override
 	public Supplier toDomain() {
@@ -27,7 +27,7 @@ public class SupplierSearchEntity extends SupplierEntity {
 	public SupplierSearchEntity toEntity(SupplierSearch supplierSearch) {
 		super.toEntity((Supplier) supplierSearch);
 		this.pageSize = supplierSearch.getPageSize();
-		this.offSet = supplierSearch.getOffSet();
+		this.offset = supplierSearch.getOffset();
 		return this;
 	}
 

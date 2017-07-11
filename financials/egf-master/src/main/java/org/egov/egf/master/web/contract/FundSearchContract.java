@@ -6,5 +6,5 @@ public class FundSearchContract extends FundContract {
     
         private String sortBy;
 	private Integer pageSize=10;
-	private Integer offSet;
+	private Integer offset;
 }

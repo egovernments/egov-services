@@ -105,8 +105,10 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<FiscalPeriod> page = new Pagination<>();
-		page.setOffSet(fiscalPeriodSearchEntity.getOffSet());
-		page.setPageSize(fiscalPeriodSearchEntity.getPageSize());
+		if (fiscalPeriodSearchEntity.getOffset() != null)
+			page.setOffset(fiscalPeriodSearchEntity.getOffset());
+		if (fiscalPeriodSearchEntity.getPageSize() != null)
+			page.setPageSize(fiscalPeriodSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -121,8 +123,8 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + fiscalPeriodSearchEntity.getPageSize() + " offset "
-				+ fiscalPeriodSearchEntity.getOffSet() * fiscalPeriodSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FiscalPeriodEntity.class);
 

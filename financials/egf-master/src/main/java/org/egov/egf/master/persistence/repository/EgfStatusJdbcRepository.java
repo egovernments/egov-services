@@ -81,8 +81,10 @@ public class EgfStatusJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<EgfStatus> page = new Pagination<>();
-		page.setOffSet(egfStatusSearchEntity.getOffSet());
-		page.setPageSize(egfStatusSearchEntity.getPageSize());
+		if (egfStatusSearchEntity.getOffset() != null)
+			page.setOffset(egfStatusSearchEntity.getOffset());
+		if (egfStatusSearchEntity.getPageSize() != null)
+			page.setPageSize(egfStatusSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -97,8 +99,8 @@ public class EgfStatusJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + egfStatusSearchEntity.getPageSize() + " offset "
-				+ egfStatusSearchEntity.getOffSet() * egfStatusSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EgfStatusEntity.class);
 

@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class AccountDetailTypeSearch extends AccountDetailType {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

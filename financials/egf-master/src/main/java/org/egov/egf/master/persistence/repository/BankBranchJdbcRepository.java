@@ -43,12 +43,10 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 	public Pagination<BankBranch> search(BankBranchSearch domain) {
 		BankBranchSearchEntity bankBranchSearchEntity = new BankBranchSearchEntity();
 		bankBranchSearchEntity.toEntity(domain);
-
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", BankBranchEntity.TABLE_NAME);
 
@@ -147,8 +145,10 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<BankBranch> page = new Pagination<>();
-		page.setOffSet(bankBranchSearchEntity.getOffSet());
-		page.setPageSize(bankBranchSearchEntity.getPageSize());
+		if (bankBranchSearchEntity.getOffset() != null)
+			page.setOffset(bankBranchSearchEntity.getOffset());
+		if (bankBranchSearchEntity.getPageSize() != null)
+			page.setPageSize(bankBranchSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -163,8 +163,8 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 		page = getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + bankBranchSearchEntity.getPageSize() + " offset "
-				+ bankBranchSearchEntity.getOffSet() * bankBranchSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BankBranchEntity.class);
 
@@ -173,7 +173,7 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 
 		page.setTotalResults(bankBranchEntities.size());
 
-		List<BankBranch> bankbranches = new ArrayList<BankBranch>();
+		List<BankBranch> bankbranches = new ArrayList<>();
 		for (BankBranchEntity bankBranchEntity : bankBranchEntities) {
 
 			bankbranches.add(bankBranchEntity.toDomain());

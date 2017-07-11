@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class AccountCodePurposeSearch extends AccountCodePurpose {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

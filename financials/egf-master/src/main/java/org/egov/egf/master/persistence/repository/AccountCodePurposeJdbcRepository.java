@@ -69,8 +69,11 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<AccountCodePurpose> page = new Pagination<>();
-		page.setOffSet(accountCodePurposeSearchEntity.getOffSet());
-		page.setPageSize(accountCodePurposeSearchEntity.getPageSize());
+
+		if (accountCodePurposeSearchEntity.getOffset() != null)
+			page.setOffset(accountCodePurposeSearchEntity.getOffset());
+		if (accountCodePurposeSearchEntity.getPageSize() != null)
+			page.setPageSize(accountCodePurposeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -86,8 +89,7 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",
-				"limit " + accountCodePurposeSearchEntity.getPageSize() + " offset "
-						+ accountCodePurposeSearchEntity.getOffSet() * accountCodePurposeSearchEntity.getPageSize());
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountCodePurposeEntity.class);
 

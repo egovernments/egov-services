@@ -15,7 +15,7 @@ import lombok.Setter;
 
 public class SchemeSearchEntity extends SchemeEntity {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 
 	@Override
 	public Scheme toDomain() {
@@ -27,7 +27,7 @@ public class SchemeSearchEntity extends SchemeEntity {
 	public SchemeSearchEntity toEntity(SchemeSearch schemeSearch) {
 		super.toEntity((Scheme) schemeSearch);
 		this.pageSize = schemeSearch.getPageSize();
-		this.offSet = schemeSearch.getOffSet();
+		this.offset = schemeSearch.getOffset();
 		return this;
 	}
 

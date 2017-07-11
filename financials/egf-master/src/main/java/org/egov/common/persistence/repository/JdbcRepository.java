@@ -314,7 +314,7 @@ public abstract class JdbcRepository {
 		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
 		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
 		page.setTotalPages(totalpages);
-		page.setCurrentPage(page.getOffSet());
+		page.setCurrentPage(page.getOffset());
 		return page;
 	}
 

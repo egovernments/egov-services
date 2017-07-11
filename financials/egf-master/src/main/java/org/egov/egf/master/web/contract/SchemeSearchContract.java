@@ -12,5 +12,5 @@ import lombok.Setter;
 
 public class SchemeSearchContract extends SchemeContract {
 	private Integer pageSize;
-	private Integer offSet;
+	private Integer offset;
 }

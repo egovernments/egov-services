@@ -445,8 +445,9 @@ class Login extends Component {
       }
    }
    openAnonymousComplaint = () => {
-     let {history} = this.props;
+     let {history, setHome} = this.props;
      history.push('/pgr/createGrievance');
+     setHome(true);
    }
 
    render() {

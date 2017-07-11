@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.egov.ReportApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
@@ -32,8 +33,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReportService {
 
-	@Autowired
-	public ReportDefinitions reportDefinitions;
+	/*@Autowired
+	public ReportDefinitions reportDefinitions;*/
 
 	@Autowired
 	private ReportRepository reportRepository;
@@ -49,8 +50,8 @@ public class ReportService {
 	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinition reportDefinition = new ReportDefinition();
-        System.out.println("Report Definitions from service "+reportDefinitions.getReportDefinitions());
-		for (ReportDefinition rDefinition : reportDefinitions.getReportDefinitions()) {
+		System.out.println("updated repot defs " + ReportApp.getUpdatedYAML() + "\n\n\n");
+		for (ReportDefinition rDefinition : ReportApp.getUpdatedYAML().getReportDefinitions()) {
 			if (rDefinition.getReportName().equals(metaDataRequest.getReportName())) {
 
 				reportDefinition = rDefinition;
@@ -58,7 +59,7 @@ public class ReportService {
 		}
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportDefinition.getReportName());
-
+        rmt.setSummary(reportDefinition.getSummary());
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
 		List<ColumnDetail> searchParams = new ArrayList<>();
 		for (SourceColumn cd : reportDefinition.getSourceColumns()) {
@@ -118,7 +119,7 @@ public class ReportService {
 
 	public ReportResponse getReportData(ReportRequest reportRequest) {
 		
-		List<ReportDefinition> listReportDefinitions  = reportDefinitions.getReportDefinitions();
+		List<ReportDefinition> listReportDefinitions  = ReportApp.getUpdatedYAML().getReportDefinitions();
 		 
 		ReportDefinition reportDefinition = listReportDefinitions.stream()
 				.filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);

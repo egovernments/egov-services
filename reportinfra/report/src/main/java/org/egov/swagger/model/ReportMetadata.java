@@ -14,8 +14,19 @@ import javax.validation.constraints.*;
 public class ReportMetadata   {
   @JsonProperty("reportName")
   private String reportName = null;
+  
+  @JsonProperty("summary")
+  private String summary = null;
 
-  @JsonProperty("reportHeader")
+  public String getSummary() {
+	return summary;
+}
+
+public void setSummary(String summary) {
+	this.summary = summary;
+}
+
+@JsonProperty("reportHeader")
   private List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
 
   @JsonProperty("searchParams")

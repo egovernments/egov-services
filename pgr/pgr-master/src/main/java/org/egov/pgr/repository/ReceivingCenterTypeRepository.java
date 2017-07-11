@@ -132,5 +132,25 @@ public class ReceivingCenterTypeRepository {
 
 		return true;
 	}
+	
+	public boolean checkReceivingCenterNameExists(final String name, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+
+		// preparedStatementValues.add(id);
+		preparedStatementValues.add(tenantId);
+		String query = "";
+		if ((null != name && name != "")) {
+
+			preparedStatementValues.add(name);
+			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
+
+		}
+		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
+				preparedStatementValues.toArray());
+		if (!ceneterTypes.isEmpty())
+			return true;
+
+		return false;
+	}
 
 }

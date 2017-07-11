@@ -114,6 +114,7 @@ public class EscalationHierarchyService {
 		List<EscalationHierarchy> escHierarchyList = escalationHierarchyRequest.getEscalationHierarchy();
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(escalationHierarchyRequest.getRequestInfo().getUserInfo().getId());
+		escalationHierarchyRepository.deleteEscalationHierarchy(escHierarchyList);
 		return escalationHierarchyRepository.persistEscalationHierarchy(escHierarchyList,auditDetails);
 	}
 	

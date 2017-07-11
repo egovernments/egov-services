@@ -249,10 +249,10 @@ componentWillUpdate() {
  
 	handleDepartment = (e) => {
 		
-		 let {toggleSnackbarAndSetText} = this.props;
+		 let {toggleSnackbarAndSetText, emptyProperty} = this.props;
 		
 		 var currentThis = this;
-	    currentThis.setState({designation : []});
+	    currentThis.setState({designations : []});
 		  currentThis.setState({toPosition : []});
 		
 		let query = {
@@ -291,7 +291,7 @@ componentWillUpdate() {
   
   updateEscalation = () => {
 
-    let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText} = this.props;
+    let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, emptyProperty} = this.props;
     setLoadingStatus('loading');
 
 		 var current = this
@@ -313,7 +313,10 @@ componentWillUpdate() {
           let query = {
         fromPosition:current.props.defineEscalation.fromPosition
       }
-    
+		emptyProperty("serviceCode");
+		emptyProperty("department");
+		emptyProperty("designation");
+		emptyProperty("toPosition");
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
                     setLoadingStatus('hide');
                     if (response.escalationHierarchies[0] != null) {
@@ -342,7 +345,7 @@ componentWillUpdate() {
 
   addEscalation = () => {
 
-    let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText} = this.props;
+    let {setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText, emptyProperty} = this.props;
     setLoadingStatus('loading');
 
     var current = this
@@ -361,7 +364,12 @@ componentWillUpdate() {
 		toggleDailogAndSetText(true, "Escalation Created Successfully");
         let query = {
         fromPosition:current.props.defineEscalation.fromPosition
-      }
+		}
+		
+		emptyProperty("serviceCode");
+		emptyProperty("department");
+		emptyProperty("designation");
+		emptyProperty("toPosition");
     
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
                     setLoadingStatus('hide');
@@ -403,7 +411,6 @@ componentWillUpdate() {
         }
       }
 
-      
       this.handleDepartment(d);
 
       this.handleDesignation(e);
@@ -428,7 +435,6 @@ componentWillUpdate() {
       })
     }
   }
-
 
     render() {
 
@@ -486,6 +492,7 @@ componentWillUpdate() {
                            floatingLabelText={translate('pgr.lbl.grievance.type')+ " *"}
                            fullWidth={true}
                            value={defineEscalation.serviceCode ? defineEscalation.serviceCode : ""}
+						   disabled={editIndex<0 ? false : true}
                            onChange= {(e, index ,value) => {
                              var e = {
                                target: {
@@ -584,11 +591,11 @@ componentWillUpdate() {
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
    		          <thead >
    		            <tr>
-						<th>From Position</th>
-						<th>Grievance Type</th>
-						<th>Department</th>
-						<th>Designation</th>
-						<th>To Position</th>
+						<th>{translate('pgr.lbl.fromposition')}</th>
+						<th>{translate('pgr.lbl.grievance.type')}</th>
+						<th>{translate('core.lbl.department')}</th>
+						<th>{translate('pgr.lbl.designation')}</th>
+						<th>{translate('pgr.lbl.toposition')}</th>
 						<th></th>
    		            </tr>
    		          </thead>
@@ -672,7 +679,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["fromPosition", "grievanceType", "department", "designation", "toPosition"]
+          required: ["fromPosition", "serviceCode", "department", "designation", "toPosition"]
         },
         pattern: {
           current: [],
@@ -690,8 +697,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["fromPosition", "grievanceType", "department", "designation", "toPosition"] ,
-          required:["fromPosition", "grievanceType", "department", "designation", "toPosition"]
+          current: ["fromPosition", "serviceCode", "department", "designation", "toPosition"] ,
+          required:["fromPosition", "serviceCode", "department", "designation", "toPosition"]
         },
         pattern: {
           current: [],
@@ -699,6 +706,23 @@ const mapDispatchToProps = dispatch => ({
         }
       }
     });
+  },
+  emptyProperty: (property) => {
+	  dispatch({
+		  type: "EMPTY_PROPERTY",
+		  property,
+		  isFormValid:false,
+		  validationData: {
+        required: {
+          current: ["fromPosition", ],
+          required: ["fromPosition", "serviceCode", "department", "designation", "toPosition"]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+		  }
+		});
   },
   
   handleChange: (e, property, isRequired, pattern) => {

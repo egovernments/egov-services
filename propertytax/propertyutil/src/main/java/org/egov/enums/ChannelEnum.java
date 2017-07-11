@@ -14,7 +14,9 @@ public enum ChannelEnum {
 
 	CFC_COUNTER("CFC_COUNTER"),
 
-	CITIZEN("CITIZEN");
+	CITIZEN("CITIZEN"),
+
+	DATA_ENTRY("DATA_ENTRY");
 
 	private String value;
 

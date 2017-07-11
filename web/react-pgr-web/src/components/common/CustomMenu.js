@@ -37,6 +37,8 @@ class CustomMenu extends Component {
       filterMenu:[],
       level:0,
       parentLevel:0,
+      modules:[],
+      items:[]
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);   
@@ -58,7 +60,11 @@ class CustomMenu extends Component {
 
   componentDidUpdate()
   {
-    let {menuItems}=this.props;
+    let {menuItems,actionList}=this.props;
+    // console.log(actionList);
+    // this.setState({
+    //   modules:actionList
+    // })
 
     // this.menuLeaves(menuItems.length>0?menuItems[0].items:[]);
     // console.log(menuItems);
@@ -91,6 +97,14 @@ class CustomMenu extends Component {
   //
   //   return menu;
   // }
+
+  changeModulesActions(modules,items)
+  {
+    this.setState({
+      modules,
+      items
+    })
+  }
 
   handleChange=(e)=>
   {
@@ -126,9 +140,10 @@ class CustomMenu extends Component {
 
   render() {
     // console.log(this.state.searchText);
-    let {menuItems, handleToggle}=this.props;
-    let {searchText,filterMenu,level,parentLevel}=this.state;
+    let {menuItems, handleToggle,actionList}=this.props;
+    let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions}=this.state;
     let {menuChange,changeLevel}=this;
+    // console.log(actionList);
     // console.log(menuItems.length>0?menuItems[0].title:"");
     // const constructMenu=(items)=>{
     //   // console.log(items);
@@ -155,7 +170,7 @@ class CustomMenu extends Component {
     //   return menu;
     // }
     // console.log(menuItems);
-    // console.log(parentLevel); 
+    // console.log(parentLevel);
     const checkUrl = function(item) {
       if(item.url == '/pgr/createReceivingCenter' && window.location.href.indexOf("/pgr/createReceivingCenter")>-1) {
           window.urlCheck = true;
@@ -170,6 +185,7 @@ class CustomMenu extends Component {
 
       if(searchText.length==0)
       {
+
         return menuItems.map((item,index)=>{
             if (item.level==level) {
               if (item.url) {
@@ -202,30 +218,16 @@ class CustomMenu extends Component {
 
             }
         })
-        // return(
-        //   <div>
-        //     <MenuItem
-        //          leftIcon={<i className="material-icons">view_module</i>}
-        //          primaryText={menuItems.length>0?menuItems[0].title:""}
-        //          rightIcon={<ArrowDropRight />}
-        //           />
-        //       {/*
-        //         <MenuItem
-        //              leftIcon={<i className="material-icons">view_module</i>}
-        //              primaryText={menuItems.length>0?menuItems[0].title:""}
-        //              rightIcon={<ArrowDropRight />}
-        //              menuItems={constructMenu(menuItems.length>0?menuItems[0].items:[])}
-        //            />
-        //         */}
-        //
-        //          {/*<MenuItem
-        //             leftIcon={<i className="material-icons">favorite</i>}
-        //             primaryText="Favourites"
-        //             rightIcon={<ArrowDropRight />}
-        //             menuItems={constructMenu(menuItems.length>0?menuItems[0].items:[])}
-        //           />*/}
-        //     </div>
-        // )
+        return(
+          <div>
+            <MenuItem
+                 leftIcon={<i className="material-icons">view_module</i>}
+                 primaryText={menuItems.length>0?menuItems[0].title:""}
+                 rightIcon={<ArrowDropRight />}
+                  />
+
+            </div>
+        )
       }
       else {
 
@@ -241,16 +243,103 @@ class CustomMenu extends Component {
                     </Link>
                   )
                 }
-                // else {
-                //   return(
-                //     <span>Not found</span>
-                //   )
-                // }
+
           })
 
 
       }
     }
+
+    // const showMenuOne=(modules=[],actionList=[])=>{
+    //   menuItems=[...modules,...actionList];
+    //   // console.log(menuItems);
+    //   if(searchText.length==0)
+    //   {
+    //     return menuItems.map((item,index)=>{
+    //         if (item.hasOwnProperty("actionList")) {
+    //             <MenuItem
+    //                 key={index}
+    //                 leftIcon={<i className="material-icons">view_module</i>}
+    //                 primaryText={item.displayName}
+    //                 rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
+    //                 onTouchTap={()=>{changeModulesActions(item.subModules, item.actionList)}}
+    //             />
+    //         } else {
+    //
+    //         }
+    //     })
+    //   }
+    //
+    //
+    //   // if(searchText.length==0)
+    //   // {
+    //   //   return menuItems.map((item,index)=>{
+    //   //
+    //   //
+    //   //       // if (item.level==level) {
+    //   //       //   if (item.url) {
+    //   //       //     return(
+    //   //       //       <Link   key={index} to={item.url} >
+    //   //       //         <MenuItem
+    //   //       //
+    //   //       //
+    //   //       //              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+    //   //       //
+    //   //       //              leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+    //   //       //              primaryText={item.name}
+    //   //       //           />
+    //   //       //       </Link>
+    //   //       //
+    //   //       //
+    //   //       //     )
+    //   //       //
+    //   //       //   }
+    //   //       //
+    //   //       //   else {
+    //   //       //     return (
+    //   //       //           <MenuItem
+    //   //       //               key={index}
+    //   //       //                leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+    //   //       //                primaryText={item.name}
+    //   //       //                rightIcon={<i className="material-icons">{item.rightIcon}</i>}
+    //   //       //                onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
+    //   //       //             />
+    //   //       //         )
+    //   //       //   }
+    //   //       //
+    //   //       // }
+    //   //   })
+    //   //   return(
+    //   //     <div>
+    //   //       <MenuItem
+    //   //            leftIcon={<i className="material-icons">view_module</i>}
+    //   //            primaryText={menuItems.length>0?menuItems[0].title:""}
+    //   //            rightIcon={<ArrowDropRight />}
+    //   //             />
+    //   //
+    //   //       </div>
+    //   //   )
+    //   // }
+    //   // else {
+    //   //
+    //   //     return menuItems.map((item,index)=>{
+    //   //           if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+    //   //             return(
+    //   //               <Link   key={index} to={item.url} >
+    //   //                 <MenuItem
+    //   //                      onTouchTap={()=>{handleToggle(false)}}
+    //   //                      leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+    //   //                      primaryText={item.name}
+    //   //                   />
+    //   //               </Link>
+    //   //             )
+    //   //           }
+    //   //
+    //   //     })
+    //   //
+    //   //
+    //   // }
+    // }
     // console.log(constructMenu(menuItems.length>0?menuItems[0].items:[]));
     return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
@@ -288,7 +377,11 @@ class CustomMenu extends Component {
               rightIcon={<ArrowDropRight />}
               />
             */}
-          {showMenu()}
+
+            {showMenu()}
+
+            {/*modules.length>0 && showMenuOne(modules,items)*/}
+
           {/*constructMenu()*/}
         {/*  <MenuItem>
             <Link to="/">

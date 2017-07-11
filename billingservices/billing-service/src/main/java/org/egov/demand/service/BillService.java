@@ -56,6 +56,7 @@ import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -74,7 +75,6 @@ import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.number.money.CurrencyUnitFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -110,6 +110,10 @@ public class BillService {
 	
 	@Autowired
 	private GlCodeMasterService glCodeMasterService;
+
+	public List<Bill> getBills(BillSearchCriteria billSearchCriteria){
+		return billRepository.getBills(billSearchCriteria);
+	}
 
 	public BillResponse createAsync(BillRequest billRequest) {
 

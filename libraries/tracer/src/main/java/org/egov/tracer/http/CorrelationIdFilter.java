@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.egov.tracer.config.ObjectMapperFactory;
 import org.egov.tracer.model.RequestContext;
 import org.egov.tracer.model.RequestCorrelationId;
 import org.springframework.http.MediaType;
@@ -41,9 +42,10 @@ public class CorrelationIdFilter implements Filter {
     private final ObjectMapper objectMapper;
     private boolean inboundHttpRequestBodyLoggingEnabled;
 
-    public CorrelationIdFilter(boolean inboundHttpRequestBodyLoggingEnabled) {
+    public CorrelationIdFilter(boolean inboundHttpRequestBodyLoggingEnabled,
+                               ObjectMapperFactory objectMapperFactory) {
         this.inboundHttpRequestBodyLoggingEnabled = inboundHttpRequestBodyLoggingEnabled;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapperFactory.create();
     }
 
     @Override

@@ -41,6 +41,8 @@ package org.egov.egf.budget.web.contract;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.common.master.web.contract.BoundaryContract;
 import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.common.web.contract.AuditableContract;
@@ -83,12 +85,14 @@ public class BudgetDetailContract extends AuditableContract {
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
+	@NotNull
 	private BudgetGroupContract budgetGroup;
 
 	/*
 	 * budget is node reference given for budget in the budget tree structure
 	 * defined.
 	 */
+	@NotNull
 	private BudgetContract budget;
 
 	/*

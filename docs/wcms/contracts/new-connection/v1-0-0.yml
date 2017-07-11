@@ -300,7 +300,6 @@ definitions:
       zone/word/block:
         type: string
         description: Zone or Word of the Applicant.
-        
   Asset:
     type: object
     properties:
@@ -326,7 +325,7 @@ definitions:
       zone/word/block:
         type: string
         description: Zone or Word of the Applicant.
-      
+
   LegacyConnectionTypeReq:
       type: object
       properties:
@@ -588,6 +587,8 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/DocumentOwner"
+      demand:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand"
       timelines:
         type: array
         items:

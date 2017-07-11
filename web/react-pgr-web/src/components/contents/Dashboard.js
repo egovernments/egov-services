@@ -110,10 +110,12 @@ class Dashboard extends Component {
           Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 response.serviceRequests.sort(function(s1, s2) {
                   var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+                  var d11 = s1.requestedDatetime.split(" ")[1].split(":");
                   var d2 = s2.requestedDatetime.split(" ")[0].split("-");
-                  if(new Date(d1[2], d1[1]-1, d1[0]).getTime() < new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                  var d22 = s2.requestedDatetime.split(" ")[1].split(":");
+                  if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() < new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
                     return 1;
-                  } else if(new Date(d1[2], d1[1]-1, d1[0]).getTime() > new Date(d2[2], d2[1]-1, d2[0]).getTime()) {
+                  } else if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() > new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
                     return -1;
                   }
                   return 0;

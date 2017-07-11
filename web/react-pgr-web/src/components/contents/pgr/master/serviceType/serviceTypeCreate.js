@@ -125,7 +125,7 @@ class ServiceTypeCreate extends Component {
     componentDidUpdate() {
 	 	  var keyword;
 	  var pgr = this.props.location.pathname.match("pgr");
-	  
+
 	  if(pgr){
 		  keyword = "Complaint";
 	  } else {
@@ -137,11 +137,11 @@ class ServiceTypeCreate extends Component {
 
       e.preventDefault()
       var current = this;
-	  
+
 
 	  let keyword;
 	  let pgr = this.props.location.pathname.match("pgr");
-	  
+
 	  if(pgr){
 		  console.log(this.props.location.pathname, pgr);
 		  keyword = "Complaint";
@@ -156,7 +156,9 @@ class ServiceTypeCreate extends Component {
            "description" :this.props.createServiceType.description,
            "active" :this.props.createServiceType.active,
            "type" :this.props.createServiceType.type,
-           "keywords" : keyword,
+           "keywords": [
+                "Complaint"
+              ],
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
            "attributes" :this.props.createServiceType.attributes,
@@ -586,8 +588,8 @@ class ServiceTypeCreate extends Component {
                                       id="description"
                                   />
                               </Col>
-							
-              
+
+
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
@@ -663,13 +665,13 @@ class ServiceTypeCreate extends Component {
                                   />
                               </Col>
                                {/*<Col xs={12} md={3} sm={6}>
-                               
+
                                                                  <Checkbox
                                                                    label="Attributes"
                                                                    style={styles.metadata}
                                                                    checked = {createServiceType.metadata || false}
                                                                    onCheck = {(e, i, v) => { console.log(createServiceType.metadata, i);
-                               
+
                                                                      var e = {
                                                                        target: {
                                                                          value:i
@@ -720,7 +722,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ["serviceName","serviceCode","category","slaHours","keywords"]
+          required: ["serviceName","serviceCode","category","slaHours"]
         },
         pattern: {
           current: [],
@@ -738,8 +740,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: ["serviceName","serviceCode","category","slaHours","keywords"],
-          required: ["serviceName","serviceCode","category","slaHours","keywords"]
+          current: ["serviceName","serviceCode","category","slaHours"],
+          required: ["serviceName","serviceCode","category","slaHours"]
         },
         pattern: {
           current: [],

@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.egov.tracer.config.ObjectMapperFactory;
 import org.egov.tracer.config.TracerProperties;
 import org.egov.tracer.model.RequestContext;
 import org.egov.tracer.model.RequestCorrelationId;
@@ -32,9 +33,10 @@ public class KafkaListenerLoggingAspect {
     private ObjectMapper objectMapper;
     private TracerProperties tracerProperties;
 
-    public KafkaListenerLoggingAspect(TracerProperties tracerProperties) {
+    public KafkaListenerLoggingAspect(TracerProperties tracerProperties,
+                                      ObjectMapperFactory objectMapperFactory) {
         this.tracerProperties = tracerProperties;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapperFactory.create();
     }
 
     @Pointcut(value=" within(org.egov..*) && @annotation(org.springframework.kafka.annotation.KafkaListener)")

@@ -1,6 +1,8 @@
 package org.egov.tracer.http;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.Resources;
+import org.egov.tracer.config.ObjectMapperFactory;
 import org.egov.tracer.model.RequestContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CorrelationIdFilterTest {
@@ -29,9 +32,13 @@ public class CorrelationIdFilterTest {
     @Mock
     private FilterChain filterChain;
 
+    @Mock
+    private ObjectMapperFactory objectMapperFactory;
+
     @Before
     public void before() {
-        correlationIdFilter = new CorrelationIdFilter(true);
+        when(objectMapperFactory.create()).thenReturn(new ObjectMapper());
+        correlationIdFilter = new CorrelationIdFilter(true, objectMapperFactory);
     }
 
     @Test

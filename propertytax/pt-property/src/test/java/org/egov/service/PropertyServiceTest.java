@@ -27,6 +27,9 @@ import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.MutationMaster;
+import org.egov.models.MutationMasterRequest;
+import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
@@ -1718,5 +1721,106 @@ public class PropertyServiceTest {
 
 		assertTrue(true);
 
+	}
+
+	@Test
+	public void createMutationTest() {
+
+		MutationMasterRequest mutationMasterRequest = new MutationMasterRequest();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("123");
+		mutationMaster.setCode("456");
+		mutationMaster.setName("prasad");
+		mutationMaster.setNameLocal("pranav");
+		mutationMaster.setDescription("description");
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("pankaj");
+		auditDetails.setLastModifiedBy("paku");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+		mutationMaster.setAuditDetails(auditDetails);
+
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		mutationMasters.add(mutationMaster);
+		String tenantId = "123";
+
+		mutationMasterRequest.setRequestInfo(getRequestInfoObject());
+		mutationMasterRequest.setMutationMasters(mutationMasters);
+
+		MutationMasterResponse mutationMasterResponse = null;
+
+		try {
+			mutationMasterResponse = masterService.createMutationMater(tenantId, mutationMasterRequest);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (mutationMasterResponse != null && mutationMasterResponse.getMutationMasters().size() > 0)
+			assertTrue(true);
+
+		else
+			assertTrue(false);
+
+	}
+
+	@Test
+	public void modifyMutationMaster() {
+
+		MutationMasterRequest mutationMasterRequest = new MutationMasterRequest();
+		MutationMaster mutationMaster = new MutationMaster();
+		mutationMaster.setTenantId("1234");
+		mutationMaster.setCode("4567");
+		mutationMaster.setName("pankaj");
+		mutationMaster.setNameLocal("paku");
+		mutationMaster.setDescription("description");
+		mutationMaster.setId(1l);
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("pankaj");
+		auditDetails.setLastModifiedBy("paku");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+		mutationMaster.setAuditDetails(auditDetails);
+
+		List<MutationMaster> mutationMasters = new ArrayList<>();
+		mutationMasters.add(mutationMaster);
+
+		mutationMasterRequest.setRequestInfo(getRequestInfoObject());
+		mutationMasterRequest.setMutationMasters(mutationMasters);
+
+		MutationMasterResponse mutationMasterResponse = null;
+
+		try {
+			mutationMasterResponse = masterService.updateMutationMaster(mutationMasterRequest);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (mutationMasterResponse != null && mutationMasterResponse.getMutationMasters().size() > 0)
+			assertTrue(true);
+
+		else
+			assertTrue(false);
+
+	}
+
+	@Test
+	public void searchMutationMaster() {
+		String tenantId = "1234";
+		String code = "4567";
+		MutationMasterResponse mutationMasterResponse = null;
+
+		try {
+			mutationMasterResponse = masterService.searchMutationMaster(getRequestInfoObject(), tenantId, null, null,
+					code, null, null, null);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (mutationMasterResponse != null && mutationMasterResponse.getMutationMasters().size() > 0) {
+			assertTrue(true);
+		} else
+			assertTrue(false);
 	}
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.egov.pgrrest.read.domain.exception.UpdateServiceRequestNotAllowedException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -28,6 +29,7 @@ public class AuthenticatedUser {
         return AuthenticatedUser.builder()
             .anonymousUser(true)
             .type(UserType.SYSTEM)
+            .roleCodes(Collections.singletonList(UserType.SYSTEM.getValue()))
             .id(0L)
             .build();
     }
@@ -45,12 +47,12 @@ public class AuthenticatedUser {
     }
 
     public void validateUpdateEligibility() {
-        boolean isRoleMatching = roleCodes.stream().anyMatch(getRoleCodes()::contains);
+        boolean isRoleMatching = roleCodes.stream().anyMatch(rolesAllowedToUpdateServiceRequest()::contains);
         if (!isRoleMatching)
             throw new UpdateServiceRequestNotAllowedException();
     }
 
-    private List<String> getRoleCodes() {
+    private List<String> rolesAllowedToUpdateServiceRequest() {
         return Arrays.asList(GRIEVANCE_ADMINISTRATOR, GRIEVANCE_OFFICER, GRIEVANCE_ROUTING_OFFICER);
     }
 }

@@ -30,7 +30,7 @@ public void setSummary(String summary) {
   private List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
 
   @JsonProperty("searchParams")
-  private List<ColumnDetail> searchParams = new ArrayList<ColumnDetail>();
+  private List<SearchColumn> searchParams = new ArrayList<SearchColumn>();
 
   public ReportMetadata reportName(String reportName) {
     this.reportName = reportName;
@@ -73,12 +73,12 @@ public void setSummary(String summary) {
     this.reportHeader = reportHeader;
   }
 
-  public ReportMetadata searchParams(List<ColumnDetail> searchParams) {
+  public ReportMetadata searchParams(List<SearchColumn> searchParams) {
     this.searchParams = searchParams;
     return this;
   }
 
-  public ReportMetadata addSearchParamsItem(ColumnDetail searchParamsItem) {
+  public ReportMetadata addSearchParamsItem(SearchColumn searchParamsItem) {
     this.searchParams.add(searchParamsItem);
     return this;
   }
@@ -88,11 +88,11 @@ public void setSummary(String summary) {
    * @return searchParams
   **/
   
-  public List<ColumnDetail> getSearchParams() {
+  public List<SearchColumn> getSearchParams() {
     return searchParams;
   }
 
-  public void setSearchParams(List<ColumnDetail> searchParams) {
+  public void setSearchParams(List<SearchColumn> searchParams) {
     this.searchParams = searchParams;
   }
 

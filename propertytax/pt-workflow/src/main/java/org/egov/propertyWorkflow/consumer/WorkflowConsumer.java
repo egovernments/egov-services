@@ -18,7 +18,6 @@ import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Service;
  *
  */
 
-@EnableKafka
 @Service
 public class WorkflowConsumer {
 
@@ -87,33 +85,39 @@ public class WorkflowConsumer {
 	 * 
 	 * start workflow, update workflow
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow')}",
-    "#{environment.getProperty('egov.propertytax.property.update.workflow')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.create')}",
+			"#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.update')}" })
 
 	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
 
 		PropertyRequest propertyRequest = record.value();
 
-		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow"))) {
+		if (record.topic()
+				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.titletransfer.workflow.create"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo, environment.getProperty("businessKey"),environment.getProperty("type"),environment.getProperty("create.property.comments"));
+				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
+						environment.getProperty("businessKey"), environment.getProperty("type"),
+						environment.getProperty("create.property.comments"));
 				property.getPropertyDetail().setStateId(processInstance.getId());
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);
-		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.workflow"))) {
+			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
+					propertyRequest);
+		} else if (record.topic()
+				.equals(environment.getProperty("egov.propertytax.property.titletransfer.workflow.update"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,property.getPropertyDetail().getStateId());
+				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
+						property.getPropertyDetail().getStateId());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"), propertyRequest);
+			workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
+					propertyRequest);
 		}
-
 	}
 
 	/**
@@ -151,12 +155,13 @@ public class WorkflowConsumer {
 		requestInfo.setDid(propertyRequest.getRequestInfo().getDid());
 		requestInfo.setKey(propertyRequest.getRequestInfo().getMsgId());
 		requestInfo.setRequesterId(propertyRequest.getRequestInfo().getRequesterId());
-		//TODO temporary fix for date format and need to replace with actual ts value
+		// TODO temporary fix for date format and need to replace with actual ts
+		// value
 		String dateValue = null;
 		Date date = new Date();
 		dateValue = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(date);
 		requestInfo.setTs(dateValue);
-		//requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
+		// requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
 		requestInfo.setVer(propertyRequest.getRequestInfo().getVer());
 		requestInfo.setTenantId(tenantId);
 

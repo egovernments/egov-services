@@ -976,20 +976,20 @@
     PropertyTypeCategoryTypeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         propertyTypeCategoryType:
           $ref: '#/definitions/PropertyTypeCategoryType'
       required:
-        - RequestInfo
+        - requestInfo
         - propertyTypeCategoryType
     
     PropertyTypeCategoryTypesRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeCategoryTypes:
+        propertyTypeCategoryTypes:
           type: array
           maximum: 20
           items:
@@ -1024,20 +1024,20 @@
     PropertyTypePipeSizeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypePipeSize:
+        propertyTypePipeSize:
           $ref: '#/definitions/PropertyTypePipeSize'
       required:
-        - RequestInfo
-        - PropertyTypePipeSize
+        - requestInfo
+        - propertyTypePipeSize
     
     PropertyTypePipeSizeRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypePipeSizes:
+        propertyTypePipeSizes:
           type: array
           maximum: 20
           items:
@@ -1072,20 +1072,20 @@
     PropertyTypeUsageTypeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         propertyTypeUsageType:
           $ref: '#/definitions/PropertyTypeUsageType'
       required:
-        - RequestInfo
+        - requestInfo
         - propertyTypeUsageType
     
     PropertyTypeUsageTypesRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeUsageTypes:
+        propertyTypeUsageTypes:
           type: array
           maximum: 20
           items:
@@ -1120,20 +1120,20 @@
     DocumentTypeApplicationTypeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         documentTypeApplicationType:
           $ref: '#/definitions/DocumentTypeApplicationType'
       required:
-        - RequestInfo
+        - requestInfo
         - documentTypeApplicationType
     
     DocumentTypeApplicationTypesRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentTypeApplicationTypes:
+        documentTypeApplicationTypes:
           type: array
           maximum: 20
           items:
@@ -1178,9 +1178,9 @@
     ApplicationTypesRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        ApplicationTypes:
+        applicationTypes:
           type: array
           maximum: 10
           items:
@@ -1220,9 +1220,9 @@
     ConnectionTypesRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        ConnectionTypes:
+        connectionTypes:
           type: array
           maximum: 10
           items:
@@ -1268,13 +1268,13 @@
     SourceTypeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        SourceType:
+        sourceType:
           $ref: '#/definitions/SourceType'
       required:
-        - RequestInfo
-        - SourceType
+        - requestInfo
+        - sourceType
     
     SourceType:
       type: object
@@ -1314,9 +1314,9 @@
     SupplyTypesRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        SupplyTypes:
+        supplyTypes:
           type: array
           maximum: 10
           items:
@@ -1325,13 +1325,13 @@
     SupplyTypeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        SupplyType:
+        supplyType:
           $ref: '#/definitions/SupplyType'
       required:
-        - RequestInfo
-        - SupplyType
+        - requestInfo
+        - supplyType
     
     SupplyType:
       type: object
@@ -1487,9 +1487,9 @@
     DonationRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        Donation:
+        donation:
           type: array
           maximum: 10
           items:
@@ -1498,13 +1498,13 @@
     DonationReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        Donation:
+        donation:
           $ref: '#/definitions/Donation'
       required:
-        - RequestInfo
-        - Donation
+        - requestInfo
+        - donation
       
     Donation:
       type: object
@@ -1569,20 +1569,20 @@
     CategoryTypeReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        CategoryType:
+        categoryType:
           $ref: '#/definitions/CategoryType'
       required:
-        - RequestInfo
-        - CategoryType
+        - requestInfo
+        - categoryType
     
     CategoryTypeRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        CategoryTypes:
+        categoryTypes:
           type: array
           maximum: 20
           items:
@@ -1626,20 +1626,20 @@
     WaterTreatmentPlantReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        WaterTreatmentPlant:
+        waterTreatmentPlant:
           $ref: '#/definitions/WaterTreatmentPlant'
       required:
-        - RequestInfo
-        - WaterTreatmentPlant
+        - requestInfo
+        - waterTreatmentPlant
     
     WaterTreatmentPlantRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        WaterTreatmentPlant:
+        waterTreatmentPlant:
           type: array
           maximum: 20
           items:
@@ -1699,20 +1699,20 @@
     StorageReservoirReq:
       type: object
       properties:
-        RequestInfo:
+        requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        StorageReservoir:
+        storageReservoir:
           $ref: '#/definitions/StorageReservoir'
       required:
-        - RequestInfo
-        - StorageReservoir
+        - requestInfo
+        - storageReservoir
     
     StorageReservoirRes:
       type: object
       properties:
-        ResponseInfo:
+        responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        StorageReservoir:
+        storageReservoir:
           type: array
           maximum: 20
           items:

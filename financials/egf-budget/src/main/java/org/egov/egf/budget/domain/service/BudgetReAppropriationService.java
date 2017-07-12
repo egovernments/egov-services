@@ -3,13 +3,10 @@ package org.egov.egf.budget.domain.service;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
-import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
-import org.egov.egf.budget.domain.repository.BudgetDetailRepository;
 import org.egov.egf.budget.domain.repository.BudgetReAppropriationRepository;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +32,12 @@ public class BudgetReAppropriationService {
 
 	@Autowired
 	private SmartValidator validator;
-
 	@Autowired
 	private BudgetDetailRepository budgetDetailRepository;
+	@Autowired
+	private EgfStatusRepository egfStatusRepository;
 
-	public BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
+	private BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
 			BindingResult errors) {
 
 		try {
@@ -73,19 +71,27 @@ public class BudgetReAppropriationService {
 	public List<BudgetReAppropriation> fetchRelated(List<BudgetReAppropriation> budgetreappropriations) {
 		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
 			// fetch related items
-			/*if (budgetReAppropriation.getBudgetDetailId() != null) {
-				BudgetDetail budgetDetail = budgetDetailRepository.findById(budgetReAppropriation.getBudgetDetailId());
+			if (budgetReAppropriation.getBudgetDetail() != null) {
+				BudgetDetail budgetDetail = budgetDetailRepository.findById(budgetReAppropriation.getBudgetDetail());
 				if (budgetDetail == null) {
 					throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
 				}
-				budgetReAppropriation.setBudgetDetailId(budgetDetail);
-			}*/
+				budgetReAppropriation.setBudgetDetail(budgetDetail);
+			}
+			if (budgetReAppropriation.getStatus() != null) {
+				EgfStatus status = egfStatusRepository.findById(budgetReAppropriation.getStatus());
+				if (status == null) {
+					throw new InvalidDataException("status", "status.invalid", " Invalid status");
+				}
+				budgetReAppropriation.setStatus(status);
+			}
 
 		}
 
 		return budgetreappropriations;
 	}
 
+	@Transactional
 	public List<BudgetReAppropriation> add(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors) {
 		budgetreappropriations = fetchRelated(budgetreappropriations);
 		validate(budgetreappropriations, ACTION_CREATE, errors);
@@ -96,6 +102,7 @@ public class BudgetReAppropriationService {
 
 	}
 
+	@Transactional
 	public List<BudgetReAppropriation> update(List<BudgetReAppropriation> budgetreappropriations,
 			BindingResult errors) {
 		budgetreappropriations = fetchRelated(budgetreappropriations);

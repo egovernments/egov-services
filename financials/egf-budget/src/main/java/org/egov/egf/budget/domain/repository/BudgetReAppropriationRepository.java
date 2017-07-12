@@ -10,6 +10,7 @@ import org.egov.egf.budget.persistence.repository.BudgetReAppropriationJdbcRepos
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BudgetReAppropriationRepository {
@@ -20,19 +21,16 @@ public class BudgetReAppropriationRepository {
 	private BudgetServiceQueueRepository budgetReAppropriationQueueRepository;
 
 	public BudgetReAppropriation findById(BudgetReAppropriation budgetReAppropriation) {
-		return budgetReAppropriationJdbcRepository
-				.findById(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
+		return budgetReAppropriationJdbcRepository.findById(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
 
 	}
-
+	@Transactional
 	public BudgetReAppropriation save(BudgetReAppropriation budgetReAppropriation) {
-		return budgetReAppropriationJdbcRepository
-				.create(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
+		return budgetReAppropriationJdbcRepository.create(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
 	}
-
+	@Transactional
 	public BudgetReAppropriation update(BudgetReAppropriation entity) {
-		return budgetReAppropriationJdbcRepository.update(new BudgetReAppropriationEntity().toEntity(entity))
-				.toDomain();
+		return budgetReAppropriationJdbcRepository.update(new BudgetReAppropriationEntity().toEntity(entity)).toDomain();
 	}
 
 	public void add(CommonRequest<BudgetReAppropriationContract> request) {

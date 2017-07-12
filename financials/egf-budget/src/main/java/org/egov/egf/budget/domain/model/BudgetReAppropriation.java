@@ -42,13 +42,11 @@ package org.egov.egf.budget.domain.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,8 +59,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@JsonPropertyOrder({ "id", "budgetDetailId", "additionAmount", "deductionAmount", "originalAdditionAmount",
-		"originalDeductionAmount", "anticipatoryAmount", "statusId", "asOnDate" })
 public class BudgetReAppropriation extends Auditable {
 
 	/**
@@ -71,53 +67,61 @@ public class BudgetReAppropriation extends Auditable {
 	 */
 	private String id;
 
-	/*
+	/**
 	 * budgetDetail is the reference given for budget re appropriation to
 	 * identify for witch budget line item this appropriation is doing.
 	 */
-	@JsonIgnore
 	@NotNull
-	private BudgetDetail budgetDetailId;
+	private BudgetDetail budgetDetail;
 
-	/*
+	/**
 	 * additionAmount is the proposed extra amount to add for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal additionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * deductionAmount is the proposed amount to deduct for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal deductionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * originalAdditionAmount is the extra amount to add for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal originalAdditionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * originalAdditionAmount is the amount to deduct for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal originalDeductionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * anticipatoryAmount is the anticipated amount while processing the
 	 * re-appropriations.
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * status gives the current status of the budget re appropriation line item.
 	 */
-	private EgfStatus statusId;
+	private EgfStatus status;
 
-	/*
+	/**
 	 * asOnDate is the date on witch date the current appropriation is done.
 	 */
-	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "IST")
 	private Date asOnDate;
 
 }

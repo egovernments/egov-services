@@ -18,6 +18,7 @@ import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
 import org.egov.egf.budget.domain.service.BudgetReAppropriationService;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -38,39 +39,40 @@ public class BudgetReAppropriationController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetReAppropriationContract> create(
-			@RequestBody @Valid CommonRequest<BudgetReAppropriationContract> budgetReAppropriationContractRequest,
+	public CommonResponse<BudgetReAppropriationContract> create(@RequestBody CommonRequest<BudgetReAppropriationContract> budgetReAppropriationRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
+		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetReAppropriationContract> budgetReAppropriationResponse = new CommonResponse<>();
+		budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
 		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
 		BudgetReAppropriation budgetReAppropriation = null;
 		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
 		BudgetReAppropriationContract contract = null;
 
-		budgetReAppropriationContractRequest.getRequestInfo().setAction("create");
+		budgetReAppropriationRequest.getRequestInfo().setAction("create");
 
-		for (BudgetReAppropriationContract brc : budgetReAppropriationContractRequest.getData()) {
-			budgetReAppropriation = brc.toDomain();
-			budgetReAppropriation.setCreatedBy(budgetReAppropriationContractRequest.getRequestInfo().getUserInfo());
-			budgetReAppropriation
-					.setLastModifiedBy(budgetReAppropriationContractRequest.getRequestInfo().getUserInfo());
+		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest.getData()) {
+			budgetReAppropriation = new BudgetReAppropriation();
+			model.map(budgetReAppropriationContract, budgetReAppropriation);
+			budgetReAppropriation.setCreatedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
+			budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
 			budgetreappropriations.add(budgetReAppropriation);
 		}
 
 		budgetreappropriations = budgetReAppropriationService.add(budgetreappropriations, errors);
 
-		for (BudgetReAppropriation bra : budgetreappropriations) {
+		for (BudgetReAppropriation f : budgetreappropriations) {
 			contract = new BudgetReAppropriationContract();
-			contract.toContract(bra);
+			model.map(f, contract);
 			budgetReAppropriationContracts.add(contract);
 		}
 
-		budgetReAppropriationContractRequest.setData(budgetReAppropriationContracts);
-		budgetReAppropriationService.addToQue(budgetReAppropriationContractRequest);
+		budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
+		budgetReAppropriationService.addToQue(budgetReAppropriationRequest);
 		budgetReAppropriationResponse.setData(budgetReAppropriationContracts);
 
 		return budgetReAppropriationResponse;
@@ -78,27 +80,24 @@ public class BudgetReAppropriationController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetReAppropriationContract> update(
-			@RequestBody @Valid CommonRequest<BudgetReAppropriationContract> budgetReAppropriationContractRequest,
+	public CommonResponse<BudgetReAppropriationContract> update(@RequestBody @Valid CommonRequest<BudgetReAppropriationContract> budgetReAppropriationContractRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
 		budgetReAppropriationContractRequest.getRequestInfo().setAction("update");
-
+		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetReAppropriationContract> budgetReAppropriationResponse = new CommonResponse<>();
 		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
 		BudgetReAppropriation budgetReAppropriation = null;
 		BudgetReAppropriationContract contract = null;
 		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
 
-		for (BudgetReAppropriationContract brc : budgetReAppropriationContractRequest.getData()) {
+		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationContractRequest.getData()) {
 			budgetReAppropriation = new BudgetReAppropriation();
-			budgetReAppropriation = brc.toDomain();
-			budgetReAppropriation
-					.setLastModifiedBy(budgetReAppropriationContractRequest.getRequestInfo().getUserInfo());
+			model.map(budgetReAppropriationContract, budgetReAppropriation);
+			budgetReAppropriation.setLastModifiedBy(budgetReAppropriationContractRequest.getRequestInfo().getUserInfo());
 			budgetreappropriations.add(budgetReAppropriation);
 		}
 
@@ -106,7 +105,7 @@ public class BudgetReAppropriationController {
 
 		for (BudgetReAppropriation budgetReAppropriationObj : budgetreappropriations) {
 			contract = new BudgetReAppropriationContract();
-			contract.toContract(budgetReAppropriationObj);
+			model.map(budgetReAppropriationObj, contract);
 			budgetReAppropriationContracts.add(contract);
 		}
 
@@ -120,26 +119,27 @@ public class BudgetReAppropriationController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BudgetReAppropriationContract> search(
-			@ModelAttribute BudgetReAppropriationSearchContract budgetReAppropriationSearchContract,
+	public CommonResponse<BudgetReAppropriationContract> search(@ModelAttribute BudgetReAppropriationSearchContract budgetReAppropriationSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors) {
 
-		BudgetReAppropriationSearch domain = budgetReAppropriationSearchContract.toDomain();
+		ModelMapper mapper = new ModelMapper();
+		BudgetReAppropriationSearch domain = new BudgetReAppropriationSearch();
+		mapper.map(budgetReAppropriationSearchContract, domain);
 		BudgetReAppropriationContract contract = null;
+		ModelMapper model = new ModelMapper();
 		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
-
 		Pagination<BudgetReAppropriation> budgetreappropriations = budgetReAppropriationService.search(domain);
 
 		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations.getPagedData()) {
 			contract = new BudgetReAppropriationContract();
-			contract.toContract(budgetReAppropriation);
+			model.map(budgetReAppropriation, contract);
 			budgetReAppropriationContracts.add(contract);
 		}
 
 		CommonResponse<BudgetReAppropriationContract> response = new CommonResponse<>();
 		response.setData(budgetReAppropriationContracts);
 		response.setPage(new PaginationContract(budgetreappropriations));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(getResponseInfo(requestInfo)); 
 
 		return response;
 

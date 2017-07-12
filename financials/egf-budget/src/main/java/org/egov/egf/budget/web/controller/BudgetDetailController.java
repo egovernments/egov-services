@@ -18,6 +18,7 @@ import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.service.BudgetDetailService;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -38,37 +39,40 @@ public class BudgetDetailController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetDetailContract> create(
-			@RequestBody @Valid CommonRequest<BudgetDetailContract> budgetDetailContractRequest, BindingResult errors) {
+	public CommonResponse<BudgetDetailContract> create(@RequestBody CommonRequest<BudgetDetailContract> budgetDetailRequest,
+			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
+		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
+		budgetDetailResponse.setResponseInfo(getResponseInfo(budgetDetailRequest.getRequestInfo()));
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
 		List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
 		BudgetDetailContract contract = null;
 
-		budgetDetailContractRequest.getRequestInfo().setAction("create");
+		budgetDetailRequest.getRequestInfo().setAction("create");
 
-		for (BudgetDetailContract budgetDetailContract : budgetDetailContractRequest.getData()) {
-			budgetDetail = budgetDetailContract.toDomain();
-			budgetDetail.setCreatedBy(budgetDetailContractRequest.getRequestInfo().getUserInfo());
-			budgetDetail.setLastModifiedBy(budgetDetailContractRequest.getRequestInfo().getUserInfo());
+		for (BudgetDetailContract budgetDetailContract : budgetDetailRequest.getData()) {
+			budgetDetail = new BudgetDetail();
+			model.map(budgetDetailContract, budgetDetail);
+			budgetDetail.setCreatedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
+			budgetDetail.setLastModifiedBy(budgetDetailRequest.getRequestInfo().getUserInfo());
 			budgetdetails.add(budgetDetail);
 		}
 
 		budgetdetails = budgetDetailService.add(budgetdetails, errors);
 
-		for (BudgetDetail bd : budgetdetails) {
+		for (BudgetDetail f : budgetdetails) {
 			contract = new BudgetDetailContract();
-			contract.toContract(bd);
+			model.map(f, contract);
 			budgetDetailContracts.add(contract);
 		}
 
-		budgetDetailContractRequest.setData(budgetDetailContracts);
-		budgetDetailService.addToQue(budgetDetailContractRequest);
+		budgetDetailRequest.setData(budgetDetailContracts);
+		budgetDetailService.addToQue(budgetDetailRequest);
 		budgetDetailResponse.setData(budgetDetailContracts);
 
 		return budgetDetailResponse;
@@ -76,15 +80,14 @@ public class BudgetDetailController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetDetailContract> update(
-			@RequestBody @Valid CommonRequest<BudgetDetailContract> budgetDetailContractRequest, BindingResult errors) {
+	public CommonResponse<BudgetDetailContract> update(@RequestBody @Valid CommonRequest<BudgetDetailContract> budgetDetailContractRequest,
+			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
 		budgetDetailContractRequest.getRequestInfo().setAction("update");
-
+		ModelMapper model = new ModelMapper();
 		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
@@ -92,7 +95,8 @@ public class BudgetDetailController {
 		List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
 
 		for (BudgetDetailContract budgetDetailContract : budgetDetailContractRequest.getData()) {
-			budgetDetail = budgetDetailContract.toDomain();
+			budgetDetail = new BudgetDetail();
+			model.map(budgetDetailContract, budgetDetail);
 			budgetDetail.setLastModifiedBy(budgetDetailContractRequest.getRequestInfo().getUserInfo());
 			budgetdetails.add(budgetDetail);
 		}
@@ -101,7 +105,7 @@ public class BudgetDetailController {
 
 		for (BudgetDetail budgetDetailObj : budgetdetails) {
 			contract = new BudgetDetailContract();
-			contract.toContract(budgetDetailObj);
+			model.map(budgetDetailObj, contract);
 			budgetDetailContracts.add(contract);
 		}
 
@@ -115,26 +119,27 @@ public class BudgetDetailController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BudgetDetailContract> search(
-			@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract, @RequestBody RequestInfo requestInfo,
-			BindingResult errors) {
+	public CommonResponse<BudgetDetailContract> search(@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract,
+			@RequestBody RequestInfo requestInfo, BindingResult errors) {
 
-		BudgetDetailSearch domain = budgetDetailSearchContract.toDomain();
+		ModelMapper mapper = new ModelMapper();
+		BudgetDetailSearch domain = new BudgetDetailSearch();
+		mapper.map(budgetDetailSearchContract, domain);
 		BudgetDetailContract contract = null;
+		ModelMapper model = new ModelMapper();
 		List<BudgetDetailContract> budgetDetailContracts = new ArrayList<BudgetDetailContract>();
-
 		Pagination<BudgetDetail> budgetdetails = budgetDetailService.search(domain);
 
 		for (BudgetDetail budgetDetail : budgetdetails.getPagedData()) {
 			contract = new BudgetDetailContract();
-			contract.toContract(budgetDetail);
+			model.map(budgetDetail, contract);
 			budgetDetailContracts.add(contract);
 		}
 
 		CommonResponse<BudgetDetailContract> response = new CommonResponse<>();
 		response.setData(budgetDetailContracts);
 		response.setPage(new PaginationContract(budgetdetails));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(getResponseInfo(requestInfo)); 
 
 		return response;
 

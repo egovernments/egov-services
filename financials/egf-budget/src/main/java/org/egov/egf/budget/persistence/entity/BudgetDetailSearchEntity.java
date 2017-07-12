@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class BudgetDetailSearchEntity extends BudgetDetailEntity {
 	private Integer pageSize;
 	private Integer offset;
@@ -24,7 +25,7 @@ public class BudgetDetailSearchEntity extends BudgetDetailEntity {
 	}
 
 	public BudgetDetailSearchEntity toEntity(BudgetDetailSearch budgetDetailSearch) {
-		super.toEntity(budgetDetailSearch);
+		super.toEntity((BudgetDetail) budgetDetailSearch);
 		this.pageSize = budgetDetailSearch.getPageSize();
 		this.offset = budgetDetailSearch.getOffset();
 		return this;

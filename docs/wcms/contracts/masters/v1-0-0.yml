@@ -1,7 +1,4 @@
   swagger: '2.0'
-  # eGSP YAML Template Version: 1.0 
-  # This is a version number for the YAML template. This must not be changed.
-  
   info:
     version: 1.0.0
     title: Water Charges Management Service (WCMS) Master APIs
@@ -21,14 +18,14 @@
         - Create, Update and Search for mapping between DocumentType-ApplicationType
         - Create, Update and Search for Storage Reservoir Master
         - Create, Update and Search for Water Treatment Plant Master
-        
     contact:
       name: Rishi
       email: rishi@egovernments.org
   schemes:
     - https
-  basePath: '/v1/egov-wcms-masters/[API endpoint]'
-  
+  basePath: '/water/masters/v1/[API endpoint]'
+  x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+
   paths:
     /categorytype/_create:
       post:

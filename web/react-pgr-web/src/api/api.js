@@ -19,7 +19,7 @@ var authToken = localStorage.getItem("token");
 var requestInfo = {
     "apiId": "org.egov.pt",
     "ver": "1.0",
-    "ts": "10-03-2017 00:00:00",
+    "ts": "01-01-2017 01:01:01",
     "action": "asd",
     "did": "4354648646",
     "key": "xyz",

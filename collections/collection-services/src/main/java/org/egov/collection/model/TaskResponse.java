@@ -37,41 +37,29 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.web.contract;
+package org.egov.collection.model;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.egov.common.contract.response.ResponseInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
 @Setter
+@Getter
 @ToString
-public class ProcessInstance {
+public class TaskResponse {
+    @JsonProperty("responseInfo")
+    private ResponseInfo responseInfo = null;
 
-    private String id;
-    private String businessKey;
-    private String type;
-    private Position assignee;
-    private String comments;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastupdatedSince;
-    private Position owner;
-    private String state;
-    private String status;
-    private String senderName;
-    private String details;
-    List<Task> tasks = new ArrayList<>();
-    private String tenantId;
-    private Long initiatorPosition;
-    private Map<String, Attribute> attributes = new HashMap<>();
+    @JsonProperty("tasks")
+    private List<Task> tasks = new ArrayList<>();
+
+    @JsonProperty("task")
+    private Task task = null;
 }

@@ -37,13 +37,11 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.web.contract;
+package org.egov.collection.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import org.egov.collection.web.contract.Position;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -51,10 +49,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
 @Setter
+@Getter
 @ToString
-public class ProcessInstance {
+public class Task {
 
     private String id;
     private String businessKey;
@@ -68,10 +66,11 @@ public class ProcessInstance {
     private Position owner;
     private String state;
     private String status;
+    private String url;
+    private String action;
     private String senderName;
     private String details;
-    List<Task> tasks = new ArrayList<>();
+    private String natureOfTask;
+    private String entity;
     private String tenantId;
-    private Long initiatorPosition;
-    private Map<String, Attribute> attributes = new HashMap<>();
 }

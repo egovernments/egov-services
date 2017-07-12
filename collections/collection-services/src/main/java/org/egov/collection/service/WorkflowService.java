@@ -49,11 +49,14 @@ import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.EmployeeInfo;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
+import org.egov.collection.model.Task;
+import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.WorkflowRepository;
 import org.egov.collection.web.contract.Designation;
+import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,7 +152,7 @@ public class WorkflowService {
 		return position;
 	}
 	
-	public WorkflowDetails pushToQueue(WorkflowDetails workflowDetails) {		
+	public WorkflowDetails start(WorkflowDetails workflowDetails) {		
 		try{
 			collectionProducer.producer(applicationProperties.getKafkaStartWorkflowTopic(),
 					applicationProperties.getKafkaStartWorkflowTopicKey(), workflowDetails);
@@ -161,7 +164,19 @@ public class WorkflowService {
 		return workflowDetails;
 	}
 	
-	public ProcessInstanceResponse startWorkflow(WorkflowDetails workflowDetails){
+	public WorkflowDetails update(WorkflowDetails workflowDetails) {		
+		try{
+			collectionProducer.producer(applicationProperties.getKafkaUpdateworkflowTopic(),
+					applicationProperties.getKafkaUpdateworkflowTopicKey(), workflowDetails);
+			
+		}catch(Exception e){
+			logger.error("Pushing to Queue FAILED! ", e.getMessage());
+			return null;
+		}
+		return workflowDetails;
+	}
+	
+	public ProcessInstance startWorkflow(WorkflowDetails workflowDetails){
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		try{
 			processInstanceResponse = workflowRepository.startWorkflow(workflowDetails);
@@ -170,11 +185,27 @@ public class WorkflowService {
 		}
 		if(null == processInstanceResponse){
 			logger.error("Repository returned null processInstanceResponse");
-			return processInstanceResponse;
+			return null;
 
 		}
 		logger.info("Proccess Instance Id received is: "+processInstanceResponse.getProcessInstance().getId());
-		return processInstanceResponse;
+		return processInstanceResponse.getProcessInstance();
+	}
+	
+	public Task updateWorkflow(WorkflowDetails workflowDetails){
+		TaskResponse taskResponse = new TaskResponse();
+		try{
+			taskResponse = workflowRepository.updateWorkflow(workflowDetails);
+		}catch(Exception e){
+			logger.error("Task Id id couldn't be fetched from workflow svc", e.getCause());
+		}
+		if(null == taskResponse){
+			logger.error("Repository returned null taskResponse");
+			return null;
+
+		}
+		logger.info("Task Id received is: "+taskResponse.getTask().getId());
+		return taskResponse.getTask();
 	}
 	
 	

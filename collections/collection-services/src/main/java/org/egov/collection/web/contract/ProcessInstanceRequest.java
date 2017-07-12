@@ -56,12 +56,12 @@ import lombok.ToString;
 public class ProcessInstanceRequest {
 
     @JsonProperty("requestInfo")
-    private RequestInfo requestInfo = null;
+    private RequestInfo requestInfo;
 
     @JsonProperty("processInstances")
     private List<ProcessInstance> processInstances = new ArrayList<>();
 
     @JsonProperty("processInstance")
-    private ProcessInstance processInstance = null;
+    private ProcessInstance processInstance;
 
 }

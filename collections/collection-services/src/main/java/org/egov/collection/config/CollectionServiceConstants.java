@@ -97,10 +97,10 @@ public class CollectionServiceConstants {
 	
 	
 	//URIs for other micro services collection depends on
-	public static final String BD_SEARCH_URI = "http://localhost:8889/egov-common-masters/businessDetails/_search";
+	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
 	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
 	public static final String STATUS_SEARCH_URI = "egov-micro-dev.egovernments.org/collection/collectionStatus/_search";
-	public static final String ID_GEN_URI = "http://localhost:8080/egov-idgen/id/_generate";
+	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate";
 	public static final String GET_DEPT_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/departments/_search";
 	public static final String GET_DESIG_URI = "http://egov-micro-dev.egovernments.org/egov-common-workflows/designations/_search";
 	public static final String GET_USERS_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/_search";

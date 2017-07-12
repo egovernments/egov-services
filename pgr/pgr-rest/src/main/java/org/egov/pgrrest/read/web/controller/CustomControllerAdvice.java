@@ -123,4 +123,10 @@ public class CustomControllerAdvice {
     public ErrorResponse handleDraftNotFoundException(DraftNotFoundException ex) {
         return new DraftNotFoundExceptionAdapter().adapt(null);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MandatoryAttributesAbsentException.class)
+    public ErrorResponse handleMandatoryAttributesAbsentException(MandatoryAttributesAbsentException ex) {
+        return new MandatoryAttributesAbsentExceptionAdapter().adapt(ex.getMissingMandatoryAttributeCodes());
+    }
 }

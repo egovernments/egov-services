@@ -62,11 +62,7 @@ import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
-import org.egov.eis.web.contract.AssignmentGetRequest;
-import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.UserRequest;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -157,6 +153,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeUserMapper employeeUserMapper;
+
+    @Autowired
+    private EmployeeDataSyncService employeeDataSyncService;
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -291,6 +290,9 @@ public class EmployeeService {
         if (!isEmpty(employee.getAprDetails())) {
             aprDetailRepository.save(employeeRequest);
         }
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+
+        employeeDataSyncService.createDataSync(userRequest);
     }
 
     public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
@@ -351,6 +353,9 @@ public class EmployeeService {
         educationalQualificationService.update(employee);
         aprDetailService.update(employee);
         employeeDocumentsService.update(employee);
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
+
+        employeeDataSyncService.createDataSync(userRequest);
     }
 
     public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {

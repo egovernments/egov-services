@@ -40,5 +40,9 @@ public class PropertiesManager {
 	 @Value("${egov.services.allottee_service.searchpath}")
 	 private String allotteeApiSearchPath;
 	 
+	 @Value("${egov.services.tenant.host}")
+	 private String tenantServiceHostName;
+	 
+	 
 
 }

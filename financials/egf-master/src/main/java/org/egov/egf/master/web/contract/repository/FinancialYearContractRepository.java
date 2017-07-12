@@ -1,7 +1,6 @@
 package org.egov.egf.master.web.contract.repository;
 
 import org.egov.common.web.contract.CommonResponse;
-import org.egov.common.web.contract.RequestInfo;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Repository
 public class FinancialYearContractRepository {
 
-	public static int DEFAULT_PAGE_SIZE = 500;
-	public static int DEFAULT_PAGE_OFFSET = 0;
-
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/financialyears/_search?id={id}&pageSize={pageSize}&offset={offSet}";
+	public static final String SEARCH_URL = "/egf-master/financialyears/_search?id={id}";
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -29,18 +25,12 @@ public class FinancialYearContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public CommonResponse<FinancialYearContract> getFinancialYearById(String id, String pageSize, String offSet,
-			RequestInfo requestInfo) {
-
-		if (pageSize == null || pageSize.isEmpty())
-			pageSize = String.valueOf(DEFAULT_PAGE_SIZE);
-		if (offSet == null || offSet.isEmpty())
-			offSet = String.valueOf(DEFAULT_PAGE_OFFSET);
+	public CommonResponse<FinancialYearContract> getFinancialYearById(String id) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 
 		CommonResponse<FinancialYearContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, requestInfo, CommonResponse.class, id, pageSize, offSet),
+				restTemplate.postForObject(url, null, CommonResponse.class, id),
 				new TypeReference<CommonResponse<FinancialYearContract>>() {
 				});
 

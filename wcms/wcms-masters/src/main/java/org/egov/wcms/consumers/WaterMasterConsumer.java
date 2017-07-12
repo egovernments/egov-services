@@ -54,6 +54,7 @@ import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
+import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
@@ -65,9 +66,8 @@ import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
+import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -81,8 +81,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class WaterMasterConsumer {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(WaterMasterConsumer.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -122,6 +120,9 @@ public class WaterMasterConsumer {
 
     @Autowired
     private SourceTypeService waterSourceTypeService;
+    
+    @Autowired
+    private StorageReservoirService storageReservoirService;
 
     @KafkaListener(topics = { "${kafka.topics.usagetype.create.name}", "${kafka.topics.usagetype.update.name}",
             "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
@@ -134,11 +135,11 @@ public class WaterMasterConsumer {
             "${kafka.topics.propertyusage.update.name}", "${kafka.topics.propertypipesize.create.name}",
             "${kafka.topics.propertypipesize.update.name}", "${kafka.topics.sourcetype.create.name}",
             "${kafka.topics.sourcetype.update.name}", "${kafka.topics.supplytype.create.name}",
-            "${kafka.topics.supplytype.update.name}" })
+            "${kafka.topics.supplytype.update.name}","${kafka.topics.storagereservoir.create.name}","${kafka.topics.storagereservoir.update.name}"})
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
-        LOGGER.debug("key:" + topic + ":" + "value:" + consumerRecord);
+        log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
         try {
             if (applicationProperties.getCreateCategoryTopicName().equals(topic))
@@ -189,6 +190,10 @@ public class WaterMasterConsumer {
                 supplyTypeService.createSupplyType(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
             else if (applicationProperties.getUpdateSupplyTypeTopicName().equals(topic))
                 supplyTypeService.updateSupplyType(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
+            else if (applicationProperties.getCreateStorageReservoirTopicName().equals(topic))
+                storageReservoirService.create(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
+            else if (applicationProperties.getupdateStorageReservoirTopicName().equals(topic))
+                storageReservoirService.update(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
         } catch (final Exception exception) {
             log.debug("processMessage:" + exception);
             throw exception;

@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class BudgetReAppropriationSearchEntity extends BudgetReAppropriationEntity {
 	private Integer pageSize;
 	private Integer offset;
@@ -24,7 +25,7 @@ public class BudgetReAppropriationSearchEntity extends BudgetReAppropriationEnti
 	}
 
 	public BudgetReAppropriationSearchEntity toEntity(BudgetReAppropriationSearch budgetReAppropriationSearch) {
-		super.toEntity(budgetReAppropriationSearch);
+		super.toEntity((BudgetReAppropriation) budgetReAppropriationSearch);
 		this.pageSize = budgetReAppropriationSearch.getPageSize();
 		this.offset = budgetReAppropriationSearch.getOffset();
 		return this;

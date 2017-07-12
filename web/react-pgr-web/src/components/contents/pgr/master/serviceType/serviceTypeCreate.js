@@ -122,6 +122,15 @@ class ServiceTypeCreate extends Component {
       });
     }
 
+    componentWillUpdate() {
+      if(window.urlCheck) {
+        let {initForm}=this.props;
+        initForm();
+        this.setState({id:undefined});
+        window.urlCheck = false;
+      }
+    }
+
     componentDidUpdate() {
 	 	  var keyword;
 	  var pgr = this.props.location.pathname.match("pgr");

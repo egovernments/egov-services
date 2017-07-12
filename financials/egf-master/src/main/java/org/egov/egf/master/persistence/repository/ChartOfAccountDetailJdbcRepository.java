@@ -55,27 +55,30 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( chartOfAccountDetailSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,chartOfAccountDetailSearchEntity.getId());} 
-if( chartOfAccountDetailSearchEntity.getChartOfAccountId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "chartOfAccount =: chartOfAccount");
-paramValues.put("chartOfAccount" ,chartOfAccountDetailSearchEntity.getChartOfAccountId());} 
-if( chartOfAccountDetailSearchEntity.getAccountDetailTypeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "accountDetailType =: accountDetailType");
-paramValues.put("accountDetailType" ,chartOfAccountDetailSearchEntity.getAccountDetailTypeId());} 
-
-		 
+		if (chartOfAccountDetailSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", chartOfAccountDetailSearchEntity.getId());
+		}
+		if (chartOfAccountDetailSearchEntity.getChartOfAccountId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("chartOfAccount =:chartOfAccount");
+			paramValues.put("chartOfAccount", chartOfAccountDetailSearchEntity.getChartOfAccountId());
+		}
+		if (chartOfAccountDetailSearchEntity.getAccountDetailTypeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("accountDetailType =:accountDetailType");
+			paramValues.put("accountDetailType", chartOfAccountDetailSearchEntity.getAccountDetailTypeId());
+		}
 
 		Pagination<ChartOfAccountDetail> page = new Pagination<>();
-		page.setOffSet(chartOfAccountDetailSearchEntity.getOffset());
-		page.setPageSize(chartOfAccountDetailSearchEntity.getPageSize());
+		if (chartOfAccountDetailSearchEntity.getOffset() != null)
+			page.setOffset(chartOfAccountDetailSearchEntity.getOffset());
+		if (chartOfAccountDetailSearchEntity.getPageSize() != null)
+			page.setPageSize(chartOfAccountDetailSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -87,19 +90,20 @@ paramValues.put("accountDetailType" ,chartOfAccountDetailSearchEntity.getAccount
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<ChartOfAccountDetail>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + chartOfAccountDetailSearchEntity.getPageSize() + " offset "
-				+ chartOfAccountDetailSearchEntity.getOffset() * chartOfAccountDetailSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(ChartOfAccountDetailEntity.class);
 
-		List<ChartOfAccountDetailEntity> chartOfAccountDetailEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<ChartOfAccountDetailEntity> chartOfAccountDetailEntities = namedParameterJdbcTemplate
+				.query(searchQuery.toString(), paramValues, row);
 
 		page.setTotalResults(chartOfAccountDetailEntities.size());
 
-		List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<ChartOfAccountDetail>();
+		List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<>();
 		for (ChartOfAccountDetailEntity chartOfAccountDetailEntity : chartOfAccountDetailEntities) {
 
 			chartofaccountdetails.add(chartOfAccountDetailEntity.toDomain());
@@ -112,14 +116,15 @@ paramValues.put("accountDetailType" ,chartOfAccountDetailSearchEntity.getAccount
 	public ChartOfAccountDetailEntity findById(ChartOfAccountDetailEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<ChartOfAccountDetailEntity> chartofaccountdetails = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<ChartOfAccountDetailEntity>());
+		List<ChartOfAccountDetailEntity> chartofaccountdetails = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(ChartOfAccountDetailEntity.class));
 		if (chartofaccountdetails.isEmpty()) {
 			return null;
 		} else {

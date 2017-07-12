@@ -146,7 +146,7 @@ public class ServiceTypeRepository {
         final String serviceTypeUpdate = ServiceTypeQueryBuilder.updateServiceTypeQuery();
         final ServiceType serviceType = serviceRequest.getService();
         final Object[] obj = new Object[] { serviceType.getServiceName(),
-        		serviceType.getDescription(), serviceType.getCategory(), serviceType.getActive(), serviceType.isHasFinancialImpact(), serviceRequest.getRequestInfo().getUserInfo().getId(), 
+        		serviceType.getDescription(), serviceType.getCategory(), serviceType.getSlaHours(), serviceType.getActive(), serviceType.isHasFinancialImpact(), serviceRequest.getRequestInfo().getUserInfo().getId(), 
                 new Date(new java.util.Date().getTime()), serviceType.getServiceCode(), serviceType.getTenantId() };
         jdbcTemplate.update(serviceTypeUpdate, obj);
         final String valueRemove = ServiceTypeQueryBuilder.removeValueQuery();

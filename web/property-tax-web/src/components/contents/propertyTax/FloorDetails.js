@@ -192,6 +192,8 @@ class FloorDetails extends Component {
         }).catch((err)=> {
           console.log(err)
         })
+		
+		this.setRoomsInArray();
   }  
 
   setRoomsInArray = () => {
@@ -205,21 +207,25 @@ class FloorDetails extends Component {
 
     if(floorDetails.floors){  
       for(let i = 0; i<floorDetails.floors.length;i++){
-        console.log("Floor Details", floorDetails.floors[i] );
+		 floorDetails.floors[i].uniquePosition = i;
         if(floorDetails.floors[i].unitType == 1){
-
+			
           if(floorDetails.floors[i].units){
+			
              for(let j=0; j< floorDetails.floors[i].units.length; j++){
+				floorDetails.floors[i].units[j].uniquePosition = i;
+				floorDetails.floors[i].units[j].uniqueSubPosition = j;
                temArray.push(floorDetails.floors[i].units[j]);
             }
           } else {
             temArray.push(floorDetails.floors[i]);
           }
         } else {
-          temArray.push(floorDetails.floors[i]);
+			temArray.push(floorDetails.floors[i]);
         }
       }
 
+	     
       currentThis.setState({
         rooms : temArray
       })
@@ -228,10 +234,44 @@ class FloorDetails extends Component {
     }, 300)
 
     
-  } 
+  }
+
+handleDelete = (position, subPosition, index) => {
+	var temp = this.state.rooms;
+	temp.splice(index, 1)
+	this.setState({
+		rooms: temp
+	})
+	if(subPosition != undefined) {
+		this.props.deleteNestedObject('floors', position ,'units', subPosition);
+	} else {
+		this.props.deleteObject('floors', position);
+	}
+}  
+
+handleEdit = (item, index) => {
+	var object = this.state.rooms[index];
+	if(item.uniqueSubPosition) {
+		this.setState({
+			addRoom:true
+		});
+		this.props.editObject('unit', item);
+	} else {
+		this.props.editObject('floor', item);
+	} 
+}
+
+handleUpdate = (object) => {
+		var position = object.uniquePosition;
+		var subPosition = object.uniqueSubPosition;
+		
+		this.props.updateNestedObject("floors", position,"unit", subPosition);
+}
 
 
   render() {
+	  
+	  console.log("Floor Details", this.state.rooms);
 
     const renderOption = function(list,listName="") {
         if(list)
@@ -259,33 +299,9 @@ class FloorDetails extends Component {
       isAddRoom
     } = this.props;
 
-    let {search} = this;
+    let {search, handleDelete, handleEdit} = this;
 
     let cThis = this;
-
-    const unitForm = () => (
-      <div className="unitsList">
-          <br/>
-          <Col xs={12} md={12}><strong>Units</strong></Col>
-          <div className="clearfix"></div>
-          <br/>
-
-          <Col xs={12} md={3} sm={6}>
-
-            {((editIndex == -1 || editIndex == undefined) && true) &&
-              <RaisedButton  type="button" label="Add Unit"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
-              this.props.addNestedFormDataTwo("floor","units",'unit');
-              this.props.resetObject("unit");
-            }}/>}
-            { ((editIndex > -1) && true) &&
-              <RaisedButton type="button" label="Save Unit"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
-                  this.props.updateNestedObject("floor","units", "unit", editIndex);
-                  this.props.resetObject("unit");
-                  isEditIndex(-1);
-              }}/>}
-          </Col>
-      </div>)
-
 
       const roomForm = () => (
         <div>
@@ -614,13 +630,14 @@ class FloorDetails extends Component {
               <Col xs={12}  style={{textAlign:'right'}}>
 
                 {((editIndex == -1 || editIndex == undefined) && true) &&
-                  <RaisedButton  type="button" label="Save Room Details"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                  <RaisedButton  type="button" label="Add Room Details"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+					  
                   this.props.addNestedFormDataTwo("floor","units",'unit');
                   this.props.resetObject("unit");
                 }}/>}
                 { ((editIndex > -1) && true) &&
-                  <RaisedButton type="button" label="Save Room"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
-                      this.props.updateNestedObject("floor","units", "unit", editIndex);
+                  <RaisedButton type="button" label="Save Room Details"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						this.handleUpdate(floorDetails.unit);
                       this.props.resetObject("unit");
                       isEditIndex(-1);
                   }}/>}
@@ -1026,16 +1043,17 @@ class FloorDetails extends Component {
                                                 <Col xs={12} style={{textAlign:"right"}}>
                                                     <br/>
                                                     { (editIndex == -1 || editIndex == undefined) &&
-                                                      <RaisedButton type="button" label="Save Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                                                      <RaisedButton type="button" label="Add Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
                                                           //  this.props.addNestedFormData("floor","units");
                                                             this.props.addNestedFormData("floors","floor");
                                                             this.props.resetObject("floor"); 
                                                             this.setState({addRoom:false});
+															this.setRoomsInArray();
                                                           }
                                                       }/>
                                                     }
                                                       { (editIndex > -1) &&
-                                                        <RaisedButton type="button" label="Save"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                                                        <RaisedButton type="button" label="Save Floor"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
                                                               this.props.updateObject("floors","floor",  editIndex);
                                                               this.props.resetObject("floor");
                                                               isEditIndex(-1);
@@ -1077,7 +1095,7 @@ class FloorDetails extends Component {
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            {floorDetails.floors && floorDetails.floors.map(function(i, index){
+                                            {cThis.state.rooms && cThis.state.rooms.map(function(i, index){
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
@@ -1103,9 +1121,13 @@ class FloorDetails extends Component {
                                                     <td>{i.buildingPermissionDate}</td>
                                                     <td>{i.plinthAreaBuildingPlan}</td>
                                                     <td>
+														<i className="material-icons" style={styles.iconFont} onClick={ () => {
+															handleEdit(i, index);
+															isEditIndex(index);
+                                                         }}>mode_edit</i>
                                                          <i className="material-icons" style={styles.iconFont} onClick={ () => {
-                                                           deleteObject("floors", index);
-                                                           isEditIndex(-1);
+															handleDelete(i.uniquePosition, i.uniqueSubPosition, index);
+															isEditIndex(-1);
                                                          }}>delete</i>
                                                     </td>
                                                   </tr>)
@@ -1194,21 +1216,21 @@ const mapDispatchToProps = dispatch => ({
     })
   },
 
-  deleteNestedObject: (property,propertyOne, index) => {
+  deleteNestedObject: (property,position, propertyOne, subPosition) => {
     dispatch({
       type: "DELETE_NESTED_OBJECT",
       property,
+	  position,
       propertyOne,
-      index
+      subPosition
     })
   },
 
-  editObject: (objectName, object, isEditable) => {
+  editObject: (objectName, object) => {
     dispatch({
       type: "EDIT_OBJECT",
       objectName,
-      object,
-      isEditable
+      object
     })
   },
 
@@ -1227,12 +1249,13 @@ const mapDispatchToProps = dispatch => ({
     })
   },
 
-  updateNestedObject:  (objectName, objectArray, object) => {
+  updateNestedObject:  (property,position, propertyOne, subPosition) => {
     dispatch({
       type: "UPDATE_NESTED_OBJECT",
-      objectName,
-      objectArray,
-      object
+      property,
+	  position,
+      propertyOne,
+	  subPosition
     })
   },
 

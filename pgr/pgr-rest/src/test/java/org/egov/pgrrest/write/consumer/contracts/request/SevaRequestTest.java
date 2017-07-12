@@ -1,5 +1,6 @@
 package org.egov.pgrrest.write.consumer.contracts.request;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.write.domain.model.ServiceRequestRecord;
 import org.junit.Before;
@@ -17,16 +18,20 @@ import static org.junit.Assert.assertNotNull;
 public class SevaRequestTest {
 
     private static final String IST = "Asia/Calcutta";
+    private ObjectMapper objectMapper;
 
     @Before
     public void before() {
         TimeZone.setDefault(TimeZone.getTimeZone(IST));
+        objectMapper = new ObjectMapper();
+        objectMapper.setTimeZone(TimeZone.getTimeZone(IST));
     }
 
     @Test
     public void test_should_convert_from_seva_request_map_to_domain_complaint_record() {
         final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap, objectMapper);
 
         final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 
@@ -62,7 +67,7 @@ public class SevaRequestTest {
         final HashMap<String, Object> userInfo = (HashMap<String, Object>) requestInfo.get("userInfo");
         userInfo.put("type", "CITIZEN");
         userInfo.put("id", "4");
-        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
+        final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap, objectMapper);
 
         final ServiceRequestRecord serviceRequestRecord = sevaRequest.toDomain();
 

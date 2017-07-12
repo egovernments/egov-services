@@ -31,20 +31,8 @@ public class ReceiptRequestDocument {
     @JsonProperty("paymentMode")
     private String paymentMode;
 
-    @JsonProperty("arrearAmount")
-    private BigDecimal arrearAmount;
-
-    @JsonProperty("penaltyAmount")
-    private BigDecimal penaltyAmount;
-
-    @JsonProperty("currentAmount")
-    private BigDecimal currentAmount;
-
     @JsonProperty("totalAmount")
     private BigDecimal totalAmount;
-
-    @JsonProperty("advanceAmount")
-    private BigDecimal advanceAmount;
 
     @JsonProperty("channel")
     private String channel;
@@ -58,6 +46,18 @@ public class ReceiptRequestDocument {
     @JsonProperty("consumerCode")
     private String consumerCode;
 
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("consumerName")
+    private String consumerName;
+
+    @JsonProperty("receiptCreator")
+    private String receiptCreator;
+
+    @JsonProperty("consumerType")
+    private String consumerType;
+
     @JsonProperty("cityName")
     private String cityName;
 
@@ -66,43 +66,4 @@ public class ReceiptRequestDocument {
 
     @JsonProperty("regionName")
     private String regionName;
-
-    @JsonProperty("status")
-    private String status;
-
-    @JsonProperty("latePaymentCharges")
-    private BigDecimal latePaymentCharges;
-
-    @JsonProperty("arrearCess")
-    private BigDecimal arrearCess;
-
-    @JsonProperty("currentCess")
-    private BigDecimal currentCess;
-
-    @JsonProperty("installmentFrom")
-    private String installmentFrom;
-
-    @JsonProperty("installmentTo")
-    private String installmentTo;
-
-    @JsonProperty("consumerName")
-    private String consumerName;
-
-    @JsonProperty("reductionAmount")
-    private BigDecimal reductionAmount;
-
-    @JsonProperty("cityGrade")
-    private String cityGrade;
-
-    @JsonProperty("cityCode")
-    private String cityCode;
-
-    @JsonProperty("receiptCreator")
-    private String receiptCreator;
-
-    @JsonProperty("revenueWard")
-    private String revenueWard;
-
-    @JsonProperty("consumerType")
-    private String consumerType;
 }

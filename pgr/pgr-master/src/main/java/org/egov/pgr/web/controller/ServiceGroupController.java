@@ -90,6 +90,8 @@ public class ServiceGroupController {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
+	private static final String[] taskAction = {"create","update"} ; 
+	
 	@Autowired
     private ErrorHandler errHandler;
 	
@@ -103,7 +105,7 @@ public class ServiceGroupController {
 		}
 		logger.info("serviceGroup Create : Request::" + serviceGroupRequest);
 
-		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
+		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest, taskAction[0]);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -126,7 +128,7 @@ public class ServiceGroupController {
 		}
 		logger.info("serviceGroup Update : Request::" + serviceGroupRequest);
 		serviceGroupRequest.getServiceGroup().setCode(code);
-		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest);
+		final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest, taskAction[1]);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		
@@ -165,28 +167,30 @@ public class ServiceGroupController {
         return getSuccessResponse(serviceGroupList, requestInfo);
     }
 
-	private List<ErrorResponse> validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest) {
+	private List<ErrorResponse> validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest, String action) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(serviceGroupRequest);
+		final Error error = getError(serviceGroupRequest, action);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final ServiceGroupRequest serviceGroupRequest) {
+	private Error getError(final ServiceGroupRequest serviceGroupRequest, String action) {
 		serviceGroupRequest.getServiceGroup();
-		final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest);
+		final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest, action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest) {
+	private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest, String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addServiceGroupNameValidationErrors(serviceGroupRequest, errorFields);
 		addTeanantIdValidationErrors(serviceGroupRequest, errorFields);
-		verifyRequestUniqueness(serviceGroupRequest, errorFields);
+		if (action.equals(taskAction[0])) {
+			verifyRequestUniqueness(serviceGroupRequest, errorFields);
+		}
 		return errorFields;
 	}
 

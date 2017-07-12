@@ -1,6 +1,7 @@
 package org.egov.lams.repository;
 
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.model.City;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.Tenant;
 import org.egov.lams.web.contract.TenantResponse;
@@ -18,7 +19,7 @@ public class TenantRepository {
 	@Autowired
 	private PropertiesManager propertiesManager;
 	
-	public Tenant fetchTenantByCode(String tenant) {
+	public City fetchTenantByCode(String tenant) {
         String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenant;
 
         /*final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
@@ -27,7 +28,7 @@ public class TenantRepository {
 
         TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
         if (!CollectionUtils.isEmpty(tr.getTenant()))
-            return tr.getTenant().get(0);
+            return tr.getTenant().get(0).getCity();
         else
             return null;
     }

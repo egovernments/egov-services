@@ -5,13 +5,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.models.*;
+import org.egov.models.Address;
+import org.egov.models.AuditDetails;
+import org.egov.models.Document;
 import org.egov.models.Error;
-import org.egov.property.consumer.PropertyProducer;
+import org.egov.models.ErrorRes;
+import org.egov.models.Floor;
+import org.egov.models.IdGenerationRequest;
+import org.egov.models.IdGenerationResponse;
+import org.egov.models.IdRequest;
+import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
+import org.egov.models.PropertyLocation;
+import org.egov.models.PropertyRequest;
+import org.egov.models.PropertyResponse;
+import org.egov.models.RequestInfo;
+import org.egov.models.ResponseInfo;
+import org.egov.models.ResponseInfoFactory;
+import org.egov.models.TitleTransferRequest;
+import org.egov.models.TitleTransferResponse;
+import org.egov.models.Unit;
+import org.egov.models.User;
+import org.egov.models.VacantLandDetail;
+import org.egov.property.consumer.Producer;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.PropertySearchException;
+import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.PropertyUser;
+import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +50,10 @@ import com.google.gson.GsonBuilder;
 public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
-	private Environment env;
-
-	@Autowired
 	PropertyValidator propertyValidator;
 
 	@Autowired
-	PropertyProducer producer;
+	Producer producer;
 
 	@Autowired
 	Environment environment;
@@ -48,13 +67,18 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	PropertyRepository propertyRepository;
 
+	@Autowired
+	PropertyMasterRepository propertyMasterRepository;
+
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) {
 		// TODO Auto-generated method stub
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
-			property = generateAcknowledegeNumber(property, propertyRequest.getRequestInfo());
-			sendToKafka(environment.getProperty("egov.propertytax.property.userenhanced"), propertyRequest);
+			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
+					propertyRequest.getRequestInfo());
+			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
+			producer.send(environment.getProperty("egov.propertytax.property.create.validate.user"), propertyRequest);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
@@ -69,20 +93,9 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
-			sendToKafka(environment.getProperty("egov.propertytax.property.update.userenhanced"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.update.validate.user"), propertyRequest);
 		}
 		return null;
-	}
-
-	/**
-	 * Description: sending property request to kafka
-	 * 
-	 * @param topic
-	 * @param propertyRequestInfo
-	 */
-	private void sendToKafka(String topic, PropertyRequest propertyRequest) {
-		producer.send(topic, propertyRequest);
-
 	}
 
 	/**
@@ -92,19 +105,19 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @param requestInfo
 	 * @return
 	 */
-	public Property generateAcknowledegeNumber(Property property, RequestInfo requestInfo) {
+	public String generateAcknowledegeMentNumber(String tenantId, RequestInfo requestInfo) {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
 		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
-        idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.basepath"));
 		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
-        // generating acknowledgement number for all properties
 
+		// generating acknowledgement number for all properties
+		String acknowledegeMentNumber = null;
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
 		idrequest.setFormat(environment.getProperty("id.format"));
 		idrequest.setIdName(environment.getProperty("id.idName"));
-		idrequest.setTenantId(property.getTenantId());
+		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
 		idRequests.add(idrequest);
 		idGeneration.setIdRequests(idRequests);
@@ -113,7 +126,7 @@ public class PropertyServiceImpl implements PropertyService {
 		try {
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
 		} catch (Exception ex) {
-			throw new ValidationUrlNotFoundException(env.getProperty("invalid.id.service.url"),
+			throw new ValidationUrlNotFoundException(environment.getProperty("invalid.id.service.url"),
 					idGenerationUrl.toString(), requestInfo);
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -127,10 +140,11 @@ public class PropertyServiceImpl implements PropertyService {
 			if (idResponse.getResponseInfo().getStatus().toString()
 					.equalsIgnoreCase(environment.getProperty("success"))) {
 				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					property.getPropertyDetail().setApplicationNo(idResponse.getIdResponses().get(0).getId());
+					acknowledegeMentNumber = idResponse.getIdResponses().get(0).getId();
 			}
 		}
-        return property;
+
+		return acknowledegeMentNumber;
 	}
 
 	/**
@@ -331,6 +345,51 @@ public class PropertyServiceImpl implements PropertyService {
 
 		}
 		return userList;
-    }
+	}
 
+	@Override
+	public TitleTransferResponse createTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
+		Boolean isPropertyUnderWorkflow = propertyRepository
+				.isPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
+		TitleTransferResponse titleTransferResponse = null;
+		if (isPropertyUnderWorkflow) {
+			throw new PropertyUnderWorkflowException(environment.getProperty("invalid.property.status"),
+					titleTransferRequest.getRequestInfo());
+
+		} else {
+			Boolean isValidated = validateTitleTransfer(titleTransferRequest);
+			if (!isValidated) {
+				throw new PropertyUnderWorkflowException(environment.getProperty("invalid.title.transfer"),
+						titleTransferRequest.getRequestInfo());
+			} else {
+				propertyRepository.updateIsPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
+				String acknowldgeMentNumber = generateAcknowledegeMentNumber(
+						titleTransferRequest.getTitleTransfer().getTenantId(), titleTransferRequest.getRequestInfo());
+
+				titleTransferRequest.getTitleTransfer().setApplicationNo(acknowldgeMentNumber);
+
+				producer.send(environment.getProperty("egov.propertytax.property.titletransfer.create"),
+						titleTransferRequest);
+
+				titleTransferResponse = new TitleTransferResponse();
+				titleTransferResponse.setResponseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(titleTransferRequest.getRequestInfo(), true));
+				titleTransferResponse.setTitleTransfer(titleTransferRequest.getTitleTransfer());
+			}
+		}
+		return titleTransferResponse;
+	}
+
+	/**
+	 * This method will validate title transfer object(Currently not yet have
+	 * any validations)
+	 * 
+	 * @param titleTransferRequest
+	 * @return boolean
+	 */
+	private Boolean validateTitleTransfer(TitleTransferRequest titleTransferRequest) {
+
+		return propertyMasterRepository
+				.checkUniqueCodeForMutation(titleTransferRequest.getTitleTransfer().getTransferReason());
+	}
 }

@@ -122,7 +122,7 @@ public class DemandQueryBuilder {
 			demandQuery.append("demand.businessservice=?");
 			preparedStatementValues.add(demandCriteria.getBusinessService());
 		}
-		if (demandCriteria.getConsumerCode() != null) {
+		if (demandCriteria.getConsumerCode() != null && !demandCriteria.getConsumerCode().isEmpty()) {
 			addAndClause(demandQuery);
 			demandQuery.append("demand.consumercode IN ("
 			+ getIdQueryForStrings(demandCriteria.getConsumerCode()));

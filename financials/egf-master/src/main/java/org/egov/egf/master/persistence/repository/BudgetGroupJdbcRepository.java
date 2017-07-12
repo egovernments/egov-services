@@ -55,57 +55,66 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( budgetGroupSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,budgetGroupSearchEntity.getId());} 
-if( budgetGroupSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,budgetGroupSearchEntity.getName());} 
-if( budgetGroupSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,budgetGroupSearchEntity.getDescription());} 
-if( budgetGroupSearchEntity.getMajorCodeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "majorCode =: majorCode");
-paramValues.put("majorCode" ,budgetGroupSearchEntity.getMajorCodeId());} 
-if( budgetGroupSearchEntity.getMaxCodeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "maxCode =: maxCode");
-paramValues.put("maxCode" ,budgetGroupSearchEntity.getMaxCodeId());} 
-if( budgetGroupSearchEntity.getMinCodeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "minCode =: minCode");
-paramValues.put("minCode" ,budgetGroupSearchEntity.getMinCodeId());} 
-if( budgetGroupSearchEntity.getAccountTypeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "accountType =: accountType");
-paramValues.put("accountType" ,budgetGroupSearchEntity.getAccountTypeId());} 
-if( budgetGroupSearchEntity.getBudgetingTypeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "budgetingType =: budgetingType");
-paramValues.put("budgetingType" ,budgetGroupSearchEntity.getBudgetingTypeId());} 
-if( budgetGroupSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,budgetGroupSearchEntity.getActive());} 
-
-		 
+		if (budgetGroupSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", budgetGroupSearchEntity.getId());
+		}
+		if (budgetGroupSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", budgetGroupSearchEntity.getName());
+		}
+		if (budgetGroupSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", budgetGroupSearchEntity.getDescription());
+		}
+		if (budgetGroupSearchEntity.getMajorCodeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("majorCode =:majorCode");
+			paramValues.put("majorCode", budgetGroupSearchEntity.getMajorCodeId());
+		}
+		if (budgetGroupSearchEntity.getMaxCodeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("maxCode =:maxCode");
+			paramValues.put("maxCode", budgetGroupSearchEntity.getMaxCodeId());
+		}
+		if (budgetGroupSearchEntity.getMinCodeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("minCode =:minCode");
+			paramValues.put("minCode", budgetGroupSearchEntity.getMinCodeId());
+		}
+		if (budgetGroupSearchEntity.getAccountTypeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("accountType =:accountType");
+			paramValues.put("accountType", budgetGroupSearchEntity.getAccountTypeId());
+		}
+		if (budgetGroupSearchEntity.getBudgetingTypeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("budgetingType =:budgetingType");
+			paramValues.put("budgetingType", budgetGroupSearchEntity.getBudgetingTypeId());
+		}
+		if (budgetGroupSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", budgetGroupSearchEntity.getActive());
+		}
 
 		Pagination<BudgetGroup> page = new Pagination<>();
-		page.setOffSet(budgetGroupSearchEntity.getOffset());
-		page.setPageSize(budgetGroupSearchEntity.getPageSize());
+		if (budgetGroupSearchEntity.getOffset() != null)
+			page.setOffset(budgetGroupSearchEntity.getOffset());
+		if (budgetGroupSearchEntity.getPageSize() != null)
+			page.setPageSize(budgetGroupSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -117,19 +126,20 @@ paramValues.put("active" ,budgetGroupSearchEntity.getActive());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<BudgetGroup>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + budgetGroupSearchEntity.getPageSize() + " offset "
-				+ budgetGroupSearchEntity.getOffset() * budgetGroupSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BudgetGroupEntity.class);
 
-		List<BudgetGroupEntity> budgetGroupEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<BudgetGroupEntity> budgetGroupEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(budgetGroupEntities.size());
 
-		List<BudgetGroup> budgetgroups = new ArrayList<BudgetGroup>();
+		List<BudgetGroup> budgetgroups = new ArrayList<>();
 		for (BudgetGroupEntity budgetGroupEntity : budgetGroupEntities) {
 
 			budgetgroups.add(budgetGroupEntity.toDomain());
@@ -142,14 +152,15 @@ paramValues.put("active" ,budgetGroupSearchEntity.getActive());}
 	public BudgetGroupEntity findById(BudgetGroupEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<BudgetGroupEntity> budgetgroups = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<BudgetGroupEntity>());
+		List<BudgetGroupEntity> budgetgroups = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(BudgetGroupEntity.class));
 		if (budgetgroups.isEmpty()) {
 			return null;
 		} else {

@@ -55,32 +55,36 @@ public class EgfStatusJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( egfStatusSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,egfStatusSearchEntity.getId());} 
-if( egfStatusSearchEntity.getModuleType()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "moduleType =: moduleType");
-paramValues.put("moduleType" ,egfStatusSearchEntity.getModuleType());} 
-if( egfStatusSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,egfStatusSearchEntity.getCode());} 
-if( egfStatusSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,egfStatusSearchEntity.getDescription());} 
-
-		 
+		if (egfStatusSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", egfStatusSearchEntity.getId());
+		}
+		if (egfStatusSearchEntity.getModuleType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("moduleType =:moduleType");
+			paramValues.put("moduleType", egfStatusSearchEntity.getModuleType());
+		}
+		if (egfStatusSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", egfStatusSearchEntity.getCode());
+		}
+		if (egfStatusSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", egfStatusSearchEntity.getDescription());
+		}
 
 		Pagination<EgfStatus> page = new Pagination<>();
-		page.setOffSet(egfStatusSearchEntity.getOffset());
-		page.setPageSize(egfStatusSearchEntity.getPageSize());
+		if (egfStatusSearchEntity.getOffset() != null)
+			page.setOffset(egfStatusSearchEntity.getOffset());
+		if (egfStatusSearchEntity.getPageSize() != null)
+			page.setPageSize(egfStatusSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -92,19 +96,20 @@ paramValues.put("description" ,egfStatusSearchEntity.getDescription());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<EgfStatus>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + egfStatusSearchEntity.getPageSize() + " offset "
-				+ egfStatusSearchEntity.getOffset() * egfStatusSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(EgfStatusEntity.class);
 
-		List<EgfStatusEntity> egfStatusEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<EgfStatusEntity> egfStatusEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+				row);
 
 		page.setTotalResults(egfStatusEntities.size());
 
-		List<EgfStatus> egfstatuses = new ArrayList<EgfStatus>();
+		List<EgfStatus> egfstatuses = new ArrayList<>();
 		for (EgfStatusEntity egfStatusEntity : egfStatusEntities) {
 
 			egfstatuses.add(egfStatusEntity.toDomain());
@@ -116,15 +121,15 @@ paramValues.put("description" ,egfStatusSearchEntity.getDescription());}
 
 	public EgfStatusEntity findById(EgfStatusEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<EgfStatusEntity> egfstatuses = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<EgfStatusEntity>());
+		List<EgfStatusEntity> egfstatuses = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(EgfStatusEntity.class));
 		if (egfstatuses.isEmpty()) {
 			return null;
 		} else {

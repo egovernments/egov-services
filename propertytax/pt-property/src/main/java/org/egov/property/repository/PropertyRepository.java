@@ -773,5 +773,19 @@ public class PropertyRepository {
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 
 	}
+	
+	 public boolean isPropertyUnderWorkflow(String upicNo) {
+	        String query = PropertyBuilder.isPropertyUnderWorkflow;
+	        Object[] arguments = { upicNo };
+	        Boolean isPropertyUnderWorkflow = jdbcTemplate.queryForObject(query, arguments, Boolean.class);
+	        return isPropertyUnderWorkflow;
+	    }
+
+	    public void updateIsPropertyUnderWorkflow(String upicNo) {
+	     String query=PropertyBuilder.updatePropertyIsUnderWokflow;
+	     Object[] arguments={true,upicNo};
+	     jdbcTemplate.update(query, arguments);
+	        
+	    }
 
 }

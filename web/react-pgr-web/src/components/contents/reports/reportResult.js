@@ -21,7 +21,7 @@ require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
-var flag = 0;
+
 
 
 class ShowField extends Component {
@@ -55,6 +55,7 @@ class ShowField extends Component {
 
 
   componentWillUpdate() {
+    let {flag}=this.props;
     if(flag == 1) {
       flag = 0;
       $('#reportTable').dataTable().fnDestroy();
@@ -142,7 +143,7 @@ class ShowField extends Component {
   }
 }
 
-const mapStateToProps = state => ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult});
+const mapStateToProps = state => ({isTableShow:state.form.showTable,metaData:state.report.metaData,reportResult:state.report.reportResult,flag:state.report.flag});
 
 const mapDispatchToProps = dispatch => ({
 

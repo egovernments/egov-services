@@ -566,10 +566,10 @@ public class FinancialMastersListener {
 			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
 		}
 
-		if (mastersMap.get("financialfearcontract_create") != null) {
+		if (mastersMap.get("financialyearcontract_create") != null) {
 
 			CommonRequest<FinancialYearContract> request = objectMapper.convertValue(
-					mastersMap.get("financialfearcontract_create"),
+					mastersMap.get("financialyearcontract_create"),
 					new TypeReference<CommonRequest<FinancialYearContract>>() {
 					});
 
@@ -583,10 +583,10 @@ public class FinancialMastersListener {
 			mastersMap.put("financialYearcontract_completed", request);
 			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
 		}
-		if (mastersMap.get("financialfearcontract_update") != null) {
+		if (mastersMap.get("financialyearcontract_update") != null) {
 
 			CommonRequest<FinancialYearContract> request = objectMapper.convertValue(
-					mastersMap.get("financialfearcontract_update"),
+					mastersMap.get("financialyearcontract_update"),
 					new TypeReference<CommonRequest<FinancialYearContract>>() {
 					});
 
@@ -758,7 +758,7 @@ public class FinancialMastersListener {
 		if (mastersMap.get("subschemecontract_update") != null) {
 
 			CommonRequest<SubSchemeContract> request = objectMapper.convertValue(
-					mastersMap.get("subSchemecontract_update"), new TypeReference<CommonRequest<SubSchemeContract>>() {
+					mastersMap.get("subschemecontract_update"), new TypeReference<CommonRequest<SubSchemeContract>>() {
 					});
 
 			ModelMapper mapper = new ModelMapper();

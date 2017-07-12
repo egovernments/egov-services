@@ -94,7 +94,7 @@ const styles = {
 };
 
 var flag = 0;
-class searchRouter extends Component {
+class searchCategoryType extends Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -159,10 +159,9 @@ class searchRouter extends Component {
 
   search = e => {
     e.preventDefault();
-      console.log( this.props.routerSearchSet);
     var self = this;
-    var searchSet = Object.assign({}, self.props.routerSearchSet);
-    console.log("searchSet",searchSet);
+    var searchSet = Object.assign({}, self.props.categoryTypeSearchSet);
+
     if(searchSet.active==false){
         searchSet.active=false;
     }else{
@@ -199,7 +198,7 @@ class searchRouter extends Component {
   render() {
     _this = this;
     let {
-      routerSearchSet,
+      categoryTypeSearchSet,
       handleAutoCompleteKeyUp,
       handleChange
     } = this.props;
@@ -221,7 +220,7 @@ class searchRouter extends Component {
     } = this.state;
  let url;
 
-console.log("routerSearchSet",routerSearchSet);
+console.log("categoryTypeSearchSet",categoryTypeSearchSet);
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
@@ -261,7 +260,7 @@ console.log("routerSearchSet",routerSearchSet);
    }
 
     return (
-      <div className="searchRouter">
+      <div className="searchCategoryType">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
             <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Category Type </div>}/>
@@ -272,9 +271,9 @@ console.log("routerSearchSet",routerSearchSet);
                          <TextField
                              fullWidth={true}
                              floatingLabelText={"Category Type"+"*"}
-                             value={routerSearchSet.name? routerSearchSet.name: ""}
+                             value={categoryTypeSearchSet.name? categoryTypeSearchSet.name: ""}
                              maxLength={100}
-                             onChange={(e) => { routerSearchSet.active = true;
+                             onChange={(e) => { categoryTypeSearchSet.active = true;
                              handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
                              id="name"
                          />
@@ -284,7 +283,7 @@ console.log("routerSearchSet",routerSearchSet);
                        <Checkbox
                            label={translate("pgr.lbl.active")}
                            style={styles.checkbox}
-                           defaultChecked = {routerSearchSet.active || true}
+                           defaultChecked = {categoryTypeSearchSet.active || true}
                            onCheck = {(e, i, v) => {
 
                              var e = {
@@ -315,7 +314,7 @@ console.log("routerSearchSet",routerSearchSet);
 }
 
 const mapStateToProps = state => {
-  return ({routerSearchSet: state.form.form});
+  return ({categoryTypeSearchSet: state.form.form});
 };
 const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
@@ -348,4 +347,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(searchRouter);
+export default connect(mapStateToProps, mapDispatchToProps)(searchCategoryType);

@@ -208,7 +208,7 @@ class SearchEscalation extends Component {
       } else {}
 
       console.log(query)
-
+	
       Api.commonApiPost("/workflow/escalation-hours/v1/_search",query,{}).then(function(response){
           setLoadingStatus('hide');
           console.log(response);

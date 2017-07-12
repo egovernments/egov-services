@@ -27,38 +27,6 @@ public class FundJdbcRepository extends JdbcRepository {
 		LOG.debug("end init fund");
 	}
 
-	public static synchronized void init(Class T) {
-		String TABLE_NAME = "";
-
-		List<String> insertFields = new ArrayList<>();
-		List<String> updateFields = new ArrayList<>();
-		List<String> uniqueFields = new ArrayList<>();
-
-		String updateQuery;
-
-		try {
-
-			TABLE_NAME = (String) T.getDeclaredField("TABLE_NAME").get(null);
-		} catch (Exception e) {
-
-		}
-		insertFields.addAll(fetchFields(T));
-		uniqueFields.add("name");
-		uniqueFields.add("tenantId");
-		insertFields.removeAll(uniqueFields);
-		allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
-		updateFields.addAll(insertFields);
-		updateFields.remove("createdBy");
-		updateQuery = updateQuery(updateFields, TABLE_NAME, uniqueFields);
-		LOG.debug(T.getSimpleName() + "--------" + insertFields);
-		allInsertFields.put(T.getSimpleName(), insertFields);
-		allUpdateFields.put(T.getSimpleName(), updateFields);
-		allUniqueFields.put(T.getSimpleName(), uniqueFields);
-		allUpdateQuery.put(T.getSimpleName(), updateQuery);
-		getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
-		LOG.debug("allInsertQuery : " + allInsertQuery);
-	}
-
 	public FundEntity create(FundEntity entity) {
 
 		entity.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -81,9 +49,8 @@ public class FundJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 		String orderBy = "order by id";
-		if(fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
-		    orderBy = "order by " + fundSearchEntity.getSortBy();
-		    
+		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + fundSearchEntity.getSortBy();
 
 		searchQuery = searchQuery.replace(":tablename", FundEntity.TABLE_NAME);
 
@@ -92,8 +59,10 @@ public class FundJdbcRepository extends JdbcRepository {
 		// implement jdbc specfic search
 
 		Pagination<Fund> page = new Pagination<>();
-		page.setOffSet(fundSearchEntity.getOffset());
-		page.setPageSize(fundSearchEntity.getPageSize());
+		if (fundSearchEntity.getOffset() != null)
+			page.setOffset(fundSearchEntity.getOffset());
+		if (fundSearchEntity.getPageSize() != null)
+			page.setPageSize(fundSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -105,11 +74,11 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = getPagination(searchQuery, page, paramValues);
+		page = (Pagination<Fund>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + fundSearchEntity.getPageSize() + " offset "
-				+ fundSearchEntity.getOffset() * fundSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FundEntity.class);
 

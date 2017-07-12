@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.egov.wcms.model.enums.ApplicationType;
+import org.egov.wcms.model.enums.ReservoirType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,5 +60,12 @@ public class CommonMastersController {
         return applicationType;
     }
 
-   
+    @RequestMapping(value = "/_getreservoirtypes")
+    public Map<String, ReservoirType> getReservoirTypeEnum() {
+        final Map<String, ReservoirType> reservoirType = new HashMap<>();
+        for (final ReservoirType key : ReservoirType.values())
+            reservoirType.put(key.name(), key);
+        return reservoirType;
+    }
+
 }

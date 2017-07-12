@@ -41,6 +41,8 @@ package org.egov.egf.budget.domain.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
@@ -51,8 +53,7 @@ import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,141 +66,148 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@JsonPropertyOrder({ "id", "budgetGroupId", "budgetId", "originalAmount", "approvedAmount", "budgetAvailable",
-		"anticipatoryAmount", "usingDepartmentId", "executingDepartmentId", "functionId", "schemeId", "fundId",
-		"subSchemeId", "functionaryId", "boundaryId", "materializedPath", "documentNumber", "uniqueNo",
-		"planningPercent", "status" })
 public class BudgetDetail extends Auditable {
 
-	/*
+	/**
 	 * id of the budgetDeatil representing the unique value of each record
 	 * getting saved.
 	 */
 	private String id;
 
-	/*
+	/**
+	 * budget is node reference given for budget in the budget tree structure
+	 * defined.
+	 */
+	@NotNull
+	private Budget budget;
+
+	/**
 	 * budgetGroup is reference to the budget group which defines the set of COA
 	 * or a COA at major, minor or detailed level with its account type and
 	 * budgeting type.
 	 */
 	@NotNull
-	private BudgetGroupContract budgetGroupId;
+	private BudgetGroupContract budgetGroup;
 
-	/*
-	 * budget is node reference given for budget in the budget tree structure
-	 * defined.
-	 */
-	@NotNull
-	private Budget budgetId;
-
-	/*
-	 * originalAmount is the budget amount for the given combination of budget
-	 * detail
-	 */
-	private BigDecimal originalAmount = new BigDecimal("0.0");
-
-	/*
-	 * approvedAmount final approved budget (post workflow) amount which is
-	 * considered for budget checking.
-	 */
-	private BigDecimal approvedAmount = new BigDecimal("0.0");
-
-	/* budgetAvailable is the running balance of the budget line item */
-	private BigDecimal budgetAvailable = new BigDecimal("0.0");
-
-	/*
-	 * anticipatoryAmount is the anticipated amount while processing the
-	 * re-appropriations.
-	 */
-	private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
-
-	/*
+	/**
 	 * usingDepartment is the department for which the budget line item is
 	 * actually budgeted for.
 	 */
-	private DepartmentContract usingDepartmentId;
+	private DepartmentContract usingDepartment;
 
-	/*
+	/**
 	 * executingDepartment is the department which uses the budget to execute
 	 * the work which is defined in the budget of using department.
 	 */
-	private DepartmentContract executingDepartmentId;
+	private DepartmentContract executingDepartment;
 
-	/*
-	 * function is the MIS or financial transaction attribute which contributes
-	 * the budget details definition.
-	 */
-	private FunctionContract functionId;
-
-	/*
-	 * scheme is the MIS or financial transaction attribute which contributes
-	 * the budget details definition. Scheme can be optional
-	 */
-	private SchemeContract schemeId;
-
-	/*
+	/**
 	 * fund is the MIS or financial transaction attribute which contributes the
 	 * budget details definition
 	 */
-	private FundContract fundId;
+	private FundContract fund;
 
-	/*
+	/**
+	 * function is the MIS or financial transaction attribute which contributes
+	 * the budget details definition.
+	 */
+	private FunctionContract function;
+
+	/**
+	 * scheme is the MIS or financial transaction attribute which contributes
+	 * the budget details definition. Scheme can be optional
+	 */
+
+	private SchemeContract scheme;
+
+	/**
 	 * subScheme is the MIS or financial transaction attribute which contributes
 	 * the budget details definition. sub Scheme can be optional
 	 */
-	private SubSchemeContract subSchemeId;
+	private SubSchemeContract subScheme;
 
-	/*
+	/**
 	 * functionary is the MIS or financial transaction attribute which
 	 * contributes the budget details definition
 	 */
-	private FunctionContract functionaryId;
+	private FunctionContract functionary;
 
-	/*
+	/**
 	 * boundary is also the MIS attribute which is used incase the budget need
 	 * to be defined and idetified by boundaries of the organization.
 	 */
-	private BoundaryContract boundaryId;
+	private BoundaryContract boundary;
 
 	/**
-	 * materializedPath is unique data by hierarchy level.This data is created
-	 * internally
+	 * anticipatoryAmount is the anticipated amount while processing the
+	 * Estimate or re-appropriations.
 	 */
-	private String materializedPath;
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
 
-	/*
-	 * budgetReAppropriations is the reference to the re appropriations made for
-	 * the given budget line item
+	/**
+	 * originalAmount is the budget amount for the given combination of budget
+	 * detail
 	 */
-	// private Set<BudgetReAppropriation> budgetReAppropriations = new
-	// HashSet<BudgetReAppropriation>(0);
 
-	/*
-	 * documentNumber is the reference number to identify the attachments made
-	 * to the budget definition.
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal originalAmount = new BigDecimal("0.0");
+
+	/**
+	 * approvedAmount final approved budget (post workflow) amount which is
+	 * considered for budget checking.
 	 */
-	private Long documentNumber;
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal approvedAmount = new BigDecimal("0.0");
 
-	/*
-	 * unique number is unique ref number to identify the budget line item. ie
-	 * the combination of MIS attributes used for defining budget and budget
-	 * group. Ex - Fund, Function, dept and Group. This data is internal to the
-	 * system.
-	 */
-	private String uniqueNo;
-
-	/*
+	/**
 	 * planningPercent is the percentage which gives the inflated budget used in
 	 * certain business modules to have the budget check based on the inflated
 	 * budget values. Ex: 150% in planning percentage for a budget line item is
 	 * the 50% extra budget on approved budget used to do the budget checking in
 	 * works module.
 	 */
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal planningPercent;
 
-	/*
+	/** budgetAvailable is the running balance of the budget line item */
+	@Min(value = 0)
+	@Max(value = 999999999)
+	private BigDecimal budgetAvailable = new BigDecimal("0.0");
+
+	/**
 	 * status gives the current status of the budget line item. (detailed level)
 	 */
-	private EgfStatus statusId;
+	private EgfStatus status;
+
+	/**
+	 * documentNumber is the reference number to identify the attachments made
+	 * to the budget definition.
+	 */
+	private String documentNumber;
+
+	/**
+	 * unique number is unique ref number to identify the budget line item. ie
+	 * the combination of MIS attributes used for defining budget and budget
+	 * group. Ex - Fund, Function, dept and Group. This data is internal to the
+	 * system.
+	 */
+	@Length(max = 128)
+	private String uniqueNo;
+
+	/**
+	 * materializedPath is unique data by hierarchy level.This data is created
+	 * internally
+	 */
+	@Length(max = 10)
+	private String materializedPath;
 
 }

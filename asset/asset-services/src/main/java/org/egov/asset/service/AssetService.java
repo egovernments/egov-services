@@ -106,12 +106,16 @@ public class AssetService {
 		assetRequest.getAsset().setId(assetId);
 
 		List<YearWiseDepreciation> yearWiseDepreciation = assetRequest.getAsset().getYearWiseDepreciation();
-		if (assetRequest.getAsset().getEnableYearWiseDepreciation()) {
-			if (yearWiseDepreciation != null) {
+
+		if(assetRequest.getAsset().getEnableYearWiseDepreciation()!=null){
+			
+			if (!yearWiseDepreciation.isEmpty()&&assetRequest.getAsset().getEnableYearWiseDepreciation()) {
 				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {
 					depreciationRate.setAssetId(assetId);
 				}
 			}
+		} else {
+			assetRequest.getAsset().setEnableYearWiseDepreciation(false);
 		}
 
 		// TODO validate assetcategory for an asset

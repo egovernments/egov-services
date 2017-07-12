@@ -2,10 +2,15 @@ package org.egov.demand.web.contract;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class InstallmentSearchCriteria {
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date fromDate = null;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date toDate = null;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date currentDate = null;
 	private Date installmentYear = null;
 	private String module = null;

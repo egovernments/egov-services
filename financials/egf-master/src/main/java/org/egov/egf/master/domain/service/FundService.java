@@ -33,7 +33,7 @@ public class FundService {
 	@Autowired
 	private SmartValidator validator;
 
-	public BindingResult validate(List<Fund> funds, String method, BindingResult errors) {
+	private BindingResult validate(List<Fund> funds, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -70,16 +70,18 @@ public class FundService {
 		return funds;
 	}
 
+	@Transactional
 	public List<Fund> add(List<Fund> funds, BindingResult errors) {
 		funds = fetchRelated(funds);
 		validate(funds, ACTION_CREATE, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		return funds;
+		return funds;  
 
 	}
 
+	@Transactional
 	public List<Fund> update(List<Fund> funds, BindingResult errors) {
 		funds = fetchRelated(funds);
 		validate(funds, ACTION_UPDATE, errors);

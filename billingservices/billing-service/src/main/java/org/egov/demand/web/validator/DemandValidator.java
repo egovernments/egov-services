@@ -166,7 +166,7 @@ public class DemandValidator implements Validator {
 				.getTaxHeads(taxHeadMasterCriteria, demandRequest.getRequestInfo()).getTaxHeadMasters();
 		if (taxHeadMasters.isEmpty())
 			errors.rejectValue("Demands", "",
-					"no taxheadmasters found for the given code value DemandDetail.code is invalid, please give a valid code");
+					"no taxheadmasters found for the given code value DemandDetail.code, please give a valid code");
 		else {
 			Map<String, List<TaxHeadMaster>> taxHeadMap = taxHeadMasters.stream()
 					.collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));

@@ -40,6 +40,7 @@
 package org.egov.egf.budget.domain.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
 import org.egov.egf.master.web.contract.FinancialYearContract;
@@ -56,7 +57,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "parent", "referenceBudget", "status" }, callSuper = false)
+@EqualsAndHashCode(exclude = { "financialYear", "parent", "referenceBudget", "status" }, callSuper = false)
 public class Budget extends Auditable {
 
 	/**
@@ -76,6 +77,8 @@ public class Budget extends Auditable {
 	 * department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
 	 * department level.
 	 */
+	@Size(max = 250)
+	@NotNull
 	private String name;
 
 	/**
@@ -83,20 +86,56 @@ public class Budget extends Auditable {
 	 * belongs is tagged.
 	 */
 	@NotNull
-	private FinancialYearContract financialYearId;
+	private FinancialYearContract financialYear;
 
 	/**
 	 * estimationType is type of the budget definition - which signifies budget
 	 * type i.e New budget (BE) or the Revised budget (RE)
 	 */
-	private String estimationType;
+	@NotNull
+	private EstimationType estimationType;
 
 	/**
 	 * parent is the node used to define in the budget hierarchy tree structure
 	 * definition. The root node will not have any parent. The lowest node is
 	 * the budget under which the details are defined.
 	 */
-	private Budget parentId;
+	private Budget parent;
+
+	/**
+	 * active provides flag denotes whether the budget is active or not. i.e all
+	 * the detail budget defined under this tree will not be accessible in
+	 * transaction.
+	 */
+	private Boolean active;
+
+	/**
+	 * primaryBudget is the flag that identifies the root budget. (which has no
+	 * parent).
+	 */
+	@NotNull
+	private Boolean primaryBudget;
+
+	/**
+	 * referenceBudget is the previous year budget tree id reference to refer
+	 * previous year budget. When the BE is created, the previous year RE
+	 * reference is mapped to the BE of current year or for the year for which
+	 * BE is created.
+	 */
+	private Budget referenceBudget;
+
+	/**
+	 * status gives the current status of the budget Node. i.e collective status
+	 * of the details. However the status at budget detail also exist.
+	 */
+	private EgfStatus status;
+
+	/**
+	 * documentNumber is the reference number to identify the attachments made
+	 * to the budget definition.
+	 */
+	@Size(max = 50)
+	private String documentNumber;
 
 	/**
 	 * description provides more information on budget line item and this is
@@ -105,45 +144,13 @@ public class Budget extends Auditable {
 	 * "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
 	 * department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
 	 */
+	@Size(max = 250)
 	private String description;
-
-	/**
-	 * isActiveBudget provides flag denotes whether the budget is active or not.
-	 * i.e all the detail budget defined under this tree will not be accessible
-	 * in transaction.
-	 */
-	private Boolean isActiveBudget;
-
-	/**
-	 * isPrimaryBudget is the flag that identifies the root budget. (which has
-	 * no parent).
-	 */
-	@NotNull
-	private Boolean isPrimaryBudget;
 
 	/**
 	 * materializedPath is unique data by hierarchy level.
 	 */
+	@Size(max = 25)
 	private String materializedPath;
-
-	/**
-	 * referenceBudget is the previous year budget tree id reference to refer
-	 * previous year budget. When the BE is created, the previous year RE
-	 * reference is mapped to the BE of current year or for the year for which
-	 * BE is created.
-	 */
-	private Budget referenceBudgetId;
-
-	/**
-	 * documentNumber is the reference number to identify the attachments made
-	 * to the budget definition.
-	 */
-	private Long documentNumber;
-
-	/**
-	 * status gives the current status of the budget Node. i.e collective status
-	 * of the details. However the status at budget detail also exist.
-	 */
-	private EgfStatus statusId;
 
 }

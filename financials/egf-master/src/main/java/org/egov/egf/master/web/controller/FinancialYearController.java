@@ -49,9 +49,9 @@ public class FinancialYearController {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FinancialYearContract> financialYearResponse = new CommonResponse<>();
 		List<FinancialYear> financialyears = new ArrayList<>();
-		FinancialYear financialYear = null;
-		List<FinancialYearContract> financialYearContracts = new ArrayList<FinancialYearContract>();
-		FinancialYearContract contract = null;
+		FinancialYear financialYear;
+		List<FinancialYearContract> financialYearContracts = new ArrayList<>();
+		FinancialYearContract contract;
 
 		financialYearContractRequest.getRequestInfo().setAction("create");
 
@@ -92,9 +92,9 @@ public class FinancialYearController {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FinancialYearContract> financialYearResponse = new CommonResponse<>();
 		List<FinancialYear> financialyears = new ArrayList<>();
-		FinancialYear financialYear = null;
-		FinancialYearContract contract = null;
-		List<FinancialYearContract> financialYearContracts = new ArrayList<FinancialYearContract>();
+		FinancialYear financialYear;
+		FinancialYearContract contract;
+		List<FinancialYearContract> financialYearContracts = new ArrayList<>();
 
 		for (FinancialYearContract financialYearContract : financialYearContractRequest.getData()) {
 			financialYear = new FinancialYear();
@@ -122,15 +122,15 @@ public class FinancialYearController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FinancialYearContract> search(
-			@ModelAttribute FinancialYearSearchContract financialYearSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			@ModelAttribute FinancialYearSearchContract financialYearSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FinancialYearSearch domain = new FinancialYearSearch();
 		mapper.map(financialYearSearchContract, domain);
-		FinancialYearContract contract = null;
+		FinancialYearContract contract;
 		ModelMapper model = new ModelMapper();
-		List<FinancialYearContract> financialYearContracts = new ArrayList<FinancialYearContract>();
+		List<FinancialYearContract> financialYearContracts = new ArrayList<>();
 
 		Pagination<FinancialYear> financialyears = financialYearService.search(domain);
 

@@ -41,7 +41,7 @@ class CustomMenu extends Component {
       items:[]
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.setWrapperRef = this.setWrapperRef.bind(this);   
+    this.setWrapperRef = this.setWrapperRef.bind(this);
   }
 
   setWrapperRef(node) {
@@ -179,6 +179,14 @@ class CustomMenu extends Component {
       if(item.url == '/pgr/receivingModeCreate' && window.location.href.indexOf("/pgr/receivingModeCreate/update")>-1) {
           window.urlCheck = true;
       }
+
+      if(item.url == '/pgr/createServiceType' && window.location.href.indexOf("/pgr/serviceTypeCreate/edit")>-1) {
+          window.urlCheck = true;
+      }
+
+      if(item.url == '/pgr/createServiceGroup' && window.location.href.indexOf("/pgr/updateServiceGroup")>-1) {
+          window.urlCheck = true; 
+      }
     }
 
     const showMenu=()=>{
@@ -190,7 +198,7 @@ class CustomMenu extends Component {
             if (item.level==level) {
               if (item.url) {
                 return(
-                  <Link   key={index} to={item.url} >
+                  <Link  key={index} to={item.url} >
                     <MenuItem
 
 

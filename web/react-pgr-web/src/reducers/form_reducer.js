@@ -44,9 +44,9 @@ export default(state = defaultState, action) => {
                   [action.object]:null
                 }
               }
-			  
+
 	case "EMPTY_PROPERTY":
-		
+
 		return {
 			...state,
 			form:{
@@ -318,9 +318,9 @@ function validate(isRequired, pattern, name, value, validationData) {
         // if (_.indexOf(validationData.pattern.current, name) == -1) {
         //   validationData.pattern.current.push(name);
         // }
-		
+
       } else if(pattern == "/^[0-9]+$/"){
-		  
+
 		validationData.required.current = _.remove(validationData.required.current, (item) => {
           return item != name
         });
@@ -328,7 +328,7 @@ function validate(isRequired, pattern, name, value, validationData) {
         //   return item != name
         // });
         errorText = "It expects numeric only";
-		  
+
 	  } else {
         validationData.required.current = _.remove(validationData.required.current, (item) => {
           return item != name

@@ -55,52 +55,60 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( fiscalPeriodSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,fiscalPeriodSearchEntity.getId());} 
-if( fiscalPeriodSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,fiscalPeriodSearchEntity.getName());} 
-if( fiscalPeriodSearchEntity.getFinancialYearId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "financialYear =: financialYear");
-paramValues.put("financialYear" ,fiscalPeriodSearchEntity.getFinancialYearId());} 
-if( fiscalPeriodSearchEntity.getStartingDate()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "startingDate =: startingDate");
-paramValues.put("startingDate" ,fiscalPeriodSearchEntity.getStartingDate());} 
-if( fiscalPeriodSearchEntity.getEndingDate()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "endingDate =: endingDate");
-paramValues.put("endingDate" ,fiscalPeriodSearchEntity.getEndingDate());} 
-if( fiscalPeriodSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,fiscalPeriodSearchEntity.getActive());} 
-if( fiscalPeriodSearchEntity.getIsActiveForPosting()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isActiveForPosting =: isActiveForPosting");
-paramValues.put("isActiveForPosting" ,fiscalPeriodSearchEntity.getIsActiveForPosting());} 
-if( fiscalPeriodSearchEntity.getIsClosed()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "isClosed =: isClosed");
-paramValues.put("isClosed" ,fiscalPeriodSearchEntity.getIsClosed());} 
-
-		 
+		if (fiscalPeriodSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", fiscalPeriodSearchEntity.getId());
+		}
+		if (fiscalPeriodSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", fiscalPeriodSearchEntity.getName());
+		}
+		if (fiscalPeriodSearchEntity.getFinancialYearId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("financialYear =:financialYear");
+			paramValues.put("financialYear", fiscalPeriodSearchEntity.getFinancialYearId());
+		}
+		if (fiscalPeriodSearchEntity.getStartingDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("startingDate =:startingDate");
+			paramValues.put("startingDate", fiscalPeriodSearchEntity.getStartingDate());
+		}
+		if (fiscalPeriodSearchEntity.getEndingDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("endingDate =:endingDate");
+			paramValues.put("endingDate", fiscalPeriodSearchEntity.getEndingDate());
+		}
+		if (fiscalPeriodSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", fiscalPeriodSearchEntity.getActive());
+		}
+		if (fiscalPeriodSearchEntity.getIsActiveForPosting() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isActiveForPosting =:isActiveForPosting");
+			paramValues.put("isActiveForPosting", fiscalPeriodSearchEntity.getIsActiveForPosting());
+		}
+		if (fiscalPeriodSearchEntity.getIsClosed() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("isClosed =:isClosed");
+			paramValues.put("isClosed", fiscalPeriodSearchEntity.getIsClosed());
+		}
 
 		Pagination<FiscalPeriod> page = new Pagination<>();
-		page.setOffSet(fiscalPeriodSearchEntity.getOffset());
-		page.setPageSize(fiscalPeriodSearchEntity.getPageSize());
+		if (fiscalPeriodSearchEntity.getOffset() != null)
+			page.setOffset(fiscalPeriodSearchEntity.getOffset());
+		if (fiscalPeriodSearchEntity.getPageSize() != null)
+			page.setPageSize(fiscalPeriodSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -112,19 +120,20 @@ paramValues.put("isClosed" ,fiscalPeriodSearchEntity.getIsClosed());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<FiscalPeriod>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + fiscalPeriodSearchEntity.getPageSize() + " offset "
-				+ fiscalPeriodSearchEntity.getOffset() * fiscalPeriodSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FiscalPeriodEntity.class);
 
-		List<FiscalPeriodEntity> fiscalPeriodEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<FiscalPeriodEntity> fiscalPeriodEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(fiscalPeriodEntities.size());
 
-		List<FiscalPeriod> fiscalperiods = new ArrayList<FiscalPeriod>();
+		List<FiscalPeriod> fiscalperiods = new ArrayList<>();
 		for (FiscalPeriodEntity fiscalPeriodEntity : fiscalPeriodEntities) {
 
 			fiscalperiods.add(fiscalPeriodEntity.toDomain());
@@ -136,15 +145,15 @@ paramValues.put("isClosed" ,fiscalPeriodSearchEntity.getIsClosed());}
 
 	public FiscalPeriodEntity findById(FiscalPeriodEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<FiscalPeriodEntity> fiscalperiods = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<FiscalPeriodEntity>());
+		List<FiscalPeriodEntity> fiscalperiods = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(FiscalPeriodEntity.class));
 		if (fiscalperiods.isEmpty()) {
 			return null;
 		} else {

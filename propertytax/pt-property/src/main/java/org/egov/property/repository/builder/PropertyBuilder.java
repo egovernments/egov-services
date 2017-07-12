@@ -10,6 +10,8 @@ public class PropertyBuilder {
 			+ " occupancyDate, gisRefNo,isAuthorised, isUnderWorkflow, channel,"
 			+ " createdBy,lastModifiedBy, createdTime,lastModifiedTime,demands)" + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
+    public static String updatePropertyIsUnderWokflow="UPDATE egpt_Property SET isUnderWorkflow = ? where upicNumber=?";
+
 	public static String updatePropertyQuery() {
 
 		StringBuffer propertyUpdateSQL = new StringBuffer();
@@ -23,4 +25,5 @@ public class PropertyBuilder {
 		return propertyUpdateSQL.toString();
 	}
 
+	public static final String isPropertyUnderWorkflow="select isunderworkflow from property where upicNumber=?";
 }

@@ -40,7 +40,7 @@ export default class Fields extends Component{
       case "singlevaluelist":
         return(
           <Col xs={12} md={3}>
-            <SelectField fullWidth={true} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
+            <SelectField fullWidth={true} ref={obj.code} floatingLabelText={description} value={this.props.value} onChange={(event, key, value) => {
               this.props.handler(value, obj.code, obj.required, "")
             }} >
             {obj.attribValues.map((dd, index) => (

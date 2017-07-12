@@ -7,8 +7,10 @@ import org.egov.lams.notification.config.PropertiesManager;
 import org.egov.lams.notification.model.Agreement;
 import org.egov.lams.notification.model.Allottee;
 import org.egov.lams.notification.model.Asset;
+import org.egov.lams.notification.model.City;
 import org.egov.lams.notification.repository.AllotteeRepository;
 import org.egov.lams.notification.repository.AssetRepository;
+import org.egov.lams.notification.repository.TenantRepository;
 import org.egov.lams.notification.service.SmsNotificationService;
 import org.egov.lams.notification.web.contract.AgreementRequest;
 import org.egov.lams.notification.web.contract.RequestInfo;
@@ -37,6 +39,9 @@ public class AgreementNotificationAdapter {
 	private AllotteeRepository allotteeRepository;
 	
 	@Autowired
+	private TenantRepository tenantRepository;
+	
+	@Autowired
 	private SmsNotificationService smsNotificationService;
 
 	@Autowired
@@ -53,23 +58,24 @@ public class AgreementNotificationAdapter {
 		
 		Asset asset = assetRepository.getAsset(agreement.getAsset().getId(),agreement.getTenantId());
 		Allottee allottee = allotteeRepository.getAllottee(agreement.getAllottee().getId(),agreement.getTenantId(),requestInfo);
-		
+		City city = tenantRepository.fetchTenantByCode(agreement.getTenantId());
+
 		if(!isEmpty(agreement.getWorkflowDetails()))
 		{
 		if(agreement.getWorkflowDetails().getAction() == null)
-			sendCreateNotification(agreement, asset, allottee);
+			sendCreateNotification(agreement, asset, allottee, city);
 		else if(agreement.getWorkflowDetails().getAction().equals("Approve"))
-			sendApprovalNotification(agreement, asset, allottee);
+			sendApprovalNotification(agreement, asset, allottee, city);
 		else if(agreement.getWorkflowDetails().getAction().equals("Reject"))
-			sendRejectedNotification(agreement, asset, allottee);
+			sendRejectedNotification(agreement, asset, allottee, city);
 		}
 	}
 	
-	public void sendCreateNotification(Agreement agreement, Asset asset, Allottee allottee) {
+	public void sendCreateNotification(Agreement agreement, Asset asset, Allottee allottee, City city) {
 
 		SmsRequest smsRequest = new SmsRequest();
 
-		smsRequest.setMessage(smsNotificationService.getSmsMessage(agreement, asset, allottee));
+		smsRequest.setMessage(smsNotificationService.getSmsMessage(agreement, asset, allottee, city));
 		smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
 
 		LOGGER.info("agreementSMS------------" + smsRequest);
@@ -82,10 +88,10 @@ public class AgreementNotificationAdapter {
 			 }		 
 	}
 
-	public void sendApprovalNotification(Agreement agreement, Asset asset, Allottee allottee) {
+	public void sendApprovalNotification(Agreement agreement, Asset asset, Allottee allottee, City city) {
 
 		SmsRequest smsRequest = new SmsRequest();
-		smsRequest.setMessage(smsNotificationService.getApprovalMessage(agreement, asset, allottee));
+		smsRequest.setMessage(smsNotificationService.getApprovalMessage(agreement, asset, allottee, city));
 		smsRequest.setMobileNumber(agreement.getAllottee().getMobileNumber().toString());
 
 		LOGGER.info("ApprovalSMS------------" + smsRequest);
@@ -98,10 +104,10 @@ public class AgreementNotificationAdapter {
 			  }	 
 	}
 
-	public void sendRejectedNotification(Agreement agreement, Asset asset, Allottee allottee) {
+	public void sendRejectedNotification(Agreement agreement, Asset asset, Allottee allottee, City city) {
 
 		SmsRequest smsRequest = new SmsRequest();
-		smsRequest.setMessage(smsNotificationService.getRejectedMessage(agreement, asset, allottee));
+		smsRequest.setMessage(smsNotificationService.getRejectedMessage(agreement, asset, allottee, city));
 		smsRequest.setMobileNumber(agreement.getAllottee().getMobileNumber().toString());
 
 		LOGGER.info("RejectedSMS------------" + smsRequest);

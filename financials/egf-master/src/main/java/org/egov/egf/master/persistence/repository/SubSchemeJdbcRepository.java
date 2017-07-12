@@ -55,52 +55,60 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( subSchemeSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,subSchemeSearchEntity.getId());} 
-if( subSchemeSearchEntity.getSchemeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "scheme =: scheme");
-paramValues.put("scheme" ,subSchemeSearchEntity.getSchemeId());} 
-if( subSchemeSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,subSchemeSearchEntity.getCode());} 
-if( subSchemeSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,subSchemeSearchEntity.getName());} 
-if( subSchemeSearchEntity.getValidFrom()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "validFrom =: validFrom");
-paramValues.put("validFrom" ,subSchemeSearchEntity.getValidFrom());} 
-if( subSchemeSearchEntity.getValidTo()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "validTo =: validTo");
-paramValues.put("validTo" ,subSchemeSearchEntity.getValidTo());} 
-if( subSchemeSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,subSchemeSearchEntity.getActive());} 
-if( subSchemeSearchEntity.getDepartmentId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "departmentId =: departmentId");
-paramValues.put("departmentId" ,subSchemeSearchEntity.getDepartmentId());} 
-
-		 
+		if (subSchemeSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", subSchemeSearchEntity.getId());
+		}
+		if (subSchemeSearchEntity.getSchemeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("scheme =:scheme");
+			paramValues.put("scheme", subSchemeSearchEntity.getSchemeId());
+		}
+		if (subSchemeSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", subSchemeSearchEntity.getCode());
+		}
+		if (subSchemeSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", subSchemeSearchEntity.getName());
+		}
+		if (subSchemeSearchEntity.getValidFrom() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("validFrom =:validFrom");
+			paramValues.put("validFrom", subSchemeSearchEntity.getValidFrom());
+		}
+		if (subSchemeSearchEntity.getValidTo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("validTo =:validTo");
+			paramValues.put("validTo", subSchemeSearchEntity.getValidTo());
+		}
+		if (subSchemeSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", subSchemeSearchEntity.getActive());
+		}
+		if (subSchemeSearchEntity.getDepartmentId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("departmentId =:departmentId");
+			paramValues.put("departmentId", subSchemeSearchEntity.getDepartmentId());
+		}
 
 		Pagination<SubScheme> page = new Pagination<>();
-		page.setOffSet(subSchemeSearchEntity.getOffset());
-		page.setPageSize(subSchemeSearchEntity.getPageSize());
+		if (subSchemeSearchEntity.getOffset() != null)
+			page.setOffset(subSchemeSearchEntity.getOffset());
+		if (subSchemeSearchEntity.getPageSize() != null)
+			page.setPageSize(subSchemeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -112,19 +120,20 @@ paramValues.put("departmentId" ,subSchemeSearchEntity.getDepartmentId());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<SubScheme>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + subSchemeSearchEntity.getPageSize() + " offset "
-				+ subSchemeSearchEntity.getOffset() * subSchemeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SubSchemeEntity.class);
 
-		List<SubSchemeEntity> subSchemeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<SubSchemeEntity> subSchemeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+				row);
 
 		page.setTotalResults(subSchemeEntities.size());
 
-		List<SubScheme> subschemes = new ArrayList<SubScheme>();
+		List<SubScheme> subschemes = new ArrayList<>();
 		for (SubSchemeEntity subSchemeEntity : subSchemeEntities) {
 
 			subschemes.add(subSchemeEntity.toDomain());
@@ -136,15 +145,15 @@ paramValues.put("departmentId" ,subSchemeSearchEntity.getDepartmentId());}
 
 	public SubSchemeEntity findById(SubSchemeEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<SubSchemeEntity> subschemes = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<SubSchemeEntity>());
+		List<SubSchemeEntity> subschemes = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(SubSchemeEntity.class));
 		if (subschemes.isEmpty()) {
 			return null;
 		} else {

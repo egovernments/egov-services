@@ -41,7 +41,6 @@
 package org.egov.wcms.service;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
@@ -61,9 +60,6 @@ public class PropertyCategoryService {
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    private PropertiesManager propertiesManager;
 
     @Autowired
     private RestPropertyTaxMasterService restPropertyTaxMasterService;
@@ -90,7 +86,7 @@ public class PropertyCategoryService {
     public PropertyTypeCategoryTypesRes getPropertyCategories(
             final PropertyCategoryGetRequest propertyCategoryGetRequest) {
         if (propertyCategoryGetRequest.getPropertyType() != null) {
-            final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
                     propertyCategoryGetRequest.getPropertyType(), propertyCategoryGetRequest.getTenantId());
             if (propertyTypes != null)
                 propertyCategoryGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
@@ -110,7 +106,7 @@ public class PropertyCategoryService {
 
     public Boolean getPropertyTypeByName(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
                 propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName(),
                 propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
         if (propertyTypes.getPropertyTypesSize()) {
@@ -122,15 +118,6 @@ public class PropertyCategoryService {
         }
         return isValidProperty;
 
-    }
-
-    private PropertyTypeResponse getPropertyIdFromPTModule(String propertyTypeName, String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", propertyTypeName);
-        url = url.replace("{tenantId}", tenantId);
-        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
-        return propertyTypes;
     }
 
 }

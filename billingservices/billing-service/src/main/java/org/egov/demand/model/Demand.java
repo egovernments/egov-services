@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -82,6 +83,8 @@ public class Demand {
 	@NotNull
 	private List<DemandDetail> demandDetails = new ArrayList<>();
 
+	@NotNull
+	@Min(1)
 	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
 
 	private AuditDetail auditDetail;

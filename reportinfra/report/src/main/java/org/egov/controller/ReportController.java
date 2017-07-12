@@ -2,6 +2,9 @@ package org.egov.controller;
 import java.io.File;
 
 import javax.validation.Valid;
+
+import org.egov.ReportApp;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.ReportYamlMetaData;
@@ -61,6 +64,13 @@ public class ReportController {
 		
 		ReportResponse reportResponse = reportService.getReportData(reportRequest);
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
+	}
+	@PostMapping("/report/_reload")
+	@ResponseBody
+	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final RequestInfo reportRequest,
+			final BindingResult errors) {
+		ReportApp.loadYaml();
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 }

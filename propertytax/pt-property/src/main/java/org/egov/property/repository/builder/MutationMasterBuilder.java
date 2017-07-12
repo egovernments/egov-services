@@ -74,5 +74,7 @@ public class MutationMasterBuilder {
 		return searchDepreciationQuery.toString();
 
 	}
+	
+	public static final String CHECK_UNIQUE_CODE ="select count(*) from "+ConstantUtility.MUTATION_MASTER_TABLE_NAME+" where code = ?";
 
 }

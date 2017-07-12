@@ -10,13 +10,13 @@ import org.egov.egf.budget.persistence.repository.BudgetJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BudgetRepository {
 
 	@Autowired
 	private BudgetJdbcRepository budgetJdbcRepository;
-
 	@Autowired
 	private BudgetServiceQueueRepository budgetQueueRepository;
 
@@ -24,11 +24,11 @@ public class BudgetRepository {
 		return budgetJdbcRepository.findById(new BudgetEntity().toEntity(budget)).toDomain();
 
 	}
-
+	@Transactional
 	public Budget save(Budget budget) {
 		return budgetJdbcRepository.create(new BudgetEntity().toEntity(budget)).toDomain();
 	}
-
+	@Transactional
 	public Budget update(Budget entity) {
 		return budgetJdbcRepository.update(new BudgetEntity().toEntity(entity)).toDomain();
 	}

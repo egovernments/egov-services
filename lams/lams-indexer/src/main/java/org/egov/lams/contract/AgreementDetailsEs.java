@@ -197,12 +197,13 @@ public class AgreementDetailsEs {
 		BigDecimal arrearCollection = BigDecimal.ZERO;
 		BigDecimal currentAmount = BigDecimal.ZERO;
 		BigDecimal currentCollection = BigDecimal.ZERO;
+		Date date = new Date();
 		for (DemandDetails demandDetail : demandDetails) {
 			if (demandDetail.getTaxReason().equalsIgnoreCase(taxReason)) {
 				if (demandDetail.getTaxPeriod().equals(installment.getDescription())) {
 					currentAmount = currentAmount.add(demandDetail.getTaxAmount());
 					currentCollection = currentCollection.add(demandDetail.getCollectionAmount());
-				} else {
+				} else if (date.after(demandDetail.getPeriodEndDate())) {
 					arrearAmount = arrearAmount.add(demandDetail.getTaxAmount());
 					arrearCollection = arrearCollection.add(demandDetail.getCollectionAmount());
 				}

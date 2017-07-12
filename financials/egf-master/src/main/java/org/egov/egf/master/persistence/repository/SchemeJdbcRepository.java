@@ -55,57 +55,66 @@ public class SchemeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( schemeSearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,schemeSearchEntity.getId());} 
-if( schemeSearchEntity.getFundId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "fund =: fund");
-paramValues.put("fund" ,schemeSearchEntity.getFundId());} 
-if( schemeSearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,schemeSearchEntity.getCode());} 
-if( schemeSearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,schemeSearchEntity.getName());} 
-if( schemeSearchEntity.getValidFrom()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "validFrom =: validFrom");
-paramValues.put("validFrom" ,schemeSearchEntity.getValidFrom());} 
-if( schemeSearchEntity.getValidTo()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "validTo =: validTo");
-paramValues.put("validTo" ,schemeSearchEntity.getValidTo());} 
-if( schemeSearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,schemeSearchEntity.getActive());} 
-if( schemeSearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,schemeSearchEntity.getDescription());} 
-if( schemeSearchEntity.getBoundary()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "boundary =: boundary");
-paramValues.put("boundary" ,schemeSearchEntity.getBoundary());} 
-
-		 
+		if (schemeSearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", schemeSearchEntity.getId());
+		}
+		if (schemeSearchEntity.getFundId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("fund =:fund");
+			paramValues.put("fund", schemeSearchEntity.getFundId());
+		}
+		if (schemeSearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", schemeSearchEntity.getCode());
+		}
+		if (schemeSearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", schemeSearchEntity.getName());
+		}
+		if (schemeSearchEntity.getValidFrom() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("validFrom =:validFrom");
+			paramValues.put("validFrom", schemeSearchEntity.getValidFrom());
+		}
+		if (schemeSearchEntity.getValidTo() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("validTo =:validTo");
+			paramValues.put("validTo", schemeSearchEntity.getValidTo());
+		}
+		if (schemeSearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", schemeSearchEntity.getActive());
+		}
+		if (schemeSearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", schemeSearchEntity.getDescription());
+		}
+		if (schemeSearchEntity.getBoundary() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("boundary =:boundary");
+			paramValues.put("boundary", schemeSearchEntity.getBoundary());
+		}
 
 		Pagination<Scheme> page = new Pagination<>();
-		page.setOffSet(schemeSearchEntity.getOffset());
-		page.setPageSize(schemeSearchEntity.getPageSize());
+		if (schemeSearchEntity.getOffset() != null)
+			page.setOffset(schemeSearchEntity.getOffset());
+		if (schemeSearchEntity.getPageSize() != null)
+			page.setPageSize(schemeSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -117,11 +126,11 @@ paramValues.put("boundary" ,schemeSearchEntity.getBoundary());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<Scheme>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + schemeSearchEntity.getPageSize() + " offset "
-				+ schemeSearchEntity.getOffset() * schemeSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SchemeEntity.class);
 
@@ -129,7 +138,7 @@ paramValues.put("boundary" ,schemeSearchEntity.getBoundary());}
 
 		page.setTotalResults(schemeEntities.size());
 
-		List<Scheme> schemes = new ArrayList<Scheme>();
+		List<Scheme> schemes = new ArrayList<>();
 		for (SchemeEntity schemeEntity : schemeEntities) {
 
 			schemes.add(schemeEntity.toDomain());
@@ -141,15 +150,15 @@ paramValues.put("boundary" ,schemeSearchEntity.getBoundary());}
 
 	public SchemeEntity findById(SchemeEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<SchemeEntity> schemes = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<SchemeEntity>());
+		List<SchemeEntity> schemes = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(SchemeEntity.class));
 		if (schemes.isEmpty()) {
 			return null;
 		} else {

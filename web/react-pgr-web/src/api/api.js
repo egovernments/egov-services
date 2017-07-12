@@ -1,3 +1,5 @@
+//import {translate} from '../components/common/common';
+var common = require('../components/common/common');
 var axios = require('axios');
 // var store = require('configureStore').configure();
 
@@ -33,7 +35,6 @@ module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false) => {
         var url = context;
 
-        console.log("queryObject",queryObject);
         if (!doNotOverride)
             url += "?tenantId=" + tenantId;
         else
@@ -57,8 +58,11 @@ module.exports = {
                     }
                     throw new Error(_err);
                 }
+            } else if(response && response.response && response.response.data && response.response.data.error){
+              var _err = common.translate(response.response.data.error.fields[0].code);
+              throw new Error(_err);
             } else if(response && response.response && !response.response.data && response.response.status == 400) {
-                document.title = "Egovernments";
+                document.title = "eGovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale', locale);

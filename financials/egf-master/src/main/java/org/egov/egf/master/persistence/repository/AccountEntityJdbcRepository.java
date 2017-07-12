@@ -55,42 +55,48 @@ public class AccountEntityJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-if( accountEntitySearchEntity.getId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "id =: id");
-paramValues.put("id" ,accountEntitySearchEntity.getId());} 
-if( accountEntitySearchEntity.getAccountDetailTypeId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "accountDetailType =: accountDetailType");
-paramValues.put("accountDetailType" ,accountEntitySearchEntity.getAccountDetailTypeId());} 
-if( accountEntitySearchEntity.getCode()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "code =: code");
-paramValues.put("code" ,accountEntitySearchEntity.getCode());} 
-if( accountEntitySearchEntity.getName()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "name =: name");
-paramValues.put("name" ,accountEntitySearchEntity.getName());} 
-if( accountEntitySearchEntity.getActive()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "active =: active");
-paramValues.put("active" ,accountEntitySearchEntity.getActive());} 
-if( accountEntitySearchEntity.getDescription()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "description =: description");
-paramValues.put("description" ,accountEntitySearchEntity.getDescription());} 
-
-		 
+		if (accountEntitySearchEntity.getId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id =:id");
+			paramValues.put("id", accountEntitySearchEntity.getId());
+		}
+		if (accountEntitySearchEntity.getAccountDetailTypeId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("accountDetailType =:accountDetailType");
+			paramValues.put("accountDetailType", accountEntitySearchEntity.getAccountDetailTypeId());
+		}
+		if (accountEntitySearchEntity.getCode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("code =:code");
+			paramValues.put("code", accountEntitySearchEntity.getCode());
+		}
+		if (accountEntitySearchEntity.getName() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name =:name");
+			paramValues.put("name", accountEntitySearchEntity.getName());
+		}
+		if (accountEntitySearchEntity.getActive() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("active =:active");
+			paramValues.put("active", accountEntitySearchEntity.getActive());
+		}
+		if (accountEntitySearchEntity.getDescription() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("description =:description");
+			paramValues.put("description", accountEntitySearchEntity.getDescription());
+		}
 
 		Pagination<AccountEntity> page = new Pagination<>();
-		page.setOffSet(accountEntitySearchEntity.getOffset());
-		page.setPageSize(accountEntitySearchEntity.getPageSize());
+		if (accountEntitySearchEntity.getOffset() != null)
+			page.setOffset(accountEntitySearchEntity.getOffset());
+		if (accountEntitySearchEntity.getPageSize() != null)
+			page.setPageSize(accountEntitySearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -102,15 +108,16 @@ paramValues.put("description" ,accountEntitySearchEntity.getDescription());}
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page,paramValues);
+		page = (Pagination<AccountEntity>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + accountEntitySearchEntity.getPageSize() + " offset "
-				+ accountEntitySearchEntity.getOffset() * accountEntitySearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AccountEntityEntity.class);
 
-		List<AccountEntityEntity> accountEntityEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+		List<AccountEntityEntity> accountEntityEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
 
 		page.setTotalResults(accountEntityEntities.size());
 
@@ -126,15 +133,15 @@ paramValues.put("description" ,accountEntitySearchEntity.getDescription());}
 
 	public AccountEntityEntity findById(AccountEntityEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
-
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<AccountEntityEntity> accountentities = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<AccountEntityEntity>());
+		List<AccountEntityEntity> accountentities = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(AccountEntityEntity.class));
 		if (accountentities.isEmpty()) {
 			return null;
 		} else {

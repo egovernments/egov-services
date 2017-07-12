@@ -27,38 +27,6 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		LOG.debug("end init function");
 	}
 
-	public static synchronized void init(Class T) {
-		String TABLE_NAME = "";
-
-		List<String> insertFields = new ArrayList<>();
-		List<String> updateFields = new ArrayList<>();
-		List<String> uniqueFields = new ArrayList<>();
-
-		String updateQuery;
-
-		try {
-
-			TABLE_NAME = (String) T.getDeclaredField("TABLE_NAME").get(null);
-		} catch (Exception e) {
-
-		}
-		insertFields.addAll(fetchFields(T));
-		uniqueFields.add("name");
-		uniqueFields.add("tenantId");
-		insertFields.removeAll(uniqueFields);
-		allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
-		updateFields.addAll(insertFields);
-		updateFields.remove("createdBy");
-		updateQuery = updateQuery(updateFields, TABLE_NAME, uniqueFields);
-		LOG.debug(T.getSimpleName() + "--------" + insertFields);
-		allInsertFields.put(T.getSimpleName(), insertFields);
-		allUpdateFields.put(T.getSimpleName(), updateFields);
-		allUniqueFields.put(T.getSimpleName(), uniqueFields);
-		allUpdateQuery.put(T.getSimpleName(), updateQuery);
-		getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
-		LOG.debug("allInsertQuery : " + allInsertQuery);
-	}
-
 	public FunctionEntity create(FunctionEntity entity) {
 
 		entity.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -131,8 +99,10 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<Function> page = new Pagination<>();
-		page.setOffSet(functionSearchEntity.getOffset());
-		page.setPageSize(functionSearchEntity.getPageSize());
+		if (functionSearchEntity.getOffset() != null)
+			page.setOffset(functionSearchEntity.getOffset());
+		if (functionSearchEntity.getPageSize() != null)
+			page.setPageSize(functionSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 
@@ -144,11 +114,11 @@ public class FunctionJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page, paramValues);
+		page = (Pagination<Function>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + functionSearchEntity.getPageSize() + " offset "
-				+ functionSearchEntity.getOffset() * functionSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FunctionEntity.class);
 

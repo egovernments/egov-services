@@ -192,7 +192,7 @@ public class ServiceTypeQueryBuilder {
     }
 
     public static String updateServiceTypeQuery() {
-        return "UPDATE egpgr_complainttype SET name = ?, description = ?, category = ?, "
+        return "UPDATE egpgr_complainttype SET name = ?, description = ?, category = ?, slaHours = ?,  "
                 + "isactive = ?, hasfinancialimpact = ?, lastmodifiedby = ?, lastmodifieddate = ? where code = ? and tenantid = ? ";
     }
     

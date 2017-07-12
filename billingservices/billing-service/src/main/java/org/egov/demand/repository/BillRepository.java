@@ -90,8 +90,8 @@ public class BillRepository {
 		
 		RequestInfo requestInfo = billRequest.getRequestInfo();
 		List<Bill> bills = billRequest.getBills();
-		List<BillDetail> billDetails = new ArrayList<BillDetail>();
-		List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
+		List<BillDetail> billDetails = new ArrayList<>();
+		List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 		for(Bill bill:bills){
 			List<BillDetail> tempBillDetails  = bill.getBillDetails();
 			billDetails.addAll(tempBillDetails);

@@ -39,7 +39,7 @@ public class FundController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundContract> create(@RequestBody @Valid CommonRequest<FundContract> fundContractRequest,
+	public CommonResponse<FundContract> create(@RequestBody CommonRequest<FundContract> fundRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -47,18 +47,19 @@ public class FundController {
 
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
+		fundResponse.setResponseInfo(getResponseInfo(fundRequest.getRequestInfo()));
 		List<Fund> funds = new ArrayList<>();
 		Fund fund = null;
 		List<FundContract> fundContracts = new ArrayList<FundContract>();
 		FundContract contract = null;
 
-		fundContractRequest.getRequestInfo().setAction("create");
+		fundRequest.getRequestInfo().setAction("create");
 
-		for (FundContract fundContract : fundContractRequest.getData()) {
+		for (FundContract fundContract : fundRequest.getData()) {
 			fund = new Fund();
 			model.map(fundContract, fund);
-			fund.setCreatedBy(fundContractRequest.getRequestInfo().getUserInfo());
-			fund.setLastModifiedBy(fundContractRequest.getRequestInfo().getUserInfo());
+			fund.setCreatedBy(fundRequest.getRequestInfo().getUserInfo());
+			fund.setLastModifiedBy(fundRequest.getRequestInfo().getUserInfo());
 			funds.add(fund);
 		}
 
@@ -70,8 +71,8 @@ public class FundController {
 			fundContracts.add(contract);
 		}
 
-		fundContractRequest.setData(fundContracts);
-		fundService.addToQue(fundContractRequest);
+		fundRequest.setData(fundContracts);
+		fundService.addToQue(fundRequest);
 		fundResponse.setData(fundContracts);
 
 		return fundResponse;
@@ -127,7 +128,6 @@ public class FundController {
 		FundContract contract = null;
 		ModelMapper model = new ModelMapper();
 		List<FundContract> fundContracts = new ArrayList<FundContract>();
-
 		Pagination<Fund> funds = fundService.search(domain);
 
 		for (Fund fund : funds.getPagedData()) {
@@ -139,7 +139,7 @@ public class FundController {
 		CommonResponse<FundContract> response = new CommonResponse<>();
 		response.setData(fundContracts);
 		response.setPage(new PaginationContract(funds));
-		response.setResponseInfo(getResponseInfo(requestInfo));
+		response.setResponseInfo(getResponseInfo(requestInfo)); 
 
 		return response;
 

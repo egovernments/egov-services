@@ -23,7 +23,7 @@ public class TitleTransfer {
     private String upicNo;
 
     @NotNull
-    private String trasferReason;
+    private String transferReason;
 
     @Size(min = 1, max = 15)
     private String registrationDocNo;
@@ -55,4 +55,8 @@ public class TitleTransfer {
     private AuditDetails auditDetails;
 
     private WorkFlowDetails workFlowDetails;
+    
+    private String applicationNo;
+    
+    private String tenantId;
 }

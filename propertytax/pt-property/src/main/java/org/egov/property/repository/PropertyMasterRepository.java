@@ -1109,6 +1109,13 @@ public class PropertyMasterRepository {
 
 	}
 
+	/**
+	 * This will persist the given depreciation object in db
+	 * 
+	 * @param depreciation
+	 * @param data
+	 * @return {@link Long} id of the record inserted in databse
+	 */
 	@Transactional
 	public Long createDepreciation(Depreciation depreciation, String data) {
 
@@ -1146,6 +1153,12 @@ public class PropertyMasterRepository {
 
 	}
 
+	/**
+	 * This will update the given Depreciation object
+	 * 
+	 * @param depreciation
+	 * @param data
+	 */
 	@Transactional
 	public void updateDepreciation(Depreciation depreciation, String data) {
 
@@ -1177,6 +1190,21 @@ public class PropertyMasterRepository {
 
 	}
 
+	/**
+	 * This will return the list of depreciations based on the given search
+	 * terms
+	 * 
+	 * @param tenantId
+	 * @param ids
+	 * @param fromYear
+	 * @param toYear
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offset
+	 * @return {@link Depreciation}
+	 */
+
 	public List<Depreciation> searchDepreciations(String tenantId, Integer[] ids, Integer fromYear, Integer toYear,
 			String code, String nameLocal, Integer pageSize, Integer offset) {
 
@@ -1199,6 +1227,13 @@ public class PropertyMasterRepository {
 		return depreciations;
 	}
 
+	/**
+	 * This will persist the Mutation in the database
+	 * 
+	 * @param mutationMaster
+	 * @param data
+	 * @return {@link Long} id of the reocrd inserted in the database
+	 */
 	@Transactional
 	public Long createMutationMaster(MutationMaster mutationMaster, String data) {
 		String insertMuationQuery = MutationMasterBuilder.INSERT_MUTATTION_QUERY;
@@ -1227,12 +1262,18 @@ public class PropertyMasterRepository {
 			}
 		};
 		final KeyHolder holder = new GeneratedKeyHolder();
-	
-			jdbcTemplate.update(psc, holder);
-			return Long.valueOf(holder.getKey().intValue());
+
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
 
 	}
 
+	/**
+	 * This will update the Mutation master
+	 * 
+	 * @param mutationMaster
+	 * @param data
+	 */
 	@Transactional
 	public void updateMutationMaster(MutationMaster mutationMaster, String data) {
 
@@ -1266,6 +1307,19 @@ public class PropertyMasterRepository {
 
 	}
 
+	/**
+	 * This will search the mutations based on the given search terms
+	 * 
+	 * @param tenantId
+	 * @param ids
+	 * @param name
+	 * @param code
+	 * @param nameLocal
+	 * @param pageSize
+	 * @param offSet
+	 * @return {@link MutationMaster} List of mutation masters
+	 */
+
 	public List<MutationMaster> searchMutation(String tenantId, Integer[] ids, String name, String code,
 			String nameLocal, Integer pageSize, Integer offSet) {
 
@@ -1287,5 +1341,25 @@ public class PropertyMasterRepository {
 		});
 
 		return mutationMasters;
+	}
+
+	/**
+	 * This will check whether there is any record in the mutation with the
+	 * given code
+	 * 
+	 * @param code
+	 * @return {@link Boolean} True /False if code exists/doesn't Exists
+	 */
+	public Boolean checkUniqueCodeForMutation(String code) {
+		Boolean isExists = Boolean.TRUE;
+
+		String query = MutationMasterBuilder.CHECK_UNIQUE_CODE;
+
+		int count = jdbcTemplate.queryForObject(query, new Object[] { code }, Integer.class);
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
 	}
 }

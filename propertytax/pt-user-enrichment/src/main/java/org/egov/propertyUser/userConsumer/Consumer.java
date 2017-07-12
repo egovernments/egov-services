@@ -2,14 +2,14 @@ package org.egov.propertyUser.userConsumer;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.egov.propertyUser.model.*;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.User;
-import org.egov.models.UserResponseInfo;
+import org.egov.propertyUser.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -18,27 +18,19 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-
 /**
- * Consumer class will use for listing  property object from kafka server. 
- * Authenticate the user
- * Search the user
- * Create the user
- * If user exist update the user id 
- * otherwise create the user
+ * Consumer class will use for listing property object from kafka server.
+ * Authenticate the user Search the user Create the user If user exist update
+ * the user id otherwise create the user
  * 
  * @author: S Anilkumar
  */
 
-@RestController
-@SuppressWarnings("unused")
+@Service
 public class Consumer {
-
-	@Autowired
-	RestTemplate restTemplate;
 
 	@Autowired
 	Environment environment;
@@ -46,25 +38,27 @@ public class Consumer {
 	@Autowired
 	private Producer producer;
 
+	@Autowired
+	private UserUtil userUtil;
 
 	/*
 	 * This method for creating rest template
 	 */
 	@Bean
-	public RestTemplate restTemplate(){
+	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-
-
 
 	/**
 	 * This method for getting consumer configuration bean
 	 */
 	@Bean
-	public Map<String,Object> consumerConfig(){
-		Map<String,Object> consumerProperties=new HashMap<String,Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("auto.offset.reset.config"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka.config.bootstrap_server_config"));
+	public Map<String, Object> consumerConfig() {
+		Map<String, Object> consumerProperties = new HashMap<String, Object>();
+		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
+				environment.getProperty("auto.offset.reset.config"));
+		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+				environment.getProperty("kafka.config.bootstrap_server_config"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "user");
@@ -72,11 +66,12 @@ public class Consumer {
 	}
 
 	/**
-	 * This method will return the consumer factory bean based on consumer configuration
+	 * This method will return the consumer factory bean based on consumer
+	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory(){
-		return new DefaultKafkaConsumerFactory<>(consumerConfig(),new StringDeserializer(),
+	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
 				new JsonDeserializer<>(PropertyRequest.class));
 
 	}
@@ -85,111 +80,41 @@ public class Consumer {
 	 * This bean will return kafka listner object based on consumer factory
 	 */
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory(){
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory=new ConcurrentKafkaListenerContainerFactory<String,PropertyRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
 
-
 	/**
-	 * This method will listen property object from producer and check user authentication
-	 *  Updating auth token in UserAuthResponseInfo
-	 *  Search user
-	 *  Create user
+	 * This method will listen property object from producer and check user
+	 * authentication Updating auth token in UserAuthResponseInfo Search user
+	 * Create user
 	 */
-	@KafkaListener(topics ={"#{environment.getProperty('egov.propertytax.property.userenhanced')}","#{environment.getProperty('egov.propertytax.property.update.userenhanced')}"})
-	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) {
-		PropertyRequest propertyRequest=consumerRecord.value();
-		if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.userenhanced"))){
-			StringBuffer createUrl=new StringBuffer();
-			createUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-			createUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-			createUrl.append(environment.getProperty("egov.services.egov_user.createpath"));
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.validate.user')}",
+			"#{environment.getProperty('egov.propertytax.property.update.validate.user')}" })
+	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
+		PropertyRequest propertyRequest = consumerRecord.value();
 
-			StringBuffer searchUrl=new StringBuffer();
-			searchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-			searchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-			searchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+		for (Property property : propertyRequest.getProperties()) {
+			for (User user : property.getOwners()) {
+				user.setUserName(user.getMobileNumber());
 
+				user = userUtil.getUserId(user, propertyRequest.getRequestInfo());
 
-			for(Property property:propertyRequest.getProperties()){
-				for(User user: property.getOwners()){
-					user.setUserName(user.getMobileNumber());
-					if(user.getId() !=null){
-
-						Map<String,Object> userSearchRequestInfo=new HashMap<String,Object >();
-						userSearchRequestInfo.put("username",user.getMobileNumber());
-						userSearchRequestInfo.put("tenantId",user.getTenantId());
-						userSearchRequestInfo.put("RequestInfo",propertyRequest.getRequestInfo());
-						//search user
-						UserResponseInfo userResponse= restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
-
-						if(userResponse.getResponseInfo()!=null){
-							if(userResponse.getUser()==null){
-								UserRequestInfo userRequestInfo=new UserRequestInfo();
-								userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-								userRequestInfo.setUser(user);
-								UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
-										userRequestInfo, UserResponseInfo.class);	
-							}
-							else{
-								user.setId(userResponse.getUser().get(0).getId());
-							}
-						}
-
-					}else{
-						UserRequestInfo userRequestInfo=new UserRequestInfo();
-						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-						userRequestInfo.setUser(user);
-
-						//create user
-						UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
-								userRequestInfo, UserResponseInfo.class);
-						user.setId(userCreateResponse.getUser().get(0).getId());
-					}
-					producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.tax"), propertyRequest);
-				}
 			}
-		}
+			if (consumerRecord.topic()
+					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.validate.user"))) {
 
-		else if(consumerRecord.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.userenhanced"))){
-			StringBuffer createUrl=new StringBuffer();
-			createUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-			createUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-			createUrl.append(environment.getProperty("egov.services.egov_user.createpath"));
+				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.create.tax.calculaion"),
+						propertyRequest);
 
-			StringBuffer searchUrl=new StringBuffer();
-			searchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-			searchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-			searchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+			} else if (consumerRecord.topic()
+					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.validate.user"))) {
 
+				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax.calculaion"),
+						propertyRequest);
 
-			for(Property property:propertyRequest.getProperties()){
-				for(User user: property.getOwners()){
-					if(user.getId() !=null){
-						StringBuffer updateUrl=new StringBuffer();
-						updateUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
-						updateUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
-						updateUrl.append(environment.getProperty("egov.services.egov_user.updatepath"));
-						//update user
-						UserRequestInfo userRequestInfo=new UserRequestInfo();
-						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-						userRequestInfo.setUser(user);
-						UserResponseInfo userCreateResponse = restTemplate.postForObject(updateUrl.toString(),
-								userRequestInfo, UserResponseInfo.class,user.getId());
-					}else{
-						user.setUserName(user.getMobileNumber());
-						UserRequestInfo userRequestInfo=new UserRequestInfo();
-						userRequestInfo.setRequestInfo(propertyRequest.getRequestInfo());
-						userRequestInfo.setUser(user);
-						//create user
-						UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(),
-								userRequestInfo, UserResponseInfo.class);
-						user.setId(userCreateResponse.getUser().get(0).getId());
-					}
-					producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax"), propertyRequest);
-				}
 			}
 		}
 	}

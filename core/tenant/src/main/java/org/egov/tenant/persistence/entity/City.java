@@ -25,7 +25,8 @@ public class City {
         LAST_MODIFIED_BY = "lastmodifiedby",
         LAST_MODIFIED_DATE = "lastmodifieddate",
         SHAPEFILE_LOCATION = "shapefilelocation",
-        CAPTCHA = "captcha";
+        CAPTCHA = "captcha",
+        CODE = "code";
     
     
     
@@ -46,6 +47,7 @@ public class City {
     private Date lastModifiedDate;
     private String shapeFileLocation;
     private String captcha;
+    private String code;
   
     public org.egov.tenant.domain.model.City toDomain() {
         return org.egov.tenant.domain.model.City.builder()
@@ -65,6 +67,7 @@ public class City {
             .lastModifiedDate(lastModifiedDate)
             .shapeFileLocation(shapeFileLocation)
             .captcha(captcha)
+            .code(code)
             .build();
     }
 }

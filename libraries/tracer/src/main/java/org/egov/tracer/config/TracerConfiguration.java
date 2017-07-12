@@ -4,7 +4,6 @@ import org.egov.tracer.http.CorrelationIdFilter;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.http.UnhandledExceptionControllerAdvice;
 import org.egov.tracer.kafka.KafkaListenerLoggingAspect;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +16,6 @@ import org.springframework.core.env.Environment;
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = {"org.egov.tracer"})
 public class TracerConfiguration {
-
-    @Value("${tracer.http.inbound.requestbodyloggingenabled:true}")
-    private boolean inboundHttpRequestBodyLoggingEnabled;
 
     @Bean
     public TracerProperties tracerProperties(Environment environment) {
@@ -62,10 +58,11 @@ public class TracerConfiguration {
     @Bean
     @ConditionalOnProperty(name = "org.egov.correlation.body.filter.disabled",
         havingValue = "false", matchIfMissing = true)
-    public FilterRegistrationBean correlationIdFilter(ObjectMapperFactory objectMapperFactory) {
+    public FilterRegistrationBean correlationIdFilter(ObjectMapperFactory objectMapperFactory,
+                                                      TracerProperties tracerProperties) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         final CorrelationIdFilter correlationIdFilter =
-            new CorrelationIdFilter(inboundHttpRequestBodyLoggingEnabled, objectMapperFactory);
+            new CorrelationIdFilter(tracerProperties.isDetailedTracingEnabled(), objectMapperFactory);
         registration.setFilter(correlationIdFilter);
         registration.addUrlPatterns("/*");
         registration.setName("correlationIdFilter");

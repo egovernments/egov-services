@@ -2,6 +2,8 @@ package org.egov.processworkflow.service;
 
 import static org.junit.Assert.assertTrue;
 
+import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
 import org.egov.models.UserAuthResponseInfo;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.PtWorkflowApplication;
@@ -68,7 +70,9 @@ public class ProcessWorkflowServiceTest {
 		try {
 
 			requestInfo.setAuthToken(getAuthToken());
-			ProcessInstance processInstance = workFlowUtil.startWorkflow(workflowDetailsRequestInfo);
+			ProcessInstance processInstance = workFlowUtil.startWorkflow(workflowDetailsRequestInfo,
+					env.getProperty("businessKey"), env.getProperty("type"),
+					env.getProperty("create.property.comments"));
 			if (processInstance == null)
 				assertTrue(false);
 
@@ -83,6 +87,10 @@ public class ProcessWorkflowServiceTest {
 	public void updateWorkflowTest() {
 
 		String tenantId = "default";
+		Property property = new Property();
+		PropertyDetail propertyDetail = new PropertyDetail();
+		propertyDetail.setStateId("1");
+		property.setPropertyDetail(propertyDetail);
 		RequestInfo requestInfo = getRequestInfoObject();
 		WorkflowDetailsRequestInfo workflowDetailsRequestInfo = new WorkflowDetailsRequestInfo();
 		WorkFlowDetails workflowDetails = new WorkFlowDetails();
@@ -97,7 +105,7 @@ public class ProcessWorkflowServiceTest {
 
 		try {
 
-			TaskResponse taskResponse = workFlowUtil.updateWorkflow(workflowDetailsRequestInfo);
+			TaskResponse taskResponse = workFlowUtil.updateWorkflow(workflowDetailsRequestInfo, property.getPropertyDetail().getStateId());
 			if (taskResponse == null)
 				assertTrue(false);
 

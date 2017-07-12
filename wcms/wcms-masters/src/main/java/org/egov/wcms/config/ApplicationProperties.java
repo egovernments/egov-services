@@ -125,6 +125,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.sourcetype.update.name}")
     private String updateSourceTypeTopicName;
 
+    @Value("${kafka.topics.storagereservoir.create.name}")
+    private String createStorageReservoirTopicName;
+
+    @Value("${kafka.topics.storagereservoir.update.name}")
+    private String updateStorageReservoirTopicName;
+
     @Autowired
     private Environment environment;
 
@@ -185,17 +191,14 @@ public class ApplicationProperties {
     }
 
     public String getUpdateDocumentTypeTopicName() {
-
         return updateDocumentTypeTopicName;
-
-    }
+       }
 
     public String getUpdateDocumentTypeApplicationTypeTopicName() {
         return updateDocTypeAppTypeTopicName;
     }
 
     public String getCreateMeterCostTopicName() {
-
         return createMeterCostTopicName;
     }
 
@@ -233,5 +236,13 @@ public class ApplicationProperties {
 
     public String getUpdateSupplyTypeTopicName() {
         return updateSupplyTypeTopicName;
+    }
+
+    public String getCreateStorageReservoirTopicName() {
+        return createStorageReservoirTopicName;
+    }
+
+    public String getupdateStorageReservoirTopicName() {
+        return updateStorageReservoirTopicName;
     }
 }

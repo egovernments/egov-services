@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.models.TitleTransferRequest;
+import org.egov.models.TitleTransferResponse;
 import org.egov.property.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +26,6 @@ public class PropertyController {
 
 	@Autowired
 	PropertyService propertyService;
-
 
 	/**
 	 * Description: this api will use for creating property
@@ -119,6 +120,20 @@ public class PropertyController {
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
 				locality, ownerName, demandFrom, demandTo);
 
+	}
+
+	/**
+	 * Description: This api for creating title transfer request for property
+	 * 
+	 * @param titleTransferRequest
+	 * @return titleTransferResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "transfer/_create", method = RequestMethod.POST)
+	public TitleTransferResponse createTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest)
+			throws Exception {
+
+		return propertyService.createTitleTransfer(titleTransferRequest);
 	}
 
 }

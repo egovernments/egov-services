@@ -37,35 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.web.controller;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.StorageReservoir;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class StorageReservoirResponse {
 
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
-    }
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("StorageReservoir")
+    private List<StorageReservoir> storageReservoirs = new ArrayList<>();
 
 }

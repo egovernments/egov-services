@@ -62,6 +62,12 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.pt_property_usagetype.searchpath}")
 	private String propertyTaxServiceUsageTypeSearchPathTopic;
+	
+	@Value("${egov.services.boundary_service.hostname}")
+        private String locationServiceBasePathTopic;
+
+        @Value("${egov.services.boundary_service.searchpath}")
+        private String locationServiceBoundarySearchPathTopic;
 
 	public String getPropertTaxServiceBasePathTopic() {
 		return propertTaxServiceBasePathTopic;

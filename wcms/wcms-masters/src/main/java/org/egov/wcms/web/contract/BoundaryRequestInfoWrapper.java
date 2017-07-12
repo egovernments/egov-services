@@ -37,35 +37,28 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.web.controller;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Builder
+public class BoundaryRequestInfoWrapper {
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
-
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
-
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
-    }
+    @JsonProperty("RequestInfo")
+    private BoundaryRequestInfo requestInfo;
 
 }

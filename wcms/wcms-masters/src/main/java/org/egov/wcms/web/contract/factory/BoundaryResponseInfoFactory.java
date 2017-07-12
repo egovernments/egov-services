@@ -37,35 +37,22 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract.factory;
 
-package org.egov.wcms.web.controller;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.web.contract.BoundaryResponseInfo;
+import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
-
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
-
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
+@Component
+public class BoundaryResponseInfoFactory {
+    public BoundaryResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {
+        final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
+        final String ver = requestInfo != null ? requestInfo.getVer() : "";
+        final String ts = requestInfo != null && requestInfo.getTs() != null ? requestInfo.getTs().toString() : "";
+        final String resMsgId = "uief87324"; // FIXME : Hard-coded
+        final String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
+        final String responseStatus = success ? "successful" : "failed";
+        return new BoundaryResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
     }
 
 }

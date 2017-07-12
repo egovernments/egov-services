@@ -43,7 +43,6 @@ package org.egov.wcms.service;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
@@ -64,9 +63,6 @@ public class PropertyUsageTypeService {
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    private PropertiesManager propertiesManager;
 
     @Autowired
     private RestPropertyTaxMasterService restPropertyTaxMasterService;
@@ -93,14 +89,14 @@ public class PropertyUsageTypeService {
     public List<PropertyTypeUsageType> getPropertyUsageTypes(
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
         if (propUsageTypeGetRequest.getPropertyType() != null) {
-            final PropertyTypeResponse propertyType = getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyIdFromPTModule(
                     propUsageTypeGetRequest.getPropertyType(), propUsageTypeGetRequest.getTenantId());
             if (propertyType != null)
                 propUsageTypeGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
         if (propUsageTypeGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = getUsageIdFromPTModule(
+            final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageIdFromPTModule(
                     propUsageTypeGetRequest.getUsageType(), propUsageTypeGetRequest.getTenantId());
             if (usageType != null)
                 propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
@@ -122,7 +118,7 @@ public class PropertyUsageTypeService {
     public Boolean getPropertyTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
 
-        final PropertyTypeResponse propertyType = getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyIdFromPTModule(
                 propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
                 propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
         if (propertyType.getPropertyTypesSize()) {
@@ -136,18 +132,9 @@ public class PropertyUsageTypeService {
 
     }
 
-    private PropertyTypeResponse getPropertyIdFromPTModule(final String propertyTypeName, final String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", propertyTypeName);
-        url = url.replace("{tenantId}", tenantId);
-        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
-        return propertyTypes;
-    }
-
     public Boolean getUsageTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidUsage = Boolean.FALSE;
-        final UsageTypeResponse usageType = getUsageIdFromPTModule(
+        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageIdFromPTModule(
                 propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
                 propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
         if (usageType.getUsageTypesSize()) {
@@ -159,15 +146,6 @@ public class PropertyUsageTypeService {
         }
         return isValidUsage;
 
-    }
-
-    private UsageTypeResponse getUsageIdFromPTModule(final String usageTypeName, final String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
-        url = url.replace("{name}", usageTypeName);
-        url = url.replace("{tenantId}", tenantId);
-        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageTypes(url);
-        return usageType;
     }
 
 }

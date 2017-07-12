@@ -51,8 +51,10 @@ import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.model.SourceType;
+import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.model.SupplyType;
 import org.egov.wcms.model.enums.ApplicationType;
+import org.egov.wcms.model.enums.ReservoirType;
 import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
@@ -62,6 +64,7 @@ import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
 import org.egov.wcms.service.SourceTypeService;
+import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
@@ -73,6 +76,7 @@ import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
+import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
@@ -114,6 +118,8 @@ public class ValidatorUtils {
 
     @Autowired
     private DonationService donationService;
+    @Autowired
+    private StorageReservoirService storageReservoirService;
 
     public List<ErrorResponse> validateCategoryRequest(final CategoryTypeRequest categoryRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -449,8 +455,8 @@ public class ValidatorUtils {
             final DonationRequest donationRequest) {
         if (!donationService.getPropertyTypeByName(donationRequest)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
-                    .message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
-                    .field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+                    .message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (!donationService.getUsageTypeByName(donationRequest)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
@@ -606,8 +612,8 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         } else if (!propertyCategoryService.getPropertyTypeByName(propertyCategoryRequest)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
-                    .message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
-                    .field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+                    .message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
 
         } else if (!propertyCategoryService.checkIfMappingExists(propertyCategoryRequest)) {
@@ -661,13 +667,13 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         } else if (!propertyUsageTypeService.getPropertyTypeByName(propUsageTypeRequest)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_CODE)
-                    .message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME)
-                    .field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE).build();
+                    .message(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_PROPERTYTYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (!propertyUsageTypeService.getUsageTypeByName(propUsageTypeRequest)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
-                    .message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME)
-                    .field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE).build();
+                    .message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (!propertyUsageTypeService.checkPropertyUsageTypeExists(propUsageTypeRequest)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTYTYPE_USAGETYPE_UNIQUE_CODE)
@@ -735,7 +741,6 @@ public class ValidatorUtils {
         final List<ErrorField> errorFields = new ArrayList<>();
         addSupplyNameValidationErrors(supplyTypeRequest, errorFields);
         addTenantIdValidationErrors(supplyTypeRequest.getSupplyType().getTenantId(), errorFields);
-        addActiveValidationErrors(supplyTypeRequest.getSupplyType().getActive(), errorFields);
         return errorFields;
     }
 
@@ -763,4 +768,77 @@ public class ValidatorUtils {
                 .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFiled).build();
     }
 
+    public List<ErrorResponse> validateStorageReservoirRequest(final StorageReservoirRequest storageReservoirRequest) {
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final List<ErrorResponse> errorResponseList = new ArrayList<>();
+        final Error error = getError(storageReservoirRequest);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponseList.add(errorResponse);
+        return errorResponseList;
+
+    }
+
+    private Error getError(final StorageReservoirRequest storageReservoirRequest) {
+        final List<ErrorField> errorFiled = getErrorFields(storageReservoirRequest);
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(WcmsConstants.INVALID_STORAGE_RESERVOIR_REQUEST_MESSAGE).errorFields(errorFiled).build();
+    }
+
+    private List<ErrorField> getErrorFields(final StorageReservoirRequest storageReservoirRequest) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        addStorageReservoirValidationErrors(storageReservoirRequest, errorFields);
+        addTenantIdValidationErrors(storageReservoirRequest.getStorageReservoir().get(0).getTenantId(), errorFields);
+        return errorFields;
+    }
+
+    private void addStorageReservoirValidationErrors(final StorageReservoirRequest storageReservoirRequest,
+            final List<ErrorField> errorFields) {
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+            if (storageReservoir.getName() == null || storageReservoir.getName().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.STORAGE_RESERVOIR_NAME_MANDATORY_CODE)
+                        .message(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!storageReservoirService.getStorageReservoirByName(storageReservoir.getId(), storageReservoir.getName(),
+                    storageReservoir.getTenantId())) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.STORAGERESERVOIR_NAME_UNIQUE_CODE)
+                        .message(WcmsConstants.STORAGERESERVOIR_UNQ_ERROR_MESSAGE)
+                        .field(WcmsConstants.STORAGERESERVOIR_NAME_UNQ_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (storageReservoir.getReservoirType() == null && storageReservoir.getReservoirType().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder()
+                        .code(WcmsConstants.STORAGE_RESERVOIR_RESERVOIR_TYPE_MANDATORY_CODE)
+                        .message(WcmsConstants.STORAGE_RESERVOIR_RESERVOIR_TYPE_MANADATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.STORAGE_RESERVOIR_RESERVOIR_TYPE_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (ReservoirType.fromValue(storageReservoir.getReservoirType()) == null) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.RESERVOIR_TYPE_INVALID_CODE)
+                        .message(WcmsConstants.RESERVOIR_TYPE_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConstants.RESERVOIR_TYPE_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (storageReservoir.getCapacity() == 0) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.STORAGE_RESERVOIR_CAPACITY_MANDATORY_CODE)
+                        .message(WcmsConstants.STORAGE_RESERVOIR_CAPACITY_MANADATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.STORAGE_RESERVOIR_CAPACITY_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!storageReservoirService.getBoundaryByZone(storageReservoir)) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.BOUNDARY_ZONE_INVALID_CODE)
+                        .message(WcmsConstants.BOUNDARY_ZONE_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConstants.BOUNDARY_ZONE_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!storageReservoirService.getBoundaryByWard(storageReservoir)) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.BOUNDARY_WARD_INVALID_CODE)
+                        .message(WcmsConstants.BOUNDARY_WARD_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConstants.BOUNDARY_WARD_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (!storageReservoirService.getBoundaryByLocation(storageReservoir)) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.BOUNDARY_LOCATION_INVALID_CODE)
+                        .message(WcmsConstants.BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConstants.BOUNDARY_LOCATION_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+                return;
+            }
+
+    }
 }

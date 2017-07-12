@@ -39,10 +39,8 @@
  */
 package org.egov.wcms.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -50,11 +48,8 @@ import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
-import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.junit.Test;

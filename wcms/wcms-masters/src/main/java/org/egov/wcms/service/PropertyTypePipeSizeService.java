@@ -42,15 +42,14 @@ package org.egov.wcms.service;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.model.PropertyTypePipeSize;
-
 import org.egov.wcms.repository.PropertyPipeSizeRepository;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -62,9 +61,6 @@ public class PropertyTypePipeSizeService {
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    private PropertiesManager propertiesManager;
 
     @Autowired
     private RestPropertyTaxMasterService restPropertyTaxMasterService;
@@ -99,7 +95,7 @@ public class PropertyTypePipeSizeService {
     public List<PropertyTypePipeSize> getPropertyPipeSizes(
             final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         if (propertyPipeSizeGetRequest.getPropertyTypeName() != null) {
-            final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
                     propertyPipeSizeGetRequest.getPropertyTypeName(), propertyPipeSizeGetRequest.getTenantId());
             if (propertyTypes != null)
                 propertyPipeSizeGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
@@ -111,7 +107,7 @@ public class PropertyTypePipeSizeService {
 
     public Boolean getPropertyTypeByName(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        final PropertyTypeResponse propertyTypes = getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
                 propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName(),
                 propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
 
@@ -124,15 +120,6 @@ public class PropertyTypePipeSizeService {
         }
         return isValidProperty;
 
-    }
-
-    private PropertyTypeResponse getPropertyIdFromPTModule(String propertyTypeName, String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
-        url = url.replace("{name}", propertyTypeName);
-        url = url.replace("{tenantId}", tenantId);
-        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyTypes(url);
-        return propertyTypes;
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {

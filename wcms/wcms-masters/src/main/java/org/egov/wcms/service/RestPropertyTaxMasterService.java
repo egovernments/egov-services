@@ -41,6 +41,7 @@
 package org.egov.wcms.service;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.UsageTypeResponse;
@@ -55,7 +56,10 @@ public class RestPropertyTaxMasterService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public PropertyTypeResponse getPropertyTypes(String url) {
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    public PropertyTypeResponse getPropertyTypes(final String url) {
         final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
@@ -64,12 +68,30 @@ public class RestPropertyTaxMasterService {
         return propertyTypes;
     }
 
-    public UsageTypeResponse getUsageTypes(String url) {
+    public UsageTypeResponse getUsageTypes(final String url) {
         final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         final UsageTypeResponse usageType = restTemplate.postForObject(url.toString(), request,
                 UsageTypeResponse.class);
+        return usageType;
+    }
+
+    public PropertyTypeResponse getPropertyIdFromPTModule(final String propertyTypeName, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+        url = url.replace("{name}", propertyTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final PropertyTypeResponse propertyTypes = getPropertyTypes(url);
+        return propertyTypes;
+    }
+
+    public UsageTypeResponse getUsageIdFromPTModule(final String usageTypeName, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
+        url = url.replace("{name}", usageTypeName);
+        url = url.replace("{tenantId}", tenantId);
+        final UsageTypeResponse usageType = getUsageTypes(url);
         return usageType;
     }
 

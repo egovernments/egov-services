@@ -37,35 +37,22 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.web.controller;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
+public class BoundaryRequest {
 
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private BoundaryRequestInfo requestInfo;
 
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
-    }
+    @JsonProperty("Boundary")
+    private final List<Boundary> boundarys = new ArrayList<>();
 
 }

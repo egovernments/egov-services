@@ -37,35 +37,66 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.web.contract;
 
-package org.egov.wcms.web.controller;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class StorageReservoirGetRequest {
 
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
+    private List<Long> id;
 
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
-    }
+    private String name;
+
+    private String reservoirType;
+
+    private String locationName;
+
+    private String location;
+
+    private String wardName;
+
+    private String ward;
+
+    private String zoneName;
+
+    private String zone;
+
+    private double capacity;
+
+    private Long noOfSubLines;
+
+    private Long noOfMainDistributionLines;
+
+    private Long noOfConnection;
+
+    @NotNull
+    private String tenantId;
+
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
 
 }

@@ -37,35 +37,32 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.repository.rowmapper;
 
-package org.egov.wcms.web.controller;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.egov.wcms.model.StorageReservoir;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+@Component
+public class StorageReservoirRowMapper implements RowMapper<StorageReservoir> {
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
-
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
+    @Override
+    public StorageReservoir mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final StorageReservoir storageReservoir = new StorageReservoir();
+        storageReservoir.setId(rs.getLong("storagereservoir_id"));
+        storageReservoir.setName(rs.getString("storagereservoir_name"));
+        storageReservoir.setReservoirType(rs.getString("storagereservoir_reservoirtype"));
+        storageReservoir.setLocation(rs.getString("storagereservoir_location"));
+        storageReservoir.setWard(rs.getString("storagereservoir_ward"));
+        storageReservoir.setZone(rs.getString("storagereservoir_zone"));
+        storageReservoir.setCapacity(rs.getDouble("storagereservoir_capacity"));
+        storageReservoir.setNoOfSubLines(rs.getLong("storagereservoir_noofsublines"));
+        storageReservoir.setNoOfMainDistributionLines(rs.getLong("storagereservoir_noofmaindistributionlines"));
+        storageReservoir.setNoOfConnection(rs.getLong("storagereservoir_noofconnection"));
+        storageReservoir.setTenantId(rs.getString("storagereservoir_tenantId"));
+        return storageReservoir;
     }
-
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
-    }
-
 }

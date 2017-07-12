@@ -37,35 +37,78 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.model;
 
-package org.egov.wcms.web.controller;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import org.egov.wcms.model.enums.ApplicationType;
-import org.egov.wcms.model.enums.ReservoirType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class StorageReservoir {
 
-@RestController
-@RequestMapping("/master")
-public class CommonMastersController {
+    public static final String SEQ_STORAGE_RESERVOIR = "SEQ_EGWTR_STORAGE_RESERVOIR";
 
-    @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
-    }
+    @NotNull
+    private Long id;
 
-    @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
-    }
+    @NotNull
+    @Size(min = 3, max = 100)
+    private String name;
+
+    @NotNull
+    private String reservoirType;
+
+    @NotNull
+    private String locationName;
+
+    private String location;
+
+    @NotNull
+    private String wardName;
+
+    private String ward;
+
+    @NotNull
+    private String zoneName;
+
+    private String zone;
+
+    @NotNull
+    @Min(1)
+    @Max(8)
+    private double capacity;
+
+    @NotNull
+    @Size(min = 1, max = 124)
+    private Long noOfSubLines;
+
+    @NotNull
+    @Size(min = 1, max = 124)
+    private Long noOfMainDistributionLines;
+
+    @NotNull
+    @Size(min = 1, max = 124)
+    private Long noOfConnection;
+
+    private AuditDetails auditDeatils;
+
+    @Size(max = 250)
+    @NotNull
+    private String tenantId;
 
 }

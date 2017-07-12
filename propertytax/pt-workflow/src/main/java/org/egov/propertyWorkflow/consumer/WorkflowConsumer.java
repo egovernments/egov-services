@@ -99,7 +99,7 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo);
+				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo, environment.getProperty("businessKey"),environment.getProperty("type"),environment.getProperty("create.property.comments"));
 				property.getPropertyDetail().setStateId(processInstance.getId());
 			}
 			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);

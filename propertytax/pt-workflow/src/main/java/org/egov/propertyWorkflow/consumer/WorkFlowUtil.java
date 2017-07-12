@@ -42,14 +42,14 @@ public class WorkFlowUtil {
 	 * @param WorkflowDetailsRequestInfo
 	 * @return ProcessInstance
 	 */
-	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo) {
+	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String businessKey, String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
 		workFlowStartUrl.append(environment.getProperty("workflowprocess.baseurl"));
 		workFlowStartUrl.append(environment.getProperty("workflowprocess.startUrl"));
 		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
-		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo);
+		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo, businessKey, type, comment);
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
@@ -104,7 +104,7 @@ public class WorkFlowUtil {
 	 * @param WorkflowDetailsRequestInfo
 	 * @return ProcessInstanceRequest
 	 */
-	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest) {
+	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest, String businessKey, String type, String comment) {
 
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
 		RequestInfo requestInfo = workflowDetailsRequest.getRequestInfo();
@@ -115,10 +115,10 @@ public class WorkFlowUtil {
 		//TODO temporary fix for required fields of processInstance and need to replace with actual values
 		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
 		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
-		processInstance.setBusinessKey(environment.getProperty("businessKey"));
-		processInstance.setType(environment.getProperty("type"));
+		processInstance.setBusinessKey(businessKey);
+		processInstance.setType(type);
 		processInstance.setAssignee(assignee);
-		processInstance.setComments(environment.getProperty("create.property.comments"));
+		processInstance.setComments(comment);
 		processInstanceRequest.setRequestInfo(requestInfo);
 		processInstanceRequest.setProcessInstance(processInstance);
 

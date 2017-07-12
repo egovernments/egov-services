@@ -5,18 +5,14 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.egov.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
 public class WorkflowProducer {
@@ -24,26 +20,7 @@ public class WorkflowProducer {
 	Environment environment;
 
 	@Autowired
-	KafkaTemplate<String, PropertyRequest> kafkaTemplate;
-
-	/**
-	 * This method will send message to the kafka queue and will process the
-	 * success or failure callback
-	 */
-	public void sendMessage(String topic, PropertyRequest propertyRequest) {
-		ListenableFuture<SendResult<String, PropertyRequest>> future = kafkaTemplate().send(topic, propertyRequest);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, PropertyRequest>>() {
-			@Override
-			public void onSuccess(SendResult<String, PropertyRequest> stringTSendResult) {
-
-			}
-
-			@Override
-			public void onFailure(Throwable throwable) {
-
-			}
-		});
-	}
+	KafkaTemplate<String, Object> kafkaTemplate;
 
 	/**
 	 * This method will return map object for producer configuration
@@ -63,7 +40,7 @@ public class WorkflowProducer {
 	 * configuration
 	 */
 	@Bean
-	public ProducerFactory<String, PropertyRequest> producerFactory() {
+	public ProducerFactory<String, Object> producerFactory() {
 		return new DefaultKafkaProducerFactory<>(producerConfig());
 	}
 
@@ -72,14 +49,14 @@ public class WorkflowProducer {
 	 * bean
 	 */
 	@Bean
-	public KafkaTemplate<String, PropertyRequest> kafkaTemplate() {
+	public KafkaTemplate<String, Object> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 
 	/**
 	 * This method will send property request to kakfa producer
 	 */
-	public void send(String topic, PropertyRequest propertyRequest) {
-		kafkaTemplate.send(topic, propertyRequest);
+	public void send(String topic, Object producerRecord) {
+		kafkaTemplate.send(topic, producerRecord);
 	}
 }

@@ -33,6 +33,7 @@ import org.egov.property.exception.PropertySearchException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.PropertyUser;
+import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	PropertyRepository propertyRepository;
+
+	@Autowired
+	PropertyMasterRepository propertyMasterRepository;
 
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) {
@@ -384,6 +388,8 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @return boolean
 	 */
 	private Boolean validateTitleTransfer(TitleTransferRequest titleTransferRequest) {
-		return true;
+
+		return propertyMasterRepository
+				.checkUniqueCodeForMutation(titleTransferRequest.getTitleTransfer().getTrasferReason());
 	}
 }

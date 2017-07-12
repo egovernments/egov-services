@@ -181,7 +181,7 @@ class ViewEditServiceGroup extends Component {
                         if(url == '/pgr/serviceGroup/view'){
                           this.props.history.push('/pgr/viewServiceGroup/'+e.id);
                         } else {
-                          this.props.history.push('/pgr/createServiceGroup/'+e.id);
+                          this.props.history.push('/pgr/updateServiceGroup/'+e.id);
                         }
                       }}>
                                               <td>{e.id}</td>

@@ -37,34 +37,54 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
+package org.egov.wcms.transition.demand.contract;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.wcms.transanction.model.AuditDetails;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class AckIdRequest {
-    
-@JsonProperty("idName")
-@NotNull
-private String idName;
+@AllArgsConstructor
+public class Demand {
 
-@NotNull
-@JsonProperty("tenantId")
-    private String tenantId;
-    
-@JsonProperty("format")
-private String format;
+	private String id;
 
+	@NotNull
+	private String tenantId;
+
+	@NotNull
+	private String consumerCode;
+
+	@NotNull
+	private String consumerType;
+
+	@NotNull
+	private String businessService;
+
+	@NotNull
+	private Owner owner;
+
+	@NotNull
+	private Long taxPeriodFrom;
+//Date
+	@NotNull
+	private Long taxPeriodTo;
+	
+	
+	@NotNull
+	private List<DemandDetail> demandDetails = new ArrayList<>();
+
+	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
+
+	private AuditDetails auditDetails;
 }

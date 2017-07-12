@@ -44,11 +44,13 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transanction.config.ConfigurationManager;
+import org.egov.wcms.transanction.exception.IdGenerationException;
 import org.egov.wcms.transanction.web.contract.AckIdRequest;
 import org.egov.wcms.transanction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transanction.web.contract.AckNoGenerationResponse;
 import org.egov.wcms.transanction.web.contract.CategoryResponseInfo;
 import org.egov.wcms.transanction.web.contract.DonationResponseInfo;
+import org.egov.wcms.transanction.web.contract.ErrorRes;
 import org.egov.wcms.transanction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transanction.web.contract.PropertyCategoryResponseInfo;
 import org.egov.wcms.transanction.web.contract.PropertyUsageTypeResponseInfo;
@@ -56,10 +58,15 @@ import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transanction.web.contract.SupplyResponseInfo;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.contract.WaterSourceResponseInfo;
+import org.egov.wcms.transanction.web.errorhandlers.Error;
+import org.egov.wcms.transanction.web.errorhandlers.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Service
 public class RestConnectionService {
@@ -67,8 +74,6 @@ public class RestConnectionService {
     @Autowired
     private ConfigurationManager configurationManager;
 
-    @Autowired
-    private RestTemplate restTemplate;
 
     public CategoryResponseInfo getCategoryTypeByName(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
@@ -77,7 +82,7 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        CategoryResponseInfo positions = restTemplate.postForObject(url.toString(), request, CategoryResponseInfo.class,
+        CategoryResponseInfo positions = new RestTemplate().postForObject(url.toString(), request, CategoryResponseInfo.class,
                 waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
         if (positions != null && !positions.getCategory().isEmpty()) {
             waterConnectionRequest.getConnection()
@@ -94,7 +99,7 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        PipeSizeResponseInfo pipesize = restTemplate.postForObject(url.toString(), request, PipeSizeResponseInfo.class,
+        PipeSizeResponseInfo pipesize = new RestTemplate().postForObject(url.toString(), request, PipeSizeResponseInfo.class,
                 Double.parseDouble(waterConnectionRequest.getConnection().getHscPipeSizeType()),
                 waterConnectionRequest.getConnection().getTenantId());
         if (pipesize != null && !pipesize.getPipeSize().isEmpty()) {
@@ -112,7 +117,7 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        WaterSourceResponseInfo sourcetype = restTemplate.postForObject(url.toString(), request, WaterSourceResponseInfo.class,
+        WaterSourceResponseInfo sourcetype = new RestTemplate().postForObject(url.toString(), request, WaterSourceResponseInfo.class,
                 waterConnectionRequest.getConnection().getSourceType(), waterConnectionRequest.getConnection().getTenantId());
         if (sourcetype != null && !sourcetype.getWaterSourceType().isEmpty()) {
             waterConnectionRequest.getConnection().setSourceTypeId(sourcetype.getWaterSourceType() != null
@@ -128,7 +133,7 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        SupplyResponseInfo supplytype = restTemplate.postForObject(url.toString(), request, SupplyResponseInfo.class,
+        SupplyResponseInfo supplytype = new RestTemplate().postForObject(url.toString(), request, SupplyResponseInfo.class,
                 waterConnectionRequest.getConnection().getSupplyType(), waterConnectionRequest.getConnection().getTenantId());
         if (supplytype != null && !supplytype.getSupplytypes().isEmpty()) {
             waterConnectionRequest.getConnection().setSupplyTypeId(supplytype.getSupplytypes() != null
@@ -147,7 +152,7 @@ public class RestConnectionService {
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        PropertyCategoryResponseInfo propCategory = restTemplate.postForObject(url.toString(),
+        PropertyCategoryResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
                 wrapper, PropertyCategoryResponseInfo.class);
         if (propCategory != null && !propCategory.getPropCategory().isEmpty()
                 && propCategory.getPropCategory().get(0).getId() != null) {
@@ -167,7 +172,7 @@ public class RestConnectionService {
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
         final RequestInfo requestInfo = RequestInfo.builder().ts(111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        PropertyCategoryResponseInfo propCategory = restTemplate.postForObject(url.toString(),
+        PropertyCategoryResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
                 wrapper, PropertyCategoryResponseInfo.class);
         if (propCategory != null && !propCategory.getPropCategory().isEmpty()
                 && propCategory.getPropCategory().get(0).getId() != null) {
@@ -188,7 +193,7 @@ public class RestConnectionService {
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        PropertyUsageTypeResponseInfo propCategory = restTemplate.postForObject(url.toString(),
+        PropertyUsageTypeResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
                 wrapper, PropertyUsageTypeResponseInfo.class);
         if (propCategory != null && propCategory.getPropCategory()!=null 
                 && propCategory.getPropCategory().get(0).getId() != null) {
@@ -201,8 +206,6 @@ public class RestConnectionService {
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
         final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();
-        System.out.println(waterConnectionRequest.getConnection().getProperty().getPropertyType());
-        System.out.println(waterConnectionRequest.getConnection().getProperty().getUsageType());
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic()).append("?propertyType=2")
@@ -216,7 +219,7 @@ public class RestConnectionService {
                 .append(waterConnectionRequest.getConnection().getPipesizeId()).append(
                         "&tenantId=")
                 .append(waterConnectionRequest.getConnection().getTenantId());
-        DonationResponseInfo donation = restTemplate.postForObject(url.toString(), wrapper,
+        DonationResponseInfo donation = new RestTemplate().postForObject(url.toString(), wrapper,
                 DonationResponseInfo.class);
         if (donation != null && !donation.getDonations().isEmpty()) {
             waterConnectionRequest.getConnection().setDonationCharge(donation.getDonations() != null
@@ -233,19 +236,43 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().build();
         List<AckIdRequest> idRequests = new ArrayList<>();
         AckIdRequest idrequest = new AckIdRequest();
+        
         idrequest.setIdName(configurationManager.getIdGenNameServiceTopic());
         idrequest.setTenantId(tenantId);
+        idrequest.setFormat(configurationManager.getIdGenFormatServiceTopic());
         AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
         idRequests.add(idrequest);
         idGeneration.setIdRequests(idRequests);
         idGeneration.setRequestInfo(requestInfo);
-        AckNoGenerationResponse response = restTemplate.patchForObject(url.toString(), requestInfo,
-                AckNoGenerationResponse.class);
-
-        if (response != null && !response.getIdResponses().isEmpty() && response.getIdResponses().get(0).getId() != null)
-            ackNumber = response.getIdResponses().get(0).getId();
+        String response = null;
+        try {
+                response = new RestTemplate().postForObject(url.toString(), idGeneration, String.class);
+        } catch (Exception ex) {
+            throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number", requestInfo);
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+        ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
+        AckNoGenerationResponse idResponse = gson.fromJson(response, AckNoGenerationResponse.class);
+        if ( !errorResponse.getErrors().isEmpty()) {
+                throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number", requestInfo);
+        } else if (idResponse.getResponseInfo() != null) {
+                if (idResponse.getResponseInfo().getStatus().toString()
+                                .equalsIgnoreCase("SUCCESSFUL")) {
+                        if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
+                            ackNumber = idResponse.getIdResponses().get(0).getId();
+                }
+        }
 
         return ackNumber;
     }
-
+    public List<ErrorResponse> populateErrors() {
+        final ErrorResponse errRes = new ErrorResponse();
+        final Error error = new Error();
+        error.setCode(1);
+        error.setDescription("Error while generating ack number");
+        errRes.setError(error);
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        errorResponses.add(errRes);
+        return errorResponses;
+    }
 }

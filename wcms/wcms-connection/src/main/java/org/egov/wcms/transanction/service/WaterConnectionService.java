@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.transanction.service;
 
+import java.util.List;
+
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WaterConnectionRepository;
@@ -46,6 +48,8 @@ import org.egov.wcms.transanction.web.contract.ProcessInstance;
 import org.egov.wcms.transanction.web.contract.Task;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.workflow.service.TransanctionWorkFlowService;
+import org.egov.wcms.transition.demand.contract.Demand;
+import org.egov.wcms.transition.demand.contract.DemandResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +64,9 @@ public class WaterConnectionService {
     public static final Logger logger = LoggerFactory.getLogger(WaterConnectionService.class);
     @Autowired
     private TransanctionWorkFlowService transanctionWorkFlowService;
+
+    @Autowired
+    private DemandConnectionService demandConnectionService;
 
     @Autowired
     private WaterTransactionProducer waterTransactionProducer;
@@ -113,6 +120,7 @@ public class WaterConnectionService {
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
+            createDemand(waterConnectionRequest);
             initiateWorkFow(waterConnectionRequest);
             waterConnectionRepository.persistConnection(waterConnectionRequest);
         } catch (final Exception e) {
@@ -141,6 +149,15 @@ public class WaterConnectionService {
         final ProcessInstance pros = transanctionWorkFlowService.startWorkFlow(waterConnectionReq);
         waterConnectionReq.getConnection().setStateId(Long.valueOf(pros.getId()));
         return pros;
+    }
+
+    private DemandResponse createDemand(final WaterConnectionReq waterConnectionReq) {
+
+        List<Demand> pros = demandConnectionService
+                .prepareDemand(waterConnectionReq.getConnection().getDemand(), waterConnectionReq);
+        DemandResponse demandRes = demandConnectionService.createDemand(pros, waterConnectionReq.getRequestInfo());
+        waterConnectionReq.getConnection().setDemandid(demandRes.getDemands().get(0).getId());
+        return demandRes;
     }
 
     private Task updateWorkFlow(final WaterConnectionReq waterConnectionReq) {

@@ -37,34 +37,56 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
+package org.egov.wcms.transition.demand.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.wcms.transition.demand.contract.UserSearchRequest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AckIdRequest {
-    
-@JsonProperty("idName")
-@NotNull
-private String idName;
+@Builder
+public class Owner {
 
-@NotNull
-@JsonProperty("tenantId")
+    @JsonProperty("tenantId")
     private String tenantId;
-    
-@JsonProperty("format")
-private String format;
 
+    @JsonProperty("id")
+    private Long id;
+
+    @JsonProperty("userName")
+    private String userName;
+
+    @JsonProperty("name")
+    private String name;
+    
+    @JsonProperty("permanentAddress")
+    private String permanentAddress;
+
+    @JsonProperty("mobileNumber")
+    private String mobileNumber;
+
+    @JsonProperty("emailId")
+    private String emailId;
+
+    @JsonProperty("aadhaarNumber")
+    private String aadhaarNumber;
+
+    public UserSearchRequest toUserSearchRequest() {
+
+            List<Long> ids = new ArrayList<>();
+            ids.add(this.id);
+            return UserSearchRequest.builder().aadhaarNumber(this.aadhaarNumber).emailId(this.emailId)
+                            .mobileNumber(this.mobileNumber).name(this.name).tenantId(this.tenantId).id(ids)
+                            .userName(this.userName).build();
+    }
 }

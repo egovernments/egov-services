@@ -37,34 +37,37 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
+package org.egov.wcms.transition.demand.contract;
+
+import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.wcms.transanction.model.AuditDetails;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class AckIdRequest {
-    
-@JsonProperty("idName")
-@NotNull
-private String idName;
+@AllArgsConstructor
+public class DemandDetail {
 
-@NotNull
-@JsonProperty("tenantId")
-    private String tenantId;
-    
-@JsonProperty("format")
-private String format;
+	private String id;
+	
+	private String demandId;	
 
+	@NotNull
+	private String taxHeadMasterCode;
+
+	@NotNull
+	private BigDecimal taxAmount;
+	
+	@NotNull
+	private BigDecimal collectionAmount = BigDecimal.valueOf(0d);
+
+	private AuditDetails auditDetail;
+
+	private String tenantId;
 }

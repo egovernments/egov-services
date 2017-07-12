@@ -37,34 +37,29 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
+package org.egov.wcms.transition.demand.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class AckIdRequest {
-    
-@JsonProperty("idName")
-@NotNull
-private String idName;
+@AllArgsConstructor
+@Builder
+public class DemandResponse {
 
-@NotNull
-@JsonProperty("tenantId")
-    private String tenantId;
-    
-@JsonProperty("format")
-private String format;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
+	@JsonProperty("Demands")
+	private List<Demand> demands = new ArrayList<>();
 }

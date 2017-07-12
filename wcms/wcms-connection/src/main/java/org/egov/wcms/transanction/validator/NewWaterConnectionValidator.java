@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
-import org.egov.wcms.transanction.model.DocumentOwner;
 import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
 import org.egov.wcms.transanction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
@@ -185,8 +184,8 @@ public class NewWaterConnectionValidator {
         final List<ErrorField> masterfielderrorList = getMasterValidation(waterConnectionRequest);
         errorFields.addAll(masterfielderrorList);
 
-        final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
-        errorFields.addAll(errorFieldList);
+       /* final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
+        errorFields.addAll(errorFieldList);*/
 
         return Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(WcmsTranasanctionConstants.INVALID_REQUEST_MESSAGE)
                 .errorFields(errorFields).build();
@@ -197,7 +196,7 @@ public class NewWaterConnectionValidator {
         final List<ErrorField> errorFields = new ArrayList<>();
 
 
-        isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
+        /*isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
         if (!isRequestValid) {
             final ErrorField
 
@@ -215,7 +214,7 @@ public class NewWaterConnectionValidator {
                     .field(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-
+*/
         /*
          * if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) { isRequestValid =
          * validateDocumentApplicationType(waterConnectionRequest); if (!isRequestValid) { final ErrorField errorField =

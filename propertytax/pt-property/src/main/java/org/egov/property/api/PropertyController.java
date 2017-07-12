@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfoWrapper;
-import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.property.services.PropertyService;

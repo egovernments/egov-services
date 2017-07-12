@@ -45,11 +45,8 @@ import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyT
 import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
 import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
 
-import PipeSizeCreate from './components/contents/wc/master/pipeSize/pipeSizeCreate';
-import ViewEditPipeSize from './components/contents/wc/master/pipeSize/viewEditPipeSize';
-import ViewPipeSize from './components/contents/wc/master/pipeSize/viewPipeSize';
-
 const base = "";
+
 
 const Main = () => {
     return (
@@ -78,7 +75,7 @@ const Main = () => {
         <Route exact name='receivingModeCreate' path={base+'/pgr/receivingModeCreate/:type/:id'} component={receivingModeCreate}/>
         <Route exact path={base+'/pgr/viewOrUpdateReceivingMode/:type'} component={viewOrUpdateReceivingMode}/>
         <Route exact path={base+'/pgr/viewReceivingMode/:type/:id'} component={viewReceivingMode}/>
-        <Route exact name="createServiceGroup" path={base+'/pgr/updateServiceGroup/:id?'} component={ServiceGroupCreate}/>
+        <Route exact name="createServiceGroup" path={base+'/pgr/createServiceGroup/:id?'} component={ServiceGroupCreate}/>
         <Route exact path={base+'/pgr/createServiceGroup'} component={ServiceGroupCreate}/>
         <Route exact path={base+'/pgr/serviceGroup/view'} component={ViewEditServiceGroup}/>
         <Route exact path={base+'/pgr/serviceGroup/edit'} component={ViewEditServiceGroup}/>
@@ -114,12 +111,6 @@ const Main = () => {
         <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
-
-        <Route exact path={base+'/wc/createPipeSize'} component={PipeSizeCreate}/>
-        <Route exact name="createPipeSize" path={base+'/wc/createPipeSize/:id?'} component={PipeSizeCreate}/>
-        <Route exact path={base+'/wc/pipeSize/view'} component={ViewEditPipeSize}/>
-        <Route exact path={base+'/wc/pipeSize/edit'} component={ViewEditPipeSize}/>
-        <Route exact path={base+'/wc/viewPipeSize/:id'} component={ViewPipeSize}/>
 
 
     </Switch>

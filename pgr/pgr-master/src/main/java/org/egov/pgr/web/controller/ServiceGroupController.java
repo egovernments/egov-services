@@ -191,6 +191,7 @@ public class ServiceGroupController {
 		if (action.equals(taskAction[0])) {
 			verifyRequestUniqueness(serviceGroupRequest, errorFields);
 		}
+		verifyIfNameAlreadyExists(serviceGroupRequest, errorFields);
 		return errorFields;
 	}
 
@@ -225,6 +226,16 @@ public class ServiceGroupController {
 	private void verifyRequestUniqueness(final ServiceGroupRequest serviceGroupRequest,
 			final List<ErrorField> errorFields) {
 		if (serviceGroupService.verifyRequestUniqueness(serviceGroupRequest)) {
+			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODENAME_UNIQUE_CODE)
+					.message(PgrMasterConstants.SERVICEGROUP_CODENAME_ERROR_MESSAGE)
+					.field(PgrMasterConstants.SERVICEGROUP_CODENAME_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} 
+	}
+	
+	private void verifyIfNameAlreadyExists(final ServiceGroupRequest serviceGroupRequest,
+			final List<ErrorField> errorFields) {
+		if (serviceGroupService.verifyIfNameAlreadyExists(serviceGroupRequest)) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODENAME_UNIQUE_CODE)
 					.message(PgrMasterConstants.SERVICEGROUP_CODENAME_ERROR_MESSAGE)
 					.field(PgrMasterConstants.SERVICEGROUP_CODENAME_FIELD_NAME).build();

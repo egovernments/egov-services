@@ -142,7 +142,7 @@ public class User {
 	private AuditDetails auditDetails = null;
 
 	@JsonProperty("otpReference")
-	private AuditDetails otpReference = null;
+	private String otpReference = null;
 
 	@JsonProperty("tenantId")
 	@NotNull

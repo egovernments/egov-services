@@ -76,6 +76,31 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
+  /connection/{ackNumber}/_update:
+      parameters:
+       - $ref: "#/parameters/updateCode"
+      post:
+        summary: updates existing values
+        description: updates existing values
+        tags:
+          - Update Water Connection
+        parameters:
+          - name: connection
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/WaterConnectionReq'
+        responses:
+          '200':
+            description: Water Connection updated successfully.
+            schema:
+              $ref: "#/definitions/WaterConnectionRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
             
   /legacy/_create:
       post:
@@ -624,6 +649,16 @@ definitions:
           $ref: '#/definitions/Connection'
          
 parameters:
+  updateCode:
+      name: ackNumber
+      in: path
+      required: true
+      description: Unique identifier of the master to be updated.
+      type: integer
+      format: int64
+      exclusiveMinimum: true
+      exclusiveMaximum: false
+
   legacyConsumerNumber:
     name: legacyConsumerNumber
     in: query
@@ -725,3 +760,4 @@ parameters:
       pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
     default:
       - +name
+

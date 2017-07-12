@@ -110,6 +110,7 @@ public class Connection {
     @NotNull
     private Long stateId;
 
+    private String demandid;
     @NotNull
     private double sumpCapacity;
 
@@ -148,6 +149,9 @@ public class Connection {
 
     @NotNull
     private Property property;
+    
+    @NotNull
+    private org.egov.wcms.transition.demand.contract.Demand demand;
 
     @NotNull
     private Asset asset;

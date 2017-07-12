@@ -122,15 +122,17 @@ public class WaterConnectionRepository {
                 else{
                     statement.setString(26, NewConnectionStatus.VERIFIED.name()); 
                 }
-                    //status
-                statement.setInt(27, 1); //state_id
+                statement.setLong(27, (waterConnectionRequest.getConnection().getStateId()!=null?waterConnectionRequest.getConnection().getStateId():1l)); 
+                if(waterConnectionRequest.getConnection().getDemandid()!=null)
+                statement.setString(28, waterConnectionRequest.getConnection().getDemandid()); 
+                
                 if (waterConnectionRequest.getConnection().getIsLegacy()  || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
-                    statement.setString(28, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(29, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setString(29, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(30, waterConnectionRequest.getConnection().getConsumerNumber());
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(29, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(31, waterConnectionRequest.getConnection().getParentConnectionId());
 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
 

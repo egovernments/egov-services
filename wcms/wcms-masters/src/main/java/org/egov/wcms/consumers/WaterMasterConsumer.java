@@ -68,8 +68,6 @@ import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -83,8 +81,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class WaterMasterConsumer {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(WaterMasterConsumer.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -143,7 +139,7 @@ public class WaterMasterConsumer {
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
-        LOGGER.debug("key:" + topic + ":" + "value:" + consumerRecord);
+        log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
         try {
             if (applicationProperties.getCreateCategoryTopicName().equals(topic))

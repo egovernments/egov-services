@@ -90,9 +90,9 @@ public class EscalationRepository {
 			escalationTimeType.setNoOfHours(Long.parseLong(applicationProp.getDefaultEscalationHours()));
 			escalationTimeType.setTenantId(escalationGetRequest.getTenantId());
 			escalationTimeType.setDesignation(0L == escalationGetRequest.getDesignation() ? 0 : escalationGetRequest.getDesignation() );
-			if(0L != escalationGetRequest.getServiceId()) { 
+			for(int i = 0 ; i < escalationGetRequest.getId().size() ; i++) { 
 				ServiceType serviceType = new ServiceType();
-				serviceType.setId(escalationGetRequest.getServiceId());
+				serviceType.setId(escalationGetRequest.getId().get(i));
 				escalationTimeType.setGrievanceType(serviceType);
 			}
 			escalationTypes.add(escalationTimeType);

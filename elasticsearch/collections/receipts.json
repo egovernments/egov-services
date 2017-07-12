@@ -1,0 +1,63 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "tenantId" : {
+           "type": "keyword"
+        },
+        "receiptNumber": {
+            "type": "keyword"
+        },
+        "receiptDate": {
+             "type": "date",
+             "format": "date_optional_time"
+        },
+        "billingService": {
+            "type": "keyword"
+        },
+        "paymentMode": {
+            "type": "keyword"
+        },
+        "totalAmount": {
+            "type": "text"
+        },
+        "channel": {
+            "type": "keyword"
+        },
+        "paymentGateway": {
+            "type": "keyword"
+        },
+        "billNumber": {
+            "type": "keyword"
+        },
+        "consumerCode": {
+            "type": "keyword"
+        },
+        "id": {
+            "type": "long"
+        },
+        "status": {
+            "type": "keyword"
+        },
+        "consumerName" : {
+            "type": "keyword"
+        },
+        "receiptCreator" : {
+            "type": "keyword"
+        },
+        "consumerType" : {
+            "type": "keyword"
+        },
+        "cityName" : {
+            "type": "keyword"
+        },
+        "districtName" : {
+            "type": "keyword"
+        },
+        "regionName" : {
+            "type": "keyword"
+        }
+       }
+   }
+ 

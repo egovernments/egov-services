@@ -207,6 +207,7 @@ public class GrievanceTypeController {
     private List<ErrorField> getUpdateErrorFields(final ServiceRequest serviceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
+        addGrievanceNameValidator(serviceTypeRequest, errorFields);
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
         checkMetadataExists(serviceTypeRequest,errorFields);
         checkCategorySLAValues(serviceTypeRequest, errorFields);
@@ -299,8 +300,7 @@ public class GrievanceTypeController {
                     .field(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-    	} else
-			return;
+    	} 
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {

@@ -84,6 +84,31 @@ const getNameById = function(object, id, property = "") {
 }
 
 
+const getNameByServiceCode = function(object, id, property = "") {
+	console.log(id)
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].serviceName;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+
+
 class SearchEscalation extends Component {
     constructor(props) {
       super(props)
@@ -244,7 +269,7 @@ class SearchEscalation extends Component {
       		return resultList.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{getNameById(current.state.grievanceTypeSource,val.id)}</td>
+      					<td>{getNameByServiceCode(current.state.grievanceTypeSource,val.grievanceType.id)}</td>
       					<td>{getNameById(current.state.designationSource,val.designation)}</td>
       					<td>{val.noOfHours}</td>
       				</tr>

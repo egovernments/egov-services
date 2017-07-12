@@ -118,9 +118,14 @@ public class ConfigurationManager {
     
     @Value("${egov.services.wcms_masters_propertyPipeSize.searchpath}")
     private String waterMasterPropPipeSizeMappingTopic;
-    
-    
+   
     @Value("${egov.services.wcms_masters_propertyUsageType.searchpath}")
     private String waterMasterPropUsageTypeMappingTopic;
+    
+    @Value("${egov.services.demandbill_service.hostname}")
+    private String billingDemandServiceHostNameTopic;
+    
+    @Value("${egov.services.demandbill_service.createdemand}")
+    private String createbillingDemandServiceTopic;
 
 }

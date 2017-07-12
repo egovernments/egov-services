@@ -1,10 +1,12 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
+import org.egov.pgrrest.common.domain.model.AttributeActionsDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.exception.MandatoryAttributesAbsentException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,10 +33,12 @@ public class MandatoryAttributeValidatorTest {
         final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
             .required(true)
             .code("code1")
+            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
             .build();
         final AttributeDefinition attributeDefinition2 = AttributeDefinition.builder()
             .required(true)
             .code("code2")
+            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
             .build();
         final List<AttributeDefinition> attributeDefinitions =
             Arrays.asList(attributeDefinition1, attributeDefinition2);
@@ -43,7 +47,7 @@ public class MandatoryAttributeValidatorTest {
             .build();
 
         try {
-            validator.validate(serviceRequest, serviceDefinition);
+            validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
             Assert.fail("Excepted validation to be thrown");
         } catch (MandatoryAttributesAbsentException ex) {
             final ArrayList<String> missingMandatoryAttributeCodes = ex.getMissingMandatoryAttributeCodes();
@@ -67,10 +71,12 @@ public class MandatoryAttributeValidatorTest {
         final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
             .required(true)
             .code("code1")
+            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
             .build();
         final AttributeDefinition attributeDefinition2 = AttributeDefinition.builder()
             .required(true)
             .code("code2")
+            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
             .build();
         final List<AttributeDefinition> attributeDefinitions =
             Arrays.asList(attributeDefinition1, attributeDefinition2);
@@ -78,7 +84,29 @@ public class MandatoryAttributeValidatorTest {
             .attributes(attributeDefinitions)
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition);
+        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+    }
+
+    @Test
+    public void
+    test_should_not_throw_exception_when_mandatory_attribute_entries_are_not_present_in_service_request_and_current_action_does_not_match() {
+        final MandatoryAttributeValidator validator = new MandatoryAttributeValidator();
+        final ServiceRequest serviceRequest = mock(ServiceRequest.class);
+        when(serviceRequest.getAttributeEntries())
+            .thenReturn(Arrays.asList(
+                new AttributeEntry("code1", "value1")
+            ));
+        final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
+            .required(true)
+            .code("code2")
+            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
+            .build();
+        final List<AttributeDefinition> attributeDefinitions = Collections.singletonList(attributeDefinition1);
+        final ServiceDefinition serviceDefinition = ServiceDefinition.builder()
+            .attributes(attributeDefinitions)
+            .build();
+
+        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.UPDATE);
     }
 
     @Test
@@ -97,7 +125,7 @@ public class MandatoryAttributeValidatorTest {
             .attributes(attributeDefinitions)
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition);
+        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
     }
 
 

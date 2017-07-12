@@ -832,7 +832,6 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "ADD_MANDATORY", property: "rating", value: '', isRequired : true, pattern: ''})
   },
   handleChange: (value, property, isRequired, pattern) => {
-      console.log(property, value);
       dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleStatusChange: (value, property, isRequired, pattern) => {

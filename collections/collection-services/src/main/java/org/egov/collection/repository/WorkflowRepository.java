@@ -45,10 +45,15 @@ import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.DepartmentSearchCriteria;
 import org.egov.collection.model.DesignationSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
+import org.egov.collection.model.Task;
+import org.egov.collection.model.TaskRequest;
+import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.UserSearchCriteria;
 import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
+import org.egov.collection.web.contract.Position;
 import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceRequest;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
@@ -57,6 +62,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
@@ -66,7 +73,7 @@ import org.springframework.web.client.RestTemplate;
 @Repository
 public class WorkflowRepository {
 	public static final Logger logger = LoggerFactory
-			.getLogger(ReceiptRepository.class);
+			.getLogger(WorkflowRepository.class);
 	
 	@Autowired
 	private CollectionProducer collectionProducer;
@@ -185,11 +192,17 @@ public class WorkflowRepository {
 		uri.append(basePath).append(searchPath);
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		processInstanceRequest = getProcessInstanceRequest(workflowDetails);
-		
+		logger.info("ProcessInstanceRequest: "+processInstanceRequest.toString());
+        final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
+		logger.info("ProcessInstanceRequest: "+request.toString());
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+	
 		try{
-            processInstanceResponse = restTemplate.postForObject(uri.toString(), processInstanceRequest,
+            processInstanceResponse = restTemplate.postForObject(uri.toString(), request,
                     ProcessInstanceResponse.class);
 		}catch(Exception e){
+			e.printStackTrace();
 			logger.error("Exception caused while hitting the workflow service: ", e.getCause());
 			processInstanceResponse = null;
 			return processInstanceResponse;
@@ -199,24 +212,80 @@ public class WorkflowRepository {
 		return processInstanceResponse;
 	}
 	
+	public TaskResponse updateWorkflow(WorkflowDetails workflowDetails){
+		TaskResponse taskResponse = new TaskResponse();
+		StringBuilder uri = new StringBuilder();
+		String basePath = applicationProperties.getWorkflowServiceHostName();
+		String searchPath = applicationProperties.getWorkflowServiceStartPath();
+		uri.append(basePath).append(searchPath);
+		TaskRequest taskRequest = new TaskRequest();
+		taskRequest = getTaskRequest(workflowDetails);
+		logger.info("TaskRequest: "+taskRequest.toString());
+        final HttpEntity<TaskRequest> request = new HttpEntity<>(taskRequest);
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		try{
+			taskResponse = restTemplate.postForObject(uri.toString(), request,
+					TaskResponse.class);
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("Exception caused while hitting the workflow service: ", e.getCause());
+			taskResponse = null;
+			return taskResponse;
+		}
+		
+		logger.info("TaskResponse: "+taskResponse);
+		return taskResponse;
+	}
+	
     private ProcessInstanceRequest getProcessInstanceRequest(final WorkflowDetails workflowDetails) {
 
         final RequestInfo requestInfo = workflowDetails.getRequestInfo();
         final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
         final ProcessInstance processInstance = new ProcessInstance();
+        final Position assignee = new Position();
+        assignee.setId(workflowDetails.getAssignee());
 
-     //   assignee.setId(workFlowDetails.getAssignee());
         processInstance.setBusinessKey(applicationProperties.getWorkflowServiceBusinessKey());
         processInstance.setType(applicationProperties.getWorkflowServiceBusinessKey());
-    //    processInstance.setAssignee(assignee);
         processInstance.setComments(workflowDetails.getComments());
         processInstance.setInitiatorPosition(workflowDetails.getInitiatorPosition());
+        processInstance.setAssignee(assignee);
         processInstance.setTenantId(workflowDetails.getTenantId());
         processInstance.setDetails("Receipt Create : " + workflowDetails.getReceiptNumber());
         processInstanceRequest.setProcessInstance(processInstance);
         processInstanceRequest.setRequestInfo(requestInfo);
 
         return processInstanceRequest;
+    }
+    
+    private TaskRequest getTaskRequest(final WorkflowDetails workflowDetails) {
+
+        final RequestInfo requestInfo = workflowDetails.getRequestInfo();
+		TaskRequest taskRequest = new TaskRequest();
+        final Task task = new Task();
+        final Position assignee = new Position();
+        assignee.setId(workflowDetails.getAssignee());
+
+        task.setBusinessKey(applicationProperties.getWorkflowServiceBusinessKey());
+        task.setType(applicationProperties.getWorkflowServiceBusinessKey());
+        task.setComments(workflowDetails.getComments());
+        task.setAssignee(assignee);
+        task.setTenantId(workflowDetails.getTenantId());
+        task.setDetails("Receipt Create : " + workflowDetails.getReceiptNumber());
+        
+        task.setAction(workflowDetails.getAction());
+        if ("Approve".equalsIgnoreCase(workflowDetails.getAction()))
+            task.setStatus(ReceiptStatus.APPROVED.toString());
+        else if ("Reject".equalsIgnoreCase(workflowDetails.getAction()))
+            task.setStatus(ReceiptStatus.REJECTED.toString());
+                
+        //logic based on dml and current state
+        
+        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setTask(task);
+  
+        return taskRequest;
     }
 
 }

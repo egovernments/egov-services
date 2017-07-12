@@ -128,9 +128,12 @@ export default(state = defaultState, action) => {
       }
 
       case 'FILE_UPLOAD':
+      var filearray = [];
+      filearray = [...state.files];
+      filearray.push(action.files);
       return {
           ...state,
-          files: action.files
+          files: filearray
       };
 
       case "HANDLE_CHANGE_NEXT_ONE":

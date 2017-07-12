@@ -5,8 +5,8 @@ import org.egov.pgrrest.common.domain.model.AttributeDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.exception.InvalidDoubleAttributeEntryException;
-import org.egov.pgrrest.read.domain.exception.InvalidIntegerAttributeEntryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class DoubleAttributeValidatorTest {
             .attributes(Collections.singletonList(attributeDefinition))
             .build();
         try {
-            validator.validate(serviceRequest, serviceDefinition);
+            validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
             Assert.fail("Expected exception to be thrown");
         } catch (InvalidDoubleAttributeEntryException ex) {
             assertEquals("double1", ex.getAttributeCode());
@@ -53,7 +53,7 @@ public class DoubleAttributeValidatorTest {
             .attributes(Collections.singletonList(attributeDefinition))
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition);
+        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
     }
 
 

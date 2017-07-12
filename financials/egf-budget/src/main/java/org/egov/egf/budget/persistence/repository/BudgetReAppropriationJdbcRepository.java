@@ -1,6 +1,5 @@
 package org.egov.egf.budget.persistence.repository;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,72 +48,61 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
+		String orderBy = "order by id";
+		if (budgetReAppropriationSearchEntity.getSortBy() != null && !budgetReAppropriationSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + budgetReAppropriationSearchEntity.getSortBy();
 
 		searchQuery = searchQuery.replace(":tablename", BudgetReAppropriationEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-		if (budgetReAppropriationSearchEntity.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("id =:id");
-			paramValues.put("id", budgetReAppropriationSearchEntity.getId());
-		}
-		if (budgetReAppropriationSearchEntity.getBudgetDetailId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("budgetDetail =:budgetDetail");
-			paramValues.put("budgetDetail", budgetReAppropriationSearchEntity.getBudgetDetailId());
-		}
-		if (budgetReAppropriationSearchEntity.getAdditionAmount() != null
-				&& 0 != budgetReAppropriationSearchEntity.getAdditionAmount().compareTo(BigDecimal.ZERO)) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("additionAmount =:additionAmount");
-			paramValues.put("additionAmount", budgetReAppropriationSearchEntity.getAdditionAmount());
-		}
-		if (budgetReAppropriationSearchEntity.getDeductionAmount() != null
-				&& 0 != budgetReAppropriationSearchEntity.getDeductionAmount().compareTo(BigDecimal.ZERO)) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("deductionAmount =:deductionAmount");
-			paramValues.put("deductionAmount", budgetReAppropriationSearchEntity.getDeductionAmount());
-		}
-		if (budgetReAppropriationSearchEntity.getOriginalAdditionAmount() != null
-				&& 0 != budgetReAppropriationSearchEntity.getOriginalAdditionAmount().compareTo(BigDecimal.ZERO)) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("originalAdditionAmount =:originalAdditionAmount");
-			paramValues.put("originalAdditionAmount", budgetReAppropriationSearchEntity.getOriginalAdditionAmount());
-		}
-		if (budgetReAppropriationSearchEntity.getOriginalDeductionAmount() != null
-				&& 0 != budgetReAppropriationSearchEntity.getOriginalDeductionAmount().compareTo(BigDecimal.ZERO)) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("originalDeductionAmount =:originalDeductionAmount");
-			paramValues.put("originalDeductionAmount", budgetReAppropriationSearchEntity.getOriginalDeductionAmount());
-		}
-		if (budgetReAppropriationSearchEntity.getAnticipatoryAmount() != null
-				&& 0 != budgetReAppropriationSearchEntity.getAnticipatoryAmount().compareTo(BigDecimal.ZERO)) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("anticipatoryAmount =:anticipatoryAmount");
-			paramValues.put("anticipatoryAmount", budgetReAppropriationSearchEntity.getAnticipatoryAmount());
-		}
-		if (budgetReAppropriationSearchEntity.getStatusId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("status =:status");
-			paramValues.put("status", budgetReAppropriationSearchEntity.getStatusId());
-		}
-		if (budgetReAppropriationSearchEntity.getAsOnDate() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("asOnDate =:asOnDate");
-			paramValues.put("asOnDate", budgetReAppropriationSearchEntity.getAsOnDate());
-		}
+if( budgetReAppropriationSearchEntity.getId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "id =:id");
+paramValues.put("id" ,budgetReAppropriationSearchEntity.getId());} 
+if( budgetReAppropriationSearchEntity.getBudgetDetailId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "budgetDetail =:budgetDetail");
+paramValues.put("budgetDetail" ,budgetReAppropriationSearchEntity.getBudgetDetailId());} 
+if( budgetReAppropriationSearchEntity.getAdditionAmount()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "additionAmount =:additionAmount");
+paramValues.put("additionAmount" ,budgetReAppropriationSearchEntity.getAdditionAmount());} 
+if( budgetReAppropriationSearchEntity.getDeductionAmount()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "deductionAmount =:deductionAmount");
+paramValues.put("deductionAmount" ,budgetReAppropriationSearchEntity.getDeductionAmount());} 
+if( budgetReAppropriationSearchEntity.getOriginalAdditionAmount()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "originalAdditionAmount =:originalAdditionAmount");
+paramValues.put("originalAdditionAmount" ,budgetReAppropriationSearchEntity.getOriginalAdditionAmount());} 
+if( budgetReAppropriationSearchEntity.getOriginalDeductionAmount()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "originalDeductionAmount =:originalDeductionAmount");
+paramValues.put("originalDeductionAmount" ,budgetReAppropriationSearchEntity.getOriginalDeductionAmount());} 
+if( budgetReAppropriationSearchEntity.getAnticipatoryAmount()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "anticipatoryAmount =:anticipatoryAmount");
+paramValues.put("anticipatoryAmount" ,budgetReAppropriationSearchEntity.getAnticipatoryAmount());} 
+if( budgetReAppropriationSearchEntity.getStatusId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "status =:status");
+paramValues.put("status" ,budgetReAppropriationSearchEntity.getStatusId());} 
+if( budgetReAppropriationSearchEntity.getAsOnDate()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "asOnDate =:asOnDate");
+paramValues.put("asOnDate" ,budgetReAppropriationSearchEntity.getAsOnDate());} 
+
 
 		Pagination<BudgetReAppropriation> page = new Pagination<>();
 		if (budgetReAppropriationSearchEntity.getOffset() != null)
@@ -130,19 +118,17 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = getPagination(searchQuery, page, paramValues);
+		page = (Pagination<BudgetReAppropriation>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + budgetReAppropriationSearchEntity.getPageSize()
-				+ " offset "
-				+ budgetReAppropriationSearchEntity.getOffset() * budgetReAppropriationSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BudgetReAppropriationEntity.class);
 
-		List<BudgetReAppropriationEntity> budgetReAppropriationEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+		List<BudgetReAppropriationEntity> budgetReAppropriationEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
 		page.setTotalResults(budgetReAppropriationEntities.size());
 
@@ -159,15 +145,15 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 	public BudgetReAppropriationEntity findById(BudgetReAppropriationEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			preparedStatementValues.add(getValue(getField(entity, s), entity));
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<BudgetReAppropriationEntity> budgetreappropriations = jdbcTemplate.query(
-				getByIdQuery.get(entity.getClass().getSimpleName()), preparedStatementValues.toArray(),
-				new BeanPropertyRowMapper<BudgetReAppropriationEntity>());
+		List<BudgetReAppropriationEntity> budgetreappropriations = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(BudgetReAppropriationEntity.class));
 		if (budgetreappropriations.isEmpty()) {
 			return null;
 		} else {

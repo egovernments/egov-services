@@ -192,7 +192,7 @@ public class WorkflowController {
 	}
 	
 	
-	@PostMapping("/start")
+	@PostMapping("/_start")
 	@ResponseBody
 	public ResponseEntity<?> startWorkflow(
 			@RequestBody @Valid final WorkflowDetails workflowDetails, BindingResult errors) {
@@ -200,7 +200,7 @@ public class WorkflowController {
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}				
+		}
 		if(!validateTenantId(workflowDetails.getTenantId())){
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();
@@ -210,11 +210,49 @@ public class WorkflowController {
 			
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
 		PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
-		positionSearchCriteriaWrapper.getPositionSearchCriteria().setEmployeeId(workflowDetails.getUser());
-		workflowDetails.setInitiatorPosition(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
-		WorkflowDetails workflowDetailsObj = workflowService.pushToQueue(workflowDetails);
+		try{
+			positionSearchCriteriaWrapper.getPositionSearchCriteria().setEmployeeId(workflowDetails.getUser());
+			workflowDetails.setAssignee(workflowService.getPositionForUser(positionSearchCriteriaWrapper));
+		}catch(Exception e){
+			LOGGER.error("Positions not found for the given user.");
+			workflowDetails.setAssignee(0L);
+		}
+		WorkflowDetails workflowDetailsObj = workflowService.start(workflowDetails);
+				
+		if(null == workflowDetailsObj){
+			LOGGER.info("Service returned null");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.INVALID_WF_REQUEST);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+			
+		}
+		
+		return new ResponseEntity<>(workflowDetailsObj, HttpStatus.OK);				
+	}
+	
+	@PostMapping("/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateWorkflow(
+			@RequestBody @Valid final WorkflowDetails workflowDetails, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		if(!validateTenantId(workflowDetails.getTenantId())){
+			LOGGER.info("Invalid TenantId");
+			Error error = new Error();
+			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		WorkflowDetails workflowDetailsObj = workflowService.update(workflowDetails);
 				
 		if(null == workflowDetailsObj){
 			LOGGER.info("Service returned null");

@@ -89,6 +89,7 @@ public class StorageReservoirServiceTest {
         final StorageReservoir storageReservoir = new StorageReservoir();
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
+        storageReservoir.setCode("12");
         storageReservoir.setLocationName("test1");
         storageReservoir.setWardName("test2");
         storageReservoir.setZoneName("test3");

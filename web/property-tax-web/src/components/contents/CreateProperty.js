@@ -103,6 +103,7 @@ chip: {
 }
 };
 
+
 //Create Class for Create and update property
 class CreateProperty extends Component {
   constructor(props) {
@@ -132,6 +133,9 @@ class CreateProperty extends Component {
       usages:[],
     }
   }
+  
+
+
 
   componentWillMount() {
     //call boundary service fetch wards,location,zone data
@@ -356,49 +360,7 @@ class CreateProperty extends Component {
                 "lastModifiedTime": 0
             }
         },
-        "owners": [ {
-            "userName": "ramki786",
-            "password":"123",
-            "salutation": "Mrs",
-            "name": "Ramakrishna",
-            "gender": "MALE",
-            "mobileNumber": "9923948234",
-            "emailId": "ramakrishna@egovernments.org",
-            "altContactNumber": null,
-            "pan": null,
-            "aadhaarNumber": null,
-            "permanentAddress": null,
-            "permanentCity": null,
-            "permanentPinCode": null,
-            "correspondenceAddress": null,
-            "correspondenceCity": null,
-            "correspondencePinCode": null,
-            "active": true,
-            "locale": "en_IN",
-            "type": "CITIZEN",
-            "accountLocked": false,
-            "fatherOrHusbandName": null,
-            "signature": null,
-            "bloodGroup": null,
-            "photo": null,
-            "identificationMark": null,
-            "createdBy": null,
-            "otpReference": null,
-            "lastModifiedBy": null,
-            "tenantId": "default",
-             "auditDetails": {
-                    "createdBy": "egovernments",
-                    "lastModifiedBy": "egovernments",
-                    "createdTime": 0,
-                    "lastModifiedTime": 0
-                },
-            "roles": [
-                {
-                    "code": "CITIZEN",
-                    "name": "Citizen"
-                }
-            ]
-        }],
+        "owners": this.props.createProperty.owners,
         "propertyDetail": {
            
             "source": "MUNICIPAL_RECORDS",
@@ -427,76 +389,7 @@ class CreateProperty extends Component {
             "woodType": "modern",
             "roofType": "new one",
             "wallType": "painting",
-            "floors": [{
-                
-                "floorNo": "fn3",
-                "units": [{
-                    "unitNo":"2",
-                    "unitType": "FLAT",
-                    "units":[{
-                    "unitNo":"3",
-                    "unitType": "ROOM",
-                    "length": 11,
-                    "width": 15,
-                    "builtupArea": 120,
-                    "assessableArea": 105,
-                    "bpaBuiltupArea": 195,
-                    "bpaNo": "bpn2",
-                    "bpaDate": "15/02/2017",
-                    "usage": "tset",
-                    "occupancyType": "asf",
-                    "occupierName": "kumar",
-                    "firmName": "wtc technologies",
-                    "rentCollected": 17,
-                    "structure": "rec14",
-                    "age": "28",
-                    "exemptionReason": "testcase",
-                    "isStructured": false,
-                    "occupancyDate": "15/02/2017",
-                    "constCompletionDate": "15/02/2017",
-                    "electricMeterNo": "emn2",
-                    "waterMeterNo": "wmn2",
-                    "auditDetails": {
-                        "createdBy": "egovernments",
-                        "lastModifiedBy": "egovernments",
-                        "createdTime": 0,
-                        "lastModifiedTime": 0
-                    }
-                }],
-                    "length": 114,
-                    "width": 175,
-                    "builtupArea": 120,
-                    "assessableArea": 105,
-                    "bpaBuiltupArea": 195,
-                    "bpaNo": "bpn2",
-                    "bpaDate": "15/02/2017",
-                    "usage": "tset",
-                    "occupancyType": "asf",
-                    "occupierName": "kumar",
-                    "firmName": "wtc technologies",
-                    "rentCollected": 17,
-                    "structure": "rec14",
-                    "age": "28",
-                    "exemptionReason": "testcase",
-                    "isStructured": false,
-                    "occupancyDate": "15/02/2017",
-                    "constCompletionDate": "15/02/2017",
-                    "electricMeterNo": "emn2",
-                    "waterMeterNo": "wmn2",
-                    "auditDetails": {
-                        "createdBy": "egovernments",
-                        "lastModifiedBy": "egovernments",
-                        "createdTime": 0,
-                        "lastModifiedTime": 0
-                    }
-                }],
-                "auditDetails": {
-                    "createdBy": "egovernments",
-                    "lastModifiedBy": "egovernments",
-                    "createdTime": 0,
-                    "lastModifiedTime": 0
-                }
-            }],
+            "floors":this.props.createProperty.floors,
             "documents": [{
                 
                 "documentType": {

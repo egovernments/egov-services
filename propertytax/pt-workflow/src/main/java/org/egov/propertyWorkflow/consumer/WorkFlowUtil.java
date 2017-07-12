@@ -3,7 +3,6 @@ package org.egov.propertyWorkflow.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.models.Property;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
@@ -36,13 +35,20 @@ public class WorkFlowUtil {
 	@Autowired
 	Environment environment;
 
+	@Autowired
+	WorkflowProducer workflowProducer;
+
+	@Autowired
+	TitleTransferConsumer titleTransferConsumer;
+
 	/**
 	 * This service method will start workflow
 	 * 
 	 * @param WorkflowDetailsRequestInfo
 	 * @return ProcessInstance
 	 */
-	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String businessKey, String type, String comment) {
+	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String businessKey,
+			String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
 		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
@@ -50,13 +56,15 @@ public class WorkFlowUtil {
 		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.startpath"));
 		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
-		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo, businessKey, type, comment);
+		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo,
+				businessKey, type, comment);
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
 
 			processInstanceResponse = restTemplate.postForObject(url, processInstanceRequest,
 					ProcessInstanceResponse.class);
+
 		} catch (Exception ex) {
 
 			System.out.println(ex.getMessage());
@@ -106,7 +114,8 @@ public class WorkFlowUtil {
 	 * @param WorkflowDetailsRequestInfo
 	 * @return ProcessInstanceRequest
 	 */
-	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest, String businessKey, String type, String comment) {
+	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest,
+			String businessKey, String type, String comment) {
 
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
 		RequestInfo requestInfo = workflowDetailsRequest.getRequestInfo();
@@ -114,7 +123,8 @@ public class WorkFlowUtil {
 		ProcessInstance processInstance = new ProcessInstance();
 		Position assignee = new Position();
 		assignee.setId((long) workflowDetails.getAssignee());
-		//TODO temporary fix for required fields of processInstance and need to replace with actual values
+		// TODO temporary fix for required fields of processInstance and need to
+		// replace with actual values
 		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
 		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
 		processInstance.setBusinessKey(businessKey);

@@ -53,6 +53,7 @@ public class StorageReservoirRowMapper implements RowMapper<StorageReservoir> {
     public StorageReservoir mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         final StorageReservoir storageReservoir = new StorageReservoir();
         storageReservoir.setId(rs.getLong("storagereservoir_id"));
+        storageReservoir.setCode(rs.getString("storagereservoir_code"));
         storageReservoir.setName(rs.getString("storagereservoir_name"));
         storageReservoir.setReservoirType(rs.getString("storagereservoir_reservoirtype"));
         storageReservoir.setLocation(rs.getString("storagereservoir_location"));

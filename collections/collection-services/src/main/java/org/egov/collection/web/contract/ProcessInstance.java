@@ -56,18 +56,18 @@ import lombok.ToString;
 @ToString
 public class ProcessInstance {
 
-    private String id = null;
-    private String businessKey = null;
-    private String type = null;
-    private Position assignee = null;
-    private String comments = null;
+    private String id;
+    private String businessKey;
+    private String type;
+    private Position assignee;
+    private String comments;
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate = null;
+    private Date createdDate;
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastupdatedSince = null;
-    private Position owner = null;
-    private String state = null;
-    private String status = null;
+    private Date lastupdatedSince;
+    private Position owner;
+    private String state;
+    private String status;
     private String senderName;
     private String details;
     List<Task> tasks = new ArrayList<>();

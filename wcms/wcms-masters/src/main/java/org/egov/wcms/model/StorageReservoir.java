@@ -67,6 +67,10 @@ public class StorageReservoir {
     private Long id;
 
     @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
+
+    @NotNull
     @Size(min = 3, max = 100)
     private String name;
 

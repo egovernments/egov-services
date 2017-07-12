@@ -45,6 +45,10 @@ import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyT
 import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
 import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
 
+import PipeSizeCreate from './components/contents/wc/master/pipeSize/pipeSizeCreate';
+import ViewEditPipeSize from './components/contents/wc/master/pipeSize/viewEditPipeSize';
+import ViewPipeSize from './components/contents/wc/master/pipeSize/viewPipeSize';
+
 const base = "";
 
 const Main = () => {
@@ -110,6 +114,12 @@ const Main = () => {
         <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
+
+        <Route exact path={base+'/wc/createPipeSize'} component={PipeSizeCreate}/>
+        <Route exact name="createPipeSize" path={base+'/wc/createPipeSize/:id?'} component={PipeSizeCreate}/>
+        <Route exact path={base+'/wc/pipeSize/view'} component={ViewEditPipeSize}/>
+        <Route exact path={base+'/wc/pipeSize/edit'} component={ViewEditPipeSize}/>
+        <Route exact path={base+'/wc/viewPipeSize/:id'} component={ViewPipeSize}/>
 
 
     </Switch>

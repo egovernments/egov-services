@@ -21,10 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -140,6 +137,24 @@ public class ServiceRequestControllerTest {
             .content(resources.getFileContents("createComplaintRequest.json")))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(resources.getFileContents("invalidAttributeEntryErrorResponse.json")));
+    }
+
+    @Test
+    public void test_should_return_error_response_when_mandatory_attribute_values_are_missing_on_creating_a_complaint()
+        throws Exception {
+        when(userRepository.getUser("authToken")).thenReturn(getCitizen());
+        final HashSet<String> missingAttributeCodes = new HashSet<>();
+        missingAttributeCodes.add("field1");
+        missingAttributeCodes.add("field2");
+        doThrow(new MandatoryAttributesAbsentException(missingAttributeCodes)).when(serviceRequestService)
+            .save(any(ServiceRequest.class), any(SevaRequest.class));
+
+        mockMvc.perform(post("/seva/v1/_create")
+            .param("foo", "b1", "b2")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .content(resources.getFileContents("createComplaintRequest.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(resources.getFileContents("mandatoryAttributeEntriesMissingErrorResponse.json")));
     }
 
     @Test

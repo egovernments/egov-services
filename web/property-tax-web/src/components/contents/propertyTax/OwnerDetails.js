@@ -304,8 +304,8 @@ class OwnerDetails extends Component {
                           <br/>
                           <RadioButtonGroup
                             name="ownerRadio"
-                            defaultSelected={ownerDetails.owner ? ownerDetails.owner.ownerTypeRadio: ''}
-                            onChange={(e, v) =>{
+                            valueSelected={ownerDetails.owner ? ownerDetails.owner.ownerTypeRadio: ''}
+                            onChange={(e, v) =>{ alert('Boom');
                             var e = {
                             target: {
                             value: v
@@ -315,13 +315,13 @@ class OwnerDetails extends Component {
                             }}
                           >
                             <RadioButton
-                              value="isPrimaryOwner"
+                              value="PrimaryOwner"
                               label="Primary owner"
                               style={styles.radioButton}
                               className="col-md-6"
                             />
                             <RadioButton
-                              value="isSecondaryOwner"
+                              value="SecondaryOwner"
                               label="Secondary owner"
                               style={styles.radioButton}
                               className="col-md-6"
@@ -381,9 +381,14 @@ class OwnerDetails extends Component {
                                     <td>{i.gaurdian}</td>
                                     <td>{i.ownerType}</td>
                                     <td>{i.ownerShipPercentage}</td>
-                                    <td><i className="material-icons" style={styles.iconFont} onClick={ () => {
-                                          deleteObject("owners", index);
-                                    }}>delete</i>
+                                    <td>
+										<i className="material-icons" style={styles.iconFont} onClick={ () => {
+											editObject("owner",i);
+											isEditIndex(index);
+										 }}>mode_edit</i>
+										<i className="material-icons" style={styles.iconFont} onClick={ () => {
+											  deleteObject("owners", index);
+										}}>delete</i>
                                     </td>
                                   </tr> )
                                 }

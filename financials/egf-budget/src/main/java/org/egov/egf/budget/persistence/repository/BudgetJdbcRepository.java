@@ -48,85 +48,76 @@ public class BudgetJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
+		String orderBy = "order by id";
+		if (budgetSearchEntity.getSortBy() != null && !budgetSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + budgetSearchEntity.getSortBy();
 
 		searchQuery = searchQuery.replace(":tablename", BudgetEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-		if (budgetSearchEntity.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("id =:id");
-			paramValues.put("id", budgetSearchEntity.getId());
-		}
-		if (budgetSearchEntity.getName() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("name =:name");
-			paramValues.put("name", budgetSearchEntity.getName());
-		}
-		if (budgetSearchEntity.getFinancialYearId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("financialYear =:financialYear");
-			paramValues.put("financialYear", budgetSearchEntity.getFinancialYearId());
-		}
-		if (budgetSearchEntity.getEstimationType() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("estimationType =:estimationType");
-			paramValues.put("estimationType", budgetSearchEntity.getEstimationType());
-		}
-		if (budgetSearchEntity.getParentId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("parent =:parent");
-			paramValues.put("parent", budgetSearchEntity.getParentId());
-		}
-		if (budgetSearchEntity.getDescription() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("description =:description");
-			paramValues.put("description", budgetSearchEntity.getDescription());
-		}
-		if (budgetSearchEntity.getIsActiveBudget() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("isActiveBudget =:isActiveBudget");
-			paramValues.put("isActiveBudget", budgetSearchEntity.getIsActiveBudget());
-		}
-		if (budgetSearchEntity.getIsPrimaryBudget() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("isPrimaryBudget =:isPrimaryBudget");
-			paramValues.put("isPrimaryBudget", budgetSearchEntity.getIsPrimaryBudget());
-		}
-		if (budgetSearchEntity.getMaterializedPath() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("materializedPath =:materializedPath");
-			paramValues.put("materializedPath", budgetSearchEntity.getMaterializedPath());
-		}
-		if (budgetSearchEntity.getReferenceBudgetId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("referenceBudget =:referenceBudget");
-			paramValues.put("referenceBudget", budgetSearchEntity.getReferenceBudgetId());
-		}
-		if (budgetSearchEntity.getDocumentNumber() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("documentNumber =:documentNumber");
-			paramValues.put("documentNumber", budgetSearchEntity.getDocumentNumber());
-		}
-		if (budgetSearchEntity.getStatusId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("status =:status");
-			paramValues.put("status", budgetSearchEntity.getStatusId());
-		}
+if( budgetSearchEntity.getId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "id =:id");
+paramValues.put("id" ,budgetSearchEntity.getId());} 
+if( budgetSearchEntity.getName()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "name =:name");
+paramValues.put("name" ,budgetSearchEntity.getName());} 
+if( budgetSearchEntity.getFinancialYearId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "financialYear =:financialYear");
+paramValues.put("financialYear" ,budgetSearchEntity.getFinancialYearId());} 
+if( budgetSearchEntity.getEstimationTypeId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "estimationType =:estimationType");
+paramValues.put("estimationType" ,budgetSearchEntity.getEstimationTypeId());} 
+if( budgetSearchEntity.getParentId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "parent =:parent");
+paramValues.put("parent" ,budgetSearchEntity.getParentId());} 
+if( budgetSearchEntity.getActive()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "active =:active");
+paramValues.put("active" ,budgetSearchEntity.getActive());} 
+if( budgetSearchEntity.getPrimaryBudget()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "primaryBudget =:primaryBudget");
+paramValues.put("primaryBudget" ,budgetSearchEntity.getPrimaryBudget());} 
+if( budgetSearchEntity.getReferenceBudgetId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "referenceBudget =:referenceBudget");
+paramValues.put("referenceBudget" ,budgetSearchEntity.getReferenceBudgetId());} 
+if( budgetSearchEntity.getStatusId()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "status =:status");
+paramValues.put("status" ,budgetSearchEntity.getStatusId());} 
+if( budgetSearchEntity.getDocumentNumber()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "documentNumber =:documentNumber");
+paramValues.put("documentNumber" ,budgetSearchEntity.getDocumentNumber());} 
+if( budgetSearchEntity.getDescription()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "description =:description");
+paramValues.put("description" ,budgetSearchEntity.getDescription());} 
+if( budgetSearchEntity.getMaterializedPath()!=null) {
+if (params.length() > 0) 
+params.append(" and "); 
+params.append( "materializedPath =:materializedPath");
+paramValues.put("materializedPath" ,budgetSearchEntity.getMaterializedPath());} 
+
 
 		Pagination<Budget> page = new Pagination<>();
 		if (budgetSearchEntity.getOffset() != null)
@@ -142,13 +133,13 @@ public class BudgetJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = getPagination(searchQuery, page, paramValues);
+		page = (Pagination<Budget>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":pagination", "limit " + budgetSearchEntity.getPageSize() + " offset "
-				+ budgetSearchEntity.getOffset() * budgetSearchEntity.getPageSize());
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(BudgetEntity.class);
 
@@ -169,16 +160,15 @@ public class BudgetJdbcRepository extends JdbcRepository {
 	public BudgetEntity findById(BudgetEntity entity) {
 		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
 
-		final List<Object> preparedStatementValues = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
-			Object value = getValue(getField(entity, s), entity);
-			if (null != value)
-				preparedStatementValues.add(value);
+			paramValues.put(s, getValue(getField(entity, s), entity));
 		}
 
-		List<BudgetEntity> budgets = jdbcTemplate.query(getByIdQuery.get(entity.getClass().getSimpleName()),
-				preparedStatementValues.toArray(), new BeanPropertyRowMapper<BudgetEntity>());
+		List<BudgetEntity> budgets = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(BudgetEntity.class));
 		if (budgets.isEmpty()) {
 			return null;
 		} else {

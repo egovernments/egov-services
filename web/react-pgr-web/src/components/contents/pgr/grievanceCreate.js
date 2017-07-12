@@ -175,7 +175,7 @@ class grievanceCreate extends Component {
     });
 
     //ReceivingMode
-    if(localStorage.getItem('type') == 'EMPLOYEE'){
+    if(localStorage.getItem('type') === 'EMPLOYEE'){
       Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response)
       {
         currentThis.setState({receivingModes : response.ReceivingModeType});
@@ -239,7 +239,7 @@ class grievanceCreate extends Component {
 
   initialCreateBasedonType = () => {
     let type = this.state.type;
-    if(type == 'CITIZEN'){
+    if(type === 'CITIZEN'){
       var userArray = [], userRequest={};
       userArray.push(localStorage.getItem('id'));
       userRequest['id']=userArray;
@@ -254,7 +254,7 @@ class grievanceCreate extends Component {
         _this.setState({loadingstatus:'hide'});
         _this.handleError(err.message);
       });
-    }else if(type == 'EMPLOYEE'){
+    }else if(type === 'EMPLOYEE'){
       _this.processCreate();
     }else{
       _this.processCreate();
@@ -323,7 +323,7 @@ class grievanceCreate extends Component {
     };
     data['attribValues'].push(finobj);
 
-    if(localStorage.getItem('type') == 'CITIZEN'){
+    if(localStorage.getItem('type') === 'CITIZEN'){
       finobj = {
           key: 'citizenUserId',
           name: localStorage.getItem('id')

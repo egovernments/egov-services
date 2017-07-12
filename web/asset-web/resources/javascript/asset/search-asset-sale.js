@@ -23,12 +23,13 @@ class SearchAsset extends React.Component {
     this.close = this.close.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.handleAction = this.handleAction.bind(this);
+    this.setAssetList = this.setAssetList.bind(this);
   }
 
   handleAction(e, id) {
     e.preventDefault();
     e.stopPropagation();
-    window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
+    window.open(`app/asset/create-asset-sale.html?id=${id}` + (getUrlVars()["type"] ? "&type=" + getUrlVars()["type"] : ""), '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
 
     this.setState({
       action: ""
@@ -48,6 +49,22 @@ class SearchAsset extends React.Component {
       })
   }
 
+  setAssetList(list) {
+    flag = 1;
+    var _this = this;
+    _this.setState({
+      isSearchClicked: true,
+      assetList: list,
+      modify: true
+    });
+
+    setTimeout(function(){
+      _this.setState({
+        modify: false
+      });
+    }, 1200);
+  }
+
   search(e) {
     e.preventDefault();
     try {
@@ -64,24 +81,46 @@ class SearchAsset extends React.Component {
         }
       }
 
+      if(getUrlVars()["type"] == "view") {
+        delete tempInfo.status;
+      }
+
       commonApiPost("asset-services","assets","_search", {...tempInfo, tenantId, pageSize:500}, function(err, res) {
         if(res) {
           var assetList = res["Assets"];
-          assetList.sort(function(item1, item2) {
-            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-          })
-          flag = 1;
-          _this.setState({
-            isSearchClicked: true,
-            assetList,
-            modify: true
-          });
+          if(getUrlVars()["type"] == "view" && assetList.length) {
+            var assetIds = "";
+            for(var i=0; i<assetList.length; i++) {
+              assetIds += (i == 0) ? assetList[i].id : "," + assetList[i].id;
+            }
 
-          setTimeout(function(){
-            _this.setState({
-              modify: false
-            });
-          }, 1200);
+            commonApiPost("asset-services", "assets/dispose", "_search", {assetId: assetIds, tenantId, pageSize:500}, function(err, res2) {
+              if(res2) {
+                if(res2.Disposals && res2.Disposals.length) {
+                  var newArray = [];
+                  for(var i=0; i<res2.Disposals.length; i++) {
+                    for(var j=0; j<assetList.length; j++) {
+                      if(assetList[j].id == res2.Disposals[i].assetId) {
+                        newArray.push(assetList[j]);
+                        break;
+                      }
+                    }
+                  }
+                  _this.setAssetList(newArray);
+
+                } else {
+                  _this.setAssetList([]);
+                }
+              }
+            })
+          } else {
+            assetList.sort(function(item1, item2) {
+              return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+            })
+            _this.setAssetList(assetList);
+          }
+        } else {
+          _this.setAssetList([]);
         }
       })
     } catch(e) {
@@ -294,7 +333,7 @@ class SearchAsset extends React.Component {
           </div>
 
 
-          <div className="row">
+          {getUrlVars()["type"] !== "view" && <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -305,7 +344,7 @@ class SearchAsset extends React.Component {
                   </div>
               </div>
             </div>
-        </div>
+          </div>}
           <br/>
 
               <div className="text-center">

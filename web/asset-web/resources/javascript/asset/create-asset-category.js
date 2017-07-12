@@ -136,7 +136,8 @@ class CreateAsset extends React.Component {
         "unitOfMeasurement": "",
         "depreciationRate": null,
         "assetFieldsDefination": [],
-        "version": ""
+        "version": "",
+        "depreciationRate": ""
       },
       customField:{
            "name": null,
@@ -531,7 +532,7 @@ class CreateAsset extends React.Component {
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
 
-    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version}=assetCategory;
+    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate}=assetCategory;
     let mode = getUrlVars()["type"];
 
     const showActionButton = function() {
@@ -993,7 +994,19 @@ class CreateAsset extends React.Component {
                     <label for="version"> Version   </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text"  name="version" value={version} onChange={(e)=>{handleChange(e,"version")}}/>
+                    <input type="text" name="version" value={version} onChange={(e)=>{handleChange(e,"version")}}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for="depreciationRate"> Depreciation Rate </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}}/>
                   </div>
                 </div>
               </div>

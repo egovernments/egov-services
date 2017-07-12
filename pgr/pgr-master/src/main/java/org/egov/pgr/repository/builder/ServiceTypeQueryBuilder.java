@@ -216,6 +216,10 @@ public class ServiceTypeQueryBuilder {
     	return " SELECT code FROM service_definition WHERE code = ? and tenantid = ? "; 
     }
     
+    public static String checkComplaintCodeIfExists() {
+    	return " SELECT code FROM egpgr_complainttype WHERE code = ? and tenantid = ? "; 
+    }
+    
     public static String checkServiceNameIfExists() { 
     	return " SELECT name from egpgr_complainttype WHERE name = ? and tenantid = ? "; 
     }

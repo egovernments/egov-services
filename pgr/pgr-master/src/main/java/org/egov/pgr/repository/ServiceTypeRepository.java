@@ -190,7 +190,11 @@ public class ServiceTypeRepository {
 		final String query = ServiceTypeQueryBuilder.checkServiceCodeIfExists();
 		final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,
 				preparedStatementValues.toArray());
-		if (!serviceTypes.isEmpty())
+		final String query2 = ServiceTypeQueryBuilder.checkComplaintCodeIfExists();
+		final List<Map<String, Object>> serviceTypes2 = jdbcTemplate.queryForList(query2,
+				preparedStatementValues.toArray());
+		
+		if (!serviceTypes.isEmpty() && !serviceTypes2.isEmpty())
 			return true;
 		return false;
 	}

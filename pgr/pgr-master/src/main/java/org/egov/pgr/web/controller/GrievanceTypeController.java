@@ -299,8 +299,7 @@ public class GrievanceTypeController {
                     .field(PgrMasterConstants.SERVICETYPE_TENANTID_NAME_UNIQUE_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
-    	} else
-			return;
+    	} 
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {

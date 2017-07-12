@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -39,10 +40,12 @@ public class ElasticSearchRepository {
         this.documentType = documentType;
     }
 
-    public void index(ReceiptRequestDocument document) {
-        String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, document.getId());
-        HttpHeaders headers = getHttpHeaders();
-        restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(document, headers), Map.class);
+    public void index(List<ReceiptRequestDocument> documents) {
+        for(ReceiptRequestDocument document : documents) {
+            String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, document.getId());
+            HttpHeaders headers = getHttpHeaders();
+            restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(document, headers), Map.class);
+        }
     }
 
     private HttpHeaders getHttpHeaders() {

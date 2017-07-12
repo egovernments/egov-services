@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class IndexerListener {
@@ -31,8 +32,8 @@ public class IndexerListener {
 
     @KafkaListener(topics = "${kafka.topics.egov.index.name}")
     public void listen(HashMap<String, Object> receiptRequestMap) {
-        ReceiptRequest sevaRequest = objectMapper.convertValue(receiptRequestMap, ReceiptRequest.class);
-        final ReceiptRequestDocument document = documentService.enrich(sevaRequest);
-        elasticSearchRepository.index(document);
+        ReceiptRequest receiptRequest = objectMapper.convertValue(receiptRequestMap, ReceiptRequest.class);
+        final List<ReceiptRequestDocument> documents = documentService.enrich(receiptRequest);
+        elasticSearchRepository.index(documents);
     }
 }

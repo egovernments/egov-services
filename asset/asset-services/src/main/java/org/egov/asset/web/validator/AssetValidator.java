@@ -122,11 +122,11 @@ public class AssetValidator {
 		verifyPanCardAndAdhaarCardForAssetSale(disposalRequest);
 		validateAssetCategoryForVoucherGeneration(asset);
 
-		if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
-			throw new RuntimeException("Asset account should be present for disposing asset : " + asset.getName());
-
-		if (disposalRequest.getDisposal().getAssetSaleAccount() == null)
-			throw new RuntimeException("Asset sale account should be present for asset disposal voucher generation");
+//		if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
+//			throw new RuntimeException("Asset account should be present for disposing asset : " + asset.getName());
+//
+//		if (disposalRequest.getDisposal().getAssetSaleAccount() == null)
+//			throw new RuntimeException("Asset sale account should be present for asset disposal voucher generation");
 	}
 
 	private void verifyPanCardAndAdhaarCardForAssetSale(final DisposalRequest disposalRequest) {
@@ -206,22 +206,22 @@ public class AssetValidator {
 		if (typeOfChange == null)
 			throw new RuntimeException("Type Of Change is necessary for asset revaluation");
 
-		if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
-				&& revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount() == null)
-			throw new RuntimeException("Fixed Asset Written Off Account is necessary for asset " + asset.getName()
-					+ " voucher generation for revaluation");
-
-		if (typeOfChange != null
-				&& (TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
-						|| TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0)
-				&& asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
-			throw new RuntimeException(
-					"Asset Account is necessary for asset " + asset.getName() + " voucher generation for revaluation");
-
-		if (typeOfChange != null && TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0
-				&& asset.getAssetCategory() != null && asset.getAssetCategory().getRevaluationReserveAccount() == null)
-			throw new RuntimeException("Revaluation Reserve Account is necessary for asset " + asset.getName()
-					+ " voucher generation for revaluation");
+//		if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
+//				&& revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount() == null)
+//			throw new RuntimeException("Fixed Asset Written Off Account is necessary for asset " + asset.getName()
+//					+ " voucher generation for revaluation");
+//
+//		if (typeOfChange != null
+//				&& (TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
+//						|| TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0)
+//				&& asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
+//			throw new RuntimeException(
+//					"Asset Account is necessary for asset " + asset.getName() + " voucher generation for revaluation");
+//
+//		if (typeOfChange != null && TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0
+//				&& asset.getAssetCategory() != null && asset.getAssetCategory().getRevaluationReserveAccount() == null)
+//			throw new RuntimeException("Revaluation Reserve Account is necessary for asset " + asset.getName()
+//					+ " voucher generation for revaluation");
 		return typeOfChange;
 	}
 

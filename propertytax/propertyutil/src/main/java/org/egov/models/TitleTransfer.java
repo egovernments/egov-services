@@ -58,5 +58,6 @@ public class TitleTransfer {
     
     private String applicationNo;
     
+    @NotNull
     private String tenantId;
 }

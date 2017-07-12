@@ -72,7 +72,7 @@ public class StorageReservoirRepository {
         log.info("storageReservoirRequest::" + storageReservoirRequest);
         final String storageReservoirInsert = StorageReservoirQueryBuilder.insertStorageReserviorQuery();
         for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
-            final Object[] obj = new Object[] { storageReservoir.getName(), storageReservoir.getReservoirType(),
+            final Object[] obj = new Object[] { Long.valueOf(storageReservoir.getCode()),storageReservoir.getCode(),storageReservoir.getName(), storageReservoir.getReservoirType(),
                     storageReservoir.getLocation(), storageReservoir.getWard(), storageReservoir.getZone(),
                     storageReservoir.getCapacity(),
                     storageReservoir.getNoOfSubLines(), storageReservoir.getNoOfMainDistributionLines(),
@@ -97,7 +97,7 @@ public class StorageReservoirRepository {
                     storageReservoir.getNoOfMainDistributionLines(),
                     storageReservoir.getNoOfConnection(),
                     Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()),
-                    new Date(new java.util.Date().getTime()), storageReservoir.getId(), storageReservoir.getTenantId() };
+                    new Date(new java.util.Date().getTime()), storageReservoir.getCode(), storageReservoir.getTenantId() };
             jdbcTemplate.update(storageReservoirUpdate, obj);
         }
         return storageReservoirRequest;
@@ -111,16 +111,16 @@ public class StorageReservoirRepository {
         return storageReservoirList;
     }
 
-    public boolean checkStorageReservoirByName(final Long id, final String name, final String tenantId) {
+    public boolean checkStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(name);
         preparedStatementValues.add(tenantId);
         final String query;
-        if (id == null)
-            query = StorageReservoirQueryBuilder.selectStorageResrvoirByNameByIdQuery();
+        if (code == null)
+            query = StorageReservoirQueryBuilder.selectStorageResrvoirByNameByCodeQuery();
         else {
-            preparedStatementValues.add(id);
-            query = StorageReservoirQueryBuilder.selectStorageReservoirByNameByIdNotInQuery();
+            preparedStatementValues.add(code);
+            query = StorageReservoirQueryBuilder.selectStorageReservoirByNameByCodeNotInQuery();
         }
         final List<Map<String, Object>> storageReservoir = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());

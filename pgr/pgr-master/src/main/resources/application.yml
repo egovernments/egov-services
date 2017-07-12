@@ -42,15 +42,15 @@ ReportDefinitions:
     source: seva
   searchParams:
   - name: fromDate
-    label: reports.pgr.datefrom
+    label: FromDate
     type: epoch
     source: seva
   - name: toDate
-    label: reports.pgr.dateto
+    label: ToDate
     type: epoch
     source: seva
   - name: complainttype
-    label: reports.pgr.complainttype
+    label: ComplaintType
     type: singlevaluelist
     pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
     source: seva
@@ -127,11 +127,11 @@ ReportDefinitions:
     source: seva
   searchParams:
   - name: fromDate
-    label: reports.pgr.datefrom
+    label: FromDate
     type: epoch
     source: seva
   - name: toDate
-    label: reports.pgr.dateto
+    label: ToDate
     type: epoch
     source: seva
   query: SELECT dept.name, count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN
@@ -208,11 +208,11 @@ ReportDefinitions:
     source: seva
   searchParams:
   - name: fromDate
-    label: reports.pgr.datefrom
+    label: FromDate
     type: epoch
     source: seva
   - name: toDate
-    label: reports.pgr.dateto
+    label: ToDate
     type: epoch
     source: seva
   query: SELECT boundary.name, count(CASE WHEN cs.status::text = 'REGISTERED'::text
@@ -289,11 +289,11 @@ ReportDefinitions:
     source: seva
   searchParams:
   - name: fromDate
-    label: reports.pgr.datefrom
+    label: FromDate
     type: epoch
     source: seva
   - name: toDate
-    label: reports.pgr.dateto
+    label: ToDate
     type: epoch
     source: seva
   query: SELECT us.username AS employeename, count(CASE WHEN cs.name::text = 'REGISTERED'::text
@@ -358,14 +358,14 @@ ReportDefinitions:
     source: submission
   searchParams:
   - name: fromDate
-    label: reports.pgr.datefrom
+    label: FromDate
     type: epoch
     source: seva
   - name: toDate
-    label: reports.pgr.dateto
+    label: ToDate
     type: epoch
     source: seva
-  - name: grievancestatustype
+  - name: Status
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
     pattern: 'list://COMPLETED: COMPLETED,PENDING: PENDING,REJECTED: REJECTED'
@@ -420,11 +420,11 @@ ReportDefinitions:
     source: submission
   searchParams:
   - name: fromDate
-    label: reports.pgr.datefrom
+    label: FromDate
     type: epoch
     source: seva
   - name: toDate
-    label: reports.pgr.dateto
+    label: ToDate
     type: epoch
     source: seva
   - name: grievancestatustype
@@ -484,22 +484,22 @@ ReportDefinitions:
   
   searchParams:
   - name: complaintcategorytype
-    label: reports.pgr.complaintcategorytype
+    label: ComplaintCategory
     type: singlevaluelist
     pattern: http://pgr-master:8080/pgr-master/serviceGroup/v1/_search?tenantId=default|$..code|$..name
     source: seva
   - name: complainttype
-    label: reports.pgr.complainttype
+    label: Complaint
     type: url
     pattern: /pgr-master/service/v1/_search?tenantId=default&categoryId={complaintcategorytype}|$..code|$..name
     source: seva
   - name: positiontype
-    label: reports.pgr.positiontype
+    label: Position
     type: singlevaluelist
     pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=default|$.Position[*].id|$.Position[*].name
     source: seva
   - name: wardtype
-    label: reports.pgr.wardtype
+    label: Ward
     type: singlevaluelist
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default|$..id|$..name
     source: seva

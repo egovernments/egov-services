@@ -45,8 +45,9 @@ public class WorkFlowUtil {
 	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String businessKey, String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
-		workFlowStartUrl.append(environment.getProperty("workflowprocess.baseurl"));
-		workFlowStartUrl.append(environment.getProperty("workflowprocess.startUrl"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.startpath"));
 		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
 		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo, businessKey, type, comment);
@@ -71,17 +72,18 @@ public class WorkFlowUtil {
 	 * @return TaskResponse
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, Property property)
+	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String stateId)
 			throws JsonProcessingException {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
-		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.baseurl"));
-		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.updateUrl"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.updatepath"));
 		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
-		uriParams.put("id", property.getPropertyDetail().getStateId());
+		uriParams.put("id", stateId);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 

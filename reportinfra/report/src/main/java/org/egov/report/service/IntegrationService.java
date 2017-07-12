@@ -63,7 +63,7 @@ public class IntegrationService {
 					columnDetail.setDefaultValue(map);
 				}else{
 					String res = restTemplate.postForObject(url,requestInfo, String.class);
-					LOGGER.info("res:"+res);
+					
 					Object document = Configuration.defaultConfiguration().jsonProvider().parse(res);
 					LOGGER.info("document:"+document);
 					List<Object> keys = JsonPath.read(document, patterns[1]);

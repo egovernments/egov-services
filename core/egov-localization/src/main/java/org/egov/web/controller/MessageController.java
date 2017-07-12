@@ -5,7 +5,6 @@ import org.egov.domain.model.Tenant;
 import org.egov.domain.service.MessageService;
 import org.egov.web.contract.*;
 import org.egov.web.exception.InvalidMessageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +54,9 @@ public class MessageController {
     }
 
     @PostMapping("/cache-bust")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void clearMessagesCache() {
+    public CacheBustResponse clearMessagesCache() {
         messageService.bustCache();
+        return new CacheBustResponse(null, true);
     }
 
     private MessagesResponse createResponse(List<org.egov.domain.model.Message> domainMessages) {

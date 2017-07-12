@@ -58,13 +58,14 @@ public class RevaluationService {
 			revaluationRequest.getRevaluation()
 					.setAuditDetails(assetCurrentAmountService.getAuditDetails(revaluationRequest.getRequestInfo()));
 
-		try {
+		//FIXME uncomment the code once voucher services are up in micro-dev environment.  
+		/*try {
 			final Long voucherId = createVoucherForReevaluation(revaluationRequest);
 			if (voucherId != null)
 				revaluationRequest.getRevaluation().setVoucherReference(voucherId);
 		} catch (final Exception e) {
 			throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
-		}
+		}*/
 
 		String json = null;
 

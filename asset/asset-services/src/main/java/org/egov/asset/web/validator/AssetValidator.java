@@ -194,7 +194,9 @@ public class AssetValidator {
 						|| revaluationRequest.getRevaluation().getValueAfterRevaluation()
 								.compareTo(assetCurrentAmount) == -1))
 			throw new RuntimeException(
-					"Decrease in amount should not be equal or greater than the gross value of the asset");
+					"Decrease in amount should not be equal or greater than the gross value of the asset. current gross value of asset is "
+							+ assetCurrentAmount + " and value after revaluation is "
+							+ revaluationRequest.getRevaluation().getValueAfterRevaluation());
 
 	}
 

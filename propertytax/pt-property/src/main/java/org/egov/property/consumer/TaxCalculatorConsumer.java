@@ -87,8 +87,8 @@ public class TaxCalculatorConsumer {
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.tax')}",
-			"#{environment.getProperty('egov.propertytax.property.update.tax')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.tax.calculaion')}",
+			"#{environment.getProperty('egov.propertytax.property.update.tax.calculaion')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -102,7 +102,17 @@ public class TaxCalculatorConsumer {
 				CalculationResponse.class);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
-		producer.send(environment.getProperty("egov.propertytax.property.create.approved"), consumerRecord.value());
+		if (consumerRecord.topic()
+				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
+
+			producer.send(environment.getProperty("egov.propertytax.property.create.workflow"), consumerRecord.value());
+
+		} else if (consumerRecord.topic()
+				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.tax.calculaion"))) {
+
+			producer.send(environment.getProperty("egov.propertytax.property.update.workflow"), consumerRecord.value());
+
+		}
 
 	}
 

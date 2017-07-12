@@ -78,7 +78,7 @@ public class PropertyServiceImpl implements PropertyService {
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
-			producer.send(environment.getProperty("egov.propertytax.property.userenhanced"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.create.validate.user"), propertyRequest);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
@@ -93,7 +93,7 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
-			producer.send(environment.getProperty("egov.propertytax.property.update.userenhanced"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.update.validate.user"), propertyRequest);
 		}
 		return null;
 	}

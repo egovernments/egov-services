@@ -1,0 +1,640 @@
+
+    Budget:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the budget representing the unique value of each record getting
+            saved.
+            
+        name:
+          type: string
+          description: |
+            name given for budget in the tree structure. Generally Tree structure
+            consist of 3 levels : 1. Root level : which is basically defined as
+            RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+            year. 2. Account type level : which is defined under root level which
+            will be combination of root level and account type - Revenue and Capital.
+            Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+            type level which will be combination of root level, account type and
+            department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+            department level.
+            
+        financialYear:
+          $ref: "#/definitions/FinancialYearContract"
+        estimationType:
+          type: string
+          description: |
+            estimationType is type of the budget definition - which signifies budget
+            type i.e New budget (BE) or the Revised budget (RE)
+            
+          enum:
+            - EstimationType(name=BudgetEstimate)
+            - EstimationType(name=RevisionEstimate)
+        parent:
+          type: integer
+          format: int64
+          description: |
+            parent is the node used to define in the budget hierarchy tree structure
+            definition. The root node will not have any parent. The lowest node is
+            the budget under which the details are defined.
+            
+        active:
+          type: boolean
+          description: |
+            active provides flag denotes whether the budget is active or not. i.e all
+            the detail budget defined under this tree will not be accessible in
+            transaction.
+            
+        primaryBudget:
+          type: boolean
+          description: |
+            primaryBudget is the flag that identifies the root budget. (which has no
+            parent).
+            
+        referenceBudget:
+          type: integer
+          format: int64
+          description: |
+            referenceBudget is the previous year budget tree id reference to refer
+            previous year budget. When the BE is created, the previous year RE
+            reference is mapped to the BE of current year or for the year for which
+            BE is created.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        documentNumber:
+          type: string
+          description: |
+            documentNumber is the reference number to identify the attachments made
+            to the budget definition.
+            
+        description:
+          type: string
+          description: |
+            description provides more information on budget line item and this is
+            combination of department name, estimation type,budget type and financial
+            year. example description
+            "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+            department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+            
+        materializedPath:
+          type: string
+          description: |
+            materializedPath is unique data by hierarchy level.
+            
+      required:
+      - name
+      - financialYear
+      - estimationType
+      - primaryBudget
+    BudgetRequest:
+      description: Contract class to receive request. Array of Budget items  are used in case of create . Where as single Budget item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+    BudgetResponse:
+      description: Contract class to send response. Array of Budget items  are used in case of search results or response for create. Where as single Budget item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the budgetDeatil representing the unique value of each record
+            getting saved.
+            
+        budget:
+          $ref: "#/definitions/Budget"
+        budgetGroup:
+          $ref: "#/definitions/BudgetGroupContract"
+        usingDepartment:
+          $ref: "#/definitions/DepartmentContract"
+        executingDepartment:
+          $ref: "#/definitions/DepartmentContract"
+        fund:
+          $ref: "#/definitions/FundContract"
+        function:
+          $ref: "#/definitions/FunctionContract"
+        scheme:
+          $ref: "#/definitions/SchemeContract"
+        subScheme:
+          $ref: "#/definitions/SubSchemeContract"
+        functionary:
+          $ref: "#/definitions/FunctionContract"
+        boundary:
+          $ref: "#/definitions/BoundaryContract"
+        anticipatoryAmount:
+          type: number
+          format: double
+          description: |
+            anticipatoryAmount is the anticipated amount while processing the
+            Estimate or re-appropriations.
+            
+        originalAmount:
+          type: number
+          format: double
+          description: |
+            originalAmount is the budget amount for the given combination of budget
+            detail
+            
+        approvedAmount:
+          type: number
+          format: double
+          description: |
+            approvedAmount final approved budget (post workflow) amount which is
+            considered for budget checking.
+            
+        planningPercent:
+          type: number
+          format: double
+          description: |
+            planningPercent is the percentage which gives the inflated budget used in
+            certain business modules to have the budget check based on the inflated
+            budget values. Ex: 150% in planning percentage for a budget line item is
+            the 50% extra budget on approved budget used to do the budget checking in
+            works module.
+            
+        budgetAvailable:
+          type: number
+          format: double
+          description: |
+            
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        documentNumber:
+          type: string
+          description: |
+            documentNumber is the reference number to identify the attachments made
+            to the budget definition.
+            
+        uniqueNo:
+          type: string
+          description: |
+            
+            
+          maxLength: 128
+        materializedPath:
+          type: string
+          description: |
+            materializedPath is unique data by hierarchy level.This data is created
+            internally
+            
+          maxLength: 10
+      required:
+      - budget
+      - budgetGroup
+      - anticipatoryAmount
+      - originalAmount
+      - approvedAmount
+      - planningPercent
+    BudgetDetailRequest:
+      description: Contract class to receive request. Array of BudgetDetail items  are used in case of create . Where as single BudgetDetail item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+    BudgetDetailResponse:
+      description: Contract class to send response. Array of BudgetDetail items  are used in case of search results or response for create. Where as single BudgetDetail item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetReAppropriation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the BudgetReAppropriation representing the unique value of each
+            record getting saved.
+            
+        budgetDetail:
+          $ref: "#/definitions/BudgetDetail"
+        additionAmount:
+          type: number
+          format: double
+          description: |
+            additionAmount is the proposed extra amount to add for the given budget
+            detail
+            
+        deductionAmount:
+          type: number
+          format: double
+          description: |
+            deductionAmount is the proposed amount to deduct for the given budget
+            detail
+            
+        originalAdditionAmount:
+          type: number
+          format: double
+          description: |
+            originalAdditionAmount is the amount to deduct for the given budget
+            detail
+            
+        originalDeductionAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        anticipatoryAmount:
+          type: number
+          format: double
+          description: |
+            anticipatoryAmount is the anticipated amount while processing the
+            re-appropriations.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        asOnDate:
+          type: string
+          format: date
+          description: |
+            asOnDate is the date on witch date the current appropriation is done.
+            
+      required:
+      - budgetDetail
+    BudgetReAppropriationRequest:
+      description: Contract class to receive request. Array of BudgetReAppropriation items  are used in case of create . Where as single BudgetReAppropriation item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+    BudgetReAppropriationResponse:
+      description: Contract class to send response. Array of BudgetReAppropriation items  are used in case of search results or response for create. Where as single BudgetReAppropriation item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+        page:
+          $ref: '#/definitions/Page'
+
+    Budget:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the budget representing the unique value of each record getting
+            saved.
+            
+        name:
+          type: string
+          description: |
+            name given for budget in the tree structure. Generally Tree structure
+            consist of 3 levels : 1. Root level : which is basically defined as
+            RE-2017-18 or BE-2017-18 which defines the budget type and the financial
+            year. 2. Account type level : which is defined under root level which
+            will be combination of root level and account type - Revenue and Capital.
+            Ex : "RE-Rev-2017-18" 3. Department wise : which is defined under budget
+            type level which will be combination of root level, account type and
+            department. Ex : "ACC-Rev-RE-2017-18" and then the budget detail under
+            department level.
+            
+        financialYear:
+          $ref: "#/definitions/FinancialYearContract"
+        estimationType:
+          type: string
+          description: |
+            estimationType is type of the budget definition - which signifies budget
+            type i.e New budget (BE) or the Revised budget (RE)
+            
+          enum:
+            - EstimationType(name=BudgetEstimate)
+            - EstimationType(name=RevisionEstimate)
+        parent:
+          type: integer
+          format: int64
+          description: |
+            parent is the node used to define in the budget hierarchy tree structure
+            definition. The root node will not have any parent. The lowest node is
+            the budget under which the details are defined.
+            
+        active:
+          type: boolean
+          description: |
+            active provides flag denotes whether the budget is active or not. i.e all
+            the detail budget defined under this tree will not be accessible in
+            transaction.
+            
+        primaryBudget:
+          type: boolean
+          description: |
+            primaryBudget is the flag that identifies the root budget. (which has no
+            parent).
+            
+        referenceBudget:
+          type: integer
+          format: int64
+          description: |
+            referenceBudget is the previous year budget tree id reference to refer
+            previous year budget. When the BE is created, the previous year RE
+            reference is mapped to the BE of current year or for the year for which
+            BE is created.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        documentNumber:
+          type: string
+          description: |
+            documentNumber is the reference number to identify the attachments made
+            to the budget definition.
+            
+        description:
+          type: string
+          description: |
+            description provides more information on budget line item and this is
+            combination of department name, estimation type,budget type and financial
+            year. example description
+            "ENGINEERING RE RevenueBudget for the year 2015-16" (ENG-Engineering
+            department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+            
+        materializedPath:
+          type: string
+          description: |
+            materializedPath is unique data by hierarchy level.
+            
+      required:
+      - name
+      - financialYear
+      - estimationType
+      - primaryBudget
+    BudgetRequest:
+      description: Contract class to receive request. Array of Budget items  are used in case of create . Where as single Budget item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+    BudgetResponse:
+      description: Contract class to send response. Array of Budget items  are used in case of search results or response for create. Where as single Budget item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the budgetDeatil representing the unique value of each record
+            getting saved.
+            
+        budget:
+          $ref: "#/definitions/Budget"
+        budgetGroup:
+          $ref: "#/definitions/BudgetGroupContract"
+        usingDepartment:
+          $ref: "#/definitions/DepartmentContract"
+        executingDepartment:
+          $ref: "#/definitions/DepartmentContract"
+        fund:
+          $ref: "#/definitions/FundContract"
+        function:
+          $ref: "#/definitions/FunctionContract"
+        scheme:
+          $ref: "#/definitions/SchemeContract"
+        subScheme:
+          $ref: "#/definitions/SubSchemeContract"
+        functionary:
+          $ref: "#/definitions/FunctionContract"
+        boundary:
+          $ref: "#/definitions/BoundaryContract"
+        anticipatoryAmount:
+          type: number
+          format: double
+          description: |
+            anticipatoryAmount is the anticipated amount while processing the
+            Estimate or re-appropriations.
+            
+        originalAmount:
+          type: number
+          format: double
+          description: |
+            originalAmount is the budget amount for the given combination of budget
+            detail
+            
+        approvedAmount:
+          type: number
+          format: double
+          description: |
+            approvedAmount final approved budget (post workflow) amount which is
+            considered for budget checking.
+            
+        planningPercent:
+          type: number
+          format: double
+          description: |
+            planningPercent is the percentage which gives the inflated budget used in
+            certain business modules to have the budget check based on the inflated
+            budget values. Ex: 150% in planning percentage for a budget line item is
+            the 50% extra budget on approved budget used to do the budget checking in
+            works module.
+            
+        budgetAvailable:
+          type: number
+          format: double
+          description: |
+            
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        documentNumber:
+          type: string
+          description: |
+            documentNumber is the reference number to identify the attachments made
+            to the budget definition.
+            
+        uniqueNo:
+          type: string
+          description: |
+            
+            
+          maxLength: 128
+        materializedPath:
+          type: string
+          description: |
+            materializedPath is unique data by hierarchy level.This data is created
+            internally
+            
+          maxLength: 10
+      required:
+      - budget
+      - budgetGroup
+      - anticipatoryAmount
+      - originalAmount
+      - approvedAmount
+      - planningPercent
+    BudgetDetailRequest:
+      description: Contract class to receive request. Array of BudgetDetail items  are used in case of create . Where as single BudgetDetail item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+    BudgetDetailResponse:
+      description: Contract class to send response. Array of BudgetDetail items  are used in case of search results or response for create. Where as single BudgetDetail item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetReAppropriation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id of the BudgetReAppropriation representing the unique value of each
+            record getting saved.
+            
+        budgetDetail:
+          $ref: "#/definitions/BudgetDetail"
+        additionAmount:
+          type: number
+          format: double
+          description: |
+            additionAmount is the proposed extra amount to add for the given budget
+            detail
+            
+        deductionAmount:
+          type: number
+          format: double
+          description: |
+            deductionAmount is the proposed amount to deduct for the given budget
+            detail
+            
+        originalAdditionAmount:
+          type: number
+          format: double
+          description: |
+            originalAdditionAmount is the amount to deduct for the given budget
+            detail
+            
+        originalDeductionAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        anticipatoryAmount:
+          type: number
+          format: double
+          description: |
+            anticipatoryAmount is the anticipated amount while processing the
+            re-appropriations.
+            
+        status:
+          $ref: "#/definitions/EgfStatus"
+        asOnDate:
+          type: string
+          format: date
+          description: |
+            asOnDate is the date on witch date the current appropriation is done.
+            
+      required:
+      - budgetDetail
+    BudgetReAppropriationRequest:
+      description: Contract class to receive request. Array of BudgetReAppropriation items  are used in case of create . Where as single BudgetReAppropriation item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+    BudgetReAppropriationResponse:
+      description: Contract class to send response. Array of BudgetReAppropriation items  are used in case of search results or response for create. Where as single BudgetReAppropriation item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+        page:
+          $ref: '#/definitions/Page'

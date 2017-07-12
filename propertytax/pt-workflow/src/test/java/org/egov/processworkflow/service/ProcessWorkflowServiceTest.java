@@ -70,7 +70,9 @@ public class ProcessWorkflowServiceTest {
 		try {
 
 			requestInfo.setAuthToken(getAuthToken());
-			ProcessInstance processInstance = workFlowUtil.startWorkflow(workflowDetailsRequestInfo);
+			ProcessInstance processInstance = workFlowUtil.startWorkflow(workflowDetailsRequestInfo,
+					env.getProperty("businessKey"), env.getProperty("type"),
+					env.getProperty("create.property.comments"));
 			if (processInstance == null)
 				assertTrue(false);
 
@@ -103,7 +105,7 @@ public class ProcessWorkflowServiceTest {
 
 		try {
 
-			TaskResponse taskResponse = workFlowUtil.updateWorkflow(workflowDetailsRequestInfo, property);
+			TaskResponse taskResponse = workFlowUtil.updateWorkflow(workflowDetailsRequestInfo, property.getPropertyDetail().getStateId());
 			if (taskResponse == null)
 				assertTrue(false);
 

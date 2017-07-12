@@ -27,7 +27,6 @@ public class PropertyController {
 	@Autowired
 	PropertyService propertyService;
 
-
 	/**
 	 * Description: this api will use for creating property
 	 * 
@@ -122,18 +121,19 @@ public class PropertyController {
 				locality, ownerName, demandFrom, demandTo);
 
 	}
-	
-	
+
 	/**
 	 * Description: This api for creating title transfer request for property
+	 * 
 	 * @param titleTransferRequest
 	 * @return titleTransferResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path="transfer/_create",method=RequestMethod.POST)
-	public TitleTransferResponse createTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest) throws Exception{
-	    
-	    return propertyService.createTitleTransfer(titleTransferRequest);
+	@RequestMapping(path = "transfer/_create", method = RequestMethod.POST)
+	public TitleTransferResponse createTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest)
+			throws Exception {
+
+		return propertyService.createTitleTransfer(titleTransferRequest);
 	}
 
 }

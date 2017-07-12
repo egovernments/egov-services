@@ -38,19 +38,16 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.budget.web.contract;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.budget.domain.model.BudgetDetail;
-import org.egov.egf.budget.domain.model.BudgetReAppropriation;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
@@ -58,113 +55,76 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder({ "id", "budgetDetail", "additionAmount", "deductionAmount", "originalAdditionAmount",
-		"originalDeductionAmount", "anticipatoryAmount", "status", "asOnDate" })
+
+@JsonPropertyOrder({ "id","budgetDetail","additionAmount","deductionAmount","originalAdditionAmount","originalDeductionAmount","anticipatoryAmount","status","asOnDate"})
 public class BudgetReAppropriationContract extends AuditableContract {
 
-	/*
-	 * id of the BudgetReAppropriationContract representing the unique value of
-	 * each record getting saved.
+	/**
+	 * id of the BudgetReAppropriationContract representing the unique value of each
+	 * record getting saved.
 	 */
 	private String id;
 
-	/*
+	/**
 	 * budgetDetail is the reference given for budget re appropriation to
 	 * identify for witch budget line item this appropriation is doing.
 	 */
 	@NotNull
 	private BudgetDetailContract budgetDetail;
 
-	/*
+	/**
 	 * additionAmount is the proposed extra amount to add for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal additionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * deductionAmount is the proposed amount to deduct for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal deductionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * originalAdditionAmount is the extra amount to add for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal originalAdditionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * originalAdditionAmount is the amount to deduct for the given budget
 	 * detail
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal originalDeductionAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * anticipatoryAmount is the anticipated amount while processing the
 	 * re-appropriations.
 	 */
+	@Min(value = 0)
+	@Max(value = 999999999)
 	private BigDecimal anticipatoryAmount = new BigDecimal("0.0");
 
-	/*
+	/**
 	 * status gives the current status of the budget re appropriation line item.
 	 */
 	private EgfStatusContract status;
 
-	/*
+	/**
 	 * asOnDate is the date on witch date the current appropriation is done.
 	 */
-	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "IST")
 	private Date asOnDate;
-
-	public BudgetReAppropriation toDomain() {
-		BudgetReAppropriation budgetReAppropriation = new BudgetReAppropriation();
-		budgetReAppropriation.setId(this.id);
-		budgetReAppropriation.setBudgetDetailId(
-				BudgetDetail.builder().id(budgetDetail != null ? budgetDetail.getId() : null).build());
-		budgetReAppropriation.setAdditionAmount(this.additionAmount);
-		budgetReAppropriation.setDeductionAmount(this.deductionAmount);
-		budgetReAppropriation.setOriginalAdditionAmount(this.originalAdditionAmount);
-		budgetReAppropriation.setOriginalDeductionAmount(this.originalDeductionAmount);
-		budgetReAppropriation.setAnticipatoryAmount(this.anticipatoryAmount);
-		budgetReAppropriation.setStatusId(EgfStatus.builder().id(status != null ? status.getId() : null).build());
-		budgetReAppropriation.setAsOnDate(this.asOnDate);
-		budgetReAppropriation.setCreatedBy(this.createdBy);
-		budgetReAppropriation.setCreatedDate(this.createdDate);
-		budgetReAppropriation.setLastModifiedBy(this.lastModifiedBy);
-		budgetReAppropriation.setLastModifiedDate(this.lastModifiedDate);
-		budgetReAppropriation.setTenantId(this.tenantId);
-		return budgetReAppropriation;
-	}
-
-	public void toContract(BudgetReAppropriation budgetReAppropriation) {
-		this.id = budgetReAppropriation.getId();
-		if (budgetReAppropriation.getBudgetDetailId() != null) {
-			BudgetDetailContract bdContract = new BudgetDetailContract();
-			bdContract.toContract(budgetReAppropriation.getBudgetDetailId());
-			this.budgetDetail = bdContract;
-		}
-		this.additionAmount = budgetReAppropriation.getAdditionAmount();
-		this.deductionAmount = budgetReAppropriation.getDeductionAmount();
-		this.originalAdditionAmount = budgetReAppropriation.getOriginalAdditionAmount();
-		this.originalDeductionAmount = budgetReAppropriation.getOriginalDeductionAmount();
-		this.anticipatoryAmount = budgetReAppropriation.getAnticipatoryAmount();
-		if (budgetReAppropriation.getStatusId() != null)
-			this.status = EgfStatusContract.builder().id(budgetReAppropriation.getStatusId().getId())
-					.code(budgetReAppropriation.getStatusId().getCode())
-					.description(budgetReAppropriation.getStatusId().getDescription())
-					.moduleType(budgetReAppropriation.getStatusId().getModuleType()).build();
-		this.asOnDate = budgetReAppropriation.getAsOnDate();
-		this.setCreatedBy(budgetReAppropriation.getCreatedBy());
-		this.setCreatedDate(budgetReAppropriation.getCreatedDate());
-		this.setLastModifiedBy(budgetReAppropriation.getLastModifiedBy());
-		this.setLastModifiedDate(budgetReAppropriation.getLastModifiedDate());
-		this.setTenantId(budgetReAppropriation.getTenantId());
-	}
 
 }

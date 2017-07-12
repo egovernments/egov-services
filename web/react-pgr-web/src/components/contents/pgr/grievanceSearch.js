@@ -139,11 +139,11 @@ class grievanceSearch extends Component {
   	} else {
   		var searchSet = Object.assign({}, grievanceSearchSet);
   		if(searchSet.startDate) {
-  			searchSet.startDate = searchSet.startDate.getDate() + "-" + (searchSet.startDate.getMonth() + 1) + "-" + searchSet.startDate.getFullYear();
+  			searchSet.startDate = searchSet.startDate.toISOString().split("T")[0].split("-")[2] + "-" + searchSet.startDate.toISOString().split("T")[0].split("-")[1] + "-" + searchSet.startDate.toISOString().split("T")[0].split("-")[0];
   		}
 
   		if(searchSet.endDate) {
-  			searchSet.endDate = searchSet.endDate.getDate() + "-" + (searchSet.endDate.getMonth() + 1) + "-" + searchSet.endDate.getFullYear();
+  			searchSet.endDate = searchSet.endDate.toISOString().split("T")[0].split("-")[2] + "-" + searchSet.endDate.toISOString().split("T")[0].split("-")[1] + "-" + searchSet.endDate.toISOString().split("T")[0].split("-")[0];
   		}
 
   		if(searchSet.status) {
@@ -274,9 +274,28 @@ class grievanceSearch extends Component {
   	const renderBody = function() {
   		if(resultList.length) {
   			return resultList.map(function(val, i) {
+          var triColor = "#fff";
+          val.attribValues.map((item,index)=>{
+            if(item.key =="PRIORITY"){
+              if(item.key =="PRIORITY"){
+                switch(item.name) {
+                  case 'PRIORITY-1':
+                    triColor = "#ff0000";
+                    break;
+                  case 'PRIORITY-2':
+                    triColor = "#00ff00";
+                    break;
+                  case 'PRIORITY-3':
+                    triColor = "#ffff00";
+                    break;
+                }
+              }
+            }
+          });
+
   				return (
   					<tr key={i} onClick={()=>{handleNavigation(val.serviceRequestId)}} style={{"cursor": "pointer"}}>
-  						<td>{val.serviceRequestId}</td>
+  						<td style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{val.serviceRequestId}</td>
   						<td>{val.serviceName}</td>
   						<td>{val.firstName}</td>
   						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>

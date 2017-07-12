@@ -5,6 +5,7 @@ import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.exception.MandatoryAttributesAbsentException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -16,8 +17,8 @@ import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpt
 public class MandatoryAttributeValidator implements AttributeValueValidator {
 
     @Override
-    public void validate(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition) {
-        final List<AttributeDefinition> mandatoryAttributes = serviceDefinition.getMandatoryAttributes();
+    public void validate(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition, SevaRequestAction action) {
+        final List<AttributeDefinition> mandatoryAttributes = serviceDefinition.getMandatoryAttributes(action);
         if (CollectionUtils.isEmpty(mandatoryAttributes)) {
             return;
         }

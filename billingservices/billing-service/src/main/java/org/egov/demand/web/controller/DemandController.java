@@ -77,7 +77,14 @@ public class DemandController {
 	@Autowired
 	private DemandValidator demandValidator;
 	
-	//TODO: Documentation is required for all the methods. This applies everywhere (controller, service, etc)
+	/**
+	 * API to create demands
+	 * 
+	 * @param demandRequest
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
@@ -145,5 +152,4 @@ public class DemandController {
 		}
 		return new ResponseEntity<>(demandService.getDemandDetails(demandDetailCriteria, requestInfo), HttpStatus.OK);
 	}
-
 }

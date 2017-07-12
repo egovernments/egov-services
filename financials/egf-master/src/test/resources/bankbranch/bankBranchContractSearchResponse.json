@@ -1,0 +1,23 @@
+{
+  "responseInfo": {
+    "resMsgId": "placeholder",
+    "status": "200",
+    "apiId": null,
+    "ver": null,
+    "key": null,
+    "tenantId": null
+  },
+   "bankBranches": [
+    {
+      "code": "bankBranchCode",
+      "name": "bankBranchName"
+    }
+  ],
+  "page": {
+    "totalResults": 1,
+    "totalPages": 1,
+    "pageSize": 0,
+    "currentPage": 0,
+    "offSet": 0
+  }
+}

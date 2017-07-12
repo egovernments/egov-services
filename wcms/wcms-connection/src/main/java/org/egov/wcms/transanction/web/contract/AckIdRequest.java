@@ -55,16 +55,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AckIdRequest {
+    
+@JsonProperty("idName")
+@NotNull
+private String idName;
 
-    @JsonProperty("idName")
-    @NotNull
-    private String idName;
-
-    @NotNull
-    @JsonProperty("tenantId")
+@NotNull
+@JsonProperty("tenantId")
     private String tenantId;
-
-    @JsonProperty("format")
-    private String format;
+    
+@JsonProperty("format")
+private String format;
 
 }

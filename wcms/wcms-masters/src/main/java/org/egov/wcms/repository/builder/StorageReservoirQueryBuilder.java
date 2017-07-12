@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StorageReservoirQueryBuilder {
 
-    private static final String BASE_QUERY = "SELECT storagereservoir.id as storagereservoir_id, storagereservoir.name as storagereservoir_name,"
+    private static final String BASE_QUERY = "SELECT storagereservoir.id as storagereservoir_id,storagereservoir.code as storagereservoir_code, storagereservoir.name as storagereservoir_name,"
             + "storagereservoir.reservoirtype as storagereservoir_reservoirtype,storagereservoir.location as storagereservoir_location, "
             + "storagereservoir.ward as storagereservoir_ward,storagereservoir.zone as storagereservoir_zone, storagereservoir.capacity as storagereservoir_capacity ,"
             + "storagereservoir.noofsublines as storagereservoir_noofsublines,storagereservoir.noofmaindistributionlines as storagereservoir_noofmaindistributionlines ,"
@@ -95,6 +95,12 @@ public class StorageReservoirQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.name = ?");
             preparedStatementValues.add(storageReservoirGetRequest.getName());
+        }
+
+        if (storageReservoirGetRequest.getCode() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" storagereservoir.code = ?");
+            preparedStatementValues.add(storageReservoirGetRequest.getCode());
         }
 
         if (storageReservoirGetRequest.getReservoirType() != null) {
@@ -149,21 +155,21 @@ public class StorageReservoirQueryBuilder {
     }
 
     public static String insertStorageReserviorQuery() {
-        return "INSERT INTO egwtr_storage_reservoir(id,name,reservoirtype,location,ward,zone,capacity,noofsublines,noofmaindistributionlines,"
+        return "INSERT INTO egwtr_storage_reservoir(id,code,name,reservoirtype,location,ward,zone,capacity,noofsublines,noofmaindistributionlines,"
                 + "noofconnection,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(nextval('SEQ_EGWTR_STORAGE_RESERVOIR'),?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public static String updateStorageReserviorQuery() {
         return "UPDATE egwtr_storage_reservoir SET name = ?,reservoirtype = ?,location = ?,ward = ? ,zone = ?"
-                + " , capacity = ?,noofsublines = ?,noofmaindistributionlines = ?,noofconnection = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?  and tenantid = ?";
+                + " , capacity = ?,noofsublines = ?,noofmaindistributionlines = ?,noofconnection = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?  and tenantid = ?";
     }
 
-    public static String selectStorageResrvoirByNameByIdQuery() {
-        return " select id FROM egwtr_storage_reservoir where name = ? and tenantId = ?";
+    public static String selectStorageResrvoirByNameByCodeQuery() {
+        return " select code FROM egwtr_storage_reservoir where name = ? and tenantId = ?";
     }
 
-    public static String selectStorageReservoirByNameByIdNotInQuery() {
-        return " select id from egwtr_storage_reservoir where name = ? and tenantId = ? and id != ? ";
+    public static String selectStorageReservoirByNameByCodeNotInQuery() {
+        return " select code from egwtr_storage_reservoir where name = ? and tenantId = ? and code != ? ";
     }
 }

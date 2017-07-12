@@ -130,7 +130,9 @@ public class BankJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page, paramValues);
+ 
+		page = (Pagination<Bank>) getPagination(searchQuery, page, paramValues);
+ 
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",

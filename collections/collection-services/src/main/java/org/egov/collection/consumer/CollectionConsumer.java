@@ -34,7 +34,9 @@ public class CollectionConsumer {
 	private WorkflowService workflowService;
 	
 	
-	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}", "${kafka.topics.workflow.start.name}" })
+	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}", "${kafka.topics.workflow.start.name}",
+			"${kafka.topics.workflow.update.name}"})
+	
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 	logger.info("Record: "+record.toString());
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -46,6 +48,9 @@ public class CollectionConsumer {
 			}else if(topic.equals(applicationProperties.getKafkaStartWorkflowTopic())){
 				logger.info("Consuming start workflow request");
 				workflowService.startWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
+			}else if(topic.equals(applicationProperties.getKafkaUpdateworkflowTopic())){
+				logger.info("Consuming start workflow request");
+				workflowService.updateWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
 			}
 			
 		} catch (final Exception e) {

@@ -30,8 +30,7 @@ const styles = {
   }
 };
 
-var _this;
-
+var _this, filesCount = 0;
 var request = {};
 
 class grievanceCreate extends Component {
@@ -175,7 +174,7 @@ class grievanceCreate extends Component {
     });
 
     //ReceivingMode
-    if(localStorage.getItem('type') == 'EMPLOYEE'){
+    if(localStorage.getItem('type') === 'EMPLOYEE'){
       Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response)
       {
         currentThis.setState({receivingModes : response.ReceivingModeType});
@@ -239,7 +238,7 @@ class grievanceCreate extends Component {
 
   initialCreateBasedonType = () => {
     let type = this.state.type;
-    if(type == 'CITIZEN'){
+    if(type === 'CITIZEN'){
       var userArray = [], userRequest={};
       userArray.push(localStorage.getItem('id'));
       userRequest['id']=userArray;
@@ -254,7 +253,7 @@ class grievanceCreate extends Component {
         _this.setState({loadingstatus:'hide'});
         _this.handleError(err.message);
       });
-    }else if(type == 'EMPLOYEE'){
+    }else if(type === 'EMPLOYEE'){
       _this.processCreate();
     }else{
       _this.processCreate();
@@ -323,7 +322,7 @@ class grievanceCreate extends Component {
     };
     data['attribValues'].push(finobj);
 
-    if(localStorage.getItem('type') == 'CITIZEN'){
+    if(localStorage.getItem('type') === 'CITIZEN'){
       finobj = {
           key: 'citizenUserId',
           name: localStorage.getItem('id')
@@ -452,7 +451,13 @@ class grievanceCreate extends Component {
       this.props.REMOVE_MANDATORY('externalCRN');
   }
 
-  handleUploadValidation = (e, formats) => {
+  handleUploadValidation = (e, formats, limit) => {
+    if(filesCount > limit)
+    {
+      this.handleError('Maximum files allowed : '+limit);
+      return;
+    }
+    filesCount+=1;
     let validFile = validate_fileupload(e.target.files, formats);
     //console.log('is valid:', validFile);
     if(validFile === true){
@@ -471,7 +476,7 @@ class grievanceCreate extends Component {
           }
         }
       });
-      this.props.handleUpload(e, formats);
+      this.props.handleUpload(e);
     }
     else
       this.handleError(validFile);
@@ -680,7 +685,7 @@ class grievanceCreate extends Component {
                   <Row>
                     <Col xs={12} md={3}>
                       <RaisedButton label={translate('core.lbl.select.photo')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
-                          <input type="file" accept="image/*" style={{display:'none'}} multiple onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'])}/>
+                          <input type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)}/>
                       </RaisedButton>
                     </Col>
                     <ImagePreview files={files}/>
@@ -829,8 +834,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : false, pattern: ''});
     _this.refs['autocomplete'].setState({searchText:''});
   },
-  handleUpload: (e, formats) => {
-    dispatch({type: 'FILE_UPLOAD', files: e.target.files})
+  handleUpload: (e) => {
+    dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
   },
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});

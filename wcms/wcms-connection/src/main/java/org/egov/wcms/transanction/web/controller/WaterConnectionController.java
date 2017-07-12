@@ -104,7 +104,7 @@ public class WaterConnectionController {
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        
+           
         waterConnectionRequest.getConnection().setAcknowledgementNumber(newWaterConnectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
@@ -112,7 +112,7 @@ public class WaterConnectionController {
         return getSuccessResponse(connection, waterConnectionRequest.getRequestInfo());
 
     }
-    @PostMapping(value = "/{applicationCode}/_update")
+    @PostMapping(value = "/{ackNumber}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
             final BindingResult errors,@PathVariable("applicationCode") final String applicationCode) {

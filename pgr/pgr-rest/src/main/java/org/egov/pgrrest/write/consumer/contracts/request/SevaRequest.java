@@ -23,9 +23,10 @@ public class SevaRequest {
     private HashMap<String, Object> sevaRequestMap;
     private ObjectMapper objectMapper;
 
-    public SevaRequest(HashMap<String, Object> sevaRequestMap) {
+    public SevaRequest(HashMap<String, Object> sevaRequestMap,
+                       ObjectMapper objectMapper) {
         this.sevaRequestMap = sevaRequestMap;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
     }
 
     public ServiceRequestRecord toDomain() {

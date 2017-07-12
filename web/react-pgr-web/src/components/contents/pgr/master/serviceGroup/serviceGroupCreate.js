@@ -102,6 +102,15 @@ class ServiceGroupCreate extends Component {
 
     }
 
+    componentWillUpdate() {
+      if(window.urlCheck) {
+        let {initForm}=this.props;
+        initForm();
+        this.setState({id:undefined});
+        window.urlCheck = false;
+      }
+    }
+
     componentDidUpdate() {
 
 
@@ -222,7 +231,7 @@ class ServiceGroupCreate extends Component {
               </Card>
               <div style={{textAlign:'center'}}>
 
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
+                <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
 
               </div>
           </form>

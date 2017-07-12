@@ -800,7 +800,7 @@ public class ValidatorUtils {
                         .message(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
-            } else if (!storageReservoirService.getStorageReservoirByName(storageReservoir.getId(), storageReservoir.getName(),
+            } else if (!storageReservoirService.getStorageReservoirByNameAndCode(storageReservoir.getCode(), storageReservoir.getName(),
                     storageReservoir.getTenantId())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.STORAGERESERVOIR_NAME_UNIQUE_CODE)
                         .message(WcmsConstants.STORAGERESERVOIR_UNQ_ERROR_MESSAGE)

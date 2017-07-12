@@ -1,0 +1,20 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Mandatory attrib value entry is not present",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.MANDATORY_ATTRIBUTE_ENTRY_MISSING",
+                "message": "Mandatory attrib value entry is not present",
+                "field": "sevaRequest.serviceRequest.attribValues=field1"
+            },
+            {
+                "code": "PGR.MANDATORY_ATTRIBUTE_ENTRY_MISSING",
+                "message": "Mandatory attrib value entry is not present",
+                "field": "sevaRequest.serviceRequest.attribValues=field2"
+            }
+        ]
+    }
+}

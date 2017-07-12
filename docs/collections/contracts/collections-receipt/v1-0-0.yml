@@ -3,25 +3,27 @@ info:
   version: 0.0.0
   title: Collection System  
   description: Collection Management System serves as revenue collection platform for all the billing systems through cash, cheque, dd, swipe machine. It also provides facility to integrate with multiple payment gateways in order to enable online payments. It is also integrated with financial system to post the ledger entries for every single receipt generated in the collection system.
+  contact:
+    name: Rishi
+    email: rishi@egovernments.org
 
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/v1/[API endpoint]'
+basePath: '/receipts/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths: 
-  /receipts/_search:
+  /_search:
     post:
       summary: Get the receipt(s) info for the consumer code/status/receipt numbers and business details etc.
       description: This API returns list of receipts created for the given servicecode and list of billNumbers/instrument numbers/receipt numbers.
       parameters:
-        - name: request_info
-          in: body
-          description: Request to get the ReceiptInfo for the given business details code and receipt number(s).
-          required: true
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortReceipt"
         - name: consumerCode
           in: query
           required: false
@@ -84,8 +86,6 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
       responses:
         200:
           description: Successful response
@@ -100,7 +100,7 @@ paths:
       tags:
         - Receipt
   
-  /receipt/_create:
+  /_create:
     post:
       summary: Validate and persist receipt with receipt number.
       description: This API generates a receipt number and persists the receipt. The receipt information is then pushed to queue for further processing.
@@ -121,7 +121,7 @@ paths:
         '400':
           description: Invalid input.
   
-  /receipt/_update:  
+  /_update:  
     post:
       summary: Update Receipt.
       description: This API updates receipt along with Instrument information. It also creates a voucher in Financial system based on configuration, if enabled. The created receipt goes through the workflow(if any) and pushes the receipt information to the elasticsearch index. Collection system will send the receipt number and link to generate receipt as a response. 
@@ -158,7 +158,7 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
-      RequestInfo:
+      requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       Receipt:
         $ref: '#/definitions/Receipt'
@@ -171,9 +171,9 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
-      ResponseInfo:
+      responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      Receipt:
+      receipt:
         $ref: '#/definitions/Receipt'
   
   BillInfo:
@@ -376,9 +376,9 @@ definitions:
         type: string
         description: Unique id of tenant.
         format: varchar
-      Bank:
+      bank:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/Bank'
-      BankAccount:
+      bankAccount:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/BankAccount'
       instrumentType:
         description: Instrument Type need to refer from Financials.
@@ -388,7 +388,7 @@ definitions:
         description: Instrument Header need to refer from Financials.
         items:
           type: string
-      BillInfo:
+      billInfo:
         $ref: '#/definitions/BillInfo'
         
         
@@ -430,3 +430,17 @@ parameters:
     description: Page number
     type: integer
     default: 1
+  sortReceipt:
+    name: sort
+    in: query
+    description: Receipt results will be sorted by receiptnumber ascending by default.
+    type: array
+    uniqueItems: true
+    minItems: 1
+    maxItems: 3
+    collectionFormat: pipes
+    items:
+      type: string
+      pattern: '[-+](receiptNumber|receiptDate)'
+    default:
+      - +receiptNumber

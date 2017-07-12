@@ -74,8 +74,10 @@ public class StorageReservoirService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
 
+    public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
         return storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
     }
 
@@ -85,7 +87,18 @@ public class StorageReservoirService {
 
     public List<StorageReservoir> createStorageReservoir(final String topic, final String key,
             final StorageReservoirRequest storageReservoirRequest) {
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+            storageReservoir.setCode(codeGeneratorService.generate(StorageReservoir.SEQ_STORAGE_RESERVOIR));
+        try {
+            kafkaTemplate.send(topic, key, storageReservoirRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+        return storageReservoirRequest.getStorageReservoir();
+    }
 
+    public List<StorageReservoir> updateStorageReservoir(final String topic, final String key,
+            final StorageReservoirRequest storageReservoirRequest) {
         try {
             kafkaTemplate.send(topic, key, storageReservoirRequest);
         } catch (final Exception ex) {
@@ -197,8 +210,8 @@ public class StorageReservoirService {
         return boundary;
     }
 
-    public boolean getStorageReservoirByName(final Long id, final String name, final String tenantId) {
-        return storageReservoirRepository.checkStorageReservoirByName(id, name, tenantId);
+    public boolean getStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
+        return storageReservoirRepository.checkStorageReservoirByNameAndCode(code, name, tenantId);
     }
 
 }

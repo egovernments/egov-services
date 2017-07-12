@@ -3,10 +3,12 @@ package org.egov.pgrrest.common.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.util.CollectionUtils;
+import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Getter
 @AllArgsConstructor
@@ -17,11 +19,11 @@ public class ServiceDefinition {
     private List<AttributeDefinition> attributes;
 
     public boolean isComputedFieldsAbsent() {
-        return CollectionUtils.isEmpty(getComputedFields());
+        return isEmpty(getComputedFields());
     }
 
     public boolean isAttributesAbsent() {
-        return CollectionUtils.isEmpty(attributes);
+        return isEmpty(attributes);
     }
 
     public List<AttributeDefinition> getComputedFields() {
@@ -36,10 +38,15 @@ public class ServiceDefinition {
             .collect(Collectors.toList());
     }
 
-    public List<AttributeDefinition> getMandatoryAttributes() {
+    public List<AttributeDefinition> getMandatoryAttributes(SevaRequestAction action) {
         return attributes.stream()
-            .filter(AttributeDefinition::isRequired)
+            .filter(attribute -> attribute.isRequired() && actionMatches(action, attribute))
             .collect(Collectors.toList());
+    }
+
+    private boolean actionMatches(SevaRequestAction expectedAction, AttributeDefinition attributeDefinition) {
+        return attributeDefinition.getActions().stream()
+            .anyMatch(a -> expectedAction.getActionName().equalsIgnoreCase(a.getName()));
     }
 
     public List<AttributeDefinition> getNonComputedDateAttributes() {

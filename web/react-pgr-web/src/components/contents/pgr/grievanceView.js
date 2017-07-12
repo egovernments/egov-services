@@ -62,7 +62,7 @@ class grievanceView extends Component{
 
   loadSRN = () =>{
 
-    let {initForm, addMandatory} = this.props;
+    let {initForm, addMandatory, handleChange} = this.props;
     initForm();
 
     Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
@@ -92,6 +92,9 @@ class grievanceView extends Component{
            }
         }
         addMandatory();
+        if(currentThis.state.PRIORITY){
+          handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
+        }
       });
 
       Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
@@ -190,7 +193,7 @@ class grievanceView extends Component{
     }
   }
   allServices = () => {
-    if(localStorage.getItem('type') == 'EMPLOYEE'){
+    if(localStorage.getItem('type') === 'EMPLOYEE'){
       Api.commonApiPost("/pgr/services/v1/_search", {type:'ALL'}).then(function(response)
       {
         currentThis.setState({complaintTypes : response.complaintTypes});
@@ -312,7 +315,7 @@ class grievanceView extends Component{
 
     let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
     if(checkStatus === 'FORWARDED'){
-      if(currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId == undefined){
+      if(currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId === undefined){
         currentThis.setState({loadingstatus:'hide'});
         currentThis.handleError('Select position to whom it is forwarded');
         return false;
@@ -321,13 +324,13 @@ class grievanceView extends Component{
 
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
-      if(req_obj.serviceRequest.attribValues[i]['key'] == 'status'){
+      if(req_obj.serviceRequest.attribValues[i]['key'] === 'status'){
         req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-      }else if(req_obj.serviceRequest.attribValues[i]['key'] == 'positionId'){
-          req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId == 0 || currentThis.props.grievanceView.positionId == undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
-      }else if(req_obj.serviceRequest.attribValues[i]['key'] == 'locationId'){
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'positionId'){
+          req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId === undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'locationId'){
           req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
-      }else if(req_obj.serviceRequest.attribValues[i]['key'] == 'childLocationId'){
+      }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'childLocationId'){
           req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.childLocationId ? currentThis.props.grievanceView.childLocationId : currentThis.state.childLocationId;
       }
     }
@@ -336,10 +339,10 @@ class grievanceView extends Component{
     req_obj.serviceRequest.serviceCode = currentThis.props.grievanceView.serviceCode ? currentThis.props.grievanceView.serviceCode :  currentThis.state.serviceCode;
 
     currentThis.chckkey('approvalComments', req_obj);
-    if(localStorage.getItem('type') == 'EMPLOYEE'){
+    if(localStorage.getItem('type') === 'EMPLOYEE'){
       currentThis.chckkey('PRIORITY', req_obj);
       //currentThis.chckkey('priorityColor', req_obj);
-    }else if(localStorage.getItem('type') == 'CITIZEN'){
+    }else if(localStorage.getItem('type') === 'CITIZEN'){
         currentThis.chckkey('rating', req_obj);
     }
 
@@ -369,7 +372,7 @@ class grievanceView extends Component{
   chckkey = (key, req_obj) =>{
     //chck approval comments exists in attribvalues
     var result = req_obj.serviceRequest.attribValues.filter(function( obj ) {
-      return obj.key == key;
+      return obj.key === key;
     });
 
     if(result.length > 0){
@@ -379,24 +382,12 @@ class grievanceView extends Component{
         }
       }
     }else{
-      var priorityarray = [{key:'PRIORITY-1',color:'#F44336'},{key:'PRIORITY-2',color:'#4CAF50'},{key:'PRIORITY-3',color:'#FFEB3B'}]
       if(currentThis.props.grievanceView[key]){
         var finobj;
-        if(key === 'PRIORITY'){
-          priorityarray.forEach(function(item, index){
-            if(item['key'] === currentThis.props.grievanceView[key]){
-              finobj = {
-                  key: key,
-                  name: item['color']
-              };
-            }
-          });
-        }else{
           finobj = {
               key: key,
               name: currentThis.props.grievanceView[key]
           };
-        }
         req_obj.serviceRequest.attribValues.push(finobj);
       }
     }
@@ -455,6 +446,24 @@ class grievanceView extends Component{
     toggleDailogAndSetText(true, msg);
     //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
   }
+  loadServiceDefinition = () => {
+    var currentThis = this;
+    if(currentThis.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
+      let FormFields = currentThis.state.SD.filter(function (el) {
+        return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
+      });
+      if(FormFields.length > 0){
+        return FormFields.map((item,index) =>
+        {
+          if(item.required)
+            this.props.ADD_MANDATORY(item.code)
+          return (
+            <Fields key={index} obj={item} value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state.PRIORITY} handler={currentThis.props.handleChange}/>
+          );
+        })
+      }
+    }
+  }
   render(){
     let
     {
@@ -463,6 +472,7 @@ class grievanceView extends Component{
       getLocation,
       renderWorkflow,
       filesUploaded,
+      loadServiceDefinition,
       handleUploadValidation
        } = this;
     let{
@@ -476,7 +486,6 @@ class grievanceView extends Component{
       files,
       fieldErrors,
       isFormValid,
-      loadServiceDefinition,
       handleUpload
     } = this.props;
     currentThis = this;
@@ -815,12 +824,15 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  ADD_MANDATORY : (property) => {
+     dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
+  },
   addMandatory : () => {
-    if(localStorage.getItem('type') == 'CITIZEN' && (currentThis.state.status == 'COMPLETED' || currentThis.state.status == 'REJECTED'))
+    if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED'))
       dispatch({type: "ADD_MANDATORY", property: "rating", value: '', isRequired : true, pattern: ''})
   },
   handleChange: (value, property, isRequired, pattern) => {
-    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+      dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleStatusChange: (value, property, isRequired, pattern) => {
     if(value !== 'FORWARDED'){
@@ -846,7 +858,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleDesignation: (value, property, isRequired, pattern) => {
-    if(property == 'departmentId' && value == 0)
+    if(property === 'departmentId' && value === 0)
     {
       currentThis.setState({designation : []});
       currentThis.setState({position : []});
@@ -868,7 +880,7 @@ const mapDispatchToProps = dispatch => ({
     }
   },
   handlePosition: (dep, value, property, isRequired, pattern) => {
-    if(property == 'designationId' && value == 0)
+    if(property === 'designationId' && value === 0)
     {
       dispatch({type: "HANDLE_CHANGE", property:'positionId', value: 0, isRequired, pattern});
     }else{
@@ -886,23 +898,6 @@ const mapDispatchToProps = dispatch => ({
       }
     }
 
-  },
-  loadServiceDefinition: () => {
-    if(currentThis.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
-      //dispatch({type: "ADD_MANDATORY", property: "priorityColor", value: '', isRequired : true, pattern: ''})
-      let FormFields = currentThis.state.SD.filter(function (el) {
-        return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
-      });
-      if(FormFields.length > 0){
-        return FormFields.map((item,index) =>
-        {
-          item.required ? dispatch({type: "ADD_MANDATORY", property: item.code, value: '', isRequired : true, pattern: ''}) : '';
-          return (
-            <Fields key={index} obj={item} value={currentThis.props.grievanceView[item.code]} handler={currentThis.props.handleChange}/>
-          );
-        })
-      }
-    }
   },
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})

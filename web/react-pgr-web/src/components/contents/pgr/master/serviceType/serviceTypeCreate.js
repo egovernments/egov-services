@@ -122,6 +122,15 @@ class ServiceTypeCreate extends Component {
       });
     }
 
+    componentWillUpdate() {
+      if(window.urlCheck) {
+        let {initForm}=this.props;
+        initForm();
+        this.setState({id:undefined});
+        window.urlCheck = false;
+      }
+    }
+
     componentDidUpdate() {
 	 	  var keyword;
 	  var pgr = this.props.location.pathname.match("pgr");
@@ -161,7 +170,41 @@ class ServiceTypeCreate extends Component {
               ],
            "category" :this.props.createServiceType.category,
            "hasFinancialImpact" :this.props.createServiceType.hasFinancialImpact,
-           "attributes" :this.props.createServiceType.attributes,
+           "attributes": [
+                        {
+                            "variable": true,
+                            "code": "PRIORITY",
+                            "dataType": "singlevaluelist",
+                            "required": true,
+                            "dataTypeDescription": null,
+                            "description": "pgr.priority",
+                            "groupCode": "pgr.group",
+                            "url": null,
+                            "roles": [
+                                "EMPLOYEE"
+                            ],
+                            "actions": [
+                                "UPDATE"
+                            ],
+                            "attribValues": [
+                                {
+                                    "key": "PRIORITY-1",
+                                    "name": "pgr.priority.one",
+                                    "isActive": true
+                                },
+                                {
+                                    "key": "PRIORITY-2",
+                                    "name": "pgr.priority.two",
+                                    "isActive": true
+                                },
+                                {
+                                    "key": "PRIORITY-3",
+                                    "name": "pgr.priority.three",
+                                    "isActive": true
+                                }
+                            ]
+                        }
+                    ],
            "slaHours" : parseInt(this.props.createServiceType.slaHours),
            "metadata" :  this.props.createServiceType.metadata,
            "tenantId":"default"

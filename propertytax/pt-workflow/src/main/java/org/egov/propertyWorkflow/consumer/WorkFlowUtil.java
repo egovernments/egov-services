@@ -3,7 +3,6 @@ package org.egov.propertyWorkflow.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.models.Property;
 import org.egov.models.WorkFlowDetails;
 import org.egov.propertyWorkflow.models.Position;
 import org.egov.propertyWorkflow.models.ProcessInstance;
@@ -36,26 +35,36 @@ public class WorkFlowUtil {
 	@Autowired
 	Environment environment;
 
+	@Autowired
+	WorkflowProducer workflowProducer;
+
+	@Autowired
+	TitleTransferConsumer titleTransferConsumer;
+
 	/**
 	 * This service method will start workflow
 	 * 
 	 * @param WorkflowDetailsRequestInfo
 	 * @return ProcessInstance
 	 */
-	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo) {
+	public ProcessInstance startWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String businessKey,
+			String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
-		workFlowStartUrl.append(environment.getProperty("workflowprocess.baseurl"));
-		workFlowStartUrl.append(environment.getProperty("workflowprocess.startUrl"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.startpath"));
 		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
-		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo);
+		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo,
+				businessKey, type, comment);
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
 
 			processInstanceResponse = restTemplate.postForObject(url, processInstanceRequest,
 					ProcessInstanceResponse.class);
+
 		} catch (Exception ex) {
 
 			System.out.println(ex.getMessage());
@@ -71,17 +80,18 @@ public class WorkFlowUtil {
 	 * @return TaskResponse
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, Property property)
+	public TaskResponse updateWorkflow(WorkflowDetailsRequestInfo workflowDetailsRequestInfo, String stateId)
 			throws JsonProcessingException {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
-		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.baseurl"));
-		workFlowUpdateUrl.append(environment.getProperty("workflowprocess.updateUrl"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.updatepath"));
 		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
-		uriParams.put("id", property.getPropertyDetail().getStateId());
+		uriParams.put("id", stateId);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
@@ -104,7 +114,8 @@ public class WorkFlowUtil {
 	 * @param WorkflowDetailsRequestInfo
 	 * @return ProcessInstanceRequest
 	 */
-	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest) {
+	private ProcessInstanceRequest getProcessInstanceRequest(WorkflowDetailsRequestInfo workflowDetailsRequest,
+			String businessKey, String type, String comment) {
 
 		WorkFlowDetails workflowDetails = workflowDetailsRequest.getWorkflowDetails();
 		RequestInfo requestInfo = workflowDetailsRequest.getRequestInfo();
@@ -112,13 +123,14 @@ public class WorkFlowUtil {
 		ProcessInstance processInstance = new ProcessInstance();
 		Position assignee = new Position();
 		assignee.setId((long) workflowDetails.getAssignee());
-		//TODO temporary fix for required fields of processInstance and need to replace with actual values
+		// TODO temporary fix for required fields of processInstance and need to
+		// replace with actual values
 		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
 		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
-		processInstance.setBusinessKey(environment.getProperty("businessKey"));
-		processInstance.setType(environment.getProperty("type"));
+		processInstance.setBusinessKey(businessKey);
+		processInstance.setType(type);
 		processInstance.setAssignee(assignee);
-		processInstance.setComments(environment.getProperty("create.property.comments"));
+		processInstance.setComments(comment);
 		processInstanceRequest.setRequestInfo(requestInfo);
 		processInstanceRequest.setProcessInstance(processInstance);
 

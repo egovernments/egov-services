@@ -71,19 +71,15 @@ public class WorkflowDetails {
 	@NotNull
 	private String receiptNumber;
 	
-    @NotNull
     private long department;
 
-    @NotNull
     private long designation;
     
-    @NotNull
-    private String buisnessKey;
+    private String businessKey;
 
     @NotNull
     private long user;
 
-    @NotNull
     private String comments;
     
     private Long initiatorPosition;
@@ -93,7 +89,7 @@ public class WorkflowDetails {
     @NotNull
     private String action;
 
-    @NotNull
+    
     private String status;
     
     @NotNull

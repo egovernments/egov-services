@@ -7,7 +7,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/v1/[API endpoint]'
+basePath: '/collection/masters/v1/[API endpoint]'
 
 paths: 
   /paymentModesNotAllowed/_create:     

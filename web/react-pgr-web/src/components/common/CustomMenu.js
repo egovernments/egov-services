@@ -179,6 +179,14 @@ class CustomMenu extends Component {
       if(item.url == '/pgr/receivingModeCreate' && window.location.href.indexOf("/pgr/receivingModeCreate/update")>-1) {
           window.urlCheck = true;
       }
+
+      if(item.url == '/pgr/createServiceType' && window.location.href.indexOf("/pgr/serviceTypeCreate/edit")>-1) {
+          window.urlCheck = true;
+      }
+
+      if(item.url == '/pgr/createServiceGroup' && window.location.href.indexOf("/pgr/updateServiceGroup")>-1) {
+          window.urlCheck = true; 
+      }
     }
 
     const showMenu=()=>{

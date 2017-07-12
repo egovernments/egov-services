@@ -151,8 +151,9 @@ export default(state = defaultState, action) => {
 				if(e.uniquePosition == action.position){
 					
 					e.units[action.subPosition] = object;
-					console.log('boom', object, e.units[action.subPosition]);
+					console.log('update nested object', object, e.units[action.subPosition]);
 				}
+				console.log('return nested object', e);
 				return e;
 			})
 				

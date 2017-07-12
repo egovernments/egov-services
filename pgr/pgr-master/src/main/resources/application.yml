@@ -365,8 +365,8 @@ ReportDefinitions:
     label: ToDate
     type: epoch
     source: seva
-  - name: Status
-    label: reports.pgr.grievancestatustype
+  - name: grievancestatustype
+    label: Status
     type: singlevaluelist
     pattern: 'list://COMPLETED: COMPLETED,PENDING: PENDING,REJECTED: REJECTED'
     source: seva
@@ -428,7 +428,7 @@ ReportDefinitions:
     type: epoch
     source: seva
   - name: grievancestatustype
-    label: reports.pgr.grievancestatustype
+    label: Status
     type: singlevaluelist
     pattern: 'list://COMPLETED: COMPLETED,PENDING: PENDING,REJECTED: REJECTED'
     source: seva

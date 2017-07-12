@@ -45,6 +45,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.service.DemandService;
+import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
@@ -144,6 +145,14 @@ public class DemandController {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(demandService.getDemandDetails(demandDetailCriteria, requestInfo), HttpStatus.OK);
+	}
+	
+	@PostMapping("_update/temp")
+	public ResponseEntity<?> tempupdate(@RequestBody BillRequest billRequest, BindingResult bindingResult) {
+
+		RequestInfo requestInfo = billRequest.getRequestInfo();
+		//demandService.getDemandDetails(demandDetailCriteria, requestInfo)
+		return new ResponseEntity<>(demandService.updateDemandFromBill(billRequest), HttpStatus.OK);
 	}
 
 }

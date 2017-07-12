@@ -146,10 +146,10 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	
-	public void updateDemandFromBill(BillRequest billRequest) {
+	public DemandResponse updateDemandFromBill(BillRequest billRequest) {
 
 		List<Bill> bills = billRequest.getBills();
-		RequestInfo requestInfo = new RequestInfo();
+		RequestInfo requestInfo = billRequest.getRequestInfo();
 		String tenantId = bills.get(0).getTenantId();
 		Set<String> consumerCodes = new HashSet<>();
 		for (Bill bill : bills) {
@@ -194,9 +194,15 @@ public class DemandService {
 					Long toDate = Long.valueOf(accDescription.get(2));
 
 					for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
+						System.err.println("the current demand detail : " + demandDetail);
 						Demand demand = demandIdMap.get(demandDetail.getDemandId());
+						System.err.println("the respective deman"+demand);
+						
 						if (fromDate.equals(demand.getTaxPeriodFrom()) && toDate.equals(demand.getTaxPeriodTo())) {
+							
 							BigDecimal collectedAmount = accountDetail.getCreditAmount();
+							System.err.println("the credit amt :"+ collectedAmount);
+							System.out.println();
 							demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
 							demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(collectedAmount));
 						}
@@ -205,6 +211,7 @@ public class DemandService {
 			}
 		}
 		demandRepository.update(new DemandRequest(requestInfo,demands));
+		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {

@@ -140,11 +140,11 @@ public class BillService {
 			ids.add(billCriteria.getDemandId());
 
 		Set<String> consumerCodes = new HashSet<>();
-		consumerCodes.add(billCriteria.getConsumerCode());
-		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService()).
-				consumerCode(consumerCodes).demandId(ids).
-				email(billCriteria.getEmail()).mobileNumber(billCriteria.getMobileNumber()).
-				tenantId(billCriteria.getTenantId()).build();
+		if (billCriteria.getConsumerCode() != null)
+			consumerCodes.add(billCriteria.getConsumerCode());
+		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService())
+				.consumerCode(consumerCodes).demandId(ids).email(billCriteria.getEmail())
+				.mobileNumber(billCriteria.getMobileNumber()).tenantId(billCriteria.getTenantId()).build();
 
 		log.debug("generateBill demandCriteria: "+demandCriteria);
 		DemandResponse demandResponse = demandService.getDemands(demandCriteria,requestInfo);
@@ -305,9 +305,12 @@ public class BillService {
 				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
 
 		log.debug("getGlCodes taxHeadMasterCode:"+taxHeadMasterCode);
-		List<GlCodeMaster> glCodeMasters = glCodeMasterService.getGlCodes(GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(service).build(), requestInfo).getGlCodeMasters();
+		List<GlCodeMaster> glCodeMasters = glCodeMasterService.getGlCodes(
+				GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(
+				service).tenantId(tenantId).build(), requestInfo).getGlCodeMasters();
 		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
-		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
+		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(
+				Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
 
 		log.debug("getTaxHeadMaster map:"+map);
 		return map;

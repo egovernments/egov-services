@@ -37,7 +37,7 @@ public class Consumer {
 
 	@Autowired
 	private Producer producer;
-	
+
 	@Autowired
 	private UserUtil userUtil;
 
@@ -91,8 +91,8 @@ public class Consumer {
 	 * authentication Updating auth token in UserAuthResponseInfo Search user
 	 * Create user
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.userenhanced')}",
-			"#{environment.getProperty('egov.propertytax.property.update.userenhanced')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.validate.user')}",
+			"#{environment.getProperty('egov.propertytax.property.update.validate.user')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 		PropertyRequest propertyRequest = consumerRecord.value();
 
@@ -102,11 +102,21 @@ public class Consumer {
 
 				user = userUtil.getUserId(user, propertyRequest.getRequestInfo());
 
-				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.tax"), propertyRequest);
+			}
+			if (consumerRecord.topic()
+					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.validate.user"))) {
+
+				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.create.tax.calculaion"),
+						propertyRequest);
+
+			} else if (consumerRecord.topic()
+					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.validate.user"))) {
+
+				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax.calculaion"),
+						propertyRequest);
+
 			}
 		}
 	}
-
-	
 
 }

@@ -130,7 +130,14 @@ export default(state = defaultState, action) => {
 			[action.property]: state.form[action.property].map((e,i) => {
 				
 				if(e.uniquePosition == action.position){
-					e.units.splice(action.subPosition,1)
+					if(e.units){
+						e.units.splice(action.subPosition,1);
+						alert(e.units.length)
+						if(e.units.length<=0){
+							alert('inside');
+							state.form[action.property].splice(action.position,1);
+						}
+					}
 				}
 				return e;
 			} )

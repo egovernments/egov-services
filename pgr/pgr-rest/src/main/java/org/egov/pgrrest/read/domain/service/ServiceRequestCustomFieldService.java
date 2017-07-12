@@ -11,6 +11,7 @@ import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException;
 import org.egov.pgrrest.read.domain.exception.RuleEvaluationException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
 import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class ServiceRequestCustomFieldService {
         this.scriptEngineFactory = scriptEngineFactory;
     }
 
-    public void enrich(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
+    public void enrich(ServiceRequest serviceRequest, SevaRequest contractSevaRequest, SevaRequestAction action) {
         final List<org.egov.pgr.common.contract.AttributeEntry> attribValues =
             contractSevaRequest.getAttributeValues();
         final ServiceDefinition serviceDefinition = getServiceDefinition(serviceRequest);
@@ -48,7 +49,7 @@ public class ServiceRequestCustomFieldService {
         if (serviceDefinition.isAttributesAbsent()) {
             return;
         }
-        validateAttributeValues(serviceRequest, serviceDefinition);
+        validateAttributeValues(serviceRequest, serviceDefinition, action);
         if (serviceDefinition.isComputedFieldsAbsent()) {
             return;
         }
@@ -128,8 +129,10 @@ public class ServiceRequestCustomFieldService {
         return attributeDefinition.parse(attributeEntries);
     }
 
-    private void validateAttributeValues(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition) {
-        attributeValueValidators.forEach(validator -> validator.validate(serviceRequest, serviceDefinition));
+    private void validateAttributeValues(ServiceRequest serviceRequest,
+                                         ServiceDefinition serviceDefinition,
+                                         SevaRequestAction action) {
+        attributeValueValidators.forEach(validator -> validator.validate(serviceRequest, serviceDefinition, action));
     }
 
     private void validateKnownServiceDefinition(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition) {

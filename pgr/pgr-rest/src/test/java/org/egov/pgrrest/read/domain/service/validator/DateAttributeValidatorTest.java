@@ -6,6 +6,7 @@ import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
 import org.egov.pgrrest.read.domain.exception.InvalidDateAttributeEntryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class DateAttributeValidatorTest {
             .attributes(Collections.singletonList(attributeDefinition))
             .build();
         try {
-            validator.validate(serviceRequest, serviceDefinition);
+            validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
             Assert.fail("Expected exception to be thrown");
         } catch (InvalidDateAttributeEntryException ex) {
             assertEquals("date1", ex.getAttributeCode());
@@ -52,7 +53,7 @@ public class DateAttributeValidatorTest {
             .attributes(Collections.singletonList(attributeDefinition))
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition);
+        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
     }
 
 

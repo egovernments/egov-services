@@ -4,3 +4,4 @@ public enum ServiceType {
     CITIZEN_SERVICE,
     COMPLAINT
 }
+

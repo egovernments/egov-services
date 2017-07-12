@@ -16,6 +16,7 @@ import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.service.BudgetService;
+import org.egov.egf.budget.persistence.queue.BudgetServiceQueueRepository;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
 import org.modelmapper.ModelMapper;
@@ -36,6 +37,9 @@ public class BudgetController {
 
 	@Autowired
 	private BudgetService budgetService;
+
+	@Autowired
+	private BudgetServiceQueueRepository budgetServiceQueueRepository;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -63,7 +67,7 @@ public class BudgetController {
 			budgets.add(budget);
 		}
 
-		budgets = budgetService.add(budgets, errors);
+		budgets = budgetService.validate(budgets, errors, budgetRequest.getRequestInfo().getAction());
 
 		for (Budget f : budgets) {
 			contract = new BudgetContract();
@@ -72,7 +76,7 @@ public class BudgetController {
 		}
 
 		budgetRequest.setData(budgetContracts);
-		budgetService.addToQue(budgetRequest);
+		budgetServiceQueueRepository.addToQue(budgetRequest);
 		budgetResponse.setData(budgetContracts);
 
 		return budgetResponse;
@@ -80,8 +84,8 @@ public class BudgetController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetContract> update(@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest,
-			BindingResult errors) {
+	public CommonResponse<BudgetContract> update(
+			@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -101,7 +105,7 @@ public class BudgetController {
 			budgets.add(budget);
 		}
 
-		budgets = budgetService.update(budgets, errors);
+		budgets = budgetService.validate(budgets, errors,budgetContractRequest.getRequestInfo().getAction());
 
 		for (Budget budgetObj : budgets) {
 			contract = new BudgetContract();
@@ -110,7 +114,7 @@ public class BudgetController {
 		}
 
 		budgetContractRequest.setData(budgetContracts);
-		budgetService.addToQue(budgetContractRequest);
+		budgetServiceQueueRepository.addToQue(budgetContractRequest);
 		budgetResponse.setData(budgetContracts);
 
 		return budgetResponse;
@@ -139,7 +143,7 @@ public class BudgetController {
 		CommonResponse<BudgetContract> response = new CommonResponse<>();
 		response.setData(budgetContracts);
 		response.setPage(new PaginationContract(budgets));
-		response.setResponseInfo(getResponseInfo(requestInfo)); 
+		response.setResponseInfo(getResponseInfo(requestInfo));
 
 		return response;
 

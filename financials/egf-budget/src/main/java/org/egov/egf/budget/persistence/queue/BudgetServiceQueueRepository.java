@@ -19,7 +19,7 @@ public class BudgetServiceQueueRepository {
 	@Value("${kafka.topics.egf.budget.service.validated.key}")
 	private String validatedKey;
 
-	public void add(CommonRequest<?> request) {
+	public void addToQue(CommonRequest<?> request) {
 		String masterName = "";
 		HashMap<String, CommonRequest<?>> topicMap = new HashMap<String, CommonRequest<?>>();
 		if (!request.getData().isEmpty())

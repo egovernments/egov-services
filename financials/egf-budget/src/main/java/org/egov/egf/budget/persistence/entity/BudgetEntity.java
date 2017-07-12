@@ -4,6 +4,7 @@ import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.EgfStatus;
+import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class BudgetEntity extends AuditableEntity {
 	private String id;
 	private String name;
 	private String financialYearId;
-	private String estimationTypeId;
+	private String estimationType;
 	private String parentId;
 	private Boolean active;
 	private Boolean primaryBudget;
@@ -39,7 +40,7 @@ public class BudgetEntity extends AuditableEntity {
 		budget.setId(this.id);
 		budget.setName(this.name);
 		budget.setFinancialYear(FinancialYearContract.builder().id(financialYearId).build());
-		budget.setEstimationType(null);
+		budget.setEstimationType(EstimationType.valueOf(this.estimationType));
 		budget.setParent(Budget.builder().id(parentId).build());
 		budget.setActive(this.active);
 		budget.setPrimaryBudget(this.primaryBudget);
@@ -56,7 +57,7 @@ public class BudgetEntity extends AuditableEntity {
 		this.id = budget.getId();
 		this.name = budget.getName();
 		this.financialYearId = budget.getFinancialYear() != null ? budget.getFinancialYear().getId() : null;
-	//	this.estimationTypeId = budget.getEstimationType() != null ? budget.getEstimationType().getId() : null;
+		this.estimationType = budget.getEstimationType() != null ? budget.getEstimationType().name() : null;
 		this.parentId = budget.getParent() != null ? budget.getParent().getId() : null;
 		this.active = budget.getActive();
 		this.primaryBudget = budget.getPrimaryBudget();

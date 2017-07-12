@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.budget.web.contract;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -53,13 +54,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","name","financialYear","estimationType","parent","active","primaryBudget","referenceBudget","status","documentNumber","description","materializedPath"})
+@JsonPropertyOrder({ "id", "name", "financialYear", "estimationType", "parent", "active", "primaryBudget",
+		"referenceBudget", "status", "documentNumber", "description", "materializedPath" })
 public class BudgetContract extends AuditableContract {
 
 	/**
@@ -84,8 +87,8 @@ public class BudgetContract extends AuditableContract {
 	private String name;
 
 	/**
-	 * financialYear is the attribute to identify to which year the BudgetContract
-	 * belongs is tagged.
+	 * financialYear is the attribute to identify to which year the
+	 * BudgetContract belongs is tagged.
 	 */
 	@NotNull
 	private FinancialYearContract financialYear;
@@ -93,9 +96,9 @@ public class BudgetContract extends AuditableContract {
 	/**
 	 * estimationType is type of the budget definition - which signifies budget
 	 * type i.e New budget (BE) or the Revised budget (RE)
-	 */	
+	 */
 	@NotNull
-	private EstimationType  estimationType;
+	private EstimationType estimationType;
 
 	/**
 	 * parent is the node used to define in the budget hierarchy tree structure
@@ -112,19 +115,19 @@ public class BudgetContract extends AuditableContract {
 	private Boolean active;
 
 	/**
-	 * primaryBudgetContract is the flag that identifies the root budget. (which has no
-	 * parent).
+	 * primaryBudgetContract is the flag that identifies the root budget. (which
+	 * has no parent).
 	 */
 	@NotNull
-	private Boolean primaryBudgetContract;
+	private Boolean primaryBudget;
 
 	/**
-	 * referenceBudgetContract is the previous year budget tree id reference to refer
-	 * previous year budget. When the BE is created, the previous year RE
+	 * referenceBudgetContract is the previous year budget tree id reference to
+	 * refer previous year budget. When the BE is created, the previous year RE
 	 * reference is mapped to the BE of current year or for the year for which
 	 * BE is created.
 	 */
-	private BudgetContract referenceBudgetContract;
+	private BudgetContract referenceBudget;
 
 	/**
 	 * status gives the current status of the budget Node. i.e collective status
@@ -143,8 +146,9 @@ public class BudgetContract extends AuditableContract {
 	 * description provides more information on budget line item and this is
 	 * combination of department name, estimation type,budget type and financial
 	 * year. example description
-	 * "ENGINEERING RE RevenueBudgetContract for the year 2015-16" (ENG-Engineering
-	 * department,RE- Revision Estimate,Rev-Revenue,2017-18: financial year)
+	 * "ENGINEERING RE RevenueBudgetContract for the year 2015-16"
+	 * (ENG-Engineering department,RE- Revision Estimate,Rev-Revenue,2017-18:
+	 * financial year)
 	 */
 	@Size(max = 250)
 	private String description;

@@ -16,6 +16,7 @@ import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.service.BudgetDetailService;
+import org.egov.egf.budget.persistence.queue.BudgetServiceQueueRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.modelmapper.ModelMapper;
@@ -37,10 +38,13 @@ public class BudgetDetailController {
 	@Autowired
 	private BudgetDetailService budgetDetailService;
 
+	@Autowired
+	private BudgetServiceQueueRepository budgetServiceQueueRepository;
+
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetDetailContract> create(@RequestBody CommonRequest<BudgetDetailContract> budgetDetailRequest,
-			BindingResult errors) {
+	public CommonResponse<BudgetDetailContract> create(
+			@RequestBody CommonRequest<BudgetDetailContract> budgetDetailRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -63,7 +67,8 @@ public class BudgetDetailController {
 			budgetdetails.add(budgetDetail);
 		}
 
-		budgetdetails = budgetDetailService.add(budgetdetails, errors);
+		budgetdetails = budgetDetailService.validate(budgetdetails, errors,
+				budgetDetailRequest.getRequestInfo().getAction());
 
 		for (BudgetDetail f : budgetdetails) {
 			contract = new BudgetDetailContract();
@@ -72,7 +77,7 @@ public class BudgetDetailController {
 		}
 
 		budgetDetailRequest.setData(budgetDetailContracts);
-		budgetDetailService.addToQue(budgetDetailRequest);
+		budgetServiceQueueRepository.addToQue(budgetDetailRequest);
 		budgetDetailResponse.setData(budgetDetailContracts);
 
 		return budgetDetailResponse;
@@ -80,8 +85,8 @@ public class BudgetDetailController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetDetailContract> update(@RequestBody @Valid CommonRequest<BudgetDetailContract> budgetDetailContractRequest,
-			BindingResult errors) {
+	public CommonResponse<BudgetDetailContract> update(
+			@RequestBody @Valid CommonRequest<BudgetDetailContract> budgetDetailContractRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -101,7 +106,8 @@ public class BudgetDetailController {
 			budgetdetails.add(budgetDetail);
 		}
 
-		budgetdetails = budgetDetailService.update(budgetdetails, errors);
+		budgetdetails = budgetDetailService.validate(budgetdetails, errors,
+				budgetDetailContractRequest.getRequestInfo().getAction());
 
 		for (BudgetDetail budgetDetailObj : budgetdetails) {
 			contract = new BudgetDetailContract();
@@ -110,7 +116,7 @@ public class BudgetDetailController {
 		}
 
 		budgetDetailContractRequest.setData(budgetDetailContracts);
-		budgetDetailService.addToQue(budgetDetailContractRequest);
+		budgetServiceQueueRepository.addToQue(budgetDetailContractRequest);
 		budgetDetailResponse.setData(budgetDetailContracts);
 
 		return budgetDetailResponse;
@@ -119,8 +125,9 @@ public class BudgetDetailController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BudgetDetailContract> search(@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+	public CommonResponse<BudgetDetailContract> search(
+			@ModelAttribute BudgetDetailSearchContract budgetDetailSearchContract, @RequestBody RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		BudgetDetailSearch domain = new BudgetDetailSearch();
@@ -139,7 +146,7 @@ public class BudgetDetailController {
 		CommonResponse<BudgetDetailContract> response = new CommonResponse<>();
 		response.setData(budgetDetailContracts);
 		response.setPage(new PaginationContract(budgetdetails));
-		response.setResponseInfo(getResponseInfo(requestInfo)); 
+		response.setResponseInfo(getResponseInfo(requestInfo));
 
 		return response;
 

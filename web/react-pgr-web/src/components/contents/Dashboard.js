@@ -205,7 +205,6 @@ class Dashboard extends Component {
 	  
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
-				var priority;
 				var triColor = "#fff";
 				e.attribValues.map((item,index)=>{
 				  if(item.key =="PRIORITY"){

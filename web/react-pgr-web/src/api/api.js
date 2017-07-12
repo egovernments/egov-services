@@ -58,7 +58,7 @@ module.exports = {
                     }
                     throw new Error(_err);
                 }
-            }else if(response.response.data.error){
+            } else if(response && response.response && response.response.data && response.response.data.error){
               var _err = common.translate(response.response.data.error.fields[0].code);
               throw new Error(_err);
             } else if(response && response.response && !response.response.data && response.response.status == 400) {

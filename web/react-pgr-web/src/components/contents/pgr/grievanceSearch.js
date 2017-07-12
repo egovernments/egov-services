@@ -274,9 +274,16 @@ class grievanceSearch extends Component {
   	const renderBody = function() {
   		if(resultList.length) {
   			return resultList.map(function(val, i) {
+          var triColor = "#fff";
+          val.attribValues.map((item,index)=>{
+            if(item.key =="PRIORITY"){
+            triColor = item.name
+            }
+          });
+
   				return (
   					<tr key={i} onClick={()=>{handleNavigation(val.serviceRequestId)}} style={{"cursor": "pointer"}}>
-  						<td>{val.serviceRequestId}</td>
+  						<td style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{val.serviceRequestId}</td>
   						<td>{val.serviceName}</td>
   						<td>{val.firstName}</td>
   						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>

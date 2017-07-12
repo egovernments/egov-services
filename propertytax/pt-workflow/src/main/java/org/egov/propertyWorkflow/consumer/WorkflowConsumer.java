@@ -108,8 +108,7 @@ public class WorkflowConsumer {
 
 		PropertyRequest propertyRequest = record.value();
 
-		if (record.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow"))) {
+		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
@@ -194,11 +193,11 @@ public class WorkflowConsumer {
 	 * 
 	 * @param property
 	 * @param propertyRequest
-	 * @return workflowDetailsRequestInfo
+	 * @return upicNumber
 	 */
 	private String generateUpicNo(Property property, PropertyRequest propertyRequest) {
 
-		
+		String upicNumber = null;
 		StringBuilder tenantCodeUrl = new StringBuilder();
 		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.host"));
 		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.base.path"));
@@ -209,30 +208,33 @@ public class WorkflowConsumer {
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
 		try {
-
 			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
 					propertyRequest.getRequestInfo(), SearchTenantResponse.class);
 			if (searchTenantResponse.getTenant().size() > 0) {
 				City city = searchTenantResponse.getTenant().get(0).getCity();
-				String CityCode = city.getCode();
+				String cityCode = city.getCode();
+				String upicFormat = environment.getProperty("upic.number.format");
+				upicNumber = getUpicNumber(property.getTenantId(), propertyRequest, upicFormat);
+				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
+				if (cityCode != null) {
+					upicNumber = cityCode + "-" + upicNumber;
+				}
 			}
-			String upicNumber = getUpicNumber(property.getTenantId(), propertyRequest);
-			property.setUpicNumber(upicNumber);
-
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
-		return null;
+		return upicNumber;
 	}
 
 	/**
-	 * Description: Generating acknowledge number for property
+	 * Description: Generating sequence number
 	 * 
-	 * @param property
-	 * @param requestInfo
-	 * @return
+	 * @param tenantId
+	 * @param propertyRequest
+	 * @param upicFormat
+	 * @return UpicNumber
 	 */
-	public String getUpicNumber(String tenantId, PropertyRequest propertyRequest) {
+	public String getUpicNumber(String tenantId, PropertyRequest propertyRequest, String upicFormat) {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
 		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.host"));
@@ -243,7 +245,7 @@ public class WorkflowConsumer {
 		String UpicNumber = null;
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(environment.getProperty("upic.number.format"));
+		idrequest.setFormat(upicFormat);
 		idrequest.setIdName(environment.getProperty("id.idName"));
 		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
@@ -261,8 +263,8 @@ public class WorkflowConsumer {
 		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
 
 		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			//Error error = errorResponse.getErrors().get(0);
-
+			// TODO throw error exception
+			// Error error = errorResponse.getErrors().get(0);
 		} else if (idResponse.getResponseInfo() != null) {
 			if (idResponse.getResponseInfo().getStatus().toString()
 					.equalsIgnoreCase(environment.getProperty("success"))) {

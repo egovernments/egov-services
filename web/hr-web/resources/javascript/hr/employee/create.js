@@ -1569,7 +1569,7 @@ function addMandatoryStart(validationObject, prefix = "") {
 
 function getPositions(_this, cb) {
     if (($("#assignments\\.department").val() != "" && $("#assignments\\.designation").val() != "") && (_this.id == "assignments.department" || _this.id == "assignments.designation" || _this.id == "assignment.fromDate" || _this.id == "assignments.isPrimary")) {
-        if (employeeSubObject["assignments"].isPrimary == "true" || employeeSubObject["assignments"].isPrimary == true) {
+        if (employeeSubObject["assignments"].isPrimary == "true") {
             if ($("#assignments\\.fromDate").val()) {
                 var _date = $("#assignments\\.fromDate").val();
                 commonApiPost("hr-masters", "vacantpositions", "_search", {

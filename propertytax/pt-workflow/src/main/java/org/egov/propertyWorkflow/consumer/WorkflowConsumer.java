@@ -87,14 +87,14 @@ public class WorkflowConsumer {
 	 * 
 	 * start workflow, update workflow
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.approved')}",
-    "#{environment.getProperty('egov.propertytax.property.update.approved')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow')}",
+    "#{environment.getProperty('egov.propertytax.property.update.workflow')}" })
 
 	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
 
 		PropertyRequest propertyRequest = record.value();
 
-		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.approved"))) {
+		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
@@ -103,7 +103,7 @@ public class WorkflowConsumer {
 				property.getPropertyDetail().setStateId(processInstance.getId());
 			}
 			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);
-		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.approved"))) {
+		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.workflow"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
@@ -111,7 +111,7 @@ public class WorkflowConsumer {
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,property.getPropertyDetail().getStateId());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.updated"), propertyRequest);
+			workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"), propertyRequest);
 		}
 
 	}

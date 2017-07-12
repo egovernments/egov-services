@@ -117,8 +117,10 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<BudgetReAppropriation> page = new Pagination<>();
-		page.setOffSet(budgetReAppropriationSearchEntity.getOffset());
-		page.setPageSize(budgetReAppropriationSearchEntity.getPageSize());
+		if (budgetReAppropriationSearchEntity.getOffset() != null)
+			page.setOffset(budgetReAppropriationSearchEntity.getOffset());
+		if (budgetReAppropriationSearchEntity.getPageSize() != null)
+			page.setPageSize(budgetReAppropriationSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 

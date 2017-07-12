@@ -77,7 +77,7 @@ public class BudgetService {
 
 			if (budget.getFinancialYearId() != null) {
 				CommonResponse<FinancialYearContract> result = financialYearContractRepository
-						.getFinancialYearById(budget.getFinancialYearId().getId(), "500", "0", null);
+						.getFinancialYearById(budget.getFinancialYearId().getId());
 				if (result == null || result.getData() == null || result.getData().isEmpty()) {
 					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
 				}

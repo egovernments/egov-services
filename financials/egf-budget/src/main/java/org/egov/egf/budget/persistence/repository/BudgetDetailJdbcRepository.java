@@ -183,8 +183,10 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 		}
 
 		Pagination<BudgetDetail> page = new Pagination<>();
-		page.setOffSet(budgetDetailSearchEntity.getOffset());
-		page.setPageSize(budgetDetailSearchEntity.getPageSize());
+		if (budgetDetailSearchEntity.getOffset() != null)
+			page.setOffset(budgetDetailSearchEntity.getOffset());
+		if (budgetDetailSearchEntity.getPageSize() != null)
+			page.setPageSize(budgetDetailSearchEntity.getPageSize());
 
 		if (params.length() > 0) {
 

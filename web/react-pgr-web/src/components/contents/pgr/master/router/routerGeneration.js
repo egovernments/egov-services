@@ -308,7 +308,6 @@ class routerGeneration extends Component {
 	  			resultList: [],
 	  			isSearchClicked: false,
 	  			flag: 1,
-	  			positionSource: [],
 	  			boundariesList: [],
           open2: true
 	  		});

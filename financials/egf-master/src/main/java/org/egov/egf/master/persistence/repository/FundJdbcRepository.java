@@ -74,7 +74,7 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		page = getPagination(searchQuery, page, paramValues);
+		page = (Pagination<Fund>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",

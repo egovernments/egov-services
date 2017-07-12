@@ -10,6 +10,7 @@ import org.egov.egf.master.persistence.repository.FundJdbcRepository;
 import org.egov.egf.master.web.contract.FundContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FundRepository {
@@ -23,11 +24,11 @@ public class FundRepository {
 		return fundJdbcRepository.findById(new FundEntity().toEntity(fund)).toDomain();
 
 	}
-
+	@Transactional
 	public Fund save(Fund fund) {
 		return fundJdbcRepository.create(new FundEntity().toEntity(fund)).toDomain();
 	}
-
+	@Transactional
 	public Fund update(Fund entity) {
 		return fundJdbcRepository.update(new FundEntity().toEntity(entity)).toDomain();
 	}

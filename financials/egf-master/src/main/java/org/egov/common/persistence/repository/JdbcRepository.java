@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public abstract class JdbcRepository {
@@ -279,8 +280,9 @@ public abstract class JdbcRepository {
 
 	}
 
+	@Transactional
 	public Object create(Object ob) {
-		System.out.println(allInsertQuery);
+		//System.out.println(allInsertQuery);
 		((AuditableEntity) ob).setCreatedDate(new Date());
 		((AuditableEntity) ob).setLastModifiedDate(new Date());
 
@@ -288,12 +290,13 @@ public abstract class JdbcRepository {
 		List<Map<String, Object>> batchValues = new ArrayList<>();
 		batchValues.add(paramValues(ob, allInsertFields.get(obName)));
 		batchValues.get(0).putAll(paramValues(ob, allUniqueFields.get(obName)));
-		// System.out.println(obName+"----" +allInsertQuery.get(obName));
+		 System.out.println(obName+"----" +allInsertQuery.get(obName));
+		System.out.println(namedParameterJdbcTemplate);
 		namedParameterJdbcTemplate.batchUpdate(allInsertQuery.get(obName),
 				batchValues.toArray(new Map[batchValues.size()]));
 		return ob;
 	}
-
+	@Transactional
 	public Object update(Object ob) {
 		System.out.println(allUpdateQuery);
 		((AuditableEntity) ob).setCreatedDate(new Date());
@@ -309,7 +312,7 @@ public abstract class JdbcRepository {
 		return ob;
 	}
 
-	public Pagination getPagination(String searchQuery, Pagination page, Map<String, Object> paramValues) {
+	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
 		String countQuery = "select count(*) from (" + searchQuery + ") as x";
 		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
 		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());

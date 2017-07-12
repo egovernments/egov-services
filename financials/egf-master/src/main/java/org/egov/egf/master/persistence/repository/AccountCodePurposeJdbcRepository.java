@@ -85,7 +85,9 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":orderby", "order by id ");
 
-		page = getPagination(searchQuery, page, paramValues);
+
+		page = (Pagination<AccountCodePurpose>) getPagination(searchQuery, page,paramValues);
+
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",

@@ -390,6 +390,6 @@ public class PropertyServiceImpl implements PropertyService {
 	private Boolean validateTitleTransfer(TitleTransferRequest titleTransferRequest) {
 
 		return propertyMasterRepository
-				.checkUniqueCodeForMutation(titleTransferRequest.getTitleTransfer().getTrasferReason());
+				.checkUniqueCodeForMutation(titleTransferRequest.getTitleTransfer().getTransferReason());
 	}
 }

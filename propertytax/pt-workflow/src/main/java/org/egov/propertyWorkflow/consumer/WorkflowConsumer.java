@@ -53,7 +53,7 @@ public class WorkflowConsumer {
 		Map<String, Object> consumerProperties = new HashMap<String, Object>();
 		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("auto.offset.reset"));
 		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				environment.getProperty("bootstrap.server.config"));
+				environment.getProperty("kafka.config.bootstrap_server_config"));
 		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.groupId"));
@@ -108,7 +108,7 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo, property);
+				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,property.getPropertyDetail().getStateId());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 			}
 			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.updated"), propertyRequest);

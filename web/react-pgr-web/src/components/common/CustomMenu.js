@@ -185,7 +185,7 @@ class CustomMenu extends Component {
       }
 
       if(item.url == '/pgr/createServiceGroup' && window.location.href.indexOf("/pgr/updateServiceGroup")>-1) {
-          window.urlCheck = true; 
+          window.urlCheck = true;
       }
     }
 
@@ -200,10 +200,8 @@ class CustomMenu extends Component {
                 return(
                   <Link  key={index} to={item.url} >
                     <MenuItem
-
-
+                        style={{whiteSpace: "initial"}}
                          onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
-
                          leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                          primaryText={item.name}
                       />
@@ -215,7 +213,8 @@ class CustomMenu extends Component {
               } else {
                 return (
                       <MenuItem
-                          key={index}
+
+                           key={index}
                            leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                            primaryText={item.name}
                            rightIcon={<i className="material-icons">{item.rightIcon}</i>}
@@ -229,6 +228,7 @@ class CustomMenu extends Component {
         return(
           <div>
             <MenuItem
+
                  leftIcon={<i className="material-icons">view_module</i>}
                  primaryText={menuItems.length>0?menuItems[0].title:""}
                  rightIcon={<ArrowDropRight />}
@@ -244,6 +244,7 @@ class CustomMenu extends Component {
                   return(
                     <Link   key={index} to={item.url} >
                       <MenuItem
+                          style={{whiteSpace: "initial"}}
                            onTouchTap={()=>{handleToggle(false)}}
                            leftIcon={<i className="material-icons">{item.leftIcon}</i>}
                            primaryText={item.name}
@@ -364,7 +365,7 @@ class CustomMenu extends Component {
 
 
 
-        <Menu desktop={true} width={320}>
+        <Menu desktop={true}>
         {(level>0 || searchText) && <RaisedButton
                                       primary={true}
                                       icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}

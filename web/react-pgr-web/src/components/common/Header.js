@@ -659,6 +659,19 @@ class Header extends Component {
             parentModule:1,
             level:11
           },
+          {
+            id:39,
+            name:'Router Escalation',
+            displayName:"Router Escalation",
+            url:base + "report/RouterEscalation",
+            enabled:"true",
+            orderNumber:1,
+            queryParams:"",
+            leftIcon:'view_module',
+            rightIcon:'',
+            parentModule:1,
+            level:11
+          },
             {
             id:30,
             name:'Category',
@@ -701,7 +714,7 @@ class Header extends Component {
           },
           {
             id:33,
-            name:'Update Category',
+            name:'Update Receiving Mode',
             displayName:"Update Receiving Mode",
             url:base + "pgr/serviceGroup/edit",
             enabled:"true",
@@ -793,7 +806,7 @@ class Header extends Component {
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
           {/*<div id="menu"></div>*/}
-        {this.props.actionList.length && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
+          {this.props.actionList.length && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
         </Drawer>
 
         {/*

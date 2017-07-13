@@ -45,6 +45,8 @@ import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyT
 import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
 import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
 
+
+
 const base = "";
 
 
@@ -53,7 +55,10 @@ const Main = () => {
   <main style={{"marginBottom": "50px"}}>
     <Switch>
       <Route exact path= {base + '/'} component={Login}/>
+
+
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
+  
       <Route exact path={base+'/dashboard'} component={Dashboard}/>
 
         {/*

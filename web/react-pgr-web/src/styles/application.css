@@ -662,13 +662,13 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 
 
 table th {
-	background-color: #3f474d !important; 
+	background-color: #3f474d !important;
 	color: #ffffff !important;
 	font-weight: bolder;
 }
 
 table td {
-	cursor: pointer !important; 
+	cursor: pointer !important;
 }
 
 .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {

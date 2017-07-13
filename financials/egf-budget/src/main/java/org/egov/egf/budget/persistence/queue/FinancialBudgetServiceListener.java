@@ -6,13 +6,15 @@ import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
-import org.egov.egf.budget.domain.repository.BudgetDetailRepository;
-import org.egov.egf.budget.domain.repository.BudgetReAppropriationRepository;
-import org.egov.egf.budget.domain.repository.BudgetRepository;
+import org.egov.egf.budget.domain.service.BudgetDetailService;
+import org.egov.egf.budget.domain.service.BudgetReAppropriationService;
+import org.egov.egf.budget.domain.service.BudgetService;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
-import org.modelmapper.ModelMapper;
+import org.egov.egf.budget.web.mapper.BudgetDetailMapper;
+import org.egov.egf.budget.web.mapper.BudgetMapper;
+import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -38,17 +40,21 @@ public class FinancialBudgetServiceListener {
 	private FinancialProducer financialProducer;
 
 	@Autowired
-	private BudgetRepository budgetRepository;
+	private BudgetService budgetService;
 
 	@Autowired
-	private BudgetDetailRepository budgetDetailRepository;
+	private BudgetDetailService budgetDetailService;
 
 	@Autowired
-	private BudgetReAppropriationRepository budgetReAppropriationRepository;
+	private BudgetReAppropriationService budgetReAppropriationService;
 
 	@KafkaListener(id = "${kafka.topics.egf.budget.service.validated.id}", topics = "${kafka.topics.egf.budget.service.validated.topic}", group = "${kafka.topics.egf.budget.service.validated.group}")
 	public void process(HashMap<String, CommonRequest<?>> mastersMap) {
-		ModelMapper mapper = new ModelMapper();
+
+		BudgetMapper budgetMapper = new BudgetMapper();
+		BudgetDetailMapper budgetDetailMapper = new BudgetDetailMapper();
+		BudgetReAppropriationMapper budgetReAppropriationMapper = new BudgetReAppropriationMapper();
+
 		if (mastersMap.get("budgetcontract_create") != null) {
 
 			CommonRequest<BudgetContract> request = objectMapper.convertValue(mastersMap.get("budgetcontract_create"),
@@ -56,25 +62,24 @@ public class FinancialBudgetServiceListener {
 					});
 
 			for (BudgetContract budgetContract : request.getData()) {
-				Budget domain = mapper.map(budgetContract, Budget.class);
-				budgetRepository.save(domain);
+				Budget domain = budgetMapper.toDomain(budgetContract);
+				budgetService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("budgetcontract_completed", request);
 			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
 		}
-		if (mastersMap.get("budgetcontract_update") != null)
 
-		{
+		if (mastersMap.get("budgetcontract_update") != null) {
 
 			CommonRequest<BudgetContract> request = objectMapper.convertValue(mastersMap.get("budgetcontract_update"),
 					new TypeReference<CommonRequest<BudgetContract>>() {
 					});
 
 			for (BudgetContract budgetContract : request.getData()) {
-				Budget domain = mapper.map(budgetContract, Budget.class);
-				budgetRepository.update(domain);
+				Budget domain = budgetMapper.toDomain(budgetContract);
+				budgetService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -90,8 +95,8 @@ public class FinancialBudgetServiceListener {
 					});
 
 			for (BudgetDetailContract budgetDetailContract : request.getData()) {
-				BudgetDetail domain = mapper.map(budgetDetailContract, BudgetDetail.class);
-				budgetDetailRepository.save(domain);
+				BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
+				budgetDetailService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -109,8 +114,8 @@ public class FinancialBudgetServiceListener {
 					});
 
 			for (BudgetDetailContract budgetDetailContract : request.getData()) {
-				BudgetDetail domain = mapper.map(budgetDetailContract, BudgetDetail.class);
-				budgetDetailRepository.update(domain);
+				BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
+				budgetDetailService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -126,8 +131,8 @@ public class FinancialBudgetServiceListener {
 					});
 
 			for (BudgetReAppropriationContract budgetReAppropriationContract : request.getData()) {
-				BudgetReAppropriation domain = mapper.map(budgetReAppropriationContract, BudgetReAppropriation.class);
-				budgetReAppropriationRepository.save(domain);
+				BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
+				budgetReAppropriationService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -144,8 +149,8 @@ public class FinancialBudgetServiceListener {
 					});
 
 			for (BudgetReAppropriationContract budgetReAppropriationContract : request.getData()) {
-				BudgetReAppropriation domain = mapper.map(budgetReAppropriationContract, BudgetReAppropriation.class);
-				budgetReAppropriationRepository.update(domain);
+				BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
+				budgetReAppropriationService.update(domain);
 			}
 
 			mastersMap.clear();

@@ -16,8 +16,13 @@ public class BudgetRepository {
 	private BudgetJdbcRepository budgetJdbcRepository;
 
 	public Budget findById(Budget budget) {
-		return budgetJdbcRepository.findById(new BudgetEntity().toEntity(budget)).toDomain();
 
+		BudgetEntity entity = budgetJdbcRepository.findById(new BudgetEntity().toEntity(budget));
+
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
 	}
 
 	@Transactional

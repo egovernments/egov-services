@@ -5,11 +5,9 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.repository.BudgetRepository;
-import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.egov.egf.master.web.contract.repository.FinancialYearContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,23 +70,28 @@ public class BudgetService {
 		for (Budget budget : budgets) {
 			// fetch related items
 
-			/*if (budget.getFinancialYear() != null) {
-				CommonResponse<FinancialYearContract> financialYear = financialYearContractRepository
-						.getFinancialYearById(budget.getFinancialYear().getId());
-				if (financialYear == null || financialYear.getData() == null || financialYear.getData().isEmpty()) {
-					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
-				}
-				budget.setFinancialYear(financialYear.getData().get(0));
-			}*/
+			/*
+			 * if (budget.getFinancialYear() != null) {
+			 * CommonResponse<FinancialYearContract> financialYear =
+			 * financialYearContractRepository
+			 * .getFinancialYearById(budget.getFinancialYear().getId()); if
+			 * (financialYear == null || financialYear.getData() == null ||
+			 * financialYear.getData().isEmpty()) { throw new
+			 * InvalidDataException("financialYear", "financialYear.invalid",
+			 * " Invalid financialYear"); }
+			 * budget.setFinancialYear(financialYear.getData().get(0)); }
+			 */
 
-			if (budget.getParent() != null) {
+			if (budget.getParent() != null && budget.getParent().getId() != null
+					&& !budget.getParent().getId().isEmpty()) {
 				Budget parent = budgetRepository.findById(budget.getParent());
 				if (parent == null) {
 					throw new InvalidDataException("parent", "parent.invalid", " Invalid parent");
 				}
 				budget.setParent(parent);
 			}
-			if (budget.getReferenceBudget() != null) {
+			if (budget.getReferenceBudget() != null && budget.getReferenceBudget().getId() != null
+					&& !budget.getReferenceBudget().getId().isEmpty()) {
 				Budget referenceBudget = budgetRepository.findById(budget.getReferenceBudget());
 				if (referenceBudget == null) {
 					throw new InvalidDataException("referenceBudget", "referenceBudget.invalid",
@@ -102,18 +105,32 @@ public class BudgetService {
 	}
 
 	@Transactional
-	public List<Budget> validate(List<Budget> budgets, BindingResult errors, String action) {
+	public List<Budget> save(List<Budget> budgets, BindingResult errors, String action) {
+
 		budgets = fetchRelated(budgets);
+
 		validate(budgets, action, errors);
+
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+
 		return budgets;
 
 	}
 
 	public Pagination<Budget> search(BudgetSearch budgetSearch) {
 		return budgetRepository.search(budgetSearch);
+	}
+
+	@Transactional
+	public Budget save(Budget budget) {
+		return budgetRepository.save(budget);
+	}
+
+	@Transactional
+	public Budget update(Budget budget) {
+		return budgetRepository.update(budget);
 	}
 
 }

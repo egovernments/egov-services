@@ -159,18 +159,32 @@ public class BudgetDetailService {
 	}
 
 	@Transactional
-	public List<BudgetDetail> validate(List<BudgetDetail> budgetdetails, BindingResult errors, String action) {
+	public List<BudgetDetail> save(List<BudgetDetail> budgetdetails, BindingResult errors, String action) {
+
 		budgetdetails = fetchRelated(budgetdetails);
+
 		validate(budgetdetails, action, errors);
+
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+
 		return budgetdetails;
 
 	}
 
 	public Pagination<BudgetDetail> search(BudgetDetailSearch budgetDetailSearch) {
 		return budgetDetailRepository.search(budgetDetailSearch);
+	}
+
+	@Transactional
+	public BudgetDetail save(BudgetDetail budgetDetail) {
+		return budgetDetailRepository.save(budgetDetail);
+	}
+
+	@Transactional
+	public BudgetDetail update(BudgetDetail budgetDetail) {
+		return budgetDetailRepository.update(budgetDetail);
 	}
 
 }

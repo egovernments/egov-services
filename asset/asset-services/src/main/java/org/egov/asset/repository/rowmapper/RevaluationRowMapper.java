@@ -42,7 +42,7 @@ public class RevaluationRowMapper implements RowMapper<Revaluation> {
 			auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
 
 			revaluation.setAuditDetails(auditDetails);
-			revaluation.setVoucherReference(Long.valueOf(rs.getString("voucherreference")));
+			revaluation.setVoucherReference(rs.getLong("voucherreference"));
 
 		} catch (final Exception ex) {
 			ex.printStackTrace();

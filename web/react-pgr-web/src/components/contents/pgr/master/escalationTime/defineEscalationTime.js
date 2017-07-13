@@ -189,14 +189,21 @@ class DefineEscalationTime extends Component {
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
-                isSearchClicked: true
+                isSearchClicked: true,
+				 noData: false,
               })
           } else {
             current.setState({
               noData: true,
+			   resultList:[],
+                isSearchClicked: false
             })
           }
       }).catch((error)=>{
+		   current.setState({
+                resultList:[],
+                isSearchClicked: false
+              })
         toggleSnackbarAndSetText(true, error);
       })
 
@@ -236,7 +243,8 @@ class DefineEscalationTime extends Component {
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
-                isSearchClicked: true
+                isSearchClicked: true,
+				 noData: false,
               })
           } else {
             current.setState({
@@ -289,7 +297,8 @@ class DefineEscalationTime extends Component {
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
-                isSearchClicked: true
+                isSearchClicked: true,
+				 noData: false,
               })
           } else {
             current.setState({

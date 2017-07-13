@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
 import org.egov.common.web.contract.CommonResponse;
@@ -19,7 +18,7 @@ import org.egov.egf.budget.domain.service.BudgetService;
 import org.egov.egf.budget.persistence.queue.BudgetServiceQueueRepository;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
-import org.modelmapper.ModelMapper;
+import org.egov.egf.budget.web.mapper.BudgetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -35,6 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/budgets")
 public class BudgetController {
 
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
 	@Autowired
 	private BudgetService budgetService;
 
@@ -45,11 +48,8 @@ public class BudgetController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommonResponse<BudgetContract> create(@RequestBody CommonRequest<BudgetContract> budgetRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
-		ModelMapper model = new ModelMapper();
+		BudgetMapper mapper = new BudgetMapper();
 		CommonResponse<BudgetContract> budgetResponse = new CommonResponse<>();
 		budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
 		List<Budget> budgets = new ArrayList<>();
@@ -57,26 +57,26 @@ public class BudgetController {
 		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
 		BudgetContract contract = null;
 
-		budgetRequest.getRequestInfo().setAction("create");
+		budgetRequest.getRequestInfo().setAction(ACTION_CREATE);
 
 		for (BudgetContract budgetContract : budgetRequest.getData()) {
-			budget = new Budget();
-			model.map(budgetContract, budget);
+			budget = mapper.toDomain(budgetContract);
 			budget.setCreatedBy(budgetRequest.getRequestInfo().getUserInfo());
 			budget.setLastModifiedBy(budgetRequest.getRequestInfo().getUserInfo());
 			budgets.add(budget);
 		}
 
-		budgets = budgetService.validate(budgets, errors, budgetRequest.getRequestInfo().getAction());
+		budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
 
-		for (Budget f : budgets) {
-			contract = new BudgetContract();
-			model.map(f, contract);
+		for (Budget b : budgets) {
+			contract = mapper.toContract(b);
 			budgetContracts.add(contract);
 		}
 
 		budgetRequest.setData(budgetContracts);
+
 		budgetServiceQueueRepository.addToQue(budgetRequest);
+
 		budgetResponse.setData(budgetContracts);
 
 		return budgetResponse;
@@ -84,37 +84,35 @@ public class BudgetController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BudgetContract> update(
-			@RequestBody @Valid CommonRequest<BudgetContract> budgetContractRequest, BindingResult errors) {
+	public CommonResponse<BudgetContract> update(@RequestBody @Valid CommonRequest<BudgetContract> budgetRequest,
+			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		budgetContractRequest.getRequestInfo().setAction("update");
-		ModelMapper model = new ModelMapper();
+		BudgetMapper mapper = new BudgetMapper();
 		CommonResponse<BudgetContract> budgetResponse = new CommonResponse<>();
 		List<Budget> budgets = new ArrayList<>();
 		Budget budget = null;
 		BudgetContract contract = null;
 		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
 
-		for (BudgetContract budgetContract : budgetContractRequest.getData()) {
-			budget = new Budget();
-			model.map(budgetContract, budget);
-			budget.setLastModifiedBy(budgetContractRequest.getRequestInfo().getUserInfo());
+		budgetRequest.getRequestInfo().setAction(ACTION_UPDATE);
+
+		for (BudgetContract budgetContract : budgetRequest.getData()) {
+			budget = mapper.toDomain(budgetContract);
+			budget.setLastModifiedBy(budgetRequest.getRequestInfo().getUserInfo());
 			budgets.add(budget);
 		}
 
-		budgets = budgetService.validate(budgets, errors,budgetContractRequest.getRequestInfo().getAction());
+		budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
 
-		for (Budget budgetObj : budgets) {
-			contract = new BudgetContract();
-			model.map(budgetObj, contract);
+		for (Budget b : budgets) {
+			contract = mapper.toContract(b);
 			budgetContracts.add(contract);
 		}
 
-		budgetContractRequest.setData(budgetContracts);
-		budgetServiceQueueRepository.addToQue(budgetContractRequest);
+		budgetRequest.setData(budgetContracts);
+
+		budgetServiceQueueRepository.addToQue(budgetRequest);
+
 		budgetResponse.setData(budgetContracts);
 
 		return budgetResponse;
@@ -126,17 +124,14 @@ public class BudgetController {
 	public CommonResponse<BudgetContract> search(@ModelAttribute BudgetSearchContract budgetSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		BudgetSearch domain = new BudgetSearch();
-		mapper.map(budgetSearchContract, domain);
+		BudgetMapper mapper = new BudgetMapper();
+		BudgetSearch domain = mapper.toSearchDomain(budgetSearchContract);
 		BudgetContract contract = null;
-		ModelMapper model = new ModelMapper();
 		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
 		Pagination<Budget> budgets = budgetService.search(domain);
 
 		for (Budget budget : budgets.getPagedData()) {
-			contract = new BudgetContract();
-			model.map(budget, contract);
+			contract = mapper.toContract(budget);
 			budgetContracts.add(contract);
 		}
 
@@ -151,7 +146,7 @@ public class BudgetController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
 	}
 
 }

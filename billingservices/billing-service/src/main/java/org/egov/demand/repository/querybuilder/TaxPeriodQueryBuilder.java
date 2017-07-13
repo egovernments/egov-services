@@ -39,6 +39,9 @@
  */
 package org.egov.demand.repository.querybuilder;
 
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.TaxPeriodRepository;
@@ -47,9 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Set;
-
 @Component
 public class TaxPeriodQueryBuilder {
 
@@ -57,6 +57,14 @@ public class TaxPeriodQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT * FROM EGBS_TAXPERIOD taxperiod ";
 
+    public final String insertQuery = "INSERT INTO public.egbs_taxperiod(id, service, code, fromdate, todate,"
+    		+ " financialyear, createddate,lastmodifieddate, createdby, lastmodifiedby, tenantid, periodcycle)"
+    		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+    public final String updateQuery="UPDATE public.egbs_taxperiod SET service=?, code=?, fromdate=?, todate=?,"
+    		+ " financialyear=?, lastmodifieddate=?, lastmodifiedby=?, tenantid=?,"
+    		+ " periodcycle=? WHERE tenantid = ? and id = ? ";
+    
     public String prepareSearchQuery(final TaxPeriodCriteria taxPeriodCriteria, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         logger.info("prepareSearchQuery --> ");
@@ -65,7 +73,7 @@ public class TaxPeriodQueryBuilder {
         return selectQuery.toString();
     }
 
-    private void prepareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+	private void prepareWhereClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
                                     final TaxPeriodCriteria taxPeriodCriteria) {
 
         selectQuery.append(" WHERE ");
@@ -75,29 +83,34 @@ public class TaxPeriodQueryBuilder {
             preparedStatementValues.add(taxPeriodCriteria.getTenantId());
         }
 
-        if (StringUtils.isNotBlank(taxPeriodCriteria.getService())) {
-            selectQuery.append(" and taxperiod.service = ? ");
-            preparedStatementValues.add(taxPeriodCriteria.getService());
+        Set<String> service = taxPeriodCriteria.getService(); 
+        if (service != null &&  !service.isEmpty()) {
+            selectQuery.append(" and taxperiod.service IN (" + getQueryForCollection(service));
         }
+        
+        if(taxPeriodCriteria.getPeriodCycle() != null){
+        	 selectQuery.append(" and taxperiod.periodcycle = ? ");
+             preparedStatementValues.add(taxPeriodCriteria.getPeriodCycle());
+        }
+        
+        if(taxPeriodCriteria.getFromDate() != null){
+       	 selectQuery.append(" and taxperiod.fromdate >= ? ");
+            preparedStatementValues.add(taxPeriodCriteria.getFromDate());
+       }
+        
+        if(taxPeriodCriteria.getToDate() != null){
+       	 selectQuery.append(" and taxperiod.todate <= ? ");
+            preparedStatementValues.add(taxPeriodCriteria.getToDate());
+       }
 
         if (StringUtils.isNotBlank(taxPeriodCriteria.getCode())) {
             selectQuery.append(" and taxperiod.code = ? ");
             preparedStatementValues.add(taxPeriodCriteria.getCode());
         }
 
-        if (!taxPeriodCriteria.getId().isEmpty())
-            selectQuery.append(" and taxperiod.id IN "+getQueryForCollection(taxPeriodCriteria.getId()));
-    }
-
-    public String getInsertQuery(){
-        return "INSERT INTO egbs_taxperiod(id,service,code,fromdate,todate,financialYear, " +
-                "createddate, lastmodifieddate, createdby, lastmodifiedby, tenantid) " +
-                "values (?,?,?,?,?,?,?,?,?,?,?);";
-    }
-
-    public String getUpdateQuery(){
-        return "UPDATE egbs_taxperiod SET service=?, code=?, fromdate=?, todate=?, financialyear=?, " +
-                "lastmodifieddate=?, lastmodifiedby=? WHERE tenantid = ? and id = ?;";
+        Set<String> ids = taxPeriodCriteria.getId();
+        if (ids != null && !ids.isEmpty())
+            selectQuery.append(" and taxperiod.id IN "+getQueryForCollection(ids));
     }
 
     public String prepareQueryForValidation(List<TaxPeriod> taxPeriodList, String mode){

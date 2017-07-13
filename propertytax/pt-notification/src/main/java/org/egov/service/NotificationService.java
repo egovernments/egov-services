@@ -10,6 +10,7 @@ import org.egov.model.EmailRequest;
 import org.egov.model.SmsMessage;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.models.TaxCalculation;
 import org.egov.models.User;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Service
 /**
@@ -251,7 +255,17 @@ public class NotificationService {
 			propertyMessage.put("upicNo", property.getUpicNumber());
 			propertyMessage.put("assessmentDate", property.getAssessmentDate());
 			propertyMessage.put("tenantId", property.getTenantId());
-
+			// total Propertytax calculation logic
+			String taxCalculations = property.getPropertyDetail().getTaxCalculations();
+			Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+			List<TaxCalculation> taxCalculationList = gson.fromJson(taxCalculations, TaxCalculation.class);
+			Double propertyTax = 0.0;
+			for (TaxCalculation taxcalculation : taxCalculationList) {
+				propertyTax = propertyTax + taxcalculation.getPropertyTaxes().getTotalTax();
+			}
+			propertyMessage.put("propertyTax", propertyTax);
+			propertyMessage.put("effectiveDate", property.getAssessmentDate());
+			propertyMessage.put("municipalityName", property.getTenantId());
 			for (User user : property.getOwners()) {
 
 				propertyMessage.put("name", user.getName());

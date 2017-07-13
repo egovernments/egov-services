@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.service.AgreementService;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AgreementResponse;
@@ -192,8 +193,9 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		
+		if(agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)){
 		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		}
 
 		if (!(code.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
 				|| code.equals(agreementRequest.getAgreement().getAgreementNumber())

@@ -121,4 +121,14 @@ public class ChartOfAccountService {
 		return chartOfAccountRepository.search(chartOfAccountSearch);
 	}
 
+	@Transactional
+	public ChartOfAccount save(ChartOfAccount chartOfAccount) {
+		return chartOfAccountRepository.save(chartOfAccount);
+	}
+
+	@Transactional
+	public ChartOfAccount update(ChartOfAccount chartOfAccount) {
+		return chartOfAccountRepository.update(chartOfAccount);
+	}
+
 }

@@ -3,6 +3,9 @@ package org.egov.demand.web.contract;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+
+import org.egov.demand.model.enums.PeriodCycle;
+
 import java.util.Set;
 
 @Setter
@@ -17,7 +20,9 @@ public class TaxPeriodCriteria {
     private String tenantId;
 
     @NotNull
-    private String service;
+    private Set<String> service;
+    
+    private PeriodCycle periodCycle;
 
     private Set<String> id;
 

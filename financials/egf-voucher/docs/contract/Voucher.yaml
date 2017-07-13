@@ -1,0 +1,401 @@
+    /vouchers/_search:
+      post:
+        summary: Get the list of vouchers
+        description: vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+            maxLength: 32
+          - name: type
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 16
+          - name: name
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 16
+          - name: description
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 256
+          - name: voucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 32
+          - name: voucherDate
+            type: string
+            format: date
+            in: query
+            description: |
+              
+              
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: originalVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: refVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: moduleName
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: ledgers
+            type: object
+            items:
+              $ref: "#/definitions/Ledger"
+            in: query
+            description: |
+              
+              
+          - name: vouchermis
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Voucher retrieved Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /vouchers/_create:
+      post:
+        summary: Create  new  vouchers
+        description: Create  new vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: voucherRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /vouchers/{id}/_update:
+      post:
+        summary: Update any of the vouchers
+        description: Update any of the vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Voucher
+            required: true
+            type: integer
+            format: int64
+          - name: voucherRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          200:
+            description: Voucher updated Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+definitions:
+    Voucher:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        type:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        name:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        description:
+          type: string
+          description: |
+            
+            
+          maxLength: 256
+        voucherNumber:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        voucherDate:
+          type: string
+          format: date
+          description: |
+            
+            
+        fund:
+          $ref: "#/definitions/FundContract"
+        status:
+          $ref: "#/definitions/EgfStatus"
+        originalVoucherNumber:
+          type: string
+          description: |
+            
+            
+        refVoucherNumber:
+          type: string
+          description: |
+            
+            
+        moduleName:
+          type: string
+          description: |
+            
+            
+        ledgers:
+          type:  array
+          description:  |
+            
+            
+          items:
+            $ref: "#/definitions/Ledger"
+        vouchermis:
+          $ref: "#/definitions/Vouchermis"
+      required:
+      - type
+      - name
+      - voucherDate
+    Ledger:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            
+            
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccountContract"
+        glcode:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        creditAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        function:
+          $ref: "#/definitions/FunctionContract"
+        ledgerDetails:
+          type:  array
+          description:  |
+            
+            
+          items:
+            $ref: "#/definitions/LedgerDetail"
+      required:
+      - chartOfAccount
+      - glcode
+      - debitAmount
+      - creditAmount
+    Vouchermis:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        billNumber:
+          type: string
+          description: |
+            
+            
+        function:
+          $ref: "#/definitions/FunctionContract"
+        fundsource:
+          $ref: "#/definitions/FundsourceContract"
+        scheme:
+          $ref: "#/definitions/SchemeContract"
+        subScheme:
+          $ref: "#/definitions/SubSchemeContract"
+        functionary:
+          $ref: "#/definitions/FunctionaryContract"
+        sourcePath:
+          type: string
+          description: |
+            
+            
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            
+            
+        budgetAppropriationNo:
+          type: string
+          description: |
+            
+            
+    LedgerDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+        accountDetailKey:
+          $ref: "#/definitions/AccountDetailKey"
+        amount:
+          type: number
+          format: double
+          description: |
+            
+            
+      required:
+      - accountDetailKey
+      - amount
+    VoucherRequest:
+      description: Contract class to receive request. Array of Voucher items  are used in case of create . Where as single Voucher item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+    VoucherResponse:
+      description: Contract class to send response. Array of Voucher items  are used in case of search results or response for create. Where as single Voucher item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+        page:
+          $ref: '#/definitions/Page'

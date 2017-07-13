@@ -1,0 +1,38 @@
+[{
+  "tenantId": "default",
+  "receiptDate" : null,
+  "receiptNumber" : "test123",
+  "billingService" : "PropertyTax",
+  "paymentMode" : "Cash",
+  "totalAmount" : 1000,
+  "channel" : null,
+  "paymentGateway" : null,
+  "billNumber" : "Bill001",
+  "consumerCode" : "0001",
+  "status" : "Created",
+  "consumerName" : "Narasappa",
+  "receiptCreator" : null,
+  "consumerType" : null,
+  "cityName" : "Kurnool",
+  "districtName" : null,
+  "regionName" : null
+
+}, {
+  "tenantId": "default",
+  "receiptDate" : null,
+  "receiptNumber" : "test234",
+  "billingService" : "TradeLicence",
+  "paymentMode" : "dd",
+  "totalAmount" : 2000,
+  "channel" : null,
+  "paymentGateway" : null,
+  "billNumber" : "Bill002",
+  "consumerCode" : "0002",
+  "status" : "Approved",
+  "consumerName" : "Egovernments",
+  "receiptCreator" : null,
+  "consumerType" : null,
+  "cityName" : "Bangalore",
+  "districtName" : null,
+  "regionName" : null
+}]

@@ -27,7 +27,6 @@ public class FunctionService {
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
- 
 
 	@Autowired
 	private SmartValidator validator;
@@ -106,6 +105,16 @@ public class FunctionService {
 
 	public Pagination<Function> search(FunctionSearch functionSearch) {
 		return functionRepository.search(functionSearch);
+	}
+
+	@Transactional
+	public Function save(Function function) {
+		return functionRepository.save(function);
+	}
+
+	@Transactional
+	public Function update(Function function) {
+		return functionRepository.update(function);
 	}
 
 }

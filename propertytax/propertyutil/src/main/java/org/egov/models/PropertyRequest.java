@@ -3,6 +3,8 @@ package org.egov.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -22,5 +24,6 @@ public class PropertyRequest {
 	private RequestInfo requestInfo = null;
 
 	@JsonProperty("properties")
+	@Valid
 	private List<Property> properties = new ArrayList<Property>();
 }

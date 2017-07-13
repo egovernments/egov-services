@@ -246,7 +246,7 @@ class PipeSizeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
-                                    defaultChecked = {createPipeSize.active || true}
+                                    defaultChecked = { this.state.id != '' ? (createPipeSize.active || false) : (createPipeSize.active || true)}
                                     onCheck = {(e, i, v) => { console.log(createPipeSize.active, i);
 
                                       var e = {

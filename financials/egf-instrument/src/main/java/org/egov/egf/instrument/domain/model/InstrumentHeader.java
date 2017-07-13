@@ -44,6 +44,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.egov.egf.master.web.contract.BankAccountContract;
+import org.egov.egf.master.web.contract.BankContract;
+import org.ja.annotation.DrillDown;
+import org.ja.annotation.DrillDownTable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -56,37 +61,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "ECSType", "instrumentVouchers", "instrumentType", "statusId" }, callSuper = false)
+@EqualsAndHashCode(exclude = { "ECSType", "instrumentVouchers", "instrumentType", "status" }, callSuper = false)
 public class InstrumentHeader {
 
 	/*
 	 * id is the unique reference to Instrument Header entered in the system.
 	 */
 	private String id;
-
-	/*
-	 * detailTypeId is the reference of the sub ledger type to identify the
-	 * which type of sub ledger codes is used to assign the instrument
-	 * (Cheque/RTGS) with reference to the payment and receipts made.
-	 */
-	private String detailTypeId;
-
-	/*
-	 * bankAccountId is the reference of the Bank account from which the payment
-	 * instrument is assigned
-	 */
-	private String bankAccountId;
-
-	/*
-	 * status gives the current status of the instrument. (Receipt/Payment)
-	 */
-	private EgfStatus statusId;
-
-	/*
-	 * bankId reference to the bank from which the payment/Receipt is made.
-	 */
-	private String bankId;
-
+	
 	/*
 	 * instrumentNumber is the Cheque numbers assigned for the payment which is
 	 * unique for a given bank account number and financial year. In case of
@@ -102,18 +84,39 @@ public class InstrumentHeader {
 	 */
 	private Date instrumentDate;
 
+
 	/*
 	 * instrumentAmount is the (total) amount entered for the instrument in the
 	 * payment or receipt.
 	 */
 	private BigDecimal instrumentAmount;
 
+	
+	
+	
 	/*
-	 * payTo is the payee name (entered in the payment - populated from
-	 * sub-ledger or from the configuration specific to the transaction.
-	 * Editable in payment screen.
+	 * instrumentType specifies the type of the instrument - i.e Cheque/DD/RTGS.
+	 * For receipt - Cheque/DD/RTGS
 	 */
-	private String payTo;
+	private InstrumentType instrumentType;
+
+	
+	/*
+	 * bankAccount is the reference of the Bank account from which the payment
+	 * instrument is assigned
+	 */
+	private BankAccountContract bankAccount;
+
+	/*
+	 * status gives the current status of the instrument. (Receipt/Payment)
+	 */
+	private EgfStatus status;
+
+	/*
+	 * bankId reference to the bank from which the payment/Receipt is made.
+	 */
+	private BankContract bank;
+
 
 	/*
 	 * isPayCheque is the identifier to flag whether it is a payment instrument
@@ -121,12 +124,7 @@ public class InstrumentHeader {
 	 */
 	private String isPayCheque;
 
-	/*
-	 * instrumentType specifies the type of the instrument - i.e Cheque/DD/RTGS.
-	 * For receipt - Cheque/DD/RTGS
-	 */
-	private InstrumentType instrumentType;
-
+	
 	/*
 	 * detailTypeId is the reference of the sub ledger type to whom the
 	 * instrument (Cheque/RTGS) is assigned with reference to the payment and
@@ -134,26 +132,26 @@ public class InstrumentHeader {
 	 */
 	private String detailKeyId;
 
-	/*
-	 * transactionNumber is the RTGS reference number assigned for the RTGS
-	 * assignment in the form of instrument
-	 */
-	private String transactionNumber;
-
-	/*
-	 * transactionDate is the date of the RTGS transaction entered during the
-	 * RTGS
-	 */
-	private Date transactionDate;
-
+	
 	/*
 	 * payee in receipt, is the payee name entered in receipt by USER.
 	 */
 	private String payee;
 
+	
+	/*
+	 * payTo is the payee name (entered in the payment - populated from
+	 * sub-ledger or from the configuration specific to the transaction.
+	 * Editable in payment screen.
+	 */
+	private String payTo;
+
+	
 	/*
 	 * bankBranchName is the branch name entered in the collection Receipt.
 	 */
+	
+	
 	private String bankBranchName;
 
 	/*
@@ -180,5 +178,9 @@ public class InstrumentHeader {
 	 * instrumentVouchers is the reference to the payment voucher/s for which
 	 * the instrument is attached.
 	 */
+	@DrillDownTable
 	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
+	
+	@DrillDown
+	private InstrumentDetails instrumentDetails;
 }

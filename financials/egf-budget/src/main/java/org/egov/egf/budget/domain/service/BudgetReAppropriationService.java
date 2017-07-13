@@ -97,8 +97,8 @@ public class BudgetReAppropriationService {
 	}
 
 	@Transactional
-	public List<BudgetReAppropriation> validate(List<BudgetReAppropriation> budgetreappropriations,
-			BindingResult errors, String action) {
+	public List<BudgetReAppropriation> save(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors,
+			String action) {
 		budgetreappropriations = fetchRelated(budgetreappropriations);
 		validate(budgetreappropriations, action, errors);
 		if (errors.hasErrors()) {
@@ -110,6 +110,16 @@ public class BudgetReAppropriationService {
 
 	public Pagination<BudgetReAppropriation> search(BudgetReAppropriationSearch budgetReAppropriationSearch) {
 		return budgetReAppropriationRepository.search(budgetReAppropriationSearch);
+	}
+
+	@Transactional
+	public BudgetReAppropriation save(BudgetReAppropriation budgetReAppropriation) {
+		return budgetReAppropriationRepository.save(budgetReAppropriation);
+	}
+
+	@Transactional
+	public BudgetReAppropriation update(BudgetReAppropriation budgetReAppropriation) {
+		return budgetReAppropriationRepository.update(budgetReAppropriation);
 	}
 
 }

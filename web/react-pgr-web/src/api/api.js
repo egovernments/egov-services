@@ -1,3 +1,4 @@
+var common = require('../components/common/common');
 var axios = require('axios');
 // var store = require('configureStore').configure();
 
@@ -17,7 +18,7 @@ var authToken = localStorage.getItem("token");
 var requestInfo = {
     "apiId": "org.egov.pt",
     "ver": "1.0",
-    "ts": "01-01-2017 01:01:01",
+    "ts": "12-12-2017 12:12:12",
     "action": "asd",
     "did": "4354648646",
     "key": "xyz",
@@ -57,8 +58,11 @@ module.exports = {
                     }
                     throw new Error(_err);
                 }
-            } else if(response && response.response && !response.response.data && response.response.status == 400) {
-                document.title = "Egovernments";
+            }else if(response && response.response && response.response.data && response.response.data.error){
+              let _err = common.translate(response.response.data.error.fields[0].code);
+              throw new Error(_err);
+            }else if(response && response.response && !response.response.data && response.response.status == 400) {
+                document.title = "eGovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale', locale);

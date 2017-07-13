@@ -69,7 +69,7 @@ public class DocumentService {
             document.setConsumerType(billDetail.getBillDetails().getConsumerType());
             document.setConsumerCode(billDetail.getBillDetails().getConsumerCode());
             document.setReceiptNumber(billDetail.getReceiptNumber());
-            document.setReceiptDate(billDetail.getReceiptDate().toString());
+            document.setReceiptDate(billDetail.getReceiptDate());
             document.setChannel(billDetail.getChannel());
             document.setPaymentMode(billDetail.getCollectionType());
             document.setTotalAmount(billDetail.getBillDetails().getTotalAmount());

@@ -75,14 +75,14 @@ public class SourceTypeService {
 
     public SourceType createWaterSource(final String topic, final String key,
             final SourceTypeRequest waterSourceRequest) {
-        waterSourceRequest.getWaterSourceType().setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
+        waterSourceRequest.getSourceType().setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
 
         try {
             kafkaTemplate.send(topic, key, waterSourceRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return waterSourceRequest.getWaterSourceType();
+        return waterSourceRequest.getSourceType();
     }
 
     public SourceType updateWaterSource(final String topic, final String key,
@@ -93,7 +93,7 @@ public class SourceTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return waterSourceRequest.getWaterSourceType();
+        return waterSourceRequest.getSourceType();
     }
 
     public boolean getWaterSourceByNameAndCode(final String code, final String name, final String tenantId) {

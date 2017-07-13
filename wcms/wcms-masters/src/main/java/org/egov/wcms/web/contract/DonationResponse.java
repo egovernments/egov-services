@@ -62,8 +62,9 @@ import lombok.ToString;
 @ToString
 public class DonationResponse {
 
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
+    
     @JsonProperty("donations")
     private List<Donation> donations = new ArrayList<>();
 

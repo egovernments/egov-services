@@ -41,6 +41,7 @@ package org.egov.demand.repository.rowmapper;
 
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.model.enums.PeriodCycle;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +61,8 @@ public class TaxPeriodRowMapper implements RowMapper<TaxPeriod> {
         taxPeriod.setToDate(rs.getLong("toDate"));
         taxPeriod.setFinancialYear(rs.getString("financialYear"));
         taxPeriod.setTenantId(rs.getString("tenantId"));
+        String periodCycle = rs.getString("periodcycle");
+        taxPeriod.setPeriodCycle(PeriodCycle.fromValue(periodCycle));
 
         AuditDetail auditDetail = new AuditDetail();
         auditDetail.setCreatedBy(rs.getString("createdby"));

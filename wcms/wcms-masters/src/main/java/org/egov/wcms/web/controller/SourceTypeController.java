@@ -123,7 +123,7 @@ public class SourceTypeController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("waterSourceRequest::" + waterSourceRequest);
-        waterSourceRequest.getWaterSourceType().setCode(code);
+        waterSourceRequest.getSourceType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest);
         if (!errorResponses.isEmpty())
@@ -168,7 +168,7 @@ public class SourceTypeController {
     private ResponseEntity<?> getSuccessResponse(final List<SourceType> waterSourceList, final String mode,
             final RequestInfo requestInfo) {
         final SourceTypeResponse waterSourceResponse = new SourceTypeResponse();
-        waterSourceResponse.setWaterSourceTypes(waterSourceList);
+        waterSourceResponse.setSourceTypes(waterSourceList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());

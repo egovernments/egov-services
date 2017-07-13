@@ -114,4 +114,13 @@ public class AccountDetailKeyService {
 		return accountDetailKeyRepository.search(accountDetailKeySearch);
 	}
 
+	@Transactional
+	public AccountDetailKey save(AccountDetailKey accountDetailKey) {
+		return accountDetailKeyRepository.save(accountDetailKey);
+	}
+
+	@Transactional
+	public AccountDetailKey update(AccountDetailKey accountDetailKey) {
+		return accountDetailKeyRepository.update(accountDetailKey);
+	}
 }

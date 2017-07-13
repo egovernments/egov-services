@@ -186,9 +186,10 @@ class searchPipeSize extends Component {
   }
 
   handleNavigation = (id) => {
-      let url = this.props.location.pathsizeInMilimeter;
+      let url = this.props.location.pathname;
       console.log("url",url);
       if(url == '/wc/pipeSize/view'){
+
            this.props.history.push('/wc/viewPipeSize/'+id);
        } else {
            this.props.history.push('/wc/createPipeSize/'+id);

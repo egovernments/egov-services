@@ -62,7 +62,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DocumentTypeRes {
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     public ResponseInfo responseInfo;
 
     @JsonProperty("documentTypes")

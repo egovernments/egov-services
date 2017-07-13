@@ -45,6 +45,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.demand.model.enums.PeriodCycle;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -60,10 +62,13 @@ public class TaxPeriod {
 
 	@NotNull
 	private Long toDate;
+	
+	@NotNull
+	private PeriodCycle periodCycle;
 
 	@NotNull
 	private String service;
-
+	
 	@NotNull
 	private String code;
 

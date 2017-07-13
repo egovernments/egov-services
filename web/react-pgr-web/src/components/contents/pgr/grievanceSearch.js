@@ -107,6 +107,18 @@ class grievanceSearch extends Component {
        this.handlePageClick = this.handlePageClick.bind(this);
        this.handleNavigation = this.handleNavigation.bind(this);
        this.handleRequestClose = this.handleRequestClose.bind(this);
+       this.resetSearch = this.resetSearch.bind(this);
+  }
+
+  resetSearch() {
+    this.props.initForm();
+    this.props.changeButtonText(translate("core.lbl.more"));
+    this.setState({
+      pageCount: 0,
+      fromIndex: 0,
+      resultList: [],
+      isSearchClicked: false
+    })
   }
 
   handleNavigation(serviceId) {
@@ -139,20 +151,28 @@ class grievanceSearch extends Component {
   		})
   	} else {
   		var searchSet = Object.assign({}, grievanceSearchSet);
-  		if(searchSet.startDate) {
+  		/*if(searchSet.startDate) {
   			searchSet.startDate = searchSet.startDate.toISOString().split("T")[0].split("-")[2] + "-" + searchSet.startDate.toISOString().split("T")[0].split("-")[1] + "-" + searchSet.startDate.toISOString().split("T")[0].split("-")[0];
   		}
 
   		if(searchSet.endDate) {
   			searchSet.endDate = searchSet.endDate.toISOString().split("T")[0].split("-")[2] + "-" + searchSet.endDate.toISOString().split("T")[0].split("-")[1] + "-" + searchSet.endDate.toISOString().split("T")[0].split("-")[0];
-  		}
+  		}*/
+
+      if(searchSet.startDate) {
+        searchSet.startDate = ("0" + searchSet.startDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.startDate.getMonth() + 1)).slice(-2) + "-" + searchSet.startDate.getFullYear();
+      }
+
+      if(searchSet.endDate) {
+        searchSet.endDate = ("0" + searchSet.endDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.endDate.getMonth() + 1)).slice(-2) + "-" + searchSet.endDate.getFullYear();
+      }
 
   		if(searchSet.status) {
   			searchSet.status = searchSet.status.join(",");
   		}
 
   		searchSet.sizePerPage = 10;
-  		searchSet.fromIndex = self.state.fromIndex;
+  		searchSet.fromIndex = self.state.fromIndex || "0";
       self.props.setLoadingStatus("loading");
   		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
@@ -251,7 +271,7 @@ class grievanceSearch extends Component {
   };
 
   render() {
-  	let {search, resetAndSearch, handlePageClick, handleNavigation} = this;
+  	let {search, resetAndSearch, handlePageClick, handleNavigation, resetSearch} = this;
   	let {
   		complaintTypeList,
   		statusList,
@@ -302,7 +322,7 @@ class grievanceSearch extends Component {
   						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
   						<td>{getNameByProperty(val.attribValues, "status")}</td>
   						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
-  						<td>{val.requestedDatetime ? toLocalTime(val.requestedDatetime) : val.requestedDatetime}</td>
+  						<td>{val.requestedDatetime ? /*toLocalTime(*/val.requestedDatetime/*)*/ : val.requestedDatetime}</td>
   					</tr>
   				)
   			})
@@ -422,8 +442,8 @@ class grievanceSearch extends Component {
 	              		<Grid>
 	                		<Row>
 	                			<Col xs={12} md={3}>
-	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.srn")} value={grievanceSearchSet.serviceRequestId} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
-	                			</Col>
+	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.srn")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
+                        </Col>
 	                			<Col xs={12} md={3}>
 	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
@@ -461,7 +481,7 @@ class grievanceSearch extends Component {
 	          <div style={{textAlign: 'center'}}>
 
 		          <RaisedButton style={{margin:'15px 5px'}} type="submit" primary={true} label={translate("core.lbl.search")}/>
-
+              <RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.reset")} onClick={(e) => {resetSearch(e)}}/>
               </div>
 	        </form>
 	        {displayTableCard()}

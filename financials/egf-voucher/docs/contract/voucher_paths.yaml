@@ -1,0 +1,676 @@
+    /vouchers/_search:
+      post:
+        summary: Get the list of vouchers
+        description: vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+            maxLength: 32
+          - name: type
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 16
+          - name: name
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 16
+          - name: description
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 256
+          - name: voucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 32
+          - name: voucherDate
+            type: string
+            format: date
+            in: query
+            description: |
+              
+              
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: originalVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: refVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: moduleName
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: ledgers
+            type: object
+            items:
+              $ref: "#/definitions/Ledger"
+            in: query
+            description: |
+              
+              
+          - name: vouchermis
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Voucher retrieved Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /vouchers/_create:
+      post:
+        summary: Create  new  vouchers
+        description: Create  new vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: voucherRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /vouchers/{id}/_update:
+      post:
+        summary: Update any of the vouchers
+        description: Update any of the vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Voucher
+            required: true
+            type: integer
+            format: int64
+          - name: voucherRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          200:
+            description: Voucher updated Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /vouchers/_search:
+      post:
+        summary: Get the list of vouchers
+        description: vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+            maxLength: 32
+          - name: type
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 16
+          - name: name
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 16
+          - name: description
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 256
+          - name: voucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+            maxLength: 32
+          - name: voucherDate
+            type: string
+            format: date
+            in: query
+            description: |
+              
+              
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: originalVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: refVoucherNumber
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: moduleName
+            type: string
+            in: query
+            description: |
+              
+              
+          - name: ledgers
+            type: object
+            items:
+              $ref: "#/definitions/Ledger"
+            in: query
+            description: |
+              
+              
+          - name: vouchermis
+            type: integer
+            format: int64
+            in: query
+            description: |
+              
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: Voucher retrieved Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /vouchers/_create:
+      post:
+        summary: Create  new  vouchers
+        description: Create  new vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: voucherRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /vouchers/{id}/_update:
+      post:
+        summary: Update any of the vouchers
+        description: Update any of the vouchers
+        tags: 
+          - voucher
+          - Voucher
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Voucher
+            required: true
+            type: integer
+            format: int64
+          - name: voucherRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          200:
+            description: Voucher updated Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgets/_search:
+      post:
+        summary: Get the list of budgets
+        description: budgets
+        tags: 
+          - voucher
+          - Budget
+        parameters:
+    /budgets/_create:
+      post:
+        summary: Create  new  budgets
+        description: Create  new budgets
+        tags: 
+          - voucher
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          201:
+            description: Budget created Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/{id}/_update:
+      post:
+        summary: Update any of the budgets
+        description: Update any of the budgets
+        tags: 
+          - voucher
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Budget
+            required: true
+            type: integer
+            format: int64
+          - name: budgetRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          200:
+            description: Budget updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgets/_search:
+      post:
+        summary: Get the list of budgets
+        description: budgets
+        tags: 
+          - voucher
+          - Budget
+        parameters:
+    /budgets/_create:
+      post:
+        summary: Create  new  budgets
+        description: Create  new budgets
+        tags: 
+          - voucher
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          201:
+            description: Budget created Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgets/{id}/_update:
+      post:
+        summary: Update any of the budgets
+        description: Update any of the budgets
+        tags: 
+          - voucher
+          - Budget
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the Budget
+            required: true
+            type: integer
+            format: int64
+          - name: budgetRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetRequest'
+        responses:
+          200:
+            description: Budget updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgetdetails/_search:
+      post:
+        summary: Get the list of budgetdetails
+        description: budgetdetails
+        tags: 
+          - voucher
+          - BudgetDetail
+        parameters:
+    /budgetdetails/_create:
+      post:
+        summary: Create  new  budgetdetails
+        description: Create  new budgetdetails
+        tags: 
+          - voucher
+          - BudgetDetail
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetDetailRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetDetailRequest'
+        responses:
+          201:
+            description: BudgetDetail created Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetdetails/{id}/_update:
+      post:
+        summary: Update any of the budgetdetails
+        description: Update any of the budgetdetails
+        tags: 
+          - voucher
+          - BudgetDetail
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the BudgetDetail
+            required: true
+            type: integer
+            format: int64
+          - name: budgetDetailRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetDetailRequest'
+        responses:
+          200:
+            description: BudgetDetail updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetDetailResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+
+    /budgetreappropriations/_search:
+      post:
+        summary: Get the list of budgetreappropriations
+        description: budgetreappropriations
+        tags: 
+          - voucher
+          - BudgetReAppropriation
+        parameters:
+    /budgetreappropriations/_create:
+      post:
+        summary: Create  new  budgetreappropriations
+        description: Create  new budgetreappropriations
+        tags: 
+          - voucher
+          - BudgetReAppropriation
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: budgetReAppropriationRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationRequest'
+        responses:
+          201:
+            description: BudgetReAppropriation created Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /budgetreappropriations/{id}/_update:
+      post:
+        summary: Update any of the budgetreappropriations
+        description: Update any of the budgetreappropriations
+        tags: 
+          - voucher
+          - BudgetReAppropriation
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the BudgetReAppropriation
+            required: true
+            type: integer
+            format: int64
+          - name: budgetReAppropriationRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationRequest'
+        responses:
+          200:
+            description: BudgetReAppropriation updated Successfully
+            schema:
+              $ref: '#/definitions/BudgetReAppropriationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+

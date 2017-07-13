@@ -57,8 +57,11 @@ public class WorkFlowService {
     public static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowService.class);
     
     @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
     private WorkFlowSearchURLHelper workFlowSearchURLHelper;
-    
+
     @Autowired
     private PropertiesManager propertiesManager;
 
@@ -78,7 +81,6 @@ public class WorkFlowService {
         processInstanceRequest.setProcessInstance(processInstance);
         final String url = workFlowSearchURLHelper.startURL();
 
-        final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
@@ -113,7 +115,6 @@ public class WorkFlowService {
         taskRequest.setTask(task);
         final String url = workFlowSearchURLHelper.updateURL(leaveApplicationRequest.getLeaveApplication().getStateId());
 
-        final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         final HttpEntity<TaskRequest> request = new HttpEntity<>(taskRequest);

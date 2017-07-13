@@ -1,48 +1,40 @@
 import React, { Component } from 'react';
+import {Col} from 'react-bootstrap';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import FileRemove from 'material-ui/svg-icons/action/highlight-off';
 
-export default (props) => {
-    let files = props.files;
-    let renderImage = () =>
-    {
-      if(files && files.length>0){
-        var parent = document.getElementById("imgParent");
-        parent.innerHTML = "";
-        for(let i=0; i<files.length; i++) {
-          let div = document.createElement("div");
-          div.className = "col-md-3 col-xs-12";
-          let file = files[i];
-          let filename=file.name;
-          let reader = new FileReader();
-          reader.onload = function(e) {
-    				//setImage(e,input, filename);
-            var bool = false;
-            for(var i=0; i<parent.children.length; i++) {
-              if(parent.children[i].getAttribute("data-name") == filename) {
-                bool = true;
-                break;
-              }
-            }
-            if(!bool){
-              let img = document.createElement("img");
-              img.src = e.target.result;
-              div.setAttribute("data-name", filename);
-              img.style.width = "100%";
-              img.style.height = "auto";
-              div.appendChild(img);
-              parent.appendChild(div);
-            }
-    			}
-          reader.readAsDataURL(file);
-        }
-      }else{
-        if(document.getElementById("imgParent"))
-          document.getElementById("imgParent").innerHTML = "";
+var filename;
+const renderImage = (props) => {
+
+  const readURL = (e, idx) => {
+    if(props.file){
+      let section = 'image'+idx;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+          document.getElementById(section).src = e.target.result;
       }
+      reader.readAsDataURL(props.file);
     }
+  }
 
-    return (
-      <div id="imgParent">
-        {renderImage()}
-      </div>
-    )
+  const removeFile = (fileobjToDelete) => {
+    props.handler(fileobjToDelete.name);
+  }
+
+  return (
+    <Col xs={12} md={3}>
+      <RaisedButton
+        label={props.file.name.length > 15 ? props.file.name.substr(0, 12)+'...' : props.file.name}
+        primary={true}
+        fullWidth = {true}
+        icon={<FileRemove />}
+        onTouchTap={event => {removeFile(props.file)}}
+      />
+      <img src="#" id={'image'+props.idx} width="100%" height="100%" />
+      {readURL(this, props.idx)}
+    </Col>
+  );
 }
+
+export default renderImage;

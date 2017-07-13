@@ -62,10 +62,10 @@ import lombok.ToString;
 public class SourceTypeRequest {
 
     @NotNull
-    @JsonProperty("RequestInfo")
+    @JsonProperty("requestInfo")
     private RequestInfo requestInfo;
 
     @JsonProperty("sourceType")
-    private SourceType waterSourceType;
+    private SourceType sourceType;
 
 }

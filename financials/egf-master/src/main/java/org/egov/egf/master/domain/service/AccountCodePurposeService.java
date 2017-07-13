@@ -100,4 +100,13 @@ public class AccountCodePurposeService {
 		return accountCodePurposeRepository.search(accountCodePurposeSearch);
 	}
 
+	@Transactional
+	public AccountCodePurpose save(AccountCodePurpose accountCodePurpose) {
+		return accountCodePurposeRepository.save(accountCodePurpose);
+	}
+
+	@Transactional
+	public AccountCodePurpose update(AccountCodePurpose accountCodePurpose) {
+		return accountCodePurposeRepository.update(accountCodePurpose);
+	}
 }

@@ -62,9 +62,10 @@ import lombok.ToString;
 public class PropertyTypePipeSizeRequest {
 
     @NotNull
-    @JsonProperty("RequestInfo")
+    @JsonProperty("requestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("PropertyPipeSize")
-    private PropertyTypePipeSize propertyPipeSize;
+    
+    @JsonProperty("propertyTypePipeSize")
+    private PropertyTypePipeSize propertyTypePipeSize;
 
 }

@@ -71,7 +71,7 @@ public class CategoryTypeRepository {
     public CategoryTypeRequest persistCreateCategory(final CategoryTypeRequest categoryRequest) {
         log.info("ConnectionCategoryRequest::" + categoryRequest);
         final String categoryInsert = CategoryTypeQueryBuilder.insertCategoryQuery();
-        final CategoryType category = categoryRequest.getCategory();
+        final CategoryType category = categoryRequest.getCategoryType();
         final Object[] obj = new Object[] { Long.valueOf(category.getCode()), category.getCode(), category.getName(),
                 category.getDescription(), category.getActive(),
                 Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
@@ -85,7 +85,7 @@ public class CategoryTypeRepository {
     public CategoryTypeRequest persistModifyCategory(final CategoryTypeRequest categoryRequest) {
         log.info("ConnectionCategoryRequest::" + categoryRequest);
         final String categoryUpdate = CategoryTypeQueryBuilder.updateCategoryQuery();
-        final CategoryType category = categoryRequest.getCategory();
+        final CategoryType category = categoryRequest.getCategoryType();
         final Object[] obj = new Object[] { category.getName(), category.getDescription(), category.getActive(),
                 Long.valueOf(categoryRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), category.getCode() };

@@ -114,4 +114,13 @@ public class AccountEntityService {
 		return accountEntityRepository.search(accountEntitySearch);
 	}
 
+	@Transactional
+	public AccountEntity save(AccountEntity accountEntity) {
+		return accountEntityRepository.save(accountEntity);
+	}
+
+	@Transactional
+	public AccountEntity update(AccountEntity accountEntity) {
+		return accountEntityRepository.update(accountEntity);
+	}
 }

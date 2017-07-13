@@ -81,15 +81,15 @@ public class PropertyTypePipeSizeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return propertyPipeSizeRequest.getPropertyPipeSize();
+        return propertyPipeSizeRequest.getPropertyTypePipeSize();
     }
 
     public boolean checkPropertyByPipeSize(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         getPropertyTypeByName(propertyPipeSizeRequest);
-        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyPipeSize().getId(),
-                propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeId(),
-                propertyPipeSizeRequest.getPropertyPipeSize().getPipeSize(),
-                propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
+        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyTypePipeSize().getId(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeId(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getPipeSize(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId());
     }
 
     public List<PropertyTypePipeSize> getPropertyPipeSizes(
@@ -108,12 +108,12 @@ public class PropertyTypePipeSizeService {
     public Boolean getPropertyTypeByName(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
         final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
-                propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName(),
-                propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeName(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId());
 
         if (propertyTypes.getPropertyTypesSize()) {
             isValidProperty = Boolean.TRUE;
-            propertyPipeSizeRequest.getPropertyPipeSize().setPropertyTypeId(
+            propertyPipeSizeRequest.getPropertyTypePipeSize().setPropertyTypeId(
                     propertyTypes.getPropertyTypes() != null && propertyTypes.getPropertyTypes().get(0) != null
                             ? propertyTypes.getPropertyTypes().get(0).getId() : "");
 

@@ -92,7 +92,7 @@ public class PropertyTypePipeSizeServiceTest {
 
         final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
-        propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
         assertTrue(propertyPipeSize.equals(propertyPipeSizeService.createPropertyPipeSize("", "", propertyPipeSizeRequest)));
     }
 
@@ -101,7 +101,7 @@ public class PropertyTypePipeSizeServiceTest {
 
         final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         final PropertyTypePipeSizeRequest propertyPipeSizeRequest = new PropertyTypePipeSizeRequest();
-        propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
         when(propertyPipeSizeRepository.persistCreatePropertyPipeSize(any(PropertyTypePipeSizeRequest.class)))
                 .thenReturn(propertyPipeSizeRequest);
         assertTrue(propertyPipeSizeRequest.equals(propertyPipeSizeService.create(propertyPipeSizeRequest)));

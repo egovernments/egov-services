@@ -235,7 +235,7 @@ class ServiceGroupCreate extends Component {
               </Card>
               <div style={{textAlign:'center'}}>
 
-                <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
+                <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
 
               </div>
           </form>

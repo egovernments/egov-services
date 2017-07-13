@@ -42,6 +42,7 @@ package org.egov.demand.web.validator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,11 +55,14 @@ import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.TaxHeadMasterService;
+import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,6 +80,9 @@ public class DemandValidator implements Validator {
 
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
+	
+	@Autowired
+	private TaxPeriodService taxPeriodService;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -110,23 +117,44 @@ public class DemandValidator implements Validator {
 					errors.rejectValue("Demands", "",
 							"collectionAmount : "+collection+" should not be greater than taxAmount : "+tax+" for demandDetail");
 			}
-		/*demandDetails.stream().filter(demandDetail -> {
-			
-			BigDecimal tax = demandDetail.getTaxAmount();
-			BigDecimal collection = demandDetail.getCollectionAmount();
-			int i = tax.compareTo(collection);
-			System.err.println("compare to value" + i);
-			if(i < 0)
-				errors.rejectValue("Demands", "",
-						"collectionAmount : "+collection+" should not be greater than taxAmount : "+tax+" for demandDetail");
-			else
-				System.err.println("hi");
-			return true;
-		});*/
+		//TODO DEMAND UNIQUE VALIDATION WITH BUSINESSERVICE AND CONSUMERCODE
 	}
 
 	private void validateTaxPeriod(DemandRequest demandRequest, Errors errors) {
 		
+		List<Demand> demands = demandRequest.getDemands();
+		Long startDate = demands.get(0).getTaxPeriodFrom();
+		Long endDate = demands.get(0).getTaxPeriodTo();
+		String tenantId = demands.get(0).getTenantId();
+		Set<String> businessServiceDetails = new HashSet<>(); 
+		
+		for (Demand demand : demands) {
+			businessServiceDetails.add(demand.getBusinessService());
+			if(startDate > demand.getTaxPeriodFrom())
+				startDate = demand.getTaxPeriodFrom();
+			if(endDate < demand.getTaxPeriodTo())
+				endDate = demand.getTaxPeriodTo();
+		}
+		
+		TaxPeriodCriteria taxPeriodCriteria = TaxPeriodCriteria.builder().service(businessServiceDetails)
+				.fromDate(startDate).toDate(endDate).tenantId(tenantId).build();
+		Map<String, List<TaxPeriod>> taxPeriodMap = taxPeriodService.searchTaxPeriods(
+				taxPeriodCriteria, demandRequest.getRequestInfo()).getTaxPeriods().stream()
+				.collect(Collectors.groupingBy(TaxPeriod::getService));
+		
+	/*	if(demand.getTaxPeriodFrom().compareTo(taxPeriodCriteria.getFromDate()) = 0
+							&& demand.getTaxPeriodTo().compareTo(t.ge) = 0)*/
+		for (Demand demand : demands) {
+			List<TaxPeriod> taxPeriods = taxPeriodMap.get(demand.getBusinessService());
+			TaxPeriod taxPeriod = taxPeriods.stream()
+					.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) <= 0 
+					 && demand.getTaxPeriodTo().compareTo(t.getToDate()) >= 0)
+					.findAny().orElse(null);
+			if (taxPeriod == null)
+				errors.rejectValue("Demands", "", "the given taxPeriod value periodFrom : '" + demand.getTaxPeriodFrom()
+						+ "and periodTo : " +demand.getTaxPeriodTo()
+						+ "'in Demand is invalid, please give a valid taxPeriod");
+		}
 	}
 
 	private void validateBusinessService(DemandRequest demandRequest, Errors errors) {

@@ -87,14 +87,14 @@ class CreateReceivingCenter extends Component {
 
 
 
-     componentWillUpdate() {
-    if(window.urlCheck) {
-      let {initForm}=this.props;
-      initForm();
-      this.setState({id:undefined});
-      window.urlCheck = false;
-    }
-  }
+      componentWillUpdate() {
+        if(window.urlCheck) {
+          let {initForm}=this.props;
+          initForm();
+          this.setState({id:undefined});
+          window.urlCheck = false;
+        }
+      }
 
     submitForm = (e) => {
 
@@ -114,26 +114,28 @@ class CreateReceivingCenter extends Component {
            "tenantId":"default"
           }
       }
-
+      current.props.setLoadingStatus('loading');
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/receivingcenter/v1/"+body.ReceivingCenterType.code+"/_update",{},body).then(function(response){
-              console.log(response);
               current.setState({
                 open: true
               });
-          }).catch((error)=>{
-              console.log(error);
+              current.props.setLoadingStatus('hide');
+          }).catch((err)=>{
+              current.props.toggleSnackbarAndSetText(true, err.message);
+              current.props.setLoadingStatus('hide');
           })
       } else {
           Api.commonApiPost("/pgr-master/receivingcenter/v1/_create",{},body).then(function(response){
-              console.log(response);
+              current.props.setLoadingStatus('hide');
               current.setState({
                 open: true
               })
               let {initForm}=current.props;
               initForm();
-          }).catch((error)=>{
-              console.log(error);
+          }).catch((err)=>{
+              current.props.toggleSnackbarAndSetText(true, err.message);
+              current.props.setLoadingStatus('hide');
           })
       }
     }
@@ -256,7 +258,7 @@ class CreateReceivingCenter extends Component {
               </Card>
               <div style={{textAlign:'center'}}>
 
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} primary={true}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} primary={true}/>
 
               </div>
           </form>
@@ -335,7 +337,15 @@ const mapDispatchToProps = dispatch => ({
       isRequired,
       pattern
     });
-  }
+  },
+
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+  },
+
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateReceivingCenter);

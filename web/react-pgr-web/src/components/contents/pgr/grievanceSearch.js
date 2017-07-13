@@ -160,11 +160,11 @@ class grievanceSearch extends Component {
   		}*/
 
       if(searchSet.startDate) {
-        searchSet.startDate = ("0" + searchSet.startDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.startDate.getMonth() + 1)).slice(-2) + "-" + ("0" + searchSet.startDate.getFullYear()).slice(-2);
+        searchSet.startDate = ("0" + searchSet.startDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.startDate.getMonth() + 1)).slice(-2) + "-" + searchSet.startDate.getFullYear();
       }
 
       if(searchSet.endDate) {
-        searchSet.endDate = ("0" + searchSet.endDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.endDate.getMonth() + 1)).slice(-2) + "-" + ("0" + searchSet.endDate.getFullYear()).slice(-2);
+        searchSet.endDate = ("0" + searchSet.endDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.endDate.getMonth() + 1)).slice(-2) + "-" + searchSet.endDate.getFullYear();
       }
 
   		if(searchSet.status) {

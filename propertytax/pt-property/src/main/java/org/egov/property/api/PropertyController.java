@@ -135,5 +135,18 @@ public class PropertyController {
 
 		return propertyService.createTitleTransfer(titleTransferRequest);
 	}
+	
+	/**
+	 * 
+	 * @param titleTransferRequest
+	 * @return titleTransferResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "transfer/_update", method = RequestMethod.POST)
+	public TitleTransferResponse updateTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest)
+			throws Exception {
+
+		return propertyService.updateTitleTransfer(titleTransferRequest);
+	}
 
 }

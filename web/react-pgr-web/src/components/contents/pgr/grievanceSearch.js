@@ -139,13 +139,21 @@ class grievanceSearch extends Component {
   		})
   	} else {
   		var searchSet = Object.assign({}, grievanceSearchSet);
-  		if(searchSet.startDate) {
+  		/*if(searchSet.startDate) {
   			searchSet.startDate = searchSet.startDate.toISOString().split("T")[0].split("-")[2] + "-" + searchSet.startDate.toISOString().split("T")[0].split("-")[1] + "-" + searchSet.startDate.toISOString().split("T")[0].split("-")[0];
   		}
 
   		if(searchSet.endDate) {
   			searchSet.endDate = searchSet.endDate.toISOString().split("T")[0].split("-")[2] + "-" + searchSet.endDate.toISOString().split("T")[0].split("-")[1] + "-" + searchSet.endDate.toISOString().split("T")[0].split("-")[0];
-  		}
+  		}*/
+
+      if(searchSet.startDate) {
+        searchSet.startDate = ("0" + searchSet.startDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.startDate.getMonth() + 1)).slice(-2) + "-" + ("0" + searchSet.startDate.getFullYear()).slice(-2);
+      }
+
+      if(searchSet.endDate) {
+        searchSet.endDate = ("0" + searchSet.endDate.getDate()).slice(-2) + "-" + ("0" + (searchSet.endDate.getMonth() + 1)).slice(-2) + "-" + ("0" + searchSet.endDate.getFullYear()).slice(-2);
+      }
 
   		if(searchSet.status) {
   			searchSet.status = searchSet.status.join(",");
@@ -302,7 +310,7 @@ class grievanceSearch extends Component {
   						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
   						<td>{getNameByProperty(val.attribValues, "status")}</td>
   						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
-  						<td>{val.requestedDatetime ? toLocalTime(val.requestedDatetime) : val.requestedDatetime}</td>
+  						<td>{val.requestedDatetime ? /*toLocalTime(*/val.requestedDatetime/*)*/ : val.requestedDatetime}</td>
   					</tr>
   				)
   			})

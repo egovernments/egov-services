@@ -48,11 +48,19 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", FundsourceEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(fundsourceSearchEntity.getSortBy());
+                    validateEntityFieldName(fundsourceSearchEntity.getSortBy(), FundsourceEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + fundsourceSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (fundsourceSearchEntity.getId() != null) {
@@ -118,7 +126,7 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<Fundsource>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

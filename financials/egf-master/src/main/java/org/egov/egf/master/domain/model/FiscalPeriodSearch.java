@@ -13,4 +13,5 @@ import lombok.Setter;
 public class FiscalPeriodSearch extends FiscalPeriod {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

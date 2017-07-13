@@ -48,11 +48,19 @@ public class FunctionJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
-
 		searchQuery = searchQuery.replace(":tablename", FunctionEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(functionSearchEntity.getSortBy());
+                    validateEntityFieldName(functionSearchEntity.getSortBy(), FunctionEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + functionSearchEntity.getSortBy();
+
 
 		// implement jdbc specfic search
 		if (functionSearchEntity.getId() != null) {
@@ -111,8 +119,8 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		} else {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
-
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		
+	        searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<Function>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

@@ -48,6 +48,12 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
+		
+	        if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty()) {
+	            validateSortByOrder(fundSearchEntity.getSortBy());
+	            validateEntityFieldName(fundSearchEntity.getSortBy(), FundEntity.class);
+	        }
+		
 		String orderBy = "order by id";
 		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
 			orderBy = "order by " + fundSearchEntity.getSortBy();

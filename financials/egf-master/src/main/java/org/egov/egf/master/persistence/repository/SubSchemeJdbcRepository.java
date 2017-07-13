@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
 import org.egov.egf.master.persistence.entity.SubSchemeEntity;
@@ -48,11 +49,19 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", SubSchemeEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (subSchemeSearchEntity.getSortBy() != null && !subSchemeSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(subSchemeSearchEntity.getSortBy());
+                    validateEntityFieldName(subSchemeSearchEntity.getSortBy(), SubSchemeEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (subSchemeSearchEntity.getSortBy() != null && !subSchemeSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + subSchemeSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (subSchemeSearchEntity.getId() != null) {
@@ -118,7 +127,7 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<SubScheme>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

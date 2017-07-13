@@ -10,6 +10,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
+import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.persistence.entity.FiscalPeriodEntity;
 import org.egov.egf.master.persistence.entity.FiscalPeriodSearchEntity;
 import org.slf4j.Logger;
@@ -48,11 +49,19 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", FiscalPeriodEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(fiscalPeriodSearchEntity.getSortBy());
+                    validateEntityFieldName(fiscalPeriodSearchEntity.getSortBy(), FiscalPeriodEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + fiscalPeriodSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (fiscalPeriodSearchEntity.getId() != null) {
@@ -118,7 +127,7 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<FiscalPeriod>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

@@ -10,6 +10,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
+import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.persistence.entity.BudgetGroupEntity;
 import org.egov.egf.master.persistence.entity.BudgetGroupSearchEntity;
 import org.slf4j.Logger;
@@ -48,11 +49,19 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", BudgetGroupEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(budgetGroupSearchEntity.getSortBy());
+                    validateEntityFieldName(budgetGroupSearchEntity.getSortBy(), BudgetGroupEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (budgetGroupSearchEntity.getSortBy() != null && !budgetGroupSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + budgetGroupSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (budgetGroupSearchEntity.getId() != null) {
@@ -124,7 +133,7 @@ public class BudgetGroupJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<BudgetGroup>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

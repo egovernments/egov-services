@@ -48,11 +48,19 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", AccountDetailKeyEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (accountDetailKeySearchEntity.getSortBy() != null && !accountDetailKeySearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(accountDetailKeySearchEntity.getSortBy());
+                    validateEntityFieldName(accountDetailKeySearchEntity.getSortBy(), AccountDetailKeyEntity.class);
+                }
+                
+                String orderBy = "order by key asc";
+                if (accountDetailKeySearchEntity.getSortBy() != null && !accountDetailKeySearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + accountDetailKeySearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (accountDetailKeySearchEntity.getId() != null) {
@@ -88,7 +96,7 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<AccountDetailKey>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

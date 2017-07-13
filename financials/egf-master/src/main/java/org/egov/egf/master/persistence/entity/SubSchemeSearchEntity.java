@@ -16,6 +16,7 @@ import lombok.Setter;
 public class SubSchemeSearchEntity extends SubSchemeEntity {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 
 	@Override
 	public SubScheme toDomain() {
@@ -28,6 +29,7 @@ public class SubSchemeSearchEntity extends SubSchemeEntity {
 		super.toEntity((SubScheme) subSchemeSearch);
 		this.pageSize = subSchemeSearch.getPageSize();
 		this.offset = subSchemeSearch.getOffset();
+		this.sortBy = subSchemeSearch.getSortBy();
 		return this;
 	}
 

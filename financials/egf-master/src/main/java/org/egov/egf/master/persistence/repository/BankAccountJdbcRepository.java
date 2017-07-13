@@ -10,6 +10,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
+import org.egov.egf.master.domain.model.BankBranch;
 import org.egov.egf.master.persistence.entity.BankAccountEntity;
 import org.egov.egf.master.persistence.entity.BankAccountSearchEntity;
 import org.slf4j.Logger;
@@ -48,11 +49,19 @@ public class BankAccountJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", BankAccountEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (bankAccountSearchEntity.getSortBy() != null && !bankAccountSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(bankAccountSearchEntity.getSortBy());
+                    validateEntityFieldName(bankAccountSearchEntity.getSortBy(), BankAccountEntity.class);
+                }
+                
+                String orderBy = "order by id";
+                if (bankAccountSearchEntity.getSortBy() != null && !bankAccountSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + bankAccountSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (bankAccountSearchEntity.getId() != null) {
@@ -130,7 +139,7 @@ public class BankAccountJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<BankAccount>)getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

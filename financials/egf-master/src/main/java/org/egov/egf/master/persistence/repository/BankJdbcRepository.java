@@ -48,11 +48,19 @@ public class BankJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", BankEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (bankSearchEntity.getSortBy() != null && !bankSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(bankSearchEntity.getSortBy());
+                    validateEntityFieldName(bankSearchEntity.getSortBy(), BankEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (bankSearchEntity.getSortBy() != null && !bankSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + bankSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (bankSearchEntity.getId() != null) {
@@ -128,7 +136,7 @@ public class BankJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
  
 		page = (Pagination<Bank>) getPagination(searchQuery, page, paramValues);

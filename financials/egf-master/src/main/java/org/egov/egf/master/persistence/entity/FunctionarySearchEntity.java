@@ -16,6 +16,7 @@ import lombok.Setter;
 public class FunctionarySearchEntity extends FunctionaryEntity {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 
 	@Override
 	public Functionary toDomain() {
@@ -28,6 +29,7 @@ public class FunctionarySearchEntity extends FunctionaryEntity {
 		super.toEntity((Functionary) functionarySearch);
 		this.pageSize = functionarySearch.getPageSize();
 		this.offset = functionarySearch.getOffset();
+		this.sortBy = functionarySearch.getSortBy();
 		return this;
 	}
 

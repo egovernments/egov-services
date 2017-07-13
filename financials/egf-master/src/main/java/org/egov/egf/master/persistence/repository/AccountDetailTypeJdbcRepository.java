@@ -10,6 +10,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
+import org.egov.egf.master.domain.model.AccountEntity;
 import org.egov.egf.master.persistence.entity.AccountDetailTypeEntity;
 import org.egov.egf.master.persistence.entity.AccountDetailTypeSearchEntity;
 import org.slf4j.Logger;
@@ -48,11 +49,19 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", AccountDetailTypeEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (accountDetailTypeSearchEntity.getSortBy() != null && !accountDetailTypeSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(accountDetailTypeSearchEntity.getSortBy());
+                    validateEntityFieldName(accountDetailTypeSearchEntity.getSortBy(), AccountDetailTypeEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (accountDetailTypeSearchEntity.getSortBy() != null && !accountDetailTypeSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + accountDetailTypeSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (accountDetailTypeSearchEntity.getId() != null) {
@@ -106,7 +115,7 @@ public class AccountDetailTypeJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<AccountDetailType>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

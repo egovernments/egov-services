@@ -1,0 +1,520 @@
+
+    Voucher:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        type:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        name:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        description:
+          type: string
+          description: |
+            
+            
+          maxLength: 256
+        voucherNumber:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        voucherDate:
+          type: string
+          format: date
+          description: |
+            
+            
+        fund:
+          $ref: "#/definitions/FundContract"
+        status:
+          $ref: "#/definitions/EgfStatus"
+        originalVoucherNumber:
+          type: string
+          description: |
+            
+            
+        refVoucherNumber:
+          type: string
+          description: |
+            
+            
+        moduleName:
+          type: string
+          description: |
+            
+            
+        ledgers:
+          type:  array
+          description:  |
+            
+            
+          items:
+            $ref: "#/definitions/Ledger"
+        vouchermis:
+          $ref: "#/definitions/Vouchermis"
+      required:
+      - type
+      - name
+      - voucherDate
+    Ledger:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            
+            
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccountContract"
+        glcode:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        creditAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        function:
+          $ref: "#/definitions/FunctionContract"
+        ledgerDetails:
+          type:  array
+          description:  |
+            
+            
+          items:
+            $ref: "#/definitions/LedgerDetail"
+      required:
+      - chartOfAccount
+      - glcode
+      - debitAmount
+      - creditAmount
+    Vouchermis:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        billNumber:
+          type: string
+          description: |
+            
+            
+        function:
+          $ref: "#/definitions/FunctionContract"
+        fundsource:
+          $ref: "#/definitions/FundsourceContract"
+        scheme:
+          $ref: "#/definitions/SchemeContract"
+        subScheme:
+          $ref: "#/definitions/SubSchemeContract"
+        functionary:
+          $ref: "#/definitions/FunctionaryContract"
+        sourcePath:
+          type: string
+          description: |
+            
+            
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            
+            
+        budgetAppropriationNo:
+          type: string
+          description: |
+            
+            
+    LedgerDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+        accountDetailKey:
+          $ref: "#/definitions/AccountDetailKey"
+        amount:
+          type: number
+          format: double
+          description: |
+            
+            
+      required:
+      - accountDetailKey
+      - amount
+    VoucherRequest:
+      description: Contract class to receive request. Array of Voucher items  are used in case of create . Where as single Voucher item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+    VoucherResponse:
+      description: Contract class to send response. Array of Voucher items  are used in case of search results or response for create. Where as single Voucher item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+        page:
+          $ref: '#/definitions/Page'
+
+    Voucher:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        type:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        name:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        description:
+          type: string
+          description: |
+            
+            
+          maxLength: 256
+        voucherNumber:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        voucherDate:
+          type: string
+          format: date
+          description: |
+            
+            
+        fund:
+          $ref: "#/definitions/FundContract"
+        status:
+          $ref: "#/definitions/EgfStatus"
+        originalVoucherNumber:
+          type: string
+          description: |
+            
+            
+        refVoucherNumber:
+          type: string
+          description: |
+            
+            
+        moduleName:
+          type: string
+          description: |
+            
+            
+        ledgers:
+          type:  array
+          description:  |
+            
+            
+          items:
+            $ref: "#/definitions/Ledger"
+        vouchermis:
+          $ref: "#/definitions/Vouchermis"
+      required:
+      - type
+      - name
+      - voucherDate
+    Ledger:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            
+            
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccountContract"
+        glcode:
+          type: string
+          description: |
+            
+            
+          maxLength: 16
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        creditAmount:
+          type: number
+          format: double
+          description: |
+            
+            
+        function:
+          $ref: "#/definitions/FunctionContract"
+        ledgerDetails:
+          type:  array
+          description:  |
+            
+            
+          items:
+            $ref: "#/definitions/LedgerDetail"
+      required:
+      - chartOfAccount
+      - glcode
+      - debitAmount
+      - creditAmount
+    Vouchermis:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+          maxLength: 32
+        billNumber:
+          type: string
+          description: |
+            
+            
+        function:
+          $ref: "#/definitions/FunctionContract"
+        fundsource:
+          $ref: "#/definitions/FundsourceContract"
+        scheme:
+          $ref: "#/definitions/SchemeContract"
+        subScheme:
+          $ref: "#/definitions/SubSchemeContract"
+        functionary:
+          $ref: "#/definitions/FunctionaryContract"
+        sourcePath:
+          type: string
+          description: |
+            
+            
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            
+            
+        budgetAppropriationNo:
+          type: string
+          description: |
+            
+            
+    LedgerDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            
+            
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+        accountDetailKey:
+          $ref: "#/definitions/AccountDetailKey"
+        amount:
+          type: number
+          format: double
+          description: |
+            
+            
+      required:
+      - accountDetailKey
+      - amount
+    VoucherRequest:
+      description: Contract class to receive request. Array of Voucher items  are used in case of create . Where as single Voucher item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+    VoucherResponse:
+      description: Contract class to send response. Array of Voucher items  are used in case of search results or response for create. Where as single Voucher item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        voucher:
+          $ref: '#/definitions/Voucher'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetRequest:
+      description: Contract class to receive request. Array of Budget items  are used in case of create . Where as single Budget item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+    BudgetResponse:
+      description: Contract class to send response. Array of Budget items  are used in case of search results or response for create. Where as single Budget item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetRequest:
+      description: Contract class to receive request. Array of Budget items  are used in case of create . Where as single Budget item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+    BudgetResponse:
+      description: Contract class to send response. Array of Budget items  are used in case of search results or response for create. Where as single Budget item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgets:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Budget'
+        budget:
+          $ref: '#/definitions/Budget'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetDetailRequest:
+      description: Contract class to receive request. Array of BudgetDetail items  are used in case of create . Where as single BudgetDetail item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+    BudgetDetailResponse:
+      description: Contract class to send response. Array of BudgetDetail items  are used in case of search results or response for create. Where as single BudgetDetail item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetDetails:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetDetail'
+        budgetDetail:
+          $ref: '#/definitions/BudgetDetail'
+        page:
+          $ref: '#/definitions/Page'
+
+    BudgetReAppropriationRequest:
+      description: Contract class to receive request. Array of BudgetReAppropriation items  are used in case of create . Where as single BudgetReAppropriation item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+    BudgetReAppropriationResponse:
+      description: Contract class to send response. Array of BudgetReAppropriation items  are used in case of search results or response for create. Where as single BudgetReAppropriation item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        budgetReAppropriations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BudgetReAppropriation'
+        budgetReAppropriation:
+          $ref: '#/definitions/BudgetReAppropriation'
+        page:
+          $ref: '#/definitions/Page'

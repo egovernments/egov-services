@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.config.TracerConfiguration;
-import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +24,6 @@ public class SearchIndexerApplication {
 	@PostConstruct
 	public void initialize() {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
-        DateTimeZone.setDefault(DateTimeZone.forID(timeZone));
 	}
 
 	@Bean

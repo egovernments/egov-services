@@ -66,6 +66,7 @@ import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.model.enums.Category;
 import org.egov.demand.model.enums.Purpose;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.web.contract.BillRequest;
@@ -210,6 +211,10 @@ public class BillService {
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
 					demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand.getTaxPeriodTo().
 					compareTo(t.getValidTill()) <= 0).findAny().orElse(null);
+					
+					if(taxHeadMaster == null) 
+						throw new RuntimeException(
+								"No TaxHead Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode());
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
 
@@ -218,26 +223,17 @@ public class BillService {
 							.filter((t) -> demand2.getTaxPeriodFrom() >= t.getFromDate()
 									&& demand2.getTaxPeriodTo() <= t.getToDate())
 							.findAny().orElse(null);
+					
+					if(glCodeMaster == null) 
+						throw new RuntimeException(
+								"No glCode Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode());
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
-					Long currDate = new Date().getTime();
-					Purpose purpose = null;
 					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
+					Purpose purpose = getPurpose(
+							taxHeadMaster.getCategory(),taxHeadCode,demand2.getTaxPeriodFrom(),demand2.getTaxPeriodTo());
 					
-					//TODO check with ghanshyam
-					if(taxHeadCode.equalsIgnoreCase(Purpose.REBATE.toString()))
-						purpose = Purpose.REBATE;
-					else if (demand2.getTaxPeriodFrom() <= currDate && demand2.getTaxPeriodTo() >= currDate) {
-						purpose = Purpose.CURRENT_AMOUNT;
-					} else if (currDate < demand2.getTaxPeriodFrom()) {
-						purpose = Purpose.ARREAR_AMOUNT;
-					} else if (currDate > demand2.getTaxPeriodTo()) {
-						purpose = Purpose.ADVANCE_AMOUNT;
-					}
-					
-					String accountDespcription = taxHeadCode+"-"+demand2.getTaxPeriodFrom()+"-"
-							+demand2.getTaxPeriodTo();
-					
+					String accountDespcription = taxHeadCode+"-"+demand2.getTaxPeriodFrom()+"-"+demand2.getTaxPeriodTo();
 					BillAccountDetail billAccountDetail = BillAccountDetail.builder().accountDescription(accountDespcription)
 							.crAmountToBePaid(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()))
 							//.creditAmount())
@@ -248,10 +244,12 @@ public class BillService {
 					billAccountDetails.add(billAccountDetail);
 				}
 			}
-			//TODO check if map is working properly for retriving businessservicedetail
-			BusinessServiceDetail businessServiceDetail = businessServiceMap.get(businessService);
 
+			BusinessServiceDetail businessServiceDetail = businessServiceMap.get(businessService);
 			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
+			
+			/* FIXME TODO RAMKI (Discussion about the consumerCode being more than one for same 
+			businessservice because of the uniqueness of consumerCode with business service)*/
 			
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService())
 					.billDescription(description).displayMessage(description).billAccountDetails(billAccountDetails)
@@ -268,6 +266,28 @@ public class BillService {
 		bills.add(bill);
 
 		return bills;
+	}
+
+	private Purpose getPurpose(Category category, String taxHeadCode, Long taxPeriodFrom, Long taxPeriodTo) {
+
+		Long currDate = new Date().getTime();
+		//TODO remove taxHead If never needed 
+		//check about arrears late payments ask Ramki to take a look
+
+		if (category.equals(Category.TAX) || category.equals(Category.FEE)) {
+
+			if (taxPeriodFrom <= currDate && taxPeriodTo >= currDate)
+				return Purpose.CURRENT_AMOUNT;
+			else if (currDate < taxPeriodFrom)
+				return Purpose.ARREAR_AMOUNT;
+			else
+				return Purpose.ADVANCE_AMOUNT;
+		} else if (category.equals(Category.REBATE))
+			return Purpose.REBATE;
+		else if (category.equals(Category.ADVANCE_COLLECTION))
+			return Purpose.ADVANCE_AMOUNT;
+		else
+			return Purpose.OTHERS;
 	}
 
 	private Map<String, List<TaxHeadMaster>> getTaxHeadMaster(List<Demand> demands, String tenantId, RequestInfo requestInfo) {

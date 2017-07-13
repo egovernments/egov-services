@@ -267,44 +267,64 @@ class FloorDetails extends Component {
 	  
 	  var allFloors = this.state.floorNumber;
 	  
-	  var floorNumber = [];
+		var hasFlatNo = true;
 	  
-	  for(let i=0;i<allRooms.length;i++){
-		  floorNumber.push(allRooms[i].floorNo)
-	  }
-	  
-	  floorNumber = floorNumber.filter(function(item, index, array){
-		  return index == array.indexOf(item);
-	  });
-	  
-	  
-	  for(let i=0;i<floorNumber.length;i++){
-		   var floor = {
-			  floorNo:'',
-			  units:[]
-		  }
-		  floor.floorNo = floorNumber[i];
-		  floors.push(floor);
-	  }
-	
-	  for(var i=0;i<floors.length;i++){
-		for(let j = 0; j<allRooms.length;j++){
-			if(allRooms[j].floorNo == floors[i].floorNo && allRooms[j].unitType == 2){
-		
-					unit = allRooms[j];
-					unit.units = [];
-					floors[i].units.push(unit);
-			}
-				 else if(allRooms[j].floorNo == floors[i].floorNo && allRooms[j].unitType == 1){
-					unit.units = [];
-					unit.units.push(allRooms[j]);
-					floors[i].units.push(unit);
+	  for(let i = 0; i< allRooms.length;i++){
+		  if(allRooms[i].unitType == 2){
+			 var floor = {
+				  floorNo:'',
+				  units:[]
 				}
-			
-		}
+				allRooms[i].units = [];
+			  floor.floorNo = allRooms[i].floorNo;
+			  floor.units.push(allRooms[i]);
+			  floors.push(floor);
+		  } else if (allRooms[i].unitType == 1){
+			  if(floors.length == 0){
+				  	let floor = {
+					  floorNo:'',
+					  units:[]
+					}
+					let room = {
+						units: []
+					}
+				  floor.floorNo = allRooms[i].floorNo;
+				  room.units.push(allRooms[i]);
+				  floor.units.push(room);
+				  floors.push(floor);
+			  }  else {
+				 
+				  for(let j=0;j<floors.length;j++) {
+					  
+					  for(let k = 0; k<floors[j].units[0].units.length;k++){
+						   if(floors[j].units[0].units[k].flatNo == allRooms[i].flatNo){ 
+							  floors[j].units[0].units.push(allRooms[i]);
+							   break;
+							} else {
+								console.log(floors[j].units[0].units[k].flatNo, allRooms[i].flatNo)
+								let floor = {
+									  floorNo:'',
+									  units:[]
+									}
+									let room = {
+										units: []
+									}
+								  floor.floorNo = allRooms[i].floorNo;
+								  room.units.push(allRooms[i]);
+								  floor.units.push(room);
+								  floors.push(floor);
+								  break;
+							}
+					  } 
+					 
+				  }
+			  }
+		  }
 	  }
+	  
+	  
 	   	  
-	  console.log(floors);
+	console.log(floors);
   }
   
    render(){

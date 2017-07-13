@@ -486,7 +486,7 @@ ReportDefinitions:
   - name: complaintcategorytype
     label: reports.pgr.complaintcategorytype
     type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/serviceGroup/v1/_search?tenantId=default|$..code|$..name
+    pattern: http://pgr-master:8080/pgr-master/serviceGroup/v1/_search?tenantId=default|$..id|$..name
     source: seva
   - name: complainttype
     label: reports.pgr.complainttype

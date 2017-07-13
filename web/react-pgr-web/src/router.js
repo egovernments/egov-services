@@ -80,7 +80,7 @@ const Main = () => {
         <Route exact name='receivingModeCreate' path={base+'/pgr/receivingModeCreate/:type/:id'} component={receivingModeCreate}/>
         <Route exact path={base+'/pgr/viewOrUpdateReceivingMode/:type'} component={viewOrUpdateReceivingMode}/>
         <Route exact path={base+'/pgr/viewReceivingMode/:type/:id'} component={viewReceivingMode}/>
-        <Route exact name="createServiceGroup" path={base+'/pgr/createServiceGroup/:id?'} component={ServiceGroupCreate}/>
+        <Route exact name="createServiceGroup" path={base+'/pgr/updateServiceGroup/:id?'} component={ServiceGroupCreate}/>
         <Route exact path={base+'/pgr/createServiceGroup'} component={ServiceGroupCreate}/>
         <Route exact path={base+'/pgr/serviceGroup/view'} component={ViewEditServiceGroup}/>
         <Route exact path={base+'/pgr/serviceGroup/edit'} component={ViewEditServiceGroup}/>

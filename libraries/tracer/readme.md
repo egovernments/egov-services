@@ -1,6 +1,5 @@
-#Tracer
-
-###Distributed tracing library
+# Tracer
+### Distributed tracing library
 Correlation id and logging support addons to Spring Web and Spring Kafka. 
 
 #### Features supported

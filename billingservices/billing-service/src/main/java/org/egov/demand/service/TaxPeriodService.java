@@ -110,11 +110,11 @@ public class TaxPeriodService {
         String userId = taxPeriodRequest.getRequestInfo().getUserInfo().getId().toString();
         Long currEpochDate = new Date().getTime();
         AuditDetail auditDetail;
-        for (TaxPeriod taxPeriod : taxPeriods) {
+        /*for (TaxPeriod taxPeriod : taxPeriods) {
             auditDetail = taxPeriod.getAuditDetail();
             auditDetail.setLastModifiedBy(userId);
             auditDetail.setLastModifiedTime(currEpochDate);
-        }
+        }*/
         kafkaTemplate.send(applicationProperties.getUpdateTaxPeriodTopicName(), taxPeriodRequest);
         return getTaxPeriodResponse(taxPeriods, taxPeriodRequest.getRequestInfo());
     }

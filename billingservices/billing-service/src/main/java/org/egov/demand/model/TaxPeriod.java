@@ -68,7 +68,7 @@ public class TaxPeriod {
 
 	@NotNull
 	private String service;
-
+	
 	@NotNull
 	private String code;
 

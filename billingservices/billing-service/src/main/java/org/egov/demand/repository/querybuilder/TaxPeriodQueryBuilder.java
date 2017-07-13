@@ -57,7 +57,15 @@ public class TaxPeriodQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT * FROM EGBS_TAXPERIOD taxperiod ";
 
-    public String prepareSearchQuery(final TaxPeriodCriteria taxPeriodCriteria, final List<Object> preparedStatementValues) {
+    public final String insertQuery = "INSERT INTO public.egbs_taxperiod(id, service, code, fromdate, todate,"
+    		+ " financialyear, createddate,lastmodifieddate, createdby, lastmodifiedby, tenantid, periodcycle)"
+    		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+    public final String updateQuery="UPDATE public.egbs_taxperiod SET service=?, code=?, fromdate=?, todate=?,"
+    		+ " financialyear=?, lastmodifieddate=?, lastmodifiedby=?, tenantid=?,"
+    		+ " periodcycle=? WHERE tenantid = ? and id = ? ";
+    
+    public String prepareSearchQuery(final TaxPeriodCriteria taxPeriodCriteria, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         logger.info("prepareSearchQuery --> ");
         prepareWhereClause(selectQuery, preparedStatementValues, taxPeriodCriteria);
@@ -103,17 +111,6 @@ public class TaxPeriodQueryBuilder {
         Set<String> ids = taxPeriodCriteria.getId();
         if (ids != null && !ids.isEmpty())
             selectQuery.append(" and taxperiod.id IN "+getQueryForCollection(ids));
-    }
-
-    public String getInsertQuery(){
-        return "INSERT INTO egbs_taxperiod(id,service,code,fromdate,todate,financialYear, " +
-                "createddate, lastmodifieddate, createdby, lastmodifiedby, tenantid) " +
-                "values (?,?,?,?,?,?,?,?,?,?,?);";
-    }
-
-    public String getUpdateQuery(){
-        return "UPDATE egbs_taxperiod SET service=?, code=?, fromdate=?, todate=?, financialyear=?, " +
-                "lastmodifieddate=?, lastmodifiedby=? WHERE tenantid = ? and id = ?;";
     }
 
     public String prepareQueryForValidation(List<TaxPeriod> taxPeriodList, String mode){

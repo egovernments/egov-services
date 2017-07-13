@@ -1477,19 +1477,21 @@ function markEditIndex(index = -1, modalName = "", object = "", fromServer) {
                         }
                     });
                 } else {
-                    if(object = "assignments")
+                    if(object == "assignments") {
                         $("#assignments\\.toDate").datepicker('setStartDate', null);
+                    }
                     if(object == "assignments" && fromServer) {
                         //$("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', false);
                         $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', true);
                         $("#assignments\\.fromDate").attr('disabled', true);
-
+                        $("#assignments\\.toDate").attr('disabled', false);
+                        $("#assignments\\.toDate").datepicker('setStartDate', new Date());
                         if(employee[object][editIndex].toDate) {
                             var date = employee[object][editIndex].toDate.split("/");
                             if(new Date().getTime() > employee[object][editIndex].fromToDate) {
                                 $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', true);
-                                $("#assignments\\.toDate").datepicker('setStartDate', new Date());
                                 $("#assignments\\.toDate").attr('disabled', false);
+                                $("#assignments\\.toDate").datepicker('setStartDate', new Date());
                             }
                         }
                     }
@@ -2631,8 +2633,8 @@ function loadUI() {
             }
             if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee");
 
-
             $("#assignmentDetailsModalOpenBtn").on('click', function() {
+                $("#assignments\\.toDate").datepicker('setStartDate', null);
                 $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', false);
             })
             getDropdown("employeeType", function(res) {

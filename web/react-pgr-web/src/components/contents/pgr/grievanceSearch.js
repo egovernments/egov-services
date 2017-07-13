@@ -107,6 +107,18 @@ class grievanceSearch extends Component {
        this.handlePageClick = this.handlePageClick.bind(this);
        this.handleNavigation = this.handleNavigation.bind(this);
        this.handleRequestClose = this.handleRequestClose.bind(this);
+       this.resetSearch = this.resetSearch.bind(this);
+  }
+
+  resetSearch() {
+    this.props.initForm();
+    this.props.changeButtonText(translate("core.lbl.more"));
+    this.setState({
+      pageCount: 0,
+      fromIndex: 0,
+      resultList: [],
+      isSearchClicked: false
+    })
   }
 
   handleNavigation(serviceId) {
@@ -259,7 +271,7 @@ class grievanceSearch extends Component {
   };
 
   render() {
-  	let {search, resetAndSearch, handlePageClick, handleNavigation} = this;
+  	let {search, resetAndSearch, handlePageClick, handleNavigation, resetSearch} = this;
   	let {
   		complaintTypeList,
   		statusList,
@@ -430,8 +442,8 @@ class grievanceSearch extends Component {
 	              		<Grid>
 	                		<Row>
 	                			<Col xs={12} md={3}>
-	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.srn")} value={grievanceSearchSet.serviceRequestId} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
-	                			</Col>
+	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.srn")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e) => {handleChange(e, "serviceRequestId", false, "")}}/>
+                        </Col>
 	                			<Col xs={12} md={3}>
 	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
@@ -469,7 +481,7 @@ class grievanceSearch extends Component {
 	          <div style={{textAlign: 'center'}}>
 
 		          <RaisedButton style={{margin:'15px 5px'}} type="submit" primary={true} label={translate("core.lbl.search")}/>
-
+              <RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.reset")} onClick={(e) => {resetSearch(e)}}/>
               </div>
 	        </form>
 	        {displayTableCard()}

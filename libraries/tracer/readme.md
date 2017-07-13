@@ -54,8 +54,11 @@ Note - See the "logging.pattern" mentioned in the "Tracer integration" section.
  ```
  @Import({TracerConfiguration.class})
 ```
- - In order to make http requests, in your class component autowire Spring's RestTemplate.
- - In order to push messages to Kafka, in your class component autowire LogAwareKafkaTemplate.
+ - To make http requests, in your class component autowire Spring's RestTemplate.
+ - To push messages to Kafka, in your class component autowire LogAwareKafkaTemplate.
+ - To receive messages via Kafka consumer annotate your bean method with KafkaListener annotation. Add the
+ payload annotation to the message payload parameter (any data type is supported) and topic header to the topic String
+  parameter. 
  
  
 #### Tracer implementation details -
@@ -73,7 +76,7 @@ to the outgoing request, logging the corresponding request and response sent and
 of messages sent to Kafka.
 - For a Kafka consumer implemented using Spring Kafka's KafkaListener annotation an AspectJ's aspect is used to log and
  retrieve the correlation id from the received payload.
-- The retrieved correlation id done via the filter or aspect is then stored in a thread local variable to 
+- The correlation id retrieved via the filter or aspect is then stored in a thread local variable to 
 forward as necessary. 
  
 #### Change log -

@@ -16,6 +16,7 @@ import Snackbar from 'material-ui/Snackbar';
 import Api from '../../../api/api';
 import {translate, toLocalTime} from '../../common/common';
 
+
 const getNameById = function(object, id, property = "") {
   if(!object) return;
   if (id == "" || id == null) {

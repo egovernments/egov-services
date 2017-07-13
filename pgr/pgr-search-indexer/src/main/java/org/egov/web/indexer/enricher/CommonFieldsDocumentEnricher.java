@@ -8,9 +8,6 @@ import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.TimeZone;
-
 import static org.egov.pgr.common.date.DateFormatter.toDate;
 
 @Service
@@ -31,16 +28,9 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setKeywords(serviceType.getKeywords());
         document.setCrn(serviceRequest.getCrn());
         document.setId(serviceRequest.getCrn());
-        final Date createdDate = toDate(serviceRequest.getCreatedDate());
-        log.info("Default Timezone: {}", TimeZone.getDefault());
-        log.info("Created date : {}", createdDate);
-        document.setCreatedDate(createdDate);
-        final Date lastModifiedDate = toDate(serviceRequest.getLastModifiedDate());
-        log.info("Last Modified date : {}", lastModifiedDate);
-        document.setLastModifiedDate(lastModifiedDate);
-        final Date escalationDate = toDate(serviceRequest.getEscalationDate());
-        log.info("Escalation date : {}", escalationDate);
-        document.setEscalationDate(escalationDate);
+        document.setCreatedDate(toDate(serviceRequest.getCreatedDate()));
+        document.setLastModifiedDate(toDate(serviceRequest.getLastModifiedDate()));
+        document.setEscalationDate(toDate(serviceRequest.getEscalationDate()));
         document.setDetails(serviceRequest.getDetails());
         document.setLandmarkDetails(serviceRequest.getLandmarkDetails());
         document.setRequesterName(serviceRequest.getFirstName());

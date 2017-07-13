@@ -18,7 +18,8 @@ public class MandatoryAttributeValidator implements AttributeValueValidator {
 
     @Override
     public void validate(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition, SevaRequestAction action) {
-        final List<AttributeDefinition> mandatoryAttributes = serviceDefinition.getMandatoryAttributes(action);
+        final List<AttributeDefinition> mandatoryAttributes =
+            serviceDefinition.getMandatoryAttributes(action, serviceRequest.getAuthenticatedUser().getRoleCodes());
         if (CollectionUtils.isEmpty(mandatoryAttributes)) {
             return;
         }

@@ -35,6 +35,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -43,9 +44,38 @@
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>tracer</artifactId>
-			<version>0.14.0</version>
+			<version>0.18.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>services-common</artifactId>
+			<version>0.12.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>

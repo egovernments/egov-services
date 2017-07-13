@@ -62,7 +62,7 @@ public class PropertyCategoryService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestPropertyTaxMasterService restPropertyTaxMasterService;
+    private RestExternalMasterService restExternalMasterService;
 
     public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
@@ -86,7 +86,7 @@ public class PropertyCategoryService {
     public PropertyTypeCategoryTypesRes getPropertyCategories(
             final PropertyCategoryGetRequest propertyCategoryGetRequest) {
         if (propertyCategoryGetRequest.getPropertyType() != null) {
-            final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
                     propertyCategoryGetRequest.getPropertyType(), propertyCategoryGetRequest.getTenantId());
             if (propertyTypes != null)
                 propertyCategoryGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
@@ -106,7 +106,7 @@ public class PropertyCategoryService {
 
     public Boolean getPropertyTypeByName(final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
                 propertyCategoryRequest.getPropertyTypeCategoryType().getPropertyTypeName(),
                 propertyCategoryRequest.getPropertyTypeCategoryType().getTenantId());
         if (propertyTypes.getPropertyTypesSize()) {

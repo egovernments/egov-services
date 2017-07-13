@@ -44,11 +44,39 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.List;
+@Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
 public class ReceiptSearchCriteria {
-    private String receiptNumber;
+
+    private List<String> receiptNumbers;
+
+    private String consumerCode;
+
+    private String fromDate;
+
+    private String toDate;
+
+    private String collectedBy;
+
+    private String status;
+
+    private String paymentType;
+
+    private String classification;
+
+    private String businessCode;
+
+    private String tenantId;
+    
+    private String sortBy;
+    
+    private String sortOrder;
 }

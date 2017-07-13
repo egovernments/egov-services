@@ -1,18 +1,26 @@
 package org.egov.propertyWorkflow.consumer;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.egov.models.ErrorRes;
+import org.egov.models.IdGenerationRequest;
+import org.egov.models.IdGenerationResponse;
+import org.egov.models.IdRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.WorkFlowDetails;
+import org.egov.propertyWorkflow.models.City;
 import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.RequestInfo;
+import org.egov.propertyWorkflow.models.SearchTenantResponse;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +32,11 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * 
@@ -42,6 +55,9 @@ public class WorkflowConsumer {
 
 	@Autowired
 	WorkflowProducer workflowProducer;
+
+	@Autowired
+	RestTemplate restTemplate;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -85,15 +101,14 @@ public class WorkflowConsumer {
 	 * 
 	 * start workflow, update workflow
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.create')}",
-			"#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.update')}" })
 
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow')}",
+			"#{environment.getProperty('egov.propertytax.property.update.workflow')}" })
 	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
 
 		PropertyRequest propertyRequest = record.value();
 
-		if (record.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.titletransfer.workflow.create"))) {
+		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.workflow"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
@@ -102,11 +117,11 @@ public class WorkflowConsumer {
 						environment.getProperty("businessKey"), environment.getProperty("type"),
 						environment.getProperty("create.property.comments"));
 				property.getPropertyDetail().setStateId(processInstance.getId());
+				workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
+						propertyRequest);
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
-					propertyRequest);
-		} else if (record.topic()
-				.equals(environment.getProperty("egov.propertytax.property.titletransfer.workflow.update"))) {
+
+		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.workflow"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
@@ -114,9 +129,17 @@ public class WorkflowConsumer {
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
 						property.getPropertyDetail().getStateId());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
+				String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
+				if (action.equalsIgnoreCase(environment.getProperty("property.approved"))) {
+					String upicNumber = generateUpicNo(property, propertyRequest);
+					property.setUpicNumber(upicNumber);
+					workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.approved"),
+							propertyRequest);
+				} else {
+					workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
+							propertyRequest);
+				}
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
-					propertyRequest);
 		}
 	}
 
@@ -166,5 +189,93 @@ public class WorkflowConsumer {
 		requestInfo.setTenantId(tenantId);
 
 		return requestInfo;
+	}
+
+	/**
+	 * This method will generate UPIC NO from the Property
+	 * 
+	 * @param property
+	 * @param propertyRequest
+	 * @return upicNumber
+	 */
+	private String generateUpicNo(Property property, PropertyRequest propertyRequest) {
+
+		String upicNumber = null;
+		StringBuilder tenantCodeUrl = new StringBuilder();
+		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.host"));
+		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.base.path"));
+		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.search.path"));
+		String url = tenantCodeUrl.toString();
+		// Query parameters
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+				// Add query parameter
+				.queryParam("code", property.getTenantId());
+		try {
+			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
+					propertyRequest.getRequestInfo(), SearchTenantResponse.class);
+			if (searchTenantResponse.getTenant().size() > 0) {
+				City city = searchTenantResponse.getTenant().get(0).getCity();
+				String cityCode = city.getCode();
+				String upicFormat = environment.getProperty("upic.number.format");
+				upicNumber = getUpicNumber(property.getTenantId(), propertyRequest, upicFormat);
+				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
+				if (cityCode != null) {
+					upicNumber = cityCode + "-" + upicNumber;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return upicNumber;
+	}
+
+	/**
+	 * Description: Generating sequence number
+	 * 
+	 * @param tenantId
+	 * @param propertyRequest
+	 * @param upicFormat
+	 * @return UpicNumber
+	 */
+	public String getUpicNumber(String tenantId, PropertyRequest propertyRequest, String upicFormat) {
+
+		StringBuffer idGenerationUrl = new StringBuffer();
+		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.host"));
+		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.base.path"));
+		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.create.path"));
+
+		// generating acknowledgement number for all properties
+		String UpicNumber = null;
+		List<IdRequest> idRequests = new ArrayList<>();
+		IdRequest idrequest = new IdRequest();
+		idrequest.setFormat(upicFormat);
+		idrequest.setIdName(environment.getProperty("id.idName"));
+		idrequest.setTenantId(tenantId);
+		IdGenerationRequest idGeneration = new IdGenerationRequest();
+		idRequests.add(idrequest);
+		idGeneration.setIdRequests(idRequests);
+		idGeneration.setRequestInfo(propertyRequest.getRequestInfo());
+		String response = null;
+		try {
+			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
+		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
+
+		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
+			// TODO throw error exception
+			// Error error = errorResponse.getErrors().get(0);
+		} else if (idResponse.getResponseInfo() != null) {
+			if (idResponse.getResponseInfo().getStatus().toString()
+					.equalsIgnoreCase(environment.getProperty("success"))) {
+				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
+					UpicNumber = idResponse.getIdResponses().get(0).getId();
+			}
+		}
+
+		return UpicNumber;
 	}
 }

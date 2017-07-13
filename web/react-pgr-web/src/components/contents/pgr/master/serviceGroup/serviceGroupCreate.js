@@ -103,6 +103,10 @@ class ServiceGroupCreate extends Component {
     }
 
     componentWillUpdate() {
+      this.initData();
+    }
+
+    initData = () => {
       if(window.urlCheck) {
         let {initForm}=this.props;
         initForm();
@@ -112,7 +116,7 @@ class ServiceGroupCreate extends Component {
     }
 
     componentDidUpdate() {
-
+        this.initData();
 
     }
     close(){

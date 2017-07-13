@@ -30,11 +30,68 @@ class App extends Component {
   //     // this.callLogin = this.callLogin.bind(this);
   // }
 
+  // componentDidUpdate(prevProps) {
+  //   // const { location} = this.props;
+  //   // console.log(location);
+  //
+  //   // if (window.localStorage.getItem("token")) {
+  //   //     this.props.history.replace(location.location);
+  //   // }
+  //   // else {
+  //   //     this.props.history.replace("/");
+  //   // }
+  //
+  //   // console.log(this.props);
+  //   // console.log(match);
+  //   // const isLoggingOut = prevProps.isLoggedIn && !this.props.isLoggedIn
+  //   // const isLoggingIn = !prevProps.isLoggedIn && this.props.isLoggedIn
+  //   //
+  //   // if (isLoggingIn) {
+  //   //   dispatch(navigateTo(redirectUrl))
+  //   // } else if (isLoggingOut) {
+  //   //
+  //   //   // do any kind of cleanup or post-logout redirection here
+  //   // }
+  // }
+
+  // componentWillUpdate()
+  // {
+  //   // console.log("hit");
+  //     const { location} = this.props;
+  //     console.log(location);
+  //
+  //     if (window.localStorage.getItem("token")) {
+  //         this.props.history.replace(location.location);
+  //     }
+  //     else {
+  //         this.props.history.replace("/");
+  //     }
+  // }
+
   componentWillReceiveProps(nextProps) {
-        if (nextProps.redirectTo) {
-          this.props.history.replace(nextProps.redirectTo);
-          this.props.onRedirect();
+      if (nextProps.redirectTo) {
+            // console.log("Login");
+            this.props.history.replace(nextProps.redirectTo);
+            this.props.onRedirect();
       }
+
+
+
+      // console.log(this.props.location);
+      // if (!window.localStorage.getItem("token") && this.props.location.pathname!="/") {
+      //     // console.log("Login");
+      //   // if (this.props.location.pathname=="/pgr/createGrievance") {
+      //   //     this.props.history.replace("/pgr/createGrievance");
+      //   // } else {
+      //     this.props.history.replace("/");
+      //
+      //   // }
+      //   // this.props.onRedirect();
+      // }
+
+      // if (this.props.location.pathname=="/pgr/createGrievance") {
+      //     this.props.history.replace("/pgr/createGrievance");
+      // }
   }
 
   componentWillMount() {
@@ -78,15 +135,13 @@ class App extends Component {
       //     ? agent.Auth.login((this.props.auth.userName || "9999999999"), (this.props.auth.password || "demo"))
       //     : {UserRequest: currentUser}, token);
 
+      // console.log("hit");
+
       if(localStorage.getItem("token") && localStorage.getItem("userRequest")) {
         this.props.onLoad({UserRequest: JSON.parse(localStorage.getItem("userRequest"))}, localStorage.getItem("token"));
       }
   }
 
-  componentDidMount()
-  {
-
-  }
 
   handleClose = () => {
     this.props.toggleDailogAndSetText(false, '');
@@ -151,6 +206,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onLoad: (payload, token) => dispatch({type: 'APP_LOAD', payload, token, skipTracking: true}),
     onRedirect: () => dispatch({type: 'REDIRECT'}),
+    setRoute:(route)=>dispatch({type:'SET_ROUTE',route}),
     // setLabels: payload => dispatch({type: 'LABELS', payload}),
     // onUpdateAuth: (value, key) => dispatch({type: 'UPDATE_FIELD_AUTH', key, value}),
     // onLogin: (username, password) => {

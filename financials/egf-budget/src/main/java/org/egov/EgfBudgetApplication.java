@@ -2,6 +2,7 @@ package org.egov;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +23,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 public class EgfBudgetApplication {
@@ -59,11 +59,12 @@ public class EgfBudgetApplication {
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		// DateFormat std=DateFormat.getInstance().f
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		// mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+		// false);
+		mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;

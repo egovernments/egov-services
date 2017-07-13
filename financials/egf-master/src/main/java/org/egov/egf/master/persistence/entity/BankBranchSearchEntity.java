@@ -14,21 +14,23 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class BankBranchSearchEntity extends BankBranchEntity {
-	private Integer pageSize;
-	private Integer offset;
+    private Integer pageSize;
+    private Integer offset;
+    private String sortBy;
 
-	@Override
-	public BankBranch toDomain() {
-		BankBranch bankBranch = new BankBranch();
-		super.toDomain(bankBranch);
-		return bankBranch;
-	}
+    @Override
+    public BankBranch toDomain() {
+        BankBranch bankBranch = new BankBranch();
+        super.toDomain(bankBranch);
+        return bankBranch;
+    }
 
-	public BankBranchSearchEntity toEntity(BankBranchSearch bankBranchSearch) {
-		super.toEntity((BankBranch) bankBranchSearch);
-		this.pageSize = bankBranchSearch.getPageSize();
-		this.offset = bankBranchSearch.getOffset();
-		return this;
-	}
+    public BankBranchSearchEntity toEntity(BankBranchSearch bankBranchSearch) {
+        super.toEntity((BankBranch) bankBranchSearch);
+        this.pageSize = bankBranchSearch.getPageSize();
+        this.offset = bankBranchSearch.getOffset();
+        this.sortBy = bankBranchSearch.getSortBy();
+        return this;
+    }
 
 }

@@ -4,12 +4,12 @@ import lombok.ToString;
 
 @ToString
 public enum EstimationType {
-   BE ("BudgetEstimate"),   RE ("RevisionEstimate");
+	BE("BudgetEstimate"), RE("RevisionEstimate");
 
-   private final String name;       
-   private EstimationType(String s) {
-       name = s;
-   }
-   
+	private final String name;
+
+	private EstimationType(String s) {
+		name = s;
+	}
+
 }
-

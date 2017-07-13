@@ -1,17 +1,13 @@
 package org.egov.commons.persistence.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
+
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.egov.commons.model.AuthenticatedUser;
 import org.egov.commons.model.BusinessAccountDetails;
 import org.egov.commons.model.BusinessAccountSubLedgerDetails;
 import org.egov.commons.model.BusinessCategory;

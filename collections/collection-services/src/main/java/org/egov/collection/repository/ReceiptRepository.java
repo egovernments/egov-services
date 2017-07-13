@@ -40,19 +40,31 @@
 
 package org.egov.collection.repository;
 
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.CommonDataModel;
 import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
+import org.egov.collection.model.ReceiptCommonModel;
+import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.producer.CollectionProducer;
@@ -75,47 +87,45 @@ import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.JsonPath;
 
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Repository
 public class ReceiptRepository {
 	public static final Logger logger = LoggerFactory
 			.getLogger(ReceiptRepository.class);
 	
-	@Autowired
-	private CollectionProducer collectionProducer;
 	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	@Autowired
+
+	private CollectionProducer collectionProducer;
+	
+
+	private ApplicationProperties applicationProperties;
+	
+
+	private ReceiptDetailQueryBuilder receiptDetailQueryBuilder;
+	
+
+	private ReceiptRowMapper receiptRowMapper;
+	
+
 	private RestTemplate restTemplate;
 	
-	
-
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	private static final String SELECT_RECEIPTHEADER_RCPT_NO = "SELECT * FROM egcl_receiptheader WHERE receiptnumber = :receiptnumber";
-
+	@Autowired
 	public ReceiptRepository(
-			NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+			NamedParameterJdbcTemplate namedParameterJdbcTemplate,JdbcTemplate jdbcTemplate,CollectionProducer collectionProducer
+			,ApplicationProperties applicationProperties,ReceiptDetailQueryBuilder receiptDetailQueryBuilder
+			,ReceiptRowMapper receiptRowMapper) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	}
-
-	public List<ReceiptHeader> find(ReceiptSearchCriteria receiptSearchCriteria) {
-
-		return getReceiptForGivenReceiptNumber(receiptSearchCriteria);
-	}
-
-	private List<ReceiptHeader> getReceiptForGivenReceiptNumber(
-			ReceiptSearchCriteria receiptSearchCriteria) {
-		final Map<String, Object> parametersMap = new HashMap<>();
-		parametersMap.put("receiptnumber",
-				receiptSearchCriteria.getReceiptNumber());
-		return namedParameterJdbcTemplate.query(
-				SELECT_RECEIPTHEADER_RCPT_NO, parametersMap,
-				new ReceiptRowMapper());
+		this.jdbcTemplate=jdbcTemplate;
+		this.collectionProducer=collectionProducer;
+		this.applicationProperties=applicationProperties;
+		this.receiptDetailQueryBuilder=receiptDetailQueryBuilder;
+		this.receiptRowMapper=receiptRowMapper;
+		
 	}
 	
 	public Receipt pushToQueue(ReceiptReq receiptReq) {
@@ -393,6 +403,35 @@ public class ReceiptRepository {
 		String receiptNo = JsonPath.read(response, "$.idResponses[0].id");
 
 		return receiptNo;
+	}
+	
+	public ReceiptCommonModel findAllReceiptsByCriteria(ReceiptSearchCriteria receiptSearchCriteria) {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String queryString = receiptDetailQueryBuilder.getQuery(receiptSearchCriteria, preparedStatementValues);
+		List<ReceiptHeader> listOfHeadersFromDB = jdbcTemplate.query(queryString, preparedStatementValues.toArray(),
+				receiptRowMapper);
+		Set<ReceiptDetail> receiptDetails = new LinkedHashSet<>(0);
+		for (ReceiptHeader header : listOfHeadersFromDB) {
+			receiptDetails.add((ReceiptDetail) header.getReceiptDetails().toArray()[0]);
+		}
+
+		List<ReceiptHeader> uniqueReceiptheader = listOfHeadersFromDB.stream().filter(distinctByKey(p -> p.getId()))
+				.collect(Collectors.toList());
+		List<ReceiptDetail> uniqueReceiptDetails = receiptDetails.stream()
+				.filter(accountdetail -> accountdetail.getId() != null)
+				.collect(collectingAndThen(
+						toCollection(() -> new TreeSet<>(comparingLong(ReceiptDetail::getId))),
+						ArrayList::new));
+		List<ReceiptHeader> unqReceiptheader = uniqueReceiptheader.stream()
+		.map(unqheader -> unqheader.toDomainModel()).collect(Collectors.toList());
+		return new ReceiptCommonModel(unqReceiptheader,uniqueReceiptDetails);
+	}
+
+
+
+	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+		Map<Object, Boolean> map = new ConcurrentHashMap<>();
+		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
 	
 

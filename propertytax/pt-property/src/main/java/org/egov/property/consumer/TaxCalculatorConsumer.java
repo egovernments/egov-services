@@ -11,6 +11,7 @@ import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.property.utility.UpicNoGeneration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -41,6 +42,9 @@ public class TaxCalculatorConsumer {
 
 	@Autowired
 	Producer producer;
+
+	@Autowired
+	UpicNoGeneration upicGeneration;
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -102,18 +106,31 @@ public class TaxCalculatorConsumer {
 				CalculationResponse.class);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
-		if (consumerRecord.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
+		if (!property.getChannel().toString().equalsIgnoreCase(environment.getProperty("egov.property.channel.type"))) {
 
-			producer.send(environment.getProperty("egov.propertytax.property.create.workflow"), consumerRecord.value());
+			if (consumerRecord.topic()
+					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
 
-		} else if (consumerRecord.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.tax.calculaion"))) {
+				producer.send(environment.getProperty("egov.propertytax.property.create.workflow"),
+						consumerRecord.value());
 
-			producer.send(environment.getProperty("egov.propertytax.property.update.workflow"), consumerRecord.value());
+			} else if (consumerRecord.topic()
+					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.tax.calculaion"))) {
+
+				producer.send(environment.getProperty("egov.propertytax.property.update.workflow"),
+						consumerRecord.value());
+
+			}
 
 		}
 
-	}
+		else {
 
+			String upicNo = upicGeneration.generateUpicNo(property, consumerRecord.value().getRequestInfo());
+			property.setUpicNumber(upicNo);
+			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
+					consumerRecord.value());
+		}
+
+	}
 }

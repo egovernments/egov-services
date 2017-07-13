@@ -125,7 +125,7 @@ public class StorageReservoirController {
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         final List<StorageReservoir> storageReservoir = storageReservoirService.updateStorageReservoir(
-                applicationProperties.getupdateStorageReservoirTopicName(), "storagereservoir-update", storageReservoirRequest);
+                applicationProperties.getUpdateStorageReservoirTopicName(), "storagereservoir-update", storageReservoirRequest);
 
         return getSuccessResponse(storageReservoir, null, storageReservoirRequest.getRequestInfo());
     }

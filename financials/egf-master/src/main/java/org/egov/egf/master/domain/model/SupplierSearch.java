@@ -13,4 +13,5 @@ import lombok.Setter;
 public class SupplierSearch extends Supplier {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

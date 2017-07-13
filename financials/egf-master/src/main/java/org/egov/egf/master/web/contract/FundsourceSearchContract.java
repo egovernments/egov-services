@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class FundsourceSearchContract extends FundsourceContract {
-	private Integer pageSize;
-	private Integer offset;
+    private String sortBy;
+    private Integer pageSize=10;
+    private Integer offset;
 }

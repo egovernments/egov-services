@@ -64,5 +64,12 @@ public interface PropertyService {
 	 */
 	
 	public TitleTransferResponse createTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest) throws Exception;
-
+	
+	/**
+	 * This api for updating title transfer request for property
+	 * @param titleTransferRequest
+	 * @return titleTransferResponse
+	 * @throws Exception
+	 */
+	public TitleTransferResponse updateTitleTransfer(@RequestBody TitleTransferRequest titleTransferRequest) throws Exception;
 }

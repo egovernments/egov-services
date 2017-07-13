@@ -51,3 +51,10 @@ export function format_lat_long(latorlong)
 
 	return formatted;
 }
+
+export function toLocalTime(regDate) {
+  var dat = regDate.split(" ")[0];
+  dat = dat.split("-")[1] + "-" + dat.split("-")[0] + "-" + dat.split("-")[2] + " " + regDate.split(" ")[1];
+  dat = new Date(dat + " UTC").toString();
+  return dat.substr(0, dat.indexOf("GMT"));
+}

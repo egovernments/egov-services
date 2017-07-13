@@ -1,13 +1,14 @@
 package org.egov.collection.web.contract;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Builder
 @Getter
 @Setter
 @ToString

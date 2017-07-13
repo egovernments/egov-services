@@ -207,6 +207,7 @@ public class GrievanceTypeController {
     private List<ErrorField> getUpdateErrorFields(final ServiceRequest serviceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addGrievanceNameValidationErrors(serviceTypeRequest, errorFields);
+        addGrievanceNameValidator(serviceTypeRequest, errorFields);
         addTeanantIdValidationErrors(serviceTypeRequest, errorFields);
         checkMetadataExists(serviceTypeRequest,errorFields);
         checkCategorySLAValues(serviceTypeRequest, errorFields);

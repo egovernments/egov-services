@@ -84,8 +84,8 @@ public class EscalationHierarchyRespository {
 							statement.setLong(2, eachEscHierarchy.getFromPosition());
 							statement.setLong(3, eachEscHierarchy.getToPosition());
 							statement.setString(4, eachEscHierarchy.getServiceCode());
-							statement.setLong(5, eachEscHierarchy.getDepartment());
-							statement.setLong(6, eachEscHierarchy.getDesignation());
+							statement.setLong(5, (null == eachEscHierarchy.getDepartment())? 0L : eachEscHierarchy.getDepartment());
+							statement.setLong(6, (null == eachEscHierarchy.getDesignation())? 0L : eachEscHierarchy.getDesignation());
 							statement.setLong(7, auditDetails.getCreatedBy());
 							statement.setDate(8, new Date(new java.util.Date().getTime()));
 						}

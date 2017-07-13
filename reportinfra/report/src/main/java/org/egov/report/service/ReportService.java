@@ -30,6 +30,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
+
 @Service
 public class ReportService {
 
@@ -61,7 +63,7 @@ public class ReportService {
 		rmt.setReportName(reportDefinition.getReportName());
         rmt.setSummary(reportDefinition.getSummary());
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
-		List<ColumnDetail> searchParams = new ArrayList<>();
+		List<SearchColumn> searchParams = new ArrayList<>();
 		for (SourceColumn cd : reportDefinition.getSourceColumns()) {
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
@@ -72,12 +74,15 @@ public class ReportService {
             
 		}
 		for (SearchColumn cd : reportDefinition.getSearchParams()) {
-			ColumnDetail searchParam = new ColumnDetail();
-			searchParam.setLabel(cd.getLabel());
-			searchParam.setName(cd.getName());
+			
+			SearchColumn sc = new SearchColumn();
+			
 			TypeEnum te = getType(cd.getType().toString());
-			searchParam.setType(te);
-			searchParams.add(searchParam);
+			sc.setType(te);
+			sc.setLabel(cd.getLabel());
+			sc.setName(cd.getName());
+			sc.setPattern(cd.getPattern());
+			searchParams.add(sc);
 
 		}
 		rmt.setReportHeader(reportHeaders);
@@ -100,6 +105,9 @@ public class ReportService {
 		}
 		if (type.equals("singlevaluelist")) {
 			return ColumnDetail.TypeEnum.SINGLEVALUELIST;
+		}
+		if (type.equals("url")) {
+			return ColumnDetail.TypeEnum.URL;
 		}
 		
 		return null;

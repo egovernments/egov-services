@@ -134,6 +134,21 @@ public class ServiceGroupRepository {
 		return false;
 	}
 	
+	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest) { 
+		List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
+		String checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
+		final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
+				preparedStatementValues.toArray(), Integer.class);
+		if(count.size()>0){
+			if(count.get(0) > 0){
+				return true;
+			}
+		}
+		return false; 
+	}
+	
 	
 
 }

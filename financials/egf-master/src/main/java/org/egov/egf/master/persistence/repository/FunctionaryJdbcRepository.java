@@ -48,8 +48,16 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
+		if (functionarySearchEntity.getSortBy() != null && !functionarySearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(functionarySearchEntity.getSortBy());
+                    validateEntityFieldName(functionarySearchEntity.getSortBy(), FunctionaryEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (functionarySearchEntity.getSortBy() != null && !functionarySearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + functionarySearchEntity.getSortBy();
+                
 		searchQuery = searchQuery.replace(":tablename", FunctionaryEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
@@ -94,7 +102,7 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<Functionary>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

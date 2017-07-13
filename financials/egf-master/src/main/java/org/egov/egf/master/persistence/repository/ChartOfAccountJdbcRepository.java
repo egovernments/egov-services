@@ -53,6 +53,15 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":tablename", ChartOfAccountEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (chartOfAccountSearchEntity.getSortBy() != null && !chartOfAccountSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(chartOfAccountSearchEntity.getSortBy());
+                    validateEntityFieldName(chartOfAccountSearchEntity.getSortBy(), ChartOfAccountEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (chartOfAccountSearchEntity.getSortBy() != null && !chartOfAccountSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + chartOfAccountSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (chartOfAccountSearchEntity.getId() != null) {
@@ -173,7 +182,7 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<ChartOfAccount>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

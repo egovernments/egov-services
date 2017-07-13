@@ -48,11 +48,19 @@ public class SchemeJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", SchemeEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(schemeSearchEntity.getSortBy());
+                    validateEntityFieldName(schemeSearchEntity.getSortBy(), SchemeEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (schemeSearchEntity.getSortBy() != null && !schemeSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + schemeSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (schemeSearchEntity.getId() != null) {
@@ -124,7 +132,7 @@ public class SchemeJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<Scheme>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

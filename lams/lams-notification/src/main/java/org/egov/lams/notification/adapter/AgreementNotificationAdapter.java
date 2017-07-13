@@ -2,7 +2,6 @@ package org.egov.lams.notification.adapter;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-import org.egov.lams.notification.broker.AgreementNotificationProducer;
 import org.egov.lams.notification.config.PropertiesManager;
 import org.egov.lams.notification.model.Agreement;
 import org.egov.lams.notification.model.Allottee;
@@ -15,19 +14,15 @@ import org.egov.lams.notification.service.SmsNotificationService;
 import org.egov.lams.notification.web.contract.AgreementRequest;
 import org.egov.lams.notification.web.contract.RequestInfo;
 import org.egov.lams.notification.web.contract.SmsRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AgreementNotificationAdapter {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(AgreementNotificationAdapter.class);
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -43,12 +38,9 @@ public class AgreementNotificationAdapter {
 	
 	@Autowired
 	private SmsNotificationService smsNotificationService;
-
+	
 	@Autowired
-	private AgreementNotificationProducer agreementNotificationProducer;
-
-	@Autowired
-	SmsRequest smsRequest;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public void sendSmsNotification(AgreementRequest agreementRequest) {
 
@@ -78,11 +70,9 @@ public class AgreementNotificationAdapter {
 		smsRequest.setMessage(smsNotificationService.getSmsMessage(agreement, asset, allottee, city));
 		smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
 
-		LOGGER.info("agreementSMS------------" + smsRequest);
-		String smsRequestJson = getJson(smsRequest);
-
-		
-		 try { agreementNotificationProducer.sendMessage(propertiesManager.getSmsNotificationTopic(), "sms-notification", smsRequestJson); }
+		log.info("agreementSMS------------" + smsRequest);		
+		 try { 
+			 kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), propertiesManager.getSmsNotificationTopicKey(), smsRequest); }
 		 catch (Exception ex) { 
 			 ex.printStackTrace();
 			 }		 
@@ -94,11 +84,9 @@ public class AgreementNotificationAdapter {
 		smsRequest.setMessage(smsNotificationService.getApprovalMessage(agreement, asset, allottee, city));
 		smsRequest.setMobileNumber(agreement.getAllottee().getMobileNumber().toString());
 
-		LOGGER.info("ApprovalSMS------------" + smsRequest);
-		String smsRequestJson = getJson(smsRequest);
-
+		log.info("ApprovalSMS------------" + smsRequest);
 		
-		  try { agreementNotificationProducer.sendMessage(propertiesManager.getSmsNotificationTopic(), "sms-notification", smsRequestJson); }
+		  try { kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), propertiesManager.getSmsNotificationTopicKey(), smsRequest); }
 		  catch (Exception ex) { 
 			  ex.printStackTrace();
 			  }	 
@@ -110,23 +98,11 @@ public class AgreementNotificationAdapter {
 		smsRequest.setMessage(smsNotificationService.getRejectedMessage(agreement, asset, allottee, city));
 		smsRequest.setMobileNumber(agreement.getAllottee().getMobileNumber().toString());
 
-		LOGGER.info("RejectedSMS------------" + smsRequest);
-		String smsRequestJson = getJson(smsRequest);
+		log.info("RejectedSMS------------" + smsRequest);
 		
-		  try { agreementNotificationProducer.sendMessage(propertiesManager.getSmsNotificationTopic(), "sms-notification", smsRequestJson); }
+		  try { kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), propertiesManager.getSmsNotificationTopicKey(), smsRequest); }
 		  catch (Exception ex) { 
 			  ex.printStackTrace(); 
 			  }
 	}
-
-	private String getJson(SmsRequest smsRequest) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(smsRequest);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 }

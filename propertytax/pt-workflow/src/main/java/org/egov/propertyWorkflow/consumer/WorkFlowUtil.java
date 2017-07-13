@@ -125,7 +125,7 @@ public class WorkFlowUtil {
 		assignee.setId((long) workflowDetails.getAssignee());
 		// TODO temporary fix for required fields of processInstance and need to
 		// replace with actual values
-		processInstance.setState(environment.getProperty("workflowprocess.startStatus"));
+		processInstance.setState(environment.getProperty("state"));
 		processInstance.setTenantId(workflowDetailsRequest.getTenantId());
 		processInstance.setBusinessKey(businessKey);
 		processInstance.setType(type);

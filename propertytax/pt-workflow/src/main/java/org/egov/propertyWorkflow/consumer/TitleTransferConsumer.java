@@ -96,7 +96,8 @@ public class TitleTransferConsumer {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
 			ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
-					environment.getProperty("businessKey"), environment.getProperty("type"),
+					environment.getProperty("titletransfer.businesskey"), 
+					environment.getProperty("titletransfer.type"),
 					environment.getProperty("create.property.comments"));
 
 			titleTransferRequest.getTitleTransfer().setStateId(processInstance.getId());

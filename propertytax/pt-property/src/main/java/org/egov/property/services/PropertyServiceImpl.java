@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.models.Address;
+import org.egov.models.AttributeNotFoundException;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
 import org.egov.models.Error;
@@ -27,8 +28,10 @@ import org.egov.models.TitleTransferResponse;
 import org.egov.models.Unit;
 import org.egov.models.User;
 import org.egov.models.VacantLandDetail;
+import org.egov.models.WorkFlowDetails;
 import org.egov.property.consumer.Producer;
 import org.egov.property.exception.IdGenerationException;
+import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
@@ -378,6 +381,51 @@ public class PropertyServiceImpl implements PropertyService {
 			}
 		}
 		return titleTransferResponse;
+	}
+
+	@Override
+	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
+
+		validateTitleTransferWorkflowDeatails(titleTransferRequest, titleTransferRequest.getRequestInfo());
+		producer.send(environment.getProperty("egov.propertytax.property.titletransfer.update"), titleTransferRequest);
+		TitleTransferResponse titleTransferResponse = null;
+		titleTransferResponse = new TitleTransferResponse();
+		titleTransferResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(titleTransferRequest.getRequestInfo(), true));
+		titleTransferResponse.setTitleTransfer(titleTransferRequest.getTitleTransfer());
+		
+		return titleTransferResponse;
+	}
+	
+	/**
+	 * This method validate title transfer worflow details
+	 * 
+	 * @param titleTransferRequest
+	 * @param requestInfo
+	 * @throws AttributeNotFoundException
+	 */
+	public void validateTitleTransferWorkflowDeatails(TitleTransferRequest titleTransferRequest,
+			RequestInfo requestInfo) throws AttributeNotFoundException {
+
+		WorkFlowDetails workflowDetails = titleTransferRequest.getTitleTransfer().getWorkFlowDetails();
+		if (workflowDetails.getAction() == null) {
+			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.action.message"), requestInfo);
+
+		} else if (workflowDetails.getAssignee() == null) {
+			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.assignee.message"), requestInfo);
+
+		} else if (workflowDetails.getDepartment() == null) {
+			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.department.message"),
+					requestInfo);
+
+		} else if (workflowDetails.getDesignation() == null) {
+			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.designation.message"),
+					requestInfo);
+
+		} else if (workflowDetails.getStatus() == null) {
+			throw new InvalidUpdatePropertyException(environment.getProperty("workflow.status.message"), requestInfo);
+
+		}
 	}
 
 	/**

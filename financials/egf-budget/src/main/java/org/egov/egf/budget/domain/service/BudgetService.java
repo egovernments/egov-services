@@ -3,12 +3,14 @@ package org.egov.egf.budget.domain.service;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
+import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.repository.BudgetRepository;
-import org.egov.egf.budget.web.contract.BudgetContract;
+import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.master.web.contract.repository.FinancialYearContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,24 +30,21 @@ public class BudgetService {
 	public static final String ACTION_SEARCH = "search";
 
 	@Autowired
+	private SmartValidator validator;
+
+	@Autowired
 	private BudgetRepository budgetRepository;
 
 	@Autowired
-	private SmartValidator validator;
-@Autowired
-private BudgetRepository budgetRepository;
-@Autowired
-private FinancialYearContractRepository financialYearContractRepository;
-@Autowired
-private EgfStatusRepository egfStatusRepository;
-
+	private FinancialYearContractRepository financialYearContractRepository;
 
 	private BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
 			case ACTION_VIEW:
-				// validator.validate(budgetContractRequest.getBudget(), errors);
+				// validator.validate(budgetContractRequest.getBudget(),
+				// errors);
 				break;
 			case ACTION_CREATE:
 				Assert.notNull(budgets, "Budgets to create must not be null");
@@ -72,68 +71,45 @@ private EgfStatusRepository egfStatusRepository;
 	public List<Budget> fetchRelated(List<Budget> budgets) {
 		for (Budget budget : budgets) {
 			// fetch related items
-if(budget.getFinancialYear()!=null)
-{
-FinancialYearContract  financialYear=financialYearContractRepository.findById(budget.getFinancialYear());
-if(financialYear==null)
-{
-throw new InvalidDataException("financialYear","financialYear.invalid"," Invalid financialYear");
-}budget.setFinancialYear(financialYear);
-}
-if(budget.getParent()!=null)
-{
-Budget  parent=budgetRepository.findById(budget.getParent());
-if(parent==null)
-{
-throw new InvalidDataException("parent","parent.invalid"," Invalid parent");
-}budget.setParent(parent);
-}
-if(budget.getReferenceBudget()!=null)
-{
-Budget  referenceBudget=budgetRepository.findById(budget.getReferenceBudget());
-if(referenceBudget==null)
-{
-throw new InvalidDataException("referenceBudget","referenceBudget.invalid"," Invalid referenceBudget");
-}budget.setReferenceBudget(referenceBudget);
-}
-if(budget.getStatus()!=null)
-{
-EgfStatus  status=egfStatusRepository.findById(budget.getStatus());
-if(status==null)
-{
-throw new InvalidDataException("status","status.invalid"," Invalid status");
-}budget.setStatus(status);
-}
 
+			/*if (budget.getFinancialYear() != null) {
+				CommonResponse<FinancialYearContract> financialYear = financialYearContractRepository
+						.getFinancialYearById(budget.getFinancialYear().getId());
+				if (financialYear == null || financialYear.getData() == null || financialYear.getData().isEmpty()) {
+					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
+				}
+				budget.setFinancialYear(financialYear.getData().get(0));
+			}*/
+
+			if (budget.getParent() != null) {
+				Budget parent = budgetRepository.findById(budget.getParent());
+				if (parent == null) {
+					throw new InvalidDataException("parent", "parent.invalid", " Invalid parent");
+				}
+				budget.setParent(parent);
+			}
+			if (budget.getReferenceBudget() != null) {
+				Budget referenceBudget = budgetRepository.findById(budget.getReferenceBudget());
+				if (referenceBudget == null) {
+					throw new InvalidDataException("referenceBudget", "referenceBudget.invalid",
+							" Invalid referenceBudget");
+				}
+				budget.setReferenceBudget(referenceBudget);
+			}
 		}
 
 		return budgets;
 	}
 
 	@Transactional
-	public List<Budget> add(List<Budget> budgets, BindingResult errors) {
+	public List<Budget> validate(List<Budget> budgets, BindingResult errors, String action) {
 		budgets = fetchRelated(budgets);
-		validate(budgets, ACTION_CREATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		return budgets;  
-
-	}
-
-	@Transactional
-	public List<Budget> update(List<Budget> budgets, BindingResult errors) {
-		budgets = fetchRelated(budgets);
-		validate(budgets, ACTION_UPDATE, errors);
+		validate(budgets, action, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return budgets;
 
-	}
-
-	public void addToQue(CommonRequest<BudgetContract> request) {
-		budgetRepository.add(request);
 	}
 
 	public Pagination<Budget> search(BudgetSearch budgetSearch) {

@@ -111,7 +111,7 @@ public class DocumentTypeController {
                 applicationProperties.getCreateDocumentTypeTopicName(), "documenttype-create", documentTypeReq);
         final List<DocumentType> documentTypes = new ArrayList<>();
         documentTypes.add(documentType);
-        return getSuccessResponse(documentTypes, null, documentTypeReq.getRequestInfo());
+        return getSuccessResponse(documentTypes, "created", documentTypeReq.getRequestInfo());
 
     }
 

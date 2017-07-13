@@ -8,6 +8,7 @@ import org.egov.models.IdGenerationResponse;
 import org.egov.models.IdRequest;
 import org.egov.models.Property;
 import org.egov.models.RequestInfo;
+import org.egov.models.SearchTenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -45,9 +46,9 @@ public class UpicNoGeneration {
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
 		try {
-			org.egov.models.SearchTenantResponse searchTenantResponse = restTemplate.postForObject(
+			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(
 					builder.buildAndExpand().toUri(), requestInfo,
-					org.egov.models.SearchTenantResponse.class);
+					SearchTenantResponse.class);
 			if (searchTenantResponse.getTenant().size() > 0) {
 				org.egov.models.City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();

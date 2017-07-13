@@ -999,6 +999,7 @@ definitions:
         enum:
           - TAX
           - FEE
+          - CHARGES
           - REBATE
           - ADVANCE_COLLECTION
           - PENALTY
@@ -1112,6 +1113,15 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 4
+      type:
+        type: string
+        format: int64
+        description: Type of a tax period. A period cycle.
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
       fromDate:
         type: integer
         format: int64
@@ -1523,4 +1533,5 @@ definitions:
           $ref: '#/definitions/TaxPeriod'
     type: object
     
+
 

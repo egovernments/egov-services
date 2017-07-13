@@ -315,9 +315,15 @@ class grievanceView extends Component{
 
     let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
     if(checkStatus === 'FORWARDED'){
-      if(currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId === undefined){
+      if(currentThis.props.grievanceView.positionId === undefined){
         currentThis.setState({loadingstatus:'hide'});
         currentThis.handleError('Select position to whom it is forwarded');
+        return false;
+      }
+    }else if(checkStatus === 'REGISTERED'){
+      if(currentThis.props.grievanceView.positionId){
+        currentThis.setState({loadingstatus:'hide'});
+        currentThis.handleError('Select the status as FORWARDED. Since you are trying to change the position.');
         return false;
       }
     }
@@ -327,7 +333,7 @@ class grievanceView extends Component{
       if(req_obj.serviceRequest.attribValues[i]['key'] === 'status'){
         req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
       }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'positionId'){
-          req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId === 0 || currentThis.props.grievanceView.positionId === undefined) ? currentThis.state.positionId : currentThis.props.grievanceView.positionId;
+          req_obj.serviceRequest.attribValues[i]['name'] = (currentThis.props.grievanceView.positionId) ? currentThis.props.grievanceView.positionId : currentThis.state.positionId ;
       }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'locationId'){
           req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.locationId ? currentThis.props.grievanceView.locationId : currentThis.state.locationId;
       }else if(req_obj.serviceRequest.attribValues[i]['key'] === 'childLocationId'){
@@ -804,7 +810,7 @@ class grievanceView extends Component{
 }
 
 const mapStateToProps = state => {
-  //console.log(state.form.form);
+  console.log(state.form.form);
   return ({grievanceView: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
@@ -835,9 +841,18 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleStatusChange: (value, property, isRequired, pattern) => {
-    if(value !== 'FORWARDED'){
+    if(value === 'FORWARDED'){
+      dispatch({type: "ADD_MANDATORY", property: "designationId", value: '', isRequired : true, pattern: ''});
+      dispatch({type: "ADD_MANDATORY", property: "positionId", value: '', isRequired : true, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property:'departmentId', value:0, isRequired:false, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property:'designationId', value:0, isRequired:true, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property:'positionId', value:0, isRequired:true, pattern:''});
+    }else{
       dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
       dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property:'departmentId', value:0, isRequired:false, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property:'designationId', value:0, isRequired:false, pattern:''});
+      dispatch({type: "HANDLE_CHANGE", property:'positionId', value:0, isRequired:false, pattern:''});
     }
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
@@ -858,25 +873,26 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleDesignation: (value, property, isRequired, pattern) => {
-    if(property === 'departmentId' && value === 0)
-    {
-      currentThis.setState({designation : []});
-      currentThis.setState({position : []});
-      dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
-      dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
-      dispatch({type: "HANDLE_CHANGE", property:'departmentId', value: 0, isRequired, pattern});
-      dispatch({type: "HANDLE_CHANGE", property:'designationId', value: 0, isRequired, pattern});
-      dispatch({type: "HANDLE_CHANGE", property:'positionId', value: 0, isRequired, pattern});
+    if(value === 0){
+        currentThis.setState({designation : []});
+        currentThis.setState({position : []});
+        dispatch({type: "REMOVE_MANDATORY", property: "designationId", value: '', isRequired : false, pattern: ''});
+        dispatch({type: "REMOVE_MANDATORY", property: "positionId", value: '', isRequired : false, pattern: ''});
+        dispatch({type: "HANDLE_CHANGE", property:'departmentId', value: 0, isRequired:false, pattern:''});
+        dispatch({type: "HANDLE_CHANGE", property:'designationId', value:'', isRequired:false, pattern:''});
+        dispatch({type: "HANDLE_CHANGE", property:'positionId', value: '', isRequired:false, pattern:''});
     }else{
-      Api.commonApiPost("/hr-masters/designations/_search").then(function(response)
-      {
-        currentThis.setState({designation : response.Designation});
-        dispatch({type: "ADD_MANDATORY", property: "designationId", value: '', isRequired : true, pattern: ''});
-        dispatch({type: "ADD_MANDATORY", property: "positionId", value: '', isRequired : true, pattern: ''});
-        dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
-      },function(err) {
-        currentThis.handleError(err.message);
-      });
+        Api.commonApiPost("/hr-masters/designations/_search").then(function(response)
+        {
+          currentThis.setState({designation : response.Designation});
+          dispatch({type: "ADD_MANDATORY", property: "designationId", value: '', isRequired : true, pattern: ''});
+          dispatch({type: "ADD_MANDATORY", property: "positionId", value: '', isRequired : true, pattern: ''});
+          dispatch({type: "HANDLE_CHANGE", property:'designationId', value: '', isRequired:true, pattern:''});
+          dispatch({type: "HANDLE_CHANGE", property:'positionId', value: '', isRequired:true, pattern:''});
+          dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+        },function(err) {
+          currentThis.handleError(err.message);
+        });
     }
   },
   handlePosition: (dep, value, property, isRequired, pattern) => {
@@ -897,7 +913,6 @@ const mapDispatchToProps = dispatch => ({
         currentThis.setState({position : []});
       }
     }
-
   },
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files})

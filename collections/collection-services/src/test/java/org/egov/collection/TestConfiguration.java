@@ -38,45 +38,21 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.model;
+package org.egov.collection;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
 
-import java.util.List;
-@Setter
-@Getter
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@NoArgsConstructor
-public class ReceiptSearchCriteria {
+import static org.mockito.Mockito.mock;
 
-    private List<String> receiptNumbers;
+@Configuration
+public class TestConfiguration {
 
-    private String consumerCode;
+    @Bean
+    @SuppressWarnings("unchecked")
+    public KafkaTemplate<String, Object> kafkaTemplate() {
+        return mock(KafkaTemplate.class);
+    }
 
-    private String fromDate;
-
-    private String toDate;
-
-    private String collectedBy;
-
-    private String status;
-
-    private String paymentType;
-
-    private String classification;
-
-    private String businessCode;
-
-    private String tenantId;
-    
-    private String sortBy;
-    
-    private String sortOrder;
 }

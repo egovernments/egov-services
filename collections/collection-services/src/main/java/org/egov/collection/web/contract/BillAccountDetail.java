@@ -3,7 +3,7 @@ package org.egov.collection.web.contract;
 
 import java.math.BigDecimal;
 
-
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,6 +12,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
+@Builder
 public class BillAccountDetail   {
   
 	private String glcode;

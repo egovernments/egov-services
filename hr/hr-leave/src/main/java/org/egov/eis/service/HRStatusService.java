@@ -55,13 +55,16 @@ import java.util.List;
 
 @Service
 public class HRStatusService {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Autowired
     private HRStatusSearchURLHelper hrStatusSearchURLHelper;
 
     public List<HRStatus> getHRStatuses(final String code, final String tenantId, final RequestInfo requestInfo) {
         final String url = hrStatusSearchURLHelper.searchURL(code, tenantId);
 
-        final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

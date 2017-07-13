@@ -57,6 +57,9 @@ import java.util.List;
 public class VacantPositionsService {
 
 	@Autowired
+	private RestTemplate restTemplate;
+
+	@Autowired
 	private VacantPositionsRepository vacantPositionsRepository;
 
 	@Autowired
@@ -74,7 +77,7 @@ public class VacantPositionsService {
 
 		System.err.println(url);
 
-		NonVacantPositionsResponse nonVacantPositionsResponse = new RestTemplate().postForObject(url, requestInfoWrapper,
+		NonVacantPositionsResponse nonVacantPositionsResponse = restTemplate.postForObject(url, requestInfoWrapper,
 				NonVacantPositionsResponse.class);
 
 		if (!nonVacantPositionsResponse.getPositionIds().isEmpty())

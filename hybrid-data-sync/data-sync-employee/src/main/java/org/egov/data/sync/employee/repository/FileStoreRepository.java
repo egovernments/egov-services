@@ -48,14 +48,17 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class FileStoreRepository {
 
+/*
     @Autowired
     private RestTemplate restTemplate;
+*/
 
     @Autowired
     private PropertiesManager propertiesManager;
 
     public byte[] getFileInByteArray(String tenantId, String fileStoreId) {
         String url = getFileStoreURL(tenantId, fileStoreId);
+        RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(url, byte[].class);
     }
 

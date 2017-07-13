@@ -491,7 +491,7 @@ ReportDefinitions:
   - name: complainttype
     label: reports.pgr.complainttype
     type: url
-    pattern: /pgr-master/service/v1/_search?tenantId=default&categoryId={complaintcategorytype}|$..code|$..name
+    pattern: /pgr-master/service/v1/_search?tenantId=default&categoryId={complaintcategorytype}|$..serviceCode|$..serviceName
     source: seva
   - name: positiontype
     label: reports.pgr.positiontype

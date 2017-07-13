@@ -47,13 +47,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.model.StorageReservoir;
-import org.egov.wcms.service.StorageReservoirService;
+import org.egov.wcms.model.TreatmentPlant;
+import org.egov.wcms.service.TreatmentPlantService;
 import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
-import org.egov.wcms.web.contract.StorageReservoirGetRequest;
-import org.egov.wcms.web.contract.StorageReservoirRequest;
-import org.egov.wcms.web.contract.StorageReservoirResponse;
+import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
+import org.egov.wcms.web.contract.TreatmentPlantRequest;
+import org.egov.wcms.web.contract.TreatmentPlantResponse;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
@@ -72,11 +72,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping("/storagereservoir")
-public class StorageReservoirController {
+@RequestMapping("/treatmentplant")
+public class TreatmentPlantController {
 
     @Autowired
-    private StorageReservoirService storageReservoirService;
+    private TreatmentPlantService treatmentPlantService;
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
@@ -92,48 +92,48 @@ public class StorageReservoirController {
 
     @PostMapping(value = "/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final StorageReservoirRequest storageReservoirRequest,
+    public ResponseEntity<?> create(@RequestBody @Valid final TreatmentPlantRequest treatmentPlantRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        log.info("Storage Reservoir Request::" + storageReservoirRequest);
+        log.info("Treatment Plant Request::" + treatmentPlantRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateStorageReservoirRequest(storageReservoirRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<StorageReservoir> storageReservoir = storageReservoirService.createStorageReservoir(
-                applicationProperties.getCreateStorageReservoirTopicName(), "storagereservoir-create", storageReservoirRequest);
+        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.createTreatmentPlant(
+                applicationProperties.getCreateTreatmentPlantTopicName(), "treatmentplant-create", treatmentPlantRequest);
 
-        return getSuccessResponse(storageReservoir, "created", storageReservoirRequest.getRequestInfo());
+        return getSuccessResponse(treatmentPlantList, "created", treatmentPlantRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final StorageReservoirRequest storageReservoirRequest,
+    public ResponseEntity<?> update(@RequestBody @Valid final TreatmentPlantRequest treatmentPlantRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        log.info("storageReservoirRequest::" + storageReservoirRequest);
+        log.info("treatmentPlantRequest::" + treatmentPlantRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateStorageReservoirRequest(storageReservoirRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateTreatmentPlantRequest(treatmentPlantRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<StorageReservoir> storageReservoir = storageReservoirService.updateStorageReservoir(
-                applicationProperties.getUpdateStorageReservoirTopicName(), "storagereservoir-update", storageReservoirRequest);
+        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.updateTreatmentPlant(
+                applicationProperties.getUpdateTreatmentPlantTopicName(), "treatmentplant-update", treatmentPlantRequest);
 
-        return getSuccessResponse(storageReservoir, null, storageReservoirRequest.getRequestInfo());
+        return getSuccessResponse(treatmentPlantList, null, treatmentPlantRequest.getRequestInfo());
     }
 
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(
-            @ModelAttribute @Valid final StorageReservoirGetRequest storageReservoirGetRequest,
+            @ModelAttribute @Valid final TreatmentPlantGetRequest treatmentPlantGetRequest,
             final BindingResult modelAttributeBindingResult,
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -148,29 +148,29 @@ public class StorageReservoirController {
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         // Call service
-        List<StorageReservoir> storageReservoirList = null;
+        List<TreatmentPlant> treatmentPlantList = null;
         try {
-            storageReservoirList = storageReservoirService.getStorageReservoir(storageReservoirGetRequest);
+            treatmentPlantList = treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest);
         } catch (final Exception exception) {
-            log.error("Error while processing request " + storageReservoirGetRequest, exception);
+            log.error("Error while processing request " + treatmentPlantGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponse(storageReservoirList, null, requestInfo);
+        return getSuccessResponse(treatmentPlantList, null, requestInfo);
 
     }
 
-    private ResponseEntity<?> getSuccessResponse(final List<StorageReservoir> storageReservoirs,
+    private ResponseEntity<?> getSuccessResponse(final List<TreatmentPlant> treatmentPlantList,
             final String mode, final RequestInfo requestInfo) {
-        final StorageReservoirResponse storageReservoirResponse = new StorageReservoirResponse();
-        storageReservoirResponse.setStorageReservoirs(storageReservoirs);
+        final TreatmentPlantResponse treatmentPlantResponse = new TreatmentPlantResponse();
+        treatmentPlantResponse.setTreatmentPlants(treatmentPlantList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());
         else
             responseInfo.setStatus(HttpStatus.OK.toString());
-        storageReservoirResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<>(storageReservoirResponse, HttpStatus.OK);
+        treatmentPlantResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(treatmentPlantResponse, HttpStatus.OK);
 
     }
 

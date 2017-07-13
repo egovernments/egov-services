@@ -42,12 +42,12 @@ package org.egov.wcms.service;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.model.StorageReservoir;
-import org.egov.wcms.repository.StorageReservoirRepository;
+import org.egov.wcms.model.TreatmentPlant;
+import org.egov.wcms.repository.TreatmentPlantRepository;
 import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.BoundaryResponse;
-import org.egov.wcms.web.contract.StorageReservoirGetRequest;
-import org.egov.wcms.web.contract.StorageReservoirRequest;
+import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
+import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,10 +55,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class StorageReservoirService {
+public class TreatmentPlantService {
 
     @Autowired
-    private StorageReservoirRepository storageReservoirRepository;
+    private TreatmentPlantRepository treatmentPlantRepository;
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -69,76 +69,76 @@ public class StorageReservoirService {
     @Autowired
     private RestExternalMasterService restExternalMasterService;
 
-    public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
-        return storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
+    public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
+        return treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);
     }
 
-    public StorageReservoirRequest update(final StorageReservoirRequest storageReservoirRequest) {
-        return storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest);
+    public TreatmentPlantRequest update(final TreatmentPlantRequest treatmentPlantRequest) {
+        return treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest);
     }
 
-    public List<StorageReservoir> createStorageReservoir(final String topic, final String key,
-            final StorageReservoirRequest storageReservoirRequest) {
-        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
-            storageReservoir.setCode(codeGeneratorService.generate(StorageReservoir.SEQ_STORAGE_RESERVOIR));
+    public List<TreatmentPlant> createTreatmentPlant(final String topic, final String key,
+            final TreatmentPlantRequest treatmentPlantRequest) {
+        for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants())
+            treatmentPlant.setCode(codeGeneratorService.generate(TreatmentPlant.SEQ_TREATMENT_PLANT));
         try {
-            kafkaTemplate.send(topic, key, storageReservoirRequest);
+            kafkaTemplate.send(topic, key, treatmentPlantRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return storageReservoirRequest.getStorageReservoir();
+        return treatmentPlantRequest.getTreatmentPlants();
     }
 
-    public List<StorageReservoir> updateStorageReservoir(final String topic, final String key,
-            final StorageReservoirRequest storageReservoirRequest) {
+    public List<TreatmentPlant> updateTreatmentPlant(final String topic, final String key,
+            final TreatmentPlantRequest treatmentPlantRequest) {
         try {
-            kafkaTemplate.send(topic, key, storageReservoirRequest);
+            kafkaTemplate.send(topic, key, treatmentPlantRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return storageReservoirRequest.getStorageReservoir();
+        return treatmentPlantRequest.getTreatmentPlants();
     }
 
-    public List<StorageReservoir> getStorageReservoir(
-            final StorageReservoirGetRequest storageReservoirGetRequest) {
-        if (storageReservoirGetRequest.getZoneName() != null) {
+    public List<TreatmentPlant> getTreatmentPlant(
+            final TreatmentPlantGetRequest treatmentPlantGetRequest) {
+        if (treatmentPlantGetRequest.getZoneName() != null) {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.ZONE,
-                    WcmsConstants.REVENUE, storageReservoirGetRequest.getTenantId());
+                    WcmsConstants.REVENUE, treatmentPlantGetRequest.getTenantId());
             if (boundary != null)
-                storageReservoirGetRequest.setZone(boundary.getBoundarys().get(0).getId());
+                treatmentPlantGetRequest.setZone(boundary.getBoundarys().get(0).getId());
 
         }
-        if (storageReservoirGetRequest.getWardName() != null) {
+        if (treatmentPlantGetRequest.getWardName() != null) {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.WARD,
-                    WcmsConstants.REVENUE, storageReservoirGetRequest.getTenantId());
+                    WcmsConstants.REVENUE, treatmentPlantGetRequest.getTenantId());
             if (boundary != null)
-                storageReservoirGetRequest.setWard(boundary.getBoundarys().get(0).getId());
+                treatmentPlantGetRequest.setWard(boundary.getBoundarys().get(0).getId());
 
         }
-        if (storageReservoirGetRequest.getLocationName() != null) {
+        if (treatmentPlantGetRequest.getLocationName() != null) {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.LOCALITY,
-                    WcmsConstants.LOCATION, storageReservoirGetRequest.getTenantId());
+                    WcmsConstants.LOCATION, treatmentPlantGetRequest.getTenantId());
             if (boundary != null)
-                storageReservoirGetRequest.setLocation(boundary.getBoundarys().get(0).getId());
+                treatmentPlantGetRequest.setLocation(boundary.getBoundarys().get(0).getId());
 
         }
-        return storageReservoirRepository.findForCriteria(storageReservoirGetRequest);
+        return treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest);
     }
 
     public Boolean getBoundaryByZone(
-            final StorageReservoir storageReservoir) {
+            final TreatmentPlant treatmentPlant) {
         Boolean isValidBoundaryByZone = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
         boundaryRespose = restExternalMasterService.getBoundaryId(
                 WcmsConstants.ZONE,
                 WcmsConstants.REVENUE,
-                storageReservoir.getTenantId());
+                treatmentPlant.getTenantId());
         if (boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByZone = Boolean.TRUE;
-            storageReservoir.setZone(
+            treatmentPlant.setZone(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
                             ? boundaryRespose.getBoundarys().get(0).getId() : "");
 
@@ -147,16 +147,16 @@ public class StorageReservoirService {
 
     }
 
-    public Boolean getBoundaryByWard(final StorageReservoir storageReservoir) {
+    public Boolean getBoundaryByWard(final TreatmentPlant treatmentPlant) {
         Boolean isValidBoundaryByWard = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
         boundaryRespose = restExternalMasterService.getBoundaryId(
                 WcmsConstants.WARD,
                 WcmsConstants.REVENUE,
-                storageReservoir.getTenantId());
+                treatmentPlant.getTenantId());
         if (boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByWard = Boolean.TRUE;
-            storageReservoir.setWard(
+            treatmentPlant.setWard(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
                             ? boundaryRespose.getBoundarys().get(0).getId() : "");
 
@@ -165,16 +165,16 @@ public class StorageReservoirService {
 
     }
 
-    public Boolean getBoundaryByLocation(final StorageReservoir storageReservoir) {
+    public Boolean getBoundaryByLocation(final TreatmentPlant treatmentPlant) {
         Boolean isValidBoundaryByLocation = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
         boundaryRespose = restExternalMasterService.getBoundaryId(
                 WcmsConstants.LOCALITY,
                 WcmsConstants.LOCATION,
-                storageReservoir.getTenantId());
+                treatmentPlant.getTenantId());
         if (boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByLocation = Boolean.TRUE;
-            storageReservoir.setLocation(
+            treatmentPlant.setLocation(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
                             ? boundaryRespose.getBoundarys().get(0).getId() : "");
 
@@ -183,8 +183,12 @@ public class StorageReservoirService {
 
     }
 
-    public boolean getStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
-        return storageReservoirRepository.checkStorageReservoirByNameAndCode(code, name, tenantId);
+    public boolean getTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
+        return treatmentPlantRepository.checkTreatmentPlantByNameAndCode(code, name, tenantId);
+    }
+
+    public boolean checkStorageReservoirExists(final String storageReservoirName, final String tenantId) {
+        return treatmentPlantRepository.checkStorageReservoirExists(storageReservoirName, tenantId);
     }
 
 }

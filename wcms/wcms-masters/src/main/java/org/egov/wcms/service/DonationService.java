@@ -64,7 +64,7 @@ public class DonationService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestPropertyTaxMasterService restPropertyTaxMasterService;
+    private RestExternalMasterService restExternalMasterService;
 
     public DonationRequest create(final DonationRequest donationRequest) {
         return donationRepository.persistDonationDetails(donationRequest);
@@ -85,14 +85,14 @@ public class DonationService {
 
     public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {
         if (donationGetRequest.getPropertyType() != null) {
-            final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     donationGetRequest.getPropertyType(), donationGetRequest.getTenantId());
             if (propertyType != null)
                 donationGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
         if (donationGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageIdFromPTModule(
+            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                     donationGetRequest.getUsageType(), donationGetRequest.getTenantId());
             if (usageType != null)
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
@@ -104,7 +104,7 @@ public class DonationService {
     public Boolean getPropertyTypeByName(final DonationRequest donationRequest) {
         Boolean isValidProperty = Boolean.FALSE;
 
-        final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                 donationRequest.getDonation().getPropertyType(),
                 donationRequest.getDonation().getTenantId());
         if (propertyType.getPropertyTypesSize()) {
@@ -120,7 +120,7 @@ public class DonationService {
 
     public Boolean getUsageTypeByName(final DonationRequest donationRequest) {
         Boolean isValidUsage = Boolean.FALSE;
-        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageIdFromPTModule(
+        final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                 donationRequest.getDonation().getUsageType(),
                 donationRequest.getDonation().getTenantId());
         if (usageType.getUsageTypesSize()) {

@@ -63,7 +63,7 @@ public class PropertyTypePipeSizeService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestPropertyTaxMasterService restPropertyTaxMasterService;
+    private RestExternalMasterService restExternalMasterService;
 
     public PropertyTypePipeSizeRequest create(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistCreatePropertyPipeSize(propertyPipeSizeRequest);
@@ -95,7 +95,7 @@ public class PropertyTypePipeSizeService {
     public List<PropertyTypePipeSize> getPropertyPipeSizes(
             final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         if (propertyPipeSizeGetRequest.getPropertyTypeName() != null) {
-            final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
                     propertyPipeSizeGetRequest.getPropertyTypeName(), propertyPipeSizeGetRequest.getTenantId());
             if (propertyTypes != null)
                 propertyPipeSizeGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
@@ -107,7 +107,7 @@ public class PropertyTypePipeSizeService {
 
     public Boolean getPropertyTypeByName(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
-        final PropertyTypeResponse propertyTypes = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
                 propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeName(),
                 propertyPipeSizeRequest.getPropertyPipeSize().getTenantId());
 

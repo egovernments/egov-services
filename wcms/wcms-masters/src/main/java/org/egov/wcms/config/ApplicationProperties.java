@@ -131,6 +131,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.storagereservoir.update.name}")
     private String updateStorageReservoirTopicName;
 
+    @Value("${kafka.topics.treatmentplant.create.name}")
+    private String createTreatmentPlantTopicName;
+
+    @Value("${kafka.topics.treatmentplant.update.name}")
+    private String updateTreatmentPlantTopicName;
+
     @Autowired
     private Environment environment;
 
@@ -192,7 +198,7 @@ public class ApplicationProperties {
 
     public String getUpdateDocumentTypeTopicName() {
         return updateDocumentTypeTopicName;
-       }
+    }
 
     public String getUpdateDocumentTypeApplicationTypeTopicName() {
         return updateDocTypeAppTypeTopicName;
@@ -242,7 +248,15 @@ public class ApplicationProperties {
         return createStorageReservoirTopicName;
     }
 
-    public String getupdateStorageReservoirTopicName() {
+    public String getUpdateStorageReservoirTopicName() {
         return updateStorageReservoirTopicName;
+    }
+
+    public String getCreateTreatmentPlantTopicName() {
+        return createTreatmentPlantTopicName;
+    }
+
+    public String getUpdateTreatmentPlantTopicName() {
+        return updateTreatmentPlantTopicName;
     }
 }

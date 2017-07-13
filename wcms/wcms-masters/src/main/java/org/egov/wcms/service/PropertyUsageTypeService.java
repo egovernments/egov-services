@@ -65,7 +65,7 @@ public class PropertyUsageTypeService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestPropertyTaxMasterService restPropertyTaxMasterService;
+    private RestExternalMasterService restExternalMasterService;
 
     public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
@@ -89,14 +89,14 @@ public class PropertyUsageTypeService {
     public List<PropertyTypeUsageType> getPropertyUsageTypes(
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
         if (propUsageTypeGetRequest.getPropertyType() != null) {
-            final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+            final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     propUsageTypeGetRequest.getPropertyType(), propUsageTypeGetRequest.getTenantId());
             if (propertyType != null)
                 propUsageTypeGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
         if (propUsageTypeGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageIdFromPTModule(
+            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                     propUsageTypeGetRequest.getUsageType(), propUsageTypeGetRequest.getTenantId());
             if (usageType != null)
                 propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
@@ -118,7 +118,7 @@ public class PropertyUsageTypeService {
     public Boolean getPropertyTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidProperty = Boolean.FALSE;
 
-        final PropertyTypeResponse propertyType = restPropertyTaxMasterService.getPropertyIdFromPTModule(
+        final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                 propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
                 propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
         if (propertyType.getPropertyTypesSize()) {
@@ -134,7 +134,7 @@ public class PropertyUsageTypeService {
 
     public Boolean getUsageTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidUsage = Boolean.FALSE;
-        final UsageTypeResponse usageType = restPropertyTaxMasterService.getUsageIdFromPTModule(
+        final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                 propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
                 propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
         if (usageType.getUsageTypesSize()) {

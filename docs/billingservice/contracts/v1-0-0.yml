@@ -296,6 +296,11 @@ paths:
           description: description of the tax period for which 'TaxPeriod' is to be returned.
           required: false
           type: string
+        - name: cycle
+          in: query
+          description: cycle of the tax period for which 'TaxPeriod' is to be returned.
+          required: true
+          type: string
         - name: fromDate
           in: query
           description: period from date

@@ -62,10 +62,10 @@ import lombok.ToString;
 @ToString
 public class SourceTypeResponse {
 
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("waterSourceType")
-    private List<SourceType> waterSourceTypes = new ArrayList<>();
+    @JsonProperty("sourceTypes")
+    private List<SourceType> sourceTypes = new ArrayList<>();
 
 }

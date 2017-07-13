@@ -107,7 +107,7 @@ public class SourceTypeRepositoryTest {
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
         final SourceType waterSource = getWaterSourceType();
-        waterSourceTypeRequest.setWaterSourceType(waterSource);
+        waterSourceTypeRequest.setSourceType(waterSource);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest
@@ -124,7 +124,7 @@ public class SourceTypeRepositoryTest {
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
         final SourceType waterSource = getWaterSourceType();
-        waterSourceTypeRequest.setWaterSourceType(waterSource);
+        waterSourceTypeRequest.setSourceType(waterSource);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest

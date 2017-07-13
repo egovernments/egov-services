@@ -125,7 +125,7 @@ public class PopertyTypePipeSizeController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("propertyPipeSizeRequest::" + propertyPipeSizeRequest);
-        propertyPipeSizeRequest.getPropertyPipeSize().setId(propertyPipeSizeId);
+        propertyPipeSizeRequest.getPropertyTypePipeSize().setId(propertyPipeSizeId);
 
         final List<ErrorResponse> errorResponses = validatorUtils
                 .validatePropertyPipeSizeRequest(propertyPipeSizeRequest);
@@ -173,7 +173,7 @@ public class PopertyTypePipeSizeController {
     private ResponseEntity<?> getSuccessResponse(final List<PropertyTypePipeSize> propertyPipeSizeList,
             final String mode, final RequestInfo requestInfo) {
         final PropertyTypePipeSizeResponse propertyPipeSizeResponse = new PropertyTypePipeSizeResponse();
-        propertyPipeSizeResponse.setPropertyPipeSizes(propertyPipeSizeList);
+        propertyPipeSizeResponse.setPropertyTypePipeSizes(propertyPipeSizeList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());

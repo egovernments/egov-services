@@ -78,13 +78,13 @@ public class CategoryTypeService {
 
     public CategoryType createCategory(final String topic, final String key,
             final CategoryTypeRequest categoryRequest) {
-        categoryRequest.getCategory().setCode(codeGeneratorService.generate(CategoryType.SEQ_CATEGORY));
+        categoryRequest.getCategoryType().setCode(codeGeneratorService.generate(CategoryType.SEQ_CATEGORY));
         try {
             kafkaTemplate.send(topic, key, categoryRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return categoryRequest.getCategory();
+        return categoryRequest.getCategoryType();
     }
 
     public CategoryType updateCategory(final String topic, final String key,
@@ -94,7 +94,7 @@ public class CategoryTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return categoryRequest.getCategory();
+        return categoryRequest.getCategoryType();
     }
 
     public boolean getCategoryByNameAndCode(final String code, final String name, final String tenantId) {

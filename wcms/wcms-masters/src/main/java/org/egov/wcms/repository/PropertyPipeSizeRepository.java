@@ -74,7 +74,7 @@ public class PropertyPipeSizeRepository {
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         log.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeInsert = PropertyPipeSizeQueryBuilder.insertPropertyPipeSizeQuery();
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyTypePipeSize();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {
@@ -87,7 +87,7 @@ public class PropertyPipeSizeRepository {
         if (pipesizeId == null)
             log.info("Invalid input.");
 
-        final Object[] obj = new Object[] { pipesizeId, propertyPipeSizeRequest.getPropertyPipeSize().getPropertyTypeId(),
+        final Object[] obj = new Object[] { pipesizeId, propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeId(),
                 propertyPipeSize.getActive(),
                 Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
                 Long.valueOf(propertyPipeSizeRequest.getRequestInfo().getUserInfo().getId()),
@@ -101,7 +101,7 @@ public class PropertyPipeSizeRepository {
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         log.info("PropertyPipeSizeRequest::" + propertyPipeSizeRequest);
         final String propertyPipeSizeUpdate = PropertyPipeSizeQueryBuilder.updatePropertyPipeSizeQuery();
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyTypePipeSize();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {

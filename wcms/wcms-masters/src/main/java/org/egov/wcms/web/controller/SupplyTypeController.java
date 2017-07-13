@@ -164,7 +164,7 @@ public class SupplyTypeController {
     private ResponseEntity<?> getSuccessResponse(final List<SupplyType> supplyType, final String mode,
             final RequestInfo requestInfo) {
         final SupplyTypeResponse supplyResponse = new SupplyTypeResponse();
-        supplyResponse.setSupplytypes(supplyType);
+        supplyResponse.setSupplyTypes(supplyType);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());

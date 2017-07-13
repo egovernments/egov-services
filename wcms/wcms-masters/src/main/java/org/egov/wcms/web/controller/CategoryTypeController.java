@@ -124,7 +124,7 @@ public class CategoryTypeController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("categoryRequest::" + categoryRequest);
-        categoryRequest.getCategory().setCode(code);
+        categoryRequest.getCategoryType().setCode(code);
 
         final List<ErrorResponse> errorResponses = validatorUtils.validateCategoryRequest(categoryRequest);
         if (!errorResponses.isEmpty())
@@ -169,7 +169,7 @@ public class CategoryTypeController {
     private ResponseEntity<?> getSuccessResponse(final List<CategoryType> categoryList, final String mode,
             final RequestInfo requestInfo) {
         final CategoryTypeResponse categoryResponse = new CategoryTypeResponse();
-        categoryResponse.setCategories(categoryList);
+        categoryResponse.setCategoryTypes(categoryList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if (StringUtils.isNotBlank(mode))
             responseInfo.setStatus(HttpStatus.CREATED.toString());

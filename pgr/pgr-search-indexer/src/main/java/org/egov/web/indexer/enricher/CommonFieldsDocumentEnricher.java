@@ -1,5 +1,6 @@
 package org.egov.web.indexer.enricher;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.contract.ServiceType;
 import org.egov.web.indexer.contract.SevaRequest;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import static org.egov.pgr.common.date.DateFormatter.toDate;
 
 @Service
+@Slf4j
 public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnricher {
 
     private static final String SERVICE_STATUS = "status";

@@ -80,11 +80,9 @@ public class ElasticSearchRepository {
     }
 
     public void index(List<ReceiptRequestDocument> documents) {
-        for(ReceiptRequestDocument document : documents) {
             String url = String.format("%s%s/%s/", this.indexServiceHost, indexName, documentType);
             HttpHeaders headers = getHttpHeaders();
-            restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(document, headers), Map.class);
-        }
+            restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(documents, headers), Map.class);
     }
 
     private HttpHeaders getHttpHeaders() {

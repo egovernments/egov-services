@@ -16,6 +16,7 @@ public class TaxPeriodRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 	
+	
 	private List<TaxPeriod> taxPeriods;
 	
 	

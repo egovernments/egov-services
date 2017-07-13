@@ -184,18 +184,26 @@ class DefineEscalationTime extends Component {
 
       Api.commonApiPost("workflow/escalation-hours/v1/_search",query,{}).then(function(response){
              setLoadingStatus('hide');
-          if (response.EscalationTimeType[0] != null) {
+          if (response.EscalationTimeType[0] != null && response.EscalationTimeType[0].id !=null ) {
+			  
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
-                isSearchClicked: true
+                isSearchClicked: true,
+				 noData: false,
               })
           } else {
             current.setState({
               noData: true,
+			   resultList:[],
+                isSearchClicked: false
             })
           }
       }).catch((error)=>{
+		   current.setState({
+                resultList:[],
+                isSearchClicked: false
+              })
         toggleSnackbarAndSetText(true, error);
       })
 
@@ -235,7 +243,8 @@ class DefineEscalationTime extends Component {
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
-                isSearchClicked: true
+                isSearchClicked: true,
+				 noData: false,
               })
           } else {
             current.setState({
@@ -288,7 +297,8 @@ class DefineEscalationTime extends Component {
               flag = 1;
               current.setState({
                 resultList: response.EscalationTimeType,
-                isSearchClicked: true
+                isSearchClicked: true,
+				 noData: false,
               })
           } else {
             current.setState({

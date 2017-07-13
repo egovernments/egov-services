@@ -62,10 +62,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class TreatmentPlantResponse {
 
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("treatmentPlant")
+    @JsonProperty("treatmentPlants")
     private List<TreatmentPlant> treatmentPlants = new ArrayList<>();
 
 }

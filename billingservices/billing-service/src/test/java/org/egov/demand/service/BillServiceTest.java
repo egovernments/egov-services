@@ -1,5 +1,6 @@
 package org.egov.demand.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -15,12 +16,14 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.BillHelper;
 import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
+import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.util.FileUtils;
@@ -35,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -87,6 +91,22 @@ public class BillServiceTest {
 	}
 	
 	@Test
+	public void testsearchBill(){
+		Bill bill=getBills();
+		List<Bill> bills=new ArrayList<Bill>();
+		bills.add(bill);
+		BillResponse billResponse=new BillResponse();
+		billResponse.setBill(bills);
+		
+		when(billRepository.findBill(Matchers.any(BillSearchCriteria.class)))
+		.thenReturn(bills);
+		
+		BillSearchCriteria billSearchcriteria=BillSearchCriteria.builder().tenantId("ap.kurnool").build();
+		
+		assertEquals(billResponse, billService.searchBill(billSearchcriteria, new RequestInfo()));
+	}
+	
+	@Test
 	public void testCreateAsync() {
 		Bill bill=getBills();
 		BillRequest billRequest=new BillRequest();
@@ -101,6 +121,13 @@ public class BillServiceTest {
 		doNothing().when(billHelper).getBillRequestWithIds(any(BillRequest.class));
 		assertTrue(billResponse.equals(billService.createAsync(billRequest)));
 
+		when(billRepository.findBill(Matchers.any(BillSearchCriteria.class)))
+		.thenReturn(bills);
+		
+		BillSearchCriteria billCriteria=BillSearchCriteria.builder().tenantId("ap.kurnool").build();
+		
+		assertEquals(billResponse, billService.searchBill(billCriteria, new RequestInfo()));
+		
 	}
 	
 	@Test

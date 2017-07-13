@@ -1,6 +1,7 @@
 package org.egov.demand.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,13 +21,17 @@ public class BillSearchCriteria {
 	
 	private String demandId;
 	
-	private List<String> billId;
+	private Set<String> billId;
 	
-	private boolean isActive;
+	private Boolean isActive;
 	
-	private boolean isCancelled;
+	private Boolean isCancelled;
 
 	private String billType;
 	
 	private String consumerCode;
+	
+	private Long size;
+	
+	private Long offset;
 }

@@ -714,8 +714,8 @@ class Header extends Component {
           },
           {
             id:33,
-            name:'Update Receiving Mode',
-            displayName:"Update Receiving Mode",
+            name:'Update Category',
+            displayName:"Update Category",
             url:base + "pgr/serviceGroup/edit",
             enabled:"true",
             orderNumber:3,

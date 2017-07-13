@@ -116,7 +116,7 @@ public class PropertyPipeSizeRepositoryTest {
         requestInfo.setUserInfo(user);
         propertyPipeSizeRequest.setRequestInfo(requestInfo);
         final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
-        propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(propertyPipeSizeRequest
@@ -133,7 +133,7 @@ public class PropertyPipeSizeRepositoryTest {
         requestInfo.setUserInfo(user);
         propertyPipeSizeRequest.setRequestInfo(requestInfo);
         final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
-        propertyPipeSizeRequest.setPropertyPipeSize(propertyPipeSize);
+        propertyPipeSizeRequest.setPropertyTypePipeSize(propertyPipeSize);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(propertyPipeSizeRequest

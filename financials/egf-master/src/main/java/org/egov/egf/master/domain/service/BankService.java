@@ -111,4 +111,14 @@ public class BankService {
 		return bankRepository.search(bankSearch);
 	}
 
+	@Transactional
+	public Bank save(Bank bank) {
+		return bankRepository.save(bank);
+	}
+
+	@Transactional
+	public Bank update(Bank bank) {
+		return bankRepository.update(bank);
+	}
+
 }

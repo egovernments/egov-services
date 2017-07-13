@@ -62,9 +62,9 @@ import lombok.ToString;
 public class DonationRequest {
 
     @NotNull
-    @JsonProperty("RequestInfo")
+    @JsonProperty("requestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("Donation")
+    @JsonProperty("donation")
     private Donation donation;
 }

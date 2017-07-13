@@ -112,4 +112,14 @@ public class SubSchemeService {
 		return subSchemeRepository.search(subSchemeSearch);
 	}
 
+	@Transactional
+	public SubScheme save(SubScheme subScheme) {
+		return subSchemeRepository.save(subScheme);
+	}
+
+	@Transactional
+	public SubScheme update(SubScheme subScheme) {
+		return subSchemeRepository.update(subScheme);
+	}
+
 }

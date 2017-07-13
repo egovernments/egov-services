@@ -16,8 +16,14 @@ public class BudgetReAppropriationRepository {
 	private BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository;
 
 	public BudgetReAppropriation findById(BudgetReAppropriation budgetReAppropriation) {
-		return budgetReAppropriationJdbcRepository
-				.findById(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
+
+		BudgetReAppropriationEntity entity = budgetReAppropriationJdbcRepository
+				.findById(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation));
+
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
 
 	}
 

@@ -74,6 +74,9 @@ public class UserService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
+	private RestTemplate restTemplate;
+
+	@Autowired
 	private UserSearchURLHelper userSearchURLHelper;
 
 	@Autowired
@@ -92,7 +95,7 @@ public class UserService {
 		UserResponse userResponse = null;
 		List<User> users = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, userGetRequest, UserResponse.class);
+			userResponse = restTemplate.postForObject(url, userGetRequest, UserResponse.class);
 			users = userResponse.getUser();
 		} catch (Exception e) {
 			LOGGER.debug("\n\nFollowing Exception Occurred While Calling User Service : " + e.getMessage());
@@ -114,7 +117,7 @@ public class UserService {
 
 		UserResponse userResponse = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+			userResponse = restTemplate.postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
 			LOGGER.debug("\n\n" + "Following exception occurred while creating user: " + errorResponseBody);
@@ -154,7 +157,7 @@ public class UserService {
 
 		UserResponse userResponse = null;
 		try {
-			userResponse = new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+			userResponse = restTemplate.postForObject(url, userRequest, UserResponse.class);
 		} catch (HttpClientErrorException e) {
 			String errorResponseBody = e.getResponseBodyAsString();
 			LOGGER.debug("\n\n" + "Following exception occurred while updating user: " + errorResponseBody);

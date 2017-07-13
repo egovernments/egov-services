@@ -12,6 +12,7 @@
       "service": "Test Service",
       "code": "2017-2018-I",
       "financialYear": "2017-18",
+      "periodCycle": "QUARTER",
       "auditDetail": null
     }
   ]

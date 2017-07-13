@@ -6,8 +6,6 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
-import org.egov.egf.master.domain.enums.BudgetAccountType;
-import org.egov.egf.master.domain.enums.BudgetingType;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -94,7 +92,6 @@ public class BudgetGroupService {
 				}
 				budgetGroup.setMinCode(minCode);
 			}
-			 
 
 		}
 
@@ -127,6 +124,16 @@ public class BudgetGroupService {
 
 	public Pagination<BudgetGroup> search(BudgetGroupSearch budgetGroupSearch) {
 		return budgetGroupRepository.search(budgetGroupSearch);
+	}
+
+	@Transactional
+	public BudgetGroup save(BudgetGroup budgetGroup) {
+		return budgetGroupRepository.save(budgetGroup);
+	}
+
+	@Transactional
+	public BudgetGroup update(BudgetGroup budgetGroup) {
+		return budgetGroupRepository.update(budgetGroup);
 	}
 
 }

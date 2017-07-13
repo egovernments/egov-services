@@ -112,4 +112,13 @@ public class SchemeService {
 		return schemeRepository.search(schemeSearch);
 	}
 
+	@Transactional
+	public Scheme save(Scheme scheme) {
+		return schemeRepository.save(scheme);
+	}
+
+	@Transactional
+	public Scheme update(Scheme scheme) {
+		return schemeRepository.update(scheme);
+	}
 }

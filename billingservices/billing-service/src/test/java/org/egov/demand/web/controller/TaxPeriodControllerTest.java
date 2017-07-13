@@ -43,6 +43,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.model.enums.PeriodCycle;
 import org.egov.demand.service.TaxPeriodService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
@@ -152,6 +153,7 @@ public class TaxPeriodControllerTest {
         taxPeriod.setFromDate(1478930l);
         taxPeriod.setToDate(4783525l);
         taxPeriod.setFinancialYear("2017-18");
+        taxPeriod.setPeriodCycle(PeriodCycle.fromValue("QUARTER"));
         return taxPeriod;
     }
 

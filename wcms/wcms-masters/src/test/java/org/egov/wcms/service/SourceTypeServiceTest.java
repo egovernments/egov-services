@@ -92,7 +92,7 @@ public class SourceTypeServiceTest {
 
         final SourceType waterSource = getWaterSourceType();
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
-        waterSourceRequest.setWaterSourceType(waterSource);
+        waterSourceRequest.setSourceType(waterSource);
         assertTrue(waterSource.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
     }
 
@@ -101,7 +101,7 @@ public class SourceTypeServiceTest {
 
         final SourceType waterSourceType = getWaterSourceType();
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
-        waterSourceRequest.setWaterSourceType(waterSourceType);
+        waterSourceRequest.setSourceType(waterSourceType);
         when(waterSourceTypeRepository.persistCreateWaterSourceType(any(SourceTypeRequest.class)))
                 .thenReturn(waterSourceRequest);
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.create(waterSourceRequest)));

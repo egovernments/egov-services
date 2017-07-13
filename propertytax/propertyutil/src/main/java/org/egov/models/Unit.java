@@ -33,7 +33,7 @@ public class Unit {
 	private List<Unit> units;
 
 	@JsonProperty("unitType")
-	@Size(min = 1, max = 16)
+	@NotNull
 	private UnitTypeEnum unitType = null;
 
 	@JsonProperty("length")
@@ -47,6 +47,7 @@ public class Unit {
 	private Double builtupArea = null;
 
 	@JsonProperty("assessableArea")
+	@NotNull
 	private Double assessableArea = null;
 
 	@JsonProperty("bpaBuiltupArea")

@@ -1,0 +1,171 @@
+    /instrumenttypes/_search:
+      post:
+        summary: Get the list of instrumenttypes
+        description: instrumenttypes
+        tags: 
+          - voucher
+          - InstrumentType
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Common Request info for the Services
+            schema:
+              $ref: '#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: type
+            type: string
+            in: query
+            description: |
+              type specifies the modetype of transaction that can be made - i.e
+              ChequeDDRTGS. For receipt - ChequeDDRTGS
+              
+          - name: active
+            type: boolean
+            in: query
+            description: |
+              active specifies whether the type is active for transacting.
+              
+          - name: pageSize
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+          - name: offSet
+            type: integer
+            format: int32
+            in: query
+            description: |
+              
+              
+        responses:
+          200:
+            description: InstrumentType retrieved Successfully
+            schema:
+              $ref: '#/definitions/InstrumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /instrumenttypes/_create:
+      post:
+        summary: Create  new  instrumenttypes
+        description: Create  new instrumenttypes
+        tags: 
+          - voucher
+          - InstrumentType
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: instrumentTypeRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/InstrumentTypeRequest'
+        responses:
+          201:
+            description: InstrumentType created Successfully
+            schema:
+              $ref: '#/definitions/InstrumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+    /instrumenttypes/{id}/_update:
+      post:
+        summary: Update any of the instrumenttypes
+        description: Update any of the instrumenttypes
+        tags: 
+          - voucher
+          - InstrumentType
+        parameters:
+          - name: tenantId
+            in: query
+            description: Unique id for  a tenant.
+            required: true
+            type: string
+            format: varchar
+          - name: id
+            in: path
+            description: Unique id of the InstrumentType
+            required: true
+            type: integer
+            format: int64
+          - name: instrumentTypeRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/InstrumentTypeRequest'
+        responses:
+          200:
+            description: InstrumentType updated Successfully
+            schema:
+              $ref: '#/definitions/InstrumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+definitions:
+    InstrumentType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            id is the unique reference to instrument type entered in the system.
+            
+        type:
+          type: string
+          description: |
+            type specifies the modetype of transaction that can be made - i.e
+            ChequeDDRTGS. For receipt - ChequeDDRTGS
+            
+        active:
+          type: boolean
+          description: |
+            active specifies whether the type is active for transacting.
+            
+    InstrumentTypeRequest:
+      description: Contract class to receive request. Array of InstrumentType items  are used in case of create . Where as single InstrumentType item is used for update
+      properties:
+        requestInfo:
+          $ref: '#/definitions/RequestInfo'
+        instrumentTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/InstrumentType'
+        instrumentType:
+          $ref: '#/definitions/InstrumentType'
+    InstrumentTypeResponse:
+      description: Contract class to send response. Array of InstrumentType items  are used in case of search results or response for create. Where as single InstrumentType item is used for update
+      properties:
+        responseInfo:
+          $ref: '#/definitions/ResponseInfo'
+        instrumentTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/InstrumentType'
+        instrumentType:
+          $ref: '#/definitions/InstrumentType'
+        page:
+          $ref: '#/definitions/Page'

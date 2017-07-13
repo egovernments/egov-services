@@ -14,13 +14,12 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.Bill;
+import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
-import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.service.BillService;
 import org.egov.demand.util.FileUtils;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
-import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.BillValidator;
 import org.junit.Test;
@@ -51,6 +50,25 @@ public class BillControllerTest {
 	
 	@MockBean
 	private ResponseFactory responseFactory;
+	
+	@Test
+	public void test_Should_Search_Bill() throws IOException, Exception{
+		List<Bill> bills = new ArrayList<>();
+		bills.add(getBills());
+		BillResponse billResponse=new BillResponse();
+		billResponse.setBill(bills);
+		billResponse.setResposneInfo(new ResponseInfo());
+		
+		when(billService.searchBill(Matchers.any(BillSearchCriteria.class), Matchers.any(RequestInfo.class)))
+		.thenReturn(billResponse);
+
+		mockMvc.perform(post("/bill/_search").param("tenantId", "ap.kurnool")
+		.contentType(MediaType.APPLICATION_JSON)
+		.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
+		.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+		.andExpect(content().json(getFileContents("billSearchResponse.json")));
+
+	}
 	
 	@Test
 	public void test_Should_Create_Bill() throws IOException, Exception {

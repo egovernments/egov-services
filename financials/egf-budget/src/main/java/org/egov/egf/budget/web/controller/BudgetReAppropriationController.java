@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
 import org.egov.common.web.contract.CommonResponse;
@@ -19,7 +18,7 @@ import org.egov.egf.budget.domain.service.BudgetReAppropriationService;
 import org.egov.egf.budget.persistence.queue.BudgetServiceQueueRepository;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
-import org.modelmapper.ModelMapper;
+import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -35,6 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/budgetreappropriations")
 public class BudgetReAppropriationController {
 
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
 	@Autowired
 	private BudgetReAppropriationService budgetReAppropriationService;
 
@@ -46,11 +49,8 @@ public class BudgetReAppropriationController {
 	public CommonResponse<BudgetReAppropriationContract> create(
 			@RequestBody CommonRequest<BudgetReAppropriationContract> budgetReAppropriationRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
-		ModelMapper model = new ModelMapper();
+		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 		CommonResponse<BudgetReAppropriationContract> budgetReAppropriationResponse = new CommonResponse<>();
 		budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
 		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
@@ -58,22 +58,20 @@ public class BudgetReAppropriationController {
 		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
 		BudgetReAppropriationContract contract = null;
 
-		budgetReAppropriationRequest.getRequestInfo().setAction("create");
+		budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_CREATE);
 
 		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest.getData()) {
-			budgetReAppropriation = new BudgetReAppropriation();
-			model.map(budgetReAppropriationContract, budgetReAppropriation);
+			budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
 			budgetReAppropriation.setCreatedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
 			budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
 			budgetreappropriations.add(budgetReAppropriation);
 		}
 
-		budgetreappropriations = budgetReAppropriationService.validate(budgetreappropriations, errors,
+		budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
 				budgetReAppropriationRequest.getRequestInfo().getAction());
 
-		for (BudgetReAppropriation f : budgetreappropriations) {
-			contract = new BudgetReAppropriationContract();
-			model.map(f, contract);
+		for (BudgetReAppropriation bra : budgetreappropriations) {
+			contract = mapper.toContract(bra);
 			budgetReAppropriationContracts.add(contract);
 		}
 
@@ -87,40 +85,33 @@ public class BudgetReAppropriationController {
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommonResponse<BudgetReAppropriationContract> update(
-			@RequestBody @Valid CommonRequest<BudgetReAppropriationContract> budgetReAppropriationContractRequest,
+			@RequestBody @Valid CommonRequest<BudgetReAppropriationContract> budgetReAppropriationRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		budgetReAppropriationContractRequest.getRequestInfo().setAction("update");
-		ModelMapper model = new ModelMapper();
+		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+		budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		CommonResponse<BudgetReAppropriationContract> budgetReAppropriationResponse = new CommonResponse<>();
 		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
 		BudgetReAppropriation budgetReAppropriation = null;
 		BudgetReAppropriationContract contract = null;
 		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
 
-		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationContractRequest
-				.getData()) {
-			budgetReAppropriation = new BudgetReAppropriation();
-			model.map(budgetReAppropriationContract, budgetReAppropriation);
-			budgetReAppropriation
-					.setLastModifiedBy(budgetReAppropriationContractRequest.getRequestInfo().getUserInfo());
+		for (BudgetReAppropriationContract budgetReAppropriationContract : budgetReAppropriationRequest.getData()) {
+			budgetReAppropriation = mapper.toDomain(budgetReAppropriationContract);
+			budgetReAppropriation.setLastModifiedBy(budgetReAppropriationRequest.getRequestInfo().getUserInfo());
 			budgetreappropriations.add(budgetReAppropriation);
 		}
 
-		budgetreappropriations = budgetReAppropriationService.validate(budgetreappropriations, errors,
-				budgetReAppropriationContractRequest.getRequestInfo().getAction());
+		budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
+				budgetReAppropriationRequest.getRequestInfo().getAction());
 
-		for (BudgetReAppropriation budgetReAppropriationObj : budgetreappropriations) {
-			contract = new BudgetReAppropriationContract();
-			model.map(budgetReAppropriationObj, contract);
+		for (BudgetReAppropriation bra : budgetreappropriations) {
+			contract = mapper.toContract(bra);
 			budgetReAppropriationContracts.add(contract);
 		}
 
-		budgetReAppropriationContractRequest.setData(budgetReAppropriationContracts);
-		budgetServiceQueueRepository.addToQue(budgetReAppropriationContractRequest);
+		budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
+		budgetServiceQueueRepository.addToQue(budgetReAppropriationRequest);
 		budgetReAppropriationResponse.setData(budgetReAppropriationContracts);
 
 		return budgetReAppropriationResponse;
@@ -133,17 +124,14 @@ public class BudgetReAppropriationController {
 			@ModelAttribute BudgetReAppropriationSearchContract budgetReAppropriationSearchContract,
 			@RequestBody RequestInfo requestInfo, BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		BudgetReAppropriationSearch domain = new BudgetReAppropriationSearch();
-		mapper.map(budgetReAppropriationSearchContract, domain);
+		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+		BudgetReAppropriationSearch domain = mapper.toSearchDomain(budgetReAppropriationSearchContract);
 		BudgetReAppropriationContract contract = null;
-		ModelMapper model = new ModelMapper();
 		List<BudgetReAppropriationContract> budgetReAppropriationContracts = new ArrayList<BudgetReAppropriationContract>();
 		Pagination<BudgetReAppropriation> budgetreappropriations = budgetReAppropriationService.search(domain);
 
 		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations.getPagedData()) {
-			contract = new BudgetReAppropriationContract();
-			model.map(budgetReAppropriation, contract);
+			contract = mapper.toContract(budgetReAppropriation);
 			budgetReAppropriationContracts.add(contract);
 		}
 
@@ -158,7 +146,7 @@ public class BudgetReAppropriationController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
 	}
 
 }

@@ -296,6 +296,11 @@ paths:
           description: description of the tax period for which 'TaxPeriod' is to be returned.
           required: false
           type: string
+        - name: cycle
+          in: query
+          description: cycle of the tax period for which 'TaxPeriod' is to be returned.
+          required: true
+          type: string
         - name: fromDate
           in: query
           description: period from date
@@ -999,6 +1004,7 @@ definitions:
         enum:
           - TAX
           - FEE
+          - CHARGES
           - REBATE
           - ADVANCE_COLLECTION
           - PENALTY
@@ -1112,6 +1118,15 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 4
+      cycle:
+        type: string
+        format: int64
+        description: A period cycle. One business service can have multiple period cycles.
+        enum:
+          - MONTH
+          - QUARTER
+          - HALFYEAR
+          - ANNUAL
       fromDate:
         type: integer
         format: int64
@@ -1523,4 +1538,5 @@ definitions:
           $ref: '#/definitions/TaxPeriod'
     type: object
     
+
 

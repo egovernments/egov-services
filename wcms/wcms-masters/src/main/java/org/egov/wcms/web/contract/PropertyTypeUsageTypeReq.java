@@ -62,8 +62,9 @@ import lombok.ToString;
 public class PropertyTypeUsageTypeReq {
 
     @NotNull
-    @JsonProperty("RequestInfo")
+    @JsonProperty("requestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("PropertyTypeUsageType")
+    
+    @JsonProperty("propertyTypeUsageType")
     private PropertyTypeUsageType propertyTypeUsageType;
 }

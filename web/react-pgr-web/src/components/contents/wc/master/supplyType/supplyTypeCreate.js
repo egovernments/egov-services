@@ -222,7 +222,7 @@ class SupplyTypeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
-                                    defaultChecked = {createSupplyType.active || true}
+                                    defaultChecked = { this.state.id != '' ? (createSupplyType.active || false) : (createSupplyType.active || true)}
                                     onCheck = {(e, i, v) => { console.log(createSupplyType.active, i);
 
                                       var e = {

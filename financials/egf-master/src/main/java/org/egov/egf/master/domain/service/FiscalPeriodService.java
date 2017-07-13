@@ -112,4 +112,13 @@ public class FiscalPeriodService {
 		return fiscalPeriodRepository.search(fiscalPeriodSearch);
 	}
 
+	@Transactional
+	public FiscalPeriod save(FiscalPeriod fiscalPeriod) {
+		return fiscalPeriodRepository.save(fiscalPeriod);
+	}
+
+	@Transactional
+	public FiscalPeriod update(FiscalPeriod fiscalPeriod) {
+		return fiscalPeriodRepository.update(fiscalPeriod);
+	}
 }

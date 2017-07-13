@@ -100,4 +100,14 @@ public class EgfStatusService {
 		return egfStatusRepository.search(egfStatusSearch);
 	}
 
+	@Transactional
+	public EgfStatus save(EgfStatus egfStatus) {
+		return egfStatusRepository.save(egfStatus);
+	}
+
+	@Transactional
+	public EgfStatus update(EgfStatus egfStatus) {
+		return egfStatusRepository.update(egfStatus);
+	}
+
 }

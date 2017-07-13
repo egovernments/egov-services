@@ -63,15 +63,15 @@ public class SourceTypeRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private SourceTypeQueryBuilder waterSourceTypeQueryBuilder;
+    private SourceTypeQueryBuilder sourceTypeQueryBuilder;
 
     @Autowired
-    private SourceTypeRowMapper waterSourceTypeRowMapper;
+    private SourceTypeRowMapper sourceTypeRowMapper;
 
     public SourceTypeRequest persistCreateWaterSourceType(final SourceTypeRequest waterSourceTypeRequest) {
         log.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
         final String waterSourceInsert = SourceTypeQueryBuilder.insertWaterSourceTypeQuery();
-        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final SourceType waterSource = waterSourceTypeRequest.getSourceType();
         final Object[] obj = new Object[] { Long.valueOf(waterSource.getCode()), waterSource.getCode(),
                 waterSource.getName(), waterSource.getDescription(), waterSource.getActive(),
                 Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
@@ -85,7 +85,7 @@ public class SourceTypeRepository {
     public SourceTypeRequest persistModifyWaterSourceType(final SourceTypeRequest waterSourceTypeRequest) {
         log.info("WaterSourceTypeRequest::" + waterSourceTypeRequest);
         final String waterSourceUpdate = SourceTypeQueryBuilder.updateWaterSourceTypeQuery();
-        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final SourceType waterSource = waterSourceTypeRequest.getSourceType();
         final Object[] obj = new Object[] { waterSource.getName(), waterSource.getDescription(),
                 waterSource.getActive(), Long.valueOf(waterSourceTypeRequest.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), waterSource.getCode() };
@@ -113,11 +113,11 @@ public class SourceTypeRepository {
         return true;
     }
 
-    public List<SourceType> findForCriteria(final SourceTypeGetRequest waterSourceGetRequest) {
+    public List<SourceType> findForCriteria(final SourceTypeGetRequest sourceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = waterSourceTypeQueryBuilder.getQuery(waterSourceGetRequest, preparedStatementValues);
+        final String queryStr = sourceTypeQueryBuilder.getQuery(sourceTypeGetRequest, preparedStatementValues);
         final List<SourceType> waterSourceTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-                waterSourceTypeRowMapper);
+                sourceTypeRowMapper);
         return waterSourceTypes;
     }
 }

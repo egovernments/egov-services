@@ -28,8 +28,6 @@ public class FundsourceService {
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
 
-	 
-
 	@Autowired
 	private SmartValidator validator;
 	@Autowired
@@ -107,6 +105,16 @@ public class FundsourceService {
 
 	public Pagination<Fundsource> search(FundsourceSearch fundsourceSearch) {
 		return fundsourceRepository.search(fundsourceSearch);
+	}
+
+	@Transactional
+	public Fundsource save(Fundsource fundsource) {
+		return fundsourceRepository.save(fundsource);
+	}
+
+	@Transactional
+	public Fundsource update(Fundsource fundsource) {
+		return fundsourceRepository.update(fundsource);
 	}
 
 }

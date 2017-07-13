@@ -77,7 +77,7 @@ public class FundService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		return funds;  
+		return funds;
 
 	}
 
@@ -98,6 +98,16 @@ public class FundService {
 
 	public Pagination<Fund> search(FundSearch fundSearch) {
 		return fundRepository.search(fundSearch);
+	}
+
+	@Transactional
+	public Fund save(Fund fund) {
+		return fundRepository.save(fund);
+	}
+
+	@Transactional
+	public Fund update(Fund fund) {
+		return fundRepository.update(fund);
 	}
 
 }

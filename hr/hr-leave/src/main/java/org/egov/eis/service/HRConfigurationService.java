@@ -57,6 +57,10 @@ import java.util.List;
 
 @Service
 public class HRConfigurationService {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Autowired
     private HRConfigurationSearchURLHelper hrConfigurationSearchURLHelper;
 
@@ -66,7 +70,6 @@ public class HRConfigurationService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date cutOffDate = null;
 
-        final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

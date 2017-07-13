@@ -1,7 +1,12 @@
 package org.egov.demand.web.controller;
 
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
+import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.service.BillService;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -35,6 +40,21 @@ public class BillController {
 	
 	@Autowired
 	private ResponseFactory responseFactory;
+	
+	@PostMapping("_search")
+	@ResponseBody
+	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid final BillSearchCriteria billCriteria,
+			final BindingResult bindingResult) {
+
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<>(billService.searchBill(billCriteria,requestInfo), HttpStatus.OK);
+	}
 
 	@PostMapping("_create")
 	@ResponseBody

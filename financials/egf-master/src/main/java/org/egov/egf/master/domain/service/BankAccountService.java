@@ -6,7 +6,6 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
-import org.egov.egf.master.domain.enums.BankAccountType;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.model.BankBranch;
@@ -42,7 +41,7 @@ public class BankAccountService {
 	private SmartValidator validator;
 	@Autowired
 	private ChartOfAccountRepository chartOfAccountRepository;
-	 
+
 	@Autowired
 	private BankBranchRepository bankBranchRepository;
 	@Autowired
@@ -103,7 +102,7 @@ public class BankAccountService {
 				}
 				bankAccount.setFund(fund);
 			}
-			 
+
 		}
 
 		return bankaccounts;
@@ -137,4 +136,13 @@ public class BankAccountService {
 		return bankAccountRepository.search(bankAccountSearch);
 	}
 
+	@Transactional
+	public BankAccount save(BankAccount bankAccount) {
+		return bankAccountRepository.save(bankAccount);
+	}
+
+	@Transactional
+	public BankAccount update(BankAccount bankAccount) {
+		return bankAccountRepository.update(bankAccount);
+	}
 }

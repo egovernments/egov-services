@@ -123,4 +123,13 @@ public class SupplierService {
 		return supplierRepository.search(supplierSearch);
 	}
 
+	@Transactional
+	public Supplier save(Supplier supplier) {
+		return supplierRepository.save(supplier);
+	}
+
+	@Transactional
+	public Supplier update(Supplier supplier) {
+		return supplierRepository.update(supplier);
+	}
 }

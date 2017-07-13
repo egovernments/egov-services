@@ -58,7 +58,7 @@ public class InstrumentVoucher {
 	 * instrumentHeaderId is the reference of the instrument attached to a
 	 * voucher
 	 */
-	private InstrumentHeader instrumentHeaderId;
+	private InstrumentHeader instrumentHeader;
 
 	/*
 	 * voucherHeaderId is the reference of the voucher attached to a instrument.

@@ -236,7 +236,7 @@ public class ReceivingModeTypeController {
 		}
 
 		if (errorFields.size() == 0) {
-			if (flag && modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
+			if (modeTypeService.checkReceivingModeTypeByName(receivingMode.getCode(), receivingMode.getName(),
 					receivingMode.getTenantId())) {
 				final ErrorField errorField = ErrorField.builder()
 						.code(PgrMasterConstants.RECEIVINGMODE_NAME_UNIQUE_CODE)
@@ -245,7 +245,6 @@ public class ReceivingModeTypeController {
 				errorFields.add(errorField);
 			}
 		}
-		return;
 	}
 
 	private void addChannelValidationErrors(final ReceivingModeTypeReq receivingModeRequest,

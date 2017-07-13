@@ -46,8 +46,6 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter

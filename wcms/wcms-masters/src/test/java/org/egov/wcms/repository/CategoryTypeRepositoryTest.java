@@ -76,12 +76,12 @@ public class CategoryTypeRepositoryTest {
     private CategoryTypeRowMapper categoryRowMapper;
 
     @InjectMocks
-    private CategoryTypeRepository connectionCategoryRepository;
+    private CategoryTypeRepository categoryTypeRepository;
 
     @Test
     public void test_Should_Create_ConnectionCategory_Valid() {
         final CategoryTypeRequest categoryRequest = getConnectionCategoryRequest();
-        final CategoryType category = categoryRequest.getCategory();
+        final CategoryType category = categoryRequest.getCategoryType();
         Long.valueOf(category.getCode());
         category.getCode();
         category.getName();
@@ -93,13 +93,13 @@ public class CategoryTypeRepositoryTest {
         new Date(new java.util.Date().getTime());
         category.getTenantId();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(categoryRequest.equals(connectionCategoryRepository.persistCreateCategory(categoryRequest)));
+        assertTrue(categoryRequest.equals(categoryTypeRepository.persistCreateCategory(categoryRequest)));
     }
 
     @Test
     public void test_Should_Create_ConnectionCategory_Invalid() {
         final CategoryTypeRequest categoryRequest = getConnectionCategoryRequest();
-        final CategoryType category = categoryRequest.getCategory();
+        final CategoryType category = categoryRequest.getCategoryType();
         Long.valueOf(category.getCode());
         category.getCode();
         category.getName();
@@ -111,7 +111,7 @@ public class CategoryTypeRepositoryTest {
         new Date(new java.util.Date().getTime());
         category.getTenantId();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(!category.equals(connectionCategoryRepository.persistCreateCategory(categoryRequest)));
+        assertTrue(!category.equals(categoryTypeRepository.persistCreateCategory(categoryRequest)));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class CategoryTypeRepositoryTest {
                 .thenReturn(connectionCategories);
 
         assertTrue(
-                connectionCategories.equals(connectionCategoryRepository.findForCriteria(categoryGetRequest)));
+                connectionCategories.equals(categoryTypeRepository.findForCriteria(categoryGetRequest)));
     }
 
     private CategoryTypeRequest getConnectionCategoryRequest() {
@@ -140,7 +140,7 @@ public class CategoryTypeRepositoryTest {
         newUser.setId(2L);
         requestInfo.setUserInfo(newUser);
         categoryRequest.setRequestInfo(requestInfo);
-        categoryRequest.setCategory(category);
+        categoryRequest.setCategoryType(category);
         return categoryRequest;
     }
 }

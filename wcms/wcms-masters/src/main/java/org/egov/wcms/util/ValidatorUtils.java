@@ -139,7 +139,7 @@ public class ValidatorUtils {
     }
 
     private Error getError(final CategoryTypeRequest categoryRequest) {
-        categoryRequest.getCategory();
+        categoryRequest.getCategoryType();
         final List<ErrorField> errorFields = getErrorFields(categoryRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
@@ -148,14 +148,14 @@ public class ValidatorUtils {
     private List<ErrorField> getErrorFields(final CategoryTypeRequest categoryRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addCategoryNameValidationErrors(categoryRequest, errorFields);
-        addTenantIdValidationErrors(categoryRequest.getCategory().getTenantId(), errorFields);
-        addActiveValidationErrors(categoryRequest.getCategory().getActive(), errorFields);
+        addTenantIdValidationErrors(categoryRequest.getCategoryType().getTenantId(), errorFields);
+        addActiveValidationErrors(categoryRequest.getCategoryType().getActive(), errorFields);
         return errorFields;
     }
 
     private void addCategoryNameValidationErrors(final CategoryTypeRequest categoryRequest,
             final List<ErrorField> errorFields) {
-        final CategoryType category = categoryRequest.getCategory();
+        final CategoryType category = categoryRequest.getCategoryType();
         if (category.getName() == null || category.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
@@ -535,14 +535,14 @@ public class ValidatorUtils {
     private List<ErrorField> getErrorFields(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addPropertyPipeSizeValidationErrors(propertyPipeSizeRequest, errorFields);
-        addTenantIdValidationErrors(propertyPipeSizeRequest.getPropertyPipeSize().getTenantId(), errorFields);
-        addActiveValidationErrors(propertyPipeSizeRequest.getPropertyPipeSize().getActive(), errorFields);
+        addTenantIdValidationErrors(propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId(), errorFields);
+        addActiveValidationErrors(propertyPipeSizeRequest.getPropertyTypePipeSize().getActive(), errorFields);
         return errorFields;
     }
 
     private void addPropertyPipeSizeValidationErrors(final PropertyTypePipeSizeRequest propertyPipeSizeRequest,
             final List<ErrorField> errorFields) {
-        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyPipeSize();
+        final PropertyTypePipeSize propertyPipeSize = propertyPipeSizeRequest.getPropertyTypePipeSize();
         if (propertyPipeSize.getPropertyTypeName() == null && !propertyPipeSize.getPropertyTypeName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.PROPERTY_PIPESIZE_PROPERTYTYPE_MANDATORY_CODE)
@@ -710,14 +710,14 @@ public class ValidatorUtils {
     private List<ErrorField> getErrorFields(final SourceTypeRequest waterSourceTypeRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
         addCategoryNameValidationErrors(waterSourceTypeRequest, errorFields);
-        addTenantIdValidationErrors(waterSourceTypeRequest.getWaterSourceType().getTenantId(), errorFields);
-        addActiveValidationErrors(waterSourceTypeRequest.getWaterSourceType().getActive(), errorFields);
+        addTenantIdValidationErrors(waterSourceTypeRequest.getSourceType().getTenantId(), errorFields);
+        addActiveValidationErrors(waterSourceTypeRequest.getSourceType().getActive(), errorFields);
         return errorFields;
     }
 
     private void addCategoryNameValidationErrors(final SourceTypeRequest waterSourceTypeRequest,
             final List<ErrorField> errorFields) {
-        final SourceType waterSource = waterSourceTypeRequest.getWaterSourceType();
+        final SourceType waterSource = waterSourceTypeRequest.getSourceType();
         if (waterSource.getName() == null || waterSource.getName().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.WATERSOURCETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.WATERSOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)

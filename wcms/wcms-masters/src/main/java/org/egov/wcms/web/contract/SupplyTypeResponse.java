@@ -22,10 +22,10 @@ import lombok.Getter;
 @ToString
 public class SupplyTypeResponse {
     
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
     
-    @JsonProperty("supplytypes")
-    private List<SupplyType>supplytypes=new ArrayList<>();
+    @JsonProperty("supplyTypes")
+    private List<SupplyType>supplyTypes=new ArrayList<>();
 
 }

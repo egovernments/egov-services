@@ -28,7 +28,7 @@ public class PropertyDetail {
 	private Long id = null;
 
 	@JsonProperty("source")
-	@Size(min = 1, max = 64)
+
 	private SourceEnum source = null;
 
 	@JsonProperty("regdDocNo")
@@ -43,7 +43,6 @@ public class PropertyDetail {
 	private String reason = null;
 
 	@JsonProperty("status")
-	@Size(min = 1, max = 8)
 	private StatusEnum status = null;
 
 	@JsonProperty("isVerified")

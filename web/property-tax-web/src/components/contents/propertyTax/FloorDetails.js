@@ -259,53 +259,55 @@ class FloorDetails extends Component {
   
   createFloorObject = () => {
 	  
-	  var allRooms = this.props.floorDetails.floors;
+		var floors = [];
 	  
-	  var floors=[]
-	  
-	  var unit = {};
-	  
-	  var allFloors = this.state.floorNumber;
-	  
-	  var floorNumber = [];
-	  
-	  for(let i=0;i<allRooms.length;i++){
-		  floorNumber.push(allRooms[i].floorNo)
-	  }
-	  
-	  floorNumber = floorNumber.filter(function(item, index, array){
-		  return index == array.indexOf(item);
-	  });
-	  
-	  
-	  for(let i=0;i<floorNumber.length;i++){
-		   var floor = {
-			  floorNo:'',
-			  units:[]
-		  }
-		  floor.floorNo = floorNumber[i];
-		  floors.push(floor);
-	  }
-	
-	  for(var i=0;i<floors.length;i++){
-		for(let j = 0; j<allRooms.length;j++){
-			if(allRooms[j].floorNo == floors[i].floorNo && allRooms[j].unitType == 2){
+	    var allRooms = this.props.floorDetails.floors;
 		
-					unit = allRooms[j];
-					unit.units = [];
-					floors[i].units.push(unit);
-			}
-				 else if(allRooms[j].floorNo == floors[i].floorNo && allRooms[j].unitType == 1){
-					unit.units = [];
-					unit.units.push(allRooms[j]);
-					floors[i].units.push(unit);
+		for(let i=0;i<allRooms.length;i++){
+			let local = floors;
+			if(allRooms[i].unitType == 2){
+			 var floor = {
+				  floorNo:'',
+				  flatNo:'',
+				  units:[]
 				}
-			
+			  floor.floorNo = allRooms[i].floorNo;
+			  floor.units.push(allRooms[i]);
+			  floors.push(floor);
+			} else if(allRooms[i].unitType == 1){
+				if(floors.length != 0){
+					for(let j = 0;j<local.length;j++){
+						if(local[j].hasOwnProperty('flatNo')){
+							if(local[j].floorNo == allRooms[i].floorNo && local[j].flatNo == allRooms[i].flatNo ) {
+								local[j].units[0].units.push(allRooms[i])
+							}
+						} else {
+							console.log('NOM');
+						}
+						
+					}
+					floors = local;
+				  } else {
+						let floor = {
+						  floorNo:'',
+						  flatNo:'',
+						  units:[]
+						}
+						let room = {
+							units: []
+						}
+					  floor.floorNo = allRooms[i].floorNo;
+					  floor.flatNo = allRooms[i].flatNo;
+					  room.units.push(allRooms[i]);
+					  floor.units.push(room);
+					  floors.push(floor);
+				  } 	
+			}
+			console.log(floors);
 		}
-	  }
-	   	  
-	  console.log(floors);
+		
   }
+ 
   
    render(){
 	   

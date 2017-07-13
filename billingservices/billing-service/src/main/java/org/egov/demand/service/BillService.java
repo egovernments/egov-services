@@ -112,10 +112,11 @@ public class BillService {
 	@Autowired
 	private GlCodeMasterService glCodeMasterService;
 
-	public List<Bill> getBills(BillSearchCriteria billSearchCriteria){
-		return billRepository.getBills(billSearchCriteria);
+	public BillResponse searchBill(BillSearchCriteria billCriteria, RequestInfo requestInfo){
+		
+		return getBillResponse(billRepository.findBill(billCriteria));
 	}
-
+	
 	public BillResponse createAsync(BillRequest billRequest) {
 
 		billHelper.getBillRequestWithIds(billRequest);

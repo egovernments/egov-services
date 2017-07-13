@@ -18,6 +18,7 @@ import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
+import org.egov.demand.repository.rowmapper.SearchBillRowMapper;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
@@ -44,11 +45,18 @@ public class BillRepository {
 	private RestTemplate restTemplate;
 	
 	@Autowired
+	private SearchBillRowMapper searchBillRowMapper;
+	
+	@Autowired
 	private BusinessServiceDetailRepository businessServiceDetailRepository;
 	
-	public List<Bill> getBills(BillSearchCriteria billSearchCriteria){
+	public List<Bill> findBill(BillSearchCriteria billCriteria){
 		
-		return null;
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String queryStr = billQueryBuilder.getBillQuery(billCriteria, preparedStatementValues);
+		log.debug("query:::"+queryStr+"  preparedStatementValues::"+preparedStatementValues);
+		
+		return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), searchBillRowMapper);
 	}
 	
 	@Transactional

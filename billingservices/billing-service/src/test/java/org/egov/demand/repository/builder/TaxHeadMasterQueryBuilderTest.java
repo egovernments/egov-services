@@ -39,20 +39,30 @@ public class TaxHeadMasterQueryBuilderTest {
 		MockitoAnnotations.initMocks(this);
 	}
 	
+	private String queryWithTenantId = "SELECT *,taxhead.id AS taxheadId, taxhead.tenantid AS taxheadTenantid,"
+			+ " taxhead.service taxheadService, taxhead.createdby AS taxcreatedby, taxhead.createdtime AS taxcreatedtime,"
+			+ " taxhead.lAStmodifiedby AS taxlAStmodifiedby, taxhead.lAStmodifiedtime AS taxlAStmodifiedtime,"
+			+ "glcode.id AS glCodeId, glcode.tenantid AS glCodeTenantId,glcode.service AS glCodeService,"
+			+ " glcode.createdby AS glcreatedby, glcode.createdtime AS glcreatedtime, glcode.lastmodifiedby AS gllastmodifiedby,"
+			+ " glcode.lastmodifiedtime AS gllastmodifiedtime"
+			+ " FROM egbs_taxheadmaster taxhead"
+			+ " INNER Join egbs_glcodemaster glcode  ON taxhead.code=glcode.taxhead and taxhead.tenantid=glcode.tenantid "
+			+ " WHERE taxhead.tenantId = ?  ORDER BY name LIMIT ? OFFSET ?";
+	
+	private String insertQuery = "INSERT INTO egbs_taxheadmaster(id, tenantid, category, service, name, code,"
+			+ " isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime, lastmodifiedby,"
+			+ " lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	
+	private String updateQuery  = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?, name = ?, code=?,"
+			+ " isdebit = ?, isactualdemand = ?, orderno = ?, validfrom = ?, validtill = ?, lastmodifiedby = ?,"
+			+ " lastmodifiedtime = ? WHERE tenantid = ? ";
 	
 	@Test
 	public void getQueryTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		TaxHeadMasterCriteria taxHeadMasterCriteriaQuery = TaxHeadMasterCriteria.builder().tenantId("ap.kurnool").build();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String queryWithTenantId = "SELECT *,taxhead.id as taxheadId, taxhead.tenantid as taxheadTenantid, "
-				+ "taxhead.service taxheadService, glcode.id as glCodeId,glcode.tenantid as glCodeTenantId,"
-				+ "glcode.service as glCodeService ,taxhead.createdby as taxcreatedby, taxhead.createdtime "
-				+ "as taxcreatedtime,taxhead.lastmodifiedby as taxlastmodifiedby, taxhead.lastmodifiedtime as taxlastmodifiedtime"
-				+ ",glcode.createdby as glcreatedby, glcode.createdtime as glcreatedtime,"
-				+ " glcode.lastmodifiedby as gllastmodifiedby, glcode.lastmodifiedtime as gllastmodifiedtime "
-				+ "FROM egbs_taxheadmaster taxhead INNER Join egbs_glcodemaster glcode on taxhead.code=glcode.taxhead"
-				+ " and taxhead.tenantid=glcode.tenantid WHERE taxhead.tenantId = ?  ORDER BY name LIMIT ? OFFSET ?";
+		
 		assertEquals(queryWithTenantId,
 				taxHeadMasterQueryBuilder.getQuery(taxHeadMasterCriteriaQuery, preparedStatementValues));
 
@@ -65,20 +75,11 @@ public class TaxHeadMasterQueryBuilderTest {
 	
 	@Test
 	public void getInsertQueryTest() {
-		String queryWithTenantId = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
-				+ "service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime,"
-				+ "lastmodifiedby, lastmodifiedtime) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-		assertEquals(queryWithTenantId, taxHeadMasterQueryBuilder.Insert_Query);
+		assertEquals(insertQuery, taxHeadMasterQueryBuilder.Insert_Query);
 	}
 	
 	@Test
 	public void getUpdateQueryTest() {
-		String query="UPDATE public.egbs_taxheadmaster SET  category=?, service=?, "
-				+ "name=?, code=?, isdebit=?, isactualdemand=?, orderno=?, validfrom=?, validtill=?, "
-				+ "lastmodifiedby=?, lastmodifiedtime=?"
-				+ " WHERE tenantid=?";
-		
-		assertEquals(query, taxHeadMasterQueryBuilder.Update_Query);
+		assertEquals(updateQuery, taxHeadMasterQueryBuilder.Update_Query);
 	}
 }

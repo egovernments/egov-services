@@ -80,10 +80,10 @@ public class DataSyncEmployeeService {
         dataSyncEmployeeRepository.executeProcedure();
         User user = userRequest.getUser();
         if (user.getSignature() != null) {
-            byte[] file = fileStorageService.getFile(user);
+            byte[] fileData = fileStorageService.getFile(user);
             String[] tenant = user.getTenantId().split("\\.");
             String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
-            dataSyncEmployeeRepository.updateEmployeeSignature(file, user.getSignature(), tenantId);
+            dataSyncEmployeeRepository.updateEmployeeSignature(fileData, user.getUserName(), tenantId);
         }
     }
 }

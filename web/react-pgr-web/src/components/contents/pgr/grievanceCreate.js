@@ -30,7 +30,7 @@ const styles = {
   }
 };
 
-var _this, filesCount = 0;
+var _this;
 var request = {};
 
 class grievanceCreate extends Component {
@@ -212,6 +212,10 @@ class grievanceCreate extends Component {
   search(e)
   {
       e.preventDefault();
+      if(!((this.props.grievanceCreate.lat && this.props.grievanceCreate.lat) || this.props.grievanceCreate.addressId)){
+        this.handleError('Grievance location is mandatory!');
+        return false;
+      }
       //console.log('Initial Position:',this.state.citylat, this.state.citylng);
       //console.log('Changed Position:',this.props.grievanceCreate.lat, this.props.grievanceCreate.lng);
       this.setState({loadingstatus:'loading'});
@@ -452,30 +456,30 @@ class grievanceCreate extends Component {
   }
 
   handleUploadValidation = (e, formats, limit) => {
-    if(filesCount > limit)
-    {
+    //console.log(this.props.files.length , limit);
+    if(this.props.files.length >= limit){
       this.handleError('Maximum files allowed : '+limit);
       return;
     }
-    filesCount+=1;
     let validFile = validate_fileupload(e.target.files, formats);
-    //console.log('is valid:', validFile);
     if(validFile === true){
-      EXIF.getData(e.target.files[0], function() {
-        var imagelat = EXIF.getTag(this, "GPSLatitude"),
-        imagelongt = EXIF.getTag(this, "GPSLongitude");
-        if(imagelat && imagelongt){
-          var formatted_lat = format_lat_long(imagelat.toString());
-          var formatted_long = format_lat_long(imagelongt.toString());
-          if(formatted_lat && formatted_long){
-            axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true')
-            .then(function (response) {
-              //console.log(response.data.results[0].formatted_address);
-              _this.props.handleMap(formatted_lat, formatted_long, "address");
-            });
+      if(this.props.files.length === 0 && this.state.isMapsEnabled){
+        EXIF.getData(this.props.files[0], function() {
+          var imagelat = EXIF.getTag(this, "GPSLatitude"),
+          imagelongt = EXIF.getTag(this, "GPSLongitude");
+          if(imagelat && imagelongt){
+            var formatted_lat = format_lat_long(imagelat.toString());
+            var formatted_long = format_lat_long(imagelongt.toString());
+            if(formatted_lat && formatted_long){
+              axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+formatted_lat+','+formatted_long+'&sensor=true')
+              .then(function (response) {
+                //console.log(response.data.results[0].formatted_address);
+                _this.props.handleMap(formatted_lat, formatted_long, "address");
+              });
+            }
           }
-        }
-      });
+        });
+      }
       this.props.handleUpload(e);
     }
     else
@@ -489,6 +493,12 @@ class grievanceCreate extends Component {
           customAddress : response.data.results[0].formatted_address
         });
       });
+  }
+
+  renderImagePreview = (files) => {
+    return files.map((file, index) => {
+      return <ImagePreview file={file} idx={index} key={index} handler={this.props.handleFileRemoval}/>
+    });
   }
 
   render() {
@@ -659,7 +669,7 @@ class grievanceCreate extends Component {
                       <AutoComplete
                         hintText="Type your location or select it from maps"
                         ref="autocomplete"
-                        floatingLabelText={translate('pgr.lbl.grievance.location')}
+                        floatingLabelText={translate('pgr.lbl.grievance.location')+' *'}
                         filter={AutoComplete.noFilter}
                         fullWidth={true}
                         dataSource={this.state.boundarySource}
@@ -676,7 +686,7 @@ class grievanceCreate extends Component {
                                 value: chosenRequest
                               }
                             };
-                            handleChange(e, "addressId", false, "");
+                            handleChange(e, "addressId", true, "");
                           }
                        }}
                       />
@@ -688,13 +698,15 @@ class grievanceCreate extends Component {
                           <input type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)}/>
                       </RaisedButton>
                     </Col>
-                    <ImagePreview files={files}/>
+                    {this.renderImagePreview(files)}
                   </Row>
                   {this.state.isMapsEnabled ?
                   <Row>
                     <Col md={12}>
                       <div style={{width: '100%', height: 400}}>
-                        <SimpleMap lat={this.props.grievanceCreate.lat ? this.props.grievanceCreate.lat : this.state.citylat} lng={this.props.grievanceCreate.lng ? this.props.grievanceCreate.lng : this.state.citylng}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
+                        {this.state.citylat && this.state.citylng ?
+                          <SimpleMap lat={this.props.grievanceCreate.lat ? this.props.grievanceCreate.lat : this.state.citylat} lng={this.props.grievanceCreate.lng ? this.props.grievanceCreate.lng : this.state.citylng}  markers={[]} handler={(lat, lng)=>{getAddress(lat, lng);this.props.handleMap(lat, lng, "address")}}/>
+                        : ''}
                       </div>
                     </Col>
                   </Row> : ''}
@@ -737,11 +749,11 @@ const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
     var requiredArray = [];
     if(type == 'CITIZEN'){
-      requiredArray = ["serviceCategory","serviceCode","description"]
+      requiredArray = ["serviceCategory","serviceCode","description","addressId"]
     }else if(type == 'EMPLOYEE'){
-      requiredArray = ["receivingMode","firstName","phone","serviceCategory","serviceCode","description"]
+      requiredArray = ["receivingMode","firstName","phone","serviceCategory","serviceCode","description","addressId"]
     }else{
-      requiredArray = ["firstName","phone","serviceCategory","serviceCode","description"]
+      requiredArray = ["firstName","phone","serviceCategory","serviceCode","description","addressId"]
     }
 
     var patternarray = ["phone","email","description"];
@@ -831,6 +843,7 @@ const mapDispatchToProps = dispatch => ({
   handleMap: (lat, lng, field) => {
     dispatch({type: "HANDLE_CHANGE", property:'lat', value: lat, isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property:'lng', value: lng, isRequired : false, pattern: ''});
+    dispatch({type: "REMOVE_MANDATORY", property:'addressId', value: '', isRequired : false, pattern: ''});
     dispatch({type: "HANDLE_CHANGE", property: 'addressId', value: '', isRequired : false, pattern: ''});
     _this.refs['autocomplete'].setState({searchText:''});
   },
@@ -843,6 +856,9 @@ const mapDispatchToProps = dispatch => ({
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '', isRequired : false, pattern: ''});
     }
+  },
+  handleFileRemoval : (filename) => {
+    dispatch({type: 'FILE_REMOVE', removefiles: filename});
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

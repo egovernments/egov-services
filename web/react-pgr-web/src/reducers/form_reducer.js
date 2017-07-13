@@ -136,6 +136,25 @@ export default(state = defaultState, action) => {
           files: filearray
       };
 
+      case 'FILE_REMOVE':
+      var filearray = [];
+      filearray = [...state.files];
+      var idx = -1;
+      for(var i = 0; i < filearray.length; i++) {
+          if (filearray[i].name === action.removefiles) {
+              idx = i;
+              break;
+          }
+      }
+      if(idx !== -1){
+        //remove the index idx object
+        filearray.splice(idx, 1);
+      }
+      return {
+          ...state,
+          files: filearray
+      };
+
       case "HANDLE_CHANGE_NEXT_ONE":
 
         validationData = undefined;

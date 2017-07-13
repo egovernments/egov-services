@@ -1,3 +1,4 @@
+var common = require('../components/common/common');
 var axios = require('axios');
 // var store = require('configureStore').configure();
 
@@ -57,8 +58,11 @@ module.exports = {
                     }
                     throw new Error(_err);
                 }
-            } else if(response && response.response && !response.response.data && response.response.status == 400) {
-                document.title = "Egovernments";
+            }else if(response && response.response && response.response.data && response.response.data.error){
+              let _err = common.translate(response.response.data.error.fields[0].code);
+              throw new Error(_err);
+            }else if(response && response.response && !response.response.data && response.response.status == 400) {
+                document.title = "eGovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale', locale);

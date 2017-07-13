@@ -54,7 +54,7 @@ const styles = {
 
 var _this;
 
-class SupplyTypeCreate extends Component {
+class DocumentTypeCreate extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -62,10 +62,10 @@ class SupplyTypeCreate extends Component {
           data:'',
           open:false
       }
-      this.handleOpenNClose=this.handleOpenNClose.bind(this);
+
     }
 
-    handleOpenNClose() {
+    handleOpenNClose = () => {
       this.setState({
       	open: !this.state.open
       });
@@ -83,11 +83,11 @@ class SupplyTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms-masters/supplytype/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/wcms-masters/documenttype/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log("response",response);
-                  console.log("response object",response.supplytypes[0]);
-                current.setState({data:response.supplytypes})
-                setForm(response.supplytypes[0])
+                  console.log("response object",response.documentTypes[0]);
+                current.setState({data:response.documentTypes})
+                setForm(response.documentTypes[0])
             }, function(err) {
               current.props.toggleSnackbarAndSetText(true, err.message);
               current.props.setLoadingStatus('hide');
@@ -121,19 +121,19 @@ class SupplyTypeCreate extends Component {
         var current = this;
 
       var body = {
-          "SupplyType":{
-           "id": this.props.createSupplyType.id,
-           "name" :this.props.createSupplyType.name,
-           "code" :this.props.createSupplyType.code,
-           "active" : !this.props.createSupplyType.active ? false : this.props.createSupplyType.active,
-           "description" :this.props.createSupplyType.description,
+          "DocumentType":{
+           "id": this.props.createDocumentType.id,
+           "name" :this.props.createDocumentType.name,
+           "code" :this.props.createDocumentType.code,
+           "active" : !this.props.createDocumentType.active ? false : this.props.createDocumentType.active,
+           "description" :this.props.createDocumentType.description,
            "tenantId":"default"
           }
       }
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/wcms-masters/supplytype/"+body.SupplyType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/wcms-masters/documenttype/"+body.DocumentType.code+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -143,12 +143,12 @@ class SupplyTypeCreate extends Component {
             current.props.setLoadingStatus('hide');
         	})
       } else {
-          Api.commonApiPost("/wcms-masters/supplytype/_create",{},body).then(function(response){
+          Api.commonApiPost("/wcms-masters/documenttype/_create",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
               });
-              current.props.resetObject('createSupplyType');
+              current.props.resetObject('createDocumentType');
           }, function(err) {
             current.props.toggleSnackbarAndSetText(true, err.message);
             current.props.setLoadingStatus('hide');
@@ -164,7 +164,7 @@ class SupplyTypeCreate extends Component {
     render() {
 
       let {
-        createSupplyType ,
+        createDocumentType ,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -178,24 +178,24 @@ class SupplyTypeCreate extends Component {
       } = this.props;
 
       let {submitForm,handleOpenNClose} = this;
-      console.log("createSupplyType",createSupplyType);
+      console.log("createDocumentType",createDocumentType);
 
       return(
-        <div className="createSupplyType">
+        <div className="createDocumentType">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Supply Type' : 'Create Supply Type'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Document Type' : 'Create Document Type'} < /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
                               <Col xs={12} md={3} sm={6}>
                                   <TextField
                                       fullWidth={true}
-                                      floatingLabelText={"Supply Type"+"*"}
-                                      value={createSupplyType.name? createSupplyType.name : ""}
+                                      floatingLabelText={"Document Type"+"*"}
+                                      value={createDocumentType.name? createDocumentType.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
                                       maxLength={100}
-                                      onChange={(e) => { createSupplyType.active = true;
+                                      onChange={(e) => { createDocumentType.active = true;
                                       handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
                                       id="name"
 
@@ -206,7 +206,7 @@ class SupplyTypeCreate extends Component {
                                       fullWidth={true}
                                       maxLength={250}
                                       floatingLabelText={translate("core.lbl.description")}
-                                      value={createSupplyType.description? createSupplyType.description : ""}
+                                      value={createDocumentType.description? createDocumentType.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
                                       onChange={(e) => {
 
@@ -218,12 +218,12 @@ class SupplyTypeCreate extends Component {
                               </Col>
                               <div className="clearfix"></div>
                               <Col xs={12} md={3} sm={6}>
-                              {console.log(createSupplyType.active)}
+                              {console.log(createDocumentType.active)}
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
-                                    defaultChecked = { this.state.id != '' ? (createSupplyType.active || false) : (createSupplyType.active || true)}
-                                    onCheck = {(e, i, v) => { console.log(createSupplyType.active, i);
+                                    defaultChecked = { this.state.id != '' ? (createDocumentType.active || false) : (createDocumentType.active || true)}
+                                    onCheck = {(e, i, v) => { console.log(createDocumentType.active, i);
 
                                       var e = {
                                         target: {
@@ -248,7 +248,7 @@ class SupplyTypeCreate extends Component {
           </form>
 
           <Dialog
-               title={this.state.id != '' ? "Supply Type "+createSupplyType.name+" Updated Successfully" : "Supply Type "+createSupplyType.name+" Created Successfully"}
+               title={this.state.id != '' ? "Category Type "+createDocumentType.name+" Updated Successfully" : "Category Type "+createDocumentType.name+" Created Successfully"}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -265,7 +265,7 @@ class SupplyTypeCreate extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({createSupplyType : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
+  return ({createDocumentType : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -328,13 +328,13 @@ const mapDispatchToProps = dispatch => ({
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   },
-  setInitalObject : (createSupplyType,object) => {
+  setInitalObject : (createDocumentType,object) => {
     dispatch({
       type: "EDIT_OBJECT",
-      objectName: createSupplyType,
+      objectName: createDocumentType,
       object: object
     });
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SupplyTypeCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentTypeCreate);

@@ -221,7 +221,7 @@ class WaterSourceTypeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
-                                    defaultChecked = {createWaterSourceType.active || true}
+                                    defaultChecked = { this.state.id != '' ? (createWaterSourceType.active || false) : (createWaterSourceType.active || true)}
                                     onCheck = {(e, i, v) => { console.log(createWaterSourceType.active, i);
 
                                       var e = {

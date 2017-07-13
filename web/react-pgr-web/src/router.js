@@ -45,7 +45,13 @@ import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyT
 import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
 import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
 
+import PipeSizeCreate from './components/contents/wc/master/pipeSize/pipeSizeCreate';
+import ViewEditPipeSize from './components/contents/wc/master/pipeSize/viewEditPipeSize';
+import ViewPipeSize from './components/contents/wc/master/pipeSize/viewPipeSize';
 
+import DocumentTypeCreate from './components/contents/wc/master/documentType/documentTypeCreate';
+import ViewEditDocumentType from './components/contents/wc/master/documentType/viewEditDocumentType';
+import ViewDocumentType from './components/contents/wc/master/documentType/viewDocumentType';
 
 const base = "";
 
@@ -58,7 +64,7 @@ const Main = () => {
 
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-  
+
       <Route exact path={base+'/dashboard'} component={Dashboard}/>
 
         {/*
@@ -116,6 +122,18 @@ const Main = () => {
         <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
+
+        <Route exact path={base+'/wc/createPipeSize'} component={PipeSizeCreate}/>
+        <Route exact name="createPipeSize" path={base+'/wc/createPipeSize/:id?'} component={PipeSizeCreate}/>
+        <Route exact path={base+'/wc/pipeSize/view'} component={ViewEditPipeSize}/>
+        <Route exact path={base+'/wc/pipeSize/edit'} component={ViewEditPipeSize}/>
+        <Route exact path={base+'/wc/viewPipeSize/:id'} component={ViewPipeSize}/>
+
+        <Route exact path={base+'/wc/createDocumentType'} component={DocumentTypeCreate}/>
+        <Route exact name="createDocumentType" path={base+'/wc/createDocumentType/:id?'} component={DocumentTypeCreate}/>
+        <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
+        <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
+        <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
 
 
     </Switch>

@@ -58,6 +58,9 @@ import org.springframework.web.client.RestTemplate;
 public class PositionService {
 
 	@Autowired
+	private RestTemplate restTemplate;
+
+	@Autowired
 	private PositionAssignmentRepository positionAssignmentRepository;
 
 	@Autowired
@@ -73,7 +76,7 @@ public class PositionService {
 
 		String url = positionSearchURLHelper.searchURL(positionGetRequest);
 
-		PositionResponse positionResponse = new RestTemplate().postForObject(url, requestInfoWrapper,
+		PositionResponse positionResponse = restTemplate.postForObject(url, requestInfoWrapper,
 				PositionResponse.class);
 
 		return positionResponse.getPosition();

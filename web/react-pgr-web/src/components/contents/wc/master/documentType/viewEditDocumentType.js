@@ -38,7 +38,7 @@ const getNameById = function(object, id, property = "") {
     for (var i = 0; i < object.length; i++) {
         if (property == "") {
             if (object[i].id == id) {
-                return object[i].sizeInMilimeter;
+                return object[i].name;
             }
         } else {
             if (object[i].hasOwnProperty(property)) {
@@ -58,7 +58,7 @@ const getNameByBoundary = function(object, id) {
     }
     for (var i = 0; i < object.length; i++) {
             if (object[i].id == id) {
-                return object[i].boundaryType.sizeInMilimeter;
+                return object[i].boundaryType.name;
             }
         }
 }
@@ -94,12 +94,12 @@ const styles = {
 };
 
 var flag = 0;
-class searchPipeSize extends Component {
+class searchDocumentType extends Component {
   constructor(props) {
       super(props);
       this.state = {
           allSourceConfig: {
-            text: 'sizeInMilimeter',
+            text: 'name',
             value: 'id'
           },
           complaintSource: [],
@@ -160,7 +160,7 @@ class searchPipeSize extends Component {
   search = e => {
     e.preventDefault();
     var self = this;
-    var searchSet = Object.assign({}, self.props.pipeSizeSearchSet);
+    var searchSet = Object.assign({}, self.props.documentTypeSearchSet);
 
     if(searchSet.active==false){
         searchSet.active=false;
@@ -170,10 +170,10 @@ class searchPipeSize extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms-masters/pipesize/_search/", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms-masters/documenttype/_search/", searchSet).then(function(response) {
       flag = 1;
       self.setState({
-        resultList: response.PipeSize,
+        resultList: response.documentTypes,
         isSearchClicked: true
       });
 
@@ -188,18 +188,17 @@ class searchPipeSize extends Component {
   handleNavigation = (id) => {
       let url = this.props.location.pathname;
       console.log("url",url);
-      if(url == '/wc/pipeSize/view'){
-
-           this.props.history.push('/wc/viewPipeSize/'+id);
+      if(url == '/wc/DocumentType/view'){
+           this.props.history.push('/wc/viewDocumentType/'+id);
        } else {
-           this.props.history.push('/wc/createPipeSize/'+id);
+           this.props.history.push('/wc/createDocumentType/'+id);
       }
   }
 
   render() {
     _this = this;
     let {
-      pipeSizeSearchSet,
+      documentTypeSearchSet,
       handleAutoCompleteKeyUp,
       handleChange
     } = this.props;
@@ -221,15 +220,14 @@ class searchPipeSize extends Component {
     } = this.state;
  let url;
 
-console.log("pipeSizeSearchSet",pipeSizeSearchSet);
+console.log("documentTypeSearchSet",documentTypeSearchSet);
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
         return (
           <tr key={i} onClick={() => {handleNavigation(val.id,url)}}>
             <td>{val.code}</td>
-            <td>{val.sizeInMilimeter}</td>
-            <td>{val.sizeInInch}</td>
+            <td>{val.name}</td>
             <td>{val.description}</td>
             <td>{val.active? 'true' : 'false'}</td>
           </tr>
@@ -247,8 +245,7 @@ console.log("pipeSizeSearchSet",pipeSizeSearchSet);
              <thead>
                 <tr>
                    <th>{translate("core.lbl.code")}</th>
-                   <th>{translate("core.lbl.add.sizeInMilimeter")}</th>
-                   <th>{translate("core.lbl.add.sizeInInch")}</th>
+                   <th>{translate("core.lbl.add.name")}</th>
                    <th>{translate("core.lbl.description")}</th>
                    <th>{translate("pgr.lbl.active")} </th>
                 </tr>
@@ -263,22 +260,22 @@ console.log("pipeSizeSearchSet",pipeSizeSearchSet);
    }
 
     return (
-      <div className="searchPipeSize">
+      <div className="searchDocumentType">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Pipe Size </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Document Type </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
                      <Col xs={12} md={3} sm={6}>
                          <TextField
                              fullWidth={true}
-                             floatingLabelText={"Pipe Size"+"*"}
-                             value={pipeSizeSearchSet.sizeInMilimeter? pipeSizeSearchSet.sizeInMilimeter: ""}
+                             floatingLabelText={"Document Type"+"*"}
+                             value={documentTypeSearchSet.name? documentTypeSearchSet.name: ""}
                              maxLength={100}
-                             onChange={(e) => { pipeSizeSearchSet.active = true;
-                             handleChange(e, "sizeInMilimeter", true, /^[a-zA-Z0-9 ]*$/g)}}
-                             id="sizeInMilimeter"
+                             onChange={(e) => { documentTypeSearchSet.active = true;
+                             handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
+                             id="name"
                          />
                      </Col>
                      <div className="clearfix"></div>
@@ -286,7 +283,7 @@ console.log("pipeSizeSearchSet",pipeSizeSearchSet);
                        <Checkbox
                            label={translate("pgr.lbl.active")}
                            style={styles.checkbox}
-                           defaultChecked = {pipeSizeSearchSet.active || true}
+                           defaultChecked = {documentTypeSearchSet.active || true}
                            onCheck = {(e, i, v) => {
 
                              var e = {
@@ -317,7 +314,7 @@ console.log("pipeSizeSearchSet",pipeSizeSearchSet);
 }
 
 const mapStateToProps = state => {
-  return ({pipeSizeSearchSet: state.form.form});
+  return ({documentTypeSearchSet: state.form.form});
 };
 const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
@@ -350,4 +347,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(searchPipeSize);
+export default connect(mapStateToProps, mapDispatchToProps)(searchDocumentType);

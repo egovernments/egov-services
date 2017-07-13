@@ -11,6 +11,9 @@ import org.springframework.web.client.RestTemplate;
 public class EmployeeDataSyncService {
 
     @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
     private PropertiesManager propertiesManager;
 
     public void createDataSync(UserRequest userRequest) {
@@ -19,6 +22,6 @@ public class EmployeeDataSyncService {
                 + propertiesManager.getHybridDataSyncServiceCreatePath();
 
         System.err.print(url);
-        new RestTemplate().postForObject(url, userRequest, UserResponse.class);
+        restTemplate.postForObject(url, userRequest, UserResponse.class);
     }
 }

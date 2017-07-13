@@ -1113,10 +1113,10 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 4
-      type:
+      cycle:
         type: string
         format: int64
-        description: Type of a tax period. A period cycle.
+        description: A period cycle. One business service can have multiple period cycles.
         enum:
           - MONTH
           - QUARTER

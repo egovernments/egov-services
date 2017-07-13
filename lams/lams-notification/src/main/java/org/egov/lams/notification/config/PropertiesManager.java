@@ -19,7 +19,7 @@ public class PropertiesManager {
 	@Value("${kafka.topics.notification.sms.name}")
 	private String smsNotificationTopic;
 	
-	@Value("${kafka.topics.notification..sms.key}")
+	@Value("${kafka.topics.notification.sms.key}")
 	private String smsNotificationTopicKey;
 
 	@Value("${lams.notification.sms.msg}")

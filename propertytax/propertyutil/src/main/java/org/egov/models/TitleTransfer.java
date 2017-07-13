@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TitleTransfer {
+	
+	private Long id = null;
     
     @Valid
     @NotNull

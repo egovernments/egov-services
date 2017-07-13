@@ -733,7 +733,7 @@ class ServiceTypeCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id != '' ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
+                <RaisedButton style={{margin:'15px 5px'}} type="submit" primary="true" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")} labelColor={white}/>
               </div>
           </form>
           <Dialog

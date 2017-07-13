@@ -13,4 +13,5 @@ import lombok.Setter;
 public class FundsourceSearch extends Fundsource {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

@@ -42,6 +42,7 @@ package org.egov.collection.service;
 
 import java.util.List;
 
+import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
@@ -67,9 +68,8 @@ public class ReceiptService {
 	private ReceiptRepository receiptRepository;
 	
 
-	public List<ReceiptHeader> getReceipts
-	(ReceiptSearchCriteria receiptSearchCriteria) {
-		return receiptRepository.find(receiptSearchCriteria);
+	public ReceiptCommonModel getReceipts(ReceiptSearchCriteria receiptSearchCriteria) {
+	 return  receiptRepository.findAllReceiptsByCriteria(receiptSearchCriteria);
 	}
 	
 	public Receipt pushToQueue(ReceiptReq receiptReq){

@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TitleTransfer {
+	
+	private Long id = null;
     
     @Valid
     @NotNull
@@ -58,5 +60,6 @@ public class TitleTransfer {
     
     private String applicationNo;
     
+    @NotNull
     private String tenantId;
 }

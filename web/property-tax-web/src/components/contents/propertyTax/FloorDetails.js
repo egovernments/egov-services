@@ -216,6 +216,8 @@ class FloorDetails extends Component {
         })
 		
 		//this.setRoomsInArray();
+		
+		this.createFloorObject();
   }
 
   setRoomsInArray = () => {
@@ -255,19 +257,69 @@ class FloorDetails extends Component {
   }
   
   
+  createFloorObject = () => {
+	  
+	  var allRooms = this.props.floorDetails.floors;
+	  
+	  var floors=[]
+	  
+	  var unit = {};
+	  
+	  var allFloors = this.state.floorNumber;
+	  
+	  var floorNumber = [];
+	  
+	  for(let i=0;i<allRooms.length;i++){
+		  floorNumber.push(allRooms[i].floorNo)
+	  }
+	  
+	  floorNumber = floorNumber.filter(function(item, index, array){
+		  return index == array.indexOf(item);
+	  });
+	  
+	  
+	  for(let i=0;i<floorNumber.length;i++){
+		   var floor = {
+			  floorNo:'',
+			  units:[]
+		  }
+		  floor.floorNo = floorNumber[i];
+		  floors.push(floor);
+	  }
+	
+	  for(var i=0;i<floors.length;i++){
+		for(let j = 0; j<allRooms.length;j++){
+			if(allRooms[j].floorNo == floors[i].floorNo && allRooms[j].unitType == 2){
+		
+					unit = allRooms[j];
+					unit.units = [];
+					floors[i].units.push(unit);
+			}
+				 else if(allRooms[j].floorNo == floors[i].floorNo && allRooms[j].unitType == 1){
+					unit.units = [];
+					unit.units.push(allRooms[j]);
+					floors[i].units.push(unit);
+				}
+			
+		}
+	  }
+	   	  
+	  console.log(floors);
+  }
+  
    render(){
 	   
-	var _this = this;   
-	   
-    const renderOption = function(list,listName="") {
-        if(list)
-        {
-			return list.map((item)=>
+		var _this = this;   
+		   
+		const renderOption = function(list,listName="") {
+			if(list)
 			{
-				return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
-			})
-        }
-    }
+				return list.map((item)=>
+				{
+					return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+				})
+			}
+		}
 	   
 	     let {
 		  owners,
@@ -674,6 +726,7 @@ class FloorDetails extends Component {
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room"  backgroundColor="#0b272e" labelColor={white} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															 this.props.resetObject("floor");
+															 this.createFloorObject();
 															}	
 														}/>}
 														{ (editIndex > -1) &&
@@ -723,8 +776,8 @@ class FloorDetails extends Component {
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index}</td>
-                                                    <td>{getNameById(_this.state.unitType ,i.unitType)}</td>
                                                     <td>{getNameById(_this.state.floorNumber ,i.floorNo)}</td>
+													<td>{getNameById(_this.state.unitType ,i.unitType)}</td>
 													<td>{i.flatNo ? i.flatNo : ''}</td>
                                                     <td>{i.unitNo}</td>
                                                     <td>{i.constructionType}</td>

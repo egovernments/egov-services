@@ -159,7 +159,6 @@ public class ReceivingModeTypeRepository {
 	public boolean checkReceivingModeTypeByNameAndCode(final String code, final String name, final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
-		// preparedStatementValues.add(id);
 		preparedStatementValues.add(tenantId);
 		String query = "";
 		if (code != null && code != "") {
@@ -180,7 +179,6 @@ public class ReceivingModeTypeRepository {
 	public boolean checkReceivingModeTypeByName(final String code, final String name, final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
-		// preparedStatementValues.add(id);
 		preparedStatementValues.add(tenantId);
 		String query = "";
 		if (null != name && name != "") {

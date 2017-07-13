@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class AccountDetailKeySearchContract extends AccountDetailKeyContract {
-	private Integer pageSize;
-	private Integer offset;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

@@ -1,5 +1,3 @@
-//import {translate} from '../components/common/common';
-var common = require('../components/common/common');
 var axios = require('axios');
 // var store = require('configureStore').configure();
 
@@ -51,6 +49,7 @@ module.exports = {
             return response.data;
         }).catch(function(response) {
             if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
+                console.log(response.error);
                 var _err = response.response.data[0].error.message || "";
                 if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
@@ -58,11 +57,8 @@ module.exports = {
                     }
                     throw new Error(_err);
                 }
-            } else if(response && response.response && response.response.data && response.response.data.error){
-              var _err = common.translate(response.response.data.error.fields[0].code);
-              throw new Error(_err);
             } else if(response && response.response && !response.response.data && response.response.status == 400) {
-                document.title = "eGovernments";
+                document.title = "Egovernments";
                 var locale = localStorage.getItem('locale');
                 localStorage.clear();
                 localStorage.setItem('locale', locale);

@@ -87,7 +87,8 @@ public class PropertyConsumer {
 	 *            updated
 	 */
 	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow.started')}",
-			"#{environment.getProperty('egov.propertytax.property.update.workflow.started')}" })
+			"#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
+			"#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
 		if (consumerRecord.topic()
@@ -95,8 +96,7 @@ public class PropertyConsumer {
 			persisterService.addProperty(consumerRecord.value().getProperties());
 		}
 
-		else if (consumerRecord.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.workflow.started"))) {
+		else {
 			persisterService.updateProperty(consumerRecord.value().getProperties());
 		}
 	}

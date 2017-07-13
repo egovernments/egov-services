@@ -41,6 +41,7 @@
 package org.egov.collection.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -52,8 +53,11 @@ import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
+import org.egov.collection.web.contract.ReceiptSearchGetRequest;
+import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.errorhandlers.Error;
+import org.egov.collection.web.errorhandlers.ErrorHandler;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
@@ -73,65 +77,69 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receipt")
+@RequestMapping("/receipts/v1")
 public class ReceiptController {
-	public static final Logger LOGGER = LoggerFactory
-			.getLogger(ReceiptController.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
 
 	@Autowired
 	private ReceiptService receiptService;
-	
-	@Autowired 
+
+	@Autowired
 	private ReceiptReqValidator receiptReqValidator;
-	
+
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
-	@PostMapping("_search")
+	@Autowired
+	private ErrorHandler errHandler;
+
+	@PostMapping("/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(
-			@ModelAttribute @Valid ReceiptSearchCriteria receiptSearchCriteria,
-			@RequestBody RequestInfo requestInfo, BindingResult bindingResult) {
+	public ResponseEntity<?> search(@ModelAttribute @Valid ReceiptSearchGetRequest receiptGetRequest,
+			final BindingResult modelAttributeBindingResult,
+			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+			final BindingResult requestBodyBindingResult) {
 
-		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
+				.businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
+				.collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())
+				.fromDate(receiptGetRequest.getFromDate()).toDate(receiptGetRequest.getToDate())
+				.paymentType(receiptGetRequest.getPaymentType()).receiptNumbers(receiptGetRequest.getReceiptNumbers())
+				.status(receiptGetRequest.getStatus()).tenantId(receiptGetRequest.getTenantId())
+				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).build();
+
+		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+		if (modelAttributeBindingResult.hasErrors())
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		if (requestBodyBindingResult.hasErrors())
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		List<Receipt> receipts =new ArrayList<>();
+		try {
+		receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+		} catch (final Exception exception) {
+			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
-
-		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:"
-				+ receiptSearchCriteria);
-		//TODO: FIX ME: Need to map the Model to Contract to send back the response
-		
-		List receipts = receiptService.getReceipts(receiptSearchCriteria);
-		
-		//TODO: FIX ME: Catching the response in a interface ref variable is not right. 
-		//Please create the instance of a concrete class like ArrayList<>() and then catch if you feel my observation is correct.
-		if (receipts.isEmpty())
-			try {
-				throw new Exception("No receipts found for the given criteria");
-			} catch (Exception e) {
-				LOGGER.error("before sending for response su7ccess");
-			}
 		return getSuccessResponse(receipts, requestInfo);
 	}
-	
+
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(
-			@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
+	public ResponseEntity<?> create(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-				
+
 		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-		
+
 		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
-				
-		if(null == receiptInfo){
+
+		if (null == receiptInfo) {
 			LOGGER.info("Service returned null");
 			Error error = new Error();
 			ErrorField errorField = new ErrorField();
@@ -144,21 +152,20 @@ public class ReceiptController {
 			error.setErrorFields(errorFields);
 			ErrorResponse errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
-			
+
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-			
+
 		}
-		
+
 		List<Receipt> receipts = new ArrayList<>();
 		receipts.add(receiptInfo);
-		
+
 		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
 	}
 
 	@PostMapping("_update/{code}")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody ReceiptReq receiptRequest,
-			BindingResult bindingResult) {
+	public ResponseEntity<?> update(@RequestBody ReceiptReq receiptRequest, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
@@ -167,9 +174,8 @@ public class ReceiptController {
 
 		return null;
 	}
-	
-	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
-			RequestInfo requestInfo) {
+
+	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts, RequestInfo requestInfo) {
 		LOGGER.info("Building success response.");
 		ReceiptRes receiptResponse = new ReceiptRes();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -179,7 +185,6 @@ public class ReceiptController {
 		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
 	}
 
-
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 
@@ -188,14 +193,13 @@ public class ReceiptController {
 		 * responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		 * responseInfo.setApi_id(""); errRes.setResponseInfo(responseInfo);
 		 */
-		
+
 		Error error = new Error();
 		error.setCode(1);
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
 			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields()
-						.put(errs.getField(), errs.getDefaultMessage());
+				error.getFields().put(errs.getField(), errs.getDefaultMessage());
 			}
 		}
 		errRes.setError(error);

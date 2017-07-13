@@ -1,3 +1,5 @@
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+
 const makeAjaxUpload = function(file, cb) {
     if(file.constructor == File) {
       let formData = new FormData();
@@ -51,6 +53,15 @@ const uploadFiles = function(body, cb) {
     }
 }
 
+const hasValues = function(files) {
+  for(var i=0; i< files.length; i++) {
+    if(files[i] && files[i].value && files[i].value.constructor == Array && files[i].value.length)
+      return true;
+  }
+
+  return false;
+}
+
 class Sale extends React.Component {
     constructor(props) {
         super(props);
@@ -76,7 +87,9 @@ class Sale extends React.Component {
           revenueZones: [],
           revenueWards: [],
           showPANNAadhar: false,
-          assetAccount: []
+          assetAccount: [],
+          readOnly: false,
+          disposedFiles: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.close = this.close.bind(this);
@@ -112,6 +125,13 @@ class Sale extends React.Component {
       });
 
       let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
+
+      if(getUrlVars()["type"] == "view") {
+        _this.setState({
+          readOnly: true
+        })
+      }
+
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         if(key == "assetSet") {
@@ -130,7 +150,7 @@ class Sale extends React.Component {
       getCommonMasterById("asset-services", "assets", id, function(err, res) {
           if(res && res["Assets"] && res["Assets"][0]) {
             checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
-            commonApiPost("asset-services", "assets", "currentValue/_search", {tenantId, assetId: res["Assets"][0].id}, function(er, res) {
+            commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetId: res["Assets"][0].id}, function(er, res) {
               if(res && res.AssetCurrentValue) {
                 _this.setState({
                   disposal: {
@@ -144,6 +164,29 @@ class Sale extends React.Component {
             console.log(err);
           }
       })
+
+      if(getUrlVars()["type"] == "view") {
+        commonApiPost("asset-services", "assets/dispose", "_search", {assetId: id, tenantId, pageSize:500}, function(err, res2) {
+              if(res2 && res2.Disposals && res2.Disposals.length) {
+                let disposedAsset = res2.Disposals[0];
+                if(disposedAsset.documents && disposedAsset.documents.length) {
+                  var _files = [];
+                  for(var i=0; i<disposedAsset.documents.length; i++) {
+                    _files.push(disposedAsset.documents[i]);
+                  }
+
+                  _this.setState({
+                    disposal: disposedAsset,
+                    disposedFiles: JSON.parse(JSON.stringify(_files))
+                  })
+                } else {
+                  _this.setState({
+                    disposal: disposedAsset
+                  });
+                }
+              }
+        })
+      }
 
       getDropdown("assignments_department", function(res) {
         checkCountAndCall("departments", res);
@@ -281,7 +324,7 @@ class Sale extends React.Component {
                 'auth-token': authToken
             },
             success: function(res) {
-              
+              window.location.href=`app/asset/create-asset-ack.html?name=${_this.state.assetSet.name}&type=&value=${(tempInfo.type == "Disposal" ? "disposed" : "sold")}&code=${_this.state.assetSet.code}`;
             },
             error: function(err) {
               console.log(err);
@@ -302,8 +345,8 @@ class Sale extends React.Component {
 
   	render() {
       let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation, viewAssetDetails} = this;
-      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, assetAccount} = this.state;
-
+      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, assetAccount, disposedFiles} = this.state;
+      let self = this;
       const renderOptions = function(list) {
         if(list) {
           if(list.constructor == Array) {
@@ -328,6 +371,46 @@ class Sale extends React.Component {
         }
       }
 
+      const renderFileBody = function(fles) {
+        return fles.map(function(v, ind) {
+          return v.value.map(function(file, ind2) {
+            return (
+              <tr key={ind2}>
+                <td>{ind2+1}</td>
+                <td>{v.key}</td>
+                <td>
+                  <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                    Download
+                  </a>
+                </td>
+              </tr>
+            )
+          })
+        }) 
+      }
+
+      const showAttachedFiles = function() {
+        if(disposedFiles.length && hasValues(disposedFiles)) {
+            return (
+                <table id="fileTable" className="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Name</th>
+                        <th>File</th>
+                    </tr>
+                    </thead>
+                    <tbody id="agreementSearchResultTableBody">
+                      {
+                        renderFileBody(disposedFiles)
+                      }
+                    </tbody>
+
+               </table>
+              )
+        }
+      }
+
       const showOtherDetails = function() {
         if(showPANNAadhar) {
           return (
@@ -338,10 +421,13 @@ class Sale extends React.Component {
                     <label>Pan Card Number <span>*</span> </label>
                   </div>
                   <div className="col-sm-6">
-                  <div>
-                    <input type="text" value={disposal.panCardNumber} onChange={(e)=>handleChange(e, "panCardNumber")} onInput={(e) => {handlePANValidation(e)}} onInvalid={(e) => {handlePANValidation(e)}} required/>
+                    <div>
+                      <input type="text" value={disposal.panCardNumber} onChange={(e)=>handleChange(e, "panCardNumber")} onInput={(e) => {handlePANValidation(e)}} onInvalid={(e) => {handlePANValidation(e)}} required/>
+                    </div>
                   </div>
-                </div>
+                  <div className="col-sm-6 label-view-text" style={{display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.panCardNumber}</label>
+                  </div>
               </div>
             </div>
             <div className="col-sm-6">
@@ -350,10 +436,13 @@ class Sale extends React.Component {
                     <label>Aadhar Card Number <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
-                  <div>
-                    <input type="text" value={disposal.aadharCardNumber} onChange={(e)=>handleChange(e, "aadharCardNumber")} onInput={(e) => {handleAadharValidation(e)}} onInvalid={(e) => {handleAadharValidation(e)}} required/>
+                    <div>
+                      <input type="text" value={disposal.aadharCardNumber} onChange={(e)=>handleChange(e, "aadharCardNumber")} onInput={(e) => {handleAadharValidation(e)}} onInvalid={(e) => {handleAadharValidation(e)}} required/>
+                    </div>
                   </div>
-                </div>
+                  <div className="col-sm-6 label-view-text" style={{display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.aadharCardNumber}</label>
+                  </div>
               </div>
             </div>
           </div>)
@@ -435,11 +524,14 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Disposal Date <span>*</span></label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <input id="disposalDate" type="text" value={disposal.disposalDate} className="datepicker" required/>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <input id="disposalDate" type="text" value={disposal.disposalDate} className="datepicker" required/>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.disposalDate}</label>
+                            </div>
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -447,11 +539,14 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Disposal Party Name <span>*</span> </label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <input type="text" value={disposal.disposalPartyName} onChange={(e)=>handleChange(e, "disposalPartyName")} required/>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <input type="text" value={disposal.disposalPartyName} onChange={(e)=>handleChange(e, "disposalPartyName")} required/>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.disposalPartyName}</label>
+                            </div>
                         </div>
                       </div>
                     </div>  
@@ -461,11 +556,14 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Disposal Party Address <span> *</span> </label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <textarea value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required></textarea>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <textarea value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required></textarea>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.disposalPartyAddress}</label>
+                            </div>
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -473,11 +571,14 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Disposal Reason <span>*</span></label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <textarea value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required></textarea>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <textarea value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required></textarea>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.disposalReason}</label>
+                            </div>
                         </div>
                       </div>
                     </div>  
@@ -487,15 +588,18 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Type <span>*</span></label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <select required onChange={(e)=>handleChange(e, "type")}>
-                                <option value="">Select Type</option>
-                                <option value="Sale">Sale</option>
-                                <option value="Disposal">Disposal</option>
-                              </select>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <select required onChange={(e)=>handleChange(e, "type")}>
+                                  <option value="">Select Type</option>
+                                  <option value="Sale">Sale</option>
+                                  <option value="Disposal">Disposal</option>
+                                </select>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.type}</label>
+                            </div>
                         </div>
                       </div>
                     </div>  
@@ -506,11 +610,14 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Current Value Of The Asset <span>*</span></label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e)=>handleChange(e, "currentValueOfTheAsset")} required/>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e)=>handleChange(e, "currentValueOfTheAsset")} required/>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.currentValueOfTheAsset}</label>
+                            </div>
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -518,11 +625,14 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Sale Value <span>*</span></label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <input type="number" value={disposal.saleValue} onChange={(e)=>handleChange(e, "saleValue")} required/>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <input type="number" value={disposal.saleValue} onChange={(e)=>handleChange(e, "saleValue")} required/>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{disposal.saleValue}</label>
+                            </div>
                         </div>
                       </div>
                     </div> 
@@ -532,10 +642,13 @@ class Sale extends React.Component {
                           <div className="col-sm-6 label-text">
                             <label>Profit/Loss </label>
                           </div>
-                          <div className="col-sm-6">
+                          <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                             <div>
                               <input type="text" disabled value={disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}/>
                             </div>
+                          </div>
+                          <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                              <label>{disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}</label>
                           </div>
                         </div>
                       </div>
@@ -544,18 +657,21 @@ class Sale extends React.Component {
                             <div className="col-sm-6 label-text">
                               <label>Asset Sale Account Code <span>*</span></label>
                             </div>
-                            <div className="col-sm-6">
-                            <div>
-                              <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
-                                <option value="">Select Account Code</option>
-                                {renderOptions(assetAccount)}
-                              </select>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
+                                  <option value="">Select Account Code</option>
+                                  {renderOptions(assetAccount)}
+                                </select>
+                              </div>
                             </div>
-                          </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                              <label>{disposal.assetSaleAccountCode ? getNameById(assetAccount, disposal.assetSaleAccountCode) : ""}</label>
+                            </div>
                         </div>
                       </div>
                     </div>
-                    <div className="row">
+                    <div className="row" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                       <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6 label-text">
@@ -569,12 +685,26 @@ class Sale extends React.Component {
                         </div>
                       </div>
                     </div>
+                    <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                      <div className="col-sm-6">
+                        <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label>Voucher Reference</label>
+                            </div>
+                            <div className="col-sm-6 label-view-text">
+                              <label>{disposal.voucherReference}</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
               </div>
               <p className="text-right text-danger">Note: Current value of the asset is not considering the depreciation and improvements done on that asset</p>
             </div>
+            <br/>
+            {showAttachedFiles()}
             <div className="text-center">
-                <button type="submit" className="btn btn-submit">Save</button>&nbsp;&nbsp;
+                {!this.state.readOnly && <button type="submit" className="btn btn-submit">Save</button>}&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{close()}}>Close</button>
             </div>
           </form>

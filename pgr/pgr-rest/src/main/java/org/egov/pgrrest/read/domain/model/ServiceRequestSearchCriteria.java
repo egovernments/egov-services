@@ -36,7 +36,7 @@ public class ServiceRequestSearchCriteria {
     private boolean isAnonymous;
 
     public DateTime getEndDate() {
-        return getNextDay(endDate);
+        return endDate;
     }
 
     public DateTime getLastModifiedDate() {

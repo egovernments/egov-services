@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.domain.model.ChartOfAccountDetailSearch;
 import org.egov.egf.master.persistence.entity.ChartOfAccountDetailEntity;
@@ -48,8 +49,16 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
+		if (chartOfAccountDetailSearchEntity.getSortBy() != null && !chartOfAccountDetailSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(chartOfAccountDetailSearchEntity.getSortBy());
+                    validateEntityFieldName(chartOfAccountDetailSearchEntity.getSortBy(), ChartOfAccountDetailEntity.class);
+                }
+                
+                String orderBy = "order by id";
+                if (chartOfAccountDetailSearchEntity.getSortBy() != null && !chartOfAccountDetailSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + chartOfAccountDetailSearchEntity.getSortBy();
+                
 		searchQuery = searchQuery.replace(":tablename", ChartOfAccountDetailEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
@@ -88,7 +97,7 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<ChartOfAccountDetail>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

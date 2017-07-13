@@ -109,5 +109,15 @@ public class PropertiesManager {
     @Value("${kafka.topics.assignment.update.key}")
     private String updateAssignmentKey;
 
+    @Value("${egov.services.data_sync_employee_service.hostname}")
+    private String hybridDataSyncServiceHostName;
+
+    @Value("${egov.services.data_sync_employee_service.basepath}")
+    private String hybridDataSyncServiceBasePath;
+
+    @Value("${egov.services.data_sync_employee_service.createpath}")
+    private String hybridDataSyncServiceCreatePath;
+
+
 
 }

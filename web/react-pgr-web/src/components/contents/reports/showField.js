@@ -43,7 +43,8 @@ export default class ShowField extends Component
       case "string":
         return (
           <Col xs={12} md={3}>
-            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, mandatory=="*"?true:false, '')} />
+            <TextField fullWidth={true} floatingLabelText={description
+            } onChange={(e) => this.props.handler(e, obj.name, mandatory=="*"?true:false, '')} />
           </Col>
         );
       case "number":

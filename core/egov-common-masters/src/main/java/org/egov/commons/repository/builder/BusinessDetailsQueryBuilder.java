@@ -56,7 +56,6 @@ public class BusinessDetailsQueryBuilder {
 			isAppendAndClause = true;
 			selectQuery.append(" bd.tenantId = ?");
 			preparedStatementValues.add(criteria.getTenantId());
-
 		}
 
 		if (criteria.getIds() != null) {

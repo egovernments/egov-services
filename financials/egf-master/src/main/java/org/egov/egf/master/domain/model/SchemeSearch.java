@@ -13,4 +13,5 @@ import lombok.Setter;
 public class SchemeSearch extends Scheme {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

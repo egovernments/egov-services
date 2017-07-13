@@ -42,19 +42,14 @@ package org.egov.wcms.service;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.repository.StorageReservoirRepository;
 import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.BoundaryRequestInfo;
-import org.egov.wcms.web.contract.BoundaryRequestInfoWrapper;
 import org.egov.wcms.web.contract.BoundaryResponse;
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,13 +64,10 @@ public class StorageReservoirService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private PropertiesManager propertiesManager;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
     private CodeGeneratorService codeGeneratorService;
+
+    @Autowired
+    private RestExternalMasterService restExternalMasterService;
 
     public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
         return storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
@@ -110,7 +102,7 @@ public class StorageReservoirService {
     public List<StorageReservoir> getStorageReservoir(
             final StorageReservoirGetRequest storageReservoirGetRequest) {
         if (storageReservoirGetRequest.getZoneName() != null) {
-            final BoundaryResponse boundary = getBoundaryId(
+            final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.ZONE,
                     WcmsConstants.REVENUE, storageReservoirGetRequest.getTenantId());
             if (boundary != null)
@@ -118,7 +110,7 @@ public class StorageReservoirService {
 
         }
         if (storageReservoirGetRequest.getWardName() != null) {
-            final BoundaryResponse boundary = getBoundaryId(
+            final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.WARD,
                     WcmsConstants.REVENUE, storageReservoirGetRequest.getTenantId());
             if (boundary != null)
@@ -126,7 +118,7 @@ public class StorageReservoirService {
 
         }
         if (storageReservoirGetRequest.getLocationName() != null) {
-            final BoundaryResponse boundary = getBoundaryId(
+            final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.LOCALITY,
                     WcmsConstants.LOCATION, storageReservoirGetRequest.getTenantId());
             if (boundary != null)
@@ -140,7 +132,7 @@ public class StorageReservoirService {
             final StorageReservoir storageReservoir) {
         Boolean isValidBoundaryByZone = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = getBoundaryId(
+        boundaryRespose = restExternalMasterService.getBoundaryId(
                 WcmsConstants.ZONE,
                 WcmsConstants.REVENUE,
                 storageReservoir.getTenantId());
@@ -158,7 +150,7 @@ public class StorageReservoirService {
     public Boolean getBoundaryByWard(final StorageReservoir storageReservoir) {
         Boolean isValidBoundaryByWard = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = getBoundaryId(
+        boundaryRespose = restExternalMasterService.getBoundaryId(
                 WcmsConstants.WARD,
                 WcmsConstants.REVENUE,
                 storageReservoir.getTenantId());
@@ -176,7 +168,7 @@ public class StorageReservoirService {
     public Boolean getBoundaryByLocation(final StorageReservoir storageReservoir) {
         Boolean isValidBoundaryByLocation = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = getBoundaryId(
+        boundaryRespose = restExternalMasterService.getBoundaryId(
                 WcmsConstants.LOCALITY,
                 WcmsConstants.LOCATION,
                 storageReservoir.getTenantId());
@@ -189,25 +181,6 @@ public class StorageReservoirService {
         }
         return isValidBoundaryByLocation;
 
-    }
-
-    public BoundaryResponse getBoundaryId(final String boundaryTypeName, final String hierarchiTypeName, final String tenantId) {
-        String url = propertiesManager.getLocationServiceBasePathTopic()
-                + propertiesManager.getLocationServiceBoundarySearchPathTopic();
-        url = url.replace("{boundaryTypeName}", boundaryTypeName);
-        url = url.replace("{hierarchyTypeName}", hierarchiTypeName);
-        url = url.replace("{tenantId}", tenantId);
-        final BoundaryResponse boundary = getBoundary(url);
-        return boundary;
-    }
-
-    public BoundaryResponse getBoundary(final String url) {
-        final BoundaryRequestInfo requestInfo = BoundaryRequestInfo.builder().build();
-        final BoundaryRequestInfoWrapper wrapper = BoundaryRequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<BoundaryRequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final BoundaryResponse boundary = restTemplate.postForObject(url.toString(), request,
-                BoundaryResponse.class);
-        return boundary;
     }
 
     public boolean getStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {

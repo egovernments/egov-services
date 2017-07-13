@@ -10,7 +10,7 @@ import lombok.Data;
 public class FundSearchEntity extends FundEntity {
 	private Date fromDate;
 	private Date toDate;
-	private Integer pageSize = 10;
+	private Integer pageSize;
 	private Integer offset = 0;
 	private String sortBy;
 

@@ -13,4 +13,5 @@ import lombok.Setter;
 public class BankAccountSearch extends BankAccount {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

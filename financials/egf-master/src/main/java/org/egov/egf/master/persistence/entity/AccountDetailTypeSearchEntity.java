@@ -14,21 +14,23 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class AccountDetailTypeSearchEntity extends AccountDetailTypeEntity {
-	private Integer pageSize;
-	private Integer offset;
+    private Integer pageSize;
+    private Integer offset;
+    private String sortBy;
 
-	@Override
-	public AccountDetailType toDomain() {
-		AccountDetailType accountDetailType = new AccountDetailType();
-		super.toDomain(accountDetailType);
-		return accountDetailType;
-	}
+    @Override
+    public AccountDetailType toDomain() {
+        AccountDetailType accountDetailType = new AccountDetailType();
+        super.toDomain(accountDetailType);
+        return accountDetailType;
+    }
 
-	public AccountDetailTypeSearchEntity toEntity(AccountDetailTypeSearch accountDetailTypeSearch) {
-		super.toEntity((AccountDetailType) accountDetailTypeSearch);
-		this.pageSize = accountDetailTypeSearch.getPageSize();
-		this.offset = accountDetailTypeSearch.getOffset();
-		return this;
-	}
+    public AccountDetailTypeSearchEntity toEntity(AccountDetailTypeSearch accountDetailTypeSearch) {
+        super.toEntity((AccountDetailType) accountDetailTypeSearch);
+        this.pageSize = accountDetailTypeSearch.getPageSize();
+        this.offset = accountDetailTypeSearch.getOffset();
+        this.sortBy = accountDetailTypeSearch.getSortBy();
+        return this;
+    }
 
 }

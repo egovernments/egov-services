@@ -16,6 +16,7 @@ import lombok.Setter;
 public class FundsourceSearchEntity extends FundsourceEntity {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 
 	@Override
 	public Fundsource toDomain() {
@@ -28,6 +29,7 @@ public class FundsourceSearchEntity extends FundsourceEntity {
 		super.toEntity((Fundsource) fundsourceSearch);
 		this.pageSize = fundsourceSearch.getPageSize();
 		this.offset = fundsourceSearch.getOffset();
+		this.sortBy = fundsourceSearch.getSortBy();
 		return this;
 	}
 

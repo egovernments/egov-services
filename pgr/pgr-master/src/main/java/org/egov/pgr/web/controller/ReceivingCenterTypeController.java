@@ -233,7 +233,6 @@ public class ReceivingCenterTypeController {
 						.field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();
 				errorFields.add(errorField);
 			}
-		return;
 	}
 
 	private void addTeanantIdValidationErrors(final ReceivingCenterTypeReq receivingCenterRequest,

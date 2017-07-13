@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.budget.web.contract;
+
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Max;
@@ -62,13 +63,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","budget","budgetGroup","usingDepartment","executingDepartment","fund","function","scheme","subScheme","functionary","boundary","anticipatoryAmount","originalAmount","approvedAmount","planningPercent","budgetAvailable","status","documentNumber","uniqueNo","materializedPath"})
+@JsonPropertyOrder({ "id", "budget", "budgetGroup", "usingDepartment", "executingDepartment", "fund", "function",
+		"scheme", "subScheme", "functionary", "boundary", "anticipatoryAmount", "originalAmount", "approvedAmount",
+		"planningPercent", "budgetAvailable", "status", "documentNumber", "uniqueNo", "materializedPath" })
 public class BudgetDetailContract extends AuditableContract {
 
 	/**

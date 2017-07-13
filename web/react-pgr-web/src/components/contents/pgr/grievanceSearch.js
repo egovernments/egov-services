@@ -14,7 +14,8 @@ import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
 import Snackbar from 'material-ui/Snackbar';
 import Api from '../../../api/api';
-import {translate} from '../../common/common';
+import {translate, toLocalTime} from '../../common/common';
+
 
 const getNameById = function(object, id, property = "") {
   if(!object) return;
@@ -301,7 +302,7 @@ class grievanceSearch extends Component {
   						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
   						<td>{getNameByProperty(val.attribValues, "status")}</td>
   						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
-  						<td>{val.requestedDatetime}</td>
+  						<td>{val.requestedDatetime ? toLocalTime(val.requestedDatetime) : val.requestedDatetime}</td>
   					</tr>
   				)
   			})

@@ -47,9 +47,18 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+@Getter
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ReceiptHeader {
 	
 	private Long id;
@@ -71,6 +80,8 @@ public class ReceiptHeader {
 	
 	private String receiptNumber;
 	
+	private Long reference_ch_id;
+	
 	private Set<ReceiptDetail> receiptDetails = new LinkedHashSet<>(0);
 	
     private Set receiptInstrument = new HashSet<>(0);
@@ -83,9 +94,7 @@ public class ReceiptHeader {
 	
 	private Date manualReceiptDate;
 	
-	private Boolean isModifiable;
-	
-	private Long serviceDetails;
+	private String businessDetails;
 	
 	private String collectionType;
 	
@@ -95,37 +104,62 @@ public class ReceiptHeader {
 	
 	private Boolean isReconciled;
 	
-	private Long status;
+	private String status;
 	
 	private String reasonForCancellation;
+	
+	private String channel;
 	
 	private Double minimumAmount;
 	
 	private Double totalAmount;
 	
-	private String collModesNotAllowed;
-	
 	private String consumerCode;
-	
-	private String source;
 	
 	private String consumerType;
 	
-	private Long fund;
+	private String fund;
 	
-	private Long fundSource;
+	private String collModesNotAllwd;
 	
-	private Long boundary;
+	private String fundSource;
 	
-	private Long department;
+	private String function;
 	
-	private Long depositedBranch;
+	private String boundary;
+	
+	private String department;
+	
+	private String depositedBranch;
 	
     private String tenantId;
     
     private String displayMsg;
     
-    private Boolean partPaymentAllowed;
+    private String voucherheader;
     
-    private Long voucherheader;
+    private Long version;
+    
+    private Long createdBy;
+    
+    private Date createdDate;
+    
+    private Long lastModifiedBy;
+    
+    private Date lastModifiedDate;
+    
+    
+    
+    public ReceiptHeader toDomainModel(){
+    	return ReceiptHeader.builder().id(id).payeename(payeename).payeeAddress(payeeAddress).payeeEmail(payeeEmail).
+    			paidBy(paidBy).referenceNumber(referenceNumber).referenceDate(referenceDate).referenceDesc(referenceDesc)
+    			.manualReceiptNumber(manualReceiptNumber).manualReceiptDate(manualReceiptDate).businessDetails(businessDetails).
+    			collectionType(collectionType).stateId(stateId).location(location).isReconciled(isReconciled).status(status)
+    			.reasonForCancellation(reasonForCancellation).channel(channel).minimumAmount(minimumAmount).totalAmount(totalAmount)
+    			.consumerCode(consumerCode).consumerType(consumerType).fund(fund).collModesNotAllwd(collModesNotAllwd).fundSource
+    			(fundSource).function(function).boundary(boundary).receiptType(receiptType).receiptNumber(receiptNumber)
+    			.reference_ch_id(reference_ch_id).receiptDate(receiptDate).department(department).depositedBranch(depositedBranch)
+    			.tenantId(tenantId).displayMsg(displayMsg).voucherheader(voucherheader).version(version).createdBy(createdBy)
+    			.createdDate(createdDate).lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).build();
+    }
 }

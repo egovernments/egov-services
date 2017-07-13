@@ -127,6 +127,10 @@ public class ServiceGroupService {
 		return categoryRepository.verifyRequestUniqueness(serviceGroupRequest);
 	}
 	
+	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest) { 
+		return categoryRepository.verifyIfNameAlreadyExists(serviceGroupRequest);
+	}
+	
 	private List<org.egov.pgr.web.contract.ServiceGroup> convertModelToContract(List<ServiceGroup> modelList) {
 		List<org.egov.pgr.web.contract.ServiceGroup> contractList = new ArrayList<>();
 		for (int i = 0; i < modelList.size(); i++) {

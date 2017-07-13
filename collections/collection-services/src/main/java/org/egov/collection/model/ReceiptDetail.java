@@ -39,30 +39,39 @@
  */
 package org.egov.collection.model;
 
-import java.math.BigDecimal;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class ReceiptDetail implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private String chartOfAccount;
 	private ReceiptHeader receiptHeader;
-	private Long accounthead;
-	private BigDecimal dramount;
+
+	private Double dramount;
 
 	/**
 	 * A <code>BigDecimal</code> representing the actual amount to be paid by
 	 * the user
 	 */
-	private BigDecimal cramountToBePaid;
+	private Double actualcramountToBePaid;
 
 	/**
 	 * A <code>BigDecimal</code> representing the actual amount paid by the user
 	 */
-	private BigDecimal cramount;
+	private Double cramount;
 	private Long ordernumber;
 
 	/**
@@ -77,8 +86,10 @@ public class ReceiptDetail implements java.io.Serializable {
 	 */
 	private Boolean isActualDemand;
 
-	private Long financialYear;
+	private String financialYear;
 
 	private String purpose;
+	
+	private String tenantId;
 
 }

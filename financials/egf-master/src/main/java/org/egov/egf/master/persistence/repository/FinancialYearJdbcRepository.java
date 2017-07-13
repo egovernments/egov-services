@@ -48,11 +48,19 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		String orderBy = "";
 
 		searchQuery = searchQuery.replace(":tablename", FinancialYearEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (financialYearSearchEntity.getSortBy() != null && !financialYearSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(financialYearSearchEntity.getSortBy());
+                    validateEntityFieldName(financialYearSearchEntity.getSortBy(), FinancialYearEntity.class);
+                }
+                
+                String orderBy = "order by finYearRange asc";
+                if (financialYearSearchEntity.getSortBy() != null && !financialYearSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + financialYearSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (financialYearSearchEntity.getId() != null) {
@@ -118,7 +126,7 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<FinancialYear>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

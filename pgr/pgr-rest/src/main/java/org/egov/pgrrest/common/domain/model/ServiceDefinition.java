@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,10 +39,16 @@ public class ServiceDefinition {
             .collect(Collectors.toList());
     }
 
-    public List<AttributeDefinition> getMandatoryAttributes(SevaRequestAction action) {
+    public List<AttributeDefinition> getMandatoryAttributes(SevaRequestAction action, List<String> roleCodes) {
         return attributes.stream()
-            .filter(attribute -> attribute.isRequired() && actionMatches(action, attribute))
+            .filter(attribute -> attribute.isRequired()
+                && actionMatches(action, attribute)
+                && roleMatches(roleCodes, attribute))
             .collect(Collectors.toList());
+    }
+
+    private boolean roleMatches(List<String> roleCodes, AttributeDefinition attribute) {
+        return !Collections.disjoint(attribute.getRoleNames(), roleCodes);
     }
 
     private boolean actionMatches(SevaRequestAction expectedAction, AttributeDefinition attributeDefinition) {

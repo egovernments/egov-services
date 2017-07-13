@@ -288,9 +288,9 @@ class BulkEscalationGeneration extends Component {
       		return searchResult.map(function(val, i) {
       			return (
       				<tr key={i}>
-      					<td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
       					<td>{getNameByServiceCode(self.state.serviceCode, val.serviceCode)}</td>
       					<td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
+      					<td>{getNameById(self.state.positionSource, val.toPosition)}</td>
       				</tr>
       			)
       		})

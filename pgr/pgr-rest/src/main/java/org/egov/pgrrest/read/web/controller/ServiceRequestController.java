@@ -63,14 +63,14 @@ public class ServiceRequestController {
                                               @RequestParam(value = "serviceCode", required = false) String
                                                   serviceCode,
                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy") DateTime startDate,
+                                                  (pattern = "dd-MM-yyyy HH:mm:ss") DateTime startDate,
                                               @RequestParam(value = "endDate", required = false) @DateTimeFormat
-                                                  (pattern = "dd-MM-yyyy") DateTime endDate,
+                                                  (pattern = "dd-MM-yyyy HH:mm:ss") DateTime endDate,
                                               @RequestParam(value = "escalationDate", required = false) @DateTimeFormat
                                                   (pattern = "dd-MM-yyyy HH:mm:ss") DateTime escalationDate,
                                               @RequestParam(value = "status", required = false) List<String> status,
                                               @RequestParam(value = "lastModifiedDatetime", required = false)
-                                              @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime lastModifiedDate,
+                                              @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") DateTime lastModifiedDate,
                                               @RequestParam(value = "positionId", required = false) Long positionId,
                                               @RequestParam(value = "userId", required = false) Long userId,
                                               @RequestParam(value = "name", required = false) String name,
@@ -120,15 +120,16 @@ public class ServiceRequestController {
                                                 @RequestParam(value = "serviceCode", required = false)
                                                     String serviceCode,
                                                 @RequestParam(value = "startDate", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime startDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") DateTime startDate,
                                                 @RequestParam(value = "endDate", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime endDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") DateTime endDate,
                                                 @RequestParam(value = "escalationDate", required = false)
                                                 @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
                                                     DateTime escalationDate,
                                                 @RequestParam(value = "status", required = false) List<String> status,
                                                 @RequestParam(value = "lastModifiedDatetime", required = false)
-                                                @DateTimeFormat(pattern = "dd-MM-yyyy") DateTime lastModifiedDate,
+                                                @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+                                                        DateTime lastModifiedDate,
                                                 @RequestParam(value = "positionId", required = false) Long positionId,
                                                 @RequestParam(value = "userId", required = false) Long userId,
                                                 @RequestParam(value = "name", required = false) String name,

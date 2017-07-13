@@ -51,6 +51,15 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":tablename", BankBranchEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
+		
+		if (bankBranchSearchEntity.getSortBy() != null && !bankBranchSearchEntity.getSortBy().isEmpty()) {
+                    validateSortByOrder(bankBranchSearchEntity.getSortBy());
+                    validateEntityFieldName(bankBranchSearchEntity.getSortBy(), BankBranchEntity.class);
+                }
+                
+                String orderBy = "order by name asc";
+                if (bankBranchSearchEntity.getSortBy() != null && !bankBranchSearchEntity.getSortBy().isEmpty())
+                        orderBy = "order by " + bankBranchSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (bankBranchSearchEntity.getId() != null) {
@@ -158,7 +167,7 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
 
-		searchQuery = searchQuery.replace(":orderby", "order by id ");
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<BankBranch>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

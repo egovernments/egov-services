@@ -108,7 +108,9 @@ public class Consumer {
 	 * This method will listen when ever data pushed to indexer topic and insert data in elastic search
 	 */
 
-	@KafkaListener(topics="#{environment.getProperty('egov.propertytax.property.create.workflow.started')}")
+	@KafkaListener(topics= { "#{environment.getProperty('egov.propertytax.property.create.workflow.started')}",
+			"#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
+			"#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
 	public void receive(PropertyRequest propertyRequest) throws IOException{
 		for(Property property : propertyRequest.getProperties()){
 			String propertyData=	new ObjectMapper().writeValueAsString(property);

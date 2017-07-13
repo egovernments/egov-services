@@ -98,7 +98,13 @@ public class PropertyServiceImpl implements PropertyService {
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
 			producer.send(environment.getProperty("egov.propertytax.property.update.validate.user"), propertyRequest);
 		}
-		return null;
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
+		PropertyResponse propertyResponse = new PropertyResponse();
+		propertyResponse.setResponseInfo(responseInfo);
+		propertyResponse.setProperties(propertyRequest.getProperties());
+		return propertyResponse;
 	}
 
 	/**
@@ -393,10 +399,10 @@ public class PropertyServiceImpl implements PropertyService {
 		titleTransferResponse.setResponseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(titleTransferRequest.getRequestInfo(), true));
 		titleTransferResponse.setTitleTransfer(titleTransferRequest.getTitleTransfer());
-		
+
 		return titleTransferResponse;
 	}
-	
+
 	/**
 	 * This method validate title transfer worflow details
 	 * 

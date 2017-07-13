@@ -227,7 +227,7 @@ public class ReceivingCenterTypeController {
 	private void checkReceivingCenterNameUniqueness(final ReceivingCenterTypeReq receivingCenterRequest,
 			final List<ErrorField> errorFields) {
 		final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
-			if (receivingCenterService.checkReceivingCenterNameExists(receivingCenter.getName(), receivingCenter.getTenantId(), receivingCenter.getId() )) {
+			if (receivingCenterService.checkReceivingCenterNameExists(receivingCenter.getName(), receivingCenter.getTenantId())) {
 				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
 						.message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
 						.field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();

@@ -133,7 +133,7 @@ public class ReceivingCenterTypeRepository {
 		return true;
 	}
 	
-	public boolean checkReceivingCenterNameExists(final String name, final String tenantId, final Long id) {
+	public boolean checkReceivingCenterNameExists(final String name, final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
 		// preparedStatementValues.add(id);
@@ -142,7 +142,6 @@ public class ReceivingCenterTypeRepository {
 		if ((null != name && name != "")) {
 
 			preparedStatementValues.add(name);
-			preparedStatementValues.add(id);
 			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
 
 		}

@@ -222,7 +222,7 @@ class CategoryTypeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.checkbox}
-                                    defaultChecked = {createCategoryType.active || true}
+                                    defaultChecked = { this.state.id != '' ? (createCategoryType.active || false) : (createCategoryType.active || true)}
                                     onCheck = {(e, i, v) => { console.log(createCategoryType.active, i);
 
                                       var e = {

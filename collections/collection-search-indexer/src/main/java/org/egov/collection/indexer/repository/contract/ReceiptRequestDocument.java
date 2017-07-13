@@ -39,6 +39,7 @@
  */
 package org.egov.collection.indexer.repository.contract;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -52,14 +53,14 @@ import java.util.Date;
 @Builder
 public class ReceiptRequestDocument {
 
- /*   @JsonProperty("id")
-    private Long id;*/
+    private static final String ES_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     @JsonProperty("tenantId")
     private String tenantId;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("receiptDate")
-    private String receiptDate;
+    private Date receiptDate;
 
     @JsonProperty("receiptNumber")
     private String receiptNumber;

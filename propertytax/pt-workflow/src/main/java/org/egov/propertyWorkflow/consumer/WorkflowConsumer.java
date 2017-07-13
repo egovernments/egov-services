@@ -117,9 +117,9 @@ public class WorkflowConsumer {
 						environment.getProperty("businessKey"), environment.getProperty("type"),
 						environment.getProperty("create.property.comments"));
 				property.getPropertyDetail().setStateId(processInstance.getId());
+				workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
+						propertyRequest);
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
-					propertyRequest);
 
 		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.workflow"))) {
 
@@ -133,10 +133,13 @@ public class WorkflowConsumer {
 				if (action.equalsIgnoreCase(environment.getProperty("property.approved"))) {
 					String upicNumber = generateUpicNo(property, propertyRequest);
 					property.setUpicNumber(upicNumber);
+					workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.approved"),
+							propertyRequest);
+				} else {
+					workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
+							propertyRequest);
 				}
 			}
-			workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
-					propertyRequest);
 		}
 	}
 

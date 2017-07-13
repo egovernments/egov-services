@@ -63,6 +63,23 @@
 			<artifactId>modelmapper</artifactId>
 			<version>0.7.5</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>egf-master</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>common</classifier>
+			  
+		</dependency>
+
+		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>egf-master</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>client</classifier>
+			 
+		</dependency>
+		
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

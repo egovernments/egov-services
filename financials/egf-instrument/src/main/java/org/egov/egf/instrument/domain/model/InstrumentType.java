@@ -69,9 +69,9 @@ public class InstrumentType {
 	private String type;
 
 	/*
-	 * isActive specifies whether the type is active for transacting.
+	 * active specifies whether the type is active for transacting.
 	 */
-	private Boolean isActive;
+	private Boolean active;
 
 	/*
 	 * instrumentAccountCodes is the COAs that can be tagged to a given type.

@@ -66,9 +66,9 @@ public class ECSType {
 	private String type;
 
 	/*
-	 * isActive specifies whether the type is active for transacting.
+	 * active specifies whether the type is active for transacting.
 	 */
 
-	private String isActive;
+	private String active;
 
 }

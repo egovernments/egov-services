@@ -11,17 +11,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
-
 import javax.annotation.PostConstruct;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @Import(TracerConfiguration.class)
 public class SearchIndexerApplication {
-
-	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
 	@Value("${app.timezone}")
 	private String timeZone;
@@ -35,17 +30,14 @@ public class SearchIndexerApplication {
 	public ObjectMapper getObjectMapper() {
 		final ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		return objectMapper;
 	}
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		objectMapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(objectMapper);
 		return converter;
 	}

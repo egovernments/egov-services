@@ -1477,15 +1477,18 @@ function markEditIndex(index = -1, modalName = "", object = "", fromServer) {
                         }
                     });
                 } else {
-
+                    if(object = "assignments")
+                        $("#assignments\\.toDate").datepicker('setStartDate', null);
                     if(object == "assignments" && fromServer) {
-                        $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', false);
+                        //$("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', false);
+                        $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', true);
                         $("#assignments\\.fromDate").attr('disabled', true);
 
                         if(employee[object][editIndex].toDate) {
                             var date = employee[object][editIndex].toDate.split("/");
                             if(new Date().getTime() > employee[object][editIndex].fromToDate) {
                                 $("#assignmentDetailModal input, #assignmentDetailModal select").attr('disabled', true);
+                                $("#assignments\\.toDate").datepicker('setStartDate', new Date());
                                 $("#assignments\\.toDate").attr('disabled', false);
                             }
                         }

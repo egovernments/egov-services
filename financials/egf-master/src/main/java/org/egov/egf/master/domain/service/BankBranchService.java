@@ -112,4 +112,13 @@ public class BankBranchService {
 		return bankBranchRepository.search(bankBranchSearch);
 	}
 
+	@Transactional
+	public BankBranch save(BankBranch bankBranch) {
+		return bankBranchRepository.save(bankBranch);
+	}
+
+	@Transactional
+	public BankBranch update(BankBranch bankBranch) {
+		return bankBranchRepository.update(bankBranch);
+	}
 }

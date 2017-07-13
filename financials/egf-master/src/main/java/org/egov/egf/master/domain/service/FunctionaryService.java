@@ -100,4 +100,14 @@ public class FunctionaryService {
 		return functionaryRepository.search(functionarySearch);
 	}
 
+	@Transactional
+	public Functionary save(Functionary functionary) {
+		return functionaryRepository.save(functionary);
+	}
+
+	@Transactional
+	public Functionary update(Functionary functionary) {
+		return functionaryRepository.update(functionary);
+	}
+
 }

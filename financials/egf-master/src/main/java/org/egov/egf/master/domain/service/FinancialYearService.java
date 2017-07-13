@@ -100,4 +100,13 @@ public class FinancialYearService {
 		return financialYearRepository.search(financialYearSearch);
 	}
 
+	@Transactional
+	public FinancialYear save(FinancialYear financialYear) {
+		return financialYearRepository.save(financialYear);
+	}
+
+	@Transactional
+	public FinancialYear update(FinancialYear financialYear) {
+		return financialYearRepository.update(financialYear);
+	}
 }

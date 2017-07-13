@@ -100,4 +100,14 @@ public class AccountDetailTypeService {
 		return accountDetailTypeRepository.search(accountDetailTypeSearch);
 	}
 
+	@Transactional
+	public AccountDetailType save(AccountDetailType accountDetailType) {
+		return accountDetailTypeRepository.save(accountDetailType);
+	}
+
+	@Transactional
+	public AccountDetailType update(AccountDetailType accountDetailType) {
+		return accountDetailTypeRepository.update(accountDetailType);
+	}
+
 }

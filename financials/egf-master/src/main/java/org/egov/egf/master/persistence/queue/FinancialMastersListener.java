@@ -23,26 +23,26 @@ import org.egov.egf.master.domain.model.Fundsource;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.Supplier;
-import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
-import org.egov.egf.master.domain.repository.AccountDetailKeyRepository;
-import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
-import org.egov.egf.master.domain.repository.AccountEntityRepository;
-import org.egov.egf.master.domain.repository.BankAccountRepository;
-import org.egov.egf.master.domain.repository.BankBranchRepository;
-import org.egov.egf.master.domain.repository.BankRepository;
-import org.egov.egf.master.domain.repository.BudgetGroupRepository;
-import org.egov.egf.master.domain.repository.ChartOfAccountDetailRepository;
-import org.egov.egf.master.domain.repository.ChartOfAccountRepository;
-import org.egov.egf.master.domain.repository.EgfStatusRepository;
-import org.egov.egf.master.domain.repository.FinancialYearRepository;
-import org.egov.egf.master.domain.repository.FiscalPeriodRepository;
-import org.egov.egf.master.domain.repository.FunctionRepository;
-import org.egov.egf.master.domain.repository.FunctionaryRepository;
-import org.egov.egf.master.domain.repository.FundRepository;
-import org.egov.egf.master.domain.repository.FundsourceRepository;
-import org.egov.egf.master.domain.repository.SchemeRepository;
-import org.egov.egf.master.domain.repository.SubSchemeRepository;
-import org.egov.egf.master.domain.repository.SupplierRepository;
+import org.egov.egf.master.domain.service.AccountCodePurposeService;
+import org.egov.egf.master.domain.service.AccountDetailKeyService;
+import org.egov.egf.master.domain.service.AccountDetailTypeService;
+import org.egov.egf.master.domain.service.AccountEntityService;
+import org.egov.egf.master.domain.service.BankAccountService;
+import org.egov.egf.master.domain.service.BankBranchService;
+import org.egov.egf.master.domain.service.BankService;
+import org.egov.egf.master.domain.service.BudgetGroupService;
+import org.egov.egf.master.domain.service.ChartOfAccountDetailService;
+import org.egov.egf.master.domain.service.ChartOfAccountService;
+import org.egov.egf.master.domain.service.EgfStatusService;
+import org.egov.egf.master.domain.service.FinancialYearService;
+import org.egov.egf.master.domain.service.FiscalPeriodService;
+import org.egov.egf.master.domain.service.FunctionService;
+import org.egov.egf.master.domain.service.FunctionaryService;
+import org.egov.egf.master.domain.service.FundService;
+import org.egov.egf.master.domain.service.FundsourceService;
+import org.egov.egf.master.domain.service.SchemeService;
+import org.egov.egf.master.domain.service.SubSchemeService;
+import org.egov.egf.master.domain.service.SupplierService;
 import org.egov.egf.master.web.contract.AccountCodePurposeContract;
 import org.egov.egf.master.web.contract.AccountDetailKeyContract;
 import org.egov.egf.master.web.contract.AccountDetailTypeContract;
@@ -89,64 +89,64 @@ public class FinancialMastersListener {
 	private FinancialProducer financialProducer;
 
 	@Autowired
-	private FundRepository fundRepository;
+	private FundService fundService;
 
 	@Autowired
-	private BankRepository bankRepository;
+	private BankService bankService;
 
 	@Autowired
-	private FunctionRepository functionRepository;
+	private FunctionService functionService;
 
 	@Autowired
-	private BankBranchRepository bankBranchRepository;
+	private BankBranchService bankBranchService;
 
 	@Autowired
-	private BankAccountRepository bankAccountRepository;
+	private BankAccountService bankAccountService;
 
 	@Autowired
-	private AccountCodePurposeRepository accountCodePurposeRepository;
+	private AccountCodePurposeService accountCodePurposeService;
 
 	@Autowired
-	private AccountDetailTypeRepository accountDetailTypeRepository;
+	private AccountDetailTypeService accountDetailTypeService;
 
 	@Autowired
-	private AccountDetailKeyRepository accountDetailKeyRepository;
+	private AccountDetailKeyService accountDetailKeyService;
 
 	@Autowired
-	private AccountEntityRepository accountEntityRepository;
+	private AccountEntityService accountEntityService;
 
 	@Autowired
-	private BudgetGroupRepository budgetGroupRepository;
+	private BudgetGroupService budgetGroupService;
 
 	@Autowired
-	private ChartOfAccountRepository chartOfAccountRepository;
+	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired
-	private ChartOfAccountDetailRepository chartOfAccountDetailRepository;
+	private ChartOfAccountDetailService chartOfAccountDetailService;
 
 	@Autowired
-	private FinancialYearRepository financialYearRepository;
+	private FinancialYearService financialYearService;
 
 	@Autowired
-	private FiscalPeriodRepository fiscalPeriodRepository;
+	private FiscalPeriodService fiscalPeriodService;
 
 	@Autowired
-	private FunctionaryRepository functionaryRepository;
+	private FunctionaryService functionaryService;
 
 	@Autowired
-	private FundsourceRepository fundsourceRepository;
+	private FundsourceService fundsourceService;
 
 	@Autowired
-	private SchemeRepository schemeRepository;
+	private SchemeService schemeService;
 
 	@Autowired
-	private SubSchemeRepository subSchemeRepository;
+	private SubSchemeService subSchemeService;
 
 	@Autowired
-	private SupplierRepository supplierRepository;
+	private SupplierService supplierService;
 
 	@Autowired
-	private EgfStatusRepository egfStatusRepository;
+	private EgfStatusService egfStatusService;
 
 	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
 	public void process(HashMap<String, CommonRequest<?>> mastersMap) {
@@ -164,7 +164,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FundContract fundContract : request.getData()) {
 				Fund domain = mapper.map(fundContract, Fund.class);
-				fundRepository.save(domain);
+				fundService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -180,7 +180,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FundContract fundContract : request.getData()) {
 				Fund domain = mapper.map(fundContract, Fund.class);
-				fundRepository.update(domain);
+				fundService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -197,7 +197,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BankContract bankContract : request.getData()) {
 				Bank domain = mapper.map(bankContract, Bank.class);
-				bankRepository.save(domain);
+				bankService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -215,7 +215,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BankContract bankContract : request.getData()) {
 				Bank domain = mapper.map(bankContract, Bank.class);
-				bankRepository.update(domain);
+				bankService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -232,7 +232,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FunctionContract functionContract : request.getData()) {
 				Function domain = mapper.map(functionContract, Function.class);
-				functionRepository.save(domain);
+				functionService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -248,7 +248,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FunctionContract functionContract : request.getData()) {
 				Function domain = mapper.map(functionContract, Function.class);
-				functionRepository.update(domain);
+				functionService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -266,7 +266,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BankBranchContract bankBranchContract : request.getData()) {
 				BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
-				bankBranchRepository.save(domain);
+				bankBranchService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -283,7 +283,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BankBranchContract bankBranchContract : request.getData()) {
 				BankBranch domain = mapper.map(bankBranchContract, BankBranch.class);
-				bankBranchRepository.update(domain);
+				bankBranchService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -301,7 +301,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BankAccountContract bankAccountContract : request.getData()) {
 				BankAccount domain = mapper.map(bankAccountContract, BankAccount.class);
-				bankAccountRepository.save(domain);
+				bankAccountService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -318,7 +318,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BankAccountContract bankAccountContract : request.getData()) {
 				BankAccount domain = mapper.map(bankAccountContract, BankAccount.class);
-				bankAccountRepository.update(domain);
+				bankAccountService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -335,7 +335,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountCodePurposeContract accountCodePurposeContract : request.getData()) {
 				AccountCodePurpose domain = mapper.map(accountCodePurposeContract, AccountCodePurpose.class);
-				accountCodePurposeRepository.save(domain);
+				accountCodePurposeService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -352,7 +352,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountCodePurposeContract accountCodePurposeContract : request.getData()) {
 				AccountCodePurpose domain = mapper.map(accountCodePurposeContract, AccountCodePurpose.class);
-				accountCodePurposeRepository.update(domain);
+				accountCodePurposeService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -369,7 +369,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountDetailTypeContract accountDetailTypeContract : request.getData()) {
 				AccountDetailType domain = mapper.map(accountDetailTypeContract, AccountDetailType.class);
-				accountDetailTypeRepository.save(domain);
+				accountDetailTypeService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -386,7 +386,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountDetailTypeContract accountDetailTypeContract : request.getData()) {
 				AccountDetailType domain = mapper.map(accountDetailTypeContract, AccountDetailType.class);
-				accountDetailTypeRepository.update(domain);
+				accountDetailTypeService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -403,7 +403,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountDetailKeyContract accountDetailKeyContract : request.getData()) {
 				AccountDetailKey domain = mapper.map(accountDetailKeyContract, AccountDetailKey.class);
-				accountDetailKeyRepository.save(domain);
+				accountDetailKeyService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -420,7 +420,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountDetailKeyContract accountDetailKeyContract : request.getData()) {
 				AccountDetailKey domain = mapper.map(accountDetailKeyContract, AccountDetailKey.class);
-				accountDetailKeyRepository.update(domain);
+				accountDetailKeyService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -437,7 +437,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountEntityContract accountEntityContract : request.getData()) {
 				AccountEntity domain = mapper.map(accountEntityContract, AccountEntity.class);
-				accountEntityRepository.save(domain);
+				accountEntityService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -454,7 +454,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (AccountEntityContract accountEntityContract : request.getData()) {
 				AccountEntity domain = mapper.map(accountEntityContract, AccountEntity.class);
-				accountEntityRepository.update(domain);
+				accountEntityService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -471,7 +471,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BudgetGroupContract budgetGroupContract : request.getData()) {
 				BudgetGroup domain = mapper.map(budgetGroupContract, BudgetGroup.class);
-				budgetGroupRepository.save(domain);
+				budgetGroupService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -488,7 +488,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (BudgetGroupContract budgetGroupContract : request.getData()) {
 				BudgetGroup domain = mapper.map(budgetGroupContract, BudgetGroup.class);
-				budgetGroupRepository.update(domain);
+				budgetGroupService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -506,7 +506,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (ChartOfAccountContract chartOfAccountContract : request.getData()) {
 				ChartOfAccount domain = mapper.map(chartOfAccountContract, ChartOfAccount.class);
-				chartOfAccountRepository.save(domain);
+				chartOfAccountService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -523,7 +523,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (ChartOfAccountContract chartOfAccountContract : request.getData()) {
 				ChartOfAccount domain = mapper.map(chartOfAccountContract, ChartOfAccount.class);
-				chartOfAccountRepository.update(domain);
+				chartOfAccountService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -541,7 +541,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (ChartOfAccountDetailContract chartOfAccountDetailContract : request.getData()) {
 				ChartOfAccountDetail domain = mapper.map(chartOfAccountDetailContract, ChartOfAccountDetail.class);
-				chartOfAccountDetailRepository.save(domain);
+				chartOfAccountDetailService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -558,7 +558,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (ChartOfAccountDetailContract chartOfAccountDetailContract : request.getData()) {
 				ChartOfAccountDetail domain = mapper.map(chartOfAccountDetailContract, ChartOfAccountDetail.class);
-				chartOfAccountDetailRepository.update(domain);
+				chartOfAccountDetailService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -576,7 +576,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FinancialYearContract financialYearContract : request.getData()) {
 				FinancialYear domain = mapper.map(financialYearContract, FinancialYear.class);
-				financialYearRepository.save(domain);
+				financialYearService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -593,7 +593,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FinancialYearContract financialYearContract : request.getData()) {
 				FinancialYear domain = mapper.map(financialYearContract, FinancialYear.class);
-				financialYearRepository.update(domain);
+				financialYearService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -611,7 +611,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FiscalPeriodContract fiscalPeriodContract : request.getData()) {
 				FiscalPeriod domain = mapper.map(fiscalPeriodContract, FiscalPeriod.class);
-				fiscalPeriodRepository.save(domain);
+				fiscalPeriodService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -628,7 +628,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FiscalPeriodContract fiscalPeriodContract : request.getData()) {
 				FiscalPeriod domain = mapper.map(fiscalPeriodContract, FiscalPeriod.class);
-				fiscalPeriodRepository.update(domain);
+				fiscalPeriodService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -646,7 +646,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FunctionaryContract functionaryContract : request.getData()) {
 				Functionary domain = mapper.map(functionaryContract, Functionary.class);
-				functionaryRepository.save(domain);
+				functionaryService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -663,7 +663,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FunctionaryContract functionaryContract : request.getData()) {
 				Functionary domain = mapper.map(functionaryContract, Functionary.class);
-				functionaryRepository.update(domain);
+				functionaryService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -681,7 +681,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FundsourceContract fundsourceContract : request.getData()) {
 				Fundsource domain = mapper.map(fundsourceContract, Fundsource.class);
-				fundsourceRepository.save(domain);
+				fundsourceService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -698,7 +698,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (FundsourceContract fundsourceContract : request.getData()) {
 				Fundsource domain = mapper.map(fundsourceContract, Fundsource.class);
-				fundsourceRepository.update(domain);
+				fundsourceService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -715,7 +715,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (SchemeContract schemeContract : request.getData()) {
 				Scheme domain = mapper.map(schemeContract, Scheme.class);
-				schemeRepository.save(domain);
+				schemeService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -731,7 +731,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (SchemeContract schemeContract : request.getData()) {
 				Scheme domain = mapper.map(schemeContract, Scheme.class);
-				schemeRepository.update(domain);
+				schemeService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -748,7 +748,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (SubSchemeContract subSchemeContract : request.getData()) {
 				SubScheme domain = mapper.map(subSchemeContract, SubScheme.class);
-				subSchemeRepository.save(domain);
+				subSchemeService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -764,7 +764,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (SubSchemeContract subSchemeContract : request.getData()) {
 				SubScheme domain = mapper.map(subSchemeContract, SubScheme.class);
-				subSchemeRepository.update(domain);
+				subSchemeService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -780,7 +780,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (SupplierContract supplierContract : request.getData()) {
 				Supplier domain = mapper.map(supplierContract, Supplier.class);
-				supplierRepository.save(domain);
+				supplierService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -796,7 +796,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (SupplierContract supplierContract : request.getData()) {
 				Supplier domain = mapper.map(supplierContract, Supplier.class);
-				supplierRepository.update(domain);
+				supplierService.update(domain);
 			}
 
 			mastersMap.clear();
@@ -813,7 +813,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (EgfStatusContract egfStatusContract : request.getData()) {
 				EgfStatus domain = mapper.map(egfStatusContract, EgfStatus.class);
-				egfStatusRepository.save(domain);
+				egfStatusService.save(domain);
 			}
 
 			mastersMap.clear();
@@ -829,7 +829,7 @@ public class FinancialMastersListener {
 			ModelMapper mapper = new ModelMapper();
 			for (EgfStatusContract egfStatusContract : request.getData()) {
 				EgfStatus domain = mapper.map(egfStatusContract, EgfStatus.class);
-				egfStatusRepository.update(domain);
+				egfStatusService.update(domain);
 			}
 
 			mastersMap.clear();

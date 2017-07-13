@@ -259,73 +259,55 @@ class FloorDetails extends Component {
   
   createFloorObject = () => {
 	  
-	  var allRooms = this.props.floorDetails.floors;
+		var floors = [];
 	  
-	  var floors=[]
-	  
-	  var unit = {};
-	  
-	  var allFloors = this.state.floorNumber;
-	  
-		var hasFlatNo = true;
-	  
-	  for(let i = 0; i< allRooms.length;i++){
-		  if(allRooms[i].unitType == 2){
+	    var allRooms = this.props.floorDetails.floors;
+		
+		for(let i=0;i<allRooms.length;i++){
+			let local = floors;
+			if(allRooms[i].unitType == 2){
 			 var floor = {
 				  floorNo:'',
+				  flatNo:'',
 				  units:[]
 				}
-				allRooms[i].units = [];
 			  floor.floorNo = allRooms[i].floorNo;
 			  floor.units.push(allRooms[i]);
 			  floors.push(floor);
-		  } else if (allRooms[i].unitType == 1){
-			  if(floors.length == 0){
-				  	let floor = {
-					  floorNo:'',
-					  units:[]
-					}
-					let room = {
-						units: []
-					}
-				  floor.floorNo = allRooms[i].floorNo;
-				  room.units.push(allRooms[i]);
-				  floor.units.push(room);
-				  floors.push(floor);
-			  }  else {
-				 
-				  for(let j=0;j<floors.length;j++) {
-					  
-					  for(let k = 0; k<floors[j].units[0].units.length;k++){
-						   if(floors[j].units[0].units[k].flatNo == allRooms[i].flatNo){ 
-							  floors[j].units[0].units.push(allRooms[i]);
-							   break;
-							} else {
-								console.log(floors[j].units[0].units[k].flatNo, allRooms[i].flatNo)
-								let floor = {
-									  floorNo:'',
-									  units:[]
-									}
-									let room = {
-										units: []
-									}
-								  floor.floorNo = allRooms[i].floorNo;
-								  room.units.push(allRooms[i]);
-								  floor.units.push(room);
-								  floors.push(floor);
-								  break;
+			} else if(allRooms[i].unitType == 1){
+				if(floors.length != 0){
+					for(let j = 0;j<local.length;j++){
+						if(local[j].hasOwnProperty('flatNo')){
+							if(local[j].floorNo == allRooms[i].floorNo && local[j].flatNo == allRooms[i].flatNo ) {
+								local[j].units[0].units.push(allRooms[i])
 							}
-					  } 
-					 
-				  }
-			  }
-		  }
-	  }
-	  
-	  
-	   	  
-	console.log(floors);
+						} else {
+							console.log('NOM');
+						}
+						
+					}
+					floors = local;
+				  } else {
+						let floor = {
+						  floorNo:'',
+						  flatNo:'',
+						  units:[]
+						}
+						let room = {
+							units: []
+						}
+					  floor.floorNo = allRooms[i].floorNo;
+					  floor.flatNo = allRooms[i].flatNo;
+					  room.units.push(allRooms[i]);
+					  floor.units.push(room);
+					  floors.push(floor);
+				  } 	
+			}
+			console.log(floors);
+		}
+		
   }
+ 
   
    render(){
 	   

@@ -1,4 +1,5 @@
 #Tracer
+
 ###Distributed tracing library
 Correlation id and logging support addons to Spring Web and Spring Kafka. 
 
@@ -10,24 +11,24 @@ Correlation id and logging support addons to Spring Web and Spring Kafka.
 - Message payload and topic name for messages received by Kafka consumer using the KafkaListener annotation.
 - Outgoing http request URI and payload along with response code and response body when using RestTemplate.
 
-###### Toggle logging detail
+###### Toggle logging detail -
 The logging of the http request/response body and Kakfa message body can be toggled on/off using 
 "tracer.detailed.tracing.enabled" application property.
   
-###### Correlation id retrieval and forwarding
+###### Correlation id retrieval and forwarding -
 The library takes care of retrieving the correlation id from -
 - Incoming http request body or header
 - Kafka message payload
 
 For an outgoing http request the correlation id is sent as a custom request header "x-correlation-id".
 
-###### Setting the correlation id in the MDC
+###### Setting the correlation id in the MDC -
 Given the library takes care of placing the correlation id into the MDC, any custom logging done in the 
 application would seamlessly include the correlation id in the log message.
 
 Note - See the "logging.pattern" mentioned in the "Tracer integration" section.
   
-#### Steps to integrate Tracer to your Spring application
+#### Steps to integrate Tracer to your Spring application -
 - In the pom.xml add the below repository section
  ```
      <repositories>
@@ -58,7 +59,7 @@ Note - See the "logging.pattern" mentioned in the "Tracer integration" section.
  - In order to push messages to Kafka, in your class component autowire LogAwareKafkaTemplate.
  
  
-#### Tracer implementation details
+#### Tracer implementation details -
 - A Spring filter is used to retrieve the correlation id from the incoming http request.
 - If the incoming http request is a POST and the content type is compatible with application/json then the library
 makes an attempt to retrieve the correlation id from the request body. 
@@ -76,7 +77,7 @@ of messages sent to Kafka.
 - The retrieved correlation id done via the filter or aspect is then stored in a thread local variable to 
 forward as necessary. 
  
-#### Change log
+#### Change log -
 1.0.0
 - For Kafka Listener the @Payload annotation is used to identify the payload parameter.
 - For Kafka Listener @Header(KafkaHeaders.RECEIVED_TOPIC) is used to identify the topic name.

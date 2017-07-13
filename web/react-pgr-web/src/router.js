@@ -1,6 +1,8 @@
 
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
+
+
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
 import ProfileEdit from './components/contents/settings/profileEdit';
@@ -45,20 +47,22 @@ import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyT
 import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
 import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
 
-
+import ViewFunction from './components/contents/egf/ViewFunction';
 
 const base = "";
 
 
+
 const Main = () => {
     return (
-  <main style={{"marginBottom": "50px"}}>
+    <main style={{"marginBottom": "50px"}}>
     <Switch>
       <Route exact path= {base + '/'} component={Login}/>
 
 
+
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-  
+
       <Route exact path={base+'/dashboard'} component={Dashboard}/>
 
         {/*
@@ -116,6 +120,9 @@ const Main = () => {
         <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
         <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
+
+        <Route path={base+'/egf/viewFunction/:id'} component={ViewFunction}/>
+
 
 
     </Switch>

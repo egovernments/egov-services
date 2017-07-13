@@ -10,6 +10,8 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Api from '../../../api/api';
 import ShowField from './showField';
+import jp from "jsonpath";
+import _ from 'lodash';
 
 
 const styles = {
@@ -42,6 +44,47 @@ class ShowForm extends Component {
        this.search=this.search.bind(this);
    }
 
+  handleChange=(e, property, isRequired, pattern)=>
+  {
+    // console.log(e);
+    let {metaData,setMetaData}=this.props;
+    // console.log(metaData);
+    if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
+    {
+      for (var i = 0; i < metaData.reportDetails.searchParams.length; i++) {
+        if (metaData.reportDetails.searchParams[i].type=="url") {
+            if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1)
+            {
+              let splitArray=metaData.reportDetails.searchParams[i].pattern.split("?");
+              let context="";
+              let id={};
+              id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+              for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                context+=splitArray[0].split("/")[j]+"/";
+              }
+
+              Api.commonApiPost(context,id).then(function(response)
+              {
+                  let keys=jp.query(response,splitArray[1].split("|")[1]);
+                  let values=jp.query(response,splitArray[1].split("|")[2]);
+                  let defaultValue={};
+                  for (var k = 0; k < keys.length; k++) {
+                    defaultValue[keys[k]]=values[k];
+                  }
+                  console.log(defaultValue);
+                  console.log(i);
+                  // setMetaData(metaData);
+              },function(err) {
+                  console.log(err);
+              });
+            }
+        }
+      }
+    }
+
+    this.props.handleChange(e, property, isRequired, pattern);
+  }
+
 
   handleFormFields = () => {
     let {currentThis}=this;
@@ -52,7 +95,7 @@ class ShowForm extends Component {
       return metaData.reportDetails.searchParams.map((item,index) =>
       {
         return (
-          <ShowField key={index} obj={item}  handler={this.props.handleChange}/>
+          <ShowField key={index} obj={item}  handler={this.handleChange}/>
         );
       })
     }
@@ -236,6 +279,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setFlag:(flag)=>{
       dispatch({type:"SET_FLAG",flag})
+  },
+  setMetaData:(metaData)=>{
+    dispatch({type:"SET_META_DATA",metaData})
   }
 });
 

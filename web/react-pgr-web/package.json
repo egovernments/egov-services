@@ -8,6 +8,7 @@
     "exif-js": "^2.2.1",
     "intl-locales-supported": "^1.0.0",
     "jquery": "^3.2.1",
+    "jsonpath": "^0.2.11",
     "lodash": "^4.17.4",
     "material-ui": "^0.18.1",
     "material-ui-upload": "^1.1.2",

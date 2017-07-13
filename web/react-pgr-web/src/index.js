@@ -19,6 +19,7 @@ import './styles/bootstrap-theme.min.css';
 import './styles/jquery.dataTables.min.css';
 import './styles/buttons.dataTables.min.css';
 
+
 // import router from "./router";
 
 // Needed for onTouchTap

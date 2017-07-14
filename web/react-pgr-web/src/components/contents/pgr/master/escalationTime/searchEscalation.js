@@ -243,12 +243,12 @@ class SearchEscalation extends Component {
             isSearchClicked: true
           })
       }).catch((error)=>{
-		  toggleSnackbarAndSetText(true, error)
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, error)
 		   current.setState({
             resultList:[],
             isSearchClicked: false
           })
-          console.log(error);
       })
 
   }

@@ -55,6 +55,25 @@ import DocumentTypeCreate from './components/contents/wc/master/documentType/doc
 import ViewEditDocumentType from './components/contents/wc/master/documentType/viewEditDocumentType';
 import ViewDocumentType from './components/contents/wc/master/documentType/viewDocumentType';
 
+
+//Property tax
+import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
+import Test from './components/contents/propertyTax/master/Test';
+import FloorType from './components/contents/propertyTax/master/FloorType';
+import RoofType from './components/contents/propertyTax/master/RoofType';
+import WallType from './components/contents/propertyTax/master/WallType';
+import WoodType from './components/contents/propertyTax/master/WoodType';
+import UsageType from './components/contents/propertyTax/master/UsageType';
+import PropertyType from './components/contents/propertyTax/master/PropertyType';
+import Occupancy from './components/contents/propertyTax/master/Occupancy';
+import MutationReason from './components/contents/propertyTax/master/MutationReason';
+import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
+
+import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
+
+import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand'
+
+
 const base = "";
 
 
@@ -140,6 +159,18 @@ const Main = () => {
         <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
 
 
+            <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
+          <Route exact path={base+'/propertyTax'} component={PropertyTaxSearch}/>
+          <Route exact path={base+'/propertyTax/test'} component={Test}/>
+          <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
+          <Route exact path={base+'/propertyTax/roof-type'} component={RoofType}/>
+          <Route exact path={base+'/propertyTax/wall-type'} component={WallType}/>
+          <Route exact path={base+'/propertyTax/wood-type'} component={WoodType}/>
+          <Route exact path={base+'/propertyTax/usage-type'} component={UsageType}/>
+          <Route exact path={base+'/propertyTax/property-type'} component={PropertyType}/>
+          <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
+          <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
+          <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
     </Switch>
   </main>
 )}

@@ -108,6 +108,7 @@ public class TaxHeadMasterRepository {
 				ps.setString(10, requestInfo.getUserInfo().getId().toString());
 				ps.setLong(11, new Date().getTime());
 				ps.setString(12, taxHeadMaster.getTenantId());
+				ps.setString(13, taxHeadMaster.getId());
 			}
 			@Override
 			public int getBatchSize() {

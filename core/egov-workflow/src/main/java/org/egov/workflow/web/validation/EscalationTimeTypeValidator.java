@@ -22,27 +22,29 @@ public class EscalationTimeTypeValidator {
 	@Autowired
 	private EscalationService escalationService;
 	
-	public List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+	public List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest, boolean action) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(escalationTimeTypeRequest);
+		final Error error = getError(escalationTimeTypeRequest, action);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final EscalationTimeTypeReq escalationTimeTypeRequest) {
-		final List<ErrorField> errorFields = getErrorFields(escalationTimeTypeRequest);
+	private Error getError(final EscalationTimeTypeReq escalationTimeTypeRequest, boolean action) {
+		final List<ErrorField> errorFields = getErrorFields(escalationTimeTypeRequest, action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+	private List<ErrorField> getErrorFields(final EscalationTimeTypeReq escalationTimeTypeRequest, boolean action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addServiceIdValidationErrors(escalationTimeTypeRequest, errorFields);
 		addTeanantIdValidationErrors(escalationTimeTypeRequest, errorFields);
-		checkRecordExists(escalationTimeTypeRequest, errorFields);
+		if(action) { 
+			checkRecordExists(escalationTimeTypeRequest, errorFields);
+		}
 		return errorFields;
 	}
 

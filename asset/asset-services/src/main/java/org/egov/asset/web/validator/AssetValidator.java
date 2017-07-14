@@ -104,7 +104,6 @@ public class AssetValidator {
 	public void validateDisposal(final DisposalRequest disposalRequest) {
 		final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
 				disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
-		validateAssetForDisposedStatus(asset);
 		validateAssetForCapitalizedStatus(asset);
 
 		if (StringUtils.isEmpty(disposalRequest.getDisposal().getBuyerName()))
@@ -151,18 +150,15 @@ public class AssetValidator {
 	}
 
 	private void validateAssetForCapitalizedStatus(final Asset asset) {
-		final List<AssetStatus> assetStatus = assetMasterService.getStatuses("Asset Master", "CAPITALIZED",
+		final List<AssetStatus> assetStatus = assetMasterService.getStatuses("Asset Master", asset.getStatus(),
 				asset.getTenantId());
-		if (!assetStatus.get(0).getStatusValues().get(0).getCode().equalsIgnoreCase(asset.getStatus()))
+		if (assetStatus != null && !assetStatus.isEmpty()
+				&& !assetStatus.get(0).getStatusValues().get(0).getCode().equalsIgnoreCase(asset.getStatus()))
 			throw new RuntimeException("Status of Asset " + asset.getName()
-					+ " Should be Captalized for Reevaluation, Depreciation and Disposal/sale");
-	}
-
-	private void validateAssetForDisposedStatus(final Asset asset) {
-		final List<AssetStatus> assetStatus = assetMasterService.getStatuses("Asset Master", "DISPOSED",
-				asset.getTenantId());
-		if (assetStatus.get(0).getStatusValues().get(0).getCode().equalsIgnoreCase(asset.getStatus()))
-			throw new RuntimeException("Asset " + asset.getName() + " is already Disposed");
+					+ " Should be CAPITALIZED for Revaluation, Depreciation and Disposal/sale");
+		else
+			throw new RuntimeException(
+					"Status of asset :" + asset.getName() + "doesn't exists for tenant id : " + asset.getTenantId());
 	}
 
 	public void validateRevaluation(final RevaluationRequest revaluationRequest) {

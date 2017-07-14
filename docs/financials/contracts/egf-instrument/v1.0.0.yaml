@@ -2,14 +2,14 @@ swagger: '2.0'
 
 info:
   version: "1.0.0"
-  title: Voucher Service
-  description: Voucher services APIs - to create, update and search Voucher. 
+  title: Instrument Service
+  description: Instrument services APIs - to create, update and search Instrument. 
   contact:
     name: Manikanta P T
     email: info@egovernments.org
   
-basePath: "/egf-budget/v110"
-x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egf-instrument/contracts/v1-0-0.yml'
+basePath: "/egf-instrument/v100"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-instrument/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.egf.instrument'
 paths:
     /instrumentheaders/_search:
@@ -17,7 +17,6 @@ paths:
         summary: Get the list of instrumentheaders
         description: instrumentheaders
         tags: 
-          - voucher
           - InstrumentHeader
         parameters:
           - name: requestInfo
@@ -185,7 +184,6 @@ paths:
         summary: Create  new  instrumentheaders
         description: Create  new instrumentheaders
         tags: 
-          - voucher
           - InstrumentHeader
         parameters:
           - name: tenantId
@@ -213,7 +211,6 @@ paths:
         summary: Update any of the instrumentheaders
         description: Update any of the instrumentheaders
         tags: 
-          - voucher
           - InstrumentHeader
         parameters:
           - name: tenantId
@@ -248,7 +245,6 @@ paths:
         summary: Get the list of instrumenttypes
         description: instrumenttypes
         tags: 
-          - voucher
           - InstrumentType
         parameters:
           - name: requestInfo
@@ -311,7 +307,6 @@ paths:
         summary: Create  new  instrumenttypes
         description: Create  new instrumenttypes
         tags: 
-          - voucher
           - InstrumentType
         parameters:
           - name: tenantId
@@ -339,7 +334,6 @@ paths:
         summary: Update any of the instrumenttypes
         description: Update any of the instrumenttypes
         tags: 
-          - voucher
           - InstrumentType
         parameters:
           - name: tenantId
@@ -374,7 +368,6 @@ paths:
         summary: Get the list of instrumentaccountcodeses
         description: instrumentaccountcodeses
         tags: 
-          - voucher
           - InstrumentAccountCodes
         parameters:
           - name: requestInfo
@@ -439,7 +432,6 @@ paths:
         summary: Create  new  instrumentaccountcodeses
         description: Create  new instrumentaccountcodeses
         tags: 
-          - voucher
           - InstrumentAccountCodes
         parameters:
           - name: tenantId
@@ -467,7 +459,6 @@ paths:
         summary: Update any of the instrumentaccountcodeses
         description: Update any of the instrumentaccountcodeses
         tags: 
-          - voucher
           - InstrumentAccountCodes
         parameters:
           - name: tenantId

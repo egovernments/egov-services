@@ -50,6 +50,12 @@ import org.springframework.core.env.Environment;
         "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class WcmsTranasanctionConstants {
+    
+    public static final String SPECIALDEPOSITECHARGEDEMANDREASON="SPLDEPOSITECHARGE";
+    public static final String SPECIALSECURITYCHARGEDEMANDREASON="SECURITYDEPOSITECHARGE";
+    public static final String ROADCUTCHARGEDEMANDREASON="ROADCUTCHARGE";
+    public static final String ESIMATIONCHARGEDEMANDREASON="ESTIMATIONCHARGES";
+    public static final String SUPERVISIONCHARGEREASON="SUPERVISIONCHARGE";
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";

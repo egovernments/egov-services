@@ -40,18 +40,30 @@
 
 package org.egov.wcms.transanction.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transanction.config.ConfigurationManager;
 import org.egov.wcms.transanction.exception.WaterConnectionException;
+import org.egov.wcms.transanction.model.EstimationCharge;
+import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
+import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transition.demand.contract.Demand;
 import org.egov.wcms.transition.demand.contract.DemandDetail;
 import org.egov.wcms.transition.demand.contract.DemandRequest;
 import org.egov.wcms.transition.demand.contract.DemandResponse;
+import org.egov.wcms.transition.demand.contract.Owner;
+import org.egov.wcms.transition.demand.contract.TaxPeriodCriteria;
+import org.egov.wcms.transition.demand.contract.TaxPeriodResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,35 +73,80 @@ public class DemandConnectionService {
     @Autowired
     private ConfigurationManager configurationManager;
     
-    private static final String BUSINESSSERVICE="Water Supply";
+    private static final String BUSINESSSERVICE="Water Charge";
 
     public List<Demand> prepareDemand(final Demand demandrequest, final WaterConnectionReq waterConnectionRequest) {
+
         final List<Demand> demandList = new ArrayList<>();
-        DemandDetail demandDetail;
         final String tenantId = waterConnectionRequest.getConnection().getTenantId();
         final String propertyType = waterConnectionRequest.getConnection().getApplicationType();
-        List<DemandDetail> demandDetailsList;
-
+        Owner ownerobj=new Owner();
+        ownerobj.setTenantId(tenantId);
+        ownerobj.setId(waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+        final Map<String, Object> feeDetails = new HashMap<>();
         final Demand demand = new Demand();
+        TaxPeriodResponse taxperiodres=getTaxPeriod(waterConnectionRequest);
+        if(!waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())
+        {
+            EstimationCharge estimationCharge=waterConnectionRequest.getConnection().getEstimationCharge().get(0);
+            feeDetails.put(WcmsTranasanctionConstants.SPECIALDEPOSITECHARGEDEMANDREASON,100d);
+            if(estimationCharge.getSpecialSecurityCharges() > 0.0)
+            feeDetails.put(WcmsTranasanctionConstants.SPECIALSECURITYCHARGEDEMANDREASON, estimationCharge.getSpecialSecurityCharges());
+           if(estimationCharge.getEstimationCharges() > 0.0)
+            feeDetails.put(WcmsTranasanctionConstants.ESIMATIONCHARGEDEMANDREASON, estimationCharge.getEstimationCharges());
+           if(estimationCharge.getRoadCutCharges() > 0.0)
+            feeDetails.put(WcmsTranasanctionConstants.ROADCUTCHARGEDEMANDREASON,estimationCharge.getRoadCutCharges());
+           if(estimationCharge.getSupervisionCharges() > 0.0)
+            feeDetails.put(WcmsTranasanctionConstants.SUPERVISIONCHARGEREASON, estimationCharge.getSupervisionCharges());
+        }
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(propertyType);
         demand.setConsumerCode(waterConnectionRequest.getConnection().getAcknowledgementNumber());
-        demandDetailsList = new ArrayList<>();
-        for (final DemandDetail taxes : demandrequest.getDemandDetails()) {
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(taxes.getTaxHeadMasterCode());
-            demandDetail.setTaxAmount(taxes.getTaxAmount());
-            demandDetail.setTenantId(tenantId);
-            demandDetailsList.add(demandDetail);
+        final Set<DemandDetail> dmdDetailSet = new HashSet<>();
+        for (final String demandReason : feeDetails.keySet())
+           dmdDetailSet.add(createDemandDeatils(tenantId,demandReason, (Double)feeDetails.get(demandReason)));
+        
+        demand.setOwner(ownerobj);
+        demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
+        demand.setMinimumAmountPayable(new BigDecimal(1));
+        if(taxperiodres!=null && !taxperiodres.getTaxPeriods().isEmpty()){
+        demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
+        demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
-        demand.setOwner(demandrequest.getOwner());
-        demand.setDemandDetails(demandDetailsList);
-        demand.setTaxPeriodFrom(demandrequest.getTaxPeriodFrom());
-        demand.setTaxPeriodTo(demandrequest.getTaxPeriodTo());
         demandList.add(demand);
 
         return demandList;
+    }
+
+    private DemandDetail createDemandDeatils(final String tenantId, final String demandReason,final double amount) {
+        DemandDetail  demandDetail = new DemandDetail();
+        demandDetail.setTaxHeadMasterCode(demandReason);
+        demandDetail.setTaxAmount(new BigDecimal(amount));
+        demandDetail.setTenantId(tenantId);
+        return demandDetail;
+    }
+    
+    private TaxPeriodResponse getTaxPeriod(final WaterConnectionReq waterConnectionRequest)
+    {
+         TaxPeriodResponse taxPeriod=null;
+        final String url = configurationManager.getBillingDemandServiceHostNameTopic() +
+                configurationManager.getTaxperidforfinancialYearTopic();
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        TaxPeriodCriteria taxperiodcriteria=new TaxPeriodCriteria();
+        taxperiodcriteria.setTenantId(waterConnectionRequest.getConnection().getTenantId());
+        taxperiodcriteria.setService(BUSINESSSERVICE);
+        taxPeriod=new RestTemplate().postForObject(url, request, TaxPeriodResponse.class,taxperiodcriteria.getService(),taxperiodcriteria.getTenantId());
+        
+        if(taxPeriod!=null && !taxPeriod.getTaxPeriods().isEmpty()){
+            return taxPeriod;
+        }
+        else {
+        throw new WaterConnectionException("No TaxPeriod Present For Current Financial Year",
+                "No TaxPeriod Present For Current Financial Year", waterConnectionRequest.getRequestInfo());
+        }
     }
 
     public DemandResponse createDemand(final List<Demand> demands, final RequestInfo requestInfo) {

@@ -98,6 +98,7 @@ public class GlCodeMasterRepository {
 				ps.setObject(6, new Date().getTime());
 				ps.setString(7, master.getGlCode());
 				ps.setString(8, master.getTenantId());
+				ps.setString(9, master.getId());
 			}
 			@Override
 			public int getBatchSize() {

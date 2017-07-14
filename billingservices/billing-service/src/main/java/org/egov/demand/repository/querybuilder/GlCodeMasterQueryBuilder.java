@@ -100,5 +100,5 @@ public class GlCodeMasterQueryBuilder {
 				+ " glcode)VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?);";
 	
 	public final String UpdateQuery ="UPDATE egbs_glcodemaster SET taxhead=?, service=?, fromdate=?, "
-				+ "todate=?,lastmodifiedby=?, lastmodifiedtime=?, glcode=? WHERE tenantid=?;";
+				+ "todate=?,lastmodifiedby=?, lastmodifiedtime=?, glcode=? WHERE tenantid=? and id= ?;";
 }

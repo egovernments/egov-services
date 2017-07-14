@@ -97,6 +97,10 @@
 			<artifactId>tracer</artifactId>
 			<version>0.16.0</version>
 		</dependency>
+		<dependency>
+           <groupId>org.flywaydb</groupId>
+           <artifactId>flyway-core</artifactId>
+       </dependency>
 	</dependencies>
 	<repositories>
 		<repository>

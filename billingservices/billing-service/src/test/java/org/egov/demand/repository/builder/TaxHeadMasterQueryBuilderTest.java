@@ -53,9 +53,9 @@ public class TaxHeadMasterQueryBuilderTest {
 			+ " isdebit,isactualdemand, orderno, validfrom, validtill, createdby, createdtime, lastmodifiedby,"
 			+ " lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	
-	private String updateQuery  = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?, name = ?, code=?,"
-			+ " isdebit = ?, isactualdemand = ?, orderno = ?, validfrom = ?, validtill = ?, lastmodifiedby = ?,"
-			+ " lastmodifiedtime = ? WHERE tenantid = ? ";
+	private String updateQuery  = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?,"
+			+ " name = ?, code=?, isdebit = ?, isactualdemand = ?, orderno = ?, validfrom = ?, validtill = ?,"
+			+ " lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and id = ?";
 	
 	@Test
 	public void getQueryTest() {

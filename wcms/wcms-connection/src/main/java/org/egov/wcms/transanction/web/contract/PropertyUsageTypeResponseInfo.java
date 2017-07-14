@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class PropertyUsageTypeResponseInfo {
 
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
     @JsonProperty("propertyCategories")
     private List<UsageTypeResponseInfo> propCategory;

@@ -16,9 +16,9 @@ import lombok.ToString;
 @ToString
 public class SupplyResponseInfo {
 
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("supplytypes")
+    @JsonProperty("supplyTypes")
     private List<CommonResponseInfo> supplytypes;
     
     

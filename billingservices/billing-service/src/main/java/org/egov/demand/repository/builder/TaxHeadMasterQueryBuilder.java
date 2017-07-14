@@ -19,7 +19,7 @@ public class TaxHeadMasterQueryBuilder {
 	
 	public final String Update_Query = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?,"
 			+ " name = ?, code=?, isdebit = ?, isactualdemand = ?, orderno = ?, validfrom = ?, validtill = ?,"
-			+ " lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? ";
+			+ " lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and id = ?";
 
 	public final String Insert_Query = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
 			+ " service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill,"

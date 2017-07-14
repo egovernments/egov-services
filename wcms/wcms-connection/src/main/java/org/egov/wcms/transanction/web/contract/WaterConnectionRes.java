@@ -60,12 +60,12 @@ import lombok.ToString;
 @ToString
 public class WaterConnectionRes {
 
-    @JsonProperty("ResponseInfo")
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("Connection")
+    @JsonProperty("connection")
     private Connection connection;
 
-    @JsonProperty("WorkflowDetails")
+    @JsonProperty("workflowDetails")
     private WorkflowDetails workflowDetails;
 }

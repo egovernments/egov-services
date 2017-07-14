@@ -328,6 +328,9 @@ ReportDefinitions:
     egpgr_complainttype ctype, egeis_assignment ass, eg_user us WHERE cs.positionid
     = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.createddate >= $fromDate and
     cs.createddate <= $toDate GROUP BY us.username;
+  linkedReport:
+    reportName: DrillDownComplaintDetailByFunctionary
+    linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}
 - reportName: AgeingByBoundary
   summary: Ageing report by boundary
   version: 1.0.0

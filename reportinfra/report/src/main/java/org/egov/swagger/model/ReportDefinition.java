@@ -30,8 +30,21 @@ public class ReportDefinition   {
 
   @JsonProperty("query")
   private String query = null;
+  
+  @JsonProperty("linkedReport")
+  private SourceColumnLinkedReport linkedReport = null;
 
-  @JsonProperty("sourceColumns")
+  
+
+public SourceColumnLinkedReport getLinkedReport() {
+	return linkedReport;
+}
+
+public void setLinkedReport(SourceColumnLinkedReport linkedReport) {
+	this.linkedReport = linkedReport;
+}
+
+@JsonProperty("sourceColumns")
   private List<SourceColumn> sourceColumns = new ArrayList<SourceColumn>();
 
   @JsonProperty("searchParams")
@@ -169,13 +182,14 @@ public class ReportDefinition   {
         Objects.equals(this.summary, reportDefinition.summary) &&
         Objects.equals(this.version, reportDefinition.version) &&
         Objects.equals(this.query, reportDefinition.query) &&
+        Objects.equals(this.linkedReport, reportDefinition.linkedReport) &&
         Objects.equals(this.sourceColumns, reportDefinition.sourceColumns) &&
         Objects.equals(this.searchParams, reportDefinition.searchParams);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(reportName, summary, version, query, sourceColumns, searchParams);
+    return Objects.hash(reportName, summary, version, query,linkedReport, sourceColumns, searchParams);
   }
 
   @Override
@@ -187,6 +201,7 @@ public class ReportDefinition   {
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
+    sb.append("    linkedReport: ").append(toIndentedString(linkedReport)).append("\n");
     sb.append("    sourceColumns: ").append(toIndentedString(sourceColumns)).append("\n");
     sb.append("    searchParams: ").append(toIndentedString(searchParams)).append("\n");
     sb.append("}");

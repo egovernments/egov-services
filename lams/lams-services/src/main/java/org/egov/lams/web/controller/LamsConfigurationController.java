@@ -45,19 +45,17 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.lams.web.contract.RequestInfo;
-import org.egov.lams.web.contract.RequestInfoWrapper;
-import org.egov.lams.web.contract.ResponseInfo;
-import org.egov.lams.TestConfiguration;
 import org.egov.lams.service.LamsConfigurationService;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.LamsConfigurationResponse;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.egov.lams.web.errorhandlers.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

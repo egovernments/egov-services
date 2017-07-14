@@ -1,9 +1,9 @@
 package org.egov.lams.web.controller;
 
 import java.util.List;
+
 import javax.validation.Valid;
 
-import org.egov.lams.TestConfiguration;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.service.NoticeService;
@@ -17,7 +17,6 @@ import org.egov.lams.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

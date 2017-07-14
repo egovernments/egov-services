@@ -220,14 +220,14 @@ class receivingModeCreate extends Component {
                              };
                              handleChange(e, "channels", true, "")}}
                           floatingLabelText="Channel*" >
-                              <MenuItem 
-                                value={"WEB"} 
+                              <MenuItem
+                                value={"WEB"}
                                 primaryText="WEB"
                                 insetChildren={true}
                                 checked = {receivingmodeSet.channels && receivingmodeSet.channels.indexOf("WEB") > -1}
                               />
-                              <MenuItem 
-                                value={"MOBILE"} 
+                              <MenuItem
+                                value={"MOBILE"}
                                 primaryText="MOBILE"
                                 insetChildren={true}
                                 checked = {receivingmodeSet.channels && receivingmodeSet.channels.indexOf("MOBILE") > -1}

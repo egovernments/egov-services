@@ -1,6 +1,8 @@
 
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
+
+
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
 import ProfileEdit from './components/contents/settings/profileEdit';
@@ -56,11 +58,13 @@ import ViewDocumentType from './components/contents/wc/master/documentType/viewD
 const base = "";
 
 
+
 const Main = () => {
     return (
-  <main style={{"marginBottom": "50px"}}>
+    <main style={{"marginBottom": "50px"}}>
     <Switch>
       <Route exact path= {base + '/'} component={Login}/>
+
 
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>

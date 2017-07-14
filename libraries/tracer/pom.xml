@@ -5,7 +5,7 @@
 
     <groupId>org.egov.services</groupId>
     <artifactId>tracer</artifactId>
-    <version>0.18.1</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>tracer</name>
@@ -59,6 +59,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.16.1</version>
         </dependency>
 
     </dependencies>

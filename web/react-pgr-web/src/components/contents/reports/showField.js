@@ -105,6 +105,27 @@ export default class ShowField extends Component
             </SelectField>
           </Col>
         );
+
+        case "url":
+          return(
+            <Col xs={12} md={3}>
+              <SelectField fullWidth={true} floatingLabelText={description} value={this.state.value} onChange={(event, key, value) => {
+                this.setState({
+                  value
+                })
+                let e={
+                  target:{
+                    value
+                  }
+                }
+                this.props.handler(e, obj.name, mandatory=="*"?true:false, "")
+              }} maxHeight={200} >
+              {dropDownData.map((dd, index) => (
+                  <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />
+              ))}
+              </SelectField>
+            </Col>
+          );
       // case "multivaluelist":
       //   return(
       //     <Col xs={12} md={3}>

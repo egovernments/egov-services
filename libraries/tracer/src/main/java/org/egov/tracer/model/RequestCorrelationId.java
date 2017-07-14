@@ -14,6 +14,9 @@ public class RequestCorrelationId {
     }
 
     public String get() {
+        if(this.requestMap == null) {
+            return null;
+        }
         final HashMap<String, Object> requestInfo = getRequestInfo();
         if (requestInfo != null) {
             return (String) requestInfo.get(CORRELATION_ID_FIELD_NAME);

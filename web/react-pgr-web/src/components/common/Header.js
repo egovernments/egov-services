@@ -804,7 +804,7 @@ class Header extends Component {
                 iconElementLeft={this.props.token && this.props.currentUser.type != "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
-        <Drawer containerClassName="side-bar" open={this.props.showMenu || false}>
+        <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
           {/*<div id="menu"></div>*/}
           {this.props.actionList.length && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
         </Drawer>

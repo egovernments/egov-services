@@ -38,99 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.common.contract.response.ResponseInfo;
 
-import org.egov.eis.model.enums.TransferType;
-import org.egov.eis.model.enums.TypeOfMovement;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Builder
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class Movement {
+public class CategoryResponse {
 
-    private Long id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @NotNull
-    private Long employeeId;
+    @JsonProperty("Category")
+    private List<Category> category = new ArrayList<Category>();
 
-    @NotNull
-    private TypeOfMovement typeOfMovement;
-
-    @NotNull
-    private Long currentAssignment;
-
-    private TransferType transferType;
-
-    private PromotionBasis promotionBasis;
-
-    private String remarks;
-
-    private TransferReason reason;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date effectiveFrom;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date enquiryPassedDate;
-
-    private Long transferedLocation;
-
-    @NotNull
-    private Long departmentAssigned;
-
-    @NotNull
-    private Long designationAssigned;
-
-    @NotNull
-    private Long positionAssigned;
-
-    private Long fundAssigned;
-
-    private Long functionAssigned;
-
-    private List<String> documents = new ArrayList<>();
-
-    private Boolean employeeAcceptance;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    @NotNull
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
 }

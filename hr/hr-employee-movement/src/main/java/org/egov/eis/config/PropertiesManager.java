@@ -78,8 +78,29 @@ public class PropertiesManager {
     @Value("${egov.services.hr_masters_service.hostname}")
     private String hrMastersServiceHostName;
 
+    @Value("${egov.services.hr_masters_service.hrmasters.basepath}")
+    private String hrMastersServiceHRMastersBasePath;
+
     @Value("${egov.services.hr_masters_service.hrstatus.basepath}")
     private String hrMastersServiceHRStatusBasePath;
+
+    @Value("${egov.services.hr_masters_service.recruitmentmodes.basepath}")
+    private String hrMastersServiceRecruitmentModeBasePath;
+
+    @Value("${egov.services.hr_masters_service.recruitmenttypes.basepath}")
+    private String hrMastersServiceRecruitmentTypeBasePath;
+
+    @Value("${egov.services.hr_masters_service.recruitmentquotas.basepath}")
+    private String hrMastersServiceRecruitmentQuotaBasePath;
+
+    @Value("${egov.services.hr_masters_service.employeetypes.basepath}")
+    private String hrMastersServiceEmployeeTypeBasePath;
+
+    @Value("${egov.services.hr_masters_service.groups.basepath}")
+    private String hrMastersServiceGroupBasePath;
+
+    @Value("${egov.services.hr_masters_service.designations.basepath}")
+    private String hrMastersServiceDesignationBasePath;
 
     @Value("${egov.services.hr_masters_service.hrstatuses.searchpath}")
     private String hrMastersServiceStatusesSearchPath;
@@ -92,7 +113,7 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_employee_service.employees.basepath}")
     private String hrEmployeeServiceEmployeesBasePath;
-    
+
     @Value("${egov.services.hr_employee_service.vacantpositions.basepath}")
     private String hrEmployeeServiceVacantPositionsBasePath;
 
@@ -101,4 +122,43 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_employee_service.employees.updatepath}")
     private String hrEmployeeServiceEmployeesUpdatePath;
+
+    @Value("${egov.services.hr_employee_service.employees.createpath}")
+    private String hrEmployeeServiceEmployeesCreatePath;
+
+    @Value("${egov.services.common_masters_service.hostname}")
+    private String commonMastersServiceHostName;
+
+    @Value("${egov.services.common_masters_service.basepath}")
+    private String commonMastersServiceBasePath;
+
+    @Value("${egov.services.common_masters_service.religions.basepath}")
+    private String commonMastersServiceReligionBasePath;
+
+    @Value("${egov.services.common_masters_service.communities.basepath}")
+    private String commonMastersServiceCommunityBasePath;
+
+    @Value("${egov.services.common_masters_service.categories.basepath}")
+    private String commonMastersServiceCategoryBasePath;
+
+    @Value("${egov.services.common_masters_service.languages.basepath}")
+    private String commonMastersServiceLanguageBasePath;
+
+    @Value("${egov.services.common_masters_service.searchpath}")
+    private String commonMastersServiceSearchPath;
+
+    @Value("${egov.services.egf_masters_service.hostname}")
+    private String egfMastersServiceHostName;
+
+    @Value("${egov.services.egf_masters_service.basepath}")
+    private String egfMastersServiceBasePath;
+
+    @Value("${egov.services.egf_masters_service.banks.basepath}")
+    private String egfMastersServiceBankBasePath;
+
+    @Value("${egov.services.egf_masters_service.bankbranches.basepath}")
+    private String egfMastersServiceBankBranchBasePath;
+
+    @Value("${egov.services.egf_masters_service.searchpath}")
+    private String egfMastersServiceSearchPath;
 }

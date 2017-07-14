@@ -102,7 +102,6 @@ public class MovementRowMapper implements RowMapper<Movement> {
         movement.setPositionAssigned(rs.getLong("m_positionAssigned"));
         movement.setFundAssigned(rs.getLong("m_fundAssigned"));
         movement.setFunctionAssigned(rs.getLong("m_functionAssigned"));
-        movement.setDocuments(rs.getString("m_documents"));
         movement.setEmployeeAcceptance(rs.getBoolean("m_employeeAcceptance"));
         movement.setStatus(rs.getLong("m_status"));
         movement.setStateId(rs.getLong("m_stateId"));

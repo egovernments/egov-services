@@ -38,99 +38,53 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.egov.eis.model.enums.TransferType;
-import org.egov.eis.model.enums.TypeOfMovement;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@Builder
 @Getter
-@NoArgsConstructor
 @Setter
-@ToString
-public class Movement {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class BoundaryType {
 
-    private Long id;
+    @JsonProperty("id")
+    private String id;
 
-    @NotNull
-    private Long employeeId;
+    @JsonProperty("name")
+    private String name;
 
-    @NotNull
-    private TypeOfMovement typeOfMovement;
+    @JsonProperty("code")
+    private String code;
 
-    @NotNull
-    private Long currentAssignment;
+    @JsonProperty("hierarchyType")
+    private HierarchyType hierarchyType;
 
-    private TransferType transferType;
+    @JsonProperty("parent")
+    private BoundaryType parent;
 
-    private PromotionBasis promotionBasis;
+    @JsonProperty("hierarchy")
+    private Long hierarchy;
 
-    private String remarks;
+    @JsonProperty("localName")
+    private String localName;
 
-    private TransferReason reason;
+    @JsonProperty("parentName")
+    private String parentName;
 
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date effectiveFrom;
+    @JsonProperty("childBoundaryTypes")
+    private Set<BoundaryType> childBoundaryTypes;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date enquiryPassedDate;
-
-    private Long transferedLocation;
-
-    @NotNull
-    private Long departmentAssigned;
-
-    @NotNull
-    private Long designationAssigned;
-
-    @NotNull
-    private Long positionAssigned;
-
-    private Long fundAssigned;
-
-    private Long functionAssigned;
-
-    private List<String> documents = new ArrayList<>();
-
-    private Boolean employeeAcceptance;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    @NotNull
+    @JsonProperty("tenantId")
     private String tenantId;
 
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
 }

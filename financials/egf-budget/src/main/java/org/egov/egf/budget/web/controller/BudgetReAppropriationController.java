@@ -91,6 +91,7 @@ public class BudgetReAppropriationController {
 		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 		budgetReAppropriationRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		CommonResponse<BudgetReAppropriationContract> budgetReAppropriationResponse = new CommonResponse<>();
+		budgetReAppropriationResponse.setResponseInfo(getResponseInfo(budgetReAppropriationRequest.getRequestInfo()));
 		List<BudgetReAppropriation> budgetreappropriations = new ArrayList<>();
 		BudgetReAppropriation budgetReAppropriation = null;
 		BudgetReAppropriationContract contract = null;

@@ -1,0 +1,25 @@
+ "data": 
+ 	[
+        {	
+        		"id":"1",
+        		"budgetDetail":
+		   		{
+						"id":"1"
+		   		},
+		   		"additionAmount":10,
+		   		"deductionAmount":10,
+		   		"originalAdditionAmount":10,
+		   		"originalDeductionAmount":10,
+		   		"anticipatoryAmount":10,
+		   		"tenantId":"default"
+		}
+    ],
+    "page":
+    {
+        "totalResults": 1,
+        "totalPages": 1,
+        "pageSize": 500,
+        "currentPage": 0,
+        "offset": 0
+    }
+    

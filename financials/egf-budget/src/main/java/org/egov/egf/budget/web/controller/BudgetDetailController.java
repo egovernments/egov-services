@@ -89,6 +89,7 @@ public class BudgetDetailController {
 		BudgetDetailMapper mapper = new BudgetDetailMapper();
 		budgetDetailRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		CommonResponse<BudgetDetailContract> budgetDetailResponse = new CommonResponse<>();
+		budgetDetailResponse.setResponseInfo(getResponseInfo(budgetDetailRequest.getRequestInfo()));
 		List<BudgetDetail> budgetdetails = new ArrayList<>();
 		BudgetDetail budgetDetail = null;
 		BudgetDetailContract contract = null;

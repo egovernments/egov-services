@@ -110,7 +110,7 @@ public class ReceiptRepository {
 
 	private ReceiptRowMapper receiptRowMapper;
 	
-
+    @Autowired
 	private RestTemplate restTemplate;
 	
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

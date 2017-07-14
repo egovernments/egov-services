@@ -2,10 +2,10 @@ package org.egov.notificationConsumer;
 
 import java.util.Map;
 
-import org.egov.model.EmailMessage;
-import org.egov.model.EmailMessageContext;
-import org.egov.model.EmailRequest;
-import org.egov.model.SMSMessageContext;
+import org.egov.notification.model.EmailMessage;
+import org.egov.notification.model.EmailMessageContext;
+import org.egov.notification.model.EmailRequest;
+import org.egov.notification.model.SMSMessageContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;

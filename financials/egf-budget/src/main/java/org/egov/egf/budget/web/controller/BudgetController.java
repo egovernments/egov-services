@@ -89,6 +89,7 @@ public class BudgetController {
 
 		BudgetMapper mapper = new BudgetMapper();
 		CommonResponse<BudgetContract> budgetResponse = new CommonResponse<>();
+		budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
 		List<Budget> budgets = new ArrayList<>();
 		Budget budget = null;
 		BudgetContract contract = null;

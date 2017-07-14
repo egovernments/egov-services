@@ -18,8 +18,9 @@ public class PtNotificationApplication {
 	@Bean
 	public MustacheEngine getMustacheEngine() {
 		ClassPathTemplateLocator classPathTemplateLocator = new ClassPathTemplateLocator(
-				Integer.valueOf(environment.getProperty("priority")), environment.getProperty("template.folder"),
-				environment.getProperty("template.type"));
+				Integer.valueOf(environment.getProperty("pt-notification.template.priority")),
+				environment.getProperty("pt-notification.template.folder"),
+				environment.getProperty("pt-notification.template.type"));
 		return MustacheEngineBuilder.newBuilder().addTemplateLocator(classPathTemplateLocator).build();
 	}
 

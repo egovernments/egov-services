@@ -98,7 +98,7 @@ class AssessmentDetails extends Component {
     super(props);
     this.state= {
         propertytypes: [],
-        apartments:[],
+        reasonForCreation:[],
         departments:[],
     }
   } 
@@ -107,6 +107,28 @@ class AssessmentDetails extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
+
+    let isTimeLong;
+
+      Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+        console.log(res);
+        currentThis.setState({propertytypes:res.propertyTypes})
+      }).catch((err)=> {
+        currentThis.setState({
+          propertytypes:[]
+        })
+        console.log(err)
+      })
+
+      Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+          console.log(res);
+          currentThis.setState({
+            departments:res.departments
+          })
+        }).catch((err)=> {
+          console.log(err)
+        })
+
 
   }      
 
@@ -248,7 +270,7 @@ class AssessmentDetails extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-                                                  <MenuItem value={1} primaryText="Options"/>
+                                                  {renderOption(this.state.departments)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>

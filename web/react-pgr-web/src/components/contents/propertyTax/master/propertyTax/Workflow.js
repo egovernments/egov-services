@@ -99,7 +99,7 @@ class Workflow extends Component {
     this.state= {
         propertytypes: [],
         apartments:[],
-        departments:[],
+        workflowDepartment:[],
           files:[],
     }
   } 
@@ -109,6 +109,18 @@ class Workflow extends Component {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 
+
+    Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
+      console.log(res);
+      currentThis.setState({workflowDepartment: res.departments})
+    }).catch((err)=> {
+      currentThis.setState({
+        workflowDepartment:[]
+      })
+      console.log(err)
+    })
+
+   
   }  
 
 
@@ -177,7 +189,7 @@ class Workflow extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
-                                                    <MenuItem value={4} primaryText="Options" />
+                                                    {renderOption(this.state.workflowDepartment)}
                                               </SelectField>
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>

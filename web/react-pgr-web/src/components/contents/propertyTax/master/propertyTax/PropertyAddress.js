@@ -100,6 +100,11 @@ class PropertyAddress extends Component {
           locality:[],
            apartments:[],
            zone:[],
+           ward:[],
+           block:[],
+           street:[],
+           revanue:[],
+           election:[]
     }
   } 
 
@@ -118,7 +123,7 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-         Api.commonApiPost('pt-property/property/apartments/_search').then((res)=>{
+         Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({apartments:res.apartments})
         }).catch((err)=> {
@@ -138,6 +143,43 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({ward : res.Boundary})
+        }).catch((err)=> {
+          currentThis.setState({
+            ward : []
+          })
+          console.log(err)
+        })
+
+         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({block : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({street : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVANUE", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({revanue : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ELECTION", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({election : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
 
   }      
 

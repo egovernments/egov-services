@@ -108,7 +108,7 @@ class CreateNewProperty extends Component {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 
-        Api.commonApiPost('pt-property/property/propertytypes/_search').then((res)=>{
+        Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({propertytypes:res.propertyTypes})
         }).catch((err)=> {
@@ -118,7 +118,7 @@ class CreateNewProperty extends Component {
           console.log(err)
         })
 
-        Api.commonApiPost('pt-property/property/apartments/_search').then((res)=>{
+        Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({apartments:res.apartments})
         }).catch((err)=> {
@@ -128,7 +128,7 @@ class CreateNewProperty extends Component {
           console.log(err)
         })
 
-        Api.commonApiPost('pt-property/property/departments/_search').then((res)=>{
+        Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({
             departments:res.departments

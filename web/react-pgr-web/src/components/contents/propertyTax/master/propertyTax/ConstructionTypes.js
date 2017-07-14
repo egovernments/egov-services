@@ -96,9 +96,10 @@ class ConstructionTypes extends Component {
   constructor(props) {
     super(props);
     this.state= {
-        propertytypes: [],
-        apartments:[],
-        departments:[],
+          floortypes:[],
+          rooftypes:[],
+          walltypes:[],
+          woodtypes:[],
     }
   } 
 
@@ -106,6 +107,48 @@ class ConstructionTypes extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
+
+     let isTimeLong;
+
+    Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({floortypes:res.floorTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        floortypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({rooftypes: res.roofTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        rooftypes: []
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({walltypes: res.wallTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        walltypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
+      console.log(res);
+      currentThis.setState({woodtypes: res.woodTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        woodtypes:[]
+      })
+      console.log(err)
+    })
 
   }      
 

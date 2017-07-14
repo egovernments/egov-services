@@ -31,7 +31,9 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false) => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
+
+        console.log('isTimeLong =>', isTimeLong);
         var url = context;
 
         if (!doNotOverride)
@@ -44,6 +46,9 @@ module.exports = {
             }
         }
         requestInfo.authToken = localStorage.getItem("token");
+        if(isTimeLong){
+            requestInfo.ts = new Date().getTime();
+        }
         body["RequestInfo"] = requestInfo;
 
         return instance.post(url, body).then(function(response) {

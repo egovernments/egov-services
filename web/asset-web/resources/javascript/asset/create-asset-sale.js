@@ -79,7 +79,7 @@ class Sale extends React.Component {
             "aadharCardNumber": "",
             "currentValueOfTheAsset": "",
             "saleValue": "",
-            "assetSaleAccountCode": "",
+            "assetSaleAccount": "",
             "auditDetails": null,
             "documents": [],
             "transactionType": ""
@@ -304,7 +304,7 @@ class Sale extends React.Component {
 
     createDisposal(e) {
       e.preventDefault();
-      var tempInfo = Object.assign({}, this.state.disposal);
+      var tempInfo = Object.assign({}, this.state.disposal), _this = this;
       if(tempInfo.disposalDate) {
         var date = tempInfo.disposalDate.split("/");
         tempInfo.disposalDate = new Date(date[2], date[1]-1, date[0]).getTime();
@@ -660,14 +660,14 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <select required value={disposal.assetSaleAccountCode} onChange={(e)=>handleChange(e, "assetSaleAccountCode")}>
+                                <select required value={disposal.assetSaleAccount} onChange={(e)=>handleChange(e, "assetSaleAccount")}>
                                   <option value="">Select Account Code</option>
                                   {renderOptions(assetAccount)}
                                 </select>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                              <label>{disposal.assetSaleAccountCode ? getNameById(assetAccount, disposal.assetSaleAccountCode) : ""}</label>
+                              <label>{disposal.assetSaleAccount ? getNameById(assetAccount, disposal.assetSaleAccount) : ""}</label>
                             </div>
                         </div>
                       </div>

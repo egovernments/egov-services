@@ -51,9 +51,9 @@ public class WorkFlowUtil {
 			String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
-		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.hostname"));
-		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
-		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.startpath"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.egov-common-workflows.hostname"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.egov-common-workflows.basepath"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.egov-common-workflows.startpath"));
 		String url = workFlowStartUrl.toString();
 		url = url.replace("{tenantId}", workflowDetailsRequestInfo.getTenantId());
 		ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetailsRequestInfo,
@@ -85,9 +85,9 @@ public class WorkFlowUtil {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.hostname"));
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.updatepath"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.hostname"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.basepath"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.updatepath"));
 		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();

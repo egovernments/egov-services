@@ -203,8 +203,8 @@ public class WorkflowConsumer {
 		String upicNumber = null;
 		StringBuilder tenantCodeUrl = new StringBuilder();
 		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.hostname"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.base.path"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.search.path"));
+		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.basepath"));
+		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.searchpath"));
 		String url = tenantCodeUrl.toString();
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
@@ -241,8 +241,8 @@ public class WorkflowConsumer {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
 		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.base.path"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.create.path"));
+		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.basepath"));
+		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
 
 		// generating acknowledgement number for all properties
 		String UpicNumber = null;

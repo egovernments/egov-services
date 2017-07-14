@@ -16,8 +16,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
-import DataTable from '../common/Table';
-import Api from '../../api/pTAPIS';
+
+import Api from '../../../../api/api';
 
 import OwnerDetails from './propertyTax/OwnerDetails';
 import CreateNewProperty from './propertyTax/CreateNewProperty';
@@ -138,129 +138,6 @@ class CreateProperty extends Component {
 
 
   componentWillMount() {
-    //call boundary service fetch wards,location,zone data
-    //var dropDownSearch = ['propertytypes','apartments', 'departments', 'floortypes', 'rooftypes', 'walltypes', 'woodtypes', 'structureclasses', 'occupancies'];
-    var currentThis = this;
-
-        Api.commonApiPost('property/propertytypes/_search').then((res)=>{
-         // console.log(res);
-          currentThis.setState({propertytypes:res.propertyTypes})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/apartments/_search').then((res)=>{
-         // console.log(res);
-          currentThis.setState({apartments:res.apartments})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/departments/_search').then((res)=>{
-          // console.log(res);
-          currentThis.setState({departments:res.departments})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/floortypes/_search').then((res)=>{
-        //  console.log(res);
-          currentThis.setState({floortypes:res.floorTypes})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/rooftypes/_search').then((res)=>{
-         // console.log(res);
-          currentThis.setState({rooftypes: res.roofTypes})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/walltypes/_search').then((res)=>{
-          console.log(res);
-          currentThis.setState({walltypes: res.walltypes})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/woodtypes/_search').then((res)=>{
-        //  console.log(res);
-          currentThis.setState({woodtypes: res.woodTypes})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/structureclasses/_search').then((res)=>{
-        //  console.log(res);
-          currentThis.setState({structureclasses: res.structureClasses})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/occupancies/_search').then((res)=>{
-        //  console.log(res);
-          currentThis.setState({occupancies : res.occupancies})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('property/usages/_search').then((res)=>{
-        //  console.log(res);
-          currentThis.setState({usages : res.usageMasters})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVANUE"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({ward : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({locality : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVANUE"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVANUE"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({block : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"REVANUE"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({street : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVANUE", hierarchyTypeName:"REVANUE"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({street : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ELECTION", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
-        //  console.log(res);
-          currentThis.setState({election : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
 
 
   }

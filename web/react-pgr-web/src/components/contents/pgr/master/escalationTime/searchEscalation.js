@@ -203,7 +203,7 @@ class SearchEscalation extends Component {
   }
 
   submitForm = (e) => {
-       let{setLoadingStatus} = this.props;
+       let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
        setLoadingStatus('loading');
       e.preventDefault();
 
@@ -243,6 +243,7 @@ class SearchEscalation extends Component {
             isSearchClicked: true
           })
       }).catch((error)=>{
+		  toggleSnackbarAndSetText(true, error)
 		   current.setState({
             resultList:[],
             isSearchClicked: false
@@ -417,7 +418,10 @@ const mapDispatchToProps = dispatch => ({
 
      setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-    }
+    },
+	  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchEscalation);

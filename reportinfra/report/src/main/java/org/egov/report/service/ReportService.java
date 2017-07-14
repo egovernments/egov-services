@@ -181,6 +181,7 @@ public class ReportService {
 						.collect(Collectors.toList());
 
 				for(ColumnDetail cd : columnDetails) {
+					System.out.println("Getting Null Pointer Exception");
 					if(!defaultValue.equalsIgnoreCase("test")){
 					cd.setDefaultValue(defaultValue.replace("{currentColumnName}", cd.getName()));
 					}

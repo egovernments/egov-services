@@ -14,13 +14,13 @@ public class ActionQueryBuilder {
 		
 		logger.info("ActionQueryBuilder: InsertActionQuery");
 		return "INSERT INTO eg_action(id,name,url,servicecode,queryparams,parentmodule,ordernumber,displayname,enabled,createdby,lastmodifiedby,createddate,lastmodifieddate) values "
-				+ "(nextval('seq_eg_action'),?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "(nextval('seq_eg_action'),:name,:url,:servicecode,:queryparams,:parentmodule,:ordernumber,:displayname,:enabled,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate)";
 	}
 	
 
 	public static String updateActionQuery(){
 		logger.info("ActionQueryBuilder : updateActionQuery");
-		return "update eg_action set url=?,servicecode=?, queryparams=?, parentmodule=?,ordernumber=?,displayname=?,enabled=?,lastmodifiedby=?,lastmodifieddate=? where name=?";
+		return "update eg_action set url=:url,servicecode=:servicecode, queryparams=:queryparams, parentmodule=:parentmodule,ordernumber=:ordernumber,displayname=:displayname,enabled=:enabled,lastmodifiedby=:lastmodifiedby,lastmodifieddate=:lastmodifieddate where name=:name";
 	}
 	
 	
@@ -28,13 +28,13 @@ public class ActionQueryBuilder {
 	public static String checkActionNameExit(){
 		
 		logger.info("ActionQueryBuilder : checkActionNameExit");
-		return "select id from eg_action where name=?";
+		return "select id from eg_action where name= :name";
 	}
 	
 	public static String checkCombinationOfUrlAndqueryparamsExist(){
 		
 		logger.info("ActionQueryBuilder: checkCombinationOfUrlAndqueryparamsExist");
-		return "select id from eg_action where url=? and queryparams=?";
+		return "select id from eg_action where url=:url and queryparams=:queryparams";
 		
 	}
 }

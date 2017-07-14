@@ -74,10 +74,10 @@ class ViewCategoryType extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms-masters/categorytype/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/wcms/masters/categorytype/_search",{id:this.props.match.params.id},{}).then(function(response){
                 console.log(response);
-                current.setState({data:response.CategoryTypes})
-                setForm(response.CategoryTypes[0])
+                current.setState({data:response.categoryTypes})
+                setForm(response.categoryTypes[0])
             }).catch((error)=>{
                 console.log(error);
             })

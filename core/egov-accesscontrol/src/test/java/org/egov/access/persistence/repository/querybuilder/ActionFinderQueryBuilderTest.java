@@ -1,15 +1,16 @@
 package org.egov.access.persistence.repository.querybuilder;
 
-import org.egov.access.domain.criteria.ActionSearchCriteria;
-import org.egov.access.domain.criteria.RoleSearchCriteria;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
+import org.egov.access.domain.criteria.ActionSearchCriteria;
+import org.junit.Test;
 
 public class ActionFinderQueryBuilderTest {
+	
+	private ActionQueryBuilder actionQueryBuilder;
 
     @Test
     public void testQueryToFindRoles(){
@@ -65,6 +66,17 @@ public class ActionFinderQueryBuilderTest {
                 + "ra.actionid AS ra_action, ra.rolecode AS ra_rolecode FROM eg_action AS a JOIN eg_roleaction AS ra ON a.id = ra.actionid" +
                 " ORDER BY a.name";
         assertEquals(expectedQuery, builder.build());
+    }
+    
+    
+    @Test
+    public void testQueryCreateAction(){
+    	
+    	actionQueryBuilder.insertActionQuery();
+    	
+    	String expectedQuery = "";
+    	
+    	
     }
 
 }

@@ -170,10 +170,10 @@ class searchCategoryType extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms-masters/categorytype/_search/", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms/masters/categorytype/_search/", searchSet).then(function(response) {
       flag = 1;
       self.setState({
-        resultList: response.CategoryTypes,
+        resultList: response.categoryTypes,
         isSearchClicked: true
       });
 

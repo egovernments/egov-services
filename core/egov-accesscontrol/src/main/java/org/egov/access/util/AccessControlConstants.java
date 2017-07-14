@@ -3,6 +3,8 @@ package org.egov.access.util;
 public class AccessControlConstants {
 
 	public static final String INVALID_ACTION_REQUEST_MESSAGE = "Action is invalid";
+	public static final String INVALID_ROLE_REQUEST_MESSAGE = "Role is invalid";
+	public static final String INVALID_ROLE_ACTION_REQUEST_MESSAGE = "Role-Action is invalid";
 	
 	
 	public static final String TENANTID_MANDATORY_CODE = "accesscontrol.0001";
@@ -44,6 +46,20 @@ public class AccessControlConstants {
 	public static final String ROLE_NAME_DOES_NOT_EXIT_ERROR_MESSAGE = "Role Name Does n't exist.";
 	
 	public static final String ROLE_CODE_MANDATORY_CODE = "accesscontrol.0010";
-	public static final String ROLE_CODE_MANADATORY_FIELD_NAME = "tenantId";
-	public static final String ROLE_CODE_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
+	public static final String ROLE_CODE_MANADATORY_FIELD_NAME = "code";
+	public static final String ROLE_CODE_MANADATORY_ERROR_MESSAGE = "Atleast One Role Code is required";
+	
+	public static final String ACTIONS_NAME_MANDATORY_CODE = "accesscontrol.0011";
+	public static final String ACTIONS_NAME_MANDATORY_FIELD_NAME = "action";
+	public static final String ACTIONS_NAME_MANDATORY_ERROR_MESSAGE = "Atleast One Action is Required ";
+	
+	public static final String ROLE_LENGHTH_MANDATORY_CODE = "accesscontrol.0012";
+	public static final String ROLE_LENGTH_MANADATORY_FIELD_NAME = "role";
+	public static final String ROLE_LENGTH_MANADATORY_ERROR_MESSAGE = "Atleast One Role is Required";
+	
+	public static final String ROLE_MANDATORY_CODE = "accesscontrol.0013";
+	public static final String ROLE_MANADATORY_FIELD_NAME = "role";
+	public static final String ROLE_MANADATORY_ERROR_MESSAGE = "Role is Required";
+	
+	
 }

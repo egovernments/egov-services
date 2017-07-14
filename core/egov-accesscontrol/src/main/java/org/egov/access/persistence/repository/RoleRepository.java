@@ -1,9 +1,10 @@
 package org.egov.access.persistence.repository;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.access.domain.model.Role;
 import org.egov.access.persistence.repository.querybuilder.RoleQueryBuilder;
@@ -11,9 +12,9 @@ import org.egov.access.web.contract.role.RoleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,7 +23,7 @@ public class RoleRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(RoleRepository.class);
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public List<Role> createRole(final RoleRequest roleRequest) {
 
@@ -31,27 +32,17 @@ public class RoleRepository {
 
 		List<Role> roles = roleRequest.getRoles();
 
-		jdbcTemplate.batchUpdate(roleInsert, new BatchPreparedStatementSetter() {
+		List<Map<String, Object>> batchValues = new ArrayList<>(roles.size());
+		for (Role role : roles) {
+			batchValues.add(new MapSqlParameterSource("name", role.getName()).addValue("code", role.getCode())
+					.addValue("description", role.getDescription())
+					.addValue("createdby", Long.valueOf(roleRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("createddate", new Date(new java.util.Date().getTime()))
+					.addValue("lastmodifiedby", Long.valueOf(roleRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).getValues());
+		}
 
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				Role role = roles.get(i);
-
-				ps.setString(1, role.getName());
-				ps.setString(2, role.getCode());
-				ps.setString(3, role.getDescription());
-				ps.setLong(4, roleRequest.getRequestInfo().getUserInfo().getId());
-				ps.setDate(5, new Date(new java.util.Date().getTime()));
-				ps.setLong(6, roleRequest.getRequestInfo().getUserInfo().getId());
-				ps.setDate(7, new Date(new java.util.Date().getTime()));
-
-			}
-
-			@Override
-			public int getBatchSize() {
-				return roles.size();
-			}
-		});
+		namedParameterJdbcTemplate.batchUpdate(roleInsert, batchValues.toArray(new Map[roles.size()]));
 
 		return roles;
 
@@ -63,45 +54,36 @@ public class RoleRepository {
 		final String roleUpdate = RoleQueryBuilder.updateRoleQuery();
 
 		List<Role> roles = roleRequest.getRoles();
-		jdbcTemplate.batchUpdate(roleUpdate, new BatchPreparedStatementSetter() {
 
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				Role role = roles.get(i);
+		List<Map<String, Object>> batchValues = new ArrayList<>(roles.size());
 
-				ps.setString(1, role.getCode());
-				ps.setString(2, role.getDescription());
-				ps.setLong(3, roleRequest.getRequestInfo().getUserInfo().getId());
-				ps.setDate(4, new Date(new java.util.Date().getTime()));
-				ps.setString(5, role.getName());
-			}
+		for (Role role : roles) {
+			batchValues.add(new MapSqlParameterSource("name", role.getName()).addValue("code", role.getCode())
+					.addValue("description", role.getDescription())
+					.addValue("lastmodifiedby", Long.valueOf(roleRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).getValues());
+		}
 
-			@Override
-			public int getBatchSize() {
-				return roles.size();
-			}
-		});
+		namedParameterJdbcTemplate.batchUpdate(roleUpdate, batchValues.toArray(new Map[roles.size()]));
 
 		return roles;
 	}
-	
-	public boolean checkRoleNameDuplicationValidationErrors(String roleName){
-		
+
+	public boolean checkRoleNameDuplicationValidationErrors(String roleName) {
+
 		final String query = RoleQueryBuilder.checkRoleNameDuplicationValidationErrors();
-       
-		String cnt =null;
-		try{
-		 cnt = jdbcTemplate.queryForObject(query, String.class, roleName);
-		}catch(EmptyResultDataAccessException ex){
-			ex.hashCode();
-		}
-		
-		if(cnt!=null && cnt!=""){
-			
+
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
+
+		parametersMap.put("name", roleName);
+		SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(query, parametersMap);
+
+		if (sqlRowSet.next() && sqlRowSet.getString("code") != null && sqlRowSet.getString("code") != "") {
+
 			return true;
 		}
-		
-		 return false;
+
+		return false;
 	}
 
 }

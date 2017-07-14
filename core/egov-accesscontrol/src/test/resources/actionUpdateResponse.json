@@ -1,31 +1,23 @@
-{
-  "responseInfo": {
-    "apiId" : null,
-    "ver" : null,
-    "msgId" : null
-  },
-  "actions": [
+[
     {
-      "id": 1,
-      "name": "Create Complaint",
-      "url": "/createcomplaint",
-      "displayName" : "Create Complaint",
-      "enabled": true,
-      "orderNumber": 1,
-      "createdBy": 1,
-      "lastModifiedBy": 1,
-      "tenantId" : "default"
-    },
-    {
-      "id": 2,
-      "name": "Update Complaint",
-      "url": "/updatecomplaint",
-      "displayName" : "Update Complaint",
-      "enabled": true,
-      "orderNumber": 2,
-      "createdBy": 1,
-      "lastModifiedBy": 1,
-      "tenantId" : "default"
+        "responseInfo": null,
+        "error": {
+            "code": 400,
+            "message": "Action is invalid",
+            "description": null,
+            "errorFields": [
+                {
+                    "code": "accesscontrol.0005",
+                    "message": "Action Name Does Not Exit in 1 Object",
+                    "field": "name"
+                },
+                {
+                    "code": "accesscontrol.0005",
+                    "message": "Action Name Does Not Exit in 2 Object",
+                    "field": "name"
+                }
+            ],
+            "fields": null
+        }
     }
-  ]
-}
+]

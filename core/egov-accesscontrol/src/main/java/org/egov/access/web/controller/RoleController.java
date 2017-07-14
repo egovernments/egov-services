@@ -38,9 +38,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoleController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
-	
+
 	private static final String[] taskAction = { "create", "update" };
-	
+
 	private RoleService roleService;
 
 	@Autowired
@@ -53,19 +53,18 @@ public class RoleController {
 	@PostMapping(value = "_search")
 	public RoleResponse getRoles(@RequestParam(value = "code", required = false) String code,
 			@RequestBody final RoleRequest roleRequest) {
-		
+
 		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(new ArrayList<String>()).build();
 
-		if(code!=null && !code.isEmpty()){
-			
-			 roleSearchCriteria = RoleSearchCriteria.builder()
-						.codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).build();
+		if (code != null && !code.isEmpty()) {
+
+			roleSearchCriteria = RoleSearchCriteria.builder()
+					.codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).build();
 		}
 
 		List<Role> roles = roleService.getRoles(roleSearchCriteria);
 		return getSuccessResponse(roles);
-		
-		
+
 	}
 
 	private RoleResponse getSuccessResponse(final List<Role> roles) {
@@ -84,7 +83,7 @@ public class RoleController {
 
 		logger.info("Create Role Type Request::" + roleRequest);
 
-		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest,taskAction[0]);
+		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest, taskAction[0]);
 
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -104,7 +103,7 @@ public class RoleController {
 
 		logger.info("Update Role Request::" + roleRequest);
 
-		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest,taskAction[1]);
+		final List<ErrorResponse> errorResponses = validatRoleRequest(roleRequest, taskAction[1]);
 
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -135,31 +134,37 @@ public class RoleController {
 		return errRes;
 	}
 
-	private List<ErrorResponse> validatRoleRequest(final RoleRequest roleRequest,String action) {
+	private List<ErrorResponse> validatRoleRequest(final RoleRequest roleRequest, String action) {
 
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(roleRequest,action);
+		final Error error = getError(roleRequest, action);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final RoleRequest roleRequest,String action) {
-		final List<ErrorField> errorFields = getErrorFields(roleRequest,action);
+	private Error getError(final RoleRequest roleRequest, String action) {
+		final List<ErrorField> errorFields = getErrorFields(roleRequest, action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(AccessControlConstants.INVALID_ACTION_REQUEST_MESSAGE).errorFields(errorFields).build();
+				.message(AccessControlConstants.INVALID_ROLE_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final RoleRequest roleRequest,String action) {
+	private List<ErrorField> getErrorFields(final RoleRequest roleRequest, String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addRoleameValidationErrors(roleRequest, errorFields);
-		if(action.equals(taskAction[0])){
-		checkRoleNameExistValidationErrors(roleRequest, errorFields);
-		} else if(action.equals(taskAction[1])){
-			
-			checkRoleNameDoesNotExitValidationErrors(roleRequest, errorFields);
+
+		addRolesLengthValidationErrors(roleRequest,errorFields);
+		if (roleRequest.getRoles() != null && roleRequest.getRoles().size() > 0) {
+
+			addRoleameValidationErrors(roleRequest, errorFields);
+			if (action.equals(taskAction[0])) {
+				checkRoleNameExistValidationErrors(roleRequest, errorFields);
+			} else if (action.equals(taskAction[1])) {
+
+				checkRoleNameDoesNotExitValidationErrors(roleRequest, errorFields);
+			}
+
 		}
 
 		return errorFields;
@@ -170,7 +175,8 @@ public class RoleController {
 		for (int i = 0; i < roleRequest.getRoles().size(); i++) {
 			if (roleRequest.getRoles().get(i).getName() == null || roleRequest.getRoles().get(i).getName().isEmpty()) {
 				final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_NAME_MANDATORY_CODE)
-						.message(AccessControlConstants.ROLE_NAME_MANADATORY_ERROR_MESSAGE+" in "+(i+1)+" Object")
+						.message(AccessControlConstants.ROLE_NAME_MANADATORY_ERROR_MESSAGE + " in " + (i + 1)
+								+ " Object")
 						.field(AccessControlConstants.ROLE_NAME_MANADATORY_FIELD_NAME).build();
 				errorFields.add(errorField);
 			}
@@ -181,26 +187,41 @@ public class RoleController {
 
 		for (int i = 0; i < roleRequest.getRoles().size(); i++) {
 			if (roleService.checkRoleNameDuplicationValidationErrors(roleRequest.getRoles().get(i).getName())) {
-				final ErrorField errorField = ErrorField.builder()
-						.code(AccessControlConstants.ROLE_NAME_DUPLICATE_CODE)
-						.message(AccessControlConstants.ROLE_NAME_DUPLICATE_ERROR_MESSAGE+" in "+(i+1)+" Object")
+				final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_NAME_DUPLICATE_CODE)
+						.message(
+								AccessControlConstants.ROLE_NAME_DUPLICATE_ERROR_MESSAGE + " in " + (i + 1) + " Object")
 						.field(AccessControlConstants.ROLE_NAME_DUPLICATEFIELD_NAME).build();
 				errorFields.add(errorField);
 			}
 		}
 	}
-	
-	private void checkRoleNameDoesNotExitValidationErrors(final RoleRequest roleRequest, final List<ErrorField> errorFields) {
+
+	private void checkRoleNameDoesNotExitValidationErrors(final RoleRequest roleRequest,
+			final List<ErrorField> errorFields) {
 
 		for (int i = 0; i < roleRequest.getRoles().size(); i++) {
 			if (!roleService.checkRoleNameDuplicationValidationErrors(roleRequest.getRoles().get(i).getName())) {
 				final ErrorField errorField = ErrorField.builder()
 						.code(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_CODE)
-						.message(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_ERROR_MESSAGE+" in "+(i+1)+" Object")
+						.message(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_ERROR_MESSAGE + " in " + (i + 1)
+								+ " Object")
 						.field(AccessControlConstants.ROLE_NAME_DOES_NOT_EXIT_FIELD_NAME).build();
 				errorFields.add(errorField);
 			}
 		}
+	}
+	
+	private void addRolesLengthValidationErrors(final RoleRequest roleRequest,
+			final List<ErrorField> errorFields) {
+
+		if (!(roleRequest.getRoles() != null && roleRequest.getRoles().size() > 0)) {
+
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_LENGHTH_MANDATORY_CODE)
+					.message(AccessControlConstants.ROLE_LENGTH_MANADATORY_FIELD_NAME)
+					.field(AccessControlConstants.ROLE_LENGTH_MANADATORY_ERROR_MESSAGE).build();
+			errorFields.add(errorField);
+		}
+
 	}
 
 }

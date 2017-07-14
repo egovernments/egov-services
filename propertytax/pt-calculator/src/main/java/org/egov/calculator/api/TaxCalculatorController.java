@@ -22,7 +22,7 @@ public class TaxCalculatorController {
     @Autowired
     TaxCalculatorService taxCalculatorService;
 
-    @RequestMapping(path = "_calculate", method = RequestMethod.POST)
+    @RequestMapping(path = "/_calculate", method = RequestMethod.POST)
     public CalculationResponse calculatePropertyTax(
             @RequestBody CalculationRequest calculationRequest)
             throws Exception {

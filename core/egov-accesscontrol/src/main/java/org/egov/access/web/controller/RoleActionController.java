@@ -84,7 +84,7 @@ public class RoleActionController {
 	private Error getError(final RoleActionsRequest roleActionRequest) {
 		final List<ErrorField> errorFields = getErrorFields(roleActionRequest);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(AccessControlConstants.INVALID_ACTION_REQUEST_MESSAGE).errorFields(errorFields).build();
+				.message(AccessControlConstants.INVALID_ROLE_ACTION_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
 	private ErrorResponse populateErrors(final BindingResult errors) {
@@ -103,17 +103,19 @@ public class RoleActionController {
 	private List<ErrorField> getErrorFields(final RoleActionsRequest roleActionRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addTeanantIdValidationErrors(roleActionRequest, errorFields);
-		addRoleCodeAndNameValidationErrors(roleActionRequest,errorFields);
+		addRoleCodeAndNameValidationErrors(roleActionRequest, errorFields);
+		addActionsLengthValidationErrors(roleActionRequest, errorFields);
+		addActionNamesValidationErrors(roleActionRequest, errorFields);
+		addRolesLengthValidationErrors(roleActionRequest,errorFields);
 		return errorFields;
 	}
 
 	private void addTeanantIdValidationErrors(final RoleActionsRequest roleActionRequest,
 			final List<ErrorField> errorFields) {
 
-		if (roleActionRequest.getTenantId() == null
-				|| roleActionRequest.getTenantId().isEmpty()) {
+		if (roleActionRequest.getTenantId() == null || roleActionRequest.getTenantId().isEmpty()) {
 			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.TENANTID_MANDATORY_CODE)
-					.message(AccessControlConstants.TENANTID_MANADATORY_ERROR_MESSAGE )
+					.message(AccessControlConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
 					.field(AccessControlConstants.TENANTID_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
@@ -122,15 +124,52 @@ public class RoleActionController {
 	private void addRoleCodeAndNameValidationErrors(final RoleActionsRequest roleActionRequest,
 			final List<ErrorField> errorFields) {
 
-		if (roleActionRequest.getRole().getCode() == null 
-				|| roleActionRequest.getRole().getCode().isEmpty()) {
+		if (!(roleActionRequest.getRole()!=null && roleActionRequest.getRole().getCode() != null && roleActionRequest.getRole().getCode() !="") ) {
 			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_CODE_MANDATORY_CODE)
-					.message(AccessControlConstants.ROLE_CODE_MANADATORY_ERROR_MESSAGE )
+					.message(AccessControlConstants.ROLE_CODE_MANADATORY_ERROR_MESSAGE)
 					.field(AccessControlConstants.ROLE_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 	}
+
+	private void addActionsLengthValidationErrors(final RoleActionsRequest roleActionRequest,
+			final List<ErrorField> errorFields) {
+
+		if (!(roleActionRequest.getActions() != null && roleActionRequest.getActions().size() > 0)) {
+
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ACTIONS_NAME_MANDATORY_CODE)
+					.message(AccessControlConstants.ACTIONS_NAME_MANDATORY_ERROR_MESSAGE)
+					.field(AccessControlConstants.ACTIONS_NAME_MANDATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+
+	}
 	
+	private void addRolesLengthValidationErrors(final RoleActionsRequest roleActionRequest,
+			final List<ErrorField> errorFields) {
+
+		if (!(roleActionRequest.getRole() != null)) {
+
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_MANDATORY_CODE)
+					.message(AccessControlConstants.ROLE_MANADATORY_ERROR_MESSAGE)
+					.field(AccessControlConstants.ROLE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
 
 	}
 
+	private void addActionNamesValidationErrors(final RoleActionsRequest roleActionRequest,
+			final List<ErrorField> errorFields) {
+
+		if (roleActionRequest.getActions() != null && roleActionRequest.getActions().size() > 0
+				&& !roleActionService.checkActionNamesAreExistOrNot(roleActionRequest)) {
+
+			final ErrorField errorField = ErrorField.builder()
+					.code(AccessControlConstants.ACTION_NAME_DOESNOT_EXIT_CODE)
+					.message(AccessControlConstants.ACTION_NAME_DOESNOT_EXIT_ERROR_MESSAGE)
+					.field(AccessControlConstants.ACTION_NAME_DOESNOT_EXIT_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+	}
+
+}

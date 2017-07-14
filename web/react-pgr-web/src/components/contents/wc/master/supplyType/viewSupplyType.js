@@ -74,7 +74,7 @@ class ViewSupplyType extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms-masters/supplytype/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/wcms/masters/supplytype/_search",{id:this.props.match.params.id},{}).then(function(response){
                 console.log(response);
                 current.setState({data:response.supplytypes})
                 setForm(response.supplytypes[0])

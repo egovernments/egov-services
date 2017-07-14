@@ -55,6 +55,10 @@ import DocumentTypeCreate from './components/contents/wc/master/documentType/doc
 import ViewEditDocumentType from './components/contents/wc/master/documentType/viewEditDocumentType';
 import ViewDocumentType from './components/contents/wc/master/documentType/viewDocumentType';
 
+import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/documentTypeApplicationType/documentTypeApplicationTypeCreate';
+import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
+import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
+
 
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
@@ -157,6 +161,12 @@ const Main = () => {
         <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
+
+        <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
+       <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>
+       <Route exact path={base+'/wc/documentTypeApplicationType/view'} component={ViewEditDocumentTypeApplicationType}/>
+       <Route exact path={base+'/wc/documentTypeApplicationType/edit'} component={ViewEditDocumentTypeApplicationType}/>
+       <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>
 
 
             <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>

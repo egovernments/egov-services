@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Import(TestConfiguration.class)
 public class LamsMasterController {
 
 	@Autowired

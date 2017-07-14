@@ -70,7 +70,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/lamsconfigurations")
-@Import(TestConfiguration.class)
 public class LamsConfigurationController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LamsConfigurationController.class);

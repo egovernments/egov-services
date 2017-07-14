@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("agreements/document")
-@Import(TestConfiguration.class)
 public class DocumentTypeController {
 
 	@Autowired

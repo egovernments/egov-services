@@ -170,7 +170,7 @@ class searchWaterSourceType extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms/masters/sourcetype/_search", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms/masters/sourcetype/_search", searchSet,{},false,true).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.waterSourceType,

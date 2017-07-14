@@ -74,7 +74,7 @@ class ViewDocumentType extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms/masters/documenttype/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/wcms/masters/documenttype/_search",{id:this.props.match.params.id},{},false,true).then(function(response){
                 console.log(response);
                 current.setState({data:response.documentTypes})
                 setForm(response.documentTypes[0])

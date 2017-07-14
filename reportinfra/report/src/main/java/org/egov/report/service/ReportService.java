@@ -167,7 +167,7 @@ public class ReportService {
 				SourceColumnLinkedReport linkedReport = reportDefinition.getLinkedReport();
 				System.out.println("Linked Report Pattern is: "+linkedReport);
 				String pattern = null;
-				String defaultValue = null;
+				String defaultValue = "";
 				if(linkedReport != null){
 					pattern = linkedReport.getLinkedColumn();
 					if(pattern != null){
@@ -181,7 +181,7 @@ public class ReportService {
 						.collect(Collectors.toList());
 
 				for(ColumnDetail cd : columnDetails) {
-					if(defaultValue != null){
+					if(defaultValue != ""){
 					cd.setDefaultValue(defaultValue.replace("{currentColumnName}", cd.getName()));
 					}
 				}

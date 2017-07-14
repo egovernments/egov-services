@@ -20,8 +20,8 @@ basePath: '/connections/v1'
 paths:
   /_create:
     post:
-      summary: Creates new water connection
-      description: To create new water connection is based upon various master data configured for your ULB.
+      summary: Creates new water connection and creates entry for legacy connection details.
+      description: To create new water connection is based upon various master data configured for your ULB. and Legacy records and  legacyConsumerNumber is required.
       tags:
         - Water Connection
       parameters:
@@ -33,7 +33,7 @@ paths:
             $ref: '#/definitions/WaterConnectionReq'
       responses:
         '201':
-          description: New water connection request acknowledged sucessfully
+          description: New water connection request acknowledged sucessfully or Legacy Record Created SucessFully.
           schema:
             $ref: "#/definitions/WaterConnectionRes"
         '400':
@@ -102,28 +102,6 @@ paths:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
             
-  /legacy/_create:
-      post:
-        summary: creates entry for legacy connection details
-        description: allows legacy connection details.
-        tags:
-          - Legacy Connection
-        parameters:
-          - name: LegacyConnectionType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/LegacyConnectionTypeReq'
-        responses:
-          '201':
-            description: Request sucessfully
-            schema:
-              $ref: "#/definitions/LegacyConnectionTypeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 definitions:
   WorkOrder:
     type: object
@@ -331,18 +309,6 @@ definitions:
         type: string
         description: Zone or Word of the Applicant.
 
-  LegacyConnectionTypeReq:
-      type: object
-      properties:
-        requestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        connection:
-          $ref: '#/definitions/Connection'
-        
-      required:
-        - requestInfo
-        - connection
-       
   Document:
     type: object
     description: documents required under respective water connection operations.
@@ -651,14 +617,6 @@ definitions:
         maximum: 500
         items:
          $ref: '#/definitions/Connection'
-         
-  LegacyConnectionTypeRes:
-      type: object
-      properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        connection:
-          $ref: '#/definitions/Connection'
          
 parameters:
   updateCode:

@@ -241,7 +241,7 @@ public class NewWaterConnectionValidator {
                         .build();
                 errorFields.add(errorField);
             }
-
+        if(waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)){
         final DonationResponseInfo donationresInfo = restConnectionService.validateDonationAmount(waterConnectionRequest);
         if (donationresInfo == null) {
             final ErrorField errorField = ErrorField.builder()
@@ -250,6 +250,7 @@ public class NewWaterConnectionValidator {
                     .field(WcmsTranasanctionConstants.DONATION_INVALID_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
+        }
         }
 
         return errorFields;

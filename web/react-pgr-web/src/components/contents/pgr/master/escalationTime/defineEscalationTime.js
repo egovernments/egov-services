@@ -204,7 +204,8 @@ class DefineEscalationTime extends Component {
                 resultList:[],
                 isSearchClicked: false
               })
-        toggleSnackbarAndSetText(true, error);
+			   setLoadingStatus('hide');
+        toggleSnackbarAndSetText(true, error.message);
       })
 
   }
@@ -252,11 +253,13 @@ class DefineEscalationTime extends Component {
             })
           }
       }).catch((error)=>{
-            toggleSnackbarAndSetText(true, error);
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, error.message);
       })
 
     }).catch((error)=>{
-         toggleSnackbarAndSetText(true, error);
+        setLoadingStatus('hide');
+        toggleSnackbarAndSetText(true, error.message);
     })
 
   }
@@ -301,12 +304,14 @@ class DefineEscalationTime extends Component {
 				 noData: false,
               })
           } else {
+			  
             current.setState({
               noData: true,
             })
           }
       }).catch((error)=>{
-            toggleSnackbarAndSetText(true, error);
+            	   setLoadingStatus('hide');
+        toggleSnackbarAndSetText(true, error.message);
       })
 
 
@@ -314,7 +319,8 @@ class DefineEscalationTime extends Component {
           prevState.editIndex=-1
         })
     }).catch((error)=>{
-         toggleSnackbarAndSetText(true, error);
+         	   setLoadingStatus('hide');
+        toggleSnackbarAndSetText(true, error.message);
     })
 
   }

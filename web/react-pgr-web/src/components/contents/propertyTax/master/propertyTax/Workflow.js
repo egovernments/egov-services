@@ -119,7 +119,7 @@ class Workflow extends Component {
       console.log(err)
     })
 
-     Api.commonApiPost( '/egov-common-workflows/designations/_search').then((res)=>{
+     Api.commonApiPost( '/egov-common-workflows/designations/_search?businessKey="Create Property"').then((res)=>{
       console.log(res);
       currentThis.setState({designation: res.designation})
     }).catch((err)=> {

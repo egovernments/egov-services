@@ -228,14 +228,16 @@ class BulkEscalationGeneration extends Component {
                       })
                     }
                 }).catch((error)=>{
-					 toggleSnackbarAndSetText(true, error);
+					 setLoadingStatus('hide');
+					toggleSnackbarAndSetText(true, error.message);
                 })
 
               current.setState((prevState)=>{
                   prevState.editIndex=-1
                 })
     }).catch((error)=>{
-		toggleSnackbarAndSetText(true, error);
+		setLoadingStatus('hide');
+		toggleSnackbarAndSetText(true, error.message);
     })
   }
 
@@ -261,7 +263,8 @@ class BulkEscalationGeneration extends Component {
             isSearchClicked: true
           }); 
         }, function(err) {
-            toggleSnackbarAndSetText(true, err)
+            setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message)
         }); 
   }
 

@@ -186,7 +186,7 @@ class ViewEscalation extends Component {
 
   submitForm = (e) => {
 
-      let{setLoadingStatus} = this.props;
+      let{setLoadingStatus, toggleSnackbarAndSetText} = this.props;
       setLoadingStatus('loading');
     
       e.preventDefault();
@@ -209,7 +209,8 @@ class ViewEscalation extends Component {
 
       
         }, function(err) {
-            console.log(err);
+			setLoadingStatus('hide');
+            toggleSnackbarAndSetText(true, err.message)
         });
    
   }
@@ -381,7 +382,11 @@ const mapDispatchToProps = dispatch => ({
 
    setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-    }
+    },
+	
+    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+    },
 
 })
 

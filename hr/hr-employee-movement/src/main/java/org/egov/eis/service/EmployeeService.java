@@ -40,15 +40,46 @@
 
 package org.egov.eis.service;
 
+import java.util.List;
+
 import org.egov.eis.service.helper.EmployeeSearchURLHelper;
+import org.egov.eis.service.helper.HRStatusSearchURLHelper;
+import org.egov.eis.web.contract.BankBranchContract;
+import org.egov.eis.web.contract.BankBranchContractResponse;
+import org.egov.eis.web.contract.BankContract;
+import org.egov.eis.web.contract.BankContractResponse;
+import org.egov.eis.web.contract.Category;
+import org.egov.eis.web.contract.CategoryResponse;
+import org.egov.eis.web.contract.Community;
+import org.egov.eis.web.contract.CommunityResponse;
+import org.egov.eis.web.contract.Designation;
+import org.egov.eis.web.contract.DesignationResponse;
 import org.egov.eis.web.contract.Employee;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
+import org.egov.eis.web.contract.EmployeeType;
+import org.egov.eis.web.contract.EmployeeTypeResponse;
+import org.egov.eis.web.contract.Group;
+import org.egov.eis.web.contract.GroupResponse;
+import org.egov.eis.web.contract.HRStatus;
+import org.egov.eis.web.contract.HRStatusResponse;
+import org.egov.eis.web.contract.Language;
+import org.egov.eis.web.contract.LanguageResponse;
 import org.egov.eis.web.contract.MovementRequest;
+import org.egov.eis.web.contract.RecruitmentMode;
+import org.egov.eis.web.contract.RecruitmentModeResponse;
+import org.egov.eis.web.contract.RecruitmentQuota;
+import org.egov.eis.web.contract.RecruitmentQuotaResponse;
+import org.egov.eis.web.contract.RecruitmentType;
+import org.egov.eis.web.contract.RecruitmentTypeResponse;
+import org.egov.eis.web.contract.Religion;
+import org.egov.eis.web.contract.ReligionResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -57,6 +88,9 @@ import org.springframework.web.client.RestTemplate;
 public class EmployeeService {
     @Autowired
     private EmployeeSearchURLHelper employeeSearchURLHelper;
+
+    @Autowired
+    private HRStatusSearchURLHelper hrStatusSearchURLHelper;
 
     public Employee getEmployee(final MovementRequest movementRequest) {
         final String url = employeeSearchURLHelper.searchURL(movementRequest.getMovement().get(0).getEmployeeId(),
@@ -90,5 +124,228 @@ public class EmployeeService {
                 EmployeeResponse.class);
 
         return employeeResponse.getEmployee();
+    }
+
+    public Employee createEmployee(final Employee employee, final String tenantId, final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.createURL(tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        final EmployeeRequest employeeRequest = new EmployeeRequest();
+        employeeRequest.setRequestInfo(requestInfo);
+        employeeRequest.setEmployee(employee);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<EmployeeRequest> request = new HttpEntity<>(employeeRequest);
+
+        final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
+                EmployeeResponse.class);
+
+        return employeeResponse.getEmployee();
+    }
+
+    public List<HRStatus> getHRStatuses(final String objectName, final String code, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = hrStatusSearchURLHelper.searchURL(objectName, code, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final HRStatusResponse hrStatusResponse = restTemplate.postForObject(url, request,
+                HRStatusResponse.class);
+
+        return hrStatusResponse.getHrStatus();
+    }
+
+    private HttpEntity<RequestInfoWrapper> setRequestHeaders(final RequestInfo requestInfo) {
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Cookie",
+                "_ga=GA1.2.441293708.1486471903; SESSIONID=b9ee6d73-0f61-494b-bad4-ff6752bea389; JSESSIONID=kpSgYmq1HKqntZtuGnuZWhWbTU_LMLi4L0bsbrrH.ip-10-0-0-100");
+
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper, headers);
+        return request;
+    }
+
+    public List<RecruitmentMode> getRecruitmentModes(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchRecruitmentModeURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final RecruitmentModeResponse recruitmentModeResponse = restTemplate.postForObject(url, request,
+                RecruitmentModeResponse.class);
+
+        return recruitmentModeResponse.getRecruitmentMode();
+    }
+
+    public List<RecruitmentType> getRecruitmentTypes(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchRecruitmentTypeURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final RecruitmentTypeResponse recruitmentTypeResponse = restTemplate.postForObject(url, request,
+                RecruitmentTypeResponse.class);
+
+        return recruitmentTypeResponse.getRecruitmentType();
+    }
+
+    public List<RecruitmentQuota> getRecruitmentQuotas(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchRecruitmentQuotaURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final RecruitmentQuotaResponse recruitmentQuotaResponse = restTemplate.postForObject(url, request,
+                RecruitmentQuotaResponse.class);
+
+        return recruitmentQuotaResponse.getRecruitmentQuota();
+    }
+
+    public List<EmployeeType> getEmployeeTypes(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchEmployeeTypeURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final EmployeeTypeResponse employeeTypeResponse = restTemplate.postForObject(url, request,
+                EmployeeTypeResponse.class);
+
+        return employeeTypeResponse.getEmployeeType();
+    }
+
+    public List<Group> getGroups(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchGroupURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final GroupResponse groupResponse = restTemplate.postForObject(url, request,
+                GroupResponse.class);
+
+        return groupResponse.getGroup();
+    }
+
+    public List<Designation> getDesignations(final String code, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchDesignationURL(code, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final DesignationResponse designationResponse = restTemplate.postForObject(url, request,
+                DesignationResponse.class);
+
+        return designationResponse.getDesignation();
+    }
+
+    public List<Religion> getReligions(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchReligionURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final ReligionResponse religionResponse = restTemplate.postForObject(url, request,
+                ReligionResponse.class);
+
+        return religionResponse.getReligion();
+    }
+
+    public List<Community> getCommunities(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchCommunityURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final CommunityResponse communityResponse = restTemplate.postForObject(url, request,
+                CommunityResponse.class);
+
+        return communityResponse.getCommunity();
+    }
+
+    public List<Category> getCategories(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchCategoryURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final CategoryResponse categoryResponse = restTemplate.postForObject(url, request,
+                CategoryResponse.class);
+
+        return categoryResponse.getCategory();
+    }
+
+    public List<Language> getLanguages(final String name, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchLanguageURL(name, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final LanguageResponse languageResponse = restTemplate.postForObject(url, request,
+                LanguageResponse.class);
+
+        return languageResponse.getLanguage();
+    }
+
+    public List<BankContract> getBanks(final String code, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchBankURL(code, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final BankContractResponse bankContractResponse = restTemplate.postForObject(url, request,
+                BankContractResponse.class);
+
+        return bankContractResponse.getBanks();
+    }
+
+    public List<BankBranchContract> getBankBranches(final String code, final Long id, final String tenantId,
+            final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchBankBranchURL(code, id, tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = setRequestHeaders(requestInfo);
+
+        final BankBranchContractResponse bankBranchContractResponse = restTemplate.postForObject(url, request,
+                BankBranchContractResponse.class);
+
+        return bankBranchContractResponse.getBankBranches();
     }
 }

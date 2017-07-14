@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.eis.broker.MovementProducer;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
 import org.egov.eis.model.enums.TypeOfMovement;
@@ -88,7 +89,7 @@ public class MovementService {
     private MovementRepository movementRepository;
 
     @Autowired
-    private HRStatusService hrStatusService;
+    private EmployeeService employeeService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -98,12 +99,15 @@ public class MovementService {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @Autowired
     private PositionService positionService;
-    
+
     @Autowired
     private ApplicationConstants applicationConstants;
+
+    @Autowired
+    private PropertiesManager propertiesManager;
 
     public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
             final RequestInfo requestInfo) {
@@ -124,10 +128,12 @@ public class MovementService {
         movementRequest.setMovement(successMovementsList);
         for (final Movement movement : movementRequest.getMovement())
             if (isExcelUpload)
-                movement.setStatus(hrStatusService.getHRStatuses("APPROVED", movement.getTenantId(),
+                movement.setStatus(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
+                        MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
                         movementRequest.getRequestInfo()).get(0).getId());
             else
-                movement.setStatus(hrStatusService.getHRStatuses("APPLIED", movement.getTenantId(),
+                movement.setStatus(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
+                        MovementStatus.APPLIED.toString(), null, movement.getTenantId(),
                         movementRequest.getRequestInfo()).get(0).getId());
         String movementRequestJson = null;
         try {
@@ -154,7 +160,8 @@ public class MovementService {
         for (final Movement movement : movementRequest.getMovement()) {
             String errorMsg = "";
             if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
-                    .equals(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
+                    .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
+                            MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
                             movementRequest.getRequestInfo()).get(0).getId()))
                 errorMsg = validateEmployeeForPromotion(movement, movementRequest.getRequestInfo());
             movement.setErrorMsg(errorMsg);
@@ -164,7 +171,7 @@ public class MovementService {
 
     private String validateEmployeeForPromotion(final Movement movement, final RequestInfo requestInfo) {
         String errorMsg = "";
-        List<Long> positions = positionService.getPositions(movement, requestInfo);
+        final List<Long> positions = positionService.getPositions(movement, requestInfo);
         if (positions.contains(movement.getPositionAssigned()))
             errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + " ";
         return errorMsg;
@@ -233,22 +240,31 @@ public class MovementService {
 
     private void movementStatusChange(final Movement movement, final RequestInfo requestInfo) {
         final String workFlowAction = movement.getWorkflowDetails().getAction();
+        final String objectName = propertiesManager.getHrMastersServiceStatusesKey();
         if ("Approve".equalsIgnoreCase(workFlowAction))
             movement
-                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.APPROVED.toString(), movement.getTenantId(),
-                            requestInfo).get(0).getId());
+                    .setStatus(employeeService
+                            .getHRStatuses(objectName, MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
+                                    requestInfo)
+                            .get(0).getId());
         else if ("Reject".equalsIgnoreCase(workFlowAction))
             movement
-                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.REJECTED.toString(), movement.getTenantId(),
-                            requestInfo).get(0).getId());
+                    .setStatus(employeeService
+                            .getHRStatuses(objectName, MovementStatus.REJECTED.toString(), null, movement.getTenantId(),
+                                    requestInfo)
+                            .get(0).getId());
         else if ("Cancel".equalsIgnoreCase(workFlowAction))
             movement
-                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.CANCELLED.toString(), movement.getTenantId(),
-                            requestInfo).get(0).getId());
+                    .setStatus(employeeService
+                            .getHRStatuses(objectName, MovementStatus.CANCELLED.toString(), null, movement.getTenantId(),
+                                    requestInfo)
+                            .get(0).getId());
         else if ("Submit".equalsIgnoreCase(workFlowAction))
             movement
-                    .setStatus(hrStatusService.getHRStatuses(MovementStatus.RESUBMITTED.toString(), movement.getTenantId(),
-                            requestInfo).get(0).getId());
+                    .setStatus(employeeService
+                            .getHRStatuses(objectName, MovementStatus.RESUBMITTED.toString(), null, movement.getTenantId(),
+                                    requestInfo)
+                            .get(0).getId());
     }
 
     public Movement update(final MovementRequest movementRequest) {

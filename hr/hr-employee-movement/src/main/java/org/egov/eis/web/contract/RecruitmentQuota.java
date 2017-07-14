@@ -38,39 +38,36 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.service;
+package org.egov.eis.web.contract;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.egov.eis.service.helper.HRStatusSearchURLHelper;
-import org.egov.eis.web.contract.HRStatus;
-import org.egov.eis.web.contract.HRStatusResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Service
-public class HRStatusService {
-    @Autowired
-    private HRStatusSearchURLHelper hrStatusSearchURLHelper;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class RecruitmentQuota {
 
-    public List<HRStatus> getHRStatuses(final String code, final String tenantId, final RequestInfo requestInfo) {
-        final String url = hrStatusSearchURLHelper.searchURL(code, tenantId);
+    @NotNull
+    private Long id;
 
-        final RestTemplate restTemplate = new RestTemplate();
-        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
-        wrapper.setRequestInfo(requestInfo);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    @Size(min = 3, max = 50)
+    private String name;
 
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+    @Size(max = 250)
+    private String description;
 
-        final HRStatusResponse hrStatusResponse = restTemplate.postForObject(url, request,
-                HRStatusResponse.class);
+    @NotNull
+    private String tenantId;
 
-        return hrStatusResponse.getHrStatus();
-    }
 }

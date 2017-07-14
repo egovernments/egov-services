@@ -38,99 +38,31 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.egov.eis.model.Document;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import org.egov.eis.model.enums.TransferType;
-import org.egov.eis.model.enums.TypeOfMovement;
+@Component
+public class MovementDocumentsTableRowMapper implements RowMapper<Document> {
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+    @Override
+    public Document mapRow(final ResultSet rs, final int rowNum) throws SQLException, DataAccessException {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+        final Document document = new Document();
 
-@AllArgsConstructor
-@Builder
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class Movement {
+        document.setId((Long) rs.getObject("id"));
+        document.setDocument(rs.getString("document"));
+        document.setTenantId(rs.getString("tenantid"));
+        document.setMovementId(rs.getLong("movementid"));
 
-    private Long id;
+        return document;
 
-    @NotNull
-    private Long employeeId;
+    }
 
-    @NotNull
-    private TypeOfMovement typeOfMovement;
-
-    @NotNull
-    private Long currentAssignment;
-
-    private TransferType transferType;
-
-    private PromotionBasis promotionBasis;
-
-    private String remarks;
-
-    private TransferReason reason;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date effectiveFrom;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date enquiryPassedDate;
-
-    private Long transferedLocation;
-
-    @NotNull
-    private Long departmentAssigned;
-
-    @NotNull
-    private Long designationAssigned;
-
-    @NotNull
-    private Long positionAssigned;
-
-    private Long fundAssigned;
-
-    private Long functionAssigned;
-
-    private List<String> documents = new ArrayList<>();
-
-    private Boolean employeeAcceptance;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    @NotNull
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
 }

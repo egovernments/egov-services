@@ -66,7 +66,7 @@ public class MovementQueryBuilder {
             + " m.transferedLocation AS m_transferedLocation, m.enquiryPassedDate AS m_enquiryPassedDate,"
             + " m.designationAssigned AS m_designationAssigned, m.positionAssigned AS m_positionAssigned,"
             + " m.fundAssigned AS m_fundAssigned, m.functionAssigned AS m_functionAssigned,"
-            + " m.documents AS m_documents, m.employeeAcceptance AS m_employeeAcceptance,"
+            + " m.employeeAcceptance AS m_employeeAcceptance,"
             + " m.status AS m_status, m.stateId AS m_stateId, m.createdBy AS m_createdBy,"
             + " m.createdDate AS m_createdDate, m.lastModifiedBy AS m_lastModifiedBy,"
             + " m.lastModifiedDate AS m_lastModifiedDate, m.tenantId AS m_tenantId"
@@ -196,9 +196,9 @@ public class MovementQueryBuilder {
         return "INSERT INTO egeis_movement(id, employee, typeofmovement,"
                 + " currentassignment, transfertype, promotionbasis, remarks, reason,"
                 + " effectivefrom, enquiryPassedDate, transferedLocation, departmentassigned, designationassigned, positionassigned,"
-                + " fundassigned, functionassigned, documents, employeeacceptance, status,"
+                + " fundassigned, functionassigned, employeeacceptance, status,"
                 + " stateid, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid)"
-                + " VALUES (nextval('seq_egeis_movement'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+                + " VALUES (nextval('seq_egeis_movement'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
                 + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
@@ -206,7 +206,7 @@ public class MovementQueryBuilder {
         return "UPDATE egeis_movement SET employee=?, typeofmovement=?,"
                 + " currentassignment=?, transfertype=?, promotionbasis=?, remarks=?, reason=?,"
                 + " effectivefrom=?, enquiryPassedDate=?, transferedLocation=?, departmentassigned=?, designationassigned=?, positionassigned=?,"
-                + " fundassigned=?, functionassigned=?, documents=?, employeeacceptance=?, status=?,"
+                + " fundassigned=?, functionassigned=?, employeeacceptance=?, status=?,"
                 + " stateid=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=? WHERE id=? and tenantid=?";
     }
 }

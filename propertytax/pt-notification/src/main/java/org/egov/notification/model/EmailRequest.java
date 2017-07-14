@@ -1,4 +1,4 @@
-package org.egov.model;
+package org.egov.notification.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

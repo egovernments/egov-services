@@ -1,4 +1,4 @@
-package org.egov.model;
+package org.egov.notification.model;
 
 import java.util.Map;
 

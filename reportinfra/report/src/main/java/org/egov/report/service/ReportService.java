@@ -181,7 +181,7 @@ public class ReportService {
 						.collect(Collectors.toList());
 
 				for(ColumnDetail cd : columnDetails) {
-					if(defaultValue != ""){
+					if(defaultValue != null && !defaultValue.isEmpty()){
 					cd.setDefaultValue(defaultValue.replace("{currentColumnName}", cd.getName()));
 					}
 				}

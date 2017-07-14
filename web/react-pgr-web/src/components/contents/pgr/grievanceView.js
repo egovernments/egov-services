@@ -92,7 +92,7 @@ class grievanceView extends Component{
            }
         }
         addMandatory();
-        if(currentThis.state.PRIORITY){
+        if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
           handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
         }
       });

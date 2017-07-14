@@ -100,8 +100,8 @@ public class PropertyRepository {
 				ps.setString(11, property.getChannel().toString());
 				ps.setString(12, property.getAuditDetails().getCreatedBy());
 				ps.setString(13, property.getAuditDetails().getLastModifiedBy());
-				ps.setLong(14, createdTime);
-				ps.setLong(15, createdTime);
+				ps.setLong(14, getLong(createdTime));
+				ps.setLong(15, getLong(createdTime));
 
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
@@ -173,12 +173,12 @@ public class PropertyRepository {
 				ps.setString(12, propertyDetails.getUsage());
 				ps.setString(13, propertyDetails.getDepartment());
 				ps.setString(14, propertyDetails.getApartment());
-				ps.setDouble(15, propertyDetails.getSiteLength());
-				ps.setDouble(16, propertyDetails.getSiteBreadth());
-				ps.setDouble(17, propertyDetails.getSitalArea());
-				ps.setDouble(18, propertyDetails.getTotalBuiltupArea());
-				ps.setDouble(19, propertyDetails.getUndividedShare());
-				ps.setLong(20, propertyDetails.getNoOfFloors());
+				ps.setDouble(15, getDouble(propertyDetails.getSiteLength()));
+				ps.setDouble(16, getDouble(propertyDetails.getSiteBreadth()));
+				ps.setDouble(17, getDouble(propertyDetails.getSitalArea()));
+				ps.setDouble(18, getDouble(propertyDetails.getTotalBuiltupArea()));
+				ps.setDouble(19, getDouble(propertyDetails.getUndividedShare()));
+				ps.setLong(20, getLong(propertyDetails.getNoOfFloors()));
 				ps.setBoolean(21, propertyDetails.getIsSuperStructure());
 				ps.setString(22, propertyDetails.getLandOwner());
 				ps.setString(23, propertyDetails.getFloorType());
@@ -189,9 +189,9 @@ public class PropertyRepository {
 				ps.setString(28, propertyDetails.getApplicationNo());
 				ps.setString(29, propertyDetails.getAuditDetails().getCreatedBy());
 				ps.setString(30, propertyDetails.getAuditDetails().getLastModifiedBy());
-				ps.setLong(31, createdTime);
-				ps.setLong(32, createdTime);
-				ps.setInt(33, propertyId);
+				ps.setLong(31, getLong(createdTime));
+				ps.setLong(32, getLong(createdTime));
+				ps.setInt(33, getInteger(propertyId));
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(propertyDetails.getTaxCalculations());
@@ -230,9 +230,9 @@ public class PropertyRepository {
 				ps.setString(1, floor.getFloorNo());
 				ps.setString(2, floor.getAuditDetails().getCreatedBy());
 				ps.setString(3, floor.getAuditDetails().getLastModifiedBy());
-				ps.setLong(4, createdTime);
-				ps.setLong(5, createdTime);
-				ps.setInt(6, propertyDetailsId);
+				ps.setLong(4, getLong(createdTime));
+				ps.setLong(5, getLong(createdTime));
+				ps.setInt(6, getInteger(propertyDetailsId));
 				return ps;
 			}
 		};
@@ -263,35 +263,35 @@ public class PropertyRepository {
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 				final PreparedStatement ps = connection.prepareStatement(UnitBuilder.INSERT_UNIT_QUERY,
 						new String[] { "id" });
-				ps.setInt(1, unit.getUnitNo());
+				ps.setInt(1, getInteger(unit.getUnitNo()));
 				ps.setString(2, unit.getUnitType().toString());
-				ps.setDouble(3, unit.getLength());
-				ps.setDouble(4, unit.getWidth());
-				ps.setDouble(5, unit.getBuiltupArea());
-				ps.setDouble(6, unit.getAssessableArea());
-				ps.setDouble(7, unit.getBpaBuiltupArea());
+				ps.setDouble(3, getDouble(unit.getLength()));
+				ps.setDouble(4, getDouble(unit.getWidth()));
+				ps.setDouble(5, getDouble(unit.getBuiltupArea()));
+				ps.setDouble(6, getDouble(unit.getAssessableArea()));
+				ps.setDouble(7, getDouble(unit.getBpaBuiltupArea()));
 				ps.setString(8, unit.getBpaNo());
 				ps.setTimestamp(9, TimeStampUtil.getTimeStamp(unit.getBpaDate()));
 				ps.setString(10, unit.getUsage());
 				ps.setString(11, unit.getOccupancyType());
 				ps.setString(12, unit.getOccupierName());
 				ps.setString(13, unit.getFirmName());
-				ps.setDouble(14, unit.getRentCollected());
+				ps.setDouble(14, getDouble(unit.getRentCollected()));
 				ps.setString(15, unit.getStructure());
 				ps.setString(16, unit.getAge());
 				ps.setString(17, unit.getExemptionReason());
 				ps.setBoolean(18, unit.getIsStructured());
 				ps.setTimestamp(19, TimeStampUtil.getTimeStamp(unit.getOccupancyDate()));
 				ps.setTimestamp(20, TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()));
-				ps.setDouble(21, unit.getManualArv());
-				ps.setDouble(22, unit.getArv());
+				ps.setDouble(21, getDouble(unit.getManualArv()));
+				ps.setDouble(22, getDouble(unit.getArv()));
 				ps.setString(23, unit.getElectricMeterNo());
 				ps.setString(24, unit.getWaterMeterNo());
 				ps.setString(25, unit.getAuditDetails().getCreatedBy());
 				ps.setString(26, unit.getAuditDetails().getLastModifiedBy());
-				ps.setLong(27, createdTime);
-				ps.setLong(28, createdTime);
-				ps.setLong(29, floorId);
+				ps.setLong(27, getLong(createdTime));
+				ps.setLong(28, getLong(createdTime));
+				ps.setInt(29, getInteger(floorId));
 				return ps;
 			}
 		};
@@ -348,9 +348,9 @@ public class PropertyRepository {
 				ps.setString(1, document.getFileStore());
 				ps.setString(2, document.getAuditDetails().getCreatedBy());
 				ps.setString(3, document.getAuditDetails().getLastModifiedBy());
-				ps.setLong(4, createdTime);
-				ps.setLong(5, createdTime);
-				ps.setLong(6, propertyDetailsId);
+				ps.setLong(4, getLong(createdTime));
+				ps.setLong(5, getLong(createdTime));
+				ps.setInt(6, getInteger(propertyDetailsId));
 				return ps;
 			}
 		};
@@ -394,6 +394,30 @@ public class PropertyRepository {
 
 		jdbcTemplate.update(pscDocumentType, holderDocumentType);
 
+	}
+
+	public Long getLong(Long value) {
+
+		if (value == null)
+			return 0l;
+		else
+			return value;
+	}
+
+	public Double getDouble(Double value) {
+
+		if (value == null)
+			return 0.0;
+		else
+			return value;
+	}
+
+	public Integer getInteger(Integer value) {
+
+		if (value == null)
+			return 0;
+		else
+			return value;
 	}
 
 	/**
@@ -773,19 +797,19 @@ public class PropertyRepository {
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 
 	}
-	
-	 public boolean isPropertyUnderWorkflow(String upicNo) {
-	        String query = PropertyBuilder.isPropertyUnderWorkflow;
-	        Object[] arguments = { upicNo };
-	        Boolean isPropertyUnderWorkflow = jdbcTemplate.queryForObject(query, arguments, Boolean.class);
-	        return isPropertyUnderWorkflow;
-	    }
 
-	    public void updateIsPropertyUnderWorkflow(String upicNo) {
-	     String query=PropertyBuilder.updatePropertyIsUnderWokflow;
-	     Object[] arguments={true,upicNo};
-	     jdbcTemplate.update(query, arguments);
-	        
-	    }
+	public boolean isPropertyUnderWorkflow(String upicNo) {
+		String query = PropertyBuilder.isPropertyUnderWorkflow;
+		Object[] arguments = { upicNo };
+		Boolean isPropertyUnderWorkflow = jdbcTemplate.queryForObject(query, arguments, Boolean.class);
+		return isPropertyUnderWorkflow;
+	}
+
+	public void updateIsPropertyUnderWorkflow(String upicNo) {
+		String query = PropertyBuilder.updatePropertyIsUnderWokflow;
+		Object[] arguments = { true, upicNo };
+		jdbcTemplate.update(query, arguments);
+
+	}
 
 }

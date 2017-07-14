@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -59,9 +58,6 @@ public class PaymentService {
 
 	@Autowired
 	AgreementService agreementService;
-
-	@Autowired
-	AgreementProducer agreementProducer;
 
 	@Autowired
 	RestTemplate restTemplate;

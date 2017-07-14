@@ -80,8 +80,8 @@ paths:
       parameters:
        - $ref: "#/parameters/updateCode"
       post:
-        summary: updates existing values
-        description: updates existing values
+        summary: create Demand,update workflow,update index.
+        description: updates existing values.update demand with estimationCharge details,Workflow details , update Index.
         tags:
           - Update Water Connection
         parameters:
@@ -219,12 +219,26 @@ definitions:
       materialCharges:
         type: number
         description: sum total of cost required for materials used
+      roadCutCharges:
+        type: number
+        description: charges required for roadCut Charge.
+      specialSecurityCharges:
+        type: number
+        description: charges required for special security.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       tenantId:
         type: string
         readOnly: true
-        description: Unique Identifier of the tenant
+        description: Unique Identifier of the tenant.
+        
+    required:
+       - existingDistributionPipeline
+       - estimationCharges
+       - supervisionCharges
+       - roadCutCharges
+       - specialSecurityCharges
+      
 
   Timeline:
     type: object
@@ -574,8 +588,6 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/DocumentOwner"
-      demand:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand"
       timelines:
         type: array
         items:

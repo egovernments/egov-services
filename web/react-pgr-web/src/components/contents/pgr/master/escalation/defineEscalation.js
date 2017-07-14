@@ -242,7 +242,8 @@ componentWillUpdate() {
             })
           }
       }).catch((error)=>{
-         toggleSnackbarAndSetText(true, error);
+		   setLoadingStatus('hide');
+         toggleSnackbarAndSetText(true, error.message);
       })
   }
 
@@ -332,14 +333,16 @@ componentWillUpdate() {
                       })
                     }
                 }).catch((error)=>{
-					 toggleSnackbarAndSetText(true, error);
+					  setLoadingStatus('hide');
+						toggleSnackbarAndSetText(true, error.message);
                 })
 
               current.setState((prevState)=>{
                   prevState.editIndex=-1
                 })
     }).catch((error)=>{
-		toggleSnackbarAndSetText(true, error);
+		  setLoadingStatus('hide');
+         toggleSnackbarAndSetText(true, error.message);
     })
   }
 
@@ -386,11 +389,13 @@ componentWillUpdate() {
                       })
                     }
                 }).catch((error)=>{
-                    toggleSnackbarAndSetText(true, error);
+                     setLoadingStatus('hide');
+						toggleSnackbarAndSetText(true, error.message);
                 })
        
     }).catch((error)=>{
-		toggleSnackbarAndSetText(true, error);
+		  setLoadingStatus('hide');
+         toggleSnackbarAndSetText(true, error.message);
     })
   }
   

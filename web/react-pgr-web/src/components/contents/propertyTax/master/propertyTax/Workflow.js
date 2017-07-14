@@ -97,10 +97,9 @@ class Workflow extends Component {
   constructor(props) {
     super(props);
     this.state= {
-        propertytypes: [],
-        apartments:[],
+        designation: [],
         workflowDepartment:[],
-          files:[],
+          approverName:[],
     }
   } 
 
@@ -112,7 +111,7 @@ class Workflow extends Component {
 
     Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
       console.log(res);
-      currentThis.setState({workflowDepartment: res.departments})
+      currentThis.setState({workflowDepartment: res.Department})
     }).catch((err)=> {
       currentThis.setState({
         workflowDepartment:[]
@@ -120,6 +119,15 @@ class Workflow extends Component {
       console.log(err)
     })
 
+     Api.commonApiPost( '/egov-common-workflows/designations/_search').then((res)=>{
+      console.log(res);
+      currentThis.setState({designation: res.designation})
+    }).catch((err)=> {
+      currentThis.setState({
+        designation:[]
+      })
+      console.log(err)
+    })
    
   }  
 
@@ -209,7 +217,7 @@ class Workflow extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
-                                                    <MenuItem value={4} primaryText="Options" />
+                                                   {renderOption(this.state.designation)}
                                               </SelectField>
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>

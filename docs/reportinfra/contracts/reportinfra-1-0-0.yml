@@ -152,9 +152,6 @@ definitions:
           description: |
             User provided input of this parameter that will be used in query. Please note that value will be format checked against the value definition of this parameter in report definition. This field has been made an object so that multiple values from things like multivalue list can be accepted.
           type: object
-        isMandatory:
-          type: boolean
-          default: true
   
   ColumnDetail:
     allOf: 
@@ -183,6 +180,15 @@ definitions:
           description: |
             any default value for the column if the column type is number, string, date, datetime, epoch or URL
             collection contaning possible list value pairs for singlevaluelist and multivaluelist
+            the parameterized next click URL in case of drill down - the value inside {} needs to be replaced with the actual value of the column with that name
+        isMandatory:
+          type: boolean
+          default: true
+        showColumn:
+          description: |
+            whether to display the column value on the page, useful in cases like drill downs where teh value is needed for next search but is not meaningful to be shown to the user
+          type: boolean
+          default: true
       required:
         - type
       
@@ -241,8 +247,11 @@ definitions:
           type: string
           description: |
             column name in the table/index
-        linkedReport:
-          $ref: '#/definitions/LinkedReport'
+        linkPattern:
+          type: string
+          description: |
+            pattern to indicate to UI about additional serach param names and their values
+            _parent?reportName={drillDownReportName}&columnname={sourceColumnValue}&columnname={sourceColumnValue}
         isExternal: 
           type: boolean
           default: false
@@ -266,7 +275,7 @@ definitions:
     description: |
       This is the column definition for the purpose of defining the search columns
     allOf:
-    - $ref: '#/definitions/SearchParam'
+    - $ref: '#/definitions/ColumnDetail'
     - type: object
       properties:
         source: 
@@ -287,27 +296,18 @@ definitions:
       required:
         - source
         - colName
-        
-  LinkedReport:
-    type: object
-    description: |
-      links the next report to a column in SourceColumns and indicates whether the link is on COLUMN (meaning value of column header), COLUMNVALUE (meaning actual value of column in that row) or FIXEDPATH (meaning a totally different end point)
-    properties:
-      reportName: 
-        type: string
-        description: name of the next report
-      linkType:
-        type: string
-        enum: 
-        - COLUMN
-        - COLUMNVALUE
-        - FUXEDURL
-
   
   ReportDefinition:
     type: object
     description: |
       Combination of below properties provides the decription of a report that can be generically obtained from the framework. Please note that in this version, only reports out of RDBMS are supported - but later the framework will be enhanced to support reports out of RDBMS/Cross service non join reports from RDBMS/Elastic search and mashups.
+    required:
+      - reportName
+      - summary
+      - version
+      - query
+      - sourceColumns
+      - searchParams
     properties:
       reportName: 
         description: |
@@ -321,7 +321,7 @@ definitions:
         type: string
       version: 
         description: |
-          Version of the report farmework - this will help in enhancing the reporting framework in phased manner - planning to support upto two recent versions of backward compatibility. Versioning scheme is purely number based and decided by the framework an dnot indivdual Report definitions
+          Version of the report farmework - this will help in enhancing the reporting framework in phased manner - planning to support upto two recent versions of backward compatibility. Versioning scheme is purely number based and decided by the framework and not indivdual Report definitions
         type: string
       query:
         description: |
@@ -339,3 +339,9 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/SearchColumn"
+      linkPattern:
+        type: string
+        description: |
+          pattern to indicate to UI about additional serach param names and their values
+          _parent?reportName={drillDownReportName}&columnname={sourceColumnValue}&columnname={sourceColumnValue}
+      

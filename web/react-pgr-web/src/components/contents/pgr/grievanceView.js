@@ -92,7 +92,7 @@ class grievanceView extends Component{
            }
         }
         addMandatory();
-        if(currentThis.state.PRIORITY){
+        if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
           handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
         }
       });
@@ -439,13 +439,11 @@ class grievanceView extends Component{
     let validFile = validate_fileupload(e.target.files, formats);
     //console.log('is valid:', validFile);
     if(validFile === true)
-      this.props.handleUpload(e, formats);
+      this.props.handleUpload(e);
     else{
       this.refs.file.value = '';
       this.handleError(validFile);
     }
-
-
   }
   handleError = (msg) => {
     let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
@@ -915,7 +913,7 @@ const mapDispatchToProps = dispatch => ({
     }
   },
   handleUpload: (e) => {
-    dispatch({type: 'FILE_UPLOAD', files: e.target.files})
+    dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

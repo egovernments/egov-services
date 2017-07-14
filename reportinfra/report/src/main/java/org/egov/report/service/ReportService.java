@@ -23,6 +23,7 @@ import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
 import org.egov.swagger.model.SearchColumn;
 import org.egov.swagger.model.SourceColumn;
+import org.egov.swagger.model.SourceColumnLinkedReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,11 +162,31 @@ public class ReportService {
 		reportResponse.setReportData(lists);
 	}
 	private void populateReportHeader(ReportDefinition reportDefinition, ReportResponse reportResponse) {
-		List<SourceColumn> columns = reportDefinition.getSourceColumns();
-		List<ColumnDetail> columnDetails = columns.stream()
-				.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getName()))
-				.collect(Collectors.toList());
 		
+		//Let's check whether there's a linked report, we will set the default value in header columns according to that
+				SourceColumnLinkedReport linkedReport = reportDefinition.getLinkedReport();
+				System.out.println("Linked Report Pattern is: "+linkedReport);
+				String pattern = null;
+				String defaultValue = "test";
+				if(linkedReport != null){
+					pattern = linkedReport.getLinkedColumn();
+					if(pattern != null){
+						defaultValue = pattern.replace("{reportName}", linkedReport.getReportName());
+					}
+				}
+				
+				List<SourceColumn> columns = reportDefinition.getSourceColumns();
+				List<ColumnDetail> columnDetails = columns.stream()
+						.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getName()))
+						.collect(Collectors.toList());
+
+				for(ColumnDetail cd : columnDetails) {
+					System.out.println("Getting Null Pointer Exception");
+					if(!defaultValue.equalsIgnoreCase("test")){
+					cd.setDefaultValue(defaultValue.replace("{currentColumnName}", cd.getName()));
+					}
+				}
+				
 		reportResponse.setReportHeader(columnDetails);
 	}
 }

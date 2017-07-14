@@ -83,7 +83,7 @@ class WaterSourceTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms-masters/sourcetype/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/wcms/masters/sourcetype/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log("response",response);
                   console.log("response object",response.waterSourceType[0]);
                 current.setState({data:response.waterSourceType})
@@ -133,7 +133,7 @@ class WaterSourceTypeCreate extends Component {
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/wcms-masters/sourcetype/"+body.sourceType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/sourcetype/"+body.sourceType.code+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -143,7 +143,7 @@ class WaterSourceTypeCreate extends Component {
             current.props.setLoadingStatus('hide');
         	})
       } else {
-          Api.commonApiPost("/wcms-masters/sourcetype/_create",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/sourcetype/_create",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true

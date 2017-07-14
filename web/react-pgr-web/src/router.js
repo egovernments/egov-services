@@ -56,6 +56,7 @@ import ViewEditDocumentType from './components/contents/wc/master/documentType/v
 import ViewDocumentType from './components/contents/wc/master/documentType/viewDocumentType';
 
 
+
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
 import Test from './components/contents/propertyTax/master/Test';
@@ -72,6 +73,11 @@ import BuildingClassification from './components/contents/propertyTax/master/Bui
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand'
+
+import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/documentTypeApplicationType/documentTypeApplicationTypeCreate';
+import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
+import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
+
 
 
 const base = "";
@@ -157,6 +163,12 @@ const Main = () => {
         <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
+
+        <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
+        <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>
+        <Route exact path={base+'/wc/documentTypeApplicationType/view'} component={ViewEditDocumentTypeApplicationType}/>
+        <Route exact path={base+'/wc/documentTypeApplicationType/edit'} component={ViewEditDocumentTypeApplicationType}/>
+        <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>
 
 
             <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>

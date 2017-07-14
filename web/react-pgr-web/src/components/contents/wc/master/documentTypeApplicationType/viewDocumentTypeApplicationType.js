@@ -74,10 +74,10 @@ class ViewCategoryType extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms/masters/pipesize/_search",{id:this.props.match.params.id},{}).then(function(response){
+            Api.commonApiPost("/wcms/masters/categorytype/_search",{id:this.props.match.params.id},{}).then(function(response){
                 console.log(response);
-                current.setState({data:response.pipeSize})
-                setForm(response.pipeSize[0])
+                current.setState({data:response.CategoryTypes})
+                setForm(response.CategoryTypes[0])
             }).catch((error)=>{
                 console.log(error);
             })
@@ -90,7 +90,7 @@ class ViewCategoryType extends Component {
     render() {
 
       let {
-        viewPipeSize ,
+        viewCategoryType ,
         fieldErrors,
         isFormValid,
         isTableShow,
@@ -108,9 +108,9 @@ class ViewCategoryType extends Component {
       console.log(isFormValid);
 
       return(
-        <div className="viewPipeSize">
+        <div className="viewCategoryType">
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Pipe Size< /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >View Category Type< /div>} />
                   <CardText style={{padding:0}}>
 
                       <Grid>
@@ -124,27 +124,17 @@ class ViewCategoryType extends Component {
                                              {translate("core.lbl.code")}
                                         </Col>
                                         <Col xs={8} md={10}>
-                                            {viewPipeSize.code ? viewPipeSize.code : ''}
+                                            {viewCategoryType.code ? viewCategoryType.code : ''}
                                         </Col>
                                       </Row>
                                     </ListGroupItem>
                                       <ListGroupItem>
                                         <Row>
                                           <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.sizeInMilimeter")}
+                                               {translate("core.lbl.add.name")}
                                           </Col>
                                           <Col xs={8} md={10}>
-                                              {viewPipeSize.sizeInMilimeter ? viewPipeSize.sizeInMilimeter : ''}
-                                          </Col>
-                                        </Row>
-                                      </ListGroupItem>
-                                      <ListGroupItem>
-                                        <Row>
-                                          <Col xs={4} md={2} style={styles.bold}>
-                                               {translate("core.lbl.sizeInInch")}
-                                          </Col>
-                                          <Col xs={8} md={10}>
-                                              {viewPipeSize.sizeInInch ? viewPipeSize.sizeInInch : ''}
+                                              {viewCategoryType.name ? viewCategoryType.name : ''}
                                           </Col>
                                         </Row>
                                       </ListGroupItem>
@@ -154,7 +144,7 @@ class ViewCategoryType extends Component {
                                                {translate("core.lbl.description")}
                                           </Col>
                                           <Col xs={8} md={10}>
-                                              {viewPipeSize.description? viewPipeSize.description : ''}
+                                              {viewCategoryType.description? viewCategoryType.description : ''}
                                           </Col>
                                         </Row>
                                       </ListGroupItem>
@@ -164,7 +154,7 @@ class ViewCategoryType extends Component {
                                                {translate("pgr.lbl.active")}
                                           </Col>
                                           <Col xs={8} md={10}>
-                                              {viewPipeSize.active? "true": 'false'}
+                                              {viewCategoryType.active? "true": 'false'}
                                           </Col>
                                         </Row>
                                       </ListGroupItem>
@@ -179,7 +169,7 @@ class ViewCategoryType extends Component {
 }
 
 const mapStateToProps = state => {
-  return ({viewPipeSize : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({viewCategoryType : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({

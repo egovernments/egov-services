@@ -83,11 +83,11 @@ class CategoryTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms-masters/categorytype/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/wcms/masters/categorytype/_search",{id:this.props.match.params.id},body).then(function(response){
                 console.log("response",response);
-                  console.log("response object",response.CategoryTypes[0]);
-                current.setState({data:response.CategoryTypes})
-                setForm(response.CategoryTypes[0])
+                  console.log("response object",response.categoryTypes[0]);
+                current.setState({data:response.categoryTypes})
+                setForm(response.categoryTypes[0])
             }, function(err) {
               current.props.toggleSnackbarAndSetText(true, err.message);
               current.props.setLoadingStatus('hide');
@@ -133,7 +133,7 @@ class CategoryTypeCreate extends Component {
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/wcms-masters/categorytype/"+body.CategoryType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/categorytype/"+body.CategoryType.code+"/_update",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -143,7 +143,7 @@ class CategoryTypeCreate extends Component {
             current.props.setLoadingStatus('hide');
         	})
       } else {
-          Api.commonApiPost("/wcms-masters/categorytype/_create",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/categorytype/_create",{},body).then(function(response){
               console.log(response);
               current.setState({
                 open: true

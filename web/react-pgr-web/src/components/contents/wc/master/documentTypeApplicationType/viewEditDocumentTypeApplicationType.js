@@ -94,7 +94,7 @@ const styles = {
 };
 
 var flag = 0;
-class searchSupplyType extends Component {
+class searchCategoryType extends Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -160,7 +160,7 @@ class searchSupplyType extends Component {
   search = e => {
     e.preventDefault();
     var self = this;
-    var searchSet = Object.assign({}, self.props.supplyTypeSearchSet);
+    var searchSet = Object.assign({}, self.props.categoryTypeSearchSet);
 
     if(searchSet.active==false){
         searchSet.active=false;
@@ -170,10 +170,10 @@ class searchSupplyType extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms/masters/supplytype/_search/", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms/masters/categorytype/_search/", searchSet).then(function(response) {
       flag = 1;
       self.setState({
-        resultList: response.supplytypes,
+        resultList: response.CategoryTypes,
         isSearchClicked: true
       });
 
@@ -188,17 +188,17 @@ class searchSupplyType extends Component {
   handleNavigation = (id) => {
       let url = this.props.location.pathname;
       console.log("url",url);
-      if(url == '/wc/supplyType/view'){
-           this.props.history.push('/wc/viewSupplyType/'+id);
+      if(url == '/wc/categoryType/view'){
+           this.props.history.push('/wc/viewCategoryType/'+id);
        } else {
-           this.props.history.push('/wc/createSupplyType/'+id);
+           this.props.history.push('/wc/createCategoryType/'+id);
       }
   }
 
   render() {
     _this = this;
     let {
-      supplyTypeSearchSet,
+      categoryTypeSearchSet,
       handleAutoCompleteKeyUp,
       handleChange
     } = this.props;
@@ -220,7 +220,7 @@ class searchSupplyType extends Component {
     } = this.state;
  let url;
 
-console.log("supplyTypeSearchSet",supplyTypeSearchSet);
+console.log("categoryTypeSearchSet",categoryTypeSearchSet);
     const renderBody = function() {
       if(resultList && resultList.length)
       return resultList.map(function(val, i) {
@@ -260,10 +260,10 @@ console.log("supplyTypeSearchSet",supplyTypeSearchSet);
    }
 
     return (
-      <div className="searchSupplyType">
+      <div className="searchCategoryType">
          <form autoComplete="off" onSubmit={(e) => {search(e)}}>
            <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Supply Type </div>}/>
+            <CardHeader style={{paddingBottom:0}} title={<div style = {styles.headerStyle} > Search Category Type </div>}/>
               <CardText style={{padding:0}}>
                  <Grid>
                    <Row>
@@ -271,9 +271,9 @@ console.log("supplyTypeSearchSet",supplyTypeSearchSet);
                          <TextField
                              fullWidth={true}
                              floatingLabelText={"Category Type"+"*"}
-                             value={supplyTypeSearchSet.name? supplyTypeSearchSet.name: ""}
+                             value={categoryTypeSearchSet.name? categoryTypeSearchSet.name: ""}
                              maxLength={100}
-                             onChange={(e) => { supplyTypeSearchSet.active = true;
+                             onChange={(e) => { categoryTypeSearchSet.active = true;
                              handleChange(e, "name", true, /^[a-zA-Z0-9 ]*$/g)}}
                              id="name"
                          />
@@ -283,7 +283,7 @@ console.log("supplyTypeSearchSet",supplyTypeSearchSet);
                        <Checkbox
                            label={translate("pgr.lbl.active")}
                            style={styles.checkbox}
-                           defaultChecked = {supplyTypeSearchSet.active || true}
+                           defaultChecked = {categoryTypeSearchSet.active || true}
                            onCheck = {(e, i, v) => {
 
                              var e = {
@@ -314,7 +314,7 @@ console.log("supplyTypeSearchSet",supplyTypeSearchSet);
 }
 
 const mapStateToProps = state => {
-  return ({supplyTypeSearchSet: state.form.form});
+  return ({categoryTypeSearchSet: state.form.form});
 };
 const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
@@ -347,4 +347,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(searchSupplyType);
+export default connect(mapStateToProps, mapDispatchToProps)(searchCategoryType);

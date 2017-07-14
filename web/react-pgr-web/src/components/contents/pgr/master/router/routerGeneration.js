@@ -28,7 +28,7 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
 var _this = 0;
 var flag = 0;
-
+let searchTextPos = "";
 const getNameByBoundary = function(object, id) {
   if (id == "" || id == null) {
         return "";
@@ -304,6 +304,7 @@ class routerGeneration extends Component {
       self.props.setLoadingStatus("loading");
   	 	Api.commonApiPost("/workflow/router/v1/_create", {}, {routertype: routerType}).then(function(response) {
 	  		self.props.initForm();
+        searchTextPos = "";
 	  		self.setState({
 	  			resultList: [],
 	  			isSearchClicked: false,
@@ -483,7 +484,9 @@ class routerGeneration extends Component {
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
                         onKeyUp={handleAutoCompleteKeyUp}
                         errorText={fieldErrors.position || ""} value={routerCreateSet.position}
+                        searchText={searchTextPos}
                         onNewRequest={(chosenRequest, index) => {
+                          searchTextPos = chosenRequest.name;
 	                        var e = {
 	                          target: {
 	                            value: chosenRequest.id
@@ -498,7 +501,6 @@ class routerGeneration extends Component {
               </CardText>
            </Card>
            <div style={{textAlign: 'center'}}>
-
              <RaisedButton style={{margin:'15px 5px'}} type="submit" label={translate("core.lbl.search")} disabled={!isFormValid} primary={true}/>
 
            </div>

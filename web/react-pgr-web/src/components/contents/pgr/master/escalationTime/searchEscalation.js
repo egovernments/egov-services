@@ -243,6 +243,10 @@ class SearchEscalation extends Component {
             isSearchClicked: true
           })
       }).catch((error)=>{
+		   current.setState({
+            resultList:[],
+            isSearchClicked: false
+          })
           console.log(error);
       })
 

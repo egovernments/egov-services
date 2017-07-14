@@ -253,7 +253,7 @@ class OwnerDetails extends Component {
                             floatingLabelText="Guardian"
                             errorText={fieldErrors.owner ?(fieldErrors.owner.gaurdian? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gaurdian}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdian:""}
-                            onChange={(e) => handleChangeNextOne(e,  "owner",  "gaurdian", false, "")}
+                            onChange={(e) => handleChangeNextOne(e,  "owner",  "gaurdian", true, "")}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -338,7 +338,7 @@ class OwnerDetails extends Component {
                             }/>
                           }
                           { (editIndex > -1) &&
-                            <RaisedButton type="button" label="Save"  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+                            <RaisedButton type="button" label="Save" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner");
                                 isEditIndex(-1);
@@ -423,7 +423,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: []
+          required: ['ownerTypeRadio', 'aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian' ]
         },
         pattern: {
           current: [],

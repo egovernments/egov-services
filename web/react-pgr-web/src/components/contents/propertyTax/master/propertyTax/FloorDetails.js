@@ -138,7 +138,6 @@ class FloorDetails extends Component {
 		revanue:[],
 		election:[],
 		usages:[],
-		  floorArray:[]
     }
   }
 
@@ -153,7 +152,7 @@ class FloorDetails extends Component {
           console.log(err)
         })
 
-        Api.commonApiPost('pt-property/property/occupancies/_search').then((res)=>{
+        Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
           console.log(res);
           currentThis.setState({occupancies : res.occupancies})
         }).catch((err)=> {
@@ -166,7 +165,6 @@ class FloorDetails extends Component {
         }).catch((err)=> {
           console.log(err)
         })
-
       	
 		this.createFloorObject();
   }

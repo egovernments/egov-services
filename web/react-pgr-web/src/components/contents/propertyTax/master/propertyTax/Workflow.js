@@ -128,8 +128,47 @@ class Workflow extends Component {
       })
       console.log(err)
     })
-   
-  }  
+
+  
+  } 
+
+  handleWorkFlowChange = (e, type) => {
+
+    let currentThis = this;
+
+    let query = {};
+
+    let hasData = false;
+
+    if(type == 'department' && e.target.value != '' && this.props.workflow.designation) {
+      query = {
+          departmentId: e.target.value,
+          designationId: this.props.workflow.designation
+      }
+      hasData = true;
+
+    } else if(type == 'designation' && e.target.value != '' && this.props.workflow.department) {
+      query = {
+          departmentId: this.props.workflow.department,
+          designationId: e.target.value
+      }
+      hasData = true;
+    } else {
+      hasData = false;
+    }
+
+    if(hasData){
+        Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
+         console.log(res);
+          currentThis.setState({approverName: res.approverName})
+      }).catch((err)=> {
+        currentThis.setState({
+          approverName:[]
+        })
+        console.log(err);
+      })
+    }
+  } 
 
 
   onFileLoad = (e, file) => {  console.log(file.name)
@@ -168,7 +207,7 @@ class Workflow extends Component {
       isAddRoom
     } = this.props;
 
-    let {search} = this;
+    let {search, handleWorkFlowChange} = this;
 
     let cThis = this;
 
@@ -191,6 +230,7 @@ class Workflow extends Component {
                                                         value: value
                                                       }
                                                     };
+                                                    handleWorkFlowChange(e, 'department');
                                                     handleChange(e, "workflowDepartment", false, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -211,6 +251,7 @@ class Workflow extends Component {
                                                         value: value
                                                       }
                                                     };
+                                                    handleWorkFlowChange(e, 'designation');
                                                     handleChange(e, "workflowDesignation", false, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}

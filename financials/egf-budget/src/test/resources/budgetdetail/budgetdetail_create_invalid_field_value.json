@@ -1,0 +1,31 @@
+{
+  "requestInfo": {
+	    "action": "action",
+	    "did": "did",
+	    "msgId": "msgId",
+	    "requesterId": "requesterId",
+	    "ts": "01-01-2017 01:01:01",
+	    "authToken": null
+    },
+   "data": 
+		[
+
+		   	{
+				"budget":
+				{
+					"id":"1"
+				},
+				"budgetGroup":
+				{
+					"id":"1"
+				},
+		   		"anticipatoryAmount":10,
+		   		"originalAmount":10,
+		   		"approvedAmount":10,
+		   		"budgetAvailable":10,
+		   		"planningPercent":1500,
+		   		"tenantId":"default"
+		   	}
+   	
+   	   ]
+}

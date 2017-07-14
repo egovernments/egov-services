@@ -116,24 +116,24 @@ public class WaterConnectionRepository {
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
                 statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatment());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
-                if(waterConnectionRequest.getConnection().getId() == 0){
+                if(!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
                 statement.setString(26, NewConnectionStatus.CREATED.name()); 
                 }
-                else{
+                else if (waterConnectionRequest.getConnection().getIsLegacy())
+                    statement.setString(26, NewConnectionStatus.SANCTIONED.name());
+                else
                     statement.setString(26, NewConnectionStatus.VERIFIED.name()); 
-                }
-                if(waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE))
+                if(!waterConnectionRequest.getConnection().getIsLegacy()){
                 statement.setLong(27, (waterConnectionRequest.getConnection().getStateId()!=null?waterConnectionRequest.getConnection().getStateId():1l)); 
-                if(waterConnectionRequest.getConnection().getDemandid()!=null)
                 statement.setString(28, waterConnectionRequest.getConnection().getDemandid()); 
-                
+                }
                 if (waterConnectionRequest.getConnection().getIsLegacy()  || waterConnectionRequest.getConnection().getParentConnectionId() != 0) {
-                    statement.setString(29, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(30, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setString(27, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(28, waterConnectionRequest.getConnection().getConsumerNumber());
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(31, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(29, waterConnectionRequest.getConnection().getParentConnectionId());
 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
 

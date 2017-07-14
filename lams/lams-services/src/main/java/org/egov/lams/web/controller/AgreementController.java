@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("agreements")
-@Import(TestConfiguration.class)
 public class AgreementController {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(AgreementController.class);

@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("agreement/notice")
-@Import(TestConfiguration.class)
 public class NoticeController {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(NoticeController.class);

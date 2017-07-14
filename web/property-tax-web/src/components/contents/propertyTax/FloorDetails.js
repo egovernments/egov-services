@@ -260,51 +260,129 @@ class FloorDetails extends Component {
   createFloorObject = () => {
 	  
 		var floors = [];
+		
+		var allFloors = this.state.floorNumber;
 	  
 	    var allRooms = this.props.floorDetails.floors;
 		
-		for(let i=0;i<allRooms.length;i++){
-			let local = floors;
-			if(allRooms[i].unitType == 2){
-			 var floor = {
+		var rooms = allRooms.filter(function(item, index, array){
+			if(!item.hasOwnProperty('flatNo')){
+				return item;
+			}
+		});
+		
+		rooms.map((item, index)=>{
+			var floor = {
 				  floorNo:'',
-				  flatNo:'',
 				  units:[]
 				}
-			  floor.floorNo = allRooms[i].floorNo;
-			  floor.units.push(allRooms[i]);
+			  floor.floorNo = item.floorNo;
+			  delete item.floorNo;
+			  floor.units.push(item);
 			  floors.push(floor);
-			} else if(allRooms[i].unitType == 1){
-				if(floors.length != 0){
-					for(let j = 0;j<local.length;j++){
-						if(local[j].hasOwnProperty('flatNo')){
-							if(local[j].floorNo == allRooms[i].floorNo && local[j].flatNo == allRooms[i].flatNo ) {
-								local[j].units[0].units.push(allRooms[i])
-							}
-						} else {
-							console.log('NOM');
-						}
-						
-					}
-					floors = local;
-				  } else {
-						let floor = {
-						  floorNo:'',
-						  flatNo:'',
-						  units:[]
-						}
-						let room = {
-							units: []
-						}
-					  floor.floorNo = allRooms[i].floorNo;
-					  floor.flatNo = allRooms[i].flatNo;
-					  room.units.push(allRooms[i]);
-					  floor.units.push(room);
-					  floors.push(floor);
-				  } 	
+		})
+		
+		var flats = allRooms.filter(function(item, index, array){
+			if(item.hasOwnProperty('flatNo')){
+				return item;
 			}
-			console.log(floors);
+		});		
+		
+		var flatNos = flats.map(function(item, index, array){
+			return item.flatNo;
+		});
+		
+		flatNos = flatNos.filter(function(item, index, array){
+			return index == array.indexOf(item);
+		});
+		
+		var floorNos = flats.map(function(item, index, array){
+			return item.floorNo;
+		});
+		
+		floorNos = floorNos.filter(function(item, index, array){
+			return index == array.indexOf(item);
+		});
+		
+		
+		var flatsArray = [];
+		
+		
+		for(var i =0;i<flatNos.length;i++){
+			var local = {
+				units : []
+			}
+			for(var j = 0;j<flats.length;j++){
+				if(flats[j].flatNo == flatNos[i]) {
+					local.units.push(flats[j])
+				}
+			}
+			flatsArray.push(local);
 		}
+		
+		
+	var finalFloors = [];
+		for(let j=0;j<floorNos.length;j++){
+			
+			var local = {
+				flats : []
+			}
+			for(let k =0;k<flatsArray.length;k++){
+				for(let l=0;l<flatsArray[k].units.length;l++){
+					if(flatsArray[k].units[l].floorNo == floorNos[j]){
+						for(let m = 0 ; m<flatNos.length;m++){
+							if(flatNos[m] == flatsArray[k].units[l].flatNo){
+								local.flats.push(flatsArray[k].units[l]);
+							}
+						}
+							
+					}
+				}
+			}
+			finalFloors.push(local);
+		}
+		
+		var finalFlats = [];
+		
+		for(let x = 0;x<finalFloors.length;x++){
+			var temp = finalFloors[x].flats;
+			for(var i =0;i<finalFloors[x].flats.length;i++){
+				var local= {
+					units:[]
+				};
+				for(var j = 0;j<temp.length;j++){
+					if(temp[j].flatNo == finalFloors[x].flats[i].flatNo) {
+						local.units.push(temp[j])
+					}
+				}
+			finalFlats.push(local);
+			}
+			
+		}
+		
+		finalFlats = finalFlats.map((item, index)=>{
+			return JSON.stringify(item);
+		})
+		
+		finalFlats = finalFlats.filter((item, index, array)=>{
+			return index == array.indexOf(item);
+		})
+		
+		finalFlats = finalFlats.map((item, index)=>{
+			return JSON.parse(item);
+		})
+		
+		finalFlats.map((item, index)=>{
+			let floor = {
+				  floorNo:'',
+				  units:[]
+				}
+			  floor.floorNo = item.units[0].floorNo;
+			  floor.units.push(item);
+			  floors.push(floor);
+		})
+		
+				console.log(floors);
 		
   }
  

@@ -56,11 +56,16 @@ public class ActionController {
 	}
 
 	@PostMapping(value = "_list")
-	public ActionSearchResponse getAllActionsBasedOnRoles(@RequestBody final ActionRequest actionRequest) {
+	public ResponseEntity<?> getAllActionsBasedOnRoles(@RequestBody final ActionRequest actionRequest) {
 
-		List<Module> moduleList = actionService.getAllActionsBasedOnRoles(actionRequest,actionRequest.getEnabled());
+		final List<ErrorResponse> errorResponses = validateActionRequest(actionRequest, "list");
 
-		return getListSuccessResponse(actionRequest.getRequestInfo(),moduleList);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		List<Module> moduleList = actionService.getAllActionsBasedOnRoles(actionRequest);
+
+		return getListSuccessResponse(actionRequest.getRequestInfo(), moduleList);
 
 	}
 
@@ -70,11 +75,14 @@ public class ActionController {
 		return getValidateActionResponse(actionValidation);
 	}
 
-	private ActionSearchResponse getListSuccessResponse(final RequestInfo requestInfo,final List<Module> moduleList) {
-		
-		 ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		 responseInfo.setStatus(HttpStatus.OK.toString());
-		return new ActionSearchResponse(responseInfo, moduleList);
+	private ResponseEntity<?> getListSuccessResponse(final RequestInfo requestInfo, final List<Module> moduleList) {
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		ActionSearchResponse response = new ActionSearchResponse();
+		response.setResponseInfo(responseInfo);
+		response.setModules(moduleList);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	private ActionResponse getSuccessResponse(final List<Action> actionList) {
@@ -172,31 +180,32 @@ public class ActionController {
 
 	private List<ErrorField> getErrorFields(final ActionRequest actionRequest, final String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		addTeanantIdValidationErrors(actionRequest, errorFields);
-		addActionNameValidationErrors(actionRequest, errorFields);
-		if (action.equals(taskAction[0])) {
 
-			checkDuplicateActionNameValidationErrors(actionRequest, errorFields);
-		} else if (action.equals(taskAction[1])) {
-			checkActionNameDoesNotExistError(actionRequest, errorFields);
-		}
+		if (action.equals("list")) {
 
-		checkCombinationOfUrlAndqueryparamsExist(actionRequest, errorFields);
-		return errorFields;
-	}
+			addTenantIdValidationError(actionRequest, errorFields);
+			addRoleLenthValidationError(actionRequest, errorFields);
 
-	private void addTeanantIdValidationErrors(final ActionRequest actionRequest, final List<ErrorField> errorFields) {
+		} else {
 
-		for (int i = 0; i < actionRequest.getActions().size(); i++) {
-			if (actionRequest.getActions().get(i).getTenantId() == null
-					|| actionRequest.getActions().get(i).getTenantId().isEmpty()) {
-				final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.TENANTID_MANDATORY_CODE)
-						.message(
-								AccessControlConstants.TENANTID_MANADATORY_ERROR_MESSAGE + " in " + (i + 1) + " Object")
-						.field(AccessControlConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-				errorFields.add(errorField);
+			addActionsLengthValidationErrors(actionRequest, errorFields);
+
+			if (actionRequest.getActions() != null && actionRequest.getActions().size() >= 1) {
+
+				addActionNameValidationErrors(actionRequest, errorFields);
+				if (action.equals(taskAction[0])) {
+
+					checkDuplicateActionNameValidationErrors(actionRequest, errorFields);
+				} else if (action.equals(taskAction[1])) {
+					checkActionNameDoesNotExistError(actionRequest, errorFields);
+				}
+
+				checkCombinationOfUrlAndqueryparamsExist(actionRequest, errorFields);
 			}
+
+			return errorFields;
 		}
+		return errorFields;
 	}
 
 	private void addActionNameValidationErrors(final ActionRequest actionRequest, final List<ErrorField> errorFields) {
@@ -261,4 +270,39 @@ public class ActionController {
 		}
 	}
 
+	private void addActionsLengthValidationErrors(final ActionRequest actionRequest,
+			final List<ErrorField> errorFields) {
+
+		if (!(actionRequest.getActions() != null && actionRequest.getActions().size() >= 1)) {
+
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ACTIONS_NAME_MANDATORY_CODE)
+					.message(AccessControlConstants.ACTIONS_NAME_MANDATORY_ERROR_MESSAGE)
+					.field(AccessControlConstants.ACTIONS_NAME_MANDATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+
+	}
+
+	private void addTenantIdValidationError(final ActionRequest actionRequest, final List<ErrorField> errorFields) {
+
+		if (actionRequest.getTenantId() == null || actionRequest.getTenantId().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.TENANTID_MANDATORY_CODE)
+					.message(AccessControlConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+					.field(AccessControlConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+
+	}
+
+	private void addRoleLenthValidationError(final ActionRequest actionRequest, final List<ErrorField> errorFields) {
+
+		if (!(actionRequest.getRoleCodes() != null && actionRequest.getRoleCodes().size() > 0)) {
+
+			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_LENGHTH_MANDATORY_CODE)
+					.message(AccessControlConstants.ROLE_LENGTH_MANADATORY_ERROR_MESSAGE)
+					.field(AccessControlConstants.ROLE_LENGTH_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+
+		}
+	}
 }

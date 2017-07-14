@@ -1,6 +1,7 @@
 package org.egov.access.web.controller;
 
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,6 +17,9 @@ import org.egov.access.domain.criteria.RoleSearchCriteria;
 import org.egov.access.domain.model.Role;
 import org.egov.access.domain.service.RoleService;
 import org.egov.access.web.contract.factory.ResponseInfoFactory;
+import org.egov.access.web.contract.role.RoleRequest;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +75,84 @@ public class RoleControllerTest {
                 .andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
 
     }
+    
+	@Test
+	public void createRole() throws Exception {
+
+		List<Role> roles = getRoles();
+
+		when(roleService.createRole(any(RoleRequest.class))).thenReturn(roles);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/roles/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleRequest.json"))).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
+
+	}
+	
+	@Test
+	public void testShouldNotCreateRoleWithoutRole() throws Exception {
+
+		List<Role> roles = getRoles();
+
+		when(roleService.createRole(any(RoleRequest.class))).thenReturn(roles);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/roles/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleRequestWithoutRoles.json")))
+		        .andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleResponseWithoutRoles.json")));
+
+	}
+	
+	@Test
+	public void updateRole() throws Exception {
+
+		List<Role> roles = getRoles();
+
+		when(roleService.updateRole(any(RoleRequest.class))).thenReturn(roles);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/roles/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleUpdateRequest.json"))).andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleUpdateResponse.json")));
+
+	}
+	
+	@Test
+	public void testShouldNotUpdateRoleIfNoName() throws Exception {
+
+		List<Role> roles = getRoles();
+
+		when(roleService.updateRole(any(RoleRequest.class))).thenReturn(roles);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/roles/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleUpdateRequestWithoutName.json")))
+		        .andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleUpdateResponseWithoutName.json")));
+
+	}
 
     private List<Role> getRoles() {
         List<Role> roles = new ArrayList<>();

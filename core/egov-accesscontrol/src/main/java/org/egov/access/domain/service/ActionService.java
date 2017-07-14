@@ -23,11 +23,12 @@ public class ActionService {
 
     private BaseRepository repository;
     
-    @Autowired
 	private ActionRepository actionRepository;
 
-    public ActionService(BaseRepository actionRepository) {
-        this.repository = actionRepository;
+	@Autowired
+    public ActionService(BaseRepository repository,ActionRepository actionRepository) {
+        this.repository = repository;
+        this.actionRepository = actionRepository;
     }
 
     public List<Action> getActions(ActionSearchCriteria actionSearchCriteria) {
@@ -61,9 +62,9 @@ public class ActionService {
     }
     
     
-    public List<Module> getAllActionsBasedOnRoles(final ActionRequest actionRequest,final Boolean enabled){
+    public List<Module> getAllActionsBasedOnRoles(final ActionRequest actionRequest){
     	
-    	return actionRepository.getAllActionsBasedOnRoles(actionRequest,enabled).getModules();
+    	return actionRepository.getAllActionsBasedOnRoles(actionRequest).getModules();
     	
     }
 }

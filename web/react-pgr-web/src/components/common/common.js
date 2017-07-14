@@ -1,3 +1,9 @@
+var localationData={
+  "reports.pgr.complaintcategorytype":"Complaint Category Type",
+  "reports.pgr.positiontype":"Position Type",
+  "reports.pgr.wardtype":"Ward Type"
+}
+
 export function translate(locale_text){
   if(locale_text &&  localStorage.getItem("lang_response")){
 		var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
@@ -6,7 +12,7 @@ export function translate(locale_text){
 		if(langresult[0])
       return Object.values(langresult[0])[1];
     else
-      return locale_text;
+      return localationData[locale_text] || locale_text;
 	}
 }
 

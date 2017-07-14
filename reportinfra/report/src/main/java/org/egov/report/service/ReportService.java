@@ -181,7 +181,9 @@ public class ReportService {
 						.collect(Collectors.toList());
 
 				for(ColumnDetail cd : columnDetails) {
+					if(defaultValue != null){
 					cd.setDefaultValue(defaultValue.replace("{currentColumnName}", cd.getName()));
+					}
 				}
 				
 		reportResponse.setReportHeader(columnDetails);

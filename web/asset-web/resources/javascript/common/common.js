@@ -586,7 +586,7 @@ function getDropdown(name, cb, params) {
             break;
         case 'financialYears':
             if (!localStorage.getItem("financialYears") || localStorage.getItem("financialYears") == "undefined") {
-                var queryString = {active: true};
+                var queryString = {tenantId, active: true};
                 if (params && typeof params == "object")
                     queryString = Object.assign(queryString, params);
                 commonApiPost("egf-masters", "financialyears", "_search", queryString, function(err, res) {

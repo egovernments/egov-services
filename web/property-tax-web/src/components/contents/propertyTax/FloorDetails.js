@@ -138,6 +138,7 @@ class FloorDetails extends Component {
 		revanue:[],
 		election:[],
 		usages:[],
+		  floorArray:[]
     }
   }
 
@@ -259,11 +260,17 @@ class FloorDetails extends Component {
   
   createFloorObject = () => {
 	  
-		var floors = [];
+		let {floorDetails} = this.props;
+		
+		floorDetails.floorsArr = [];
 		
 		var allFloors = this.state.floorNumber;
 	  
 	    var allRooms = this.props.floorDetails.floors;
+		
+		if(!allRooms){
+			return false;
+		}
 		
 		var rooms = allRooms.filter(function(item, index, array){
 			if(!item.hasOwnProperty('flatNo')){
@@ -279,7 +286,7 @@ class FloorDetails extends Component {
 			  floor.floorNo = item.floorNo;
 			  delete item.floorNo;
 			  floor.units.push(item);
-			  floors.push(floor);
+			  floorDetails.floorsArr.push(floor);
 		})
 		
 		var flats = allRooms.filter(function(item, index, array){
@@ -379,15 +386,14 @@ class FloorDetails extends Component {
 				}
 			  floor.floorNo = item.units[0].floorNo;
 			  floor.units.push(item);
-			  floors.push(floor);
+			  floorDetails.floorsArr.push(floor);
 		})
-		
-				console.log(floors);
 		
   }
  
   
    render(){
+	   
 	   
 		var _this = this;   
 		   
@@ -806,7 +812,9 @@ class FloorDetails extends Component {
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room"  backgroundColor="#0b272e" labelColor={white} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															 this.props.resetObject("floor");
-															 this.createFloorObject();
+															 setTimeout(()=>{
+																	_this.createFloorObject();
+																}, 300);
 															}	
 														}/>}
 														{ (editIndex > -1) &&
@@ -814,6 +822,9 @@ class FloorDetails extends Component {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor");
 																  isEditIndex(-1);
+																  setTimeout(()=>{
+																	_this.createFloorObject();
+																	}, 300);
 																}
 															}/>
 														}
@@ -886,6 +897,9 @@ class FloorDetails extends Component {
                                                          <i className="material-icons" style={styles.iconFont} onClick={ () => {
 															  deleteObject("floors", index);
 																isEditIndex(-1);
+																setTimeout(()=>{
+																	_this.createFloorObject();
+																}, 300);
                                                          }}>delete</i>
                                                     </td>
                                                   </tr>)

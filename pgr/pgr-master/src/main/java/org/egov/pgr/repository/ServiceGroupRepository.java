@@ -138,7 +138,6 @@ public class ServiceGroupRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getId());
 		String checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
 		final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
 				preparedStatementValues.toArray(), Integer.class);

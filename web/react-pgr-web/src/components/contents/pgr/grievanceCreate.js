@@ -368,7 +368,7 @@ class grievanceCreate extends Component {
     Api.commonApiPost("/pgr/seva/v1/_create",{},request).then(function(createresponse)
     {
 
-      console.log(JSON.stringify(createresponse));
+      //console.log(JSON.stringify(createresponse));
 
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});

@@ -2,6 +2,7 @@ package org.egov.lams.web.controller;
 
 import java.util.List;
 
+import org.egov.lams.TestConfiguration;
 import org.egov.lams.model.DocumentType;
 import org.egov.lams.model.enums.Application;
 import org.egov.lams.service.DocumentTypeService;
@@ -9,6 +10,7 @@ import org.egov.lams.web.contract.DocumentTypeResponse;
 import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("agreements/document")
+@Import(TestConfiguration.class)
 public class DocumentTypeController {
 
 	@Autowired

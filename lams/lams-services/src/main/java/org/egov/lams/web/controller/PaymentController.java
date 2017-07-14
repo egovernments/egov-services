@@ -1,6 +1,7 @@
 package org.egov.lams.web.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.lams.TestConfiguration;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.service.AgreementService;
@@ -10,6 +11,7 @@ import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/payment")
+@Import(TestConfiguration.class)
 public class PaymentController {
 
 	@Autowired

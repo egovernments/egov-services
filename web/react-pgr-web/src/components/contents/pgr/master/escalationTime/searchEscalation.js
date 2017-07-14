@@ -227,7 +227,7 @@ class SearchEscalation extends Component {
            }
       } else if(searchEscalation.designation) {
       
-        let query = {
+        query = {
           designation:searchEscalation.designation.id
         }
       } else {}

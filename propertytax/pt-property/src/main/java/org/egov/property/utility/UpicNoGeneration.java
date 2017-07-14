@@ -38,7 +38,7 @@ public class UpicNoGeneration {
 
 		String upicNumber = null;
 		StringBuilder tenantCodeUrl = new StringBuilder();
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.host"));
+		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.hostname"));
 		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.base.path"));
 		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.search.path"));
 		String url = tenantCodeUrl.toString();

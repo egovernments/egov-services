@@ -51,7 +51,7 @@ public class WorkFlowUtil {
 			String type, String comment) {
 
 		StringBuilder workFlowStartUrl = new StringBuilder();
-		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
+		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.hostname"));
 		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
 		workFlowStartUrl.append(environment.getProperty("egov.services.workflow_service.startpath"));
 		String url = workFlowStartUrl.toString();
@@ -85,7 +85,7 @@ public class WorkFlowUtil {
 
 		TaskRequest taskRequest = getTaskRequest(workflowDetailsRequestInfo);
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.baseurl"));
+		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.hostname"));
 		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.basepath"));
 		workFlowUpdateUrl.append(environment.getProperty("egov.services.workflow_service.updatepath"));
 		String url = workFlowUpdateUrl.toString();

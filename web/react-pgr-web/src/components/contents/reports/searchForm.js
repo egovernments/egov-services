@@ -53,6 +53,7 @@ class ShowForm extends Component {
     {
       for (var i = 0; i < metaData.reportDetails.searchParams.length; i++) {
         if (metaData.reportDetails.searchParams[i].type=="url") {
+            // console.log(metaData.reportDetails.searchParams[i].type);
             if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1)
             {
               let splitArray=metaData.reportDetails.searchParams[i].pattern.split("?");
@@ -63,7 +64,7 @@ class ShowForm extends Component {
                 context+=splitArray[0].split("/")[j]+"/";
               }
 
-              Api.commonApiPost(context,id).then(function(response)
+              var response=Api.commonApiPost(context,id).then(function(response)
               {
                   let keys=jp.query(response,splitArray[1].split("|")[1]);
                   let values=jp.query(response,splitArray[1].split("|")[2]);
@@ -71,9 +72,15 @@ class ShowForm extends Component {
                   for (var k = 0; k < keys.length; k++) {
                     defaultValue[keys[k]]=values[k];
                   }
-                  console.log(defaultValue);
-                  console.log(i);
-                  // setMetaData(metaData);
+                  for (var l = 0; l < metaData.reportDetails.searchParams.length; l++) {
+                    if (metaData.reportDetails.searchParams[l].type=="url" && metaData.reportDetails.searchParams[l].pattern.search(property)>-1) {
+                        metaData.reportDetails.searchParams[l].defaultValue=defaultValue;
+                    }
+                  }
+                  // console.log(defaultValue);
+                  // console.log(i);
+                  // console.log(metaData);
+                  setMetaData(metaData);
               },function(err) {
                   console.log(err);
               });
@@ -90,7 +97,7 @@ class ShowForm extends Component {
     let {currentThis}=this;
     let {metaData,searchForm}=this.props;
     // console.log(metaData);
-    if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
+    if(!_.isEmpty(metaData) && metaData.reportDetails.searchParams.length > 0)
     {
       return metaData.reportDetails.searchParams.map((item,index) =>
       {
@@ -104,7 +111,7 @@ class ShowForm extends Component {
   componentDidMount()
   {
     let {initForm,metaData,setForm} = this.props;
-    let {searchParams}=metaData.hasOwnProperty("reportDetails")?metaData.reportDetails:{searchParams:[]};
+    let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
     for (var i = 0; i < searchParams.length; i++) {
       if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
@@ -184,7 +191,7 @@ class ShowForm extends Component {
         }}>
 
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={metaData.hasOwnProperty("reportDetails") ?metaData.reportDetails
+          <CardHeader style={{paddingBottom:0}} title={!_.isEmpty(metaData)?metaData.reportDetails
 .summary:""}/>
           <CardText style={{padding:0}}>
           <Grid>

@@ -168,7 +168,7 @@ public class FinancialMastersListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("FundContract_Completed", request);
+			mastersMap.put("fundcontract_completed", request);
 			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
 		}
 		if (mastersMap.get("fundcontract_update") != null) {
@@ -184,7 +184,7 @@ public class FinancialMastersListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("FundContract_Completed", request);
+			mastersMap.put("fundcontract_completed", request);
 			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
 		}
 

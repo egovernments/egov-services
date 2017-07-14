@@ -1,4 +1,4 @@
-package org.egov.egf.master.index.persistence.queue.contract;
+package org.egov.egf.master.index.consumer;
 
 import java.util.HashMap;
 

@@ -83,7 +83,7 @@ class DocumentTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms/masters/documenttype/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/wcms/masters/documenttype/_search",{id:this.props.match.params.id},body,false,true).then(function(response){
                 console.log("response",response);
                   console.log("response object",response.documentTypes[0]);
                 current.setState({data:response.documentTypes})
@@ -133,7 +133,7 @@ class DocumentTypeCreate extends Component {
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/wcms/masters/documenttype/"+body.DocumentType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/documenttype/"+body.DocumentType.code+"/_update",{},body,false,true).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -143,7 +143,7 @@ class DocumentTypeCreate extends Component {
             current.props.setLoadingStatus('hide');
         	})
       } else {
-          Api.commonApiPost("/wcms/masters/documenttype/_create",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/documenttype/_create",{},body,false,true).then(function(response){
               console.log(response);
               current.setState({
                 open: true

@@ -170,7 +170,7 @@ class searchDocumentType extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms/masters/documenttype/_search/", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms/masters/documenttype/_search/", searchSet,{},false,true).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.documentTypes,

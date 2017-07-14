@@ -170,7 +170,7 @@ class searchPipeSize extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/wcms/masters/pipesize/_search/", searchSet).then(function(response) {
+    Api.commonApiPost("/wcms/masters/pipesize/_search/", searchSet,{},false,true).then(function(response) {
       flag = 1;
       self.setState({
         resultList: response.pipeSizes,

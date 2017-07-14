@@ -86,7 +86,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
             let  current = this;
             let {setForm} = this.props;
 
-            Api.commonApiPost("/wcms/masters/categorytype/_search",{id:this.props.match.params.id},body).then(function(response){
+            Api.commonApiPost("/wcms/masters/categorytype/_search",{id:this.props.match.params.id},body,false,true).then(function(response){
                 console.log("response",response);
                   console.log("response object",response.CategoryTypes[0]);
                 current.setState({data:response.CategoryTypes})
@@ -104,7 +104,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
     componentDidMount() {
           let self = this;
 
-          Api.commonApiPost("/wcms/masters/master/_getapplicationtypes",{pageSize: 500}).then(function(response) {
+          Api.commonApiPost("/wcms/masters/master/_getapplicationtypes",{pageSize: 500},{},false,true).then(function(response) {
 
               var array = $.map(response, function(value, index) {
                     return [value];
@@ -118,7 +118,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
               })
           });
 
-          Api.commonApiPost("/wcms/masters/documenttype/_search",{pageSize: 500}).then(function(response) {
+          Api.commonApiPost("/wcms/masters/documenttype/_search",{pageSize: 500},{},false,true).then(function(response) {
             console.log("response",response);
               self.setState({
                 documentNameArray: response.documentTypes
@@ -158,7 +158,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
 
       if(this.props.match.params.id){
 
-          Api.commonApiPost("/wcms/masters/categorytype/"+body.CategoryType.code+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/categorytype/"+body.CategoryType.code+"/_update",{},body,false,true).then(function(response){
               console.log(response);
               current.setState({
                 open: true
@@ -168,7 +168,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
             current.props.setLoadingStatus('hide');
         	})
       } else {
-          Api.commonApiPost("/wcms/masters/categorytype/_create",{},body).then(function(response){
+          Api.commonApiPost("/wcms/masters/categorytype/_create",{},body,false,true).then(function(response){
               console.log(response);
               current.setState({
                 open: true

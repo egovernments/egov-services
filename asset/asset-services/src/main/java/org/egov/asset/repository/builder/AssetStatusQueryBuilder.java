@@ -12,7 +12,7 @@ public class AssetStatusQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(AssetStatusQueryBuilder.class);
 
-	public String BASE_QUERY = "SELECT objectname,code,description,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate FROM"
+	public String BASE_QUERY = "SELECT objectname,code,name,description,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate FROM"
 			+ " egasset_statuses as status";
 
 	public String getQuery(final AssetStatusCriteria assetStatusCriteria, final List<Object> preparedStatementValues) {

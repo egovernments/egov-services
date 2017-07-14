@@ -18,14 +18,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
+	
+	@JsonProperty("id")
+	private Long id = null;
+	
 	@JsonProperty("name")
 	@NotNull
-	@Size(max = 64)
+	@Size(min=2,max = 100)
 	private String name = null;
-
-	@JsonProperty("description")
-	private String description = null;
 	
 	@JsonProperty("code")
+	@Size(min=2,max = 50)
 	private String code = null;
+
+	@JsonProperty("description")
+	@Size(max = 256)
+	private String description = null;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
+	
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+	
+	
+	
+	
+	
 }

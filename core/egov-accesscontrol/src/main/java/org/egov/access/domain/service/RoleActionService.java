@@ -19,7 +19,10 @@ public class RoleActionService {
     	return actionRepository.createRoleActions(rolActionRequest);
     }
 	
-	
+	public boolean checkActionNamesAreExistOrNot(final RoleActionsRequest rolActionRequest){
+		
+		return actionRepository.checkActionNamesAreExistOrNot(rolActionRequest);
+	}
 
 }
 

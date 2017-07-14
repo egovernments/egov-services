@@ -13,18 +13,18 @@ public class RoleQueryBuilder {
 		
 		logger.info("RoleQueryBuilder : InsertRoleQuery");
 		return "INSERT INTO eg_ms_role(name,code,description,createdby,createddate,lastmodifiedby,lastmodifieddate) values "
-				+ "(?,?,?,?,?,?,?)";
+				+ "(:name,:code,:description,:createdby,:createddate,:lastmodifiedby,:lastmodifieddate)";
 	}
 	
 
 	public static String updateRoleQuery(){
 		logger.info("RoleQueryBuilder : updateRoleQuery");
-		return "update eg_ms_role set code=?,description=?,lastmodifiedby=?,lastmodifieddate=? where name=?";
+		return "update eg_ms_role set code=:code,description=:description,lastmodifiedby=:lastmodifiedby,lastmodifieddate=:lastmodifieddate where name=:name";
 	}
 	
 	public static String checkRoleNameDuplicationValidationErrors(){
 		
-		return "select code from eg_ms_role where name=?";
+		return "select code from eg_ms_role where name=:name";
 		
 	}
 	

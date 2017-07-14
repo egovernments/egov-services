@@ -41,11 +41,13 @@
 package org.egov.access.persistence.repository;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.egov.access.domain.model.Action;
 import org.egov.access.persistence.repository.querybuilder.ActionQueryBuilder;
@@ -57,9 +59,9 @@ import org.egov.access.web.contract.action.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -68,7 +70,7 @@ public class ActionRepository {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ActionRepository.class);
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public List<Action> createAction(final ActionRequest actionRequest) {
 
@@ -77,35 +79,19 @@ public class ActionRepository {
 
 		List<Action> actions = actionRequest.getActions();
 
-		jdbcTemplate.batchUpdate(actionInsert, new BatchPreparedStatementSetter() {
+		List<Map<String, Object>> batchValues = new ArrayList<>(actions.size());
+		for (Action action : actions) {
+			batchValues.add(new MapSqlParameterSource("name", action.getName()).addValue("url", action.getUrl())
+					.addValue("servicecode", action.getServiceCode()).addValue("queryparams", action.getQueryParams())
+					.addValue("parentmodule", action.getParentModule()).addValue("ordernumber", action.getOrderNumber())
+					.addValue("displayname", action.getDisplayName()).addValue("enabled", action.isEnabled())
+					.addValue("createdby", Long.valueOf(actionRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("lastmodifiedby", Long.valueOf(actionRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("createddate", new Date(new java.util.Date().getTime()))
+					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).getValues());
+		}
 
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				Action action = actions.get(i);
-				ps.setString(1, action.getName());
-				ps.setString(2, action.getUrl());
-				ps.setString(3, action.getServiceCode());
-				ps.setString(4, action.getQueryParams());
-				ps.setString(5, action.getParentModule());
-				if (action.getOrderNumber() != null) {
-					ps.setInt(6, action.getOrderNumber());
-				} else {
-					ps.setInt(6, 0);
-				}
-				ps.setString(7, action.getDisplayName());
-				ps.setBoolean(8, action.isEnabled());
-				ps.setLong(9, Long.valueOf(actionRequest.getRequestInfo().getUserInfo().getId()));
-				ps.setLong(10, Long.valueOf(actionRequest.getRequestInfo().getUserInfo().getId()));
-				ps.setDate(11, new Date(new java.util.Date().getTime()));
-				ps.setDate(12, new Date(new java.util.Date().getTime()));
-			}
-
-			@Override
-			public int getBatchSize() {
-				return actions.size();
-			}
-		});
-
+		namedParameterJdbcTemplate.batchUpdate(actionInsert, batchValues.toArray(new Map[actions.size()]));
 		return actions;
 	}
 
@@ -116,33 +102,18 @@ public class ActionRepository {
 
 		List<Action> actions = actionRequest.getActions();
 
-		jdbcTemplate.batchUpdate(actionUpdate, new BatchPreparedStatementSetter() {
+		List<Map<String, Object>> batchValues = new ArrayList<>(actions.size());
+		for (Action action : actions) {
+			batchValues.add(new MapSqlParameterSource("url", action.getUrl())
+					.addValue("servicecode", action.getServiceCode()).addValue("queryparams", action.getQueryParams())
+					.addValue("parentmodule", action.getParentModule()).addValue("ordernumber", action.getOrderNumber())
+					.addValue("displayname", action.getDisplayName()).addValue("enabled", action.isEnabled())
+					.addValue("lastmodifiedby", Long.valueOf(actionRequest.getRequestInfo().getUserInfo().getId()))
+					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+					.addValue("name", action.getName()).getValues());
+		}
 
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				Action action = actions.get(i);
-
-				ps.setString(1, action.getUrl());
-				ps.setString(2, action.getServiceCode());
-				ps.setString(3, action.getQueryParams());
-				ps.setString(4, action.getParentModule());
-				if (action.getOrderNumber() != null) {
-					ps.setInt(5, action.getOrderNumber());
-				} else {
-					ps.setInt(5, 0);
-				}
-				ps.setString(6, action.getDisplayName());
-				ps.setBoolean(7, action.isEnabled());
-				ps.setLong(8, Long.valueOf(actionRequest.getRequestInfo().getUserInfo().getId()));
-				ps.setDate(9, new Date(new java.util.Date().getTime()));
-				ps.setString(10, action.getName());
-			}
-
-			@Override
-			public int getBatchSize() {
-				return actions.size();
-			}
-		});
+		namedParameterJdbcTemplate.batchUpdate(actionUpdate, batchValues.toArray(new Map[actions.size()]));
 		return actions;
 	}
 
@@ -150,14 +121,12 @@ public class ActionRepository {
 
 		String Query = ActionQueryBuilder.checkActionNameExit();
 
-		Integer cnt = null;
-		try {
-			cnt = jdbcTemplate.queryForObject(Query, Integer.class, actionName);
-		} catch (EmptyResultDataAccessException ex) {
-			ex.hashCode();
-		}
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
 
-		if (cnt != null && cnt > 0) {
+		parametersMap.put("name", actionName);
+		SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(Query, parametersMap);
+
+		if (sqlRowSet.next() && sqlRowSet.getLong("id") > 0) {
 
 			return true;
 		}
@@ -169,15 +138,14 @@ public class ActionRepository {
 
 		String Query = ActionQueryBuilder.checkCombinationOfUrlAndqueryparamsExist();
 
-		Integer cnt = null;
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
 
-		try {
-			cnt = jdbcTemplate.queryForObject(Query, Integer.class, url, queryParams);
-		} catch (EmptyResultDataAccessException ex) {
-			ex.hashCode();
-		}
+		parametersMap.put("url", url);
+		parametersMap.put("queryparams", queryParams);
 
-		if (cnt != null && cnt > 0) {
+		SqlRowSet sqlRowSet = namedParameterJdbcTemplate.queryForRowSet(Query, parametersMap);
+
+		if (sqlRowSet.next() && sqlRowSet.getLong("id") > 0) {
 
 			return true;
 		}
@@ -186,104 +154,134 @@ public class ActionRepository {
 
 	}
 
-	public ActionService getAllActionsBasedOnRoles(ActionRequest actionRequest, Boolean enabled) {
+	private Map<String, List<Action>> getActionsQueryBuilder(ActionRequest actionRequest) {
+
+		ActionSearchRowMapper actionRowMapper = new ActionSearchRowMapper();
+
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
+
+		parametersMap.put("code", actionRequest.getRoleCodes());
+		parametersMap.put("tenantid", actionRequest.getTenantId());
+
+		String query = "select id,name,displayname,servicecode,url,queryparams from eg_action action where id IN(select actionid from eg_roleaction roleaction where roleaction.rolecode IN ( select code from eg_ms_role where code in (:code)) and roleaction.tenantid =:tenantid and action.id = roleaction.actionid )";
+
+		if (actionRequest.getEnabled() != null) {
+			query = query + " and enabled =:enabled ";
+			parametersMap.put("enabled", actionRequest.getEnabled());
+		}
+
+		LOGGER.info("Action Query : " + query);
+		namedParameterJdbcTemplate.query(query, parametersMap, actionRowMapper);
+		Map<String, List<Action>> actionMap = actionRowMapper.actionMap;
+
+		return actionMap;
+	}
+
+	private List<Module> getServiceQueryBuilder(ActionRequest actionRequest, Map<String, List<Action>> actionMap) {
+
+		ModuleSearchRowMapper moduleRowMapper = new ModuleSearchRowMapper();
+
+		Set<Entry<String, List<Action>>> set = actionMap.entrySet();
+
+		Iterator<Entry<String, List<Action>>> iterator = set.iterator();
+
+		List<String> codes = new ArrayList<String>();
+
+		while (iterator.hasNext()) {
+			Entry<String, List<Action>> var = iterator.next();
+			codes.add(var.getKey());
+		}
+
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
+
+		parametersMap.put("codes", codes);
+		parametersMap.put("tenantid", actionRequest.getTenantId());
+
+		String query = "select id,name,code,parentmodule,displayname from service service where service.code in (:codes) and tenantid=:tenantid";
+
+		if (actionRequest.getEnabled() != null) {
+			query = query + " and enabled =:enabled ";
+			parametersMap.put("enabled", actionRequest.getEnabled());
+		}
+
+		LOGGER.info("services Query : " + query);
+		List<Module> modules = namedParameterJdbcTemplate.query(query, parametersMap, moduleRowMapper);
+
+		return modules;
+
+	}
+
+	private List<Module> getAllServicesQueryBuilder(ActionRequest actionRequest, List<Module> moduleList) {
 
 		StringBuilder allservicesQueryBuilder = new StringBuilder();
-		StringBuilder actionQueryBuilder = new StringBuilder();
-		StringBuilder servicesQueryBuilder = new StringBuilder();
+
+		ModuleSearchRowMapper moduleRowMapper = new ModuleSearchRowMapper();
+
+		List<Long> moduleCodes = new ArrayList<>();
+		for (Module module : moduleList) {
+			moduleCodes.add(module.getId());
+		}
+
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
+
+		parametersMap.put("moduleCodes", moduleCodes);
+		parametersMap.put("tenantid", actionRequest.getTenantId());
+
+		allservicesQueryBuilder.append("(WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
+				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
+				+ " id IN (:moduleCodes) UNION ALL" + " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
+				+ " FROM nodes s2, service s1 WHERE CAST(s1.parentmodule as bigint) = s2.id");
+
+		if (actionRequest.getEnabled() != null) {
+			parametersMap.put("enabled", actionRequest.getEnabled());
+
+			allservicesQueryBuilder.append(" and s1.tenantid =:tenantid and s1.enabled =:enabled )");
+
+		} else {
+			allservicesQueryBuilder.append(" and s1.tenantid = :tenantid )");
+		}
+
+		allservicesQueryBuilder.append(" SELECT * FROM nodes)" + " UNION"
+				+ " (WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
+				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
+				+ " id IN (:moduleCodes) UNION ALL" + " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
+				+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id"
+				+ " and s1.tenantid =:tenantid )" + " SELECT * FROM nodes);");
+
+		LOGGER.info("All Services Query : " + allservicesQueryBuilder.toString());
+		List<Module> allServiceList = namedParameterJdbcTemplate.query(allservicesQueryBuilder.toString(),
+				parametersMap, moduleRowMapper);
+
+		return allServiceList;
+	}
+
+	public ActionService getAllActionsBasedOnRoles(ActionRequest actionRequest) {
 
 		ActionService service = new ActionService();
 
 		service.setModules(new ArrayList<Module>());
-		ModuleSearchRowMapper moduleRowMapper = new ModuleSearchRowMapper();
-
-		ActionSearchRowMapper actionRowMapper = new ActionSearchRowMapper();
 
 		List<Module> moduleList = null;
 
-		List<String> sqlStringifiedCodes = new ArrayList<>();
-		for (String roleName : actionRequest.getRoleCodes()) {
-			sqlStringifiedCodes.add(String.format("'%s'", roleName));
-		}
+		List<Module> allServiceList = null;
 
-		actionQueryBuilder.append(
-				"select id,name,displayname,servicecode,url,queryparams from eg_action action where id IN(select actionid from eg_roleaction roleaction where");
-
-		actionQueryBuilder.append(" roleaction.rolecode IN ( select code from eg_ms_role where code in ("
-				+ String.join(",", sqlStringifiedCodes) + "))" + "and roleaction.tenantid = '"
-				+ actionRequest.getTenantId() + "' ) ");
-
-		if (enabled != null)
-			actionQueryBuilder.append(" and enabled='" + enabled + "'");
-
-		jdbcTemplate.query(actionQueryBuilder.toString(), actionRowMapper);
-		Map<String, List<Action>> actionMap = actionRowMapper.actionMap;
+		Map<String, List<Action>> actionMap = getActionsQueryBuilder(actionRequest);
 
 		if (actionMap.size() > 0) {
 
-			servicesQueryBuilder.append(
-					"select id,name,code,parentmodule,displayname from service service where service.code in (select DISTINCT(action.servicecode) from eg_roleaction roleaction,eg_action action where ");
-			servicesQueryBuilder.append(" roleaction.rolecode IN (" + String.join(",", sqlStringifiedCodes) + ")"
-					+ "and roleaction.tenantid = '" + actionRequest.getTenantId() + "'");
-			if (enabled != null)
-				servicesQueryBuilder.append(" and enabled='" + enabled + "'");
-
-			servicesQueryBuilder.append(" and action.id = roleaction.actionid) and service.tenantid = '"
-					+ actionRequest.getTenantId() + "'");
-			if (enabled != null)
-				servicesQueryBuilder.append("  and service.enabled='" + enabled + "'");
-
-			moduleList = jdbcTemplate.query(servicesQueryBuilder.toString(), moduleRowMapper);
+			moduleList = getServiceQueryBuilder(actionRequest, actionMap);
 
 		}
-
-		List<String> moduleCodes = null;
 
 		if (moduleList != null && moduleList.size() > 0) {
 
-			moduleCodes = new ArrayList<>();
-			for (Module module : moduleList) {
-				moduleCodes.add(String.format("'%s'", module.getId()));
-			}
+			allServiceList = getAllServicesQueryBuilder(actionRequest, moduleList);
+
 		}
-
-		List<Module> allServiceList = null;
-
-		if (moduleCodes != null && moduleCodes.size() > 0) {
-
-			allservicesQueryBuilder.append("(WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
-					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
-					+ " id IN (" + String.join(",", moduleCodes) + ") UNION ALL"
-					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
-					+ " FROM nodes s2, service s1 WHERE CAST(s1.parentmodule as bigint) = s2.id");
-
-			if (enabled != null) {
-
-				allservicesQueryBuilder.append(" and s1.tenantid = '" + actionRequest.getTenantId()
-						+ "' and s1.enabled ='" + actionRequest.getEnabled() + "')");
-
-			} else {
-				allservicesQueryBuilder.append(" and s1.tenantid = '" + actionRequest.getTenantId() + "')");
-			}
-
-			allservicesQueryBuilder.append(" SELECT * FROM nodes)" + " UNION"
-					+ " (WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
-					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
-					+ " id IN (" + String.join(",", moduleCodes) + ") UNION ALL"
-					+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
-					+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id"
-					+ " and s1.tenantid = '" + actionRequest.getTenantId() + "')" + " SELECT * FROM nodes);");
-
-			allServiceList = jdbcTemplate.query(allservicesQueryBuilder.toString(), moduleRowMapper);
-		}
-
-		LOGGER.info("Action Query : " + actionQueryBuilder.toString());
-		LOGGER.info("services Query : " + servicesQueryBuilder.toString());
-		LOGGER.info("All Services Query : " + allservicesQueryBuilder.toString());
 
 		if (allServiceList != null && allServiceList.size() > 0) {
 
-			List<Module> rootModules = prepareListOfServices(allServiceList, actionMap);
+			List<Module> rootModules = prepareListOfRootModules(allServiceList, actionMap);
 
 			for (Module module : rootModules) {
 
@@ -299,7 +297,7 @@ public class ActionRepository {
 		return service;
 	}
 
-	private List<Module> prepareListOfServices(List<Module> moduleList, Map<String, List<Action>> actionMap) {
+	private List<Module> prepareListOfRootModules(List<Module> moduleList, Map<String, List<Action>> actionMap) {
 
 		List<Module> mainModules = new ArrayList<Module>();
 

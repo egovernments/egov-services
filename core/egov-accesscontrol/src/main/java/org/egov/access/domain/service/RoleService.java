@@ -18,11 +18,12 @@ public class RoleService {
 
     private BaseRepository repository;
     
-    @Autowired
-	private RoleRepository roleRepository;
+   	private RoleRepository roleRepository;
 
-    public RoleService(BaseRepository repository) {
+    @Autowired
+    public RoleService(BaseRepository repository,RoleRepository roleRepository) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
     }
 
     public List<Role> getRoles(RoleSearchCriteria roleSearchCriteria) {

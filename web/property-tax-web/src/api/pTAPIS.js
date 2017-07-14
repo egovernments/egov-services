@@ -27,7 +27,7 @@ var requestInfo = {
   "key": "xyz",
   "msgId": "654654",
   "requesterId": "61",
-  "authToken": "6617773d-bffe-4809-ab18-51f8fea4d13f"
+  "authToken": "0ced33bd-7417-4ec6-b066-c7dc1d5112ce"
 };
 //uncomment for ap
 // var tenantId = "ap." + window.location.origin.split("-")[0].split("//")[1];

@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.model.EmailMessage;
-import org.egov.model.EmailMessageContext;
-import org.egov.model.EmailRequest;
-import org.egov.model.SmsMessage;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.TaxCalculation;
 import org.egov.models.User;
+import org.egov.notification.model.EmailMessage;
+import org.egov.notification.model.EmailMessageContext;
+import org.egov.notification.model.EmailRequest;
+import org.egov.notification.model.SmsMessage;
+import org.egov.notification.model.TaxCalculationResponse;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +44,6 @@ public class NotificationService {
 	 * 
 	 * @param propertyrequest
 	 */
-	@KafkaListener(topics = "#{environment.getProperty('demand.acknowledgement')}")
 	public void demandAcknowledgement(PropertyRequest propertyrequest) {
 
 		for (Property property : propertyrequest.getProperties()) {
@@ -73,8 +72,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("demand.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("demand.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -84,7 +83,6 @@ public class NotificationService {
 	 * 
 	 * @param propertyrequest
 	 */
-	@KafkaListener(topics = "#{environment.getProperty('demand.approve')}")
 	public void demandApprove(PropertyRequest propertyrequest) {
 
 		for (Property property : propertyrequest.getProperties()) {
@@ -113,8 +111,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("demand.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("demand.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -124,7 +122,6 @@ public class NotificationService {
 	 * 
 	 * @param propertyrequest
 	 */
-	@KafkaListener(topics = "#{environment.getProperty('demand.transferfee')}")
 	public void demandTransferFee(PropertyRequest propertyrequest) {
 
 		for (Property property : propertyrequest.getProperties()) {
@@ -155,8 +152,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("demand.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("demand.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -196,8 +193,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("demand.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("demand.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -235,8 +232,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("property.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("property.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -258,9 +255,9 @@ public class NotificationService {
 			// total Propertytax calculation logic
 			String taxCalculations = property.getPropertyDetail().getTaxCalculations();
 			Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-			List<TaxCalculation> taxCalculationList = gson.fromJson(taxCalculations, TaxCalculation.class);
+			TaxCalculationResponse taxCalculationResponse = gson.fromJson(taxCalculations, TaxCalculationResponse.class);
 			Double propertyTax = 0.0;
-			for (TaxCalculation taxcalculation : taxCalculationList) {
+			for (TaxCalculation taxcalculation : taxCalculationResponse.getTaxCalculationList()) {
 				propertyTax = propertyTax + taxcalculation.getPropertyTaxes().getTotalTax();
 			}
 			propertyMessage.put("propertyTax", propertyTax);
@@ -284,8 +281,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("property.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("property.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -323,8 +320,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("property.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("property.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -363,8 +360,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("revision.petition.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("revision.petition.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -403,8 +400,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("revision.petition.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("revision.petition.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}
@@ -443,8 +440,8 @@ public class NotificationService {
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("revision.petition.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("revision.petition.email"), emailMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
+				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
 			}
 		}
 	}

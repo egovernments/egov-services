@@ -519,7 +519,7 @@ class CreateProperty extends Component {
             "woodType": "modern",
             "roofType": "new one",
             "wallType": "painting",
-            "floors":this.props.createProperty.floors,
+            "floors":this.props.createProperty.floorsArr,
             "documents": [{
                 
                 "documentType": {

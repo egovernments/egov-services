@@ -500,7 +500,7 @@ class Revaluation extends React.Component {
                               <label>Voucher Reference </label>
                             </div>
                             <div className="col-sm-6 label-view-text">
-                              <label>{revaluationSet.reasonForRevaluation}</label>
+                              <label>{revaluationSet.voucherReference}</label>
                             </div>
                         </div>
                       </div>

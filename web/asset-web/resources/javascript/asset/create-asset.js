@@ -118,7 +118,15 @@ const defaultAssetSetState = {
     "totalArea": "",
     "assetReference": "",
     "assetReferenceName": "",
-    "assetAttributes":[]
+    "assetAttributes":[],
+    "depreciationRate": "",
+    "enableYearWiseDepreciation": false,
+    "yearWiseDepreciation": [Object.assign({}, defaultyearWiseDepRateTemp)]
+};
+
+const defaultyearWiseDepRateTemp = {
+    "depreciationRate": "",
+    "financialYear": "",
 };
 
 class CreateAsset extends React.Component {
@@ -162,7 +170,8 @@ class CreateAsset extends React.Component {
         modify1: false,
         modify2: false,
         allFiles: [],
-        removedFiles: {}
+        removedFiles: {},
+        financialYears: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -180,10 +189,45 @@ class CreateAsset extends React.Component {
     this.removeReference = this.removeReference.bind(this);
     this.openNewRelAssetMdl = this.openNewRelAssetMdl.bind(this);
     this.addToRemovedFiles = this.addToRemovedFiles.bind(this);
+    this.handleAddNewYearRow = this.handleAddNewYearRow.bind(this);
+    this.handleDelYearRow = this.handleDelYearRow.bind(this);
+    this.handleYearChange = this.handleYearChange.bind(this);
+  }
+
+  handleAddNewYearRow() {
+    var _yearWiseTemplateArr = Object.assign([], this.state.assetSet.yearWiseDepreciation);
+    _yearWiseTemplateArr.push(Object.assign({}, defaultyearWiseDepRateTemp));
+    this.setState({
+      assetSet: {
+        ...this.state.assetSet,
+        yearWiseDepreciation: _yearWiseTemplateArr
+      }
+    });
+  }
+
+  handleDelYearRow(ind) {
+    var _yearWiseTemplateArr = Object.assign([], this.state.assetSet.yearWiseDepreciation);
+    _yearWiseTemplateArr.splice(ind, 1);
+    this.setState({
+      assetSet: {
+        ...this.state.assetSet,
+        yearWiseDepreciation: _yearWiseTemplateArr
+      }
+    });
+  }
+
+  handleYearChange(e, key, ind) {
+    var _yearWiseTemplateArr = Object.assign([], this.state.assetSet.yearWiseDepreciation);
+    _yearWiseTemplateArr[ind][key] = e.target.value;
+    this.setState({
+      assetSet: {
+        ...this.state.assetSet,
+        yearWiseDepreciation: _yearWiseTemplateArr
+      }
+    });
   }
 
   close() {
-      // widow.close();
       open(location, '_self').close();
   }
 
@@ -435,6 +479,15 @@ class CreateAsset extends React.Component {
   handleChange(e, name) {
       if(name === "status") {
         this.state.capitalized = ( e.target.value === "CAPITALIZED");
+      } else if(name == "enableYearWiseDepreciation") {
+        return this.setState({
+          assetSet: {
+              ...this.state.assetSet,
+              [name]: e.target.checked,
+              depreciationRate: e.target.checked ? "" : this.state.assetSet.depreciationRate,
+              yearWiseDepreciation: !e.target.checked ? [Object.assign({}, defaultyearWiseDepRateTemp)] : this.state.assetSet.yearWiseDepreciation
+          }
+         })
       }
 
       this.setState({
@@ -480,6 +533,9 @@ class CreateAsset extends React.Component {
         tempInfo.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
       }
 
+      if(!tempInfo.enableYearWiseDepreciation) {
+        delete tempInfo.yearWiseDepreciation;
+      }
       //return console.log(JSON.stringify(tempInfo));
       var body = {
           "RequestInfo": requestInfo,
@@ -650,7 +706,7 @@ class CreateAsset extends React.Component {
   }
 
   handleChangeTwoLevel(e, pName, name, multi) {
-      let text, type, codeNo, innerJSON, version;
+      let text, type, codeNo, innerJSON, version, depRate;
       if (pName == "assetCategory") {
           let el = document.getElementById('assetCategory');
           text = el.options[el.selectedIndex].innerHTML;
@@ -664,6 +720,7 @@ class CreateAsset extends React.Component {
             if (e.target.value==this.state.assetCategories[i].id) {
                 type = this.state.assetCategories[i].assetCategoryType;
                 codeNo = this.state.assetCategories[i].code;
+                depRate = this.state.assetCategories[i].depreciationRate;
                 break;
             }
          }
@@ -704,7 +761,8 @@ class CreateAsset extends React.Component {
           assetSet: {
               ...this.state.assetSet,
               [pName]: innerJSON,
-              version: version || this.state.assetSet.version || ""
+              version: version || this.state.assetSet.version || "",
+              depreciationRate: pName == "assetCategory" ? (depRate || "") : (this.state.assetSet.depreciationRate || "")
           }
       })
 
@@ -762,7 +820,7 @@ class CreateAsset extends React.Component {
 	     		$('#assetCategory,#code').attr('disabled','disabled');
 		 		})
 			}
-      var count = 11;
+      var count = 12;
       var _state = {
         readonly: (type === "view")
       };
@@ -805,6 +863,9 @@ class CreateAsset extends React.Component {
       }, {objectName: 'Asset Master'});
       getDropdown("asset_category_type", function(res) {
         checkCountNCall("asset_category_type", res);
+      });
+      getDropdown("financialYears", function(res) {
+        checkCountNCall("financialYears", res);
       });
 
       var id = getUrlVars()["id"];
@@ -1019,8 +1080,8 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles} = this.state;
+    let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles, handleAddNewYearRow, handleDelYearRow, handleYearChange} = this;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles, financialYears} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1048,7 +1109,10 @@ class CreateAsset extends React.Component {
       status,
       assetAttributes,
       assetReferenceName,
-      assetReference
+      assetReference,
+      enableYearWiseDepreciation,
+      depreciationRate,
+      yearWiseDepreciation
   	} = this.state.assetSet;
 
     const getType = function() {
@@ -1111,7 +1175,7 @@ class CreateAsset extends React.Component {
 
     }*/
 
-    const renderOption = function(list, assetCatBool, statusBool) {
+    const renderOption = function(list, assetCatBool, statusBool, yearBool) {
         if(list) {
             if (list.length) {
               if(statusBool) {
@@ -1128,6 +1192,14 @@ class CreateAsset extends React.Component {
                 else
                   return 0;
               });
+
+              if(yearBool) {
+                return list.map((item, ind)=> {
+                    return (<option key={ind} value={item.finYearRange}>
+                          {item.finYearRange}
+                    </option>)
+                })
+              }
 
               return list.map((item, ind)=> {
                   if(typeof item == "object") {
@@ -1785,6 +1857,57 @@ class CreateAsset extends React.Component {
       }
     }
 
+    const renderYearWiseTable = function () {
+      return yearWiseDepreciation.map(function(yr, ind) {
+        return (
+          <tr key={ind}>
+            <td>{ind + 1}</td>
+            <td>
+              <select required value={yr.financialYear} onChange={(e) => {handleYearChange(e, "financialYear", ind)}}  disabled={readonly}>
+                <option value="">Select Financial Year</option>
+                {renderOption(financialYears, "", "", true)}
+              </select>
+            </td>
+            <td>
+              <input required type="number" value={yr.depreciationRate} onChange={(e) => {handleYearChange(e, "depreciationRate", ind)}}  disabled={readonly}/>
+            </td>
+            <td>
+              {ind == yearWiseDepreciation.length-1 && !readonly && <button className="btn btn-close" type="button" onClick={(e) =>{handleAddNewYearRow()}}>
+                <span className="glyphicon glyphicon-plus"></span>
+              </button>}&nbsp;&nbsp;
+              {ind != 0 && !readonly && <button className="btn btn-close" type="button" onClick={(e) => {handleDelYearRow(ind)}}>
+                <span className="glyphicon glyphicon-minus"></span>
+              </button>}
+            </td>
+          </tr>
+        );
+      })
+    }
+
+    const showYearWiseDep = function () {
+      let self = this;
+      if(enableYearWiseDepreciation) {
+        return (
+          <table className="table table-bordered">
+              <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Financial Year</th>
+                    <th>Depreciation Rate</th>
+                    <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  renderYearWiseTable()
+                }
+              </tbody>
+
+         </table>
+        )
+      }  
+    }
+
     return (
       <div>
         <h3 > {getType()} Asset  </h3>
@@ -1927,9 +2050,32 @@ class CreateAsset extends React.Component {
                     </div>
                   </div>
 									{showCodeonUpdate()}
-
                 </div>
-
+                <div className="row">
+                  <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label for="name">Enable Year Wise Depreciation </label>
+                      </div>
+                      <div className="col-sm-6 label-view-text">
+                        <input id="enableYearWiseDepreciation" name="enableYearWiseDepreciation" value={enableYearWiseDepreciation} type="checkbox"
+                          onChange={(e)=>{handleChange(e, "enableYearWiseDepreciation")}} disabled={readonly} checked={[true, "true"].indexOf(enableYearWiseDepreciation) > -1}/>
+                      </div>
+                    </div>
+                  </div>
+                  {!enableYearWiseDepreciation && <div className="col-sm-6" style={{"display": !enableYearWiseDepreciation ? "block" : "none"}}>
+                      <div className="row">
+                        <div className="col-sm-6 label-text">
+                          <label for="name">Depreciation Rate <span>*</span> </label>
+                        </div>
+                        <div className="col-sm-6 label-view-text">
+                          <input required id="depreciationRate" name="depreciationRate" value={depreciationRate} type="number"
+                            onChange={(e)=>{handleChange(e, "depreciationRate")}} disabled={readonly} />
+                        </div>
+                      </div>
+                    </div>}
+                </div>
+                {showYearWiseDep()}
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">

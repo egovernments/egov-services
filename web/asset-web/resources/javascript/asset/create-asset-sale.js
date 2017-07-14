@@ -71,8 +71,8 @@ class Sale extends React.Component {
             "tenantId": tenantId,
             "id": "",
             "assetId": "",
-            "disposalPartyName": "",
-            "disposalPartyAddress": "",
+            "buyerName": "",
+            "buyerAddress": "",
             "disposalReason": "",
             "disposalDate": "",
             "panCardNumber": "",
@@ -81,7 +81,8 @@ class Sale extends React.Component {
             "saleValue": "",
             "assetSaleAccountCode": "",
             "auditDetails": null,
-            "documents": []
+            "documents": [],
+            "transactionType": ""
           },
           departments: [],
           revenueZones: [],
@@ -229,7 +230,7 @@ class Sale extends React.Component {
     }
 
     handleChange(e, name) {
-      if(name == "type") {
+      if(name == "transactionType") {
         return this.setState({
           showPANNAadhar: e.target.value && e.target.value.toLowerCase() == "sale" ? true : false,
           disposal: {
@@ -259,7 +260,7 @@ class Sale extends React.Component {
             }
           });
         }
-      } else if(name == "type" && e.target.value == "sale") {
+      } else if(name == "transactionType" && e.target.value == "SALE") {
         this.setState({
           disposal: {
             ...this.state.disposal,
@@ -541,11 +542,11 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <input type="text" value={disposal.disposalPartyName} onChange={(e)=>handleChange(e, "disposalPartyName")} required/>
+                                <input type="text" value={disposal.buyerName} onChange={(e)=>handleChange(e, "buyerName")} required/>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.disposalPartyName}</label>
+                                <label>{disposal.buyerName}</label>
                             </div>
                         </div>
                       </div>
@@ -558,11 +559,11 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <textarea value={disposal.disposalPartyAddress} onChange={(e)=>handleChange(e, "disposalPartyAddress")} required></textarea>
+                                <textarea value={disposal.buyerAddress} onChange={(e)=>handleChange(e, "buyerAddress")} required></textarea>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.disposalPartyAddress}</label>
+                                <label>{disposal.buyerAddress}</label>
                             </div>
                         </div>
                       </div>
@@ -590,15 +591,15 @@ class Sale extends React.Component {
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <select required onChange={(e)=>handleChange(e, "type")}>
+                                <select required onChange={(e)=>handleChange(e, "transactionType")}>
                                   <option value="">Select Type</option>
-                                  <option value="Sale">Sale</option>
-                                  <option value="Disposal">Disposal</option>
+                                  <option value="SALE">Sale</option>
+                                  <option value="DISPOSAL">Disposal</option>
                                 </select>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.type}</label>
+                                <label>{disposal.transactionType}</label>
                             </div>
                         </div>
                       </div>

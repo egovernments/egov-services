@@ -79,7 +79,6 @@ public class EscalationTimeTypeValidator {
 	
 	private void checkRecordExists(final EscalationTimeTypeReq escalationTimeTypeRequest,
 			final List<ErrorField> errorFields) {
-			final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
 			if (escalationService.checkRecordExists(escalationTimeTypeRequest)) {
 				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_CODE)
 						.message(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_ERROR_MESSAGE)

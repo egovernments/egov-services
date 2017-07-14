@@ -115,6 +115,7 @@ public class EscalationRepository {
 		final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
 				preparedStatementValues.toArray(), Integer.class);
 		if(count.size()>0){
+			logger.info("Size of the count is : " + count);
 			if(count.get(0) > 0){
 				return true;
 			}

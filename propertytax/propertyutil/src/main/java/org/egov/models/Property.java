@@ -33,7 +33,6 @@ public class Property {
     private String tenantId = null;
 
     @JsonProperty("upicNumber")
-    @NotNull
     @Size(min = 6, max = 128)
     private String upicNumber = null;
 

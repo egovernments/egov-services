@@ -272,7 +272,7 @@ class Login extends Component {
     var self = this;
     if(!self.state.mobNo)
       return self.setState({
-        mobErrorMsg: translate('Mobile Number / Login ID is required')
+        mobErrorMsg: translate('pgr.lbl.loginreqrd')
       })
 
     else
@@ -314,7 +314,7 @@ class Login extends Component {
       var self = this;
       if(!self.state.otp) {
         return self.setState({
-          otpErrorMsg: translate('OTP is required')
+          otpErrorMsg: translate('pgr.lbl.otprqrd')
         })
       } else {
         self.setState({
@@ -412,7 +412,7 @@ class Login extends Component {
       var self = this;
       if(!self.state.signUpObject.otp) {
         self.setState({
-          signUpErrorMsg: translate("OTP is required")
+          signUpErrorMsg: translate("pgr.lbl.otprqrd")
         })
       } else {
         Api.commonApiPost("otp/v1/_validate", {}, {
@@ -448,7 +448,7 @@ class Login extends Component {
      let {history, setHome} = this.props;
      history.push('/pgr/createGrievance');
      setHome(true);
-     
+
    }
 
    render() {
@@ -647,7 +647,7 @@ class Login extends Component {
                             <i className="material-icons">phone</i>
                         </FloatingActionButton>
                         <div style={styles.floatLeft}>
-                          <h4>{translate('Register via grievance cell')}</h4>
+                          <h4>{translate('pgr.lbl.grievancecell')}</h4>
                           <p>{translate('Call 1800-425-9766 to register your grievance')}</p>
                         </div>
                       </Col>
@@ -683,7 +683,7 @@ class Login extends Component {
               </Row>
             </Grid>
             <Dialog
-              title={translate('Recover Password')}
+              title={translate('pgr.lbl.recoverpswd')}
               actions={[
                 <FlatButton
                   label={translate('core.lbl.cancel')}
@@ -691,7 +691,7 @@ class Login extends Component {
                   onTouchTap={() => {handleClose("open")}}
                 />,
                 <FlatButton
-                  label={translate('Send Recovery OTP')}
+                  label={translate('pgr.lbl.sendotp')}
                   secondary={true}
                   onTouchTap={(e)=>{sendRecovery("otp")}}
                 />
@@ -706,11 +706,11 @@ class Login extends Component {
                   errorText={mobErrorMsg} id="mobNo" value={mobNo} onChange={(e) => handleStateChange(e, "mobNo")}
               />
               <div style={{textAlign: "right", fontSize: "12px"}}>
-                {translate('Recovery link or OTP will be sent to your registered email / mobile')}
+                {translate('pgr.lbl.recoverylink')}
               </div>
             </Dialog>
             <Dialog
-              title={!hideOtp ? translate('Enter OTP Sent To Your Mobile Number') : translate('core.lbl.new.password')}
+              title={!hideOtp ? translate('pgr.lbl.otpnumber') : translate('core.lbl.new.password')}
               actions={[
                 <FlatButton
                   label={translate('core.lbl.cancel')}
@@ -718,7 +718,7 @@ class Login extends Component {
                   onTouchTap={(e) => {handleClose("open1")}}
                 />,
                 <FlatButton
-                  label={!hideOtp ? translate('Verify') : translate('core.lbl.submit')}
+                  label={!hideOtp ? translate('pgr.lbl.verify') : translate('core.lbl.submit')}
                   secondary={true}
                   onTouchTap={(e)=>{!hideOtp ? validateOTP() : generatePassword()}}
                 />

@@ -95,6 +95,13 @@ class grievanceView extends Component{
         if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
           handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
         }
+        if(currentThis.state.status === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE'){
+          currentThis.props.ADD_MANDATORY('designationId');
+          currentThis.props.ADD_MANDATORY('positionId');
+          handleChange('', "designationId", true, "");
+          handleChange('', "positionId", true, "");
+        }
+        handleChange(currentThis.state.status, "status", false, "");
       });
 
       Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
@@ -313,20 +320,20 @@ class grievanceView extends Component{
     var date = dat.split("/").join("-");
     req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
 
-    let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-    if(checkStatus === 'FORWARDED'){
-      if(currentThis.props.grievanceView.positionId === undefined){
-        currentThis.setState({loadingstatus:'hide'});
-        currentThis.handleError('Select position to whom it is forwarded');
-        return false;
-      }
-    }else if(checkStatus === 'REGISTERED'){
-      if(currentThis.props.grievanceView.positionId){
-        currentThis.setState({loadingstatus:'hide'});
-        currentThis.handleError('Select the status as FORWARDED. Since you are trying to change the position.');
-        return false;
-      }
-    }
+    // let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
+    // if(checkStatus === 'FORWARDED'){
+    //   if(currentThis.props.grievanceView.positionId === undefined){
+    //     currentThis.setState({loadingstatus:'hide'});
+    //     currentThis.handleError(translate('pgr.lbl.selectpos'));
+    //     return false;
+    //   }
+    // }else if(checkStatus === 'REGISTERED'){
+    //   if(currentThis.props.grievanceView.positionId){
+    //     currentThis.setState({loadingstatus:'hide'});
+    //     currentThis.handleError('Select the status as FORWARDED. Since you are trying to change the position.');
+    //     return false;
+    //   }
+    // }
 
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
@@ -367,6 +374,7 @@ class grievanceView extends Component{
           req_obj.serviceRequest.attribValues.push(obj);
           currentThis.updateSeva(req_obj);
         },function(err) {
+          currentThis.setState({loadingstatus:'hide'});
           currentThis.handleError(err.message);
         });
       }
@@ -438,9 +446,10 @@ class grievanceView extends Component{
   handleUploadValidation = (e, formats) => {
     let validFile = validate_fileupload(e.target.files, formats);
     //console.log('is valid:', validFile);
-    if(validFile === true)
+    if(validFile === true){
+      this.props.handleFileEmpty();
       this.props.handleUpload(e);
-    else{
+    }else{
       this.refs.file.value = '';
       this.handleError(validFile);
     }
@@ -718,10 +727,10 @@ class grievanceView extends Component{
                 </SelectField>
               </Col> : "" }
             </Row>
-            { localStorage.getItem('type') === 'EMPLOYEE' ?
+            { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.status === 'FORWARDED' ?
             <Row>
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Forward to Department" maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
                   handleDesignation(value, "departmentId", false, ""); }
                 }>
                   <MenuItem value={0} primaryText="Select Department" />
@@ -732,7 +741,7 @@ class grievanceView extends Component{
                 </SelectField>
               </Col>
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Forward to Designation" maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddesgn')} maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
                   handlePosition(grievanceView.departmentId, value, "designationId", true, "") }}>
                   <MenuItem value={0} primaryText="Select Designation" />
                   {this.state.designation !== undefined ?
@@ -742,7 +751,7 @@ class grievanceView extends Component{
                 </SelectField>
               </Col>
               <Col xs={12} md={3}>
-                <SelectField fullWidth={true} floatingLabelText="Forward to Position" maxHeight={200} value={grievanceView.positionId} onChange={(event, key, value) => {
+                <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.positionId} onChange={(event, key, value) => {
                   handleChange(value, "positionId", true, ""); }}>
                   <MenuItem value={0} primaryText="Select Position" />
                   {this.state.position !== undefined ?
@@ -808,7 +817,7 @@ class grievanceView extends Component{
 }
 
 const mapStateToProps = state => {
-  console.log(state.form.form);
+  //console.log(state.form.form);
   return ({grievanceView: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
@@ -914,6 +923,9 @@ const mapDispatchToProps = dispatch => ({
   },
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
+  },
+  handleFileEmpty : () => {
+    dispatch({type: 'FILE_EMPTY'});
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

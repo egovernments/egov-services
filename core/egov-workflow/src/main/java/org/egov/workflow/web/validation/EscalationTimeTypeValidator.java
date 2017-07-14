@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
 import org.egov.workflow.domain.model.EscalationTimeType;
+import org.egov.workflow.domain.service.EscalationService;
 import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;
 import org.egov.workflow.web.errorhandlers.Error;
 import org.egov.workflow.web.errorhandlers.ErrorResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,9 @@ import org.springframework.validation.FieldError;
 
 @Service
 public class EscalationTimeTypeValidator {
+	
+	@Autowired
+	private EscalationService escalationService;
 	
 	public List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -37,6 +42,7 @@ public class EscalationTimeTypeValidator {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addServiceIdValidationErrors(escalationTimeTypeRequest, errorFields);
 		addTeanantIdValidationErrors(escalationTimeTypeRequest, errorFields);
+		checkRecordExists(escalationTimeTypeRequest, errorFields);
 		return errorFields;
 	}
 
@@ -68,6 +74,18 @@ public class EscalationTimeTypeValidator {
 		} else
 			return;
 	}
+	
+	private void checkRecordExists(final EscalationTimeTypeReq escalationTimeTypeRequest,
+			final List<ErrorField> errorFields) {
+			final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
+			if (escalationService.checkRecordExists(escalationTimeTypeRequest)) {
+				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_CODE)
+						.message(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_ERROR_MESSAGE)
+						.field(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			} else
+				return;
+		}
 
 	public ErrorResponse populateErrors(final BindingResult errors) {
 		final ErrorResponse errRes = new ErrorResponse();

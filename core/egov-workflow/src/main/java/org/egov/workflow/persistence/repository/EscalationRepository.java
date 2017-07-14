@@ -105,5 +105,21 @@ public class EscalationRepository {
 		}
 		return escalationTypes;
 	}
+	
+	public boolean checkRecordExists(EscalationTimeTypeReq escalationTimeTypeReq) {
+		List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(escalationTimeTypeReq.getEscalationTimeType().getGrievanceType().getId());
+		preparedStatementValues.add(escalationTimeTypeReq.getEscalationTimeType().getDesignation());
+		preparedStatementValues.add(escalationTimeTypeReq.getEscalationTimeType().getTenantId());
+		String checkQuery = escalationTimeTypeQueryBuilder.checkRecordExistsQuery();
+		final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
+				preparedStatementValues.toArray(), Integer.class);
+		if(count.size()>0){
+			if(count.get(0) > 0){
+				return true;
+			}
+		}
+		return false; 
+	}
     
 }

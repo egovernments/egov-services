@@ -114,7 +114,7 @@ public class WaterConnectionRepository {
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
 
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
-                statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatment());
+                statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
                 if(!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
                 statement.setString(26, NewConnectionStatus.CREATED.name()); 

@@ -56,6 +56,7 @@ import org.egov.wcms.transanction.web.contract.PropertyCategoryResponseInfo;
 import org.egov.wcms.transanction.web.contract.PropertyUsageTypeResponseInfo;
 import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transanction.web.contract.SupplyResponseInfo;
+import org.egov.wcms.transanction.web.contract.TreatmentPlantResponse;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transanction.web.errorhandlers.Error;
@@ -88,6 +89,23 @@ public class RestConnectionService {
             waterConnectionRequest.getConnection()
                     .setCategoryId(positions.getCategory() != null && positions.getCategory().get(0) != null
                             ? String.valueOf(positions.getCategory().get(0).getId()) : "");
+        }
+        return positions;
+    }
+    
+    public TreatmentPlantResponse getTreateMentPlanName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+                .append(configurationManager.getWaterTreatmentSearchTopic());
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        TreatmentPlantResponse positions = new RestTemplate().postForObject(url.toString(), request, TreatmentPlantResponse.class,
+                waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
+        if (positions != null && !positions.getTreatmentPlants().isEmpty()) {
+            waterConnectionRequest.getConnection()
+                    .setWaterTreatmentId(positions.getTreatmentPlants() != null && positions.getTreatmentPlants().get(0) != null
+                            ? String.valueOf(positions.getTreatmentPlants().get(0).getId()) : "");
         }
         return positions;
     }

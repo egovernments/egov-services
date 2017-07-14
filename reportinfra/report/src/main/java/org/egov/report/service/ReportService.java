@@ -166,6 +166,7 @@ public class ReportService {
 		//Let's check whether there's a linked report, we will set the default value in header columns according to that
 				SourceColumnLinkedReport linkedReport = reportDefinition.getLinkedReport();
 				System.out.println("Linked Report Pattern is: "+linkedReport);
+				System.out.println("Changes are coming in");
 				String pattern = null;
 				String defaultValue = "test";
 				if(linkedReport != null){

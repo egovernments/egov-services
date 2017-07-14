@@ -903,6 +903,8 @@ class CreateAsset extends React.Component {
                     _files.push(asset.assetAttributes[i]);
                   }
                 }  
+              } else {
+                asset.assetAttributes = [];
               }
 
               setTimeout(function() {

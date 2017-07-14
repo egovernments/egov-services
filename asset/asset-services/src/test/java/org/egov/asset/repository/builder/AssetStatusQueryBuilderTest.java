@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetStatusCriteria;
+import org.egov.asset.model.enums.AssetStatusObjectName;
+import org.egov.asset.model.enums.Status;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,12 +55,12 @@ public class AssetStatusQueryBuilderTest {
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT objectname,code,name,description,tenantid,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate FROM egasset_statuses as status WHERE status.objectname = ?";
-        final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder().objectName("Asset Master")
-                .build();
+        final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder()
+                .objectName(AssetStatusObjectName.ASSETMASTER.toString()).build();
         assertEquals(expectedQueryWithTenantId,
                 assetStatusQueryBuilder.getQuery(assetStatusCriteria, preparedStatementValues));
         final List<Object> expectedPreparedStatementValues = new ArrayList<>();
-        expectedPreparedStatementValues.add("Asset Master");
+        expectedPreparedStatementValues.add(AssetStatusObjectName.ASSETMASTER.toString());
         assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
     }
 
@@ -68,11 +70,12 @@ public class AssetStatusQueryBuilderTest {
         Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT objectname,code,name,description,tenantid,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate FROM egasset_statuses as status WHERE status.code = ?";
-        final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder().code("CAPITALIZED").build();
+        final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder()
+                .code(Status.CAPITALIZED.toString()).build();
         assertEquals(expectedQueryWithTenantId,
                 assetStatusQueryBuilder.getQuery(assetStatusCriteria, preparedStatementValues));
         final List<Object> expectedPreparedStatementValues = new ArrayList<>();
-        expectedPreparedStatementValues.add("CAPITALIZED");
+        expectedPreparedStatementValues.add(Status.CAPITALIZED.toString());
         assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
     }
 

@@ -37,59 +37,39 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.model;
+package org.egov.wcms.transition.demand.contract;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.wcms.transanction.model.AuditDetails;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
+@Data
 @NoArgsConstructor
-@Setter
-@ToString
-@Builder
+@AllArgsConstructor
+public class TaxPeriod {
 
-public class EstimationCharge {
+	private String id;
 
-    @NotNull
-    private long id;
+	@NotNull
+	private String tenantId;
 
-    @NotNull
-    private long connectionId;
+	@NotNull
+	private Long fromDate;
 
+	@NotNull
+	private Long toDate;
 
-    @NotNull
-    private String existingDistributionPipeline;
+	@NotNull
+	private String service;
 
-    @NotNull
-    private double pipelineToHomeDistance;
+	@NotNull
+	private String code;
 
-    @NotNull
-    private double estimationCharges;;
+	private String financialYear;
 
-    @NotNull
-    private double supervisionCharges;
-
-    @NotNull
-    private double materialCharges;
-    
-    private double roadCutCharges;
-    
-    private double specialSecurityCharges;
-
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
-
+	private AuditDetails auditDetail;
 }

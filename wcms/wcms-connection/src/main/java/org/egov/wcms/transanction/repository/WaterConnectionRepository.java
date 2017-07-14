@@ -122,6 +122,7 @@ public class WaterConnectionRepository {
                 else{
                     statement.setString(26, NewConnectionStatus.VERIFIED.name()); 
                 }
+                if(waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE))
                 statement.setLong(27, (waterConnectionRequest.getConnection().getStateId()!=null?waterConnectionRequest.getConnection().getStateId():1l)); 
                 if(waterConnectionRequest.getConnection().getDemandid()!=null)
                 statement.setString(28, waterConnectionRequest.getConnection().getDemandid()); 

@@ -37,59 +37,29 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.model;
+package org.egov.wcms.transition.demand.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
+@Data
 @NoArgsConstructor
-@Setter
-@ToString
+@AllArgsConstructor
 @Builder
+public class TaxPeriodResponse {
 
-public class EstimationCharge {
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-    @NotNull
-    private long id;
-
-    @NotNull
-    private long connectionId;
-
-
-    @NotNull
-    private String existingDistributionPipeline;
-
-    @NotNull
-    private double pipelineToHomeDistance;
-
-    @NotNull
-    private double estimationCharges;;
-
-    @NotNull
-    private double supervisionCharges;
-
-    @NotNull
-    private double materialCharges;
-    
-    private double roadCutCharges;
-    
-    private double specialSecurityCharges;
-
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
-
+	@JsonProperty("TaxPeriods")
+	List<TaxPeriod> taxPeriods = new ArrayList<>();
 }

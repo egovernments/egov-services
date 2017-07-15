@@ -28,7 +28,7 @@ public class ElasticSearchRepositoryTest {
 
     @Before
     public void before() {
-        esDateTimeFormatter = new ESDateTimeFormatter("Asia/Calcutta");
+        esDateTimeFormatter = new ESDateTimeFormatter("UTC");
         RestTemplate restTemplate = new RestTemplate();
         elasticSearchRepository = new ElasticSearchRepository(
                 restTemplate, INDEX_SERVICE_URL, INDEX_SERVICE_USERNAME, INDEX_SERVICE_PASSWORD, INDEX_NAME, DOCUMENT_TYPE);
@@ -47,9 +47,9 @@ public class ElasticSearchRepositoryTest {
         ServiceRequestDocument indexContent = new ServiceRequestDocument();
         indexContent.setCrn("CRN");
         indexContent.setId("id");
-        indexContent.setCreatedDate(esDateTimeFormatter.toESDateTimeString(toDate("23-12-2016 09:45:00")));
-        indexContent.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString(toDate("26-12-2016 23:15:40")));
-        indexContent.setEscalationDate(esDateTimeFormatter.toESDateTimeString(toDate("30-12-2016 09:25:00")));
+        indexContent.setCreatedDate(esDateTimeFormatter.toESDateTimeString("23-12-2016 09:45:00"));
+        indexContent.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString("26-12-2016 23:15:40"));
+        indexContent.setEscalationDate(esDateTimeFormatter.toESDateTimeString("30-12-2016 09:25:00"));
 
         elasticSearchRepository.index(indexContent);
 

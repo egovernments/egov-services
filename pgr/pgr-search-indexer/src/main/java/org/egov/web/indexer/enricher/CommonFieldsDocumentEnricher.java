@@ -8,10 +8,6 @@ import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
-import static org.egov.pgr.common.date.DateFormatter.toDate;
-
 @Service
 public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnricher {
 
@@ -34,12 +30,9 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setKeywords(serviceType.getKeywords());
         document.setCrn(serviceRequest.getCrn());
         document.setId(serviceRequest.getCrn());
-        final Date createdDate = toDate(serviceRequest.getCreatedDate());
-        document.setCreatedDate(esDateTimeFormatter.toESDateTimeString(createdDate));
-        final Date lastModifiedDate = toDate(serviceRequest.getLastModifiedDate());
-        document.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString(lastModifiedDate));
-        final Date escalationDate = toDate(serviceRequest.getEscalationDate());
-        document.setEscalationDate(esDateTimeFormatter.toESDateTimeString(escalationDate));
+        document.setCreatedDate(esDateTimeFormatter.toESDateTimeString(serviceRequest.getCreatedDate()));
+        document.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString(serviceRequest.getLastModifiedDate()));
+        document.setEscalationDate(esDateTimeFormatter.toESDateTimeString(serviceRequest.getEscalationDate()));
         document.setDetails(serviceRequest.getDetails());
         document.setLandmarkDetails(serviceRequest.getLandmarkDetails());
         document.setRequesterName(serviceRequest.getFirstName());

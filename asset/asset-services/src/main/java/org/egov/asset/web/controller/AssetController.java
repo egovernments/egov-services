@@ -81,181 +81,181 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/assets")
 public class AssetController {
 
-	private static final Logger logger = LoggerFactory.getLogger(AssetController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AssetController.class);
 
-	@Autowired
-	private AssetService assetService;
+    @Autowired
+    private AssetService assetService;
 
-	@Autowired
-	private AssetValidator assetValidator;
+    @Autowired
+    private AssetValidator assetValidator;
 
-	@Autowired
-	private RevaluationService revaluationService;
+    @Autowired
+    private RevaluationService revaluationService;
 
-	@Autowired
-	private AssetCurrentAmountService assetCurrentAmountService;
+    @Autowired
+    private AssetCurrentAmountService assetCurrentAmountService;
 
-	@Autowired
-	private DisposalService disposalService;
+    @Autowired
+    private DisposalService disposalService;
 
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final AssetCriteria assetCriteria, final BindingResult bindingResult) {
-		logger.info("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute @Valid final AssetCriteria assetCriteria, final BindingResult bindingResult) {
+        logger.info("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
-				&& assetCriteria.getToCapitalizedValue() != null)
-			throw new RuntimeException(
-					"Gross Value should not be present with from capitalized value and to capitalized value");
+        if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
+                && assetCriteria.getToCapitalizedValue() != null)
+            throw new RuntimeException(
+                    "Gross Value should not be present with from capitalized value and to capitalized value");
 
-		final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
-		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
-	}
+        final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
+        return new ResponseEntity<>(assetResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
-			final BindingResult bindingResult) {
-		logger.info("create asset:" + assetRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		// TODO Input field validation, it will be a part of phase-2
-		assetValidator.validateAsset(assetRequest);
+    @PostMapping("_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
+            final BindingResult bindingResult) {
+        logger.info("create asset:" + assetRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        // TODO Input field validation, it will be a part of phase-2
+        assetValidator.validateAsset(assetRequest);
 
-		final AssetResponse assetResponse = assetService.createAsync(assetRequest);
-		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
-	}
+        final AssetResponse assetResponse = assetService.createAsync(assetRequest);
+        return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
+    }
 
-	@PostMapping("_update/{code}")
-	@ResponseBody
-	public ResponseEntity<?> update(@PathVariable("code") final String code,
-			@RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
+    @PostMapping("_update/{code}")
+    @ResponseBody
+    public ResponseEntity<?> update(@PathVariable("code") final String code,
+            @RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
 
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		if (!code.equals(assetRequest.getAsset().getCode()))
-			throw new RuntimeException("Invalid asset code");
+        if (!code.equals(assetRequest.getAsset().getCode()))
+            throw new RuntimeException("Invalid asset code");
 
-		final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
+        final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 
-		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(assetResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("revaluation/_create")
-	@ResponseBody
-	public ResponseEntity<?> reevaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
-			final BindingResult bindingResult) {
+    @PostMapping("revaluation/_create")
+    @ResponseBody
+    public ResponseEntity<?> reevaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
+            final BindingResult bindingResult) {
 
-		logger.info("create reevaluate:" + revaluationRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		
-		assetValidator.validateRevaluation(revaluationRequest);
-		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
+        logger.info("create reevaluate:" + revaluationRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
-	}
+        assetValidator.validateRevaluation(revaluationRequest);
+        final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
 
-	@PostMapping("revaluation/_search")
-	@ResponseBody
-	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
+        return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+    }
 
-		logger.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		assetValidator.validateRevaluationCriteria(revaluationCriteria);
-		
-		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
+    @PostMapping("revaluation/_search")
+    @ResponseBody
+    public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
 
-		return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
-	}
+        logger.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        assetValidator.validateRevaluationCriteria(revaluationCriteria);
 
-	@PostMapping("dispose/_create")
-	@ResponseBody
-	public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
-			final BindingResult bindingResult) {
+        final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
 
-		logger.info("create dispose:" + disposalRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
+    }
 
-		assetValidator.validateDisposal(disposalRequest);
+    @PostMapping("dispose/_create")
+    @ResponseBody
+    public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
+            final BindingResult bindingResult) {
 
-		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
-		logger.info("dispose disposalResponse:" + disposalResponse);
+        logger.info("create dispose:" + disposalRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
-	}
+        assetValidator.validateDisposal(disposalRequest);
 
-	@PostMapping("dispose/_search")
-	@ResponseBody
-	public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
+        final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
+        logger.info("dispose disposalResponse:" + disposalResponse);
 
-		logger.info("disposalSearch disposalCriteria:" + disposalCriteria);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		assetValidator.validateDisposalCriteria(disposalCriteria);
-		
-		final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
-				requestInfoWrapper.getRequestInfo());
+        return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
+    }
 
-		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.OK);
-	}
+    @PostMapping("dispose/_search")
+    @ResponseBody
+    public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
 
-	@PostMapping("currentvalue/_search")
-	@ResponseBody
-	public ResponseEntity<?> getAssetCurrentValue(@RequestParam(name = "assetId", required = true) final Long assetId,
-			@RequestParam(name = "tenantId", required = true) final String tenantId,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
+        logger.info("disposalSearch disposalCriteria:" + disposalCriteria);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        assetValidator.validateDisposalCriteria(disposalCriteria);
 
-		logger.info("getAssetCurrentValue assetId:" + assetId + ",tenantId:" + tenantId);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
+                requestInfoWrapper.getRequestInfo());
 
-		final AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentAmount(assetId,
-				tenantId, requestInfoWrapper.getRequestInfo());
+        return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.OK);
+    }
 
-		logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
-		return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
-	}
+    @PostMapping("currentvalue/_search")
+    @ResponseBody
+    public ResponseEntity<?> getAssetCurrentValue(@RequestParam(name = "assetId", required = true) final Long assetId,
+            @RequestParam(name = "tenantId", required = true) final String tenantId,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
 
-	private ErrorResponse populateErrors(final BindingResult errors) {
-		final ErrorResponse errRes = new ErrorResponse();
+        logger.info("getAssetCurrentValue assetId:" + assetId + ",tenantId:" + tenantId);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		final ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		errRes.setResponseInfo(responseInfo);
+        final AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentAmount(assetId,
+                tenantId, requestInfoWrapper.getRequestInfo());
 
-		final Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors())
-			for (final FieldError errs : errors.getFieldErrors())
-				error.getFields().put(errs.getField(), errs.getRejectedValue());
-		errRes.setError(error);
-		return errRes;
-	}
+        logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+        return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
+    }
+
+    private ErrorResponse populateErrors(final BindingResult errors) {
+        final ErrorResponse errRes = new ErrorResponse();
+
+        final ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+        errRes.setResponseInfo(responseInfo);
+
+        final Error error = new Error();
+        error.setCode(1);
+        error.setDescription("Error while binding request");
+        if (errors.hasFieldErrors())
+            for (final FieldError errs : errors.getFieldErrors())
+                error.getFields().put(errs.getField(), errs.getRejectedValue());
+        errRes.setError(error);
+        return errRes;
+    }
 }

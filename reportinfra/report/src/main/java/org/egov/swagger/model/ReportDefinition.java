@@ -32,15 +32,15 @@ public class ReportDefinition   {
   private String query = null;
   
   @JsonProperty("linkedReport")
-  private SourceColumnLinkedReport linkedReport = null;
+  private LinkedReport linkedReport = null;
 
   
 
-public SourceColumnLinkedReport getLinkedReport() {
+public LinkedReport getLinkedReport() {
 	return linkedReport;
 }
 
-public void setLinkedReport(SourceColumnLinkedReport linkedReport) {
+public void setLinkedReport(LinkedReport linkedReport) {
 	this.linkedReport = linkedReport;
 }
 

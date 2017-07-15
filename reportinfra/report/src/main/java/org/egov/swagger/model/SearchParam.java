@@ -13,8 +13,7 @@ public class SearchParam extends ColumnDef  {
   @JsonProperty("input")
   private Object input = null;
 
-  @JsonProperty("isMandatory")
-  private Boolean isMandatory = true;
+  
 
   public SearchParam input(Object input) {
     this.input = input;
@@ -33,26 +32,6 @@ public class SearchParam extends ColumnDef  {
   public void setInput(Object input) {
     this.input = input;
   }
-
-  public SearchParam isMandatory(Boolean isMandatory) {
-    this.isMandatory = isMandatory;
-    return this;
-  }
-
-   /**
-   * Get isMandatory
-   * @return isMandatory
-  **/
-  
-  public Boolean getIsMandatory() {
-    return isMandatory;
-  }
-
-  public void setIsMandatory(Boolean isMandatory) {
-    this.isMandatory = isMandatory;
-  }
-
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -63,13 +42,12 @@ public class SearchParam extends ColumnDef  {
     }
     SearchParam searchParam = (SearchParam) o;
     return Objects.equals(this.input, searchParam.input) &&
-        Objects.equals(this.isMandatory, searchParam.isMandatory) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(input, isMandatory, super.hashCode());
+    return Objects.hash(input, super.hashCode());
   }
 
   @Override
@@ -78,7 +56,6 @@ public class SearchParam extends ColumnDef  {
     sb.append("class SearchParam {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    input: ").append(toIndentedString(input)).append("\n");
-    sb.append("    isMandatory: ").append(toIndentedString(isMandatory)).append("\n");
     sb.append("}");
     return sb.toString();
   }

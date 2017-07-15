@@ -83,19 +83,21 @@ public class SourceColumn extends ColumnDetail  {
    * flag to indicate that this column value can be fetched from external service. This will be useful when we start segragating the services in their own physical data stores 
    * @return isExternal
   **/
-  public LinkedReport getLinkedReport() {
-    return linkedReport;
-  }
-
-  public void setLinkedReport(LinkedReport linkedReport) {
-    this.linkedReport = linkedReport;
-  }
+  
   
   public Boolean getIsExternal() {
     return isExternal;
   }
 
-  public void setIsExternal(Boolean isExternal) {
+  public LinkedReport getLinkedReport() {
+	return linkedReport;
+}
+
+public void setLinkedReport(LinkedReport linkedReport) {
+	this.linkedReport = linkedReport;
+}
+
+public void setIsExternal(Boolean isExternal) {
     this.isExternal = isExternal;
   }
 

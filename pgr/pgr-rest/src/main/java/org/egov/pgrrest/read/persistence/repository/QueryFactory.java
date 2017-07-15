@@ -12,7 +12,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Service
 public class QueryFactory {
 
-    private static final String ES_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String ES_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private static final String CREATED_DATE = "createdDate";
     private static final String ESCALATION_DATE = "escalationDate";
 

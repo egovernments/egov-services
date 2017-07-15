@@ -8,11 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import static org.egov.pgr.common.date.DateFormatter.toDate;
-import static org.egov.web.indexer.repository.ESDateTimeFormatter.toESDateTimeString;
 import static org.springframework.test.web.client.ExpectedCount.once;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -28,9 +24,11 @@ public class ElasticSearchRepositoryTest {
     private final String INDEX_SERVICE_PASSWORD = "password";
     private final String INDEX_NAME = "indexName";
     private final String DOCUMENT_TYPE = "documentType";
+    private ESDateTimeFormatter esDateTimeFormatter;
 
     @Before
     public void before() {
+        esDateTimeFormatter = new ESDateTimeFormatter("Asia/Calcutta");
         RestTemplate restTemplate = new RestTemplate();
         elasticSearchRepository = new ElasticSearchRepository(
                 restTemplate, INDEX_SERVICE_URL, INDEX_SERVICE_USERNAME, INDEX_SERVICE_PASSWORD, INDEX_NAME, DOCUMENT_TYPE);
@@ -49,9 +47,9 @@ public class ElasticSearchRepositoryTest {
         ServiceRequestDocument indexContent = new ServiceRequestDocument();
         indexContent.setCrn("CRN");
         indexContent.setId("id");
-        indexContent.setCreatedDate(toESDateTimeString(toDate("23-12-2016 09:45:00")));
-        indexContent.setLastModifiedDate(toESDateTimeString(toDate("26-12-2016 23:15:40")));
-        indexContent.setEscalationDate(toESDateTimeString(toDate("30-12-2016 09:25:00")));
+        indexContent.setCreatedDate(esDateTimeFormatter.toESDateTimeString(toDate("23-12-2016 09:45:00")));
+        indexContent.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString(toDate("26-12-2016 23:15:40")));
+        indexContent.setEscalationDate(esDateTimeFormatter.toESDateTimeString(toDate("30-12-2016 09:25:00")));
 
         elasticSearchRepository.index(indexContent);
 

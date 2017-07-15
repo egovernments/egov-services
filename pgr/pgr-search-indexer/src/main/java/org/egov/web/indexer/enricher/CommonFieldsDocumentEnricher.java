@@ -1,21 +1,26 @@
 package org.egov.web.indexer.enricher;
 
-import lombok.extern.slf4j.Slf4j;
 import org.egov.web.indexer.contract.ServiceRequest;
 import org.egov.web.indexer.contract.ServiceType;
 import org.egov.web.indexer.contract.SevaRequest;
+import org.egov.web.indexer.repository.ESDateTimeFormatter;
 import org.egov.web.indexer.repository.contract.GeoPoint;
 import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 import static org.egov.pgr.common.date.DateFormatter.toDate;
-import static org.egov.web.indexer.repository.ESDateTimeFormatter.toESDateTimeString;
 
 @Service
-@Slf4j
 public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnricher {
 
     private static final String SERVICE_STATUS = "status";
+    private ESDateTimeFormatter esDateTimeFormatter;
+
+    public CommonFieldsDocumentEnricher(ESDateTimeFormatter esDateTimeFormatter) {
+        this.esDateTimeFormatter = esDateTimeFormatter;
+    }
 
     @Override
     public boolean matches(ServiceType serviceType, SevaRequest sevaRequest) {
@@ -29,9 +34,12 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setKeywords(serviceType.getKeywords());
         document.setCrn(serviceRequest.getCrn());
         document.setId(serviceRequest.getCrn());
-        document.setCreatedDate(toESDateTimeString(toDate(serviceRequest.getCreatedDate())));
-        document.setLastModifiedDate(toESDateTimeString(toDate(serviceRequest.getLastModifiedDate())));
-        document.setEscalationDate(toESDateTimeString(toDate(serviceRequest.getEscalationDate())));
+        final Date createdDate = toDate(serviceRequest.getCreatedDate());
+        document.setCreatedDate(esDateTimeFormatter.toESDateTimeString(createdDate));
+        final Date lastModifiedDate = toDate(serviceRequest.getLastModifiedDate());
+        document.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString(lastModifiedDate));
+        final Date escalationDate = toDate(serviceRequest.getEscalationDate());
+        document.setEscalationDate(esDateTimeFormatter.toESDateTimeString(escalationDate));
         document.setDetails(serviceRequest.getDetails());
         document.setLandmarkDetails(serviceRequest.getLandmarkDetails());
         document.setRequesterName(serviceRequest.getFirstName());

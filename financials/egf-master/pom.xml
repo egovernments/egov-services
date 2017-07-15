@@ -149,6 +149,7 @@
 							<classifier>client</classifier>
 							<includes>
 								<include>**/master/web/contract/**</include>
+								<include>**/master/web/repository/**</include>
 							</includes>
 						</configuration>
 					</execution>

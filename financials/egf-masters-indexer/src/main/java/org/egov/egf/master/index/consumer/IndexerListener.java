@@ -40,30 +40,29 @@ public class IndexerListener {
 
 	@Autowired
 	private ElasticSearchRepository elasticSearchRepository;
-	
+
 	@Autowired
-        ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
 
 	@KafkaListener(id = "${kafka.topics.egov.index.id}", topics = "${kafka.topics.egov.index.name}", group = "${kafka.topics.egov.index.group}")
 	public void listen(HashMap<String, Object> financialContractRequestMap) {
 
 		if (financialContractRequestMap.get("fundcontract_completed") != null) {
 
-		    CommonRequest<FundContract> request = objectMapper.convertValue(financialContractRequestMap.get("fundcontract_completed"),
-                            new TypeReference<CommonRequest<FundContract>>() {
-                            });
-		    
+			CommonRequest<FundContract> request = objectMapper.convertValue(
+					financialContractRequestMap.get("fundcontract_completed"),
+					new TypeReference<CommonRequest<FundContract>>() {
+					});
+
 			if (request.getData() != null && !request.getData().isEmpty()) {
 				for (FundContract fundContract : request.getData()) {
 					RequestContext.setId("" + fundContract);
 					elasticSearchRepository.index(FUND_OBJECT_TYPE,
-							fundContract.getTenantId() + "-" + fundContract.getName(),fundContract );
+							fundContract.getTenantId() + "-" + fundContract.getName(), fundContract);
 				}
-			} 
+			}
 		}
 
-
 	}
-
 
 }

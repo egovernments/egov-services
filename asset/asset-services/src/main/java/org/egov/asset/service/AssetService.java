@@ -107,7 +107,7 @@ public class AssetService {
 
 		List<YearWiseDepreciation> yearWiseDepreciation = assetRequest.getAsset().getYearWiseDepreciation();
 
-		if(assetRequest.getAsset().getEnableYearWiseDepreciation()!=null){
+		if(assetRequest.getAsset().getEnableYearWiseDepreciation()!=null && yearWiseDepreciation != null){
 			
 			if (!yearWiseDepreciation.isEmpty()&&assetRequest.getAsset().getEnableYearWiseDepreciation()) {
 				for (YearWiseDepreciation depreciationRate : yearWiseDepreciation) {

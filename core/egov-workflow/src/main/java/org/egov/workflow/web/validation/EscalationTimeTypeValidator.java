@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
 import org.egov.workflow.domain.model.EscalationTimeType;
+import org.egov.workflow.domain.service.EscalationService;
 import org.egov.workflow.util.PgrMasterConstants;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;
 import org.egov.workflow.web.errorhandlers.Error;
 import org.egov.workflow.web.errorhandlers.ErrorResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -17,26 +19,32 @@ import org.springframework.validation.FieldError;
 @Service
 public class EscalationTimeTypeValidator {
 	
-	public List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+	@Autowired
+	private EscalationService escalationService;
+	
+	public List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest, boolean action) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
 		final ErrorResponse errorResponse = new ErrorResponse();
-		final Error error = getError(escalationTimeTypeRequest);
+		final Error error = getError(escalationTimeTypeRequest, action);
 		errorResponse.setError(error);
 		if (!errorResponse.getErrorFields().isEmpty())
 			errorResponses.add(errorResponse);
 		return errorResponses;
 	}
 
-	private Error getError(final EscalationTimeTypeReq escalationTimeTypeRequest) {
-		final List<ErrorField> errorFields = getErrorFields(escalationTimeTypeRequest);
+	private Error getError(final EscalationTimeTypeReq escalationTimeTypeRequest, boolean action) {
+		final List<ErrorField> errorFields = getErrorFields(escalationTimeTypeRequest, action);
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PgrMasterConstants.INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 
-	private List<ErrorField> getErrorFields(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+	private List<ErrorField> getErrorFields(final EscalationTimeTypeReq escalationTimeTypeRequest, boolean action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addServiceIdValidationErrors(escalationTimeTypeRequest, errorFields);
 		addTeanantIdValidationErrors(escalationTimeTypeRequest, errorFields);
+		if(action) { 
+			checkRecordExists(escalationTimeTypeRequest, errorFields);
+		}
 		return errorFields;
 	}
 
@@ -68,6 +76,17 @@ public class EscalationTimeTypeValidator {
 		} else
 			return;
 	}
+	
+	private void checkRecordExists(final EscalationTimeTypeReq escalationTimeTypeRequest,
+			final List<ErrorField> errorFields) {
+			if (escalationService.checkRecordExists(escalationTimeTypeRequest)) {
+				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_CODE)
+						.message(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_ERROR_MESSAGE)
+						.field(PgrMasterConstants.ESCALATION_HOURS_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			} else
+				return;
+		}
 
 	public ErrorResponse populateErrors(final BindingResult errors) {
 		final ErrorResponse errRes = new ErrorResponse();

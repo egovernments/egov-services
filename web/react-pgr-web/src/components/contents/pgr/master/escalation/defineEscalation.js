@@ -248,7 +248,7 @@ componentWillUpdate() {
   }
 
  
-	handleDepartment = (e) => {
+	handleDepartment = (data) => {
 		
 		 let {toggleSnackbarAndSetText, emptyProperty} = this.props;
 		
@@ -256,8 +256,9 @@ componentWillUpdate() {
 	    currentThis.setState({designations : []});
 		  currentThis.setState({toPosition : []});
 		
+		console.log(data);
 		let query = {
-			id:e.target.value
+			id : data.department
 		}
 	
 		  Api.commonApiPost("/hr-masters/designations/_search",query).then(function(response)
@@ -268,24 +269,26 @@ componentWillUpdate() {
 		  });	
   }
   
-  handleDesignation = (e) => { 
+  handleDesignation = (data) => { 
 
-  let {setLoadingStatus} = this.props;
+  let {setLoadingStatus, toggleSnackbarAndSetText} = this.props;
 		
 		var current = this;
 		this.setState({toPosition : []});
 		
 		let query = {
-			departmentId:this.props.defineEscalation.department, 
-			designationId:e.target.value
+			departmentId:data.department,
+			designationId:data.designation
 		}
+		
+		console.log(this.props.defineEscalation);
 	
-		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response)
-		  {console.log(response);
-        setLoadingStatus('hide');
+		  Api.commonApiPost("/hr-masters/positions/_search",query).then(function(response) {
+			setLoadingStatus('hide');
 			current.setState({toPosition : response.Position});
 		  },function(err) {
-			console.log(err);
+			  toggleSnackbarAndSetText(true, err.message);
+			  setLoadingStatus('hide');
 		  });	
   }
   
@@ -298,16 +301,14 @@ componentWillUpdate() {
 		 var current = this
     var body = {
       escalationHierarchy: [ {
-				serviceCode : this.props.defineEscalation.serviceCode,
-				tenantId : "default",
-				fromPosition : this.props.defineEscalation.fromPosition,
-				toPosition : this.props.defineEscalation.toPosition,
-        department :this.props.defineEscalation.department,
-        designation :this.props.defineEscalation.designation
+			serviceCode : this.props.defineEscalation.serviceCode,
+			tenantId : "default",
+			fromPosition : this.props.defineEscalation.fromPosition,
+			toPosition : this.props.defineEscalation.toPosition,
+			department :this.props.defineEscalation.department,
+			designation :this.props.defineEscalation.designation
 			  }]
     }
-	
-	//var idd = this.props.defineEscalation.fromPosition;
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
 		toggleDailogAndSetText(true, "Escalation Updated Successfully");
@@ -320,6 +321,7 @@ componentWillUpdate() {
 		emptyProperty("toPosition");
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
                     setLoadingStatus('hide');
+					console.log(response.escalationHierarchies);
                     if (response.escalationHierarchies[0] != null) {
                         flag = 1;
                         current.setState({
@@ -404,21 +406,9 @@ componentWillUpdate() {
       setLoadingStatus('loading');
       this.props.setForm(this.state.resultList[index])
 
-      var d = {
-        target: {
-          value: this.state.resultList[index].department
-        }
-      }
+      this.handleDepartment(this.state.resultList[index]);
 
-       var e = {
-        target: {
-          value: this.state.resultList[index].designation
-        }
-      }
-
-      this.handleDepartment(d);
-
-      this.handleDesignation(e);
+      this.handleDesignation(this.state.resultList[index]);
   }
 
   

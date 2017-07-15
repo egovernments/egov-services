@@ -50,6 +50,12 @@ import org.springframework.core.env.Environment;
         "classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class WcmsTranasanctionConstants {
+    
+    public static final String SPECIALDEPOSITECHARGEDEMANDREASON="SPLDEPOSITECHARGE";
+    public static final String SPECIALSECURITYCHARGEDEMANDREASON="SECURITYDEPOSITECHARGE";
+    public static final String ROADCUTCHARGEDEMANDREASON="ROADCUTCHARGE";
+    public static final String ESIMATIONCHARGEDEMANDREASON="ESTIMATIONCHARGES";
+    public static final String SUPERVISIONCHARGEREASON="SUPERVISIONCHARGE";
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
@@ -259,6 +265,9 @@ public class WcmsTranasanctionConstants {
     public static final String SOURCETYPE_INVALID_CODE = "wcms.0040";
     public static final String SOURCETYPE_INVALID_FIELD_NAME = "sourceType.name";
     public static final String SOURCETYPE_INVALID_ERROR_MESSAGE = "SourceType name doesn't Exist";
+    public static final String TREATPLANT_INVALID_CODE = "wcms.0048";
+    public static final String TREATPLANT_INVALID_FIELD_NAME = "waterTreatment";
+    public static final String TREATPLANT_INVALID_ERROR_MESSAGE = "Water Treatment name doesn't Exist";
     
     
     

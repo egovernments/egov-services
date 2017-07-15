@@ -10,14 +10,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class BudgetServiceQueueRepository {
 
-	@Autowired
 	private FinancialProducer financialProducer;
 
-	@Value("${kafka.topics.egf.budget.service.validated.topic}")
 	private String validatedTopic;
 
-	@Value("${kafka.topics.egf.budget.service.validated.key}")
 	private String validatedKey;
+
+	@Autowired
+	public BudgetServiceQueueRepository(FinancialProducer financialProducer,
+			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
+			@Value("${kafka.topics.egf.budget.service.validated.key}") String validatedKey) {
+		this.financialProducer = financialProducer;
+		this.validatedTopic = validatedTopic;
+		this.validatedKey = validatedKey;
+	}
 
 	public void addToQue(CommonRequest<?> request) {
 		String masterName = "";

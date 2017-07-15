@@ -136,11 +136,18 @@ export default(state = defaultState, action) => {
           files: filearray
       };
 
+      case 'FILE_EMPTY':
+      filearray = [];
+      return {
+          ...state,
+          files: filearray
+      };
+
       case 'FILE_REMOVE':
-      var filearray = [];
+      filearray = [];
       filearray = [...state.files];
-      var idx = -1;
-      for(var i = 0; i < filearray.length; i++) {
+      let idx = -1;
+      for(let i = 0; i < filearray.length; i++) {
           if (filearray[i].name === action.removefiles) {
               idx = i;
               break;

@@ -120,7 +120,7 @@ public class WaterConnectionService {
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
-            createDemand(waterConnectionRequest);
+            if(waterConnectionRequest.getConnection().getIsLegacy()!=null && waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE))
             initiateWorkFow(waterConnectionRequest);
             waterConnectionRepository.persistConnection(waterConnectionRequest);
         } catch (final Exception e) {
@@ -132,6 +132,7 @@ public class WaterConnectionService {
     public Connection update(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
+            createDemand(waterConnectionRequest);
             updateWorkFlow(waterConnectionRequest);
             waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {
@@ -156,6 +157,7 @@ public class WaterConnectionService {
         List<Demand> pros = demandConnectionService
                 .prepareDemand(waterConnectionReq.getConnection().getDemand(), waterConnectionReq);
         DemandResponse demandRes = demandConnectionService.createDemand(pros, waterConnectionReq.getRequestInfo());
+        if(demandRes!=null && demandRes.getDemands()!=null && !demandRes.getDemands().isEmpty())
         waterConnectionReq.getConnection().setDemandid(demandRes.getDemands().get(0).getId());
         return demandRes;
     }

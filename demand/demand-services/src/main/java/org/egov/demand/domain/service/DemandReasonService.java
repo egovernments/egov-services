@@ -54,6 +54,8 @@ public class DemandReasonService {
 		if (demandReasonCriteria.getToDate() != null) {
 			queryStr.append(" and dr.egInstallmentMaster.fromDate<=:toDate");
 		}
+		queryStr.append(" order by installmen1_.start_date");
+		
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());
 		if (demandReasonCriteria.getModuleName() != null) {
@@ -80,6 +82,7 @@ public class DemandReasonService {
 			LOGGER.error("the exception in demandReasonService : " + e);
 			throw new RuntimeException(e);
 		}
+		
 		return (List<EgDemandReason>) query.list();
 	}
 }

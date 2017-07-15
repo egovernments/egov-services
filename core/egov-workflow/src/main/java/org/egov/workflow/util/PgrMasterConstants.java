@@ -131,6 +131,10 @@ public class PgrMasterConstants {
 	public static final String ROUTER_COMBINATION_UNIQUE_FIELD_NAME = "unique";
 	public static final String ROUTER_COMBINATION_UNIQUE_ERROR_MESSAGE = "Router already exist for the Grievance Type";
 
+	public static final String ESCALATION_HOURS_UNIQUE_CODE = "pgr.0014";
+	public static final String ESCALATION_HOURS_UNIQUE_FIELD_NAME = "hours";
+	public static final String ESCALATION_HOURS_UNIQUE_ERROR_MESSAGE = "This combination of Escalation Hours already exists";
+
 	
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);

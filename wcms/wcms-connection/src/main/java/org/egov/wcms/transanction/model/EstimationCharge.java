@@ -80,6 +80,11 @@ public class EstimationCharge {
 
     @NotNull
     private double materialCharges;
+    
+    private double roadCutCharges;
+    
+    private double specialSecurityCharges;
+
 
     @NotNull
     private AuditDetails auditDetails;

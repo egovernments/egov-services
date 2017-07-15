@@ -10,18 +10,19 @@
     "AssetStatus": [
         {
             "tenantId": "default",
-            "objectName": "Asset Status",
+            "objectName": "Asset Master",
             "statusValues": [
                 {
+                    "name": "CAPITALIZED",
                     "code": "CAPITALIZED",
-                    "description": "Asset is Capitalized"
+                    "description": "Asset status is Capitalized"
                 }
             ],
             "auditDetails": {
                 "createdBy": "1",
-                "createdDate": 1499061748794,
+                "createdDate": 1499853291695,
                 "lastModifiedBy": "1",
-                "lastModifiedDate": 1499061748794
+                "lastModifiedDate": 1499853291695
             }
         }
     ]

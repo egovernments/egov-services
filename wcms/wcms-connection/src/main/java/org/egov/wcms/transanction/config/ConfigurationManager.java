@@ -127,5 +127,11 @@ public class ConfigurationManager {
     
     @Value("${egov.services.demandbill_service.createdemand}")
     private String createbillingDemandServiceTopic;
+    
+    @Value("${egov.services.demandbill_service.taxperiod}")
+    private String taxperidforfinancialYearTopic;
+    
+    @Value("${egov.services.wcms_masters.treatment}")
+    private String waterTreatmentSearchTopic;
 
 }

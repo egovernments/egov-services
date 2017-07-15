@@ -9,6 +9,7 @@ import org.egov.web.indexer.repository.contract.ServiceRequestDocument;
 import org.springframework.stereotype.Service;
 
 import static org.egov.pgr.common.date.DateFormatter.toDate;
+import static org.egov.web.indexer.repository.ESDateTimeFormatter.toESDateTimeString;
 
 @Service
 @Slf4j
@@ -28,9 +29,9 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setKeywords(serviceType.getKeywords());
         document.setCrn(serviceRequest.getCrn());
         document.setId(serviceRequest.getCrn());
-        document.setCreatedDate(toDate(serviceRequest.getCreatedDate()));
-        document.setLastModifiedDate(toDate(serviceRequest.getLastModifiedDate()));
-        document.setEscalationDate(toDate(serviceRequest.getEscalationDate()));
+        document.setCreatedDate(toESDateTimeString(toDate(serviceRequest.getCreatedDate())));
+        document.setLastModifiedDate(toESDateTimeString(toDate(serviceRequest.getLastModifiedDate())));
+        document.setEscalationDate(toESDateTimeString(toDate(serviceRequest.getEscalationDate())));
         document.setDetails(serviceRequest.getDetails());
         document.setLandmarkDetails(serviceRequest.getLandmarkDetails());
         document.setRequesterName(serviceRequest.getFirstName());

@@ -3,6 +3,7 @@ package org.egov.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,7 +29,6 @@ public class PropertyDetail {
 	private Long id = null;
 
 	@JsonProperty("source")
-
 	private SourceEnum source = null;
 
 	@JsonProperty("regdDocNo")
@@ -122,6 +122,7 @@ public class PropertyDetail {
 	private String wallType = null;
 
 	@JsonProperty("floors")
+	@Valid
 	private List<Floor> floors = new ArrayList<Floor>();
 
 	@JsonProperty("documents")

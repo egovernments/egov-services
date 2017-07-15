@@ -24,79 +24,79 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Property {
-    @JsonProperty("id")
-    private Long id = null;
+	@JsonProperty("id")
+	private Long id = null;
 
-    @JsonProperty("tenantId")
-    @NotNull
-    @Size(min = 4, max = 128)
-    private String tenantId = null;
+	@JsonProperty("tenantId")
+	@NotNull
+	@Size(min = 4, max = 128)
+	private String tenantId = null;
 
-    @JsonProperty("upicNumber")
-    @Size(min = 6, max = 128)
-    private String upicNumber = null;
+	@JsonProperty("upicNumber")
+	@Size(min = 6, max = 128)
+	private String upicNumber = null;
 
-    @JsonProperty("oldUpicNumber")
-    @Size(min = 4, max = 128)
-    private String oldUpicNumber = null;
+	@JsonProperty("oldUpicNumber")
+	@Size(min = 4, max = 128)
+	private String oldUpicNumber = null;
 
-    @JsonProperty("vltUpicNumber")
-    @Size(min = 4, max = 128)
-    private String vltUpicNumber = null;
+	@JsonProperty("vltUpicNumber")
+	@Size(min = 4, max = 128)
+	private String vltUpicNumber = null;
 
-    @JsonProperty("creationReason")
-    private CreationReasonEnum creationReason = null;
+	@JsonProperty("creationReason")
+	@NotNull
+	private CreationReasonEnum creationReason = null;
 
-    @JsonProperty("address")
-    @NotNull
-    private Address address = null;
+	@JsonProperty("address")
+	@NotNull
+	private Address address = null;
 
-    @JsonProperty("owners")
-    @Valid
-    @NotNull
-    private List<User> owners = new ArrayList<User>();
+	@JsonProperty("owners")
+	@Valid
+	@NotNull
+	private List<User> owners = new ArrayList<User>();
 
-    @JsonProperty("propertyDetail")
-    @Valid
-    @NotNull
-    private PropertyDetail propertyDetail = null;
+	@JsonProperty("propertyDetail")
+	@Valid
+	@NotNull
+	private PropertyDetail propertyDetail = null;
 
-    @JsonProperty("vacantLand")
-    @Valid
-    private VacantLandDetail vacantLand = null;
+	@JsonProperty("vacantLand")
+	private VacantLandDetail vacantLand = null;
 
-    @JsonProperty("assessmentDate")
-    private String assessmentDate = null;
+	@JsonProperty("assessmentDate")
+	private String assessmentDate = null;
 
-    @JsonProperty("occupancyDate")
-    @NotNull
-    private String occupancyDate = null;
+	@JsonProperty("occupancyDate")
+	@NotNull
+	private String occupancyDate = null;
 
-    @JsonProperty("gisRefNo")
-    @Size(min = 4, max = 32)
-    private String gisRefNo = null;
+	@JsonProperty("gisRefNo")
+	@Size(min = 4, max = 32)
+	private String gisRefNo = null;
 
-    @JsonProperty("isAuthorised")
-    private Boolean isAuthorised = true;
+	@JsonProperty("isAuthorised")
+	private Boolean isAuthorised = true;
 
-    @JsonProperty("isUnderWorkflow")
-    private Boolean isUnderWorkflow = false;
+	@JsonProperty("isUnderWorkflow")
+	private Boolean isUnderWorkflow = false;
 
-    @JsonProperty("boundary")
-    @NotNull
-    private PropertyLocation boundary = null;
+	@JsonProperty("boundary")
+	@NotNull
+	private PropertyLocation boundary = null;
 
-    @JsonProperty("active")
-    private Boolean active = true;
+	@JsonProperty("active")
+	private Boolean active = true;
 
-    @JsonProperty("channel")
-    @NotNull
-    private ChannelEnum channel = null;
+	@JsonProperty("channel")
+	@NotNull
+	private ChannelEnum channel = null;
 
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 
-    @JsonProperty("demands")
-    private List<Demand> demands = null;
+	@JsonProperty("demands")
+	private List<Demand> demands = null;
 
 }

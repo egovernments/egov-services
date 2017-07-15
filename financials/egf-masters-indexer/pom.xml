@@ -57,6 +57,27 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>  
+			<groupId>org.egov</groupId>
+			<artifactId>egf-master</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>common</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>egf-master</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>client</classifier>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>egf-budget</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<classifier>client</classifier>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

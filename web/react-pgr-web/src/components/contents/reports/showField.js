@@ -15,7 +15,12 @@ export default class ShowField extends Component
          value:""
        }
    }
+
   renderFields = (obj) =>{
+    if (obj.type=="url") {
+      console.log(obj.defaultValue);
+    }
+    // console.log(obj);
     //console.log('came to renderfields',obj.code);
     let des = translate(obj.label);
     let mandatory = obj.hasOwnProperty("isMandatory")?(obj.isMandatory? " *" : ""):"*";
@@ -135,6 +140,9 @@ export default class ShowField extends Component
     }
   }
   render(){
+    if (this.props.obj.type=="url") {
+        console.log(this.props.obj.defaultValue);
+    }
     return (
       <div>
         {this.renderFields(this.props.obj)}

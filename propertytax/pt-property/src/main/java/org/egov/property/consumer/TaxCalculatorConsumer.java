@@ -111,13 +111,13 @@ public class TaxCalculatorConsumer {
 			if (consumerRecord.topic()
 					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.tax.calculaion"))) {
 
-				producer.send(environment.getProperty("egov.propertytax.property.create.workflow"),
+				producer.send(environment.getProperty("egov.propertytax.create.tax.calculated"),
 						consumerRecord.value());
 
 			} else if (consumerRecord.topic()
 					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.tax.calculaion"))) {
 
-				producer.send(environment.getProperty("egov.propertytax.property.update.workflow"),
+				producer.send(environment.getProperty("egov.propertytax.update.tax.calculated"),
 						consumerRecord.value());
 
 			}

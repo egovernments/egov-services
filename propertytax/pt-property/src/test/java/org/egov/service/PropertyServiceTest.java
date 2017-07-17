@@ -1325,7 +1325,7 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("egov.propertytax.property.create.workflow"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1578,7 +1578,7 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("egov.propertytax.property.update.workflow"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"), propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

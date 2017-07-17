@@ -44,7 +44,6 @@ public class TaxPeriodRespository {
      * @param tenantId
      * @return {@link Long} the id stored in the database
      */
-    @Transactional
     public Long saveTaxPeriod(TaxPeriod taxperiod, String tenantId) {
 
         Long createdTime = new Date().getTime();
@@ -87,7 +86,6 @@ public class TaxPeriodRespository {
      * @param taxperiod
      * @param tenantId
      */
-    @Transactional
     public void updateTaxPeriod(TaxPeriod taxperiod, String tenantId) {
 
         final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -121,7 +119,6 @@ public class TaxPeriodRespository {
      * @param code
      * @return {@link TaxPeriod} List of taxPeriods
      */
-    @Transactional
     public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code) {
 
         String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code);

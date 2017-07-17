@@ -64,7 +64,7 @@ public class VoucherServiceTest {
 				.thenReturn("Creating Voucher for Asset Reevaluation");
 
 		final VoucherRequest generatedVoucherRequest = voucherService
-				.createVoucherRequestForReevalaution(revaluationRequest, asset, accountCodeDetails);
+				.createVoucherRequestForRevalaution(revaluationRequest, asset, accountCodeDetails);
 
 		final Fund fund = get_Fund(revaluationRequest);
 		final Voucher voucher = getVoucher(asset, fund);

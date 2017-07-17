@@ -231,7 +231,6 @@ public class DemandRepository {
 
 	public DemandResponse updateDemand(List<Demand> demands, RequestInfo requestInfo) {
 
-		System.out.println("DemandRepository createDemand demands:" + demands);
 		DemandRequest demandRequest = new DemandRequest();
 		demandRequest.setRequestInfo(requestInfo);
 		demandRequest.setDemand(demands);

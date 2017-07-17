@@ -44,6 +44,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.Source;
 
 @Service
 public class PaymentService {
@@ -278,6 +279,7 @@ public class PaymentService {
 		LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
 		// / FIXME put update workflow here here
+		
 		updateWorkflow(billInfo.getConsumerCode(), requestInfo);
 		isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
 		LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
@@ -300,12 +302,15 @@ public class PaymentService {
 			LOGGER.info("exception while fetching agreemment in paymentService");
 		}
 		LOGGER.info("the result form jdbc query ::: " + agreements);
+		Agreement agreement = agreements.get(0);
+		if(agreement.getSource().equals(Source.SYSTEM)){
 		AgreementRequest agreementRequest = new AgreementRequest();
 		agreementRequest.setRequestInfo(requestInfo);
-		agreementRequest.setAgreement(agreements.get(0));
+		agreementRequest.setAgreement(agreement);
 		LOGGER.info("calling agreement service todo agreement update");
 		agreementService.updateAgreement(agreementRequest);
 		LOGGER.info("Workflow update for collection has been put into Kafka Queue");
+		}
 	}
 
 	private List<PaymentInfo> setPaymentInfos(BillReceiptReq billReceiptInfo) {

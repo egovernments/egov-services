@@ -136,7 +136,7 @@ public class ServiceGroupRepository {
 	
 	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest) { 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName());
+		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName().toUpperCase());
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
 		String checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
 		final List<Integer> count = jdbcTemplate.queryForList(checkQuery,

@@ -176,7 +176,7 @@ public class ReceivingCenterTypeQueryBuilder {
 
 	public static String checkReceivingCenterTypeByName() {
 
-		return "select id from egpgr_receiving_center where tenantid=? and name=? "; 
+		return "select id from egpgr_receiving_center where tenantid=? and upper(name)=? "; 
 	}
 
 	public static String checkReceivingCenterTypeByCode() {

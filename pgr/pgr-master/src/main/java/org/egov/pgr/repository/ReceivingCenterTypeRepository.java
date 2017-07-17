@@ -141,7 +141,7 @@ public class ReceivingCenterTypeRepository {
 		String query = "";
 		if ((null != name && name != "")) {
 
-			preparedStatementValues.add(name);
+			preparedStatementValues.add(name.toUpperCase());
 			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
 
 		}

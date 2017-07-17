@@ -131,7 +131,7 @@ public class ServiceGroupQueryBuilder {
 	}
 	
 	public static String checkIfNameTenantIdAvailable() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE name = ? AND tenantid = ? " ;
+		return "SELECT count(*) FROM egpgr_complainttype_category WHERE upper(name) = ? AND tenantid = ? " ;
 	}
 
 }

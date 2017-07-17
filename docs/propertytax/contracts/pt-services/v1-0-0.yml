@@ -238,6 +238,26 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Transfer
+        
+  /properties/specialnotice/_generate:
+    post: 
+      description: Generation of the special notice for the property
+      parameters:
+       - name: specialNoticeRequest
+         in: body
+         description: Request header of the Notice Request
+         required: true
+         schema:
+          $ref: '#/definitions/SpecialNoticeRequest'
+      responses:
+        '200':
+          description: Notice Generated
+          schema:
+            $ref: '#/definitions/SpecialNoticeResponse'
+        '400':
+          description: Title Tranfer failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
 ########################################################
@@ -872,6 +892,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/OwnerInfo'
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
       upicNo:
         description: Upic number of the property
         type: string
@@ -937,9 +962,84 @@ definitions:
     required:
      - trasferReason
      - departmentGuidelineValue
+     - upicNo
+     - tenantId
      
-
-
+     
+  SpecialNoticeRequest:
+    type: object
+    description: This object has the details about the special notice request
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+    required:
+       - upicNo
+       - tenantId
+       
+  SpecialNoticeResponse:
+    type: object
+    description: This object has the details about the special notice request
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+      ulbName:
+        type : string
+      ulbLogo:
+        type: string
+        description: This would an image url for ulb
+      noticegenerationDate:
+        type: string
+        format: date
+      noticeNumber:
+        type: string
+        description: This would a generated number using egov-idgenservice with the following format
+          4 digits ULB code followed by 6 digits sequence number/financial year.
+          Ex 1016000001/2017-18
+      address:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
+      owners:
+        description: Property owners, these will be citizen users in system.
+        type: array
+        items:
+          $ref: '#/definitions/OwnerInfo'
+      applicationNo:
+        type: string
+        description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
+      applicationDate:
+        type: string
+        format: date
+        description: This would be the date on which property has been created first
+      floors:
+        description: Floors
+        type: array
+        items:
+          $ref: '#/definitions/Floor'
+      taxDetails:
+        type: object
+        properties:
+          totalTax:
+            type: number
+            format: double
+            description: Total Tax for the property
+          headWiseTaxes:
+            description: Head wise taxes
+            type: array
+            items:
+              $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-calculator/v1.0.0.yml#/definitions/HeadWiseTax"
       
 parameters:
 ##########################################################

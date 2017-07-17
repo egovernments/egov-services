@@ -26,20 +26,19 @@ public class FinancialYearContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public CommonResponse<FinancialYearContract> getFinancialYearById(FinancialYearSearchContract financialYearSearchContract) {
+	public CommonResponse<FinancialYearContract> getFinancialYearById(
+			FinancialYearSearchContract financialYearSearchContract) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
-        StringBuffer content=new StringBuffer();
-        if(financialYearSearchContract.getId()!=null)
-        {
-        	content.append("id="+financialYearSearchContract.getId());
-        }
-        
-        if(financialYearSearchContract.getTenantId()!=null)
-        {
-        	content.append("tenantId="+financialYearSearchContract.getTenantId());
-        }
-        url=url+content.toString();
+		StringBuffer content = new StringBuffer();
+		if (financialYearSearchContract.getId() != null) {
+			content.append("id=" + financialYearSearchContract.getId());
+		}
+
+		if (financialYearSearchContract.getTenantId() != null) {
+			content.append("tenantId=" + financialYearSearchContract.getTenantId());
+		}
+		url = url + content.toString();
 		CommonResponse<FinancialYearContract> result = objectMapper.convertValue(
 				restTemplate.postForObject(url, null, CommonResponse.class),
 				new TypeReference<CommonResponse<FinancialYearContract>>() {

@@ -26,7 +26,7 @@ import lombok.ToString;
 public class Task {
 
 	/**
-	 * Id of the task getting updated. This field Maps to Id of the Task or
+	 * id of the task getting updated. This field Maps to Id of the Task or
 	 * ProcessInstance in case of eGov internal Work flow or the Work flow
 	 * Matrix based implementation .
 	 */
@@ -35,7 +35,7 @@ public class Task {
 
 	/**
 	 * businessKey is the name representing the process flow of the a particular
-	 * Item For example For Financial vouchers work flow process may be defined
+	 * item. For example For Financial vouchers work flow process may be defined
 	 * with a businessKey of "voucher_workflow" . For eGov internal work flow
 	 * Implementation it is same as the class name of the java object under
 	 * going work flow. example businessKey "Voucher"
@@ -150,7 +150,7 @@ public class Task {
 	 * etc
 	 */
 	private String entity;
-	
+
 	private String tenantId;
 
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();

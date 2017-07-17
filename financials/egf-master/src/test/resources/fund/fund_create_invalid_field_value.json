@@ -12,8 +12,7 @@
 		   	{
 			    "name":"MunicipalFund",
 		   		"tenantId":"default",
-		   		"code":"001",
-		   		"identifier":1,
+		   		"code":"001900000000000000000000000000000",
 		   		"active":true
 		   	}
 	   	

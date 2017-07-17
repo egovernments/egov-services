@@ -85,7 +85,7 @@ public class TaxPeriodQueryBuilder {
 
         Set<String> service = taxPeriodCriteria.getService(); 
         if (service != null &&  !service.isEmpty()) {
-            selectQuery.append(" and taxperiod.service IN (" + getQueryForCollection(service));
+            selectQuery.append(" and taxperiod.service IN " + getQueryForCollection(service));
         }
         
         if(taxPeriodCriteria.getPeriodCycle() != null){

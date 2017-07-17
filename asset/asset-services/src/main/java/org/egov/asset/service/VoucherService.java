@@ -13,6 +13,7 @@ import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
 import org.egov.asset.model.Asset;
+import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.ChartOfAccountDetailContractResponse;
@@ -74,17 +75,17 @@ public class VoucherService {
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
                 + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
-        logger.info("VoucherRequest : " + voucherRequest);
+        logger.debug("VoucherRequest : " + voucherRequest);
         Error err = new Error();
         VoucherResponse voucherRes = new VoucherResponse();
         try {
             final JSONObject voucherResponse = restTemplate.postForObject(createVoucherUrl, voucherRequest,
                     JSONObject.class);
-            logger.info("VoucherResponse : " + voucherResponse);
+            logger.debug("VoucherResponse : " + voucherResponse);
             try {
                 voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
             } catch (final IOException e) {
-                logger.info("Voucher response Deserialization Issue : " + e.getMessage());
+                logger.debug("Voucher response Deserialization Issue : " + e.getMessage());
             }
             return voucherRes.getVouchers().get(0).getId();
         } catch (final HttpClientErrorException e) {
@@ -121,13 +122,18 @@ public class VoucherService {
             chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
                     ChartOfAccountContractResponse.class);
 
-            if (chartOfAccountContractResponse.getChartOfAccounts() != null
-                    && !chartOfAccountContractResponse.getChartOfAccounts().isEmpty())
-                debitAccountCodeDetail
-                        .setGlcode(chartOfAccountContractResponse.getChartOfAccounts().get(0).getGlcode());
-            else
-                throw new RuntimeException("Chart of Account is not present for account : " + accountId);
+            final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
 
+            if (!chartOfAccounts.isEmpty()) {
+                final ChartOfAccountContract chartOfAccount = chartOfAccounts.get(0);
+                logger.debug("Chart Of Account : " + chartOfAccount);
+                if (!chartOfAccount.getIsActiveForPosting())
+                    throw new RuntimeException(
+                            "Chart of Account " + chartOfAccount.getName() + " is not active for posting");
+                else
+                    debitAccountCodeDetail.setGlcode(chartOfAccount.getGlcode());
+            } else
+                throw new RuntimeException("Chart of Account is not present for account : " + accountId);
             if (iscredit)
                 debitAccountCodeDetail.setCreditAmount(amount);
             if (isDebit)
@@ -138,7 +144,7 @@ public class VoucherService {
             debitAccountCodeDetail.setFunction(function);
 
         } catch (final Exception ex) {
-            logger.info("Some problem occured while getting account details : ", ex);
+            logger.debug("Some problem occured while getting account details : ", ex);
             throw new RuntimeException(ex);
         }
 

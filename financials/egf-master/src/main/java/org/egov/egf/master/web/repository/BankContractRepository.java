@@ -6,14 +6,15 @@ import org.egov.egf.master.web.contract.BankSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
-
+import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Service
 public class BankContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/Banks/search?";
+	public static final String SEARCH_URL = " /egf-master/banks/search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -22,16 +23,16 @@ public class BankContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public CommonResponse<BankContract> getBankById(BankSearchContract bankSearchContract) {
+	public BankContract findById(BankContract bankContract) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
-		if (bankSearchContract.getId() != null) {
-			content.append("id=" + bankSearchContract.getId());
+		if (bankContract.getId() != null) {
+			content.append("id=" + bankContract.getId());
 		}
 
-		if (bankSearchContract.getTenantId() != null) {
-			content.append("tenantId=" + bankSearchContract.getTenantId());
+		if (bankContract.getTenantId() != null) {
+			content.append("tenantId=" + bankContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<BankContract> result = objectMapper.convertValue(
@@ -39,7 +40,10 @@ public class BankContractRepository {
 				new TypeReference<CommonResponse<BankContract>>() {
 				});
 
-		return result;
+		if (result.getData() != null && result.getData().size() == 1)
+			return result.getData().get(0);
+		else
+			return null;
 
 	}
 }

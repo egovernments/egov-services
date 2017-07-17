@@ -107,6 +107,9 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_masters_service.hrstatuses.key}")
     private String hrMastersServiceStatusesKey;
+    
+    @Value("${egov.services.hr_masters_service.hrstatuses.employees.key}")
+    private String hrMastersServiceStatusesEmployeesKey;
 
     @Value("${egov.services.hr_employee_service.hostname}")
     private String hrEmployeeServiceHostName;

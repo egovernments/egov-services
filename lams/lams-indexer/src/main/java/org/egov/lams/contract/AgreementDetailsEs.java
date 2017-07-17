@@ -126,6 +126,7 @@ public class AgreementDetailsEs {
 		this.rent = agreement.getRent();
 		this.tradeLicenseNumber = agreement.getTradelicenseNumber();
 		this.paymentCycle = agreement.getPaymentCycle().toString();
+		if(agreement.getRentIncrementMethod() != null)
 		this.rentIncrementMethod = agreement.getRentIncrementMethod().getType();
 		this.orderNumber = agreement.getOrderNumber();
 		this.orderDate = agreement.getOrderDate();

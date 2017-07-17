@@ -32,7 +32,7 @@ public class TaxHeadMasterQueryBuilder {
 			+ " taxhead.lAStmodifiedtime AS taxlAStmodifiedtime,glcode.id AS glCodeId, glcode.tenantid AS glCodeTenantId,glcode.service AS glCodeService,"
 			+ " glcode.createdby AS glcreatedby, glcode.createdtime AS glcreatedtime, glcode.lastmodifiedby AS gllastmodifiedby,"
 			+ " glcode.lastmodifiedtime AS gllastmodifiedtime"
-			+ " FROM egbs_taxheadmaster taxhead INNER Join egbs_glcodemaster glcode "
+			+ " FROM egbs_taxheadmaster taxhead LEFT OUTER Join egbs_glcodemaster glcode "
 			+ " ON taxhead.code=glcode.taxhead and taxhead.tenantid=glcode.tenantid "
 			+ " WHERE taxhead.tenantId = ? ";
 	

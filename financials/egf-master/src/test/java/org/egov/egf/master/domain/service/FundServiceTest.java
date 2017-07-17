@@ -3,6 +3,7 @@ package org.egov.egf.master.domain.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.repository.FundRepository;
 import org.junit.Before;
@@ -10,11 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
-
+@Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
 public class FundServiceTest { 
 	

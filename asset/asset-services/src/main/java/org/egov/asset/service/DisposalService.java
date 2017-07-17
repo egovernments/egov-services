@@ -15,6 +15,8 @@ import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.enums.AssetStatusObjectName;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.common.contract.request.RequestInfo;
@@ -75,8 +77,8 @@ public class DisposalService {
     public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
         final Asset asset = assetCurrentAmountService.getAsset(disposalRequest.getDisposal().getAssetId(),
                 disposalRequest.getDisposal().getTenantId(), disposalRequest.getRequestInfo());
-        final List<AssetStatus> assetStatuses = assetMasterService.getStatuses("Asset Master", "DISPOSED",
-                disposalRequest.getDisposal().getTenantId());
+        final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
+                Status.DISPOSED, disposalRequest.getDisposal().getTenantId());
         asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());
         final AssetRequest assetRequest = AssetRequest.builder().asset(asset)
                 .requestInfo(disposalRequest.getRequestInfo()).build();
@@ -90,14 +92,14 @@ public class DisposalService {
         if (disposalRequest.getDisposal().getAuditDetails() == null)
             disposalRequest.getDisposal()
                     .setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
-
-//        try {
-//            final Long voucherId = createVoucherForDisposal(disposalRequest);
-//            if (voucherId != null)
-//                disposalRequest.getDisposal().setVoucherReference(voucherId);
-//        } catch (final Exception e) {
-//            throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
-//        }
+        if (applicationProperties.getEnableVoucherGenration())
+            try {
+                final Long voucherId = createVoucherForDisposal(disposalRequest);
+                if (voucherId != null)
+                    disposalRequest.getDisposal().setVoucherReference(voucherId);
+            } catch (final Exception e) {
+                throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
+            }
 
         String value = null;
         try {

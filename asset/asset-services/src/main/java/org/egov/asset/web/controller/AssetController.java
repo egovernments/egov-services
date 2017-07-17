@@ -102,7 +102,7 @@ public class AssetController {
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             @ModelAttribute @Valid final AssetCriteria assetCriteria, final BindingResult bindingResult) {
-        logger.info("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
+        logger.debug("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = populateErrors(bindingResult);
@@ -122,7 +122,7 @@ public class AssetController {
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
             final BindingResult bindingResult) {
-        logger.info("create asset:" + assetRequest);
+        logger.debug("create asset:" + assetRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -157,7 +157,7 @@ public class AssetController {
     public ResponseEntity<?> reevaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
             final BindingResult bindingResult) {
 
-        logger.info("create reevaluate:" + revaluationRequest);
+        logger.debug("create reevaluate:" + revaluationRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -200,7 +200,7 @@ public class AssetController {
         assetValidator.validateDisposal(disposalRequest);
 
         final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
-        logger.info("dispose disposalResponse:" + disposalResponse);
+        logger.debug("dispose disposalResponse:" + disposalResponse);
 
         return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
     }
@@ -210,7 +210,7 @@ public class AssetController {
     public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             @ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
 
-        logger.info("disposalSearch disposalCriteria:" + disposalCriteria);
+        logger.debug("disposalSearch disposalCriteria:" + disposalCriteria);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -229,7 +229,7 @@ public class AssetController {
             @RequestParam(name = "tenantId", required = true) final String tenantId,
             @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
 
-        logger.info("getAssetCurrentValue assetId:" + assetId + ",tenantId:" + tenantId);
+        logger.debug("getAssetCurrentValue assetId:" + assetId + ",tenantId:" + tenantId);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -238,7 +238,7 @@ public class AssetController {
         final AssetCurrentValueResponse assetCurrentValueResponse = assetCurrentAmountService.getCurrentAmount(assetId,
                 tenantId, requestInfoWrapper.getRequestInfo());
 
-        logger.info("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+        logger.debug("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
         return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
     }
 

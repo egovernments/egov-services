@@ -49,7 +49,7 @@ public class RevaluationService {
 
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest) {
 
-        logger.info("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
+        logger.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
 
         revaluationRequest.getRevaluation()
                 .setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
@@ -60,14 +60,14 @@ public class RevaluationService {
 
         // FIXME uncomment the code once voucher services are up in micro-dev
         // environment.
-//        try {
-//            final Long voucherId = createVoucherForReevaluation(revaluationRequest);
-//            if (voucherId != null)
-//                revaluationRequest.getRevaluation().setVoucherReference(voucherId);
-//        } catch (final Exception e) {
-//            throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
-//        }
-
+        if (applicationProperties.getEnableVoucherGenration())
+            try {
+                final Long voucherId = createVoucherForReevaluation(revaluationRequest);
+                if (voucherId != null)
+                    revaluationRequest.getRevaluation().setVoucherReference(voucherId);
+            } catch (final Exception e) {
+                throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
+            }
         String json = null;
 
         try {

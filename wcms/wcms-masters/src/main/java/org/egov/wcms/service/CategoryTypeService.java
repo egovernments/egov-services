@@ -46,8 +46,6 @@ import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.repository.CategoryTypeRepository;
 import org.egov.wcms.web.contract.CategoryTypeGetRequest;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +54,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CategoryTypeService {
-
-    public static final Logger logger = LoggerFactory.getLogger(CategoryTypeService.class);
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;

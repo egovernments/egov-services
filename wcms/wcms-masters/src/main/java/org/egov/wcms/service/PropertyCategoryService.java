@@ -62,7 +62,7 @@ public class PropertyCategoryService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestExternalMasterService restExternalMasterService;
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypeCategoryTypeReq createPropertyCategory(final String topic, final String key,
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {

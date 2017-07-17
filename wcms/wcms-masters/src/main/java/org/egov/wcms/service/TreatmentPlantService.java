@@ -67,7 +67,7 @@ public class TreatmentPlantService {
     private CodeGeneratorService codeGeneratorService;
 
     @Autowired
-    private RestExternalMasterService restExternalMasterService;
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
         return treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);

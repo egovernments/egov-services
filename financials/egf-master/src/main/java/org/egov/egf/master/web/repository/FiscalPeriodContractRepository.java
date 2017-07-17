@@ -18,7 +18,7 @@ public class FiscalPeriodContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public FiscalPeriodContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public FiscalPeriodContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

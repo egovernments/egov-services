@@ -18,7 +18,7 @@ public class EgfStatusContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public EgfStatusContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public EgfStatusContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

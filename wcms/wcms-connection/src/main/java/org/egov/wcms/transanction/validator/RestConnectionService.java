@@ -101,8 +101,8 @@ public class RestConnectionService {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         TreatmentPlantResponse positions = new RestTemplate().postForObject(url.toString(), request, TreatmentPlantResponse.class,
-                waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
-        if (positions != null && !positions.getTreatmentPlants().isEmpty()) {
+                waterConnectionRequest.getConnection().getWaterTreatment(), waterConnectionRequest.getConnection().getTenantId());
+        if (positions != null && positions.getTreatmentPlants()!=null && !positions.getTreatmentPlants().isEmpty()) {
             waterConnectionRequest.getConnection()
                     .setWaterTreatmentId(positions.getTreatmentPlants() != null && positions.getTreatmentPlants().get(0) != null
                             ? String.valueOf(positions.getTreatmentPlants().get(0).getId()) : "");

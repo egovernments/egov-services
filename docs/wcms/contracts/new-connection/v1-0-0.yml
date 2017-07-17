@@ -251,7 +251,7 @@ definitions:
   Property:
     type: object
     properties:
-      propertyidentifier:
+      propertyIdentifier:
        type: string
        description : tax Assessment number which will come from propertyTax
       usageType:

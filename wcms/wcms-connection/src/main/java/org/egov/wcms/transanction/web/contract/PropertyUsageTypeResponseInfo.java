@@ -18,7 +18,7 @@ public class PropertyUsageTypeResponseInfo {
 
     @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("propertyCategories")
+    @JsonProperty("propertyTypeUsageTypes")
     private List<UsageTypeResponseInfo> propCategory;
     
     

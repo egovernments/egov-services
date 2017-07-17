@@ -290,11 +290,9 @@ public class EmployeeService {
         if (!isEmpty(employee.getAprDetails())) {
             aprDetailRepository.save(employeeRequest);
         }
-/*
-        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
         employeeDataSyncService.createDataSync(userRequest);
-*/
     }
 
     public Employee updateAsync(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
@@ -355,11 +353,9 @@ public class EmployeeService {
         educationalQualificationService.update(employee);
         aprDetailService.update(employee);
         employeeDocumentsService.update(employee);
-/*
-        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
         employeeDataSyncService.createDataSync(userRequest);
-*/
     }
 
     public List<EmployeeInfo> getLoggedInEmployee(RequestInfo requestInfo) throws CloneNotSupportedException {

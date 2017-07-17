@@ -91,14 +91,15 @@ public class NonVacantPositionsRepository {
 			put("positionId", assignment.getPosition());
 			put("fromDate", assignment.getFromDate());
 			put("toDate", assignment.getToDate());
-			put("tenantId", assignment.getTenantId());
+			put("tenantId", tenantId);
 			put("employeeId", employeeId);
 		}};
 
 		if (requestType.equals("create")) {
-			return namedParameterJdbcTemplate.queryForObject(
+			Boolean aBoolean = namedParameterJdbcTemplate.queryForObject(
 					CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(" $employeeIdCheck", ""),
 					namedParameters, Boolean.class);
+			return aBoolean;
 		} else {
 			return namedParameterJdbcTemplate.queryForObject(CHECK_IF_POSITION_IS_OCCUPIED_QUERY.replace(
 					" $employeeIdCheck", " AND employeeId != :employeeId"),

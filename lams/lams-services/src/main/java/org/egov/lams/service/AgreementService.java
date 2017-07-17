@@ -156,6 +156,7 @@ public class AgreementService {
 		}
 
 		try {
+			logger.info("agreement before sending" +agreement);
 			kafkaTemplate.send(kafkaTopic, "save-agreement", agreementRequest);
 		} catch (Exception exception) {
 			logger.info("AgreementService : " + exception.getMessage(), exception);

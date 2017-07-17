@@ -147,8 +147,8 @@ public class DemandValidator implements Validator {
 		for (Demand demand : demands) {
 			List<TaxPeriod> taxPeriods = taxPeriodMap.get(demand.getBusinessService());
 			TaxPeriod taxPeriod = taxPeriods.stream()
-					.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) <= 0 
-					 && demand.getTaxPeriodTo().compareTo(t.getToDate()) >= 0)
+					.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0 
+					 && demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
 					.findAny().orElse(null);
 			if (taxPeriod == null)
 				errors.rejectValue("Demands", "", "the given taxPeriod value periodFrom : '" + demand.getTaxPeriodFrom()

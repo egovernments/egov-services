@@ -196,7 +196,11 @@ public class NewWaterConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-
+        if(waterConnectionRequest.getConnection().getProperty()!=null && 
+                waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
+        {
+            restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
+        }
         isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
         if (!isRequestValid) {
             final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.PROPERTY_CATEGORY_INVALID_CODE)
@@ -256,7 +260,6 @@ public class NewWaterConnectionValidator {
         return errorFields;
     }
 
-    // validatePropertyUsageMapping master validation need to do
 
     /*
      * private boolean validateDocumentApplicationType(final WaterConnectionReq waterConnectionRequest) { LOGGER.info(
@@ -287,7 +290,6 @@ public class NewWaterConnectionValidator {
         isRequestValid = true;
         return isRequestValid;
 
-        // Refactoring needed to reduce the if-else ladder and other optimization.
     }
 
     public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {

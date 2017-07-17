@@ -133,5 +133,12 @@ public class ConfigurationManager {
     
     @Value("${egov.services.wcms_masters.treatment}")
     private String waterTreatmentSearchTopic;
+    
+    
+    @Value("${egov.services.pt_property.hostname}")
+    private String propertyServiceHostaNameTopic;
+    
+    @Value("${egov.services.pt_property_propertytype.searchpath}")
+    private String propertyServiceSearchHostaNameTopic;
 
 }

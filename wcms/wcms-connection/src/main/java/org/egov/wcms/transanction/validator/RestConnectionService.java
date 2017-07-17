@@ -53,6 +53,7 @@ import org.egov.wcms.transanction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transanction.web.contract.ErrorRes;
 import org.egov.wcms.transanction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transanction.web.contract.PropertyCategoryResponseInfo;
+import org.egov.wcms.transanction.web.contract.PropertyResponse;
 import org.egov.wcms.transanction.web.contract.PropertyUsageTypeResponseInfo;
 import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transanction.web.contract.SupplyResponseInfo;
@@ -221,6 +222,29 @@ public class RestConnectionService {
         return isValidPropAndCategory;
         }
 
+    public PropertyResponse getPropertyDetailsByUpicNo(WaterConnectionReq waterRequestReq)
+    {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostaNameTopic())
+        .append(configurationManager.getPropertyServiceSearchHostaNameTopic()).
+        append("?upicNo=").append(waterRequestReq.getConnection().getProperty().getPropertyidentifier())
+        .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+        PropertyResponse propResp=null;
+        try{
+         propResp= new RestTemplate().postForObject(url.toString(), wrapper,
+                PropertyResponse.class);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e.getMessage());
+        }
+        if(propResp!=null && !propResp.getProperties().isEmpty())
+            waterRequestReq.getConnection().setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
+        
+        return propResp;
+    }
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
         final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();

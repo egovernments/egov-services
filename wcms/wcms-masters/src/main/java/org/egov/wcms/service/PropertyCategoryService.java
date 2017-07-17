@@ -88,7 +88,7 @@ public class PropertyCategoryService {
         if (propertyCategoryGetRequest.getPropertyType() != null) {
             final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
                     propertyCategoryGetRequest.getPropertyType(), propertyCategoryGetRequest.getTenantId());
-            if (propertyTypes != null)
+            if (propertyTypes.getPropertyTypesSize())
                 propertyCategoryGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
 
         }

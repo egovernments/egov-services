@@ -28,14 +28,9 @@ public class CollectionConsumer {
 	private ApplicationProperties applicationProperties;
 	
 	@Autowired 
-	private ReceiptService recieptService;
+	private ReceiptService recieptService;	
 	
-	@Autowired
-	private WorkflowService workflowService;
-	
-	
-	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}", "${kafka.topics.workflow.start.name}",
-			"${kafka.topics.workflow.update.name}"})
+	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}"})
 	
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 	logger.info("Record: "+record.toString());
@@ -45,12 +40,6 @@ public class CollectionConsumer {
 			if (topic.equals(applicationProperties.getCreateReceiptTopicName())) {
 				logger.info("Consuming create Receipt request");
 				recieptService.create(objectMapper.convertValue(record, ReceiptReq.class));
-			}else if(topic.equals(applicationProperties.getKafkaStartWorkflowTopic())){
-				logger.info("Consuming start workflow request");
-				workflowService.startWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
-			}else if(topic.equals(applicationProperties.getKafkaUpdateworkflowTopic())){
-				logger.info("Consuming start workflow request");
-				workflowService.updateWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
 			}
 			
 		} catch (final Exception e) {

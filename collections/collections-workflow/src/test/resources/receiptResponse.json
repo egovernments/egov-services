@@ -1,0 +1,171 @@
+{
+    "tenantId": null,
+    "ResponseInfo": {
+        "apiId": "org.egov.collection",
+        "ver": "1.0",
+        "ts": "Wed Dec 21 18:30:00 UTC 2016",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+    "Receipt": [
+        {
+            "tenantId": "default",
+            "instrumentType": null,
+            "instrumentHeader": null,
+            "BillWrapper": {
+                "paidBy": "abc",
+                "auditDetails": null,
+                "Bill": {
+                    "id": null,
+                    "payeeName": "abc",
+                    "payeeAddress": "abc nagara",
+                    "payeeEmail": "abc567@gmail.com",
+                    "isActive": null,
+                    "isCancelled": null,
+                    "billDetails": [
+                        {
+                            "id": "1",
+                            "bill": null,
+                            "billDate": null,
+                            "billDescription": null,
+                            "billNumber": null,
+                            "consumerCode": "CON12343556",
+                            "consumerType": "Known",
+                            "minimumAmount": 125.0,
+                            "totalAmount": 150.0,
+                            "collectionModesNotAllowed": [
+                                "Bill based"
+                            ],
+                            "tenantId": "default",
+                            "businessService": null,
+                            "displayMessage": "receipt created successfully",
+                            "callBackForApportioning": null,
+                            "BillAccountDetail": [
+                                {
+                                    "glcode": null,
+                                    "order": null,
+                                    "accountDescription": null,
+                                    "isActualDemand": true,
+                                    "id": "1",
+                                    "tenantId": "default",
+                                    "billDetail": "1",
+                                    "creditAmount": 800.0,
+                                    "debitAmount": 600.0,
+                                    "purpose": "REBATE"
+                                },
+                                {
+                                    "glcode": null,
+                                    "order": null,
+                                    "accountDescription": null,
+                                    "isActualDemand": true,
+                                    "id": "2",
+                                    "tenantId": "default",
+                                    "billDetail": "1",
+                                    "creditAmount": 800.0,
+                                    "debitAmount": 700.0,
+                                    "purpose": "REBATE"
+                                }
+                            ]
+                        }
+                    ],
+                    "tenantId": "default"
+                },
+                "BillDetailsWrapper": [
+                    {
+                        "businessDetailsCode": "TL",                                                
+                        "refNo": "REF1234",
+                        "event": null,
+                        "receiptNumber": "REC1234",
+                        "receiptDate": 1454371200000,
+                        "receiptType": "ghj",                                              
+                        "channel": "567hfghr",
+                        "voucherHeader": "VOUHEAD",
+                        "collectionType": "C",                                                
+                        "boundary": "67",
+                        "reasonForCancellation": "documents not proper",
+                        "amountPaid": null,
+                        "BillDetail": {
+                            "id": "1",
+                            "bill": null,
+                            "billDate": null,
+                            "billDescription": null,
+                            "billNumber": null,
+                            "consumerCode": "CON12343556",
+                            "consumerType": "Known",
+                            "minimumAmount": 125.0,
+                            "totalAmount": 150.0,
+                            "collectionModesNotAllowed": [
+                                "Bill based"
+                            ],
+                            "tenantId": "default",
+                            "businessService": null,
+                            "displayMessage": "receipt created successfully",
+                            "callBackForApportioning": null,
+                            "BillAccountDetail": [
+                                {
+                                    "glcode": null,
+                                    "order": null,
+                                    "accountDescription": null,
+                                    "isActualDemand": true,
+                                    "id": "1",
+                                    "tenantId": "default",
+                                    "billDetail": "1",
+                                    "creditAmount": 800.0,
+                                    "debitAmount": 600.0,
+                                    "purpose": "REBATE"
+                                },
+                                {
+                                    "glcode": null,
+                                    "order": null,
+                                    "accountDescription": null,
+                                    "isActualDemand": true,
+                                    "id": "2",
+                                    "tenantId": "default",
+                                    "billDetail": "1",
+                                    "creditAmount": 800.0,
+                                    "debitAmount": 700.0,
+                                    "purpose": "REBATE"
+                                }
+                            ]
+                        },
+                        "BillAccountDetailsWrapper": [
+                            {
+                                "BillAccountDetail": {
+                                    "glcode": null,
+                                    "order": null,
+                                    "accountDescription": null,
+                                    "isActualDemand": true,
+                                    "id": "1",
+                                    "tenantId": "default",
+                                    "billDetail": "1",
+                                    "creditAmount": 800.0,
+                                    "debitAmount": 600.0,
+                                    "purpose": "REBATE"
+                                }
+                            },
+                            {
+                                "BillAccountDetail": {
+                                    "glcode": null,
+                                    "order": null,
+                                    "accountDescription": null,
+                                    "isActualDemand": true,
+                                    "id": "2",
+                                    "tenantId": "default",
+                                    "billDetail": "1",
+                                    "creditAmount": 800.0,
+                                    "debitAmount": 700.0,
+                                    "purpose": "REBATE"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Bank": null,
+            "BankAccount": null,
+            "auditDetails": null,
+            "workflowDetails": null
+        }
+    ]
+}

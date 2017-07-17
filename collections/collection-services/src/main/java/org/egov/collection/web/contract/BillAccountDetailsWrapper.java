@@ -1,5 +1,7 @@
 package org.egov.collection.web.contract;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class BillAccountDetailsWrapper {
 
+	@NotNull
 	@JsonProperty("BillAccountDetail")
 	private BillAccountDetail billAccountDetails;
 }

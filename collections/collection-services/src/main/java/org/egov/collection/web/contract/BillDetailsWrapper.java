@@ -5,10 +5,16 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.egov.collection.model.AuditDetails;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,8 +22,11 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BillDetailsWrapper {
 
+	@NotNull
 	@JsonProperty("BillDetail")
 	private BillDetail billDetails;
 	
@@ -45,6 +54,7 @@ public class BillDetailsWrapper {
 	
 	private BigDecimal amountPaid;
 	
+	@NotNull
 	@JsonProperty("BillAccountDetailsWrapper")
 	private List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();//for collection-service
 

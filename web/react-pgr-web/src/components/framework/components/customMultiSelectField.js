@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/SelectField';
 
-export default class CustomTextField extends Component {
+export default class CustomMultiSelectField extends Component {
 	constructor(props) {
        super(props);
    	}
 
-	renderSelect = (item) => {
+	renderMultiSelect = (item) => {
 		switch (item.ui) {
 			case 'google': 
 				return (
 					<SelectField 
 						fullWidth={true} 
-						floatingLabelText={item.description + (item.isRequired ? " *" : "")} 
+						multi={true}
+						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)} 
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} 
 						maxHeight={200}>
@@ -27,7 +28,7 @@ export default class CustomTextField extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderSelect(this.props.item)}
+	        {this.renderMultiSelect(this.props.item)}
 	      </div>
 	    );
 	}

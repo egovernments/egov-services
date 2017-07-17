@@ -105,7 +105,7 @@ public class StorageReservoirService {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.ZONE,
                     WcmsConstants.REVENUE, storageReservoirGetRequest.getTenantId());
-            if (boundary != null)
+            if (boundary != null && boundary.getBoundarySize())
                 storageReservoirGetRequest.setZone(boundary.getBoundarys().get(0).getId());
 
         }
@@ -113,7 +113,7 @@ public class StorageReservoirService {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.WARD,
                     WcmsConstants.REVENUE, storageReservoirGetRequest.getTenantId());
-            if (boundary != null)
+            if (boundary != null && boundary.getBoundarySize())
                 storageReservoirGetRequest.setWard(boundary.getBoundarys().get(0).getId());
 
         }
@@ -121,7 +121,7 @@ public class StorageReservoirService {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.LOCALITY,
                     WcmsConstants.LOCATION, storageReservoirGetRequest.getTenantId());
-            if (boundary != null)
+            if (boundary != null && boundary.getBoundarySize())
                 storageReservoirGetRequest.setLocation(boundary.getBoundarys().get(0).getId());
 
         }
@@ -136,7 +136,7 @@ public class StorageReservoirService {
                 WcmsConstants.ZONE,
                 WcmsConstants.REVENUE,
                 storageReservoir.getTenantId());
-        if (boundaryRespose.getBoundarys().get(0) != null) {
+        if (boundaryRespose.getBoundarySize() && boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByZone = Boolean.TRUE;
             storageReservoir.setZone(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
@@ -154,7 +154,7 @@ public class StorageReservoirService {
                 WcmsConstants.WARD,
                 WcmsConstants.REVENUE,
                 storageReservoir.getTenantId());
-        if (boundaryRespose.getBoundarys().get(0) != null) {
+        if (boundaryRespose.getBoundarySize() && boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByWard = Boolean.TRUE;
             storageReservoir.setWard(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
@@ -172,7 +172,7 @@ public class StorageReservoirService {
                 WcmsConstants.LOCALITY,
                 WcmsConstants.LOCATION,
                 storageReservoir.getTenantId());
-        if (boundaryRespose.getBoundarys().get(0) != null) {
+        if (boundaryRespose.getBoundarySize() && boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByLocation = Boolean.TRUE;
             storageReservoir.setLocation(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null

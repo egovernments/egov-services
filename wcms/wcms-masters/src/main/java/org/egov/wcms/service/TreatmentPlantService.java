@@ -105,7 +105,7 @@ public class TreatmentPlantService {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.ZONE,
                     WcmsConstants.REVENUE, treatmentPlantGetRequest.getTenantId());
-            if (boundary != null)
+            if (boundary.getBoundarySize())
                 treatmentPlantGetRequest.setZone(boundary.getBoundarys().get(0).getId());
 
         }
@@ -113,7 +113,7 @@ public class TreatmentPlantService {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.WARD,
                     WcmsConstants.REVENUE, treatmentPlantGetRequest.getTenantId());
-            if (boundary != null)
+            if (boundary.getBoundarySize())
                 treatmentPlantGetRequest.setWard(boundary.getBoundarys().get(0).getId());
 
         }
@@ -121,7 +121,7 @@ public class TreatmentPlantService {
             final BoundaryResponse boundary = restExternalMasterService.getBoundaryId(
                     WcmsConstants.LOCALITY,
                     WcmsConstants.LOCATION, treatmentPlantGetRequest.getTenantId());
-            if (boundary != null)
+            if (boundary.getBoundarySize())
                 treatmentPlantGetRequest.setLocation(boundary.getBoundarys().get(0).getId());
 
         }
@@ -136,7 +136,7 @@ public class TreatmentPlantService {
                 WcmsConstants.ZONE,
                 WcmsConstants.REVENUE,
                 treatmentPlant.getTenantId());
-        if (boundaryRespose.getBoundarys().get(0) != null) {
+        if (boundaryRespose.getBoundarySize() && boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByZone = Boolean.TRUE;
             treatmentPlant.setZone(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
@@ -154,7 +154,7 @@ public class TreatmentPlantService {
                 WcmsConstants.WARD,
                 WcmsConstants.REVENUE,
                 treatmentPlant.getTenantId());
-        if (boundaryRespose.getBoundarys().get(0) != null) {
+        if (boundaryRespose.getBoundarySize() && boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByWard = Boolean.TRUE;
             treatmentPlant.setWard(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null
@@ -172,7 +172,7 @@ public class TreatmentPlantService {
                 WcmsConstants.LOCALITY,
                 WcmsConstants.LOCATION,
                 treatmentPlant.getTenantId());
-        if (boundaryRespose.getBoundarys().get(0) != null) {
+        if (boundaryRespose.getBoundarySize() && boundaryRespose.getBoundarys().get(0) != null) {
             isValidBoundaryByLocation = Boolean.TRUE;
             treatmentPlant.setLocation(
                     boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarys().get(0) != null

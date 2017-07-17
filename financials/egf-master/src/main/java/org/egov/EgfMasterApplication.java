@@ -7,10 +7,12 @@ import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -49,6 +51,10 @@ public class EgfMasterApplication {
 	private String elasticSearchClusterName;
 
 	private TransportClient client;
+	
+	 @Autowired
+	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
+
 
 	@PostConstruct
 	public void init() throws UnknownHostException {

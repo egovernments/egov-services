@@ -148,6 +148,7 @@ public class WaterConnectionService {
     private ProcessInstance initiateWorkFow(final WaterConnectionReq waterConnectionReq) {
 
         final ProcessInstance pros = transanctionWorkFlowService.startWorkFlow(waterConnectionReq);
+        if(pros!=null)
         waterConnectionReq.getConnection().setStateId(Long.valueOf(pros.getId()));
         return pros;
     }
@@ -165,6 +166,7 @@ public class WaterConnectionService {
     private Task updateWorkFlow(final WaterConnectionReq waterConnectionReq) {
 
         final Task task = transanctionWorkFlowService.updateWorkFlow(waterConnectionReq);
+        if(task!=null )
         waterConnectionReq.getConnection().setStateId(Long.valueOf(task.getId()));
         return task;
     }

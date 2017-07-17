@@ -174,13 +174,13 @@ public class RestConnectionService {
                 wrapper, PropertyCategoryResponseInfo.class);
         if (propCategory != null && propCategory.getPropCategory()!=null &&  !propCategory.getPropCategory().isEmpty()
                 && propCategory.getPropCategory().get(0).getId() != null) {
-            waterConnectionRequest.getConnection().getProperty().setPropertyType(propCategory.getPropCategory().get(0).getPropertyTypeId());
+            waterConnectionRequest.getConnection().getProperty().setPropertyTypeId(propCategory.getPropCategory().get(0).getPropertyTypeId());
             isValidPropAndCategory = Boolean.TRUE;
         }
         return isValidPropAndCategory;
     }
 
-    public Boolean validatePropertyPipesizeMapping(WaterConnectionReq waterConnectionRequest) {
+   /* public Boolean validatePropertyPipesizeMapping(WaterConnectionReq waterConnectionRequest) {
         Boolean isValidPropAndCategory = Boolean.FALSE;
         StringBuilder url = new StringBuilder();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
@@ -199,7 +199,7 @@ public class RestConnectionService {
             isValidPropAndCategory = Boolean.TRUE;
         }
         return isValidPropAndCategory;
-    }
+    }*/
 
     public Boolean validatePropertyUsageTypeMapping(WaterConnectionReq waterConnectionRequest) {
         Boolean isValidPropAndCategory = Boolean.FALSE;
@@ -215,7 +215,7 @@ public class RestConnectionService {
                 wrapper, PropertyUsageTypeResponseInfo.class);
         if (propCategory != null && propCategory.getPropCategory()!=null && !propCategory.getPropCategory().isEmpty()
                 && propCategory.getPropCategory().get(0).getId() != null) {
-            waterConnectionRequest.getConnection().getProperty().setUsageTypeId(Long.valueOf(propCategory.getPropCategory().get(0).getUsageTypeId()));
+            waterConnectionRequest.getConnection().getProperty().setUsageTypeId(propCategory.getPropCategory().get(0).getUsageTypeId());
             isValidPropAndCategory = Boolean.TRUE;
         }
         return isValidPropAndCategory;

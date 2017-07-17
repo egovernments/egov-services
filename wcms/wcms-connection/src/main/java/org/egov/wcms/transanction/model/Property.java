@@ -67,11 +67,11 @@ public class Property {
 
     @NotNull
     private String usageType;
-    private long usageTypeId;
+    private String usageTypeId;
 
     @NotNull
     private String propertyType;
-    private long propertyTypeId;
+    private String propertyTypeId;
 
     private String address;
     

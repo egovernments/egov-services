@@ -107,8 +107,8 @@ public class WaterConnectionRepository {
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
                 statement.setString(18, waterConnectionRequest.getConnection().getProperty()
                         .getPropertyidentifier());
-                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageType());
-                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyType());
+                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
+                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
                 statement.setString(21
                         , "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());

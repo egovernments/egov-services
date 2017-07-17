@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SubSchemeContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/subschemes/search?";
+	public static final String SEARCH_URL = "/egf-master/subschemes/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 

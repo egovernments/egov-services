@@ -120,7 +120,7 @@ public class BankAccountController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<BankAccountContract> search(
-			@ModelAttribute BankAccountSearchContract bankAccountSearchContract, @RequestBody RequestInfo requestInfo,
+			@ModelAttribute BankAccountSearchContract bankAccountSearchContract, RequestInfo requestInfo,
 			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();

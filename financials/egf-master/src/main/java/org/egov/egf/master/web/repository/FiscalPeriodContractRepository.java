@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class FiscalPeriodContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/fiscalperiods/search?";
+	public static final String SEARCH_URL = "/egf-master/fiscalperiods/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 

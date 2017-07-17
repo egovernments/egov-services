@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AccountDetailTypeContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/accountdetailtypes/search?";
+	public static final String SEARCH_URL = "/egf-master/accountdetailtypes/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 

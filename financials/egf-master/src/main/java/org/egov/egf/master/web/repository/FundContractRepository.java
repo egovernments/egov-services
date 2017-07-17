@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class FundContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/funds/search?";
+	public static final String SEARCH_URL = "/egf-master/funds/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -32,7 +32,7 @@ public class FundContractRepository {
 		}
 
 		if (fundContract.getTenantId() != null) {
-			content.append("tenantId=" + fundContract.getTenantId());
+			content.append("&tenantId=" + fundContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<FundContract> result = objectMapper.convertValue(

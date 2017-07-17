@@ -120,7 +120,7 @@ public class SubSchemeController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<SubSchemeContract> search(@ModelAttribute SubSchemeSearchContract subSchemeSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		SubSchemeSearch domain = new SubSchemeSearch();

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class FunctionaryContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/functionaries/search?";
+	public static final String SEARCH_URL = "/egf-master/functionaries/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 

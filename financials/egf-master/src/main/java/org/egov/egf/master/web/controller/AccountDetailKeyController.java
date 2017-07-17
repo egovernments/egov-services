@@ -123,7 +123,7 @@ public class AccountDetailKeyController {
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<AccountDetailKeyContract> search(
 			@ModelAttribute AccountDetailKeySearchContract accountDetailKeySearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountDetailKeySearch domain = new AccountDetailKeySearch();

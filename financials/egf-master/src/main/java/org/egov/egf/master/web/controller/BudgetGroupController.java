@@ -120,7 +120,7 @@ public class BudgetGroupController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<BudgetGroupContract> search(
-			@ModelAttribute BudgetGroupSearchContract budgetGroupSearchContract, @RequestBody RequestInfo requestInfo,
+			@ModelAttribute BudgetGroupSearchContract budgetGroupSearchContract, RequestInfo requestInfo,
 			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();

@@ -120,7 +120,7 @@ public class FunctionaryController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FunctionaryContract> search(
-			@ModelAttribute FunctionarySearchContract functionarySearchContract, @RequestBody RequestInfo requestInfo,
+			@ModelAttribute FunctionarySearchContract functionarySearchContract, RequestInfo requestInfo,
 			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();

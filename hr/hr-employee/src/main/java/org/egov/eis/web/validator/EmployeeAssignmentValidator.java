@@ -92,7 +92,6 @@ public class EmployeeAssignmentValidator implements Validator {
                                 + ". Please Enter Correct Dates");
             }
         }
-        ;
 
         // check for atleast 1 primary assignment
         if (primaryAssignments.size() == 0) {

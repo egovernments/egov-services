@@ -223,12 +223,12 @@ public class EmployeeController {
     public ResponseEntity<?> create(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
         log.debug("employeeRequest::" + employeeRequest);
 
-        ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
-        if (errorResponseEntity != null)
-            return errorResponseEntity;
-
         Employee employee = null;
         try {
+            ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
+            if (errorResponseEntity != null)
+                return errorResponseEntity;
+
             employee = employeeService.createAsync(employeeRequest);
         } catch (UserException ue) {
             log.error("Error while processing request ", ue);
@@ -253,12 +253,12 @@ public class EmployeeController {
     public ResponseEntity<?> update(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
         log.debug("employeeRequest::" + employeeRequest);
 
-        ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
-        if (errorResponseEntity != null)
-            return errorResponseEntity;
-
         Employee employee = null;
         try {
+            ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
+            if (errorResponseEntity != null)
+                return errorResponseEntity;
+
             employee = employeeService.updateAsync(employeeRequest);
         } catch (UserException ue) {
             log.error("Error while processing request ", ue);

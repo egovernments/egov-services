@@ -118,6 +118,4 @@ public class PropertiesManager {
     @Value("${egov.services.data_sync_employee_service.createpath}")
     private String hybridDataSyncServiceCreatePath;
 
-
-
 }

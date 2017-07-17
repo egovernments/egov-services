@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class CustomEmailField extends Component {
+export default class UiCheckBox extends Component {
 	constructor(props) {
        super(props);
    	}
 
-	renderEmailBox = (item) => {
+	renderCheckBox = (item) => {
 		switch (item.ui) {
 			case 'google': 
 				return (
 					<TextField 
 						fullWidth={true} 
-						type="email"
+						type="checkbox"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
@@ -23,7 +23,7 @@ export default class CustomEmailField extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderEmailBox(this.props.item)}
+	        {this.renderCheckBox(this.props.item)}
 	      </div>
 	    );
 	}

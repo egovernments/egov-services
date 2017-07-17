@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/SelectField';
 
-export default class CustomTextField extends Component {
+export default class UiTextField extends Component {
 	constructor(props) {
        super(props);
    	}
@@ -12,7 +12,7 @@ export default class CustomTextField extends Component {
 				return (
 					<SelectField 
 						fullWidth={true} 
-						floatingLabelText={item.description + (item.isRequired ? " *" : "")} 
+						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)} 
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} 
 						maxHeight={200}>

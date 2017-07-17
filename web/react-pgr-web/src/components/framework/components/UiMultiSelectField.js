@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/SelectField';
 
-export default class CustomMultiSelectField extends Component {
+export default class UiMultiSelectField extends Component {
 	constructor(props) {
        super(props);
    	}

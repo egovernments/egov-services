@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class CustomTextArea extends Component {
+export default class UiNumberField extends Component {
 	constructor(props) {
        super(props);
    	}
 
-	renderTextArea = (item) => {
+	renderNumberBox = (item) => {
 		switch (item.ui) {
 			case 'google': 
 				return (
 					<TextField 
 						fullWidth={true} 
-						type="checkbox"
+						type="number"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
@@ -23,7 +23,7 @@ export default class CustomTextArea extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderTextArea(this.props.item)}
+	        {this.renderNumberBox(this.props.item)}
 	      </div>
 	    );
 	}

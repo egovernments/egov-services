@@ -1,21 +1,21 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class CustomMobileField extends Component {
+export default class UiTextArea extends Component {
 	constructor(props) {
        super(props);
    	}
 
-	renderMobileNumberBox = (item) => {
+	renderTextArea = (item) => {
 		switch (item.ui) {
 			case 'google': 
 				return (
 					<TextField 
 						fullWidth={true} 
-						type="number"
+						multiLine={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '/d{10}')} />
+						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
 				);
 		}
 	}
@@ -23,7 +23,7 @@ export default class CustomMobileField extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderMobileNumberBox(this.props.item)}
+	        {this.renderTextArea(this.props.item)}
 	      </div>
 	    );
 	}

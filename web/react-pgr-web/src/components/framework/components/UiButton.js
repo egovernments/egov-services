@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class CustomButton extends Component {
+export default class UiButton extends Component {
 	constructor(props) {
        super(props);
    	}

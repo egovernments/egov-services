@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class CustomTextField extends Component {
+export default class UiTextField extends Component {
 	constructor(props) {
        super(props);
    	}
@@ -14,7 +14,7 @@ export default class CustomTextField extends Component {
 						fullWidth={true} 
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
-						onChange={(e) => this.props.handler(e, item.name, item.isRequired ? true : false, '')} />
+						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
 				);
 		}
 	}

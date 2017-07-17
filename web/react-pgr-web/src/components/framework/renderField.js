@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
-import customTextField from './components/customTextField'
-import customSelectField from './components/customSelectfield'
+import UiTextField from './components/UiTextField'
+import UiSelectField from './components/UiSelectField'
+import UiButton from './components/UiButton'
+import UiCheckBox from './components/UiCheckBox'
+import UiEmailField from './components/UiEmailField'
+import UiMobileNumber from './components/UiMobileNumber'
+import UiTextArea from './components/UiTextArea'
+import UiMultiSelectField from './components/UiMultiSelectField'
+import UiNumberField from './components/UiNumberField'
+
 
 export default class ShowField extends Component {
   constructor(props) {
@@ -10,10 +18,31 @@ export default class ShowField extends Component {
   renderField(item) {
   	switch(item.type) {
   		case 'text': 
-  			<CustomTextField ui="google" isRequired={item.isRequired} description={item.description} name={item.name} handler={this.props.handler}/>
+  			<UiTextField ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
   			break;
   		case 'singleValueList': 
-  			<CustomTextField ui="google" isRequired={item.isRequired} description={item.description} name={item.name} handler={this.props.handler}/>
+  			<UiSelectField ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler} dropDownData={item.dropDownData}/>
+  			break;
+  		case 'multiValueList': 
+  			<UiMultiSelectField ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler} dropDownData={item.dropDownData}/>
+  			break;
+  		case 'number': 
+  			<UiNumberField ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
+  			break;
+  		case 'textarea': 
+  			<UiTextArea ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
+  			break;
+  		case 'mobileNumber': 
+  			<UiMobileNumber ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
+  			break;
+  		case 'checkbox': 
+  			<UiCheckBox ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
+  			break;
+  		case 'email': 
+  			<UiEmailField ui="google" isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
+  			break;
+  		case 'button': 
+  			<UiButton ui="google" label={item.label} handler={this.props.handler}/>
   			break;
   	}
   }

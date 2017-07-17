@@ -76,7 +76,7 @@ public class FundContract extends AuditableContract {
 	private Character identifier;
 
 	@NotNull
-	private Long level = Long.valueOf(1l);
+	private Long level;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private FundContract parentId;

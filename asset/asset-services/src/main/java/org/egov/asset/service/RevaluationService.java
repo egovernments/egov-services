@@ -108,10 +108,12 @@ public class RevaluationService {
     private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest) {
         final Asset asset = assetCurrentAmountService.getAsset(revaluationRequest.getRevaluation().getAssetId(),
                 revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
-
+        logger.debug("asset for revaluation :: "+asset);
+        
         final AssetCategory assetCategory = asset.getAssetCategory();
-
+   
         if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
+            logger.info("subledger details check for Type of change INCREASED");
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
                     .getSubledgerDetails(revaluationRequest.getRequestInfo(),
                             revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());
@@ -126,6 +128,7 @@ public class RevaluationService {
                 throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
 
         } else if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
+            logger.info("subledger details check for Type of change DECREASED");
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
                     .getSubledgerDetails(revaluationRequest.getRequestInfo(),
                             revaluationRequest.getRevaluation().getTenantId(), assetCategory.getAssetAccount());

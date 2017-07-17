@@ -120,7 +120,7 @@ public class SchemeController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<SchemeContract> search(@ModelAttribute SchemeSearchContract schemeSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		SchemeSearch domain = new SchemeSearch();

@@ -123,7 +123,7 @@ public class AccountCodePurposeController {
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<AccountCodePurposeContract> search(
 			@ModelAttribute AccountCodePurposeSearchContract accountCodePurposeSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountCodePurposeSearch domain = new AccountCodePurposeSearch();

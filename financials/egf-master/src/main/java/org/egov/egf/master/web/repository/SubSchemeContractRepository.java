@@ -14,11 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SubSchemeContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/subschemes/search?";
+	public static final String SEARCH_URL = "/egf-master/subschemes/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public SubSchemeContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public SubSchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

@@ -120,7 +120,7 @@ public class FiscalPeriodController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FiscalPeriodContract> search(
-			@ModelAttribute FiscalPeriodSearchContract fiscalPeriodSearchContract, @RequestBody RequestInfo requestInfo,
+			@ModelAttribute FiscalPeriodSearchContract fiscalPeriodSearchContract, RequestInfo requestInfo,
 			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();

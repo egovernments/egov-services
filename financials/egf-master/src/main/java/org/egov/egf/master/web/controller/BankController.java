@@ -118,7 +118,7 @@ public class BankController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<BankContract> search(@ModelAttribute BankSearchContract bankSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankSearch domain = new BankSearch();

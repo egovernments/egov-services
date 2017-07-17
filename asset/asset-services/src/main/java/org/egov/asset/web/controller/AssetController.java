@@ -154,7 +154,7 @@ public class AssetController {
 
     @PostMapping("revaluation/_create")
     @ResponseBody
-    public ResponseEntity<?> reevaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
+    public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
             final BindingResult bindingResult) {
 
         logger.debug("create reevaluate:" + revaluationRequest);

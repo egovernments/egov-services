@@ -94,6 +94,7 @@ public class DisposalService {
                     .setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
         if (applicationProperties.getEnableVoucherGenration())
             try {
+                LOGGER.info("Commencing Voucher Generation for Asset Sale/Disposal");
                 final Long voucherId = createVoucherForDisposal(disposalRequest);
                 if (voucherId != null)
                     disposalRequest.getDisposal().setVoucherReference(voucherId);
@@ -139,9 +140,12 @@ public class DisposalService {
         else {
             final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposalRequest,
                     assetCategory);
+            LOGGER.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
             final VoucherRequest voucherRequest = voucherService.createVoucherRequestForDisposal(disposalRequest, asset,
                     accountCodeDetails);
+            
+            LOGGER.debug("Voucher Request for Disposal :: " + voucherRequest);
 
             return voucherService.createVoucher(voucherRequest, disposalRequest.getDisposal().getTenantId());
         }

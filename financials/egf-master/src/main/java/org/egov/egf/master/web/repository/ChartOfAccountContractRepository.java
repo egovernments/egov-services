@@ -14,11 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ChartOfAccountContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/chartofaccounts/search?";
+	public static final String SEARCH_URL = "/egf-master/chartofaccounts/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public ChartOfAccountContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public ChartOfAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

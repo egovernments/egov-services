@@ -172,7 +172,7 @@ public class RestConnectionService {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         PropertyCategoryResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
                 wrapper, PropertyCategoryResponseInfo.class);
-        if (propCategory != null && !propCategory.getPropCategory().isEmpty()
+        if (propCategory != null && propCategory.getPropCategory()!=null &&  !propCategory.getPropCategory().isEmpty()
                 && propCategory.getPropCategory().get(0).getId() != null) {
             waterConnectionRequest.getConnection().getProperty().setPropertyType(propCategory.getPropCategory().get(0).getPropertyTypeId());
             isValidPropAndCategory = Boolean.TRUE;
@@ -213,12 +213,12 @@ public class RestConnectionService {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         PropertyUsageTypeResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
                 wrapper, PropertyUsageTypeResponseInfo.class);
-        if (propCategory != null && propCategory.getPropCategory()!=null 
+        if (propCategory != null && propCategory.getPropCategory()!=null && !propCategory.getPropCategory().isEmpty()
                 && propCategory.getPropCategory().get(0).getId() != null) {
             waterConnectionRequest.getConnection().getProperty().setUsageTypeId(Long.valueOf(propCategory.getPropCategory().get(0).getUsageTypeId()));
             isValidPropAndCategory = Boolean.TRUE;
         }
-        return Boolean.TRUE;
+        return isValidPropAndCategory;
         }
 
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
@@ -239,7 +239,7 @@ public class RestConnectionService {
                 .append(waterConnectionRequest.getConnection().getTenantId());
         DonationResponseInfo donation = new RestTemplate().postForObject(url.toString(), wrapper,
                 DonationResponseInfo.class);
-        if (donation != null && !donation.getDonations().isEmpty()) {
+        if (donation != null && donation.getDonations()!=null && !donation.getDonations().isEmpty()) {
             waterConnectionRequest.getConnection().setDonationCharge(donation.getDonations() != null
                     && donation.getDonations().get(0) != null ? new Double (donation.getDonations().get(0).getDonationAmount()) : 0d);
         }

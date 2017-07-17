@@ -14,11 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SupplierContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/suppliers/search?";
+	public static final String SEARCH_URL = "/egf-master/suppliers/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public SupplierContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public SupplierContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

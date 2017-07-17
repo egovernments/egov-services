@@ -28,6 +28,7 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.service.AssetCurrentAmountService;
@@ -263,7 +264,7 @@ public class AssetControllerTest {
 		revaluation.setScheme(Long.valueOf("4"));
 		revaluation.setSubScheme(Long.valueOf("5"));
 		revaluation.setComments("coments");
-		revaluation.setStatus("ACTIVE");
+		revaluation.setStatus(Status.APPROVED.toString());
 
 		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(String.valueOf("5"));

@@ -332,7 +332,7 @@ public class AgreementService {
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if (demandReasons.isEmpty())
 			throw new RuntimeException("No demand reason found for given criteria");
-		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
+     	logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
 		return demandReasons;
 	}
 

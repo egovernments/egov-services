@@ -120,7 +120,7 @@ public class SupplierController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<SupplierContract> search(@ModelAttribute SupplierSearchContract supplierSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		SupplierSearch domain = new SupplierSearch();

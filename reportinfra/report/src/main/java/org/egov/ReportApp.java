@@ -51,11 +51,11 @@ public class ReportApp{
 	@PostConstruct
 	@Bean("reportDefinitions")
 	public static ReportDefinitions loadYaml() {
-		System.out.println("Loading the report definitions from PGR");
+		
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	try {
 
-	/*Resource resource = resourceLoader.getResource("file:/ws/egovservices-old/egov-services/pgr/pgr-master/src/main/resources/application.yml");
+	/*Resource resource = resourceLoader.getResource("file:/ws/egov-services/pgr/pgr-master/src/main/resources/application.yml");
 	File file = resource.getFile();
 	 reportDefinitions = mapper.readValue(file, ReportDefinitions.class);*/
 	// Resource resource =

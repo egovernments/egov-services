@@ -15,6 +15,7 @@ export default class UiEmailField extends Component {
 						type="email"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
+						disabled={item.isDisabled}
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
 				);
 		}

@@ -15,6 +15,7 @@ export default class UiTextField extends Component {
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)} 
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} 
+						disabled={item.isDisabled}
 						maxHeight={200}>
 				            {item.dropDownData.map((dd, index) => (
 				                <MenuItem value={dd.key} key={index} primaryText={dd.value} />

@@ -14,7 +14,8 @@ export default class UiMultiSelectField extends Component {
 						fullWidth={true} 
 						multi={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
-						value={eval(item.jsonpath)} 
+						value={eval(item.jsonpath)}
+						disabled={item.isDisabled}
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} 
 						maxHeight={200}>
 				            {item.dropDownData.map((dd, index) => (

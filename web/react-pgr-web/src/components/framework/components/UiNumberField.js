@@ -15,6 +15,7 @@ export default class UiNumberField extends Component {
 						type="number"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
+						disabled={item.isDisabled}
 						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
 				);
 		}

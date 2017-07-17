@@ -47,7 +47,7 @@ public class VoucherService {
 
     private static final Logger logger = LoggerFactory.getLogger(VoucherService.class);
 
-    public VoucherRequest createVoucherRequestForReevalaution(final RevaluationRequest revaluationRequest,
+    public VoucherRequest createVoucherRequestForRevalaution(final RevaluationRequest revaluationRequest,
             final Asset asset, final List<VouchercreateAccountCodeDetails> accountCodeDetails) {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -75,17 +75,17 @@ public class VoucherService {
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
                 + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
-        logger.debug("VoucherRequest : " + voucherRequest);
+        logger.debug("VoucherRequest :: " + voucherRequest);
         Error err = new Error();
         VoucherResponse voucherRes = new VoucherResponse();
         try {
             final JSONObject voucherResponse = restTemplate.postForObject(createVoucherUrl, voucherRequest,
                     JSONObject.class);
-            logger.debug("VoucherResponse : " + voucherResponse);
+            logger.debug("VoucherResponse :: " + voucherResponse);
             try {
                 voucherRes = mapper.readValue(voucherResponse.toString(), VoucherResponse.class);
             } catch (final IOException e) {
-                logger.debug("Voucher response Deserialization Issue : " + e.getMessage());
+                logger.debug("Voucher response Deserialization Issue :: " + e.getMessage());
             }
             return voucherRes.getVouchers().get(0).getId();
         } catch (final HttpClientErrorException e) {
@@ -95,7 +95,7 @@ public class VoucherService {
             } catch (final IOException e1) {
                 e1.printStackTrace();
             }
-            throw new RuntimeException("Voucher can not be created because : " + err.getMessage());
+            throw new RuntimeException("Voucher can not be created because :: " + err.getMessage());
         }
     }
 
@@ -106,6 +106,7 @@ public class VoucherService {
                 + "&id=" + accountId;
         final ChartOfAccountDetailContractResponse coAccountDetailContractResponse = restTemplate.postForObject(url,
                 requestInfo, ChartOfAccountDetailContractResponse.class);
+        logger.debug("Chart of account detail response for subledger details :: "+coAccountDetailContractResponse);
         return coAccountDetailContractResponse.getChartOfAccountDetails();
     }
 
@@ -118,9 +119,11 @@ public class VoucherService {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
+        logger.debug("Chart of Account id :: "+accountId);
         try {
             chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
                     ChartOfAccountContractResponse.class);
+            logger.debug("Chart of Account Response :: "+chartOfAccountContractResponse);
 
             final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
 
@@ -142,7 +145,8 @@ public class VoucherService {
             final Function function = new Function();
             function.setId(functionId);
             debitAccountCodeDetail.setFunction(function);
-
+        logger.debug("Account Code Detail :: " + debitAccountCodeDetail);
+            
         } catch (final Exception ex) {
             logger.debug("Some problem occured while getting account details : ", ex);
             throw new RuntimeException(ex);

@@ -62,7 +62,8 @@ public class RevaluationService {
         // environment.
         if (applicationProperties.getEnableVoucherGenration())
             try {
-                final Long voucherId = createVoucherForReevaluation(revaluationRequest);
+                logger.info("Commencing Voucher Generation for Asset Revaluation");
+                final Long voucherId = createVoucherForRevaluation(revaluationRequest);
                 if (voucherId != null)
                     revaluationRequest.getRevaluation().setVoucherReference(voucherId);
             } catch (final Exception e) {
@@ -104,7 +105,7 @@ public class RevaluationService {
         return getRevaluationResponse(revaluations);
     }
 
-    private Long createVoucherForReevaluation(final RevaluationRequest revaluationRequest) {
+    private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest) {
         final Asset asset = assetCurrentAmountService.getAsset(revaluationRequest.getRevaluation().getAssetId(),
                 revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
 
@@ -140,9 +141,12 @@ public class RevaluationService {
         }
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
                 assetCategory);
+        
+        logger.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequestForReevalaution(revaluationRequest,
+        final VoucherRequest voucherRequest = voucherService.createVoucherRequestForRevalaution(revaluationRequest,
                 asset, accountCodeDetails);
+        logger.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
         return voucherService.createVoucher(voucherRequest, revaluationRequest.getRevaluation().getTenantId());
 

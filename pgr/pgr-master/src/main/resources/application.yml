@@ -73,7 +73,7 @@ ReportDefinitions:
   - name: complainttype
     label: reports.pgr.complainttype
     type: singlevaluelist
-    pattern: http://localhost:8093/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
+    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
     source: seva
   query: SELECT ctype.name,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN
     1 ELSE NULL::integer END) AS registered,count(CASE WHEN cs.status::text = ANY

@@ -75,6 +75,7 @@ public class VoucherService {
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
                 + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
+        logger.debug("Voucher API Request URL :: " + createVoucherUrl);
         logger.debug("VoucherRequest :: " + voucherRequest);
         Error err = new Error();
         VoucherResponse voucherRes = new VoucherResponse();
@@ -106,7 +107,7 @@ public class VoucherService {
                 + "&id=" + accountId;
         final ChartOfAccountDetailContractResponse coAccountDetailContractResponse = restTemplate.postForObject(url,
                 requestInfo, ChartOfAccountDetailContractResponse.class);
-        logger.debug("Chart of account detail response for subledger details :: "+coAccountDetailContractResponse);
+        logger.debug("Chart of account detail response for subledger details :: " + coAccountDetailContractResponse);
         return coAccountDetailContractResponse.getChartOfAccountDetails();
     }
 
@@ -119,11 +120,11 @@ public class VoucherService {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
-        logger.debug("Chart of Account id :: "+accountId);
+        logger.debug("Chart of Account id :: " + accountId);
         try {
             chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
                     ChartOfAccountContractResponse.class);
-            logger.debug("Chart of Account Response :: "+chartOfAccountContractResponse);
+            logger.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
 
             final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
 
@@ -145,8 +146,8 @@ public class VoucherService {
             final Function function = new Function();
             function.setId(functionId);
             debitAccountCodeDetail.setFunction(function);
-        logger.debug("Account Code Detail :: " + debitAccountCodeDetail);
-            
+            logger.debug("Account Code Detail :: " + debitAccountCodeDetail);
+
         } catch (final Exception ex) {
             logger.debug("Some problem occured while getting account details : ", ex);
             throw new RuntimeException(ex);

@@ -59,6 +59,8 @@ import org.springframework.stereotype.Repository;
 public class ServiceGroupRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceGroupRepository.class);
+	
+	private static final String[] taskAction = {"create","update"} ; 
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -134,11 +136,17 @@ public class ServiceGroupRepository {
 		return false;
 	}
 	
-	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest) { 
+	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) { 
 		List<Object> preparedStatementValues = new ArrayList<>();
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getName().toUpperCase());
 		preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getTenantId());
-		String checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
+		String checkQuery = ""; 
+		if(action.equals(taskAction[0])) { 
+			checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailable();
+		} else {
+			preparedStatementValues.add(serviceGroupRequest.getServiceGroup().getId());
+			checkQuery = serviceGroupQueryBuilder.checkIfNameTenantIdAvailableUpdate();
+		}
 		final List<Integer> count = jdbcTemplate.queryForList(checkQuery,
 				preparedStatementValues.toArray(), Integer.class);
 		if(count.size()>0){

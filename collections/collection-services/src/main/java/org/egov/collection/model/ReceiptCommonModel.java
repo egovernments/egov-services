@@ -9,10 +9,7 @@ import java.util.List;
 
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillAccountDetailsWrapper;
 import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.BillDetailsWrapper;
-import org.egov.collection.web.contract.BillWrapper;
 import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 
@@ -60,28 +57,28 @@ public class ReceiptCommonModel {
 					.collectionModesNotAllowed(Arrays.asList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId()).displayMessage(receiptHeader.getDisplayMsg())
 					.billAccountDetails(billAccountDetails).build();
-			List<BillAccountDetailsWrapper> listOfBillAccountDetailsWrapper = new ArrayList<>();
+			List<BillAccountDetail> listOfBillAccountDetails = new ArrayList<>();
 			
 			for (BillAccountDetail billAccountDetail : billAccountDetails) {
-				listOfBillAccountDetailsWrapper.add(BillAccountDetailsWrapper.builder().billAccountDetails(billAccountDetail).build());
+				listOfBillAccountDetails.add(billAccountDetail);
 			}
-			BillDetailsWrapper detailsWrap = BillDetailsWrapper.builder().billDetails(billDetail)
-					.businessDetailsCode(receiptHeader.getBusinessDetails()).refNo(receiptHeader.getReferenceNumber())
+			BillDetail detailsWrap = BillDetail.builder()
+					.businessService(receiptHeader.getBusinessDetails()).billNumber(receiptHeader.getReferenceNumber())
 					.receiptNumber(receiptHeader.getReceiptNumber())
 					.receiptDate(new Timestamp(receiptHeader.getReceiptDate().getTime()))
 					.receiptType(receiptHeader.getReceiptType()).channel(receiptHeader.getChannel())
 					.voucherHeader(receiptHeader.getVoucherheader()).collectionType(receiptHeader.getCollectionType())
 					.boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation())
-					.billAccountDetailsWrapper(listOfBillAccountDetailsWrapper).build();
+					.billAccountDetails(listOfBillAccountDetails).build();
 			
 			Bill billInfo = Bill.builder().payeeName(receiptHeader.getPayeename())
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.tenantId(receiptHeader.getTenantId()).billDetails(Collections.singletonList(billDetail)).build();
-			BillWrapper billInfoWrapper = BillWrapper.builder().paidBy(receiptHeader.getPaidBy()).billInfo(billInfo)
-					.billDetailsWrapper(Collections.singletonList(detailsWrap)).build();
+			Bill bill = Bill.builder().paidBy(receiptHeader.getPaidBy())
+					.billDetails(Collections.singletonList(detailsWrap)).build();
 			Receipt receipt =new Receipt();
-			receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).billInfoWrapper(billInfoWrapper)
+			receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).bill(bill)
 					.build();
 			receipts.add(receipt);
 		}

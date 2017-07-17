@@ -29,8 +29,8 @@ public class Receipt   {
   private String instrumentHeader;
   
   @NotNull
-  @JsonProperty("BillWrapper")
-  private BillWrapper billInfoWrapper; //for collection-service
+  @JsonProperty("Bill")
+  private Bill bill;
 
   @JsonProperty("Bank")
   private Bank bank;

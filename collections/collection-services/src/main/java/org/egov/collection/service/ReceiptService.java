@@ -45,8 +45,7 @@ import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillAccountDetailsWrapper;
-import org.egov.collection.web.contract.BillDetailsWrapper;
+import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
@@ -74,11 +73,11 @@ public class ReceiptService {
 	public Receipt pushToQueue(ReceiptReq receiptReq){
 		logger.info("Pushing recieptdetail to kafka queue");
 		
-		for(BillDetailsWrapper billdetails: receiptReq.getReceipt().getBillInfoWrapper().getBillDetailsWrapper()){	
+		for(BillDetail billdetails: receiptReq.getReceipt().getBill().getBillDetails()){	
 			String receiptNumber = receiptRepository.generateReceiptNumber(receiptReq);
 			logger.info("Receipt Number generated is: "+receiptNumber);
 			billdetails.setReceiptNumber(receiptNumber);
-			Object businessDetails = receiptRepository.getBusinessDetails(billdetails.getBusinessDetailsCode(), receiptReq);
+			Object businessDetails = receiptRepository.getBusinessDetails(billdetails.getBusinessService(), receiptReq);
 			String fund = null;
 			String fundSource = null;
 			String function = null;
@@ -95,8 +94,7 @@ public class ReceiptService {
 			}
         	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
         	
-			for(BillAccountDetailsWrapper billAccountDetailWrapper: billdetails.getBillAccountDetailsWrapper()){
-				BillAccountDetail billAccountDetails = billAccountDetailWrapper.getBillAccountDetails();
+			for(BillAccountDetail billAccountDetails: billdetails.getBillAccountDetails()){
 				if(!receiptRepository.validateGLCode(billAccountDetails.getGlcode(), receiptReq.getReceipt().getTenantId(), receiptReq.getRequestInfo())){
 					logger.error("Glcode invalid!: "+billAccountDetails.getGlcode());
 					return null;

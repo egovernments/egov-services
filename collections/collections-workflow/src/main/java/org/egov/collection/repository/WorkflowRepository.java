@@ -42,21 +42,15 @@ package org.egov.collection.repository;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.model.DepartmentSearchCriteria;
-import org.egov.collection.model.DesignationSearchCriteria;
-import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.Task;
 import org.egov.collection.model.TaskRequest;
 import org.egov.collection.model.TaskResponse;
-import org.egov.collection.model.UserSearchCriteria;
-import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.web.contract.Position;
 import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceRequest;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
-import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +80,7 @@ public class WorkflowRepository {
 		processInstanceRequest = getProcessInstanceRequest(workflowDetails);
 		logger.info("ProcessInstanceRequest: "+processInstanceRequest.toString());
         final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
-		logger.info("ProcessInstanceRequest: "+request.toString());
+		logger.info("URI: "+uri.toString());
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		try{

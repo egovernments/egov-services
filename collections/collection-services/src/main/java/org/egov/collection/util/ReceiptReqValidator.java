@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillAccountDetailsWrapper;
 import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.errorhandlers.ErrorResponse;
@@ -53,68 +51,66 @@ public class ReceiptReqValidator {
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBillInfoWrapper().getBillInfo().getPayeeName() || receipt.getBillInfoWrapper().getBillInfo().getPayeeName().isEmpty()){
+		if(null == receipt.getBill().getPayeeName() || receipt.getBill().getPayeeName().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAYEE_NAME_MISSING_CODE)
 					.message(CollectionServiceConstants.PAYEE_NAME_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAYEE_NAME_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBillInfoWrapper().getPaidBy() || receipt.getBillInfoWrapper().getPaidBy().isEmpty()){
+		if(null == receipt.getBill().getPaidBy() || receipt.getBill().getPaidBy().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAID_BY_MISSING_CODE)
 					.message(CollectionServiceConstants.PAID_BY_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAID_BY_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-		for(BillDetailsWrapper billDetailsWrapper:  receipt.getBillInfoWrapper().getBillDetailsWrapper()){
-			List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();
-			billAccountDetailsWrapper = billDetailsWrapper.getBillAccountDetailsWrapper();
-			if(null == billDetailsWrapper.getReceiptType()|| billDetailsWrapper.getReceiptType().isEmpty()){
+		for(BillDetail billDetails:  receipt.getBill().getBillDetails()){
+			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
+			if(null == billDetails.getReceiptType()|| billDetails.getReceiptType().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.RECEIPT_TYPE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetailsWrapper.getReceiptDate()){
+			if(null == billDetails.getReceiptDate()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_DATE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_DATE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.RECEIPT_DATE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetailsWrapper.getCollectionType() || billDetailsWrapper.getCollectionType().isEmpty() ){
+			if(null == billDetails.getCollectionType() || billDetails.getCollectionType().isEmpty() ){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLLECTIONTYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.COLLECTIONTYPE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.COLLECTIONTYPE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetailsWrapper.getBillDetails().getCollectionModesNotAllowed()|| billDetailsWrapper.getBillDetails().getCollectionModesNotAllowed().isEmpty() ){
+			if(null == billDetails.getCollectionModesNotAllowed()|| billDetails.getCollectionModesNotAllowed().isEmpty() ){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_CODE)
 						.message(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			
-			if(null == billDetailsWrapper.getBusinessDetailsCode() || billDetailsWrapper.getBusinessDetailsCode().isEmpty()){
+			if(null == billDetails.getBusinessService() || billDetails.getBusinessService().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BD_CODE_MISSING_CODE)
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.BD_CODE_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}	
 			
-			for(BillAccountDetailsWrapper billAccountDetailWrapper: billAccountDetailsWrapper){
-				BillAccountDetail billAccountDetails = billAccountDetailWrapper.getBillAccountDetails();
-				if(null == billAccountDetails.getPurpose()){
+			for(BillAccountDetail billAccountDetail: billAccountDetails){
+				if(null == billAccountDetail.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)
 							.message(CollectionServiceConstants.PURPOSE_MISSING_MESSAGE)
 							.field(CollectionServiceConstants.PURPOSE_MISSING_FIELD).build();
 					errorFields.add(errorField);
 				}
 				
-				if(null == billAccountDetails.getGlcode() || billAccountDetails.getGlcode().isEmpty()){
+				if(null == billAccountDetail.getGlcode() || billAccountDetail.getGlcode().isEmpty()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COA_MISSING_CODE)
 							.message(CollectionServiceConstants.COA_MISSING_MESSAGE)
 							.field(CollectionServiceConstants.COA_MISSING_FIELD).build();

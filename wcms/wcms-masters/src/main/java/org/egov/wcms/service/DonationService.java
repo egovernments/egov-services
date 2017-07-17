@@ -87,14 +87,14 @@ public class DonationService {
         if (donationGetRequest.getPropertyType() != null) {
             final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     donationGetRequest.getPropertyType(), donationGetRequest.getTenantId());
-            if (propertyType != null)
+            if (propertyType != null  &&  propertyType.getPropertyTypesSize())
                 donationGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
         if (donationGetRequest.getUsageType() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                     donationGetRequest.getUsageType(), donationGetRequest.getTenantId());
-            if (usageType != null)
+            if (usageType != null && usageType.getUsageTypesSize())
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }

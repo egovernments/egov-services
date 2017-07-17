@@ -67,7 +67,7 @@ public class StorageReservoirService {
     private CodeGeneratorService codeGeneratorService;
 
     @Autowired
-    private RestExternalMasterService restExternalMasterService;
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public StorageReservoirRequest create(final StorageReservoirRequest storageReservoirRequest) {
         return storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);

@@ -133,17 +133,21 @@ public class ReceivingCenterTypeRepository {
 		return true;
 	}
 	
-	public boolean checkReceivingCenterNameExists(final String name, final String tenantId) {
+	public boolean checkReceivingCenterNameExists(ReceivingCenterType receivingCenter, boolean flag) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 
 		// preparedStatementValues.add(id);
-		preparedStatementValues.add(tenantId);
+		preparedStatementValues.add(receivingCenter.getTenantId());
 		String query = "";
-		if ((null != name && name != "")) {
+		if ((null != receivingCenter.getName() && receivingCenter.getName() != "")) {
 
-			preparedStatementValues.add(name);
-			query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
-
+			preparedStatementValues.add(receivingCenter.getName().toUpperCase());
+			if (flag) {
+				query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByName();
+			} else {
+				preparedStatementValues.add(receivingCenter.getId());
+				query = ReceivingCenterTypeQueryBuilder.checkReceivingCenterTypeByNameUpdate();
+			}
 		}
 		final List<Map<String, Object>> ceneterTypes = jdbcTemplate.queryForList(query,
 				preparedStatementValues.toArray());

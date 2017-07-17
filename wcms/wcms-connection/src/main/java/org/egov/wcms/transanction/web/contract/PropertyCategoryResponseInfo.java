@@ -18,7 +18,7 @@ public class PropertyCategoryResponseInfo {
 
     @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("propertyCategories")
+    @JsonProperty("propertyTypeCategoryTypes")
     private List<PropertyTypeResponseInfo> propCategory;
     
     

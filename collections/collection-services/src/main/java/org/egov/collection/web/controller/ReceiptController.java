@@ -41,7 +41,6 @@
 package org.egov.collection.web.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -132,7 +131,7 @@ public class ReceiptController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-
+		LOGGER.info("Request: "+ receiptRequest.toString());		
 		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -144,7 +143,7 @@ public class ReceiptController {
 			Error error = new Error();
 			ErrorField errorField = new ErrorField();
 			List<ErrorField> errorFields = new ArrayList<>();
-			errorField.setField("businessDetailsCode");
+			errorField.setField("businessDetailsCode or glcode");
 			errorField.setMessage(CollectionServiceConstants.INVALID_BD);
 			errorFields.add(errorField);
 			error.setMessage(CollectionServiceConstants.INVALID_RECEIPT_REQUEST);

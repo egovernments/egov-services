@@ -89,6 +89,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public FloorTypeResponse createFloorType(FloorTypeRequest floorTypeRequest, String tenantId) throws Exception {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
@@ -120,6 +121,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public FloorTypeResponse updateFloorType(FloorTypeRequest floorTypeRequest) throws Exception {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
@@ -173,6 +175,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public WoodTypeResponse createWoodType(WoodTypeRequest woodTypeRequest, String tenantId) throws Exception {
 
 		for (WoodType woodType : woodTypeRequest.getWoodTypes()) {
@@ -205,6 +208,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public WoodTypeResponse updateWoodType(WoodTypeRequest woodTypeRequest) throws Exception {
 
 		for (WoodType woodType : woodTypeRequest.getWoodTypes()) {
@@ -256,6 +260,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public RoofTypeResponse createRoofype(RoofTypeRequest roofTypeRequest, String tenantId) throws Exception {
 
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
@@ -290,6 +295,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest) throws Exception {
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
 
@@ -413,6 +419,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public OccuapancyMasterResponse createOccuapancyMaster(String tenantId,
 			OccuapancyMasterRequest occuapancyMasterRequest) {
 		// TODO Auto-generated method stub
@@ -450,6 +457,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public OccuapancyMasterResponse updateOccuapancyMaster(OccuapancyMasterRequest occuapancyRequest) {
 
 		Long modifiedTime = new Date().getTime();
@@ -503,6 +511,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public PropertyTypeResponse createPropertyTypeMaster(String tenantId, PropertyTypeRequest propertyTypeRequest) {
 		// TODO Auto-generated method stub
 
@@ -536,6 +545,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public PropertyTypeResponse updatePropertyTypeMaster(PropertyTypeRequest propertyTypeRequest) {
 
 		Long modifiedTime = new Date().getTime();
@@ -587,6 +597,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public UsageMasterResponse createUsageMaster(String tenantId, UsageMasterRequest usageMasterRequest)
 			throws Exception {
 
@@ -627,6 +638,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) {
 
 		for (UsageMaster usageMaster : usageMasterRequest.getUsageMasters()) {
@@ -683,6 +695,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public WallTypeResponse createWallTypeMaster(String tenantId, WallTypeRequest wallTypeRequest) throws Exception {
 
 		for (WallType wallType : wallTypeRequest.getWallTypes()) {
@@ -720,6 +733,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public WallTypeResponse updateWallTypeMaster(WallTypeRequest wallTypeRequest) throws Exception {
 
 		for (WallType wallType : wallTypeRequest.getWallTypes()) {
@@ -853,7 +867,6 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	@Transactional
 	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
 			Integer offSet) {
@@ -874,6 +887,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public DepreciationResponse createDepreciation(String tenantId, DepreciationRequest depreciationRequest)
 			throws Exception {
 
@@ -909,6 +923,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public DepreciationResponse updateDepreciation(DepreciationRequest depreciationRequest) throws Exception {
 
 		for (Depreciation depreciation : depreciationRequest.getDepreciations()) {
@@ -963,6 +978,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public MutationMasterResponse createMutationMater(String tenantId, MutationMasterRequest mutationMasterRequest)
 			throws Exception {
 		mutationMasterRequest.getMutationMasters().forEach(muatation -> {
@@ -995,6 +1011,7 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
+	@Transactional
 	public MutationMasterResponse updateMutationMaster(MutationMasterRequest mutationMasterRequest) throws Exception {
 
 		mutationMasterRequest.getMutationMasters().forEach(mutation -> {

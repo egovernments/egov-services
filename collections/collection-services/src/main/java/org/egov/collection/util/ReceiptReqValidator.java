@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillAccountDetailsWrapper;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
@@ -42,6 +43,7 @@ public class ReceiptReqValidator {
 
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			final List<ErrorField> errorFields) {
+	try{	
 		final Receipt receipt = receiptRequest.getReceipt();
 		
 		if(null == receipt.getTenantId() || receipt.getTenantId().isEmpty()){
@@ -66,7 +68,8 @@ public class ReceiptReqValidator {
 		}
 		
 		for(BillDetailsWrapper billDetailsWrapper:  receipt.getBillInfoWrapper().getBillDetailsWrapper()){
-			BillDetail billDetails = billDetailsWrapper.getBillDetails();
+			List<BillAccountDetailsWrapper> billAccountDetailsWrapper = new ArrayList<BillAccountDetailsWrapper>();
+			billAccountDetailsWrapper = billDetailsWrapper.getBillAccountDetailsWrapper();
 			if(null == billDetailsWrapper.getReceiptType()|| billDetailsWrapper.getReceiptType().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)
@@ -88,6 +91,13 @@ public class ReceiptReqValidator {
 				errorFields.add(errorField);
 			}
 			
+			if(null == billDetailsWrapper.getBillDetails().getCollectionModesNotAllowed()|| billDetailsWrapper.getBillDetails().getCollectionModesNotAllowed().isEmpty() ){
+				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_CODE)
+						.message(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_MESSAGE)
+						.field(CollectionServiceConstants.COLL_MODES_NOT_ALLWD_MISSING_FIELD).build();
+				errorFields.add(errorField);
+			}
+			
 			if(null == billDetailsWrapper.getBusinessDetailsCode() || billDetailsWrapper.getBusinessDetailsCode().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BD_CODE_MISSING_CODE)
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)
@@ -95,8 +105,8 @@ public class ReceiptReqValidator {
 				errorFields.add(errorField);
 			}	
 			
-			for(BillAccountDetail billAccountDetails: billDetails.getBillAccountDetails()){
-				
+			for(BillAccountDetailsWrapper billAccountDetailWrapper: billAccountDetailsWrapper){
+				BillAccountDetail billAccountDetails = billAccountDetailWrapper.getBillAccountDetails();
 				if(null == billAccountDetails.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)
 							.message(CollectionServiceConstants.PURPOSE_MISSING_MESSAGE)
@@ -112,5 +122,11 @@ public class ReceiptReqValidator {
 				}
 			}
 		}
+	}catch(Exception e){
+		final ErrorField errorField = ErrorField.builder().code(HttpStatus.BAD_REQUEST.toString())
+				.message(CollectionServiceConstants.INVALID_RECEIPT_REQUEST)
+				.field(CollectionServiceConstants.INVALID_RECEIPT_REQUEST).build();
+		errorFields.add(errorField);
+	}
 	}
 }

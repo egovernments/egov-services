@@ -40,13 +40,12 @@
 
 package org.egov.collection.service;
 
-import java.util.List;
 
 import org.egov.collection.model.ReceiptCommonModel;
-import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillAccountDetailsWrapper;
 import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
@@ -96,8 +95,9 @@ public class ReceiptService {
 			}
         	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
         	
-        	for(BillAccountDetail billAccountDetails: billdetails.getBillDetails().getBillAccountDetails()){
-				if(!receiptRepository.validateGLCode(billAccountDetails.getGlcode(), receiptReq.getTenantId(), receiptReq.getRequestInfo())){
+			for(BillAccountDetailsWrapper billAccountDetailWrapper: billdetails.getBillAccountDetailsWrapper()){
+				BillAccountDetail billAccountDetails = billAccountDetailWrapper.getBillAccountDetails();
+				if(!receiptRepository.validateGLCode(billAccountDetails.getGlcode(), receiptReq.getReceipt().getTenantId(), receiptReq.getRequestInfo())){
 					logger.error("Glcode invalid!: "+billAccountDetails.getGlcode());
 					return null;
 				}

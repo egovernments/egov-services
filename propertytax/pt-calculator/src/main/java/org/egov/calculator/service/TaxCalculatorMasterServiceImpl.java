@@ -350,6 +350,7 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
+	@Transactional
 	public TaxPeriodResponse createTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
@@ -374,6 +375,7 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
+	@Transactional
 	public TaxPeriodResponse updateTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {

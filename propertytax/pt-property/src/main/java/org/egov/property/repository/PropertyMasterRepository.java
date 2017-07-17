@@ -60,7 +60,6 @@ public class PropertyMasterRepository {
 	 * @param data
 	 * @return keyholder id
 	 */
-	@Transactional
 	public Long saveDepartment(String tenantId, Department department, String data) {
 
 		Long createdTime = new Date().getTime();
@@ -98,7 +97,6 @@ public class PropertyMasterRepository {
 	 * @param data
 	 * @param id
 	 */
-	@Transactional
 	public Department updateDepartment(Department department, String data, Long id) {
 		Long modifiedTime = new Date().getTime();
 
@@ -170,7 +168,7 @@ public class PropertyMasterRepository {
 	 * @param data
 	 * @return keyholder id
 	 */
-	@Transactional
+
 	public Long saveOccuapancy(String tenantId, OccuapancyMaster occuapancy, String data) {
 		Long createdTime = new Date().getTime();
 
@@ -286,7 +284,7 @@ public class PropertyMasterRepository {
 	 * @param data
 	 * @return keyholder id
 	 */
-	@Transactional
+
 	public Long savePropertyType(String tenantId, PropertyType propertyType, String data) {
 
 		Long createdTime = new Date().getTime();
@@ -325,7 +323,7 @@ public class PropertyMasterRepository {
 	 * @param propertyType
 	 * @param data
 	 */
-	@Transactional
+
 	public PropertyType updatePropertyType(PropertyType propertyType, String data) {
 
 		Long modifiedTime = new Date().getTime();
@@ -403,7 +401,6 @@ public class PropertyMasterRepository {
 	 * @return
 	 */
 
-	@Transactional
 	public Long saveFloorType(FloorType floorType, String data) {
 
 		Long createdTime = new Date().getTime();
@@ -441,7 +438,6 @@ public class PropertyMasterRepository {
 	 * @param id
 	 */
 
-	@Transactional
 	public FloorType updateFloorType(FloorType floorType, String data) {
 
 		Long updatedTime = new Date().getTime();
@@ -517,7 +513,6 @@ public class PropertyMasterRepository {
 	 * @return
 	 */
 
-	@Transactional
 	public Long saveRoofType(RoofType roofType, String data) {
 
 		Long createdTime = new Date().getTime();
@@ -555,7 +550,6 @@ public class PropertyMasterRepository {
 	 * @param id
 	 */
 
-	@Transactional
 	public RoofType updateRoofType(RoofType roofType, String data) {
 
 		long updatedTime = new Date().getTime();
@@ -627,7 +621,6 @@ public class PropertyMasterRepository {
 	 * @return
 	 */
 
-	@Transactional
 	public Long saveWoodType(WoodType woodType, String data) {
 
 		Long createdTime = new Date().getTime();
@@ -665,7 +658,6 @@ public class PropertyMasterRepository {
 	 * @param id
 	 */
 
-	@Transactional
 	public WoodType updateWoodType(WoodType woodType, String data) {
 
 		long updatedTime = new Date().getTime();
@@ -1116,7 +1108,7 @@ public class PropertyMasterRepository {
 	 * @param data
 	 * @return {@link Long} id of the record inserted in databse
 	 */
-	@Transactional
+
 	public Long createDepreciation(Depreciation depreciation, String data) {
 
 		String insertDepreciationQuery = DepreciationBuilder.INSERT_DEPRECIATION_QUERY;
@@ -1159,7 +1151,7 @@ public class PropertyMasterRepository {
 	 * @param depreciation
 	 * @param data
 	 */
-	@Transactional
+
 	public void updateDepreciation(Depreciation depreciation, String data) {
 
 		String updateDepreciation = DepreciationBuilder.UPDATE_DEPRECIATION_QUERY;
@@ -1234,7 +1226,7 @@ public class PropertyMasterRepository {
 	 * @param data
 	 * @return {@link Long} id of the reocrd inserted in the database
 	 */
-	@Transactional
+
 	public Long createMutationMaster(MutationMaster mutationMaster, String data) {
 		String insertMuationQuery = MutationMasterBuilder.INSERT_MUTATTION_QUERY;
 		Long createdTime = new Date().getTime();
@@ -1274,7 +1266,7 @@ public class PropertyMasterRepository {
 	 * @param mutationMaster
 	 * @param data
 	 */
-	@Transactional
+
 	public void updateMutationMaster(MutationMaster mutationMaster, String data) {
 
 		String updateMutation = MutationMasterBuilder.UPDATE_MUTATION_QUERY;

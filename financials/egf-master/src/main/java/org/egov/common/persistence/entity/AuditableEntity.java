@@ -22,7 +22,9 @@ public class AuditableEntity {
 	protected Date lastModifiedDate;
 
 	protected void toDomain(Auditable domain) {
+		if(createdBy!=null)
 		domain.setCreatedBy(User.builder().id(this.getCreatedBy()).build());
+		if(lastModifiedBy!=null)
 		domain.setLastModifiedBy(User.builder().id(this.getLastModifiedBy()).build());
 		domain.setCreatedDate(this.getCreatedDate());
 		domain.setLastModifiedDate(this.getLastModifiedDate());

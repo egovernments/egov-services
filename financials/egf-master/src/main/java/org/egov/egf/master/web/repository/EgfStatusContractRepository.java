@@ -1,0 +1,50 @@
+package org.egov.egf.master.web.repository;
+
+import org.egov.common.web.contract.CommonResponse;
+import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class EgfStatusContractRepository {
+	private RestTemplate restTemplate;
+	private String hostUrl;
+	public static final String SEARCH_URL = " /egf-master/egfstatuses/search?";
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	public EgfStatusContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+		this.hostUrl = hostUrl;
+	}
+
+	public EgfStatusContract findById(EgfStatusContract egfStatusContract) {
+
+		String url = String.format("%s%s", hostUrl, SEARCH_URL);
+		StringBuffer content = new StringBuffer();
+		if (egfStatusContract.getId() != null) {
+			content.append("id=" + egfStatusContract.getId());
+		}
+
+		if (egfStatusContract.getTenantId() != null) {
+			content.append("tenantId=" + egfStatusContract.getTenantId());
+		}
+		url = url + content.toString();
+		CommonResponse<EgfStatusContract> result = objectMapper.convertValue(
+				restTemplate.postForObject(url, null, CommonResponse.class),
+				new TypeReference<CommonResponse<EgfStatusContract>>() {
+				});
+
+		if (result.getData() != null && result.getData().size() == 1) {
+			return result.getData().get(0);
+		} else {
+			return null;
+		}
+
+	}
+}

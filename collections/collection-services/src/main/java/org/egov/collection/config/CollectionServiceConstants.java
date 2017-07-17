@@ -50,7 +50,7 @@ public class CollectionServiceConstants {
 	public static final String INVALID_USERS_REQUEST = "Get users request is invalid";
 	public static final String INVALID_WF_REQUEST = "Start Workflow request is invalid";
 	public static final String INVALID_REQ_DESC = "Some fields entered are either syntactically or logically incorrect";
-	public static final String INVALID_BD = "Fund, FundSource, Function, Department may be invalid.";
+	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
 
 
 
@@ -92,6 +92,10 @@ public class CollectionServiceConstants {
 	public static final String COLLECTIONTYPE_MISSING_FIELD = "collectionType";
 	public static final String COLLECTIONTYPE_MISSING_MESSAGE = "Collection type is mising";
 	
+	public static final String COLL_MODES_NOT_ALLWD_MISSING_CODE = "egcl_010";
+	public static final String COLL_MODES_NOT_ALLWD_MISSING_FIELD = "collectionModesNotAllowed";
+	public static final String COLL_MODES_NOT_ALLWD_MISSING_MESSAGE = "Collection Modes Not Allowed is mising";
+	
 	public static final String COLL_ID_NAME = "collection.receiptno";
 	public static final String COLL_ID_FORMAT = "GN-CL-[yyyy/MM/dd]-[SEQ_COLL_RCPT_NUM]"; // FIXME: Actual format - [MM/Fin-Yr/6-digit]
 	
@@ -101,9 +105,6 @@ public class CollectionServiceConstants {
 	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
 	public static final String STATUS_SEARCH_URI = "egov-micro-dev.egovernments.org/collection/collectionStatus/_search";
 	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate";
-	public static final String GET_DEPT_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/departments/_search";
-	public static final String GET_DESIG_URI = "http://egov-micro-dev.egovernments.org/egov-common-workflows/designations/_search";
-	public static final String GET_USERS_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/_search";
 	public static final String GET_POSITION_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/";
 	public static final String GET_POSITION_URI_APPEND = "/positions/_search";
 

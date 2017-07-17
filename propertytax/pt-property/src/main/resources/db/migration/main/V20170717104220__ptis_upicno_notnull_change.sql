@@ -1,0 +1,1 @@
+ALTER TABLE egpt_property ALTER COLUMN upicnumber DROP NOT NULL;

@@ -54,7 +54,7 @@ public class DemandReasonService {
 		if (demandReasonCriteria.getToDate() != null) {
 			queryStr.append(" and dr.egInstallmentMaster.fromDate<=:toDate");
 		}
-		queryStr.append(" order by installmen1_.start_date");
+		queryStr.append(" order by dr.egInstallmentMaster.fromDate");
 		
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());

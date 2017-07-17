@@ -65,7 +65,7 @@ public class PropertyUsageTypeService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestExternalMasterService restExternalMasterService;
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);

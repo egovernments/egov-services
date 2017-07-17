@@ -71,6 +71,7 @@ import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
 import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillAccountDetailsWrapper;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BillDetailsWrapper;
 import org.egov.collection.web.contract.Receipt;
@@ -95,19 +96,21 @@ public class ReceiptRepository {
 	public static final Logger logger = LoggerFactory
 			.getLogger(ReceiptRepository.class);
 	
-	
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-
+	@Autowired
 	private CollectionProducer collectionProducer;
 	
-
+	@Autowired
 	private ApplicationProperties applicationProperties;
 	
 
+	@Autowired
 	private ReceiptDetailQueryBuilder receiptDetailQueryBuilder;
 	
 
+	@Autowired
 	private ReceiptRowMapper receiptRowMapper;
 	
     @Autowired
@@ -194,6 +197,7 @@ public class ReceiptRepository {
 				parametersMap.put("referencenumber", billdetailsWrapper.getRefNo());
 				parametersMap.put("receipttype", billdetailsWrapper.getReceiptType());							
 				parametersMap.put("receiptdate", billdetailsWrapper.getReceiptDate());
+				parametersMap.put("receiptnumber", billdetailsWrapper.getReceiptNumber());
 				parametersMap.put("businessdetails", billdetailsWrapper.getBusinessDetailsCode());
 				parametersMap.put("collectiontype", billdetailsWrapper.getCollectionType());
 				parametersMap.put("reasonforcancellation", billdetailsWrapper.getReasonForCancellation());
@@ -236,12 +240,13 @@ public class ReceiptRepository {
 				Long receiptHeader = jdbcTemplate.queryForObject(receiptHeaderIdQuery, new Object[] {receiptInfo.getBillInfoWrapper().getBillInfo().getPayeeName(),
 						receiptInfo.getBillInfoWrapper().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
 				
-				Map<String, Object>[] parametersReceiptDetails = (Map<String, Object>[]) new Map[billdetails.getBillAccountDetails().size()];
+				Map<String, Object>[] parametersReceiptDetails = (Map<String, Object>[]) new Map[billdetailsWrapper.getBillAccountDetailsWrapper().size()];
 				int parametersReceiptDetailsCount = 0;
 	
-				for(BillAccountDetail billAccountDetails: billdetails.getBillAccountDetails()){
+				for(BillAccountDetailsWrapper billAccountDetailsWrapper: billdetailsWrapper.getBillAccountDetailsWrapper()){
+					BillAccountDetail billAccountDetails = billAccountDetailsWrapper.getBillAccountDetails();
 					final Map<String, Object> parameterMap = new HashMap<>();
-					if(validateGLCode(billAccountDetails.getGlcode(), receiptReq.getTenantId(), receiptReq.getRequestInfo())){
+					if(validateGLCode(billAccountDetails.getGlcode(), receiptReq.getReceipt().getTenantId(), receiptReq.getRequestInfo())){
 						parameterMap.put("chartofaccount", billAccountDetails.getGlcode());
 						parameterMap.put("dramount", billAccountDetails.getDebitAmount());
 						parameterMap.put("cramount", billAccountDetails.getCreditAmount());
@@ -251,7 +256,7 @@ public class ReceiptRepository {
 						parameterMap.put("description", null);
 						parameterMap.put("financialyear", null);
 						parameterMap.put("isactualdemand", billAccountDetails.getIsActualDemand());
-						parameterMap.put("purpose", billAccountDetails.getPurpose());
+						parameterMap.put("purpose", billAccountDetails.getPurpose().toString());
 						parameterMap.put("tenantid", receiptInfo.getTenantId());
 						
 						parametersReceiptDetails[parametersReceiptDetailsCount] = parameterMap;
@@ -282,7 +287,7 @@ public class ReceiptRepository {
 	public Object getBusinessDetails(String businessDetailsCode, ReceiptReq receiptReq){
 		logger.info("Searching for fund aand other businessDetails based on code.");	
 		StringBuilder builder = new StringBuilder();
-		String baseUri = CollectionServiceConstants.BD_SEARCH_URI;
+		String baseUri = applicationProperties.getBusinessDetailsSearch();
 		String searchCriteria="?businessDetailsCode="+businessDetailsCode+"&tenantId="+receiptReq.getReceipt().getTenantId();
 		builder.append(baseUri).append(searchCriteria);
 		
@@ -294,6 +299,7 @@ public class ReceiptRepository {
 			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
 		}catch(Exception e){
 			logger.error("Error while fetching buisnessDetails from coll-master service. "+e.getCause());
+			return null;
 		}
 		logger.info("Response from coll-master: "+response.toString());
 		return response;
@@ -304,7 +310,7 @@ public class ReceiptRepository {
 		boolean isCodeValid = true;
 		
 		StringBuilder builder = new StringBuilder();
-		String baseUri = CollectionServiceConstants.COA_SEARCH_URI;
+		String baseUri = applicationProperties.getChartOfAccountsSearch() ;
 		String searchCriteria="?glcode="+glcode+"&tenantId="+tenantId;
 		builder.append(baseUri).append(searchCriteria);
 		
@@ -312,11 +318,12 @@ public class ReceiptRepository {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		Object response = null;
-
 		try{
 			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
 		}catch(Exception e){
 			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
+			isCodeValid = false;
+			return isCodeValid;
 		}
 		
 		logger.info("Response from financials: "+response.toString());
@@ -359,7 +366,7 @@ public class ReceiptRepository {
 		logger.info("Generating receipt number for the receipt.");	
 		
 		StringBuilder builder = new StringBuilder();
-		String baseUri = CollectionServiceConstants.ID_GEN_URI;
+		String baseUri = applicationProperties.getIdGeneration();
 		builder.append(baseUri);
 		
 		logger.info("URI being hit: "+builder.toString());
@@ -397,6 +404,8 @@ public class ReceiptRepository {
 			response = restTemplate.postForObject(builder.toString(), idRequestWrapper , Object.class);
 		}catch(Exception e){
 			logger.error("Error while generating receipt number. "+e.getCause());
+			return null;
+
 		}
 		logger.info("Response from id gen service: "+response.toString());
 		

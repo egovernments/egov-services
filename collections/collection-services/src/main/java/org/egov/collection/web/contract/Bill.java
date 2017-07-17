@@ -1,17 +1,24 @@
 package org.egov.collection.web.contract;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-@Builder
+
+import org.egov.collection.model.AuditDetails;
+
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bill   {
 	//TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
 	private String id;

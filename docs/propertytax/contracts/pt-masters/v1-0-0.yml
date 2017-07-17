@@ -9,7 +9,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/property/masters/v1'
+basePath: '/pt-property/masters/v1'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths:
@@ -911,9 +911,9 @@ paths:
           - MutationMaster
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: woodTypeRequest
+          - name: mutationMasterRequest
             in: body
-            description: Wood Type Request
+            description: Mutation Master Request
             schema:
               $ref: '#/definitions/MutationMasterRequest'
         responses:
@@ -933,9 +933,9 @@ paths:
         tags: 
           - MutationMaster
         parameters:
-          - name: woodTypeRequest
+          - name: mutationMasterRequest
             in: body
-            description: Wood Type Request
+            description: Mutation Master Request
             schema:
               $ref: '#/definitions/MutationMasterRequest'
         responses:

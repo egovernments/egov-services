@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 public class EscalationService {
 
-	private static final String VALUES_ASSIGNEE_ID = "assignmentId";
+	private static final String VALUES_ASSIGNEE_ID = "positionId";
 	private static final String VALUES_KEYWORD = "keyword";
 
 	private ComplaintRestRepository complaintRestRepository;

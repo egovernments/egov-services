@@ -153,265 +153,42 @@ public class ReceiptRepository {
 		}
 		return receiptInfo;
 	}
-		
-	@SuppressWarnings("unchecked") 
-	public boolean persistCreateRequest(ReceiptReq receiptReq){
-		logger.info("Insert process initiated");
-		boolean isInsertionSuccessfull = false;	
-		Receipt receiptInfo = receiptReq.getReceipt();		
-		String statusCode = null;
+			
+	public long persistToReceiptHeader(Map<String, Object> parametersMap, Receipt receiptInfo){
+		long id = 0L;
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
-		
-		for(BillDetail billdetails: receiptInfo.getBill().getBillDetails()){	
-			
-			if(billdetails.getCollectionType().equals("ONLINE")){
-				statusCode = "PENDING";
-			}else{
-				statusCode = "TO BE SUBMITTED";
-			}
-			logger.info("StatusCode: "+statusCode);
-			final Map<String, Object> parametersMap = new HashMap<>();
-			
-			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(billdetails.getBusinessService(), receiptReq);
-			if(null == businessDetailsRes){
-				logger.error("All business details fields are not available");
-				return isInsertionSuccessfull;
-			}
-			String fund = null;
-			String fundSource = null;
-			String function = null;
-			String department = null;
-			try{
-				fund = businessDetailsRes.getBusinessDetails().get(0).getFund();
-				fundSource = businessDetailsRes.getBusinessDetails().get(0).getFundSource();
-				function = businessDetailsRes.getBusinessDetails().get(0).getFunction();
-				department = businessDetailsRes.getBusinessDetails().get(0).getDepartment();
-			}catch(Exception e){
-				logger.error("All business details fields are not available");
-				return isInsertionSuccessfull;
-			}
-        	if(((null != fund && null != fundSource) && null != function) && null != department){
-        		if(((!fund.isEmpty() && !fundSource.isEmpty()) && !function.isEmpty()) && !department.isEmpty()){
-					parametersMap.put("payeename", receiptInfo.getBill().getPayeeName());
-					parametersMap.put("payeeaddress", receiptInfo.getBill().getPayeeAddress());
-					parametersMap.put("payeeemail", receiptInfo.getBill().getPayeeEmail());
-					parametersMap.put("paidby", receiptInfo.getBill().getPaidBy());
-					parametersMap.put("referencenumber", billdetails.getBillNumber());
-					parametersMap.put("receipttype", billdetails.getReceiptType());							
-					parametersMap.put("receiptdate", billdetails.getReceiptDate());
-					parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
-					parametersMap.put("businessdetails", billdetails.getBusinessService());
-					parametersMap.put("collectiontype", billdetails.getCollectionType());
-					parametersMap.put("reasonforcancellation", billdetails.getReasonForCancellation());
-					parametersMap.put("minimumamount", billdetails.getMinimumAmount());
-					parametersMap.put("totalamount", billdetails.getTotalAmount());
-					parametersMap.put("collmodesnotallwd", billdetails.getCollectionModesNotAllowed().toString());
-					parametersMap.put("consumercode", billdetails.getConsumerCode());
-					parametersMap.put("channel", billdetails.getChannel());
-					parametersMap.put("fund", fund);
-					parametersMap.put("fundsource", fundSource);
-					parametersMap.put("function", function);
-					parametersMap.put("department", department);
-					parametersMap.put("boundary", billdetails.getBoundary());
-					parametersMap.put("voucherheader", billdetails.getVoucherHeader());
-					parametersMap.put("depositedbranch", receiptInfo.getBankAccount().getBankBranch().getName());
-					parametersMap.put("createdby", receiptInfo.getAuditDetails().getCreatedBy());
-					parametersMap.put("createddate", receiptInfo.getAuditDetails().getCreatedDate());
-					parametersMap.put("lastmodifiedby", receiptInfo.getAuditDetails().getLastModifiedBy());
-					parametersMap.put("lastmodifieddate", receiptInfo.getAuditDetails().getLastModifiedDate());
-					parametersMap.put("tenantid", receiptInfo.getTenantId());									
-					parametersMap.put("referencedate", billdetails.getBillDate());
-					parametersMap.put("referencedesc", billdetails.getBillDescription());
-					parametersMap.put("manualreceiptnumber", null);
-					parametersMap.put("manualreceiptdate", null);
-					parametersMap.put("reference_ch_id", null);
-					parametersMap.put("stateid", null);
-					parametersMap.put("location", null);
-					parametersMap.put("isreconciled", false);
-					parametersMap.put("status", statusCode);
-					
-					try{
-						logger.info("Inserting into receipt header");
-						namedParameterJdbcTemplate.update(query, parametersMap);
-					}catch(Exception e){
-						logger.error("Persisting to DB FAILED! ",e.getCause());
-						return isInsertionSuccessfull;
-					}
-					
-					String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
-					Long receiptHeader = jdbcTemplate.queryForObject(receiptHeaderIdQuery, new Object[] {receiptInfo.getBill().getPayeeName(),
-							receiptInfo.getBill().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
-					
-					Map<String, Object>[] parametersReceiptDetails = (Map<String, Object>[]) new Map[billdetails.getBillAccountDetails().size()];
-					int parametersReceiptDetailsCount = 0;
-		
-					for(BillAccountDetail billAccountDetails: billdetails.getBillAccountDetails()){
-						final Map<String, Object> parameterMap = new HashMap<>();
-						List<Object> chartOfAccount = getChartOfAccountOnGlCode(billAccountDetails.getGlcode(), 
-								receiptReq.getReceipt().getTenantId(), receiptReq.getRequestInfo());		
-						if(chartOfAccount.size() <= 0){
-							parameterMap.put("chartofaccount", billAccountDetails.getGlcode());
-							parameterMap.put("dramount", billAccountDetails.getDebitAmount());
-							parameterMap.put("cramount", billAccountDetails.getCreditAmount());
-							parameterMap.put("ordernumber", billAccountDetails.getOrder());
-							parameterMap.put("receiptheader", receiptHeader);
-							parameterMap.put("actualcramounttobepaid", billAccountDetails.getCreditAmount());
-							parameterMap.put("description", null);
-							parameterMap.put("financialyear", null);
-							parameterMap.put("isactualdemand", billAccountDetails.getIsActualDemand());
-							parameterMap.put("purpose", billAccountDetails.getPurpose().toString());
-							parameterMap.put("tenantid", receiptInfo.getTenantId());
-							
-							parametersReceiptDetails[parametersReceiptDetailsCount] = parameterMap;
-							parametersReceiptDetailsCount++;
-						}else{
-							logger.info("Glcode invalid, Hence record not inserted for COA/Gl Code: "+billAccountDetails.getGlcode());
-						}
-					}			
-					try{
-						String queryReceiptDetails = ReceiptDetailQueryBuilder.insertReceiptDetails();
-						logger.info("Inserting into receipt details for receipt header record: "+receiptHeader);
-						namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails);
-					}catch(Exception e){
-						logger.error("Persisting to receiptdetails table FAILED! ", e.getCause());
-						isInsertionSuccessfull= false;
-						return isInsertionSuccessfull;
-					}
-           }
-		}else{
-			logger.error("BuisnessDetails unavailable for the code: "+billdetails.getBusinessService());
-			logger.error("Record COULDN'T BE PERSISTED");
+		try{
+			logger.info("Inserting into receipt header");
+			namedParameterJdbcTemplate.update(query, parametersMap);
+		}catch(Exception e){
+			logger.error("Persisting to DB FAILED! ",e.getCause());
+			return id;
 		}
-	 }  	
-		isInsertionSuccessfull= true;
-		return isInsertionSuccessfull;
+		
+		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
+		try{
+			id = jdbcTemplate.queryForObject(receiptHeaderIdQuery, new Object[] {receiptInfo.getBill().getPayeeName(),
+				receiptInfo.getBill().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate()}, Long.class);
+		}catch(Exception e){
+			logger.error("Couldn't fetch receiptheader entry id ",e.getCause());
+			return id;
+		}
+		logger.info("receiptheader entry id: "+id);
+		return id;
 	}
 	
-	
-	public BusinessDetailsResponse getBusinessDetails(String businessDetailsCode, ReceiptReq receiptReq){
-		logger.info("Searching for fund aand other businessDetails based on code.");	
-		BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
-		StringBuilder builder = new StringBuilder();
-		String baseUri = applicationProperties.getBusinessDetailsSearch();
-		String searchCriteria="?businessDetailsCode="+businessDetailsCode+"&tenantId="+receiptReq.getReceipt().getTenantId();
-		builder.append(baseUri).append(searchCriteria);
-		
-		logger.info("URI being hit: "+builder.toString());	
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(receiptReq.getRequestInfo());
+	public boolean persistToReceiptDetails(Map<String, Object>[] parametersReceiptDetails, long receiptHeader){
+		boolean isInsertionSuccessful = false;
+		String queryReceiptDetails = ReceiptDetailQueryBuilder.insertReceiptDetails();
 		try{
-			businessDetailsResponse = restTemplate.postForObject(builder.toString(), requestInfoWrapper , BusinessDetailsResponse.class);
+			logger.info("Inserting into receipt details for receipt header record: "+receiptHeader);
+			namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails);
 		}catch(Exception e){
-			logger.error("Error while fetching buisnessDetails from coll-master service. "+e.getCause());
-			return null;
+			logger.error("Persisting to receiptdetails table FAILED! ", e.getCause());
+			return isInsertionSuccessful;
 		}
-		
-		logger.info("Response from coll-master: "+businessDetailsResponse.toString());
-		return businessDetailsResponse;
-	}
-	
-	public List<Object> getChartOfAccountOnGlCode(String glcode, String tenantId,  RequestInfo requestInfo ){
-		logger.info("Validating if the glcode exists in the financials system.");	
-		
-		StringBuilder builder = new StringBuilder();
-		String baseUri = applicationProperties.getChartOfAccountsSearch() ;
-		String searchCriteria="?glcode="+glcode+"&tenantId="+tenantId;
-		builder.append(baseUri).append(searchCriteria);
-		List<Object> charOfAccounts = null;
-		logger.info("URI being hit: "+builder.toString());
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		Object response = null;
-		try{
-			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
-		}catch(Exception e){
-			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
-			return charOfAccounts;		
-		}
-		
-		logger.info("Response from financials: "+response.toString());
-
-		charOfAccounts = JsonPath.read(response, "$.chartOfAccounts");
-				
-		return charOfAccounts;
-	}
-	
-/*	private String getStatusCode(RequestInfo requestInfo){
-		logger.info("fetching status for the receipt.");	
-		
-		StringBuilder builder = new StringBuilder();
-		String baseUri = CollectionServiceConstants.STATUS_SEARCH_URI;
-		String searchCriteria="?objectType=ReceiptHeader&tenantId=default&code=SUBMITTED";
-		builder.append(baseUri).append(searchCriteria);
-		
-		logger.info("URI being hit: "+builder.toString());
-		
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
-		Object response = null;
-
-		try{
-			response = restTemplate.postForObject(builder.toString(), requestInfoWrapper , Object.class);
-		}catch(Exception e){
-			logger.error("Error while fecthing COAs for validation from financial service. "+e.getCause());
-		}
-		logger.info("Response from collection-masters: "+response.toString());
-		
-		String status = JsonPath.read(response, "$.StatusInfo[0].code");
-		
-		return status;
-	} */
-	
-	public String generateReceiptNumber(ReceiptReq receiptRequest){
-		logger.info("Generating receipt number for the receipt.");	
-		
-		StringBuilder builder = new StringBuilder();
-		String baseUri = applicationProperties.getIdGeneration();
-		builder.append(baseUri);
-		
-		logger.info("URI being hit: "+builder.toString());
-		
-		IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
-		IdGenRequestInfo idGenReq = new IdGenRequestInfo();
-		
-		//Because idGen Svc uses a slightly different form of requestInfo
-		
-		idGenReq.setAction(receiptRequest.getRequestInfo().getAction());
-		idGenReq.setApiId(receiptRequest.getRequestInfo().getApiId());
-		idGenReq.setAuthToken(receiptRequest.getRequestInfo().getAuthToken());
-		idGenReq.setCorrelationId(receiptRequest.getRequestInfo().getCorrelationId());
-		idGenReq.setDid(receiptRequest.getRequestInfo().getDid());
-		idGenReq.setKey(receiptRequest.getRequestInfo().getKey());
-		idGenReq.setMsgId(receiptRequest.getRequestInfo().getMsgId());
-		idGenReq.setRequesterId(receiptRequest.getRequestInfo().getRequesterId());
-		idGenReq.setTs(receiptRequest.getRequestInfo().getTs().getTime()); // this is the difference.
-		idGenReq.setUserInfo(receiptRequest.getRequestInfo().getUserInfo());
-		idGenReq.setVer(receiptRequest.getRequestInfo().getVer());
-		
-		IdRequest idRequest = new IdRequest();
-		idRequest.setIdName(CollectionServiceConstants.COLL_ID_NAME);
-		idRequest.setTenantId(receiptRequest.getReceipt().getTenantId());
-		idRequest.setFormat(CollectionServiceConstants.COLL_ID_FORMAT);
-		
-		List<IdRequest> idRequests = new ArrayList<>();
-		idRequests.add(idRequest);
-		
-		idRequestWrapper.setIdGenRequestInfo(idGenReq);
-		idRequestWrapper.setIdRequests(idRequests);
-		Object response = null;
-
-		try{
-			response = restTemplate.postForObject(builder.toString(), idRequestWrapper , Object.class);
-		}catch(Exception e){
-			logger.error("Error while generating receipt number. "+e.getCause());
-			return null;
-
-		}
-		logger.info("Response from id gen service: "+response.toString());
-		
-		String receiptNo = JsonPath.read(response, "$.idResponses[0].id");
-
-		return receiptNo;
+		isInsertionSuccessful = true;
+		return isInsertionSuccessful;
 	}
 	
 	public ReceiptCommonModel findAllReceiptsByCriteria(ReceiptSearchCriteria receiptSearchCriteria) {

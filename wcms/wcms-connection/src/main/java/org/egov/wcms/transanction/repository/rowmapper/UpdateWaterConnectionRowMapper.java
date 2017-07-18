@@ -37,59 +37,28 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.model;
+package org.egov.wcms.transanction.repository.rowmapper;
 
-import javax.validation.constraints.NotNull;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.wcms.transanction.model.Connection;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Builder
-
-public class EstimationCharge {
-
-    @NotNull
-    private long id;
-
-    @NotNull
-    private long connectionId;
-
-
-    @NotNull
-    private String existingDistributionPipeline;
-
-    @NotNull
-    private double pipelineToHomeDistance;
-
-    @NotNull
-    private double estimationCharges;
-
-    @NotNull
-    private double supervisionCharges;
-
-    @NotNull
-    private double materialCharges;
-    
-    private double roadCutCharges;
-    
-    private double specialSecurityCharges;
-
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
-
+@Component
+public class UpdateWaterConnectionRowMapper implements RowMapper<Connection> {
+    @Override
+    public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final Connection connection = new Connection();
+        connection.setId(rs.getLong("id"));
+        connection.setStateId(rs.getLong("stateid"));
+        connection.setAcknowledgementNumber(rs.getString("acknowledgmentnumber"));
+        if(rs.getString("islegacy").equals(Boolean.TRUE))
+        connection.setIsLegacy(Boolean.TRUE);
+        else
+            connection.setIsLegacy(Boolean.FALSE);
+        connection.setTenantId(rs.getString("tenantid"));
+        return connection;
+    }
 }

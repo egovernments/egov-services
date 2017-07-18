@@ -133,7 +133,10 @@ public class WaterConnectionService {
     public Connection update(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
+            if(waterConnectionRequest.getConnection().getEstimationCharge()!=null && 
+                    !waterConnectionRequest.getConnection().getEstimationCharge().isEmpty()){
             createDemand(waterConnectionRequest);
+            }
             updateWorkFlow(waterConnectionRequest);
             waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {

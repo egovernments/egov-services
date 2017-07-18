@@ -142,6 +142,8 @@ public class TransanctionWorkFlowService {
             task.setStatus(NewConnectionStatus.REJECTED.toString());
         else if ("Verify".equalsIgnoreCase(workFlowAction))
             task.setStatus(NewConnectionStatus.VERIFIED.toString());
+        
+        task.setStatus(NewConnectionStatus.VERIFIED.toString());
         task.setTenantId(waterConnectionRequest.getConnection().getTenantId());
         final Position assignee = new Position();
         assignee.setId(waterConnectionRequest.getConnection().getWorkflowDetails().getAssignee());

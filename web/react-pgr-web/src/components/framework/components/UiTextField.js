@@ -15,7 +15,8 @@ export default class UiTextField extends Component {
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
 						disabled={item.isDisabled}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} />
+						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
+						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

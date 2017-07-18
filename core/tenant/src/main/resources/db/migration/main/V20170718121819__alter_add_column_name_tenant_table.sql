@@ -113,5 +113,4 @@ update tenant set name = 'Visakhapatnam' where code = 'ap.visakhapatnam';
 update tenant set name = 'Yelamanchili' where code = 'ap.yelamanchili';
 update tenant set name = 'Yemmiganur' where code = 'ap.yemmiganur';
 
-ALTER TABLE tenant ALTER COLUMN name SET NOT NULL;
 

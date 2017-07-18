@@ -31,7 +31,6 @@ document.title="Egovernments";
 
 const muiTheme = getMuiTheme({
   palette: {
-
     primary1Color: "#51bad9",
     primary2Color: "#51bad9",
     textColor:"#5f5c62"

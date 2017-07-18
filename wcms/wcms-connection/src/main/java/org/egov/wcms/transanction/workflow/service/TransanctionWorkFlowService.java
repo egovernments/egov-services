@@ -47,7 +47,6 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.transanction.config.ConfigurationManager;
 import org.egov.wcms.transanction.model.UserInfo;
 import org.egov.wcms.transanction.model.WorkflowDetails;
-import org.egov.wcms.transanction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transanction.request.WorkFlowRequestInfo;
 import org.egov.wcms.transanction.web.contract.Position;
 import org.egov.wcms.transanction.web.contract.ProcessInstance;
@@ -130,23 +129,24 @@ public class TransanctionWorkFlowService {
     public Task updateWorkFlow(final WaterConnectionReq waterConnectionRequest) {
         final TaskRequest taskRequest = new TaskRequest();
         final Task task = new Task();
-        final String workFlowAction = waterConnectionRequest.getConnection().getWorkflowDetails().getAction();
+        WorkflowDetails workFloedet= waterConnectionRequest.getConnection().getWorkflowDetails();
+        final String workFlowAction =workFloedet.getAction();
         task.setId(waterConnectionRequest.getConnection().getStateId().toString());
         task.setBusinessKey(configurationManager.getWorkflowServiceBusinessKey());
         task.setType(configurationManager.getWorkflowServiceBusinessKey());
         task.setComments("updating workflow waterconnection");
         task.setAction(workFlowAction);
-        if ("Approve".equalsIgnoreCase(workFlowAction))
+      /*  if ("Approve".equalsIgnoreCase(workFlowAction))
             task.setStatus(NewConnectionStatus.APPROVED.toString());
         else if ("Reject".equalsIgnoreCase(workFlowAction))
             task.setStatus(NewConnectionStatus.REJECTED.toString());
         else if ("Verify".equalsIgnoreCase(workFlowAction))
-            task.setStatus(NewConnectionStatus.VERIFIED.toString());
+            task.setStatus(NewConnectionStatus.VERIFIED.toString());*/
         
-        task.setStatus(NewConnectionStatus.VERIFIED.toString());
+        task.setStatus(workFloedet.getStatus());
         task.setTenantId(waterConnectionRequest.getConnection().getTenantId());
         final Position assignee = new Position();
-        assignee.setId(waterConnectionRequest.getConnection().getWorkflowDetails().getAssignee());
+        assignee.setId(workFloedet.getAssignee());
         task.setAssignee(assignee);
         final RequestInfo requestin = waterConnectionRequest.getRequestInfo();
         final WorkFlowRequestInfo req = new WorkFlowRequestInfo();

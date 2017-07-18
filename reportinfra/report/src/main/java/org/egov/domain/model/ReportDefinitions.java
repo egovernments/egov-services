@@ -21,8 +21,6 @@ public class ReportDefinitions {
     public List<ReportDefinition> reportDefinitions = new ArrayList<>();
 
 	private HashMap<String, ReportDefinition> definitionMap = new HashMap<>();
-    
-	
 	
 	public ReportDefinition getReportDefinition(String name){
 		return definitionMap.get(name);
@@ -31,8 +29,6 @@ public class ReportDefinitions {
 	public List<ReportDefinition> getReportDefinitions() {
 		return reportDefinitions;
 	}
-  
-
 
 	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
@@ -41,13 +37,10 @@ public class ReportDefinitions {
 		}
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "ReportDefinitions [reportDefinitions=" + reportDefinitions + "]";
 	}
-    
 	
 }
 

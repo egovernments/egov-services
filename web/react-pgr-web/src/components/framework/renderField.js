@@ -8,7 +8,7 @@ import UiMobileNumber from './components/UiMobileNumber'
 import UiTextArea from './components/UiTextArea'
 import UiMultiSelectField from './components/UiMultiSelectField'
 import UiNumberField from './components/UiNumberField'
-
+import UiDatePicker from './components/UiDatePicker'
 
 export default class ShowField extends Component {
   constructor(props) {
@@ -44,6 +44,8 @@ export default class ShowField extends Component {
   		case 'button': 
   			<UiButton ui="google" isDisabled={item.isDisabled} label={item.label} handler={this.props.handler}/>
   			break;
+  		case 'datePicker':
+  			<UiDatePicker ui="google" isDisabled={item.isDisabled} isRequired={item.isRequired} label={item.label} jsonpath={item.jsonpath} handler={this.props.handler}/>
   	}
   }
 

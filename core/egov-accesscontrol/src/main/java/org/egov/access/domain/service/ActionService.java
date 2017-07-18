@@ -13,7 +13,6 @@ import org.egov.access.persistence.repository.querybuilder.ValidateActionQueryBu
 import org.egov.access.persistence.repository.rowmapper.ActionRowMapper;
 import org.egov.access.persistence.repository.rowmapper.ActionValidationRowMapper;
 import org.egov.access.web.contract.action.ActionRequest;
-import org.egov.access.web.contract.action.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,13 +61,7 @@ public class ActionService {
     }
     
     
-    public List<Module> getAllActionsBasedOnRoles(final ActionRequest actionRequest){
-    	
-    	return actionRepository.getAllActionsBasedOnRoles(actionRequest).getModules();
-    	
-    }
-    
-    public List<Action> getAllActions(final ActionRequest actionRequest){
+   public List<Action> getAllActions(final ActionRequest actionRequest){
     	
     	return actionRepository.getAllActions(actionRequest);
     }

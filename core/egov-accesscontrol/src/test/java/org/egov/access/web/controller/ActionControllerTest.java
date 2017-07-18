@@ -32,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(ActionController.class)
 @Import(TestConfiguration.class)
@@ -106,7 +105,7 @@ public class ActionControllerTest {
 				.andExpect(content().json(new Resources().getFileContents("actionResponse.json")));
 
 	}
-	
+
 	@Test
 	public void testShouldNotCreateActionIfNoActions() throws Exception {
 
@@ -121,12 +120,11 @@ public class ActionControllerTest {
 
 		mockMvc.perform(post("/v1/actions/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("actionRequestWithoutActions.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionResponseWithoutActions.json")));
 
 	}
-	
+
 	@Test
 	public void updateAction() throws Exception {
 
@@ -140,12 +138,12 @@ public class ActionControllerTest {
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionUpdateRequest.json"))).andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.content(new Resources().getFileContents("actionUpdateRequest.json")))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionUpdateResponse.json")));
 
 	}
-	
+
 	@Test
 	public void testShouldNotUpdateActionIfNoName() throws Exception {
 
@@ -159,125 +157,10 @@ public class ActionControllerTest {
 				.thenReturn(responseInfo);
 
 		mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionUpdateRequestWithoutName.json"))).andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.content(new Resources().getFileContents("actionUpdateRequestWithoutName.json")))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionUpdateResponseWithoutName.json")));
 
 	}
-	@Test
-	public void testShouldGetModuleList() throws Exception {
 
-		
-		when(actionService.getAllActionsBasedOnRoles(any(ActionRequest.class))).thenReturn(getModuleList());
-
-		ResponseInfo responseInfo = ResponseInfo.builder().build();
-		
-		responseInfo.setApiId("org.egov.accesscontrol");
-		responseInfo.setTs("Thu Mar 09 18:30:00 UTC 2017");
-		responseInfo.setMsgId("20170310130900");
-		responseInfo.setResMsgId("uief87324");
-		responseInfo.setVer("1.0");
-		
-		
-
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-				.thenReturn(responseInfo);
-
-		mockMvc.perform(post("/v1/actions/_list").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionListRequest.json")))
-		        .andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(new Resources().getFileContents("actionListResponse.json")));
-
-	}
-
-	
-	@Test
-	public void testShouldNotGetModuleListWithoutTenant() throws Exception {
-
-		
-		when(actionService.getAllActionsBasedOnRoles(any(ActionRequest.class))).thenReturn(getModuleList());
-
-		ResponseInfo responseInfo = ResponseInfo.builder().build();
-
-
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-				.thenReturn(responseInfo);
-
-		mockMvc.perform(post("/v1/actions/_list").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionListRequestWithoutTenant.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(new Resources().getFileContents("actionListResponseWithoutTenant.json")));
-
-	}
-	
-	
-	@Test
-	public void testShouldNotGetModuleListWithoutRoleCode() throws Exception {
-
-		
-		when(actionService.getAllActionsBasedOnRoles(any(ActionRequest.class))).thenReturn(getModuleList());
-
-		ResponseInfo responseInfo = ResponseInfo.builder().build();
-
-
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
-				.thenReturn(responseInfo);
-
-		mockMvc.perform(post("/v1/actions/_list").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(new Resources().getFileContents("actionListRequestWithoutRoleCode.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(new Resources().getFileContents("actionListResponseWithoutRoleCode.json")));
-
-	}
-	
-	
-	private List<Module> getModuleList(){
-		
-		List<Module> moduleList = new ArrayList<Module>();
-
-		List<Action> actionList = new ArrayList<Action>();
-		
-		List<Module> subModule = new ArrayList<Module>();
-		
-		Module module = new Module(); 
-		
-		module.setId(74l);
-		module.setName("ess");
-		module.setSubModules(subModule);
-		module.setCode("ESS");
-		module.setDisplayName("Employee Self Service");
-		module.setEnabled(false);
-		
-		Action action1 = new Action();
-		
-		action1.setId(268l);
-		
-		action1.setName("ESS Leave Application");
-		action1.setUrl("/app/hr/leavemaster/apply-leave.html");
-		action1.setDisplayName("Apply Leave");
-		action1.setEnabled(false);
-		action1.setServiceCode("ESS");
-		
-		Action action2=new Action();
-		
-		action2.setId(267l);
-		action2.setName("View ESS Employee");
-		action2.setUrl("/app/hr/employee/create.html");
-		action2.setDisplayName("My Details");
-		action2.setEnabled(false);
-		action2.setServiceCode("ESS");
-		
-		actionList.add(action1);
-		actionList.add(action2);
-		
-		
-		module.setActionList(actionList);
-		
-		moduleList.add(module);
-		
-		return moduleList;
-	}
 }

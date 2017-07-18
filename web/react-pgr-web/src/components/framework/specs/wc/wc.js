@@ -4,78 +4,83 @@ var dat = {
 		"url": "/connections/v1/_create",
 		"groups": [
 			{
-				"label": "",
+				"label": "wc.create.groups.applicantDetails.title",
 				"name": "applicantDetails",
 				"fields": [
 						{
 							"name": "AssessmentNumber",
 							"jsonPath": "connection.property.propertyIdentifier",
-							"label": "Assessment Number",
+							"label": "wc.create.groups.applicantDetails.propertyIdentifier",
 							"pattern": "",
 							"type": "number",
 							"isRequired": true,
 							"isDisabled": false,
 							"autoCompleteUrl": "",
-							"autoFillFields": ["NameOfApplicant", "mobileNumber"]
+							"autoFillFields": {
+								"NameOfApplicant": "", 
+								"MobileNumber": "",
+								"Email": "",
+								"AadharNumber": ""
+							}
 						},
 						{
 							"name": "NameOfApplicant",
 							"jsonPath": "connection.asset.nameOfApplicant",
-							"label": "Name Of Applicant",
+							"label": "wc.create.groups.applicantDetails.nameOfApplicant",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false
 						},
 						{
-							"name": "mobileNumber",
+							"name": "MobileNumber",
 							"jsonPath": "connection.asset.mobileNumber",
-							"label": "Mobile Number",
+							"label": "wc.create.groups.applicantDetails.mobileNumber",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false
 						},
 						{
-							"name": "email",
+							"name": "Email",
 							"jsonPath": "connection.asset.email",
-							"label": "Email",
+							"label": "wc.create.groups.applicantDetails.email",
 							"pattern": "",
 							"type": "email",
 							"isRequired": false,
 							"isDisabled": false
 						},
 						{
-							"name": "adharNumber",
+							"name": "AadharNumber",
 							"jsonPath": "connection.asset.adharNumber",
-							"label": "Aadhaar Number",
+							"label": "wc.create.groups.applicantDetails.adharNumber",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false
 						},
 						{
-							"name": "locality",
+							"name": "Locality",
 							"jsonPath": "connection.asset.locality",
-							"label": "Locality",
+							"label": "wc.create.groups.applicantDetails.locality",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
 							"isDisabled": false
 						},
 						{
-							"name": "address",
+							"name": "Address",
 							"jsonPath": "connection.asset.address",
-							"label": "Address",
+							"label": "wc.create.groups.applicantDetails.address",
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
 							"isDisabled": false
 						},
 						{
-							"name": "zone",
+							"name": "Zone",
 							"jsonPath": "connection.asset.zone",
-							"label": "Zone / Ward / Block",
+							"label": "wc.create.groups.applicantDetails.zone",
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
@@ -93,7 +98,7 @@ var dat = {
 						{
 							"name": "propertyTaxDue",
 							"jsonPath": "connection.property.propertyTaxDue",
-							"label": "Property Tax",
+							"label": "wc.create.groups.applicantDetails.propertyTaxDue",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
@@ -102,13 +107,13 @@ var dat = {
 				]
 			},
 			{
-				"label": "",
+				"label": "wc.create.groups.connectionDetails.title",
 				"name": "connectionDetails",
 				"fields": [
 						{
 							"name": "ConnectionType",
 							"jsonPath": "connection.connectionType",
-							"label": "Connection Type",
+							"label": "wc.create.groups.connectionDetails.connectionType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": true,
@@ -116,63 +121,69 @@ var dat = {
 							"url": ""
 						},
 						{
-							"name": "sourceType",
+							"name": "SourceType",
 							"jsonPath": "connection.sourceType",
-							"label": "Water Source Type",
+							"label": "wc.create.groups.connectionDetails.sourceType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"url": ""
 						},
 						{
-							"name": "sourceType",
+							"name": "SourceType",
 							"jsonPath": "connection.sourceType",
-							"label": "Water Source Type",
+							"label": "wc.create.groups.connectionDetails.sourceType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"url": ""
 						},
 						{
-							"name": "propertyType",
+							"name": "PropertyType",
 							"jsonPath": "connection.property.propertyType",
-							"label": "Property Type",
+							"label": "wc.create.groups.connectionDetails.propertyType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"url": ""
 						},
 						{
-							"name": "categoryType",
+							"name": "CategoryType",
 							"jsonPath": "connection.categoryType",
-							"label": "Category",
+							"label": "wc.create.groups.connectionDetails.categoryType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"url": ""
 						},
 						{
-							"name": "usageType",
+							"name": "UsageType",
 							"jsonPath": "connection.property.usageType",
-							"label": "Usage Type",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"url": ""
 						},
 						{
 							"name": "hscPipeSizeType",
 							"jsonPath": "connection.hscPipeSizeType",
-							"label": "H.S.C Pipe Size (Inches)",
+							"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"url": ""
 						},
 						{
 							"name": "sumpCapacity",
 							"jsonPath": "connection.sumpCapacity",
-							"label": "Sump Capacity (Litres)",
+							"label": "wc.create.groups.connectionDetails.fields.sumpCapacity",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
@@ -181,7 +192,7 @@ var dat = {
 						{
 							"name": "numberOfPersons",
 							"jsonPath": "connection.numberOfPersons",
-							"label": "No.of persons",
+							"label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
@@ -190,13 +201,13 @@ var dat = {
 				]
 			},
 			{
-				"label": "",
+				"label": "wc.create.groups.approvalDetails.title",
 				"name": "approvalDetails",
 				"fields": [
 						{
 							"name": "department",
 							"jsonPath": "connection.workflowDetails.department",
-							"label": "Approver Department",
+							"label": "wc.create.groups.approvalDetails.fields.department",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -206,7 +217,7 @@ var dat = {
 						{
 							"name": "designation",
 							"jsonPath": "connection.workflowDetails.designation",
-							"label": "Approver Designation",
+							"label": "wc.create.groups.approvalDetails.fields.designation",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -215,7 +226,7 @@ var dat = {
 						{
 							"name": "approver",
 							"jsonPath": "connection.workflowDetails.approver",
-							"label": "Approver",
+							"label": "wc.create.groups.approvalDetails.fields.approver",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -224,7 +235,7 @@ var dat = {
 						{
 							"name": "comments",
 							"jsonPath": "connection.workflowDetails.comments",
-							"label": "Comments",
+							"label": "wc.create.groups.approvalDetails.fields.comments",
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,

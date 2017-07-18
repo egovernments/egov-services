@@ -194,7 +194,7 @@ class ConstructionTypes extends Component {
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText="Floor Type"
+                                                floatingLabelText="Floor Type *"
                                                 errorText={fieldErrors.floorType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floorType}</span> : ""}
                                                 value={constructionTypes.floorType ? constructionTypes.floorType : ""}
                                                 onChange={(event, index, value) => {
@@ -215,7 +215,7 @@ class ConstructionTypes extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                floatingLabelText="Roof Type"
+                                                floatingLabelText="Roof Type *"
                                                 errorText={fieldErrors.roofType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.roofType}</span> : ""}
                                                 value={constructionTypes.roofType ? constructionTypes.roofType : ""}
                                                 onChange={(event, index, value) => {

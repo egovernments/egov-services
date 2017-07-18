@@ -16,7 +16,6 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
-
 import Api from '../../../../api/api';
 
 import OwnerDetails from './propertyTax/OwnerDetails';
@@ -28,6 +27,7 @@ import ConstructionTypes from './propertyTax/ConstructionTypes';
 import FloorDetails from './propertyTax/FloorDetails';
 import DocumentUpload from './propertyTax/DocumentUpload';
 import Workflow from './propertyTax/Workflow';
+import VacantLand from './propertyTax/vacantLand';
 
 
 
@@ -104,6 +104,28 @@ chip: {
 };
 
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 //Create Class for Create and update property
 class CreateProperty extends Component {
   constructor(props) {
@@ -132,7 +154,7 @@ class CreateProperty extends Component {
       election:[],
       usages:[],
     }
-  }
+ }
   
 
 
@@ -145,6 +167,18 @@ class CreateProperty extends Component {
   componentDidMount() {
       let {initForm}=this.props;
       initForm();
+	  
+	  var currentThis = this;
+
+      Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+        console.log(res);
+        currentThis.setState({propertytypes:res.propertyTypes})
+      }).catch((err)=> {
+        currentThis.setState({
+          propertytypes:[]
+        })
+        console.log(err)
+      })
   }
 
   componentWillUnmount() {
@@ -165,142 +199,176 @@ class CreateProperty extends Component {
 
   }
 
-
-
-  handleCheckBoxChange = (prevState) => {
-      this.setState((prevState) => {prevState.cAddressDiffPAddress.checked = !prevState.cAddressDiffPAddress.checked})
-  }
   
- createFloorObject = (hasArray) => {
-	  
-		var floors = [];
-		
-		var allFloors = this.state.floorNumber;
-	  
-	    var allRooms = hasArray.floors;
-		
-		var rooms = allRooms.filter(function(item, index, array){
-			if(!item.hasOwnProperty('flatNo')){
-				return item;
-			}
-		});
-		
-		rooms.map((item, index)=>{
-			var floor = {
-				  floorNo:'',
-				  units:[]
-				}
-			  floor.floorNo = item.floorNo;
-			  delete item.floorNo;
-			  floor.units.push(item);
-			  floors.push(floor);
-		})
-		
-		var flats = allRooms.filter(function(item, index, array){
-			if(item.hasOwnProperty('flatNo')){
-				return item;
-			}
-		});		
-		
-		var flatNos = flats.map(function(item, index, array){
-			return item.flatNo;
-		});
-		
-		flatNos = flatNos.filter(function(item, index, array){
-			return index == array.indexOf(item);
-		});
-		
-		var floorNos = flats.map(function(item, index, array){
-			return item.floorNo;
-		});
-		
-		floorNos = floorNos.filter(function(item, index, array){
-			return index == array.indexOf(item);
-		});
-		
-		
-		var flatsArray = [];
-		
-		
-		for(var i =0;i<flatNos.length;i++){
-			var local = {
-				units : []
-			}
-			for(var j = 0;j<flats.length;j++){
-				if(flats[j].flatNo == flatNos[i]) {
-					local.units.push(flats[j])
-				}
-			}
-			flatsArray.push(local);
-		}
-		
-		
-	var finalFloors = [];
-		for(let j=0;j<floorNos.length;j++){
-			
-			var local = {
-				flats : []
-			}
-			for(let k =0;k<flatsArray.length;k++){
-				for(let l=0;l<flatsArray[k].units.length;l++){
-					if(flatsArray[k].units[l].floorNo == floorNos[j]){
-						for(let m = 0 ; m<flatNos.length;m++){
-							if(flatNos[m] == flatsArray[k].units[l].flatNo){
-								local.flats.push(flatsArray[k].units[l]);
-							}
-						}
+createPropertyTax = () => {
+	
+	var currentThis = this;
+      var body = {
+			"properties": [{
+				"tenantId": "default",
+				"oldUpicNumber": "",
+				"vltUpicNumber": "",
+				"creationReason": "NEWPROPERTY",
+				"address": {
+					"tenantId": "default",
+					"addressNumber": "Door number",
+					"addressLine1": "Locality Name",
+					"landmark": null,
+					"city": "After login I will get",
+					"pincode": "500082",
+					"detail": null,
+					"auditDetails": {
+						"createdBy": "egovernments",
+						"lastModifiedBy": "egovernments",
+						"createdTime": 0,
+						"lastModifiedTime": 0
+					}
+				},
+				"owners": this.props.createProperty.owners,
+				"propertyDetail": {
+					"propertyType": "OwnerShip type",
+					"category": "Property Sub Type",
+					"usage": null,
+					"department": "Department",
+					"apartment":null,
+					"siteLength": 12,
+					"siteBreadth": 15,
+					"sitalArea": "Extent of Site",
+					"totalBuiltupArea": "Sum of plinth area",
+					"undividedShare": null,
+					"noOfFloors": "Number of floors added",
+					"isSuperStructure": null,
+					"landOwner": null,
+					"floorType": "normal",
+					"woodType": "modern",
+					"roofType": "new one",
+					"wallType": "painting",
+					"floors":this.props.createProperty.floorsArr,
+					"documents": [{
+						"documentType": {
 							
+							"name": "Test application for anil",
+							"application": "CREATE",
+							"auditDetails": {
+								"createdBy": "egovernments",
+								"lastModifiedBy": "egovernments",
+								"createdTime": 0,
+								"lastModifiedTime": 0
+							}
+						},
+						"fileStore": "testing",
+						"auditDetails": {
+							"createdBy": "egovernments",
+							"lastModifiedBy": "egovernments",
+							"createdTime": 0,
+							"lastModifiedTime": 0
+						}
+					}],
+					"stateId": null,
+					"workFlowDetails": {
+						"department": "incometax",
+						"designation": "manager",
+						"assignee": 14,
+						"action": "no",
+						"status": null
+					},
+					"auditDetails": {
+						"createdBy": "egovernments",
+						"lastModifiedBy": "egovernments",
+						"createdTime": 0,
+						"lastModifiedTime": 0
 					}
-				}
-			}
-			finalFloors.push(local);
-		}
-		
-		var finalFlats = [];
-		
-		for(let x = 0;x<finalFloors.length;x++){
-			var temp = finalFloors[x].flats;
-			for(var i =0;i<finalFloors[x].flats.length;i++){
-				var local= {
-					units:[]
-				};
-				for(var j = 0;j<temp.length;j++){
-					if(temp[j].flatNo == finalFloors[x].flats[i].flatNo) {
-						local.units.push(temp[j])
+				},
+				"vacantLand": {
+					"surveyNumber": "surveynumber2",
+					"pattaNumber": "pn2",
+					"marketValue": 10748,
+					"capitalValue": 452200,
+					"layoutApprovedAuth": "laa2",
+					"layoutPermissionNo": "lpn2",
+					"layoutPermissionDate": "10/05/2017",
+					"resdPlotArea": 475,
+					"nonResdPlotArea": 658,
+					"auditDetails": {
+						"createdBy": "egovernments",
+						"lastModifiedBy": "egovernments",
+						"createdTime": 0,
+						"lastModifiedTime": 0
 					}
-				}
-			finalFlats.push(local);
-			}
-			
-		}
-		
-		finalFlats = finalFlats.map((item, index)=>{
-			return JSON.stringify(item);
-		})
-		
-		finalFlats = finalFlats.filter((item, index, array)=>{
-			return index == array.indexOf(item);
-		})
-		
-		finalFlats = finalFlats.map((item, index)=>{
-			return JSON.parse(item);
-		})
-		
-		finalFlats.map((item, index)=>{
-			let floor = {
-				  floorNo:'',
-				  units:[]
-				}
-			  floor.floorNo = item.units[0].floorNo;
-			  floor.units.push(item);
-			  floors.push(floor);
-		})
-		
-		console.log(floors);
-		
-		
-  }
+				},
 
+				"gisRefNo": null,
+				"isAuthorised": null,
+				"boundary": {
+					"revenueBoundary": { // block No
+						"id": 13,
+						"name": "rbname2"
+					},
+					"locationBoundary": { // Street (if not selected than Location) 
+						"id": 19,
+						"name": "lbname2"
+					},
+					"adminBoundary": { // election ward
+						"id": 173,
+						"name": "abname2"
+					},
+					"northBoundedBy": "nbb test1",
+					"eastBoundedBy": "ebb1",
+					"westBoundedBy": "wbb1",
+					"southBoundedBy": "sbb1",
+					"auditDetails": {
+						"createdBy": "egovernments",
+						"lastModifiedBy": "egovernments",
+						"createdTime": 0,
+						"lastModifiedTime": 0
+					}
+				},
+				"channel": "SYSTEM",
+				"auditDetails": {
+					"createdBy": "egovernments",
+					"lastModifiedBy": "egovernments",
+					"createdTime": 0,
+					"lastModifiedTime": 0
+				}
+			}]
+      }
+
+     Api.commonApiPost('pt-property/properties/_create', {},body).then((res)=>{
+		 
+		 
+		  if(currentThis.props.files){
+			if(currentThis.props.files.length === 0){
+			  //currentThis.setState({loadingstatus:'hide'});
+				console.log('create succesfully done. No file uploads');
+			}else{
+				
+				console.log('create succesfully done. still file upload pending');
+				
+			  for(let i=0;i<currentThis.props.files.length;i++){
+				//this.props.files.length[i]
+				let formData = new FormData();
+				formData.append("tenantId", localStorage.getItem('tenantId'));
+				formData.append("module", "PT");
+				formData.append("file", currentThis.props.files[i]);
+				Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response){
+				  if(i === (currentThis.props.files.length - 1)){
+					console.log('All files succesfully uploaded');
+					console.log(response);
+				  }
+				  
+				},function(err) {
+				  console.log(err);
+				});
+			  }
+			}
+		  }
+		  
+        console.log(res);
+      }).catch((err)=> {
+        console.log(err)
+      })
+    }
+  
   render() {
 	  	  
     let {
@@ -316,23 +384,21 @@ class CreateProperty extends Component {
       editObject,
       editIndex,
       isEditIndex,
-      isAddRoom
+      isAddRoom,
+	  files
     } = this.props;
 
-    let {search} = this;
-
-    let cThis = this;
+    let {search, createPropertyTax, cThis} = this;
 
     console.log(createProperty);
-
 
     const renderOption = function(list,listName="") {
         if(list)
         {
-            return list.map((item)=>
-            {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
-            })
+			return list.map((item)=>
+			{
+				return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+			})
         }
     }
 
@@ -342,202 +408,50 @@ class CreateProperty extends Component {
       })
     }
 
-    const createPropertyTax = () => {
-      var body = {
-    "properties": [{
-        "tenantId": "default",
-        "oldUpicNumber": "",
-        "vltUpicNumber": "",
-        "creationReason": "NEWPROPERTY",
-        "address": {
-            "tenantId": "default",
-            "latitude": 11,
-            "longitude": 20,
-            "addressNumber": "test",
-            "addressLine1": "ameerpet",
-            "addressLine2": "mitrivanam",
-            "landmark": "test travels",
-            "city": "secundrabad",
-            "pincode": "500082",
-            "detail": "testing",
-            "auditDetails": {
-                "createdBy": "egovernments",
-                "lastModifiedBy": "egovernments",
-                "createdTime": 0,
-                "lastModifiedTime": 0
-            }
-        },
-        "owners": this.props.createProperty.owners,
-        "propertyDetail": {
-           
-            "source": "MUNICIPAL_RECORDS",
-            "regdDocNo": "rdn2",
-            "regdDocDate": "15/02/2017",
-            "reason": "trying to purchase",
-            "status": "ACTIVE",
-            "isVerified": true,
-            "verificationDate": "25/05/2017",
-            "isExempted": false,
-            "exemptionReason": "",
-            "propertyType": "house",
-            "category": "land",
-            "usage": "no",
-            "department": "incometax",
-            "apartment": "no",
-            "siteLength": 12,
-            "siteBreadth": 15,
-            "sitalArea": 14,
-            "totalBuiltupArea": 12,
-            "undividedShare": 17,
-            "noOfFloors": 1,
-            "isSuperStructure": false,
-            "landOwner": "kumar",
-            "floorType": "normal",
-            "woodType": "modern",
-            "roofType": "new one",
-            "wallType": "painting",
-            "floors":this.props.createProperty.floorsArr,
-            "documents": [{
-                
-                "documentType": {
-                    
-                    "name": "Test application for anil",
-                    "application": "CREATE",
-                    "auditDetails": {
-                        "createdBy": "egovernments",
-                        "lastModifiedBy": "egovernments",
-                        "createdTime": 0,
-                        "lastModifiedTime": 0
-                    }
-                },
-                "fileStore": "testing",
-                "auditDetails": {
-                    "createdBy": "egovernments",
-                    "lastModifiedBy": "egovernments",
-                    "createdTime": 0,
-                    "lastModifiedTime": 0
-                }
-            }],
-            "stateId": "si2",
-            "workFlowDetails": {
-                "department": "incometax",
-                "designation": "manager",
-                "assignee": 14,
-                "action": "no",
-                "status": "processing"
-            },
-            "auditDetails": {
-                "createdBy": "egovernments",
-                "lastModifiedBy": "egovernments",
-                "createdTime": 0,
-                "lastModifiedTime": 0
-            }
-        },
-        "vacantLand": {
-            "surveyNumber": "surveynumber2",
-            "pattaNumber": "pn2",
-            "marketValue": 10748,
-            "capitalValue": 452200,
-            "layoutApprovedAuth": "laa2",
-            "layoutPermissionNo": "lpn2",
-            "layoutPermissionDate": "10/05/2017",
-            "resdPlotArea": 475,
-            "nonResdPlotArea": 658,
-            "auditDetails": {
-                "createdBy": "egovernments",
-                "lastModifiedBy": "egovernments",
-                "createdTime": 0,
-                "lastModifiedTime": 0
-            }
-        },
-        "assessmentDate": "10/04/2017",
-        "occupancyDate": "10/04/2017",
-        "gisRefNo": "gfn2",
-        "isAuthorised": false,
-        "isUnderWorkflow": false,
-        "boundary": {
-            "revenueBoundary": {
-                "id": 13,
-                "name": "rbname2"
-            },
-            "locationBoundary": {
-                "id": 19,
-                "name": "lbname2"
-            },
-            "adminBoundary": {
-                "id": 173,
-                "name": "abname2"
-            },
-            "northBoundedBy": "nbb test1",
-            "eastBoundedBy": "ebb1",
-            "westBoundedBy": "wbb1",
-            "southBoundedBy": "sbb1",
-            "auditDetails": {
-                "createdBy": "egovernments",
-                "lastModifiedBy": "egovernments",
-                "createdTime": 0,
-                "lastModifiedTime": 0
-            }
-        },
-        "active": false,
-        "channel": "SYSTEM",
-        "auditDetails": {
-            "createdBy": "egovernments",
-            "lastModifiedBy": "egovernments",
-            "createdTime": 0,
-            "lastModifiedTime": 0
-        }
-    }]
-      }
-
-     Api.commonApiPost('pt-property/properties/_create', {},body).then((res)=>{
-        console.log(res);
-      }).catch((err)=> {
-        console.log(err)
-      })
-    }
-
-   
-
-      return(
-          <div className="createProperty">
-              <form onSubmit={(e) => {search(e)}}>
-                  <OwnerDetails />
-                  <CreateNewProperty />              
-                  <PropertyAddress/>                      
-                  <Amenities />                  
-                  <AssessmentDetails />
-                  <ConstructionTypes/>
-                  {!this.state.addFloor && <Card>
-                    <CardText>
-                         <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
-                              onClick={()=>{
-                                cThis.setState({
-                                  addFloor: true
-                                });
-                              }}
-                                              />
-                          <div className="clearfix"></div>                    
-                    </CardText>
-                  </Card>}
-                  {this.state.addFloor && <FloorDetails/>}
-                  <DocumentUpload />
-                  <Workflow />
-                  
-                                    
-               
-                  <Card>
-                    <CardText style={styles.reducePadding}>
-                        <br/>
-                        <RaisedButton type="button" label="Create Property" className="pull-right" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
-                            createPropertyTax();
-                            }
-                        }/>
-                        <div className="clearfix"></div>
-                    </CardText>
-                  </Card>
-              </form>
-          </div>
+	  return(
+		  <div className="createProperty">
+				<h3 style={{padding:15}}>Create New Property</h3>
+			  <form onSubmit={(e) => {search(e)}}>
+					
+				  <OwnerDetails />
+				  <CreateNewProperty />              
+				  <PropertyAddress/>                      
+				  <Amenities />                  
+				  <AssessmentDetails />
+				  <ConstructionTypes/>
+				  {(getNameById(this.state.propertytypes, createProperty.assessmentPropertyType) == "Vacant Land") ? <VacantLand/> : 
+					 <div> {!this.state.addFloor && <Card>
+						<CardText>
+							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
+								  onClick={()=>{
+									cThis.setState({
+									  addFloor: true
+									});
+								  }}
+							  />
+							  <div className="clearfix"></div>                    
+						</CardText>
+					  </Card>}
+					  </div>
+				  }
+				  {this.state.addFloor && <FloorDetails/>}
+				  <DocumentUpload />
+				  <Workflow />
+				  
+									
+			   
+				  <Card>
+					<CardText style={styles.reducePadding}>
+						<br/>
+						<RaisedButton type="button" label="Create Property" className="pull-right" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+							createPropertyTax();
+							}
+						}/>
+						<div className="clearfix"></div>
+					</CardText>
+				  </Card>
+			  </form>
+		  </div>
       )
   }
 }
@@ -546,7 +460,8 @@ const mapStateToProps = state => ({
   createProperty:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
-  addRoom : state.form.addRoom
+  addRoom : state.form.addRoom,
+  files: state.form.files
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -75,7 +75,9 @@ import BuildingClassification from './components/contents/propertyTax/master/Bui
 
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 
-import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand'
+import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
+
+import Create from './components/framework/create';
 
 
 const base = "";
@@ -88,7 +90,7 @@ const Main = () => {
     <Switch>
       <Route exact path= {base + '/'} component={Login}/>
 
-
+      <Route exact path= {base + '/create/:moduleName'} component={Create}/>
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
 

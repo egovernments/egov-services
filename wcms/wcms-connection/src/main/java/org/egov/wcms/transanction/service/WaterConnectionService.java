@@ -46,6 +46,7 @@ import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WaterConnectionRepository;
 import org.egov.wcms.transanction.web.contract.ProcessInstance;
 import org.egov.wcms.transanction.web.contract.Task;
+import org.egov.wcms.transanction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.workflow.service.TransanctionWorkFlowService;
 import org.egov.wcms.transition.demand.contract.Demand;
@@ -132,7 +133,10 @@ public class WaterConnectionService {
     public Connection update(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
+            if(waterConnectionRequest.getConnection().getEstimationCharge()!=null && 
+                    !waterConnectionRequest.getConnection().getEstimationCharge().isEmpty()){
             createDemand(waterConnectionRequest);
+            }
             updateWorkFlow(waterConnectionRequest);
             waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {
@@ -169,5 +173,9 @@ public class WaterConnectionService {
         if(task!=null )
         waterConnectionReq.getConnection().setStateId(Long.valueOf(task.getId()));
         return task;
+    }
+    
+    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) { 
+    	return waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
     }
 }

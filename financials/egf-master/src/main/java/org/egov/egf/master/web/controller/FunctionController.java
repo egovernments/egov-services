@@ -47,10 +47,11 @@ public class FunctionController {
 
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FunctionContract> functionResponse = new CommonResponse<>();
+		functionResponse.setResponseInfo(getResponseInfo(functionContractRequest.getRequestInfo()));
 		List<Function> functions = new ArrayList<>();
-		Function function = null;
-		List<FunctionContract> functionContracts = new ArrayList<FunctionContract>();
-		FunctionContract contract = null;
+		Function function;
+		List<FunctionContract> functionContracts = new ArrayList<>();
+		FunctionContract contract;
 
 		functionContractRequest.getRequestInfo().setAction("create");
 
@@ -89,6 +90,7 @@ public class FunctionController {
 		functionContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FunctionContract> functionResponse = new CommonResponse<>();
+		functionResponse.setResponseInfo(getResponseInfo(functionContractRequest.getRequestInfo()));
 		List<Function> functions = new ArrayList<>();
 		Function function;
 		FunctionContract contract;

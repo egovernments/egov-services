@@ -46,21 +46,4 @@ public class BoundaryService {
 		}
 		return boundaryResponse.getBoundarys();
 	}
-
-	public List<BoundaryType> getBoundaryType(String ids, RequestInfo requestInfo) {
-		URI url = null;
-		BoundaryTypeResponse boundaryTypeResponse = null;
-		try {
-			url = new URI(propertiesManager.getEgovLocationServiceHost()
-					+ propertiesManager.getEgovLocationServiceBasepath()
-					+ propertiesManager.getEgovLocationServiceBoundaryTypeSearchPath() + "?"
-					+ BOUNDARY_TYPE_SEARCH_BY_ID_QUERY_PARAM + "=" + ids);
-			LOGGER.info(url.toString());
-			boundaryTypeResponse = restTemplate.getForObject(url, BoundaryTypeResponse.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return boundaryTypeResponse.getBoundaryTypes();
-	}
 }

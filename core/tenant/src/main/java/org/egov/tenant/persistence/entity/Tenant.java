@@ -12,6 +12,7 @@ public class Tenant {
 
     public static String ID = "id",
         CODE = "code",
+        NAME = "name",
         DESCRIPTION = "description",
         LOGO_ID = "logoid",
         IMAGE_ID = "imageid",
@@ -33,6 +34,7 @@ public class Tenant {
 
     private Long id;
     private String code;
+    private String name;
     private String description;
     private String logoId;
     private String imageId;
@@ -55,6 +57,7 @@ public class Tenant {
         return org.egov.tenant.domain.model.Tenant.builder()
                 .id(id)
                 .code(code)
+                .name(name)
                 .description(description)
                 .imageId(imageId)
                 .logoId(logoId)

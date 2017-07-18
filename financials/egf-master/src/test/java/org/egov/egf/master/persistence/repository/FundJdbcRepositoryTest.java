@@ -1,6 +1,7 @@
 package org.egov.egf.master.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
@@ -63,7 +65,7 @@ public class FundJdbcRepositoryTest {
 
 		FundEntity fund = FundEntity.builder().code("code").name("name").active(true).level(1l).isParent(false)
 				.parentId("1").identifier('F').build();
-		FundEntity actualResult = fundJdbcRepository.create(fund);
+		fundJdbcRepository.create(fund);
 
 	}
 
@@ -109,6 +111,42 @@ public class FundJdbcRepositoryTest {
 
 	}
 
+	@Test
+	@Sql(scripts = { "/sql/clearFund.sql", "/sql/insertFundData.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		FundEntity fundEntity = FundEntity.builder().id("5").build();
+		fundEntity.setTenantId("default");
+		FundEntity result = fundJdbcRepository.findById(fundEntity);
+		assertNull(result);
+
+	}
+
+	@Test(expected = InvalidDataException.class)
+	@Sql(scripts = { "/sql/clearFund.sql", "/sql/insertFundData.sql" })
+	public void test_search_invalid_sort_option() {
+
+		FundSearch search = getFundSearch();
+		search.setSortBy("desc");
+		fundJdbcRepository.search(search);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearFund.sql", "/sql/insertFundData.sql" })
+	public void test_search_without_pagesize_offset_sortby() {
+
+		FundSearch search = getFundSearch();
+		search.setSortBy(null);
+		search.setPageSize(null);
+		search.setOffset(null);
+		Pagination<Fund> page = (Pagination<Fund>) fundJdbcRepository.search(getFundSearch());
+		assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
+		assertThat(page.getPagedData().get(0).getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getActive()).isEqualTo(true);
+
+	}
+
 	class FundResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
 		@Override
 		public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -144,6 +182,7 @@ public class FundJdbcRepositoryTest {
 		fundSearch.setCode("code");
 		fundSearch.setPageSize(500);
 		fundSearch.setOffset(0);
+		fundSearch.setSortBy("name desc");
 		return fundSearch;
 	}
 }

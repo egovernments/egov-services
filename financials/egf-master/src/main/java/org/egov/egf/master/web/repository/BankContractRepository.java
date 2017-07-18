@@ -32,7 +32,7 @@ public class BankContractRepository {
 		}
 
 		if (bankContract.getTenantId() != null) {
-			content.append("tenantId=" + bankContract.getTenantId());
+			content.append("&tenantId=" + bankContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<BankContract> result = objectMapper.convertValue(

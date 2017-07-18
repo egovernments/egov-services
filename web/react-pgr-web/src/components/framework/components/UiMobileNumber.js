@@ -7,7 +7,7 @@ export default class UiMobileField extends Component {
    	}
 
 	renderMobileNumberBox = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 
@@ -16,7 +16,8 @@ export default class UiMobileField extends Component {
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
 						disabled={item.isDisabled}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '/d{10}')} />
+						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
+						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '/d{10}', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

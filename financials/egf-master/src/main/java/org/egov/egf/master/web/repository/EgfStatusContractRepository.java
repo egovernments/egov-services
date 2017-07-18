@@ -32,7 +32,7 @@ public class EgfStatusContractRepository {
 		}
 
 		if (egfStatusContract.getTenantId() != null) {
-			content.append("tenantId=" + egfStatusContract.getTenantId());
+			content.append("&tenantId=" + egfStatusContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<EgfStatusContract> result = objectMapper.convertValue(

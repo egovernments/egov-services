@@ -1,7 +1,31 @@
 var localationData={
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
-  "reports.pgr.wardtype":"Ward Type"
+  "reports.pgr.wardtype":"Ward Type",
+  "wc.create.groups.applicantDetails.title":"Applicant Particulars",
+  "wc.create.groups.applicantDetails.propertyIdentifier":"PT Assessment Number",
+  "wc.create.groups.applicantDetails.nameOfApplicant":"Name of Applicant",
+  "wc.create.groups.applicantDetails.mobileNumber":"Mobile Number",
+  "wc.create.groups.applicantDetails.email":"Email",
+  "wc.create.groups.applicantDetails.adharNumber":"Aadhaar Number",
+  "wc.create.groups.applicantDetails.locality":"Locality",
+  "wc.create.groups.applicantDetails.address":"Address",
+  "wc.create.groups.applicantDetails.zone":"Zone / Ward / Block",
+  "wc.create.groups.applicantDetails.propertyTaxDue":"Property Tax",
+  "wc.create.groups.connectionDetails.title":"Connection Details",
+  "wc.create.groups.connectionDetails.connectionType":"Connection Type",
+  "wc.create.groups.connectionDetails.sourceType":"Water Source Type",
+  "wc.create.groups.connectionDetails.propertyType":"Property Type",
+  "wc.create.groups.connectionDetails.categoryType":"Category",
+  "wc.create.groups.connectionDetails.usageType":"Usage Type",
+  "wc.create.groups.connectionDetails.hscPipeSizeType":"H.S.C Pipe Size (Inches)",
+  "wc.create.groups.connectionDetails.fields.sumpCapacity":"Sump Capacity (Litres)",
+  "wc.create.groups.connectionDetails.fields.numberOfPersons":"No.of persons",
+  "wc.create.groups.approvalDetails.title":"Approval Details",
+  "wc.create.groups.approvalDetails.fields.department":"Approver Department",
+  "wc.create.groups.approvalDetails.fields.designation":"Approver Designation",
+  "wc.create.groups.approvalDetails.fields.approver":"Approver  ",
+  "wc.create.groups.approvalDetails.fields.comments":"Comments"
 }
 
 export function translate(locale_text){

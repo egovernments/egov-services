@@ -32,6 +32,7 @@ public class TenantTest {
 
         org.egov.tenant.domain.model.Tenant expectedTenantModel = org.egov.tenant.domain.model.Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -50,6 +51,7 @@ public class TenantTest {
 
         Tenant tenantContract = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -75,6 +77,7 @@ public class TenantTest {
     public void test_should_not_convert_city_if_null() {
         Tenant tenantContract = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -100,6 +103,7 @@ public class TenantTest {
 
         org.egov.tenant.domain.model.Tenant tenantModel = org.egov.tenant.domain.model.Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -119,6 +123,7 @@ public class TenantTest {
         Tenant tenantContract = new Tenant(tenantModel, city);
 
         assertThat(tenantContract.getCode()).isEqualTo("AP.KURNOOL");
+        assertThat(tenantContract.getName()).isEqualTo("kurnool");
         assertThat(tenantContract.getDescription()).isEqualTo("description");
         assertThat(tenantContract.getLogoId()).isEqualTo("logoId");
         assertThat(tenantContract.getImageId()).isEqualTo("imageId");

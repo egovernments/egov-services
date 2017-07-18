@@ -5,7 +5,6 @@ import org.egov.ReportApp;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
-import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.report.service.ReportService;
 import org.egov.swagger.model.MetadataResponse;
 import org.egov.swagger.model.ReportRequest;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportController {
 
 	public ReportDefinitions reportDefinitions;
-	public ReportYamlMetaData reportYamlMetaData;
+	
 	@Autowired
 	public ReportController(ReportDefinitions reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
@@ -35,9 +34,6 @@ public class ReportController {
 	
 	@Autowired
     public static ResourceLoader resourceLoader;
-	
-	  
-	
 
 	@PostMapping("/report/metadata/_get")
 	@ResponseBody
@@ -45,7 +41,6 @@ public class ReportController {
 			final BindingResult errors) {
 		MetadataResponse mdr = reportService.getMetaData(metaDataRequest);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
-		
 	}
 	
 	@PostMapping("/report/_get")
@@ -56,6 +51,7 @@ public class ReportController {
 		ReportResponse reportResponse = reportService.getReportData(reportRequest);
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 	}
+	
 	@PostMapping("/report/_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final RequestInfo reportRequest,

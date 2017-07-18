@@ -6,6 +6,7 @@
    
   "tenant": {
     "code": "AP.KURNOOL",
+    "name": "kurnool",
     "description": "description",
     "logoId": "logoId",
     "imageId": "imageId",

@@ -52,7 +52,7 @@ public class FundJdbcRepository extends JdbcRepository {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+		// StringBuffer params = new StringBuffer();
 
 		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty()) {
 			validateSortByOrder(fundSearchEntity.getSortBy());
@@ -75,13 +75,15 @@ public class FundJdbcRepository extends JdbcRepository {
 		if (fundSearchEntity.getPageSize() != null)
 			page.setPageSize(fundSearchEntity.getPageSize());
 
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
-		}
+		/*
+		 * if (params.length() > 0) {
+		 * 
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 * 
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

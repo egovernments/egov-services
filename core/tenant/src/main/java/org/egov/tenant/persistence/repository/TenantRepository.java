@@ -20,14 +20,14 @@ import org.springframework.util.CollectionUtils;
 
 @Repository
 public class TenantRepository {
-    private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate,twitterurl,facebookurl,emailid,address,contactnumber,helplinenumber from tenant ";
+    private static final String TENANT_BASE_QUERY = "SELECT distinct id, code, name, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate,twitterurl,facebookurl,emailid,address,contactnumber,helplinenumber from tenant ";
 /*    private static final String ALL_TENANT_QUERY = "SELECT distinct id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate, from tenant ORDER BY ID";*/
 
-    private static final String INSERT_QUERY = "INSERT INTO tenant (id, code, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate,twitterurl,facebookurl,emailid,address,contactnumber,helplinenumber) " +
-        "VALUES (nextval('seq_tenant'), :code, :description, :domainurl, :logoid, :imageid, :type, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :twitterurl, :facebookurl,:emailid,:address,:contactnumber,:helplinenumber)";
+    private static final String INSERT_QUERY = "INSERT INTO tenant (id, code, name, description, domainurl, logoid, imageid, type, createdby, createddate, lastmodifiedby, lastmodifieddate,twitterurl,facebookurl,emailid,address,contactnumber,helplinenumber) " +
+        "VALUES (nextval('seq_tenant'), :code, :name, :description, :domainurl, :logoid, :imageid, :type, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :twitterurl, :facebookurl,:emailid,:address,:contactnumber,:helplinenumber)";
 
     
-    private static final String UPDATE_QUERY = "update tenant set description = :description ,  domainurl = :domainurl, logoid = :logoid, imageid = :imageid, type = :type, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate,twitterurl = :twitterurl,facebookurl = :facebookurl ,emailid = :emailid,address = :address ,contactnumber = :contactnumber,helplinenumber=:helplinenumber " +
+    private static final String UPDATE_QUERY = "update tenant set name = :name, description = :description ,  domainurl = :domainurl, logoid = :logoid, imageid = :imageid, type = :type, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate,twitterurl = :twitterurl,facebookurl = :facebookurl ,emailid = :emailid,address = :address ,contactnumber = :contactnumber,helplinenumber=:helplinenumber " +
             " where code = :code"; 
 
     
@@ -77,6 +77,7 @@ public class TenantRepository {
     public org.egov.tenant.domain.model.Tenant save(final org.egov.tenant.domain.model.Tenant tenant) {
         final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put(Tenant.CODE, tenant.getCode());
+            put(Tenant.NAME, tenant.getName());
             put(Tenant.DESCRIPTION, tenant.getDescription());
             put(Tenant.DOMAIN_URL, tenant.getDomainUrl());
             put(Tenant.LOGO_ID, tenant.getLogoId());
@@ -104,6 +105,7 @@ public class TenantRepository {
     public org.egov.tenant.domain.model.Tenant update(final org.egov.tenant.domain.model.Tenant tenant) {
         final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
            
+        	put(Tenant.NAME, tenant.getName());
         	put(Tenant.DESCRIPTION, tenant.getDescription());
         	put(Tenant.DOMAIN_URL, tenant.getDomainUrl());
         	put(Tenant.LOGO_ID, tenant.getLogoId());

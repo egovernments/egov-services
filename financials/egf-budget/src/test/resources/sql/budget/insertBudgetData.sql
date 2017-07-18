@@ -1,0 +1,2 @@
+insert into egf_budget (id,name,parentid,financialyearid,active,estimationtype,primarybudget,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)
+values('1','name',1,1,true,'BE',true,1,now(),1,now(),'default');

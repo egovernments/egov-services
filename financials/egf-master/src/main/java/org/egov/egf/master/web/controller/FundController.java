@@ -80,7 +80,7 @@ public class FundController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundContract> update(@RequestBody @Valid CommonRequest<FundContract> fundContractRequest,
+	public CommonResponse<FundContract> update(@RequestBody CommonRequest<FundContract> fundContractRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {

@@ -16,7 +16,6 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import LoadingIndicator from '../../common/LoadingIndicator';
 import Api from '../../../api/api';
 import {translate, validate_fileupload, format_lat_long} from '../../common/common';
 var axios = require('axios');
@@ -37,7 +36,6 @@ class grievanceCreate extends Component {
   constructor(props) {
        super(props);
        this.state = {
-         loadingstatus: 'loading',
          type:'',
          receivingModes : [],
          receivingCenter:[],
@@ -85,7 +83,7 @@ class grievanceCreate extends Component {
       return false;
     }
     this.handleOTPClose();
-    this.setState({loadingstatus:'loading'});
+    this.props.setLoadingStatus('loading');
     let mob = this.props.grievanceCreate.phone;
     let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
     var rqst = {
@@ -102,7 +100,7 @@ class grievanceCreate extends Component {
         request['serviceRequest'].attribValues.push(finobj);
         _this.createGrievance(request);
     }, function(err) {
-      _this.setState({loadingstatus:'hide'});
+      _this.props.setLoadingStatus('hide');
       _this.handleError(err.message);
     });
   }
@@ -136,53 +134,48 @@ class grievanceCreate extends Component {
 
   componentDidMount()
   {
+
     this.setState({type:localStorage.getItem('type')});
     let {initForm} = this.props;
     initForm(localStorage.getItem('type'));
-    //console.log(localStorage.getItem('type'));
     var currentThis = this;
 
+    this.props.setLoadingStatus('loading');
+
+    this.getCityDetails();
+
+  }
+
+  getCityDetails = () => {
     //Get City details for tenant
     Api.commonApiPost("/tenant/v1/tenant/_search",{code : localStorage.getItem('tenant') || 'default'}).then(function(response)
     {
-      currentThis.setState({
+      _this.setState({
         citylat:response.tenant[0].city.latitude,
         citylng:response.tenant[0].city.longitude
-      })
-    },function(err) {
-      currentThis.handleError(err.message);
-    });
-
-    //OTP enabled for tenant
-    if(localStorage.getItem('type') === null){
-      Api.commonApiPost("/pgr-master/OTPConfig/_search").then(function(response)
-      {
-        currentThis.setState({otpEnabled: response.otpConfig[0].otpEnabledForAnonymousComplaint})
-      },function(err) {
-        currentThis.handleError(err.message);
       });
-    }
+      _this.Maps();
+    },function(err) {
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
+    });
+  }
 
+  Maps = () => {
     //isMapsEnabled
     Api.commonApiPost("/egov-location/boundarys/isshapefileexist").then(function(response)
     {
       if(response.ShapeFile.fileExist){
-        currentThis.setState({isMapsEnabled : response.ShapeFile.fileExist});
+        _this.setState({isMapsEnabled : response.ShapeFile.fileExist});
       }
+      _this.topComplaintTypes();
     },function(err) {
-      currentThis.handleError(err.message);
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
     });
+  }
 
-    //ReceivingMode
-    if(localStorage.getItem('type') === 'EMPLOYEE'){
-      Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response)
-      {
-        currentThis.setState({receivingModes : response.ReceivingModeType});
-      },function(err) {
-        currentThis.handleError(err.message);
-      });
-    }
-
+  topComplaintTypes = () =>{
     //Top ComplaintTypes
     Api.commonApiPost("/pgr/services/v1/_search", {type: 'frequency', count: 5}).then(function(response)
     {
@@ -192,21 +185,53 @@ class grievanceCreate extends Component {
         if(response.complaintTypes[j].keywords.indexOf('complaint') > -1)
           topComplaint.push(response.complaintTypes[j]);
       }
-      currentThis.setState({topComplaintTypes : topComplaint});
+      _this.setState({topComplaintTypes : topComplaint});
+      _this.grievanceCategory();
     },function(err) {
-      currentThis.handleError(err.message);
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
     });
+  }
 
+  grievanceCategory = () => {
     //Grievance Category
     Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response)
     {
-      currentThis.setState({grievanceCategory : response.ServiceGroups});
+      _this.setState({grievanceCategory : response.ServiceGroups});
+      if(localStorage.getItem('type') === null)
+        _this.OTP();
+      else if(localStorage.getItem('type') === 'EMPLOYEE')
+        _this.receivingMode();
+      else
+        _this.props.setLoadingStatus('hide');
     },function(err) {
-      currentThis.handleError(err.message);
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
     });
+  }
 
-    this.setState({loadingstatus:'hide'});
+  OTP = () => {
+    //OTP enabled for tenant
+    Api.commonApiPost("/pgr-master/OTPConfig/_search").then(function(response)
+    {
+      _this.setState({otpEnabled: response.otpConfig[0].otpEnabledForAnonymousComplaint});
+      _this.props.setLoadingStatus('hide');
+    },function(err) {
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
+    });
+  }
 
+  receivingMode = () => {
+    //ReceivingMode
+    Api.commonApiPost("/pgr-master/receivingmode/v1/_search").then(function(response)
+    {
+      _this.setState({receivingModes : response.ReceivingModeType});
+      _this.props.setLoadingStatus('hide');
+    },function(err) {
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
+    });
   }
 
   search(e)
@@ -218,19 +243,20 @@ class grievanceCreate extends Component {
       }
       //console.log('Initial Position:',this.state.citylat, this.state.citylng);
       //console.log('Changed Position:',this.props.grievanceCreate.lat, this.props.grievanceCreate.lng);
-      this.setState({loadingstatus:'loading'});
+      this.props.setLoadingStatus('loading');
       //validate with API
       if(this.props.grievanceCreate.lat && this.props.grievanceCreate.lng){
         Api.commonApiGet("/egov-location/boundarys",{'boundary.latitude' : this.props.grievanceCreate.lat, 'boundary.longitude' : this.props.grievanceCreate.lng, 'boundary.tenantId' : localStorage.getItem('tenantId') || 'default'}).then(function(response)
         {
           if(response.Boundary.length === 0){
-            _this.setState({loadingstatus:'hide'});
+            _this.props.setLoadingStatus('hide');
             _this.handleError('Location selected is out of the city boundary');
           }else{
             //usual createGrievance
             _this.initialCreateBasedonType();
           }
         },function(err) {
+          _this.props.setLoadingStatus('hide');
           _this.handleError(err.message);
         });
       }else{
@@ -254,7 +280,7 @@ class grievanceCreate extends Component {
         var userEmail = userResponse.user[0].emailId;
         _this.processCreate(userName,userMobile,userEmail);
       },function(err) {
-        _this.setState({loadingstatus:'hide'});
+        _this.props.setLoadingStatus('hide');
         _this.handleError(err.message);
       });
     }else if(type === 'EMPLOYEE'){
@@ -347,14 +373,14 @@ class grievanceCreate extends Component {
       Api.commonApiPost("/pgr/v1/otp/_send",{},{mobileNumber:mob, tenantId:tenant}).then(function(response)
       {
         //validate OTP
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         if(response.isSuccessful){
           {currentThis.handleOTPOpen()}
         }else {
           currentThis.handleError(translate('core.error.opt.generation'));
         }
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
     }else{
@@ -368,18 +394,16 @@ class grievanceCreate extends Component {
     Api.commonApiPost("/pgr/seva/v1/_create",{},request).then(function(createresponse)
     {
 
-      //console.log(JSON.stringify(createresponse));
-
       var srn = createresponse.serviceRequests[0].serviceRequestId;
       currentThis.setState({serviceRequestId:srn});
-      var ack = translate('pgr.msg.servicerequest.underprocess')+'. '+translate('pgr.lbl.srn')+' is '+srn+'. '+translate('pgr.msg.future.reference')+'.';
+      var ack = `${translate('pgr.msg.servicerequest.underprocess')}. ${translate('pgr.lbl.srn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
       currentThis.setState({srn:translate('pgr.lbl.srn')+' : '+srn});
       currentThis.setState({acknowledgement:ack});
 
       if(currentThis.props.files){
         if(currentThis.props.files.length === 0){
           //console.log('create succesfully done. No file uploads');
-          currentThis.setState({loadingstatus:'hide'});
+          currentThis.props.setLoadingStatus('hide');
           {currentThis.handleOpen()}
         }else{
           //console.log('create succesfully done. still file upload pending');
@@ -394,7 +418,7 @@ class grievanceCreate extends Component {
             {
               if(i === (currentThis.props.files.length - 1)){
                 //console.log('All files succesfully uploaded');
-                currentThis.setState({loadingstatus:'hide'});
+                currentThis.props.setLoadingStatus('hide');
                 {currentThis.handleOpen()}
               }
             },function(err) {
@@ -404,7 +428,7 @@ class grievanceCreate extends Component {
         }
       }
     },function(err) {
-          currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
     });
   }
 
@@ -464,7 +488,7 @@ class grievanceCreate extends Component {
     let validFile = validate_fileupload(e.target.files, formats);
     if(validFile === true){
       if(this.props.files.length === 0 && this.state.isMapsEnabled){
-        EXIF.getData(this.props.files[0], function() {
+        EXIF.getData(e.target.files[0], function() {
           var imagelat = EXIF.getTag(this, "GPSLatitude"),
           imagelongt = EXIF.getTag(this, "GPSLongitude");
           if(imagelat && imagelongt){
@@ -489,8 +513,9 @@ class grievanceCreate extends Component {
   getAddress = (lat, lng) =>{
     axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
       .then(function (response) {
+        let address = response.data.results[0] ? response.data.results[0].formatted_address : '';
         _this.setState({
-          customAddress : response.data.results[0].formatted_address
+          customAddress : address
         });
       });
   }
@@ -539,14 +564,13 @@ class grievanceCreate extends Component {
 
     return (
       <div className="grievanceCreate">
-        <LoadingIndicator status={this.state.loadingstatus}/>
         <form autoComplete="off" onSubmit={(e) => {
           search(e)
         }}>
           {this.state.type === 'EMPLOYEE' || this.state.type === null ?
             <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.contact.information')}< /div>}/>
-                <CardText style={{padding:0}}>
+                <CardText style={{paddingTop:0}}>
                   <Grid>
                     <Row>
                       {this.state.type === 'EMPLOYEE' ?
@@ -598,7 +622,7 @@ class grievanceCreate extends Component {
           }
           <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.grievence.information')} < /div>}/>
-              <CardText style={{padding:0}}>
+              <CardText style={{paddingTop:0}}>
                 <Grid>
                   <Row>
                     <Col xs={12} md={12}>
@@ -656,7 +680,7 @@ class grievanceCreate extends Component {
           </Card>
           <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.moredetails')} < /div>}/>
-              <CardText style={{padding:0}}>
+              <CardText style={{paddingTop:0}}>
                 <Grid>
                   <Row>
                     <Col xs={12} md={3}>
@@ -741,7 +765,6 @@ class grievanceCreate extends Component {
 }
 
   const mapStateToProps = state => {
-    //console.log(state.form.isFormValid)
     return ({grievanceCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
   }
 
@@ -866,6 +889,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 });
 

@@ -57,7 +57,7 @@ public class Receipt {
 
     private String instrumentHeader;
 
-    @JsonProperty("BillWrapper")
-    private BillWrapper billInfoWrapper;
+    @JsonProperty("Bill")
+    private Bill bill;
 
 }

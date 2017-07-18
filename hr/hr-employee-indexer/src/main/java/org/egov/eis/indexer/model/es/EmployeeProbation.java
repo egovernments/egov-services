@@ -71,4 +71,11 @@ public class EmployeeProbation {
 	@JsonProperty("probationcreatedby")
 	private String probationCreatedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("probationlastmodifieddate")
+	private Date probationLastModifiedDate;
+
+	@JsonProperty("probationlastmodifiedby")
+	private String probationLastModifiedBy;
+
 }

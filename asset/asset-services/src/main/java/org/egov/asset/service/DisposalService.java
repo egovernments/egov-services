@@ -15,6 +15,7 @@ import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.producers.AssetProducer;
@@ -56,6 +57,9 @@ public class DisposalService {
 
     @Autowired
     private AssetMasterService assetMasterService;
+    
+    @Autowired
+    private AssetConfigurationService assetConfigurationService;
 
     public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
@@ -92,7 +96,8 @@ public class DisposalService {
         if (disposalRequest.getDisposal().getAuditDetails() == null)
             disposalRequest.getDisposal()
                     .setAuditDetails(assetCurrentAmountService.getAuditDetails(disposalRequest.getRequestInfo()));
-        if (applicationProperties.getEnableVoucherGenration())
+        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+                disposalRequest.getDisposal().getTenantId()))
             try {
                 LOGGER.info("Commencing Voucher Generation for Asset Sale/Disposal");
                 final Long voucherId = createVoucherForDisposal(disposalRequest);

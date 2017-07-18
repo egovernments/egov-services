@@ -106,4 +106,7 @@ public class ReceiptRequestDocument {
 
     @JsonProperty("regionName")
     private String regionName;
+
+    @JsonProperty("purpose")
+    private String purpose;
 }

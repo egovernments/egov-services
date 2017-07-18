@@ -40,7 +40,7 @@ public class CollectionConsumer {
 					logger.info("Consuming start workflow request");
 					workflowService.startWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
 				 }else if(topic.equals(applicationProperties.getKafkaUpdateworkflowTopic())){
-					logger.info("Consuming start workflow request");
+					logger.info("Consuming update workflow request");
 					workflowService.updateWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
 				 }
 			

@@ -32,7 +32,7 @@ public class BudgetGroupContractRepository {
 		}
 
 		if (budgetGroupContract.getTenantId() != null) {
-			content.append("tenantId=" + budgetGroupContract.getTenantId());
+			content.append("&tenantId=" + budgetGroupContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<BudgetGroupContract> result = objectMapper.convertValue(

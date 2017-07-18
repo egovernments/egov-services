@@ -29,7 +29,7 @@ public class ServiceRequest {
 	public static final String STATUS = "status";
 	public static final String VALUES_APPROVAL_COMMENT_KEY = "approvalComments";
 	public static final String PREVIOUS_ASSIGNEE = "previousAssignee";
-	private static final String ESCALATION_STATUS = "IN PROGRESS";
+	private static final String ESCALATION_STATUS = "status";
 	private static final String VALUES_APPROVAL_COMMENT_VALUE = "Complaint is escalated";
 	private static final String VALUES_DESIGNATION_ID = "designationId";
 	private static final String VALUES_DEPARTMENT_ID = "departmentId";
@@ -166,7 +166,7 @@ public class ServiceRequest {
 				.action(WorkflowRequest.Action.forComplaintStatus(getDynamicSingleValue(STATUS)))
 				.requestInfo(requestInfo)
 				.values(valuesToSet)
-				.status(ESCALATION_STATUS)
+				.status(getDynamicSingleValue(ESCALATION_STATUS))
 				.type(WORKFLOW_TYPE)
 				.businessKey(WORKFLOW_TYPE)
 				.tenantId(getTenantId())

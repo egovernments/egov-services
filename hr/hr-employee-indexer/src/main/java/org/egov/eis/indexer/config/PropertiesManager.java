@@ -80,9 +80,6 @@ public class PropertiesManager {
 	@Value("${egov.location.service.boundary.search.path}")
 	private String egovLocationServiceBoundarySearchPath;
 
-	@Value("${egov.location.service.boundarytype.search.path}")
-	private String egovLocationServiceBoundaryTypeSearchPath;
-
 	@Value("${egf.masters.service.host}")
 	private String egfMastersServiceHost;
 
@@ -103,6 +100,15 @@ public class PropertiesManager {
 
 	@Value("${egf.masters.service.functionary.search.path}")
 	private String egfMastersServiceFunctionarySearchPath;
+
+	@Value("${egov.tenant.service.host}")
+	private String tenantServiceHost;
+
+	@Value("${egov.tenant.service.basepath}")
+	private String tenantServiceBasePath;
+
+	@Value("${egov.tenant.service.search.path}")
+	private String tenantServiceSearchPath;
 
 	@Value("${kafka.topics.employee.esindex.savedb.name}")
 	private String saveEmployeeIndexerTopic;

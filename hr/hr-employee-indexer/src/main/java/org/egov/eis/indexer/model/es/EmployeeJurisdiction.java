@@ -57,5 +57,11 @@ public class EmployeeJurisdiction {
 	@JsonProperty("jurisdictioncreatedby")
 	private String  jurisdictionCreatedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("jurisdictionlastmodifieddate")
+	private Date jurisdictionLastModifiedDate;
+
+	@JsonProperty("jurisdictionlastmodifiedby")
+	private String jurisdictionLastModifiedBy;
 
 }

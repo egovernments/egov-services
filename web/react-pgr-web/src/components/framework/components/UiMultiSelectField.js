@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 export default class UiMultiSelectField extends Component {
 	constructor(props) {
@@ -7,7 +8,7 @@ export default class UiMultiSelectField extends Component {
    	}
 
 	renderMultiSelect = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<SelectField 
@@ -16,7 +17,8 @@ export default class UiMultiSelectField extends Component {
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
 						disabled={item.isDisabled}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')} 
+						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} 
+						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
 						maxHeight={200}>
 				            {item.dropDownData.map((dd, index) => (
 				                <MenuItem value={dd.key} key={index} primaryText={dd.value} />

@@ -1052,7 +1052,7 @@
         id:
           type: integer
           format: int64
-          description: Unique identifier of the entered type, typically defined by system.
+          description: Unique identifier, typically defined by system and readonly.
         propertyTypeId:
           type: string
           description: Unique identifier of property type object
@@ -1100,7 +1100,7 @@
         id:
           type: integer
           format: int64
-          description: Unique identifier of the entered type, typically defined by system.
+          description: Unique identifier, typically defined by system and readonly.
         propertyTypeId:
           type: string
           description: Unique identifier of property type object
@@ -1148,7 +1148,7 @@
         id:
           type: integer
           format: int64
-          description: Unique identifier of the entered type, typically defined by system.
+          description: Unique identifier, typically defined by system and readonly.
         propertyTypeId:
           type: string
           description: Unique identifier of property type object
@@ -1196,7 +1196,7 @@
         id:
           type: integer
           format: int64
-          description: Unique identifier of the entered type, typically defined by system.
+          description: Unique identifier, typically defined by system and readonly.
         documentTypeId:
           type: integer
           format: int64
@@ -1333,14 +1333,14 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
         code:
           type: string
-          description: unique code this should be assigned by system.
+          description: unique code this should be defined by system and readonly.
           maxLength: 20
         name: 
           type: string
-          description: human readable name should be assigned by system.
+          description: human readable name should be assigned by user.
           maxLength: 100
         description: 
           type: string
@@ -1390,10 +1390,10 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
         code:
           type: string
-          description: unique code this should be assigned by system.
+          description: unique code this should be defined by system and readonly.
           maxLength: 20
         name: 
           type: string
@@ -1447,10 +1447,10 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
         code:
           type: string
-          description: unique code this can be assigned by user.
+          description: unique code this should be defined by system and readonly.
           maxLength: 20
         name: 
           type: string
@@ -1504,10 +1504,10 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
         code:
           type: string
-          description: unique code this can be assigned by user.
+          description: unique code this should be defined by system and readonly.
           maxLength: 20
         sizeInMilimeter:
           type: number
@@ -1563,7 +1563,7 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the donation, typically defined by system.
+         description : Unique identifier of the donation, typically defined by system and readonly.
         propertyTypeId:
           type: string
           description: Unique identifier of property type object
@@ -1645,10 +1645,10 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
         code:
           type: string
-          description: unique code this can be assigned by user.
+          description: unique code this should be defined by system and readonly.
           maxLength: 20
         name: 
           type: string
@@ -1702,10 +1702,10 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
         code:
           type: string
-          description: unique code this can be assigned by user.
+          description: unique code this should be defined by system and readonly.
           maxLength: 20
         name: 
           type: string
@@ -1781,7 +1781,11 @@
         id:
          type: integer
          format: int64
-         description : Unique identifier of the entered type, typically defined by system.
+         description : Unique identifier, typically defined by system and readonly.
+        code:
+          type: string
+          description: unique code this should be defined by system and readonly.
+          maxLength: 20
         reservoirType:
           type: string
           description: Type of the Reservoir	.
@@ -1791,11 +1795,7 @@
         name: 
           type: string
           description: Name of the Storage Reservoir.
-          maxLength: 100
-        code:
-          type: string
-          description: unique code this can be assigned by user.
-          maxLength: 20
+          maxLength: 10
         location: 
           type: string
           description: boundary location  where storage reservoir is located should be selected.

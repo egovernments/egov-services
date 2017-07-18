@@ -33,7 +33,7 @@ public class AccountDetailKeyContractRepository {
 		}
 
 		if (accountDetailKeyContract.getTenantId() != null) {
-			content.append("tenantId=" + accountDetailKeyContract.getTenantId());
+			content.append("&tenantId=" + accountDetailKeyContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<AccountDetailKeyContract> result = objectMapper.convertValue(

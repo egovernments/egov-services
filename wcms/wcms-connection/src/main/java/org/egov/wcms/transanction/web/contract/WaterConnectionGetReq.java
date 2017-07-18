@@ -37,46 +37,36 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.indexer.contract;
+package org.egov.wcms.transanction.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-
-@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
+@Setter
 @ToString
-public class BillDetailsWrapper {
-
-	@JsonProperty("BillDetail")
-	private BillDetail billDetails;
+public class WaterConnectionGetReq {
 	
-	private String businessDetailsCode;
-
-	private String refNo;
-
-	private String event;
-
-	private String receiptNumber;
-
-	private Timestamp receiptDate;
+	private List<Long> id;
+	private String tenantId;
+	private String legacyConsumerNumber;
+	private String acknowledgementNumber; 
+	private String consumerNumber;
+	private Long asgineeId;
+	private String name;
+	private String mobileNumber;
+	private String locality;
+	private String revenueWard;
+	private String doorNumber;
 	
-	private String receiptType;
-
-	private String channel;
-  
-	private String voucherHeader;
-    
-	private String collectionType;
-  
-	private String boundary;
-
-	private String reasonForCancellation;
-	
-	private BigDecimal amountPaid;
 
 }

@@ -37,27 +37,28 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.indexer.contract;
+package org.egov.wcms.transanction.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.egov.wcms.transanction.model.Connection;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@Setter
-@Getter
-@ToString
-public class BillWrapper {
-
-	@JsonProperty("Bill")
-	private Bill billInfo;
-	
-	private String paidBy;
-	
-	@JsonProperty("BillDetailsWrapper")
-	private List<BillDetailsWrapper> billDetailsWrapper = new ArrayList<>(); //for collection-service
-
+@Component
+public class UpdateWaterConnectionRowMapper implements RowMapper<Connection> {
+    @Override
+    public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final Connection connection = new Connection();
+        connection.setId(rs.getLong("id"));
+        connection.setStateId(rs.getLong("stateid"));
+        connection.setAcknowledgementNumber(rs.getString("acknowledgmentnumber"));
+        if(rs.getString("islegacy").equals(Boolean.TRUE))
+        connection.setIsLegacy(Boolean.TRUE);
+        else
+            connection.setIsLegacy(Boolean.FALSE);
+        connection.setTenantId(rs.getString("tenantid"));
+        return connection;
+    }
 }

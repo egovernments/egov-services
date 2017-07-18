@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.transanction.web.contract;
 
+import java.util.List;
+
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.model.WorkflowDetails;
@@ -64,7 +66,7 @@ public class WaterConnectionRes {
     private ResponseInfo responseInfo;
 
     @JsonProperty("connection")
-    private Connection connection;
+    private List<Connection> connections;
 
     @JsonProperty("workflowDetails")
     private WorkflowDetails workflowDetails;

@@ -15,11 +15,13 @@ import org.egov.egf.budget.persistence.entity.BudgetSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BudgetJdbcRepository extends JdbcRepository {
-	private static final Logger LOG = LoggerFactory.getLogger(BudgetJdbcRepository.class);
+	
+	private static final Logger LOG = LoggerFactory.getLogger(BudgetJdbcRepository.class); 
 
 	static {
 		LOG.debug("init budget");
@@ -27,6 +29,11 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		LOG.debug("end init budget");
 	}
 
+	public BudgetJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
+
+	
 	public BudgetEntity create(BudgetEntity entity) {
 
 		entity.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -47,13 +54,17 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+		
+		if (budgetSearchEntity.getSortBy() != null && !budgetSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(budgetSearchEntity.getSortBy());
+			validateEntityFieldName(budgetSearchEntity.getSortBy(), BudgetEntity.class);
+		}
+
 		String orderBy = "order by id";
-		/*
-		 * if (budgetSearchEntity.getSortBy() != null &&
-		 * !budgetSearchEntity.getSortBy().isEmpty()) orderBy = "order by " +
-		 * budgetSearchEntity.getSortBy();
-		 */
+		if (budgetSearchEntity.getSortBy() != null && !budgetSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + budgetSearchEntity.getSortBy();
+		
+		StringBuffer params = new StringBuffer();
 
 		searchQuery = searchQuery.replace(":tablename", BudgetEntity.TABLE_NAME);
 
@@ -75,7 +86,7 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		if (budgetSearchEntity.getFinancialYearId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("financialYear =:financialYear");
+			params.append("financialYearid =:financialYear");
 			paramValues.put("financialYear", budgetSearchEntity.getFinancialYearId());
 		}
 		if (budgetSearchEntity.getEstimationType() != null) {
@@ -87,7 +98,7 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		if (budgetSearchEntity.getParentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("parent =:parent");
+			params.append("parentid =:parent");
 			paramValues.put("parent", budgetSearchEntity.getParentId());
 		}
 		if (budgetSearchEntity.getActive() != null) {
@@ -105,13 +116,13 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		if (budgetSearchEntity.getReferenceBudgetId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("referenceBudget =:referenceBudget");
+			params.append("referenceBudgetid =:referenceBudget");
 			paramValues.put("referenceBudget", budgetSearchEntity.getReferenceBudgetId());
 		}
 		if (budgetSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =:status");
+			params.append("statusid =:status");
 			paramValues.put("status", budgetSearchEntity.getStatusId());
 		}
 		if (budgetSearchEntity.getDocumentNumber() != null) {

@@ -62,7 +62,7 @@ class grievanceView extends Component{
 
   loadSRN = () =>{
 
-    let {initForm, addMandatory, handleChange} = this.props;
+    let {initForm, handleChange} = this.props;
     initForm();
 
     Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
@@ -91,7 +91,11 @@ class grievanceView extends Component{
              currentThis.setState({[k] : item[k]});
            }
         }
-        addMandatory();
+        if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED')){
+          currentThis.props.ADD_MANDATORY('rating');
+          if(currentThis.state.rating)
+            handleChange(currentThis.state.rating, "rating", true, "");
+        }
         if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
           handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
         }
@@ -319,21 +323,6 @@ class grievanceView extends Component{
     var time = new Date().toLocaleTimeString();
     var date = dat.split("/").join("-");
     req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
-
-    // let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-    // if(checkStatus === 'FORWARDED'){
-    //   if(currentThis.props.grievanceView.positionId === undefined){
-    //     currentThis.setState({loadingstatus:'hide'});
-    //     currentThis.handleError(translate('pgr.lbl.selectpos'));
-    //     return false;
-    //   }
-    // }else if(checkStatus === 'REGISTERED'){
-    //   if(currentThis.props.grievanceView.positionId){
-    //     currentThis.setState({loadingstatus:'hide'});
-    //     currentThis.handleError('Select the status as FORWARDED. Since you are trying to change the position.');
-    //     return false;
-    //   }
-    // }
 
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
@@ -608,7 +597,7 @@ class grievanceView extends Component{
                   {translate('core.lbl.location')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.childLocationName + " - " + this.state.locationName}
+                  {this.state.childLocationName ? this.state.childLocationName + " - " + this.state.locationName : this.state.locationName}
                 </Col>
                 <Col xs={6} md={3}>
                   {translate('core.lbl.landmark')}
@@ -839,10 +828,6 @@ const mapDispatchToProps = dispatch => ({
   },
   ADD_MANDATORY : (property) => {
      dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
-  },
-  addMandatory : () => {
-    if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED'))
-      dispatch({type: "ADD_MANDATORY", property: "rating", value: '', isRequired : true, pattern: ''})
   },
   handleChange: (value, property, isRequired, pattern) => {
       dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});

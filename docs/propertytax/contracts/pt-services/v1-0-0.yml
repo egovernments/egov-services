@@ -258,6 +258,26 @@ paths:
           description: Title Tranfer failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /properties/latepaymentpenalty/_calculate:
+    post: 
+      description: Calculation for the latepayment penalty of the property
+      parameters:
+       - name: penaltyCalculationRequest
+         in: body
+         description: Request header of the penalty
+         required: true
+         schema:
+          $ref: '#/definitions/LatePaymentPenaltyRequest'
+      responses:
+        '200':
+          description: Penalty Calculated
+          schema:
+            $ref: '#/definitions/LatePaymentPenaltyResponse'
+        '400':
+          description: Unable to calculate penalty
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
 ########################################################
@@ -786,6 +806,9 @@ definitions:
         description: water meter no for the Unit
         maxLength: 64
         minLength: 1
+      isAuthorised:
+        type: boolean
+        description: this would indicate the Unit is an autorised or unauthorised construction, if true then penalty to be calculated 100% (https://issues.egovernments.org/browse/EGSVC-480 )
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1067,9 +1090,44 @@ definitions:
       notice:
         $ref: '#/definitions/Notice'
         
-  
+  LatePaymentPenaltyRequest:
+    type: object
+    description: This object holds the information for the property for which penalty to be calculated
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+    required:
+       - upicNo
+       - tenantId 
               
   
+  LatePaymentPenaltyResponse:
+    type: object
+    description: This object holds the information for the property for which penalty to be calculated
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+      penalty:
+       type: number
+       format: double
+    required:
+       - upicNo
+       - tenantId
+       - penalty
      
       
 parameters:

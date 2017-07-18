@@ -21,7 +21,9 @@ var dat = {
 								"MobileNumber": "",
 								"Email": "",
 								"AadharNumber": ""
-							}
+							},
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "NameOfApplicant",
@@ -30,7 +32,9 @@ var dat = {
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "MobileNumber",
@@ -39,7 +43,9 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "Email",
@@ -48,7 +54,9 @@ var dat = {
 							"pattern": "",
 							"type": "email",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "AadharNumber",
@@ -57,7 +65,9 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "Locality",
@@ -66,7 +76,9 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "Address",
@@ -75,7 +87,9 @@ var dat = {
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "Zone",
@@ -84,7 +98,9 @@ var dat = {
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "adharNumber",
@@ -93,7 +109,9 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "propertyTaxDue",
@@ -102,7 +120,9 @@ var dat = {
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": true
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						}
 				]
 			},
@@ -118,7 +138,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": true,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "SourceType",
@@ -128,7 +150,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "SourceType",
@@ -138,7 +162,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "PropertyType",
@@ -148,7 +174,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "CategoryType",
@@ -158,7 +186,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "UsageType",
@@ -168,7 +198,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "hscPipeSizeType",
@@ -178,7 +210,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "sumpCapacity",
@@ -187,7 +221,9 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "numberOfPersons",
@@ -196,7 +232,9 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						}
 				]
 			},
@@ -212,7 +250,9 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": ""
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "designation",
@@ -221,7 +261,9 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "approver",
@@ -230,7 +272,9 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						},
 						{
 							"name": "comments",
@@ -239,7 +283,9 @@ var dat = {
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
 						}
 				]
 			}

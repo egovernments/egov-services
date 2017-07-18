@@ -95,6 +95,7 @@ definitions:
       name:
         description: The tenant name
         type: string
+        maxLength: 256
       description:
         type: "string"
       imageId:
@@ -133,7 +134,13 @@ definitions:
         maxLength: 100
       city:
         $ref: "#/definitions/City"
-
+    required:
+      - name
+      - code
+      - imageId
+      - logoId
+      - type
+      
   City:
     type: "object"
     properties:

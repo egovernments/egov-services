@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.transanction.web.contract;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,8 +56,9 @@ import lombok.ToString;
 @ToString
 public class WaterConnectionGetReq {
 	
+	private List<Long> id;
 	private String tenantId;
-	private Long legacyConsumerNumber;
+	private String legacyConsumerNumber;
 	private String acknowledgementNumber; 
 	private String consumerNumber;
 	private Long asgineeId;

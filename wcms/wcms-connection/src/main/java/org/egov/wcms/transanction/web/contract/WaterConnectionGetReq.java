@@ -39,14 +39,6 @@
  */
 package org.egov.wcms.transanction.web.contract;
 
-import java.util.List;
-
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.transanction.model.Connection;
-import org.egov.wcms.transanction.model.WorkflowDetails;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -60,14 +52,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class WaterConnectionRes {
+public class WaterConnectionGetReq {
+	
+	private String tenantId;
+	private Long legacyConsumerNumber;
+	private String acknowledgementNumber; 
+	private String consumerNumber;
+	private Long asgineeId;
+	private String name;
+	private String mobileNumber;
+	private String locality;
+	private String revenueWard;
+	private String doorNumber;
+	
 
-    @JsonProperty("responseInfo")
-    private ResponseInfo responseInfo;
-
-    @JsonProperty("connection")
-    private List<Connection> connections;
-
-    @JsonProperty("workflowDetails")
-    private WorkflowDetails workflowDetails;
 }

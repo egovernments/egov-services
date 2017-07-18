@@ -51,6 +51,7 @@ import org.egov.wcms.transanction.model.enums.BillingType;
 import org.egov.wcms.transanction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transanction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transanction.repository.rowmapper.WaterConnectionRowMapper;
+import org.egov.wcms.transanction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -227,4 +228,11 @@ public class WaterConnectionRepository {
         Connection connection = jdbcTemplate.queryForObject(WaterConnectionQueryBuilder.getWaterConnectionByacknowledgenumber(), new WaterConnectionRowMapper(), acknowledgeNumber);
         return connection;
      }
+    
+    
+    public List<Connection> getConnectionDetails(WaterConnectionGetReq waterConnectionGetReq) { 
+    	String fetchQuery = WaterConnectionQueryBuilder.getConnectionDetails();
+    	List<Connection> connectionList = jdbcTemplate.query(fetchQuery, new WaterConnectionRowMapper());
+    	return connectionList;
+    }
 }

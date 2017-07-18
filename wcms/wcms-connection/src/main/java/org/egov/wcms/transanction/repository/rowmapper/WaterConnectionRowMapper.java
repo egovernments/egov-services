@@ -43,6 +43,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.egov.wcms.transanction.model.Connection;
+import org.egov.wcms.transanction.model.Property;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -51,14 +52,38 @@ public class WaterConnectionRowMapper implements RowMapper<Connection> {
     @Override
     public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         final Connection connection = new Connection();
-        connection.setId(rs.getLong("conn_id"));
-        connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));
-        connection.setBillingType(rs.getString("conn_billtype"));
-        connection.setConnectionStatus(rs.getString("conn_constatus"));
-        connection.setConnectionType(rs.getString("conn_connType"));
-        connection.setConsumerNumber(rs.getString("conn_consumerNum"));
-        connection.setNumberOfPersons(rs.getInt("conn_nooftaps"));
-        connection.setTenantId(rs.getString("conn_tenant"));
+        connection.setTenantId(rs.getString("conn_tenant")); 
+        connection.setConnectionType(rs.getString("conn_connType")); 
+        connection.setBillingType(rs.getString("conn_billtype")); 
+        connection.setConnectionStatus(rs.getString("conn_constatus"));  
+        connection.setApplicationType(rs.getString("conn_applntype"));
+        connection.setSumpCapacity(rs.getLong("conn_sumpcap")); 
+        connection.setDonationCharge(rs.getLong("conn_doncharge"));  
+        connection.setNumberOfTaps(rs.getInt("conn_nooftaps")); 
+        connection.setSupplyTypeId(rs.getString("supplytype_id")); 
+        connection.setSupplyType(rs.getString("supplytype_name"));
+        connection.setCategoryId(rs.getString("category_id")); 
+        connection.setCategoryType(rs.getString("category_name"));  
+        connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter")); 
+        connection.setPipesizeId(rs.getString("pipesize_id")); 
+        connection.setSourceTypeId(rs.getString("watersource_id")); 
+        connection.setSourceType(rs.getString("watersource_name"));
+        connection.setNumberOfPersons(rs.getInt("conn_noofperson"));  
+        connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
+        connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
+        connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
+        connection.setIsLegacy(rs.getBoolean("conn_islegacy")); 
+        connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));  
+        connection.setConsumerNumber(rs.getString("conn_consumerNum")); 
+        connection.setPropertyIdentifier(rs.getString("conn_propid"));  
+        Property prop = new Property();
+        prop.setUsageType(rs.getString("conn_usgtype")); 
+        prop.setPropertyType(rs.getString("conn_proptype"));  
+        prop.setAddress(rs.getString("conn_propaddress"));  
+        connection.setProperty(prop);
+   /*     connection.setAssetIdentifier(rs.getString("assetidentifier"));
+        connection.setStatus(rs.getString("status"));
+        connection.setStateId(rs.getLong("stateid"));*/
         return connection;
     }
 }

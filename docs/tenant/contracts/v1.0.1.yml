@@ -92,6 +92,9 @@ definitions:
     properties:
       code:
         type: "string"
+      name:
+        description: The tenant name
+        type: string
       description:
         type: "string"
       imageId:

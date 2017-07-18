@@ -411,7 +411,11 @@ public class ActionRepository {
 			for (Action action : actions) {
 
 				String path = getPath(action.getServiceCode(), allServiceList);
-				action.setPath(path + "." + action.getName());
+
+				if (path != "") {
+					path = path + "." + action.getName();
+				}
+				action.setPath(path);
 
 				actionList.add(action);
 			}

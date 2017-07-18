@@ -249,9 +249,6 @@ public class BillService {
 			BusinessServiceDetail businessServiceDetail = businessServiceMap.get(businessService);
 			String description = demand3.getBusinessService()+" Consumer Code: "+demand3.getConsumerCode();
 			
-			/* FIXME TODO RAMKI (Discussion about the consumerCode being more than one for same 
-			businessservice because of the uniqueness of consumerCode with business service)*/
-			
 			BillDetail billDetail = BillDetail.builder().businessService(demand3.getBusinessService())
 					.billDescription(description).displayMessage(description).billAccountDetails(billAccountDetails)
 					.billDate(new Date().getTime()).callBackForApportioning(businessServiceDetail.getCallBackForApportioning()).
@@ -272,8 +269,7 @@ public class BillService {
 	private Purpose getPurpose(Category category, String taxHeadCode, Long taxPeriodFrom, Long taxPeriodTo) {
 
 		Long currDate = new Date().getTime();
-		//TODO remove taxHead If never needed 
-		//check about arrears late payments ask Ramki to take a look
+		//TODO check about arrears late payments ask Ramki to take a look
 
 		if (category.equals(Category.TAX) || category.equals(Category.FEE)) {
 

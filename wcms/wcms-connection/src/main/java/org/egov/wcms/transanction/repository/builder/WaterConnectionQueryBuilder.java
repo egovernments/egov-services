@@ -53,7 +53,7 @@ public class WaterConnectionQueryBuilder {
             + " connection.connectionstatus as conn_constatus, connection.sumpcapacity as conn_sumpcap, "
             + " connection.numberofftaps as conn_nooftaps, connection.numberofpersons "
             + " as conn_noofperson, connection.acknowledgmentnumber as conn_acknumber, "
-            + " connection.propertyid as conn_propid, connection.usagetype as conn_usgtype, "
+            + " connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, "
             + " connection.propertytype as conn_proptype, connection.propertyaddress "
             + " as conn_propaddress, connection.donationcharge as conn_doncharge, "
             + " category.id as category_id, category.code as category_code, "
@@ -71,6 +71,14 @@ public class WaterConnectionQueryBuilder {
             + " egwtr_pipesize pipesize WHERE "
             + " connection.categorytype=category.id AND connection.hscpipesizetype=pipesize.id "
             + " AND connection.sourcetype=watersource.id AND connection.supplytype=supplytype.id ";
+    
+    private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType,  connection.billingtype as conn_billtype, connection.categorytype  as conn_catgtype, "   
+    		+ " connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus, connection.sumpcapacity as conn_sumpcap, " 
+    		+ " connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, connection.propertytype as conn_proptype, connection.address " 
+    		+ " as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, " 
+    		+ " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId, supplytype.id as supplytype_id, supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active, "  
+    		+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, "  
+    		+ " egwtr_pipesize pipesize WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id ; ";
 
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
@@ -138,5 +146,9 @@ public class WaterConnectionQueryBuilder {
 
     public static String getWaterConnectionByacknowledgenumber() {
         return BASE_QUERY + " AND connection.acknowledgmentnumber = ?";
+    }
+    
+    public static String getConnectionDetails() { 
+    	return SOURCE_QUERY;  
     }
 }

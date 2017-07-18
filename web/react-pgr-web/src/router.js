@@ -72,8 +72,12 @@ import PropertyType from './components/contents/propertyTax/master/PropertyType'
 import Occupancy from './components/contents/propertyTax/master/Occupancy';
 import MutationReason from './components/contents/propertyTax/master/MutationReason';
 import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
+
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
-import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand'
+
+import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
+
+import Create from './components/framework/create';
 
 
 const base = "";
@@ -86,7 +90,7 @@ const Main = () => {
     <Switch>
       <Route exact path= {base + '/'} component={Login}/>
 
-
+      <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
 
@@ -167,7 +171,7 @@ const Main = () => {
        <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>
 
 
-          <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
+            <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
           <Route exact path={base+'/propertyTax'} component={PropertyTaxSearch}/>
           <Route exact path={base+'/propertyTax/test'} component={Test}/>
           <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>

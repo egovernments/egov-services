@@ -320,7 +320,7 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        if (restConnectionService.getTreateMentPlanName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
+        if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsTranasanctionConstants.TREATPLANT_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.TREATPLANT_INVALID_FIELD_NAME)

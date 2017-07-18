@@ -94,7 +94,7 @@ public class RestConnectionService {
         return positions;
     }
     
-    public TreatmentPlantResponse getTreateMentPlanName(WaterConnectionReq waterConnectionRequest) {
+    public TreatmentPlantResponse getTreateMentPlantName(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterTreatmentSearchTopic());
@@ -227,8 +227,8 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        url.append(configurationManager.getPropertyServiceHostaNameTopic())
-        .append(configurationManager.getPropertyServiceSearchHostaNameTopic()).
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+        .append(configurationManager.getPropertyServiceSearchPathTopic()).
         append("?upicNo=").append(waterRequestReq.getConnection().getProperty().getPropertyidentifier())
         .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
         PropertyResponse propResp=null;

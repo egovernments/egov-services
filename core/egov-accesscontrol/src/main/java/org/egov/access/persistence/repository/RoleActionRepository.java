@@ -25,29 +25,16 @@ public class RoleActionRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+	final static String GET_ACTIONS_BASEDON_IDS = "select id from eg_action where name IN (:sqlStringifiedCodes)";
+
+	final static String CHECK_UNIQUE_VALIDATION_FOR_ROLEACTIONS = "select rolecode from eg_roleaction where actionid IN (:actionid) and tenantid =:tenantid and rolecode =:rolecode";
+
 	public List<RoleAction> createRoleActions(final RoleActionsRequest actionRequest) {
 
 		LOGGER.info("Create Role Actions Repository::" + actionRequest);
 		final String roleActionsInsert = "insert into eg_roleaction(rolecode,actionid,tenantid) values (:rolecode,:actionid,:tenantid)";
 
-		List<String> sqlStringifiedCodes = new ArrayList<>();
-		for (Action actionName : actionRequest.getActions())
-			sqlStringifiedCodes.add(actionName.getName());
-
-		final Map<String, Object> parametersMap = new HashMap<String, Object>();
-
-		parametersMap.put("sqlStringifiedCodes", sqlStringifiedCodes);
-
-		final String getActionIdsBasedOnName = "select id from eg_action where name IN (:sqlStringifiedCodes)";
-
-		SqlRowSet sqlrowset = namedParameterJdbcTemplate.queryForRowSet(getActionIdsBasedOnName, parametersMap);
-
-		List<Integer> actionList = new ArrayList<Integer>();
-
-		while (sqlrowset.next()) {
-
-			actionList.add(sqlrowset.getInt("id"));
-		}
+		List<Integer> actionList = getActionsBasedOnIds(actionRequest);
 
 		Role role = actionRequest.getRole();
 
@@ -70,6 +57,29 @@ public class RoleActionRepository {
 		namedParameterJdbcTemplate.batchUpdate(roleActionsInsert, batchValues.toArray(new Map[actionList.size()]));
 
 		return roleActionList;
+	}
+
+	private List<Integer> getActionsBasedOnIds(final RoleActionsRequest actionRequest) {
+
+		List<String> sqlStringifiedCodes = new ArrayList<>();
+		for (Action actionName : actionRequest.getActions())
+			sqlStringifiedCodes.add(actionName.getName());
+
+		final Map<String, Object> parametersMap = new HashMap<String, Object>();
+
+		parametersMap.put("sqlStringifiedCodes", sqlStringifiedCodes);
+
+		SqlRowSet sqlrowset = namedParameterJdbcTemplate.queryForRowSet(GET_ACTIONS_BASEDON_IDS, parametersMap);
+
+		List<Integer> actionList = new ArrayList<Integer>();
+
+		while (sqlrowset.next()) {
+
+			actionList.add(sqlrowset.getInt("id"));
+		}
+
+		return actionList;
+
 	}
 
 	public boolean checkActionNamesAreExistOrNot(final RoleActionsRequest actionRequest) {
@@ -105,6 +115,36 @@ public class RoleActionRepository {
 		}
 
 		return false;
+	}
+
+	public boolean addUniqueValidationForTenantAndRoleAndAction(final RoleActionsRequest actionRequest) {
+
+		List<Integer> actionList = getActionsBasedOnIds(actionRequest);
+
+		if (actionList.size() > 0) {
+
+			final Map<String, Object> parametersMap = new HashMap<String, Object>();
+
+			parametersMap.put("rolecode", actionRequest.getRole().getCode());
+			parametersMap.put("tenantid", actionRequest.getTenantId());
+			parametersMap.put("actionid", actionList);
+
+			SqlRowSet sqlrowset = namedParameterJdbcTemplate.queryForRowSet(CHECK_UNIQUE_VALIDATION_FOR_ROLEACTIONS,
+					parametersMap);
+
+			if (sqlrowset.next()) {
+
+				String rolecode = sqlrowset.getString("rolecode");
+
+				if (rolecode != null && rolecode != "") {
+
+					return false;
+				}
+			}
+
+		}
+
+		return true;
 	}
 
 }

@@ -106,7 +106,7 @@ public class RoleActionController {
 		addRoleCodeAndNameValidationErrors(roleActionRequest, errorFields);
 		addActionsLengthValidationErrors(roleActionRequest, errorFields);
 		addActionNamesValidationErrors(roleActionRequest, errorFields);
-		addRolesLengthValidationErrors(roleActionRequest,errorFields);
+		addRolesLengthValidationErrors(roleActionRequest, errorFields);
 		return errorFields;
 	}
 
@@ -124,7 +124,8 @@ public class RoleActionController {
 	private void addRoleCodeAndNameValidationErrors(final RoleActionsRequest roleActionRequest,
 			final List<ErrorField> errorFields) {
 
-		if (!(roleActionRequest.getRole()!=null && roleActionRequest.getRole().getCode() != null && roleActionRequest.getRole().getCode() !="") ) {
+		if (!(roleActionRequest.getRole() != null && roleActionRequest.getRole().getCode() != null
+				&& roleActionRequest.getRole().getCode() != "")) {
 			final ErrorField errorField = ErrorField.builder().code(AccessControlConstants.ROLE_CODE_MANDATORY_CODE)
 					.message(AccessControlConstants.ROLE_CODE_MANADATORY_ERROR_MESSAGE)
 					.field(AccessControlConstants.ROLE_CODE_MANADATORY_FIELD_NAME).build();
@@ -144,7 +145,7 @@ public class RoleActionController {
 		}
 
 	}
-	
+
 	private void addRolesLengthValidationErrors(final RoleActionsRequest roleActionRequest,
 			final List<ErrorField> errorFields) {
 

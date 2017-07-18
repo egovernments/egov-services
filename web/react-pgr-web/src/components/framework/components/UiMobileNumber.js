@@ -7,7 +7,7 @@ export default class UiMobileField extends Component {
    	}
 
 	renderMobileNumberBox = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 

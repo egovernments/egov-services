@@ -7,7 +7,7 @@ export default class UiNumberField extends Component {
    	}
 
 	renderNumberBox = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 

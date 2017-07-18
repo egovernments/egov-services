@@ -7,7 +7,7 @@ export default class UiEmailField extends Component {
    	}
 
 	renderEmailBox = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 

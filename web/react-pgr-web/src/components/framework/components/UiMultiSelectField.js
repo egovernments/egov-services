@@ -7,7 +7,7 @@ export default class UiMultiSelectField extends Component {
    	}
 
 	renderMultiSelect = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<SelectField 

@@ -7,7 +7,7 @@ export default class UiEmailField extends Component {
    	}
 
 	renderDatePicker = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<DatePicker 

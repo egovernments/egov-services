@@ -7,7 +7,7 @@ export default class UiTextArea extends Component {
    	}
 
 	renderTextArea = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 

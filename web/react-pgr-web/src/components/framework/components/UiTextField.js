@@ -7,7 +7,7 @@ export default class UiTextField extends Component {
    	}
 
 	renderTextBox = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 

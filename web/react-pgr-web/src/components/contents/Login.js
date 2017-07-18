@@ -133,8 +133,6 @@ class Login extends Component {
      setLoadingStatus("loading");
      setHome(false);
      this.handleLocaleChange(this.state.locale);
-
-
    }
 
    componentWillUnmount() {
@@ -202,12 +200,32 @@ class Login extends Component {
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
+		
+		var dumy = {
+			 "id":370,
+			 "name":"AssetSaleAndDisposalSearchToCreate",
+			 "url":"/asset-web/app/asset/search-asset-sale.html",
+			 "displayName":"Create Asset Sale/Disposal",
+			 "orderNumber":null,
+			 "queryParams":null,
+			 "parentModule":null,
+			 "enabled":false,
+			 "serviceCode":"AssetSaleAndDisposalSearchToCreate",
+			 "tenantId":null,
+			 "createdDate":null,
+			 "createdBy":null,
+			 "lastModifiedDate":null,
+			 "lastModifiedBy":null,
+			 "path":"EIS"
+		}
 
-        Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response)
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes}).then(function(response)
         {
-          // console.log(response)
-          localStorage.setItem("modules", JSON.stringify(response.modules));
-          setActionList(response.modules)
+         
+		  response.actions.push(dumy);
+		  localStorage.setItem("modules", JSON.stringify(response.actions));
+          setActionList(response.actions);
+		  console.log(response.actions);
         },function(err) {
             console.log(err);
         });

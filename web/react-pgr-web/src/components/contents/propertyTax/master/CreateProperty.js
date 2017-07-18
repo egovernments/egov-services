@@ -171,14 +171,36 @@ class CreateProperty extends Component {
 	  var currentThis = this;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-        console.log(res);
         currentThis.setState({propertytypes:res.propertyTypes})
       }).catch((err)=> {
         currentThis.setState({
           propertytypes:[]
         })
-        console.log(err)
       })
+	  
+	   Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ELECTION", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+          currentThis.setState({election : res.Boundary})
+        }).catch((err)=> {
+			currentThis.setState({
+				election : []
+			})
+        })
+		
+		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          currentThis.setState({street : res.Boundary})
+        }).catch((err)=> {
+			currentThis.setState({
+				street : []
+			})
+        })
+		
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          currentThis.setState({block : res.Boundary})
+        }).catch((err)=> {
+			currentThis.setState({
+				block :[]
+				})
+        })
   }
 
   componentWillUnmount() {
@@ -202,20 +224,22 @@ class CreateProperty extends Component {
   
 createPropertyTax = () => {
 	
+	let {createProperty} = this.props;
+	
 	var currentThis = this;
       var body = {
 			"properties": [{
 				"tenantId": "default",
 				"oldUpicNumber": "",
 				"vltUpicNumber": "",
-				"creationReason": "NEWPROPERTY",
+				"creationReason": createProperty.reasonForCreation || '',
 				"address": {
 					"tenantId": "default",
-					"addressNumber": "Door number",
-					"addressLine1": "Locality Name",
+					"addressNumber": createProperty.doorNo || '',
+					"addressLine1": createProperty.locality || '',
 					"landmark": null,
 					"city": "After login I will get",
-					"pincode": "500082",
+					"pincode": createProperty.pin || '',
 					"detail": null,
 					"auditDetails": {
 						"createdBy": "egovernments",
@@ -224,30 +248,29 @@ createPropertyTax = () => {
 						"lastModifiedTime": 0
 					}
 				},
-				"owners": this.props.createProperty.owners,
+				"owners": createProperty.owners || '',
 				"propertyDetail": {
-					"propertyType": "OwnerShip type",
-					"category": "Property Sub Type",
+					"propertyType": createProperty.ownerShip || '',
+					"category": createProperty.assessmentPropertySubType || '',
 					"usage": null,
-					"department": "Department",
+					"department": createProperty.assessmentDepartment || '',
 					"apartment":null,
 					"siteLength": 12,
 					"siteBreadth": 15,
-					"sitalArea": "Extent of Site",
+					"sitalArea": createProperty.extentOfSite || '',
 					"totalBuiltupArea": "Sum of plinth area",
 					"undividedShare": null,
 					"noOfFloors": "Number of floors added",
 					"isSuperStructure": null,
 					"landOwner": null,
-					"floorType": "normal",
-					"woodType": "modern",
-					"roofType": "new one",
-					"wallType": "painting",
-					"floors":this.props.createProperty.floorsArr,
+					"floorType":createProperty.floorType || '',
+					"woodType": createProperty.woodType || '',
+					"roofType": createProperty.roofType || '',
+					"wallType": createProperty.wallType || '',
+					"floors":createProperty.floorsArr || '',
 					"documents": [{
-						"documentType": {
-							
-							"name": "Test application for anil",
+						"documentType": {						
+							"name": "Photo of Assessment",
 							"application": "CREATE",
 							"auditDetails": {
 								"createdBy": "egovernments",
@@ -266,9 +289,9 @@ createPropertyTax = () => {
 					}],
 					"stateId": null,
 					"workFlowDetails": {
-						"department": "incometax",
-						"designation": "manager",
-						"assignee": 14,
+						"department": createProperty.workflowDepartment,
+						"designation":createProperty.workflowDesignation,
+						"assignee": createProperty.approver,
 						"action": "no",
 						"status": null
 					},
@@ -280,15 +303,15 @@ createPropertyTax = () => {
 					}
 				},
 				"vacantLand": {
-					"surveyNumber": "surveynumber2",
-					"pattaNumber": "pn2",
-					"marketValue": 10748,
-					"capitalValue": 452200,
-					"layoutApprovedAuth": "laa2",
-					"layoutPermissionNo": "lpn2",
-					"layoutPermissionDate": "10/05/2017",
-					"resdPlotArea": 475,
-					"nonResdPlotArea": 658,
+					"surveyNumber": createProperty.survayNumber || '',
+					"pattaNumber": createProperty.pattaNumber || '',
+					"marketValue": createProperty.marketValue || '',
+					"capitalValue": createProperty.capitalValue || '',
+					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || '',
+					"layoutPermissionNo": createProperty.layoutPermitNumber || '',
+					"layoutPermissionDate":createProperty.layoutPermitDate || '',
+					"resdPlotArea": null,
+					"nonResdPlotArea": null,
 					"auditDetails": {
 						"createdBy": "egovernments",
 						"lastModifiedBy": "egovernments",
@@ -300,22 +323,22 @@ createPropertyTax = () => {
 				"gisRefNo": null,
 				"isAuthorised": null,
 				"boundary": {
-					"revenueBoundary": { // block No
-						"id": 13,
-						"name": "rbname2"
+					"revenueBoundary": { 
+						"id": createProperty.blockNo,
+						"name": getNameById(currentThis.state.block, createProperty.blockNo)  || ''
 					},
-					"locationBoundary": { // Street (if not selected than Location) 
-						"id": 19,
-						"name": "lbname2"
+					"locationBoundary": {
+						"id": createProperty.street ,
+						"name": getNameById(currentThis.state.street, createProperty.street)  || ''
 					},
-					"adminBoundary": { // election ward
-						"id": 173,
-						"name": "abname2"
+					"adminBoundary": { 
+						"id": createProperty.electionCard || '',
+						"name": getNameById(currentThis.state.election, createProperty.electionCard)  || ''
 					},
-					"northBoundedBy": "nbb test1",
-					"eastBoundedBy": "ebb1",
-					"westBoundedBy": "wbb1",
-					"southBoundedBy": "sbb1",
+					"northBoundedBy": createProperty.north || '',
+					"eastBoundedBy": createProperty.east || '',
+					"westBoundedBy": createProperty.west || '',
+					"southBoundedBy": createProperty.south || '',
 					"auditDetails": {
 						"createdBy": "egovernments",
 						"lastModifiedBy": "egovernments",

@@ -236,6 +236,27 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
+										  <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+                                                  floatingLabelText="Appartment/Complex name"
+                                                  errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.appComplexName}</span>: ""}
+                                                  value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "appComplexName", true, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                              >
+                                                    {renderOption(this.state.apartments)}
+                                              </SelectField>
+                                          </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Locality *"
@@ -257,25 +278,25 @@ class PropertyAddress extends Component {
                                                       {renderOption(this.state.locality)}
                                               </SelectField>
                                           </Col>
-                                          <Col xs={12} md={3} sm={6}>
+										   <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Appartment/Complex name"
-                                                  errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.appComplexName}</span>: ""}
-                                                  value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
+                                                  floatingLabelText="Election ward *"
+                                                  errorText={fieldErrors.electionCard ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.electionCard}</span> : ""}
+                                                  value={propertyAddress.electionCard ? propertyAddress.electionCard : ""}
                                                   onChange={(event, index, value) => {
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "appComplexName", true, "")}
+                                                      handleChange(e, "electionWard", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-                                                    {renderOption(this.state.apartments)}
+                                                    {renderOption(this.state.election)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -381,27 +402,6 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
                                                     {renderOption(this.state.revanue)}
-                                              </SelectField>
-                                          </Col>
-                                          <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Election ward *"
-                                                  errorText={fieldErrors.electionCard ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.electionCard}</span> : ""}
-                                                  value={propertyAddress.electionCard ? propertyAddress.electionCard : ""}
-                                                  onChange={(event, index, value) => {
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
-                                                      handleChange(e, "electionWard", true, "")}
-                                                  }
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
-                                                    {renderOption(this.state.election)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>

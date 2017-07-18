@@ -45,6 +45,7 @@ import org.egov.collection.indexer.repository.contract.ReceiptRequestDocument;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -58,21 +59,20 @@ public class DocumentService {
     public List<ReceiptRequestDocument> enrich(ReceiptRequest receiptRequest) {
         final List<ReceiptRequestDocument> documents = new ArrayList<ReceiptRequestDocument>();
         final Receipt receipt = receiptRequest.getReceipt();
-        BillWrapper billWrapper = receipt.getBillInfoWrapper();
-        List<BillDetailsWrapper> billDetails = billWrapper.getBillDetailsWrapper();
-        Bill bill = billWrapper.getBillInfo();
-        for(BillDetailsWrapper billDetail:billDetails) {
+        Bill bill = receipt.getBill();
+        for(BillDetail billDetail:bill.getBillDetails()) {
             ReceiptRequestDocument document = new ReceiptRequestDocument();
-            document.setTenantId(billDetail.getBillDetails().getTenantId());
+            document.setTenantId(receipt.getTenantId());
             document.setPaymentMode(receipt.getInstrumentType());
             document.setConsumerName(bill.getPayeeName());
-            document.setConsumerType(billDetail.getBillDetails().getConsumerType());
-            document.setConsumerCode(billDetail.getBillDetails().getConsumerCode());
+            document.setConsumerType(billDetail.getConsumerType());
+            document.setConsumerCode(billDetail.getConsumerCode());
             document.setReceiptNumber(billDetail.getReceiptNumber());
-            document.setReceiptDate(billDetail.getReceiptDate());
+            document.setReceiptDate(new Date(billDetail.getReceiptDate().getTime()));
             document.setChannel(billDetail.getChannel());
-            document.setPaymentMode(billDetail.getCollectionType());
-            document.setTotalAmount(billDetail.getBillDetails().getTotalAmount());
+            document.setBillingService(billDetail.getBusinessService());
+            document.setTotalAmount(billDetail.getTotalAmount());
+            document.setPurpose(billDetail.getBillAccountDetails().get(0).getPurpose());
             documents.add(document);
         }
         documentEnrichers.stream()

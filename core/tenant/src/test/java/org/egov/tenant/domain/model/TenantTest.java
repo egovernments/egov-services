@@ -28,6 +28,7 @@ public class TenantTest {
 
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -49,6 +50,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_city_is_not_present() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -71,6 +73,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_code_is_not_present() {
         Tenant tenant = Tenant.builder()
             .code(null)
+            .name("name")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -93,6 +96,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_code_is_empty() {
         Tenant tenant = Tenant.builder()
             .code("")
+            .name("name")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -117,6 +121,7 @@ public class TenantTest {
 
         Tenant tenant = Tenant.builder()
             .code(code)
+            .name("name")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -139,6 +144,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_logoId_is_not_present() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId(null)
             .imageId("imageId")
@@ -161,6 +167,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_logoId_is_empty() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("")
             .imageId("imageId")
@@ -183,6 +190,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_imageId_is_not_present() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("logoid")
             .imageId(null)
@@ -205,6 +213,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_imageId_is_empty() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("logoid")
             .imageId("")
@@ -227,6 +236,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_type_is_not_present() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("logoid")
             .imageId("imageid")
@@ -249,6 +259,7 @@ public class TenantTest {
     public void test_should_throw_exception_when_type_is_invalid() {
         Tenant tenant = Tenant.builder()
             .code("tenantcode")
+            .name("name")
             .description("description")
             .logoId("logoid")
             .imageId("imageid")

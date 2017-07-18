@@ -77,6 +77,7 @@ public class TenantControllerTest {
 
         Tenant tenant = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -108,6 +109,7 @@ public class TenantControllerTest {
 
         Tenant tenant = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -137,6 +139,7 @@ public class TenantControllerTest {
 
         Tenant tenant = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .logoId("logoId")
             .imageId("imageId")
@@ -180,6 +183,7 @@ public class TenantControllerTest {
             Tenant.builder()
                 .id(1L)
                 .code("AP.KURNOOL")
+                .name("kurnool")
                 .description("description")
                 .logoId("logoId")
                 .imageId("imageId")
@@ -197,6 +201,7 @@ public class TenantControllerTest {
             Tenant.builder()
                 .id(2L)
                 .code("AP.GUNTOOR")
+                .name("guntoor")
                 .description("description")
                 .logoId("logoId")
                 .imageId("imageId")
@@ -230,6 +235,7 @@ public class TenantControllerTest {
 
         Tenant tenant = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("testdescription")
             .logoId("testlogoId")
             .imageId("testimageId")

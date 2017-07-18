@@ -39,25 +39,39 @@
  */
 package org.egov.collection.indexer.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.*;
+
+import java.math.BigDecimal;
+
 
 @Setter
 @Getter
 @ToString
-public class BillWrapper {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class BillAccountDetail {
+  
+	private String glcode;
 
-	@JsonProperty("Bill")
-	private Bill billInfo;
-	
-	private String paidBy;
-	
-	@JsonProperty("BillDetailsWrapper")
-	private List<BillDetailsWrapper> billDetailsWrapper = new ArrayList<>(); //for collection-service
+	private Integer order;
 
+	private String accountDescription;
+
+	private Boolean isActualDemand;
+    
+	private String id;
+
+	private String tenantId;
+
+	private String billDetail;
+	
+	private BigDecimal creditAmount;
+
+	private BigDecimal debitAmount;
+
+    private String purpose;
+	  
 }
+

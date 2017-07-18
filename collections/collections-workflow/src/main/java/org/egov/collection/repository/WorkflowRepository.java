@@ -56,7 +56,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -69,6 +69,12 @@ public class WorkflowRepository {
 		
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 			
 	public ProcessInstanceResponse startWorkflow(WorkflowDetails workflowDetails){
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
@@ -78,11 +84,9 @@ public class WorkflowRepository {
 		uri.append(basePath).append(searchPath);
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		processInstanceRequest = getProcessInstanceRequest(workflowDetails);
-		logger.info("ProcessInstanceRequest: "+processInstanceRequest.toString());
         final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
+		logger.info("ProcessInstanceRequest: "+request.toString());
 		logger.info("URI: "+uri.toString());
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		try{
             processInstanceResponse = restTemplate.postForObject(uri.toString(), request,
                     ProcessInstanceResponse.class);
@@ -99,16 +103,16 @@ public class WorkflowRepository {
 	
 	public TaskResponse updateWorkflow(WorkflowDetails workflowDetails){
 		TaskResponse taskResponse = new TaskResponse();
+		long stateId = getStateId(workflowDetails.getReceiptNumber());
 		StringBuilder uri = new StringBuilder();
 		String basePath = applicationProperties.getWorkflowServiceHostName();
-		String searchPath = applicationProperties.getWorkflowServiceStartPath();
+		String searchPath = applicationProperties.getWorkflowServiceUpdatePath().replaceAll("\\{id\\}", ""+stateId+"");
 		uri.append(basePath).append(searchPath);
 		TaskRequest taskRequest = new TaskRequest();
 		taskRequest = getTaskRequest(workflowDetails);
 		logger.info("TaskRequest: "+taskRequest.toString());
+		logger.info("URI: "+uri.toString());
         final HttpEntity<TaskRequest> request = new HttpEntity<>(taskRequest);
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		try{
 			taskResponse = restTemplate.postForObject(uri.toString(), request,
 					TaskResponse.class);
@@ -171,6 +175,38 @@ public class WorkflowRepository {
         taskRequest.setTask(task);
   
         return taskRequest;
+    }
+    
+    public boolean updateStateId(String receiptNumber, String proccessInstanceId){
+    	logger.info("Updating stateId..");
+    	boolean isUpdateSuccessful = false;
+    	String query = "UPDATE egcl_receiptheader SET stateId=? WHERE receiptnumber=?";
+    	try{
+    		jdbcTemplate.update(query, new Object[] {Long.valueOf(proccessInstanceId), receiptNumber});
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		logger.error("Couldn't update stateId for the receipt: "+receiptNumber);
+        	return isUpdateSuccessful;
+
+    	}
+    	isUpdateSuccessful = true;
+    	return isUpdateSuccessful;
+    }
+    
+    public long getStateId(String receiptNumber){
+    	logger.info("Updating stateId..");
+    	long stateId = 0L;
+    	String query = "SELECT stateid FROM egcl_receiptheader WHERE receiptnumber=?";
+    	try{
+    		Long id = jdbcTemplate.queryForObject(query, new Object[] {receiptNumber}, Long.class);
+    		stateId = Long.valueOf(id);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		logger.error("Couldn't fetch stateId for the receipt: "+receiptNumber);
+        	return stateId;
+    	}
+    	logger.info("StateId obtained for receipt: "+receiptNumber+" is: "+stateId);
+    	return stateId;
     }
 
 }

@@ -47,5 +47,16 @@ public class RequestJsonReader {
             throw new RuntimeException(e);
         }
     }
+    public String getRequestInfo() {
+		try {
+			String info = IOUtils.toString(
+					this.getClass().getClassLoader().getResourceAsStream("common/request_info.json"), "UTF-8");
+
+			return "{\n" + info + "}";
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
     
 }

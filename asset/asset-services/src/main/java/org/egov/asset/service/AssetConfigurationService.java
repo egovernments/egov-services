@@ -30,7 +30,7 @@ public class AssetConfigurationService {
     public boolean getEnabledVoucherGeneration(final AssetConfigurationKeys assetConfigurationKey,
             final String tenantId) {
         final String value = getAssetConfigValueByKeyAndTenantId(assetConfigurationKey, tenantId);
-        if ("true".equalsIgnoreCase(value))
+        if (Boolean.TRUE.toString().equalsIgnoreCase(value))
             return true;
         else
             return false;

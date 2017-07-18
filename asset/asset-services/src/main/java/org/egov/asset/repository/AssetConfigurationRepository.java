@@ -27,8 +27,8 @@ public class AssetConfigurationRepository {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria,
                 preparedStatementValues);
-        final Map<String, List<String>> hrConfigurationKeyValues = jdbcTemplate.query(queryStr,
+        final Map<String, List<String>> assetConfigurationKeyValues = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), assetConfigurationKeyValuesRowMapper);
-        return hrConfigurationKeyValues;
+        return assetConfigurationKeyValues;
     }
 }

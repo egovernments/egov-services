@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Tenant {
     private String code;
+    private String name;
     private String description;
     private String logoId;
     private String imageId;
@@ -28,6 +29,7 @@ public class Tenant {
 
     public Tenant(org.egov.tenant.domain.model.Tenant tenant, City city) {
         this.code = tenant.getCode();
+        this.name = tenant.getName();
         this.description = tenant.getDescription();
         this.logoId = tenant.getLogoId();
         this.imageId = tenant.getImageId();
@@ -55,6 +57,7 @@ public class Tenant {
 
         return org.egov.tenant.domain.model.Tenant.builder()
             .code(code)
+            .name(name)
             .description(description)
             .logoId(logoId)
             .imageId(imageId)

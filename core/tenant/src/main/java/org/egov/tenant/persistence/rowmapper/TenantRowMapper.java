@@ -18,6 +18,7 @@ public class TenantRowMapper implements RowMapper<Tenant> {
         return builder()
             .id(rs.getLong(ID))
             .code(rs.getString(CODE))
+            .name(rs.getString(NAME))
             .description(rs.getString(DESCRIPTION))
             .domainUrl(rs.getString(DOMAIN_URL))
             .logoId(rs.getString(LOGO_ID))

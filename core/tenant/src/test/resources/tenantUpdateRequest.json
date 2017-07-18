@@ -2,6 +2,7 @@
   "RequestInfo": {},
   "tenant": {
     "code": "AP.KURNOOL",
+    "name": "kurnool",
     "description": "testdescription",
     "logoId": "testlogoId",
     "imageId": "testimageId",

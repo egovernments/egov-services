@@ -12,6 +12,7 @@ public class TenantTest {
         Tenant tenant = Tenant.builder()
                 .id(1L)
                 .code("AP.KURNOOL")
+                .name("kurnool")
                 .description("description")
                 .logoId("logoid")
                 .imageId("imageid")
@@ -29,6 +30,7 @@ public class TenantTest {
 
         assertThat(tenantModel.getId()).isEqualTo(1);
         assertThat(tenantModel.getCode()).isEqualTo("AP.KURNOOL");
+        assertThat(tenantModel.getName()).isEqualTo("kurnool");
         assertThat(tenantModel.getDescription()).isEqualTo("description");
         assertThat(tenantModel.getLogoId()).isEqualTo("logoid");
         assertThat(tenantModel.getImageId()).isEqualTo("imageid");

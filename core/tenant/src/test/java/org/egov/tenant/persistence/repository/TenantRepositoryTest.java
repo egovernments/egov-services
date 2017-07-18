@@ -107,6 +107,7 @@ public class TenantRepositoryTest {
 
         Tenant tenant = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("description")
             .domainUrl("http://egov.ap.gov.in/kurnool")
             .logoId("d45d7118-2013-11e7-93ae-92361f002671")
@@ -127,6 +128,7 @@ public class TenantRepositoryTest {
         Map<String, Object> row = result.get(0);
         assertThat(row.get(ID)).isEqualTo(1L);
         assertThat(row.get(CODE)).isEqualTo("AP.KURNOOL");
+        assertThat(row.get(NAME)).isEqualTo("kurnool");
         assertThat(row.get(DESCRIPTION)).isEqualTo("description");
         assertThat(row.get(DOMAIN_URL)).isEqualTo("http://egov.ap.gov.in/kurnool");
         assertThat(row.get(LOGO_ID)).isEqualTo("d45d7118-2013-11e7-93ae-92361f002671");
@@ -154,6 +156,7 @@ public class TenantRepositoryTest {
                 Map<String, Object> row = new HashMap<String, Object>() {{
                     put(ID, resultSet.getLong(ID));
                     put(CODE, resultSet.getString(CODE));
+                    put(NAME, resultSet.getString(NAME));
                     put(DESCRIPTION, resultSet.getString(DESCRIPTION));
                     put(DOMAIN_URL, resultSet.getString(DOMAIN_URL));
                     put(LOGO_ID, resultSet.getString(LOGO_ID));
@@ -185,6 +188,7 @@ public class TenantRepositoryTest {
 
         Tenant expected = Tenant.builder()
             .code("AP.KURNOOL")
+            .name("kurnool")
             .description("descrdsfghjkliption")
             .domainUrl("http://egov.ap.gov.in/kurnool")
             .logoId("d45d7118-2013-11e7-93ae-92361f002671")

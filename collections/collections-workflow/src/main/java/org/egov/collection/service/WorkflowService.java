@@ -76,6 +76,7 @@ public class WorkflowService {
 
 		}
 		logger.info("Proccess Instance Id received is: "+processInstanceResponse.getProcessInstance().getId());
+		workflowRepository.updateStateId(workflowDetails.getReceiptNumber(), processInstanceResponse.getProcessInstance().getId());
 		return processInstanceResponse.getProcessInstance();
 	}
 	

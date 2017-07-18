@@ -965,30 +965,10 @@ definitions:
      - upicNo
      - tenantId
      
-     
-  SpecialNoticeRequest:
+  Notice:
     type: object
-    description: This object has the details about the special notice request
+    description: This object has the details about the special notice
     properties:
-      requestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      upicNo:
-       type: string
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4
-    required:
-       - upicNo
-       - tenantId
-       
-  SpecialNoticeResponse:
-    type: object
-    description: This object has the details about the special notice request
-    properties:
-      responseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       upicNo:
        type: string
       tenantId:
@@ -1001,7 +981,7 @@ definitions:
       ulbLogo:
         type: string
         description: This would an image url for ulb
-      noticegenerationDate:
+      noticeDate:
         type: string
         format: date
       noticeNumber:
@@ -1023,23 +1003,74 @@ definitions:
         type: string
         format: date
         description: This would be the date on which property has been created first
-      floors:
-        description: Floors
+      floors: 
+        description: Floor details
         type: array
         items:
-          $ref: '#/definitions/Floor'
+          $ref: '#/definitions/FlorSpec'
       taxDetails:
         type: object
         properties:
           totalTax:
             type: number
             format: double
-            description: Total Tax for the property
+            description: Total Tax for the property, this has to be retrieve from property object json and sent for current financial year only
           headWiseTaxes:
             description: Head wise taxes
             type: array
             items:
               $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-calculator/v1.0.0.yml#/definitions/HeadWiseTax"
+  FlorSpec:
+   type: object
+   description: This object hold the floor/unit details for special notice
+   properties:
+     floorNo:
+       type: string
+     unitDetails:
+       type: string
+       description: this is the unit id
+     usage:
+       type: string
+     construction:
+       type: string
+     assessableArea:
+       type: string
+     alv:
+       type: string
+     rv:
+       type: string
+     
+  SpecialNoticeRequest:
+    type: object
+    description: This object has the details about the special notice request
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      upicNo:
+       type: string
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+    required:
+       - upicNo
+       - tenantId
+  
+       
+  SpecialNoticeResponse:
+    type: object
+    description: This object has the details about the special notice request
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      notice:
+        $ref: '#/definitions/Notice'
+        
+  
+              
+  
+     
       
 parameters:
 ##########################################################

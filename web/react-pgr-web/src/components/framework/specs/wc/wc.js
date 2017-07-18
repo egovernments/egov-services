@@ -30,7 +30,7 @@ var dat = {
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "MobileNumber",
@@ -39,7 +39,7 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "Email",
@@ -48,7 +48,7 @@ var dat = {
 							"pattern": "",
 							"type": "email",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "AadharNumber",
@@ -57,7 +57,7 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "Locality",
@@ -66,7 +66,7 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "Address",
@@ -75,7 +75,7 @@ var dat = {
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "Zone",
@@ -84,7 +84,7 @@ var dat = {
 							"pattern": "",
 							"type": "textarea",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "adharNumber",
@@ -93,7 +93,7 @@ var dat = {
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						},
 						{
 							"name": "propertyTaxDue",
@@ -102,7 +102,7 @@ var dat = {
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false
+							"isDisabled": true
 						}
 				]
 			},

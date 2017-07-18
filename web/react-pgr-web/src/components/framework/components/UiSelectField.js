@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 export default class UiTextField extends Component {
 	constructor(props) {

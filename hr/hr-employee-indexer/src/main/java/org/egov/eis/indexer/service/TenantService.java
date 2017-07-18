@@ -1,35 +1,54 @@
 package org.egov.eis.indexer.service;
 
-import org.egov.common.contract.request.RequestInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.eis.indexer.config.PropertiesManager;
-import org.egov.eis.indexer.contract.TenantResponse;
-import org.egov.eis.indexer.model.City;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.tenant.web.contract.City;
+import org.egov.tenant.web.contract.Tenant;
+import org.egov.tenant.web.contract.TenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+@Slf4j
 @Repository
-public class TenantRepository {
+public class TenantService {
 
 	@Autowired
 	private RestTemplate restTemplate;
 	
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
-	public City fetchTenantByCode(String tenant) {
-        String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenant;
 
-        /*final RequestInfoBody requestInfoBody = new RequestInfoBody(RequestInfo.builder().build());
-
-        final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);*/
-
-        TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
-        if (!CollectionUtils.isEmpty(tr.getTenant()))
-            return tr.getTenant().get(0).getCity();
-        else
+	public Tenant getTenant(String tenant, RequestInfoWrapper requestInfoWrapper) {
+        URI url = null;
+        TenantResponse tenantResponse = null;
+        try {
+            url = new URI(propertiesManager.getTenantServiceHost()
+                    + propertiesManager.getTenantServiceBasePath()
+                    + propertiesManager.getTenantServiceSearchPath() + "?code=" + tenant);
+            log.info(url.toString());
+            tenantResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper), TenantResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
+        }
+
+        return tenantResponse.getTenant();
+    }
+
+    private HttpEntity<RequestInfoWrapper> getRequestInfoAsHttpEntity(RequestInfoWrapper requestInfoWrapper) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<RequestInfoWrapper> httpEntityRequest = new HttpEntity<RequestInfoWrapper>(requestInfoWrapper,
+                headers);
+        return httpEntityRequest;
     }
 }

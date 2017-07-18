@@ -13,6 +13,7 @@ public class Tenant {
 
 	private Long id;
 	private String code;
+	private String name;
 	private String description;
 	private String logoId;
 	private String imageId;
@@ -32,7 +33,7 @@ public class Tenant {
 	}
 
 	public void validate() {
-		if (isCityAbsent() || !city.isValid() || isCodeAbsent() || isCodeOfInvalidLength() || isLogoIdAbsent()
+		if (isCityAbsent() || !city.isValid() || isCodeAbsent() || isNameAbsent() || isCodeOfInvalidLength() || isLogoIdAbsent()
 				|| isImageIdAbsent() || isTypeAbsent() || isTypeInvalid() || isContactNumberInvalidLength() || isHelpLineNumberInvalidLength()) {
 			throw new InvalidTenantDetailsException(this);
 		}
@@ -44,6 +45,10 @@ public class Tenant {
 
 	public boolean isCodeAbsent() {
 		return isEmpty(code);
+	}
+	
+	public boolean isNameAbsent() {
+		return isEmpty(name);
 	}
 
 	public boolean isCodeOfInvalidLength() {

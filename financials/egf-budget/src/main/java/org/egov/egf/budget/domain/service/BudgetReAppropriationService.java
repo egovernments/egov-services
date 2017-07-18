@@ -37,10 +37,6 @@ public class BudgetReAppropriationService {
 	@Autowired
 	private BudgetDetailRepository budgetDetailRepository;
 
-	/*
-	 * @Autowired private EgfStatusRepository egfStatusRepository;
-	 */
-
 	private BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
 			BindingResult errors) {
 
@@ -75,21 +71,15 @@ public class BudgetReAppropriationService {
 	public List<BudgetReAppropriation> fetchRelated(List<BudgetReAppropriation> budgetreappropriations) {
 		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
 			// fetch related items
-			if (budgetReAppropriation.getBudgetDetail() != null) {
+			if (budgetReAppropriation.getBudgetDetail() != null
+					&& budgetReAppropriation.getBudgetDetail().getId() != null
+					&& budgetReAppropriation.getBudgetDetail().getTenantId() != null) {
 				BudgetDetail budgetDetail = budgetDetailRepository.findById(budgetReAppropriation.getBudgetDetail());
 				if (budgetDetail == null) {
 					throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
 				}
 				budgetReAppropriation.setBudgetDetail(budgetDetail);
 			}
-			/*
-			 * if (budgetReAppropriation.getStatus() != null) { EgfStatus status
-			 * =
-			 * egfStatusRepository.findById(budgetReAppropriation.getStatus());
-			 * if (status == null) { throw new InvalidDataException("status",
-			 * "status.invalid", " Invalid status"); }
-			 * budgetReAppropriation.setStatus(status); }
-			 */
 
 		}
 
@@ -99,11 +89,15 @@ public class BudgetReAppropriationService {
 	@Transactional
 	public List<BudgetReAppropriation> save(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors,
 			String action) {
+
 		budgetreappropriations = fetchRelated(budgetreappropriations);
+
 		validate(budgetreappropriations, action, errors);
+
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+
 		return budgetreappropriations;
 
 	}

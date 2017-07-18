@@ -69,6 +69,9 @@ public class WaterConnectionRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private WaterConnectionQueryBuilder waterConnectionQueryBuilder; 
 
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -231,8 +234,9 @@ public class WaterConnectionRepository {
     
     
     public List<Connection> getConnectionDetails(WaterConnectionGetReq waterConnectionGetReq) { 
-    	String fetchQuery = WaterConnectionQueryBuilder.getConnectionDetails();
-    	List<Connection> connectionList = jdbcTemplate.query(fetchQuery, new WaterConnectionRowMapper());
+    	List<Object> preparedStatementValues = new ArrayList<>();
+    	String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
+    	List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(), new WaterConnectionRowMapper());
     	return connectionList;
     }
 }

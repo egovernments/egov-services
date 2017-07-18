@@ -163,7 +163,7 @@ public class BudgetServiceTest {
 	}
 
 	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_null_financialyear() {
+	public final void test_fetch_financialyear_null() {
 
 		List<Budget> budgets = getBudgets();
 
@@ -178,7 +178,7 @@ public class BudgetServiceTest {
 	}
 
 	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_null_parent() {
+	public final void test_fetch_parent_null() {
 
 		List<Budget> budgets = getBudgets();
 
@@ -194,7 +194,7 @@ public class BudgetServiceTest {
 	}
 
 	@Test(expected = InvalidDataException.class)
-	public final void test_fetch_null_reference_budget() {
+	public final void test_fetch_reference_budget_null() {
 
 		List<Budget> budgets = getBudgets();
 

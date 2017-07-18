@@ -43,6 +43,10 @@ public class ActionSearchRowMapper implements RowMapper<Action> {
 		action.setName(rs.getString("name"));
 		action.setServiceCode(rs.getString("servicecode"));
 		action.setDisplayName(rs.getString("displayname"));
+		action.setEnabled(rs.getBoolean("enabled"));
+		action.setParentModule(rs.getString("parentmodule"));	
+		action.setQueryParams(rs.getString("queryparams"));
+		action.setOrderNumber(rs.getInt("ordernumber"));
 		actionList.add(action);
 		return actionList;
 	}

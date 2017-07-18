@@ -163,13 +163,15 @@ public class ActionRepository {
 		parametersMap.put("code", actionRequest.getRoleCodes());
 		parametersMap.put("tenantid", actionRequest.getTenantId());
 
-		String query = "select id,name,displayname,servicecode,url,queryparams from eg_action action where id IN(select actionid from eg_roleaction roleaction where roleaction.rolecode IN ( select code from eg_ms_role where code in (:code)) and roleaction.tenantid =:tenantid and action.id = roleaction.actionid )";
+		String query = "select id,name,displayname,servicecode,url,queryparams,enabled,parentmodule,ordernumber from eg_action action where id IN(select actionid from eg_roleaction roleaction where roleaction.rolecode IN ( select code from eg_ms_role where code in (:code)) and roleaction.tenantid =:tenantid and action.id = roleaction.actionid )";
 
 		if (actionRequest.getEnabled() != null) {
-			query = query + " and enabled =:enabled ";
+			query = query + " and enabled =:enabled ORDER BY id ASC";
 			parametersMap.put("enabled", actionRequest.getEnabled());
+		} else {
+		  query = query +" ORDER BY id ASC";
 		}
-
+		
 		LOGGER.info("Action Query : " + query);
 		namedParameterJdbcTemplate.query(query, parametersMap, actionRowMapper);
 		Map<String, List<Action>> actionMap = actionRowMapper.actionMap;
@@ -241,12 +243,12 @@ public class ActionRepository {
 			allservicesQueryBuilder.append(" and s1.tenantid = :tenantid )");
 		}
 
-		allservicesQueryBuilder.append(" SELECT * FROM nodes)" + " UNION"
+		allservicesQueryBuilder.append(" SELECT * FROM nodes ORDER BY parentmodule )" + " UNION"
 				+ " (WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
 				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
 				+ " id IN (:moduleCodes) UNION ALL" + " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
 				+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id"
-				+ " and s1.tenantid =:tenantid )" + " SELECT * FROM nodes);");
+				+ " and s1.tenantid =:tenantid )" + " SELECT * FROM nodes ORDER BY parentmodule );");
 
 		LOGGER.info("All Services Query : " + allservicesQueryBuilder.toString());
 		List<Module> allServiceList = namedParameterJdbcTemplate.query(allservicesQueryBuilder.toString(),

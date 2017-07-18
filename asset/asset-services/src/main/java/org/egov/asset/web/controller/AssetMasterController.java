@@ -7,21 +7,19 @@ import javax.validation.Valid;
 
 import org.egov.asset.contract.AssetStatusResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
-import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.AssetStatusCriteria;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetMasterService;
-import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,73 +30,58 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AssetMasterController {
 
-	@Autowired
-	private AssetMasterService assetMasterService;
+    @Autowired
+    private AssetMasterService assetMasterService;
 
-	private static final Logger logger = LoggerFactory.getLogger(AssetMasterController.class);
+    @Autowired
+    private AssetCommonService assetCommonService;
 
-	@GetMapping("GET_ASSET_CATEGORY_TYPE")
-	public Map<AssetCategoryType, AssetCategoryType> getAssetCategoryTypes() {
+    private static final Logger logger = LoggerFactory.getLogger(AssetMasterController.class);
 
-		final Map<AssetCategoryType, AssetCategoryType> map = new HashMap<>();
-		for (final AssetCategoryType key : AssetCategoryType.values())
-			map.put(key, AssetCategoryType.valueOf(key.toString()));
+    @GetMapping("GET_ASSET_CATEGORY_TYPE")
+    public Map<AssetCategoryType, AssetCategoryType> getAssetCategoryTypes() {
 
-		return map;
-	}
+        final Map<AssetCategoryType, AssetCategoryType> map = new HashMap<>();
+        for (final AssetCategoryType key : AssetCategoryType.values())
+            map.put(key, AssetCategoryType.valueOf(key.toString()));
 
-	@GetMapping("GET_DEPRECIATION_METHOD")
-	public Map<DepreciationMethod, DepreciationMethod> getDepreciationMethod() {
+        return map;
+    }
 
-		final Map<DepreciationMethod, DepreciationMethod> map = new HashMap<>();
-		for (final DepreciationMethod key : DepreciationMethod.values())
-			map.put(key, DepreciationMethod.valueOf(key.toString()));
+    @GetMapping("GET_DEPRECIATION_METHOD")
+    public Map<DepreciationMethod, DepreciationMethod> getDepreciationMethod() {
 
-		return map;
-	}
+        final Map<DepreciationMethod, DepreciationMethod> map = new HashMap<>();
+        for (final DepreciationMethod key : DepreciationMethod.values())
+            map.put(key, DepreciationMethod.valueOf(key.toString()));
 
-	@GetMapping("GET_MODE_OF_ACQUISITION")
-	public Map<ModeOfAcquisition, ModeOfAcquisition> getModeOfAcquisition() {
+        return map;
+    }
 
-		final Map<ModeOfAcquisition, ModeOfAcquisition> map = new HashMap<>();
-		for (final ModeOfAcquisition key : ModeOfAcquisition.values())
-			map.put(key, ModeOfAcquisition.valueOf(key.toString()));
+    @GetMapping("GET_MODE_OF_ACQUISITION")
+    public Map<ModeOfAcquisition, ModeOfAcquisition> getModeOfAcquisition() {
 
-		return map;
-	}
+        final Map<ModeOfAcquisition, ModeOfAcquisition> map = new HashMap<>();
+        for (final ModeOfAcquisition key : ModeOfAcquisition.values())
+            map.put(key, ModeOfAcquisition.valueOf(key.toString()));
 
-	@PostMapping("/assetstatuses/_search")
-	@ResponseBody
-	public ResponseEntity<?> assetStatusSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute final AssetStatusCriteria assetStatusCriteria, final BindingResult bindingResult) {
+        return map;
+    }
 
-		logger.info("assetStatusSearch assetStatusCriteria:" + assetStatusCriteria);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+    @PostMapping("/assetstatuses/_search")
+    @ResponseBody
+    public ResponseEntity<?> assetStatusSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute final AssetStatusCriteria assetStatusCriteria, final BindingResult bindingResult) {
 
-		final AssetStatusResponse assetStatusResponse = assetMasterService.search(assetStatusCriteria,
-				requestInfoWrapper.getRequestInfo());
+        logger.debug("assetStatusSearch assetStatusCriteria:" + assetStatusCriteria);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		return new ResponseEntity<AssetStatusResponse>(assetStatusResponse, HttpStatus.OK);
-	}
+        final AssetStatusResponse assetStatusResponse = assetMasterService.search(assetStatusCriteria,
+                requestInfoWrapper.getRequestInfo());
 
-	private ErrorResponse populateErrors(final BindingResult errors) {
-		final ErrorResponse errRes = new ErrorResponse();
-
-		final ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		errRes.setResponseInfo(responseInfo);
-
-		final Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors())
-			for (final FieldError errs : errors.getFieldErrors())
-				error.getFields().put(errs.getField(), errs.getRejectedValue());
-		errRes.setError(error);
-		return errRes;
-	}
-
+        return new ResponseEntity<AssetStatusResponse>(assetStatusResponse, HttpStatus.OK);
+    }
 }

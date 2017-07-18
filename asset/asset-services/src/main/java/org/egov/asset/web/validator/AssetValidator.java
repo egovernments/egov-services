@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
@@ -15,10 +14,12 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
+import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
@@ -45,7 +46,7 @@ public class AssetValidator {
     private AssetMasterService assetMasterService;
 
     @Autowired
-    private ApplicationProperties applicationProperties;
+    private AssetConfigurationService assetConfigurationService;
 
     public void validateAsset(final AssetRequest assetRequest) {
         findAssetCategory(assetRequest);
@@ -125,7 +126,8 @@ public class AssetValidator {
             throw new RuntimeException("Sale Value should be present for disposing asset : " + asset.getName());
 
         verifyPanCardAndAdhaarCardForAssetSale(disposalRequest);
-        if (applicationProperties.getEnableVoucherGenration()) {
+        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+                disposalRequest.getDisposal().getTenantId())) {
             validateAssetCategoryForVoucherGeneration(asset);
 
             if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
@@ -181,13 +183,15 @@ public class AssetValidator {
                 revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
 
         validateAssetForCapitalizedStatus(asset);
-
-        if (applicationProperties.getEnableVoucherGenration()) {
+        final boolean enableVoucherGeneration = assetConfigurationService.getEnabledVoucherGeneration(
+                AssetConfigurationKeys.ENABLEVOUCHERGENERATION, revaluationRequest.getRevaluation().getTenantId());
+        if (enableVoucherGeneration) {
             validateAssetCategoryForVoucherGeneration(asset);
             validateFund(revaluationRequest.getRevaluation().getFund());
         }
 
-        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluationRequest, asset);
+        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluationRequest, asset,
+                enableVoucherGeneration);
 
         if (revaluationRequest.getRevaluation().getRevaluationAmount() == null)
             throw new RuntimeException(
@@ -218,12 +222,13 @@ public class AssetValidator {
     }
 
     private TypeOfChangeEnum validateRevaluationForTypeOfChange(final RevaluationRequest revaluationRequest,
-            final Asset asset) {
+            final Asset asset, final boolean enableVoucherGeneration) {
         final TypeOfChangeEnum typeOfChange = revaluationRequest.getRevaluation().getTypeOfChange();
         if (typeOfChange == null)
             throw new RuntimeException("Type Of Change is necessary for asset revaluation");
 
-        if (applicationProperties.getEnableVoucherGenration()) {
+        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+                revaluationRequest.getRevaluation().getTenantId())) {
             if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                     && revaluationRequest.getRevaluation().getFixedAssetsWrittenOffAccount() == null)
                 throw new RuntimeException("Fixed Asset Written Off Account is necessary for asset " + asset.getName()

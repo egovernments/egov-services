@@ -27,7 +27,6 @@ import org.egov.egf.master.web.contract.SchemeSearchContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeSearchContract;
 import org.egov.egf.master.web.repository.BudgetGroupContractRepository;
-import org.egov.egf.master.web.repository.EgfStatusContractRepository;
 import org.egov.egf.master.web.repository.FunctionContractRepository;
 import org.egov.egf.master.web.repository.FunctionaryContractRepository;
 import org.egov.egf.master.web.repository.FundContractRepository;
@@ -76,9 +75,6 @@ public class BudgetDetailService {
 	private SubSchemeContractRepository subSchemeContractRepository;
 
 	@Autowired
-	private EgfStatusContractRepository egfStatusContractRepository;
-
-	@Autowired
 	private BudgetRepository budgetRepository;
 
 	@Autowired
@@ -121,14 +117,17 @@ public class BudgetDetailService {
 		for (BudgetDetail budgetDetail : budgetdetails) {
 
 			// fetch related items
-			if (budgetDetail.getBudget() != null) {
+			if (budgetDetail.getBudget() != null && budgetDetail.getBudget().getId() != null
+					&& budgetDetail.getBudget().getTenantId() != null) {
 				Budget budget = budgetRepository.findById(budgetDetail.getBudget());
 				if (budget == null) {
 					throw new InvalidDataException("budget", "budget.invalid", " Invalid budget");
 				}
 				budgetDetail.setBudget(budget);
 			}
-			if (budgetDetail.getFund() != null) {
+
+			if (budgetDetail.getFund() != null && budgetDetail.getFund().getId() != null
+					&& budgetDetail.getFund().getTenantId() != null) {
 				FundSearchContract contract = new FundSearchContract();
 				contract.setId(budgetDetail.getFund().getId());
 				contract.setTenantId(budgetDetail.getFund().getTenantId());
@@ -138,7 +137,9 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setFund(fund);
 			}
-			if (budgetDetail.getBudgetGroup() != null) {
+
+			if (budgetDetail.getBudgetGroup() != null && budgetDetail.getBudgetGroup().getId() != null
+					&& budgetDetail.getBudgetGroup().getTenantId() != null) {
 				BudgetGroupSearchContract contract = new BudgetGroupSearchContract();
 				contract.setId(budgetDetail.getBudgetGroup().getId());
 				contract.setTenantId(budgetDetail.getBudgetGroup().getTenantId());
@@ -149,7 +150,8 @@ public class BudgetDetailService {
 				budgetDetail.setBudgetGroup(budgetGroup);
 			}
 
-			if (budgetDetail.getUsingDepartment() != null) {
+			if (budgetDetail.getUsingDepartment() != null && budgetDetail.getUsingDepartment().getId() != null
+					&& budgetDetail.getUsingDepartment().getTenantId() != null) {
 				DepartmentRes usingDepartment = departmentRepository.getDepartmentById(
 						budgetDetail.getUsingDepartment().getId().toString(), budgetDetail.getTenantId());
 				if (usingDepartment == null || usingDepartment.getDepartment() == null
@@ -159,7 +161,9 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setUsingDepartment(usingDepartment.getDepartment().get(0));
 			}
-			if (budgetDetail.getExecutingDepartment() != null) {
+
+			if (budgetDetail.getExecutingDepartment() != null && budgetDetail.getExecutingDepartment().getId() != null
+					&& budgetDetail.getExecutingDepartment().getTenantId() != null) {
 				DepartmentRes executingDepartment = departmentRepository.getDepartmentById(
 						budgetDetail.getExecutingDepartment().getId().toString(), budgetDetail.getTenantId());
 				if (executingDepartment == null) {
@@ -168,7 +172,9 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setExecutingDepartment(executingDepartment.getDepartment().get(0));
 			}
-			if (budgetDetail.getFunction() != null) {
+
+			if (budgetDetail.getFunction() != null && budgetDetail.getFunction().getId() != null
+					&& budgetDetail.getFunction().getTenantId() != null) {
 				FunctionSearchContract contract = new FunctionSearchContract();
 				contract.setId(budgetDetail.getFunction().getId());
 				contract.setTenantId(budgetDetail.getFunction().getTenantId());
@@ -178,7 +184,9 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setFunction(function);
 			}
-			if (budgetDetail.getScheme() != null) {
+
+			if (budgetDetail.getScheme() != null && budgetDetail.getScheme().getId() != null
+					&& budgetDetail.getScheme().getTenantId() != null) {
 				SchemeSearchContract contract = new SchemeSearchContract();
 				contract.setId(budgetDetail.getScheme().getId());
 				contract.setTenantId(budgetDetail.getScheme().getTenantId());
@@ -188,7 +196,9 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setScheme(scheme);
 			}
-			if (budgetDetail.getSubScheme() != null) {
+
+			if (budgetDetail.getSubScheme() != null && budgetDetail.getSubScheme().getId() != null
+					&& budgetDetail.getSubScheme().getTenantId() != null) {
 				SubSchemeSearchContract contract = new SubSchemeSearchContract();
 				contract.setId(budgetDetail.getSubScheme().getId());
 				contract.setTenantId(budgetDetail.getSubScheme().getTenantId());
@@ -198,7 +208,9 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setSubScheme(subScheme);
 			}
-			if (budgetDetail.getFunctionary() != null) {
+
+			if (budgetDetail.getFunctionary() != null && budgetDetail.getFunctionary().getId() != null
+					&& budgetDetail.getFunctionary().getTenantId() != null) {
 				FunctionarySearchContract contract = new FunctionarySearchContract();
 				contract.setId(budgetDetail.getFunctionary().getId());
 				contract.setTenantId(budgetDetail.getFunctionary().getTenantId());
@@ -208,21 +220,16 @@ public class BudgetDetailService {
 				}
 				budgetDetail.setFunctionary(functionary);
 			}
-			if (budgetDetail.getBoundary() != null) {
-				Boundary boundary = boundaryRepository.fetchBoundaryById(budgetDetail.getBoundary().getId(),
+
+			if (budgetDetail.getBoundary() != null && budgetDetail.getBoundary().getId() != null
+					&& budgetDetail.getBoundary().getTenantId() != null) {
+				Boundary boundary = boundaryRepository.getBoundaryById(budgetDetail.getBoundary().getId(),
 						budgetDetail.getBoundary().getTenantId());
 				if (boundary == null) {
 					throw new InvalidDataException("boundary", "boundary.invalid", " Invalid boundary");
 				}
 				budgetDetail.setBoundary(boundary);
 			}
-			/*
-			 * if (budgetDetail.getStatus() != null) { EgfStatus status =
-			 * egfStatusContractRepository.findById(budgetDetail.getStatus());
-			 * if (status == null) { throw new InvalidDataException("status",
-			 * "status.invalid", " Invalid status"); }
-			 * budgetDetail.setStatus(status); }
-			 */
 
 		}
 

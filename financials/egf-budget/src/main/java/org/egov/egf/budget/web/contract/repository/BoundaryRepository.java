@@ -17,7 +17,7 @@ public class BoundaryRepository {
 		this.boundaryServiceHost = boundaryServiceHost;
 	}
 
-	public Boundary fetchBoundaryById(String id, String tenantId) {
+	public Boundary getBoundaryById(String id, String tenantId) {
 		String url = this.boundaryServiceHost + "egov-location/boundarys?boundary.id={id}&boundary.tenantId={tenantId}";
 		return getBoundaryServiceResponse(url, id, tenantId).getBoundaries().get(0);
 	}

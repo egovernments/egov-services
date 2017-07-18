@@ -1,7 +1,8 @@
 var localationData={
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
-  "reports.pgr.wardtype":"Ward Type"
+  "reports.pgr.wardtype":"Ward Type",
+  
 }
 
 export function translate(locale_text){

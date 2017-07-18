@@ -47,13 +47,17 @@ public class BudgetJdbcRepository extends JdbcRepository {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+		
+		if (budgetSearchEntity.getSortBy() != null && !budgetSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(budgetSearchEntity.getSortBy());
+			validateEntityFieldName(budgetSearchEntity.getSortBy(), BudgetEntity.class);
+		}
+
 		String orderBy = "order by id";
-		/*
-		 * if (budgetSearchEntity.getSortBy() != null &&
-		 * !budgetSearchEntity.getSortBy().isEmpty()) orderBy = "order by " +
-		 * budgetSearchEntity.getSortBy();
-		 */
+		if (budgetSearchEntity.getSortBy() != null && !budgetSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + budgetSearchEntity.getSortBy();
+		
+		StringBuffer params = new StringBuffer();
 
 		searchQuery = searchQuery.replace(":tablename", BudgetEntity.TABLE_NAME);
 

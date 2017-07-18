@@ -11,6 +11,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
+import org.egov.egf.budget.persistence.entity.BudgetEntity;
 import org.egov.egf.budget.persistence.entity.BudgetReAppropriationEntity;
 import org.egov.egf.budget.persistence.entity.BudgetReAppropriationSearchEntity;
 import org.slf4j.Logger;
@@ -49,12 +50,18 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
+
+		if (budgetReAppropriationSearchEntity.getSortBy() != null
+				&& !budgetReAppropriationSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(budgetReAppropriationSearchEntity.getSortBy());
+			validateEntityFieldName(budgetReAppropriationSearchEntity.getSortBy(), BudgetEntity.class);
+		}
+
 		String orderBy = "order by id";
-		/*
-		 * if (budgetReAppropriationSearchEntity.getSortBy() != null &&
-		 * !budgetReAppropriationSearchEntity.getSortBy().isEmpty()) orderBy =
-		 * "order by " + budgetReAppropriationSearchEntity.getSortBy();
-		 */
+		if (budgetReAppropriationSearchEntity.getSortBy() != null
+				&& !budgetReAppropriationSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + budgetReAppropriationSearchEntity.getSortBy();
+
 		searchQuery = searchQuery.replace(":tablename", BudgetReAppropriationEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");

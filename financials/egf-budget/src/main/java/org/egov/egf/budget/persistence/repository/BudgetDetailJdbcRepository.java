@@ -13,6 +13,7 @@ import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.persistence.entity.BudgetDetailEntity;
 import org.egov.egf.budget.persistence.entity.BudgetDetailSearchEntity;
+import org.egov.egf.budget.persistence.entity.BudgetEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -49,12 +50,16 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
+
+		if (budgetDetailSearchEntity.getSortBy() != null && !budgetDetailSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(budgetDetailSearchEntity.getSortBy());
+			validateEntityFieldName(budgetDetailSearchEntity.getSortBy(), BudgetEntity.class);
+		}
+
 		String orderBy = "order by id";
-		/*
-		 * if (budgetDetailSearchEntity.getSortBy() != null &&
-		 * !budgetDetailSearchEntity.getSortBy().isEmpty()) orderBy =
-		 * "order by " + budgetDetailSearchEntity.getSortBy();
-		 */
+		if (budgetDetailSearchEntity.getSortBy() != null && !budgetDetailSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + budgetDetailSearchEntity.getSortBy();
+
 		searchQuery = searchQuery.replace(":tablename", BudgetDetailEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");

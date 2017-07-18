@@ -1,6 +1,7 @@
 package org.egov.models;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,11 +21,13 @@ public class Depreciation {
 
 	@JsonProperty("id")
 	private Long id;
-
+	
+	@Size(min=4,max=128)
 	@JsonProperty("tenantId")
 	@NotNull
 	private String tenantId;
-
+	
+	@Size(min=4,max=16)
 	@JsonProperty("code")
 	@NotNull
 	private String code;
@@ -40,7 +43,8 @@ public class Depreciation {
 
 	@JsonProperty("toYear")
 	private Integer toyear;
-
+	
+	@Size(min=8,max=512)
 	@JsonProperty("description")
 	private String description;
 

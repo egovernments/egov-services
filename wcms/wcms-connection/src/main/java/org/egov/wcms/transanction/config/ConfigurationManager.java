@@ -136,9 +136,9 @@ public class ConfigurationManager {
     
     
     @Value("${egov.services.pt_property.hostname}")
-    private String propertyServiceHostaNameTopic;
+    private String propertyServiceHostNameTopic;
     
     @Value("${egov.services.pt_property_propertytype.searchpath}")
-    private String propertyServiceSearchHostaNameTopic;
+    private String propertyServiceSearchPathTopic;
 
 }

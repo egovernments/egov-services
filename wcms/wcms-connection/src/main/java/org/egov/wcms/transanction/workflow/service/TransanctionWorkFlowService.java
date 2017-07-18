@@ -93,6 +93,7 @@ public class TransanctionWorkFlowService {
         final Position assignee = new Position();
         LOGGER.info("waterConnectionRequest workflow start:" + waterConnectionRequest);
         assignee.setId(workflowdet.getAssignee());
+        processInstance.setInitiatorPosition(workflowdet.getInitiatorPosition());
         processInstance.setAssignee(assignee);
         final RequestInfo requestin = waterConnectionRequest.getRequestInfo();
         final WorkFlowRequestInfo req = new WorkFlowRequestInfo();
@@ -110,6 +111,7 @@ public class TransanctionWorkFlowService {
         req.setUserInfo(workflowUser);
         req.setVer(requestin.getVer());
         req.setTs(new Date());
+       
         processInstanceRequest.setRequestInfo(req);
         processInstanceRequest.setProcessInstance(processInstance);
         final String url = startWorkFlowURL();

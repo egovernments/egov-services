@@ -7,14 +7,15 @@ export default class UiEmailField extends Component {
    	}
 
 	renderDatePicker = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<DatePicker 
 						hintText={item.label + (item.isRequired ? " *" : "")} 
 						disabled={item.isDisabled} 
 						value={eval(item.jsonpath)}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '')}/>
+						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
+						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}/>
 				);
 		}
 	}

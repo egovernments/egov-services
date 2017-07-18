@@ -32,7 +32,7 @@ public class FiscalPeriodContractRepository {
 		}
 
 		if (fiscalPeriodContract.getTenantId() != null) {
-			content.append("tenantId=" + fiscalPeriodContract.getTenantId());
+			content.append("&tenantId=" + fiscalPeriodContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<FiscalPeriodContract> result = objectMapper.convertValue(

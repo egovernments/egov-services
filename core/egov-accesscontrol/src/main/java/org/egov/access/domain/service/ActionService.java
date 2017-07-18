@@ -67,6 +67,11 @@ public class ActionService {
     	return actionRepository.getAllActionsBasedOnRoles(actionRequest).getModules();
     	
     }
+    
+    public List<Action> getAllActions(final ActionRequest actionRequest){
+    	
+    	return actionRepository.getAllActions(actionRequest);
+    }
 }
 
 

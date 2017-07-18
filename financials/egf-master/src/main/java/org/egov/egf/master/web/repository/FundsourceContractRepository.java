@@ -32,7 +32,7 @@ public class FundsourceContractRepository {
 		}
 
 		if (fundsourceContract.getTenantId() != null) {
-			content.append("tenantId=" + fundsourceContract.getTenantId());
+			content.append("&tenantId=" + fundsourceContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<FundsourceContract> result = objectMapper.convertValue(

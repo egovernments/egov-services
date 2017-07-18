@@ -32,7 +32,7 @@ public class AccountEntityContractRepository {
 		}
 
 		if (accountEntityContract.getTenantId() != null) {
-			content.append("tenantId=" + accountEntityContract.getTenantId());
+			content.append("&tenantId=" + accountEntityContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<AccountEntityContract> result = objectMapper.convertValue(

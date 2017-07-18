@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {validate_fileupload} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -97,9 +98,6 @@ class ConstructionTypes extends Component {
   constructor(props) {
     super(props);
     this.state= {
-        propertytypes: [],
-        apartments:[],
-        departments:[],
           files:[],
     }
   } 
@@ -111,13 +109,20 @@ class ConstructionTypes extends Component {
 
   }  
 
-
-  onFileLoad = (e, file) => {  console.log(file.name)
-    this.setState((prevState)=>{
-      prevState.files.push(file.name);
-    })
-    console.log(this.state.files)
-  }    
+  handleUploadValidation = (e, formats, limit) => {
+   
+    if(this.props.files.length >= limit){
+      console.log('Maximum files allowed : '+limit);
+      return;
+    }
+    let validFile = validate_fileupload(e.target.files, formats);
+    if(validFile){
+      this.props.handleUpload(e);
+    }
+    else {
+      console.log(validFile);
+	}
+  }  
 
 
   render() {
@@ -145,37 +150,37 @@ class ConstructionTypes extends Component {
       editObject,
       editIndex,
       isEditIndex,
-      isAddRoom
+      isAddRoom,
+	  files
     } = this.props;
 
-    let {search} = this;
+    let {search, handleUploadValidation} = this;
 
     let cThis = this;
 
     return ( <Card>
-                    <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
-                    <CardText style={styles.reducePadding}>
-                        <Card className="darkShadow">
-                            <CardText style={styles.reducePadding}>
-                                <Grid fluid>
-                                    <Row style={{paddingTop:8, paddingBottom:4}}>
-                                        <Col xs={12} md={3}>
-                                          <Row>
-                                              <Upload onFileLoad={this.onFileLoad} />
-                                          </Row>
-                                        </Col>
-                                        <Col xs={12} md={9} style={{display: 'flex',flexWrap: 'wrap'}}>
-                                        {this.state.files.map((e,i)=> (<Chip key={i} style={styles.chip}>
-                                          {e}</Chip>)
-                                        )}
-                                        </Col>
-                                    </Row>
-                                </Grid>
-                            </CardText>
-                        </Card>
-                    </CardText>
-                  </Card>
-)
+				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
+				<CardText style={styles.reducePadding}>
+					<Card className="darkShadow">
+						<CardText style={styles.reducePadding}>
+							<Grid fluid>
+								<Row style={{paddingTop:8, paddingBottom:4}}>
+									<Col xs={12} md={3}>
+									  <Row>
+										  <input type="file" accept="image/*" onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
+									  </Row>
+									</Col>
+									<Col xs={12} md={9} style={{display: 'flex',flexWrap: 'wrap'}}>
+									{this.state.files.map((e,i)=> (<Chip key={i} style={styles.chip}>
+									  {e}</Chip>)
+									)}
+									</Col>
+								</Row>
+							</Grid>
+						</CardText>
+					</Card>
+				</CardText>
+			 </Card>)
   }
 
 }
@@ -184,7 +189,8 @@ const mapStateToProps = state => ({
   constructionTypes:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
-  addRoom : state.form.addRoom
+  addRoom : state.form.addRoom,
+  files: state.form.files
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -297,6 +303,9 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
+  handleUpload: (e) => {
+    dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
+  }
 
 });
 

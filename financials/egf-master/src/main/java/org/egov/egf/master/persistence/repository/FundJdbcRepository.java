@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.FundSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class FundJdbcRepository extends JdbcRepository {
 		LOG.debug("init fund");
 		init(FundEntity.class);
 		LOG.debug("end init fund");
+	}
+
+	public FundJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public FundEntity create(FundEntity entity) {
@@ -48,12 +53,12 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		
-	        if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty()) {
-	            validateSortByOrder(fundSearchEntity.getSortBy());
-	            validateEntityFieldName(fundSearchEntity.getSortBy(), FundEntity.class);
-	        }
-		
+
+		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(fundSearchEntity.getSortBy());
+			validateEntityFieldName(fundSearchEntity.getSortBy(), FundEntity.class);
+		}
+
 		String orderBy = "order by id";
 		if (fundSearchEntity.getSortBy() != null && !fundSearchEntity.getSortBy().isEmpty())
 			orderBy = "order by " + fundSearchEntity.getSortBy();
@@ -92,7 +97,7 @@ public class FundJdbcRepository extends JdbcRepository {
 
 		page.setTotalResults(fundEntities.size());
 
-		List<Fund> funds = new ArrayList<Fund>();
+		List<Fund> funds = new ArrayList<>();
 		for (FundEntity fundEntity : fundEntities) {
 
 			funds.add(fundEntity.toDomain());

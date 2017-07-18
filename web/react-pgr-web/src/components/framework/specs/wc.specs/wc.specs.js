@@ -6,8 +6,7 @@ var dat = {
 			{	
 				"label": "",
 				"name": "applicantDetails"
-				"value": {
-					"fields": [
+				"fields": [
 						{
 							"name": "AssessmentNumber",
 							"jsonPath": "connection.property.propertyIdentifier",
@@ -28,14 +27,12 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false
 						}
-					]
-				}
+				]
 			},
 			{
 				"label": "",
 				"name": "connectionDetails"
-				"value": {
-					"fields": [
+				"fields": [
 						{
 							"name": "ConnectionType",
 							"jsonPath": "connection.connectionType",
@@ -46,8 +43,7 @@ var dat = {
 							"isDisabled": false,
 							"url": ""
 						}
-					]
-				}
+				]
 			}
 		]
 	}

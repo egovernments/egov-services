@@ -238,7 +238,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Locality"
+                                                  floatingLabelText="Locality *"
                                                   errorText={fieldErrors.locality ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.locality}</span>: ""}
                                                   value={propertyAddress.locality ? propertyAddress.locality:""}
                                                   onChange={(event, index, value) => {
@@ -280,7 +280,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Zone No."
+                                                  floatingLabelText="Zone No. *"
                                                   errorText={fieldErrors.zoneNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.zoneNo}</span>: ""}
                                                   value={propertyAddress.zoneNo ? propertyAddress.zoneNo:""}
                                                   onChange={(event, index, value) => {
@@ -301,7 +301,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Ward No."
+                                                  floatingLabelText="Ward No. *"
                                                   errorText={fieldErrors.wardNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.wardNo}</span> : ""}
                                                   value={propertyAddress.wardNo ? propertyAddress.wardNo : ""}
                                                   onChange={(event, index, value) => {
@@ -364,7 +364,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Revenue circle"
+                                                  floatingLabelText="Revenue circle *"
                                                   errorText={fieldErrors.revenueCircle ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.revenueCircle}</span> : ""}
                                                   value={propertyAddress.revenueCircle ? propertyAddress.revenueCircle : ""}
                                                   onChange={(event, index, value) => {
@@ -385,7 +385,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Election ward"
+                                                  floatingLabelText="Election ward *"
                                                   errorText={fieldErrors.electionCard ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.electionCard}</span> : ""}
                                                   value={propertyAddress.electionCard ? propertyAddress.electionCard : ""}
                                                   onChange={(event, index, value) => {
@@ -406,7 +406,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Door No."
+                                                  floatingLabelText="Door No. *"
                                                   errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
                                                   value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
                                                   onChange={(e) => handleChange(e, "doorNo", true, '')}
@@ -449,7 +449,7 @@ class PropertyAddress extends Component {
                                             <div className="addMoreAddress">
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
-                                                        floatingLabelText="Door No."
+                                                        floatingLabelText="Door No. *"
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
                                                         onChange={(e) => handleChange(e, "cDoorno", true, '')}
@@ -466,7 +466,7 @@ class PropertyAddress extends Component {
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
-                                                        floatingLabelText="Address 1"
+                                                        floatingLabelText="Address 1 *"
                                                         errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}

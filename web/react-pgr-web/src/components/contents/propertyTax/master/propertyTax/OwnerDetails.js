@@ -131,7 +131,7 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <TextField
                             hintText="eg- 434345456545"
-                            floatingLabelText="Aadhar No"
+                            floatingLabelText="Aadhar No *"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
@@ -149,7 +149,7 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="eg- 9999888877"
-                            floatingLabelText="Mobile No"
+                            floatingLabelText="Mobile No *"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
@@ -166,7 +166,7 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="eg- Joe Doe"
-                            floatingLabelText="Owner Name"
+                            floatingLabelText="Owner Name *"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
@@ -182,7 +182,7 @@ class OwnerDetails extends Component {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-                            floatingLabelText="Gender"
+                            floatingLabelText="Gender *"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
                             onChange={(event, index, value) => {
@@ -224,7 +224,7 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
                             hintText="eg- Father"
-                            floatingLabelText="Guardian Relation"
+                            floatingLabelText="Guardian Relation *"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gaurdianRelation? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gaurdianRelation}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdianRelation:""}
                             onChange={(event, index, value) => {
@@ -250,7 +250,7 @@ class OwnerDetails extends Component {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="eg- Guardian name"
-                            floatingLabelText="Guardian"
+                            floatingLabelText="Guardian *"
                             errorText={fieldErrors.owner ?(fieldErrors.owner.gaurdian? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.gaurdian}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdian:""}
                             onChange={(e) => handleChangeNextOne(e,  "owner",  "gaurdian", true, "")}
@@ -292,7 +292,7 @@ class OwnerDetails extends Component {
                             floatingLabelText="Percentage of ownership"
                             errorText={fieldErrors.owner ? (fieldErrors.owner.ownerShipPercentage ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.ownerShipPercentage}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage:""}
-                            onChange={(e) => handleChangeNextOne(e,"owner", "ownerShipPercentage", false, /^\d{3}$/g)}
+                            onChange={(e) => handleChangeNextOne(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -322,7 +322,7 @@ class OwnerDetails extends Component {
                             />
                             <RadioButton
                               value="SecondaryOwner"
-                              label="Secondary owner"
+                              label="Secondary owner "
                               style={styles.radioButton}
                               className="col-md-6"
                             />
@@ -359,7 +359,7 @@ class OwnerDetails extends Component {
                                 <th>Gender</th>
                                 <th>Email</th>
                                 <th>Gaurdian Relation</th>
-                                <th>Owner Type Radio</th>
+                                <th>Is Primary Owner</th>
                                 <th>Gaurdian</th>
                                 <th>Owner Type</th>
                                 <th>Percentage of Ownership</th>
@@ -377,7 +377,7 @@ class OwnerDetails extends Component {
                                     <td>{i.gender}</td>
                                     <td>{i.emailId}</td>
                                     <td>{i.gaurdianRelation}</td>
-                                    <td>{i.ownerTypeRadio}</td>
+                                    <td>{i.ownerTypeRadio == 'PrimaryOwner' ? "True" : "False"}</td>
                                     <td>{i.gaurdian}</td>
                                     <td>{i.ownerType}</td>
                                     <td>{i.ownerShipPercentage}</td>

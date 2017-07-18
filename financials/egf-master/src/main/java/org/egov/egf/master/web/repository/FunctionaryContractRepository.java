@@ -32,7 +32,7 @@ public class FunctionaryContractRepository {
 		}
 
 		if (functionaryContract.getTenantId() != null) {
-			content.append("tenantId=" + functionaryContract.getTenantId());
+			content.append("&tenantId=" + functionaryContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<FunctionaryContract> result = objectMapper.convertValue(

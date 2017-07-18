@@ -21,16 +21,21 @@ public class FundRepository {
 	private MastersQueueRepository fundQueueRepository;
 
 	public Fund findById(Fund fund) {
-		return fundJdbcRepository.findById(new FundEntity().toEntity(fund)).toDomain();
+		FundEntity entity = fundJdbcRepository.findById(new FundEntity().toEntity(fund));
+		return entity.toDomain();
 
 	}
+
 	@Transactional
 	public Fund save(Fund fund) {
-		return fundJdbcRepository.create(new FundEntity().toEntity(fund)).toDomain();
+		FundEntity entity = fundJdbcRepository.create(new FundEntity().toEntity(fund));
+		return entity.toDomain();
 	}
+
 	@Transactional
-	public Fund update(Fund entity) {
-		return fundJdbcRepository.update(new FundEntity().toEntity(entity)).toDomain();
+	public Fund update(Fund fund) {
+		FundEntity entity = fundJdbcRepository.update(new FundEntity().toEntity(fund));
+		return entity.toDomain();
 	}
 
 	public void add(CommonRequest<FundContract> request) {

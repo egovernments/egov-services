@@ -17,16 +17,22 @@ import org.egov.egf.budget.persistence.entity.BudgetReAppropriationSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
+
 	private static final Logger LOG = LoggerFactory.getLogger(BudgetReAppropriationJdbcRepository.class);
 
 	static {
 		LOG.debug("init budgetReAppropriation");
 		init(BudgetReAppropriationEntity.class);
 		LOG.debug("end init budgetReAppropriation");
+	}
+
+	public BudgetReAppropriationJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public BudgetReAppropriationEntity create(BudgetReAppropriationEntity entity) {
@@ -76,7 +82,7 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 		if (budgetReAppropriationSearchEntity.getBudgetDetailId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetDetail =:budgetDetail");
+			params.append("budgetDetailid =:budgetDetail");
 			paramValues.put("budgetDetail", budgetReAppropriationSearchEntity.getBudgetDetailId());
 		}
 		if (budgetReAppropriationSearchEntity.getAdditionAmount() != null
@@ -117,7 +123,7 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
 		if (budgetReAppropriationSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =:status");
+			params.append("statusid =:status");
 			paramValues.put("status", budgetReAppropriationSearchEntity.getStatusId());
 		}
 		if (budgetReAppropriationSearchEntity.getAsOnDate() != null) {

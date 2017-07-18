@@ -17,10 +17,12 @@ import org.egov.egf.budget.persistence.entity.BudgetEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BudgetDetailJdbcRepository extends JdbcRepository {
+	
 	private static final Logger LOG = LoggerFactory.getLogger(BudgetDetailJdbcRepository.class);
 
 	static {
@@ -29,6 +31,10 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 		LOG.debug("end init budgetDetail");
 	}
 
+	public BudgetDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
+	
 	public BudgetDetailEntity create(BudgetDetailEntity entity) {
 
 		entity.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -74,61 +80,61 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 		if (budgetDetailSearchEntity.getBudgetId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budget =:budget");
+			params.append("budgetid =:budget");
 			paramValues.put("budget", budgetDetailSearchEntity.getBudgetId());
 		}
 		if (budgetDetailSearchEntity.getBudgetGroupId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetGroup =:budgetGroup");
+			params.append("budgetGroupid =:budgetGroup");
 			paramValues.put("budgetGroup", budgetDetailSearchEntity.getBudgetGroupId());
 		}
 		if (budgetDetailSearchEntity.getUsingDepartmentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("usingDepartment =:usingDepartment");
+			params.append("usingDepartmentid =:usingDepartment");
 			paramValues.put("usingDepartment", budgetDetailSearchEntity.getUsingDepartmentId());
 		}
 		if (budgetDetailSearchEntity.getExecutingDepartmentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("executingDepartment =:executingDepartment");
+			params.append("executingDepartmentid =:executingDepartment");
 			paramValues.put("executingDepartment", budgetDetailSearchEntity.getExecutingDepartmentId());
 		}
 		if (budgetDetailSearchEntity.getFundId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("fund =:fund");
+			params.append("fundid =:fund");
 			paramValues.put("fund", budgetDetailSearchEntity.getFundId());
 		}
 		if (budgetDetailSearchEntity.getFunctionId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("function =:function");
+			params.append("functionid =:function");
 			paramValues.put("function", budgetDetailSearchEntity.getFunctionId());
 		}
 		if (budgetDetailSearchEntity.getSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("scheme =:scheme");
+			params.append("schemeid =:scheme");
 			paramValues.put("scheme", budgetDetailSearchEntity.getSchemeId());
 		}
 		if (budgetDetailSearchEntity.getSubSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("subScheme =:subScheme");
+			params.append("subSchemeid =:subScheme");
 			paramValues.put("subScheme", budgetDetailSearchEntity.getSubSchemeId());
 		}
 		if (budgetDetailSearchEntity.getFunctionaryId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("functionary =:functionary");
+			params.append("functionaryid =:functionary");
 			paramValues.put("functionary", budgetDetailSearchEntity.getFunctionaryId());
 		}
 		if (budgetDetailSearchEntity.getBoundaryId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("boundary =:boundary");
+			params.append("boundaryid =:boundary");
 			paramValues.put("boundary", budgetDetailSearchEntity.getBoundaryId());
 		}
 		if (budgetDetailSearchEntity.getOriginalAmount() != null
@@ -168,7 +174,7 @@ public class BudgetDetailJdbcRepository extends JdbcRepository {
 		if (budgetDetailSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =:status");
+			params.append("statusid =:status");
 			paramValues.put("status", budgetDetailSearchEntity.getStatusId());
 		}
 		if (budgetDetailSearchEntity.getDocumentNumber() != null) {

@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
+import org.egov.egf.budget.TestConfiguration;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
@@ -29,6 +30,7 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,6 +38,7 @@ import org.springframework.validation.BindingResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BudgetReAppropriationController.class)
+@Import(TestConfiguration.class)
 public class BudgetReAppropriationControllerTest {
 
 	@Autowired

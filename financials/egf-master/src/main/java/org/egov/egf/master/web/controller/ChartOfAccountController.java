@@ -123,7 +123,7 @@ public class ChartOfAccountController {
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<ChartOfAccountContract> search(
 			@ModelAttribute ChartOfAccountSearchContract chartOfAccountSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		ChartOfAccountSearch domain = new ChartOfAccountSearch();

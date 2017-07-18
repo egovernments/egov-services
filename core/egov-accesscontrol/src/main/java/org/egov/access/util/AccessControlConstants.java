@@ -47,7 +47,7 @@ public class AccessControlConstants {
 	
 	public static final String ROLE_CODE_MANDATORY_CODE = "accesscontrol.0010";
 	public static final String ROLE_CODE_MANADATORY_FIELD_NAME = "code";
-	public static final String ROLE_CODE_MANADATORY_ERROR_MESSAGE = "Atleast One Role Code is required";
+	public static final String ROLE_CODE_MANADATORY_ERROR_MESSAGE = "Role Code is required";
 	
 	public static final String ACTIONS_NAME_MANDATORY_CODE = "accesscontrol.0011";
 	public static final String ACTIONS_NAME_MANDATORY_FIELD_NAME = "action";
@@ -60,6 +60,10 @@ public class AccessControlConstants {
 	public static final String ROLE_MANDATORY_CODE = "accesscontrol.0013";
 	public static final String ROLE_MANADATORY_FIELD_NAME = "role";
 	public static final String ROLE_MANADATORY_ERROR_MESSAGE = "Role is Required";
+	
+	public static final String ROLE_ACTIONS_UNIQUE_VALIDATION_CODE = "accesscontrol.0014";
+	public static final String ROLE_ACTIONS_UNIQUE_VALIDATION_FIELD_NAME = "role-actions";
+	public static final String ROLE_ACTIONS_UNIQUE_VALIDATION_ERROR_MESSAGE = "RoleCode And Tenant And ActionId Combination Already Exist.";
 	
 	
 }

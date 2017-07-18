@@ -51,33 +51,22 @@ public class ReportApp{
 	@PostConstruct
 	@Bean("reportDefinitions")
 	public static ReportDefinitions loadYaml() {
-		System.out.println("Loading the report definitions from PGR");
+		
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	try {
 
-	/*Resource resource = resourceLoader.getResource("file:/ws/egovservices-old/egov-services/pgr/pgr-master/src/main/resources/application.yml");
+	/*Resource resource = resourceLoader.getResource("file:/ws/egov-services/pgr/pgr-master/src/main/resources/application.yml");
 	File file = resource.getFile();
 	 reportDefinitions = mapper.readValue(file, ReportDefinitions.class);*/
 	// Resource resource =
 	// resourceLoader.getResource("file:"+env.getproperty("report.yaml.path"));
     //Resource resource = resourceLoader.getResource(env.getProperty("report.yaml.path"));
-	//URL oracle = new URL(env.getProperty("report.yaml.path"));
+	
+	 //URL oracle = new URL(env.getProperty("report.yaml.path"));
 	URL oracle = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/pgr/pgr-master/src/main/resources/application.yml");
 	       
 	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
-	 //Drill Down Logic
-	/*for(ReportDefinition rd : reportDefinitions.getReportDefinitions()){
-	for(SourceColumn sc : rd.getSourceColumns()){
-		if(sc.getLinkedReport() != null) {
-			ReportDefinition linkedRd = getReportDefinition(sc.getLinkedReport().getReportName(),reportDefinitions);
-			Object dv = linkedRd;
-			
-			sc.setDefaultValue(dv);
-			
-		}
-	}
-	
-    }*/
+	 
 	System.out.println("Report Defintion PGR: "+reportDefinitions.toString());
 	return reportDefinitions;
 	} catch (Exception e) {
@@ -87,13 +76,7 @@ public class ReportApp{
 	return null;
 	}
 	
-	/*@PostConstruct
-	public static void loadYamlAgain() {
-		System.out.println("loadYamlAgain called");
-		reportDefinitions = loadYaml();
-	}*/
-	
-	public static ReportDefinitions getUpdatedYAML() {
+	public static ReportDefinitions getReportDefs() {
 		return reportDefinitions;
 	}
 	

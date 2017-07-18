@@ -120,7 +120,7 @@ public class BankBranchController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<BankBranchContract> search(@ModelAttribute BankBranchSearchContract bankBranchSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankBranchSearch domain = new BankBranchSearch();

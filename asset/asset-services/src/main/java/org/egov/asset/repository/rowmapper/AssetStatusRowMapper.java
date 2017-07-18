@@ -21,6 +21,7 @@ public class AssetStatusRowMapper implements RowMapper<AssetStatus> {
 		final AuditDetails auditDetails = new AuditDetails();
 		final List<StatusValue> statusValues = new ArrayList<StatusValue>();
 
+		statusValue.setName(rs.getString("name"));
 		statusValue.setCode(rs.getString("code"));
 		statusValue.setDescription(rs.getString("description"));
 		statusValues.add(statusValue);

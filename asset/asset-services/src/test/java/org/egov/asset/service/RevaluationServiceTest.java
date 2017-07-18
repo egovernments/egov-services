@@ -26,6 +26,7 @@ import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.RevaluationRepository;
@@ -116,7 +117,7 @@ public class RevaluationServiceTest {
 				.thenReturn(get_Asset());
 		// RevaluationService spy = PowerMockito.spy(new RevaluationService());
 		final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
-		PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForReevaluation",
+		PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
 				any(RevaluationRequest.class));
 
 		final RevaluationRequest revaluationRequest = new RevaluationRequest();
@@ -179,7 +180,7 @@ public class RevaluationServiceTest {
 		revaluation.setScheme(Long.valueOf("4"));
 		revaluation.setSubScheme(Long.valueOf("5"));
 		revaluation.setComments("coments");
-		revaluation.setStatus("ACTIVE");
+		revaluation.setStatus(Status.APPROVED.toString());
 
 		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy("5");
@@ -196,7 +197,7 @@ public class RevaluationServiceTest {
 		asset.setTenantId("ap.kurnool");
 		asset.setId(Long.valueOf("31"));
 		asset.setName("asset name");
-		asset.setStatus("CREATED");
+		asset.setStatus(Status.CREATED.toString());
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
 		final Location location = new Location();
@@ -243,7 +244,7 @@ public class RevaluationServiceTest {
 		revaluation.setScheme(Long.valueOf("4"));
 		revaluation.setSubScheme(Long.valueOf("5"));
 		revaluation.setComments("coments");
-		revaluation.setStatus("ACTIVE");
+		revaluation.setStatus(Status.APPROVED.toString());
 
 		final AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy("5");

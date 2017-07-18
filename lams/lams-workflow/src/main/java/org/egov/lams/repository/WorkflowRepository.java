@@ -14,7 +14,7 @@ import org.egov.lams.contract.TaskResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
-import org.egov.lams.producers.AgreementProducer;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,10 @@ public class WorkflowRepository {
 	public static final String ACTION = "Forward";
 
 	@Autowired
-	private RestTemplate restTemplate;
-
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
 	@Autowired
-	private AgreementProducer agreementProducer;
+	private RestTemplate restTemplate;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -85,30 +85,22 @@ public class WorkflowRepository {
 	}
 
 	public void saveAgreement(AgreementRequest agreementRequest, String stateId) {
-
 		agreementRequest.getAgreement().setStateId(stateId);
-		String agreementRequestMessage = null;
-		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			agreementRequestMessage = objectMapper.writeValueAsString(agreementRequest);
-		} catch (Exception e) {
-			LOGGER.info("WorkflowRepositorysaveAgreement : " + e);
-			throw new RuntimeException(e);
+			kafkaTemplate.send(propertiesManager.getKafkaSaveAgreementTopic(), "key", agreementRequest);
+		} catch (Exception exception) {
+			LOGGER.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
 		}
-		agreementProducer.sendMessage(propertiesManager.getKafkaSaveAgreementTopic(), "key", agreementRequestMessage);
 	}
 
 	public void updateAgreement(AgreementRequest agreementRequest) {
-
-		String agreementRequestMessage = null;
-		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			agreementRequestMessage = objectMapper.writeValueAsString(agreementRequest);
-		} catch (Exception e) {
-			LOGGER.info("WorkflowRepositoryupdateAgreement : " + e);
-			throw new RuntimeException(e);
+			kafkaTemplate.send(propertiesManager.getKafkaUpdateAgreementTopic(), "key", agreementRequest);
+		} catch (Exception exception) {
+			LOGGER.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
 		}
-		agreementProducer.sendMessage(propertiesManager.getKafkaUpdateAgreementTopic(), "key", agreementRequestMessage);
 	}
 
 	private ProcessInstanceRequest getProcessInstanceRequest(AgreementRequest agreementRequest) {

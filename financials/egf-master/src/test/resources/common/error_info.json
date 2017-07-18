@@ -1,6 +1,6 @@
 "responseInfo": {
     "resMsgId": null,
-    "status": 400,
+    "status": "400",
     "apiId": null,
     "ver": null,
     "key": null,

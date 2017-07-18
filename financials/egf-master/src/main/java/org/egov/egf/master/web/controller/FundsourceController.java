@@ -120,7 +120,7 @@ public class FundsourceController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FundsourceContract> search(@ModelAttribute FundsourceSearchContract fundsourceSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FundsourceSearch domain = new FundsourceSearch();

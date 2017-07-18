@@ -19,6 +19,10 @@ import lombok.ToString;
 @ToString
 public class StatusValue {
 	
+	@JsonProperty("name")
+	@Length(min = 3, max = 20)
+	private String name;
+	
 	@JsonProperty("code")
 	@Length(min = 3, max = 20)
 	private String code;

@@ -44,10 +44,10 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
-		<dependency>
+ 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
-		</dependency>
+		</dependency> 
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -149,6 +149,7 @@
 							<classifier>client</classifier>
 							<includes>
 								<include>**/master/web/contract/**</include>
+								<include>**/master/web/repository/**</include>
 							</includes>
 						</configuration>
 					</execution>

@@ -328,6 +328,10 @@ public class WcmsConstants {
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_FIELD_NAME = "storageReservoirName";
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_ERROR_MESSAGE = " Storage Reservoir Name is required";
     
+    public static final String PLANT_TYPE_INVALID_CODE = "wcms.0058";
+    public static final String PLANT_TYPE_INVALID_FIELD_NAME = "plantType";
+    public static final String PLANT_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Plant type";
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

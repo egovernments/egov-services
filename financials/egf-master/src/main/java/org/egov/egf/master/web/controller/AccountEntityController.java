@@ -123,7 +123,7 @@ public class AccountEntityController {
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<AccountEntityContract> search(
 			@ModelAttribute AccountEntitySearchContract accountEntitySearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountEntitySearch domain = new AccountEntitySearch();

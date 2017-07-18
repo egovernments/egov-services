@@ -63,7 +63,7 @@ public class PropertyTypePipeSizeService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestExternalMasterService restExternalMasterService;
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypePipeSizeRequest create(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
         return propertyPipeSizeRepository.persistCreatePropertyPipeSize(propertyPipeSizeRequest);
@@ -97,7 +97,7 @@ public class PropertyTypePipeSizeService {
         if (propertyPipeSizeGetRequest.getPropertyTypeName() != null) {
             final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
                     propertyPipeSizeGetRequest.getPropertyTypeName(), propertyPipeSizeGetRequest.getTenantId());
-            if (propertyTypes != null)
+            if (propertyTypes.getPropertyTypesSize())
                 propertyPipeSizeGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
 
         }

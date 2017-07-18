@@ -89,7 +89,9 @@ public class FundEntity extends AuditableEntity {
 	public Fund toDomain() {
 
 		Fund fund = new Fund();
-		Fund parent = Fund.builder().id(parentId).build();
+		Fund parent =null;
+		if(parentId!=null)
+			 parent = Fund.builder().id(parentId).build();
 		super.toDomain(fund);
 		fund.setId(this.id);
 		fund.setCode(this.code);

@@ -2,9 +2,11 @@ package org.egov.egf.master.index;
 
 import org.egov.egf.master.web.interceptor.CorrelationIdAwareRestTemplate;
 import org.egov.egf.web.interceptor.CorrelationIdInterceptor;
+import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+@Import({ TracerConfiguration.class })
 @SpringBootApplication
 public class EgfMasterIndexerApplication {
 

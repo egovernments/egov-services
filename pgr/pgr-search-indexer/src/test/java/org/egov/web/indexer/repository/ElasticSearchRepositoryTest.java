@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
+import static org.egov.pgr.common.date.DateFormatter.toDate;
 import static org.springframework.test.web.client.ExpectedCount.once;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -23,9 +24,11 @@ public class ElasticSearchRepositoryTest {
     private final String INDEX_SERVICE_PASSWORD = "password";
     private final String INDEX_NAME = "indexName";
     private final String DOCUMENT_TYPE = "documentType";
+    private ESDateTimeFormatter esDateTimeFormatter;
 
     @Before
     public void before() {
+        esDateTimeFormatter = new ESDateTimeFormatter("UTC");
         RestTemplate restTemplate = new RestTemplate();
         elasticSearchRepository = new ElasticSearchRepository(
                 restTemplate, INDEX_SERVICE_URL, INDEX_SERVICE_USERNAME, INDEX_SERVICE_PASSWORD, INDEX_NAME, DOCUMENT_TYPE);
@@ -44,9 +47,13 @@ public class ElasticSearchRepositoryTest {
         ServiceRequestDocument indexContent = new ServiceRequestDocument();
         indexContent.setCrn("CRN");
         indexContent.setId("id");
+        indexContent.setCreatedDate(esDateTimeFormatter.toESDateTimeString("23-12-2016 09:45:00"));
+        indexContent.setLastModifiedDate(esDateTimeFormatter.toESDateTimeString("26-12-2016 23:15:40"));
+        indexContent.setEscalationDate(esDateTimeFormatter.toESDateTimeString("30-12-2016 09:25:00"));
 
         elasticSearchRepository.index(indexContent);
 
         server.verify();
     }
+
 }

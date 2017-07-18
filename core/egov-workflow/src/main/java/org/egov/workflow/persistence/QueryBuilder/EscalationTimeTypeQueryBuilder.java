@@ -179,6 +179,10 @@ public class EscalationTimeTypeQueryBuilder {
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
 		// pageNo * pageSize
 	}
+	
+	public String checkRecordExistsQuery(){
+		return "SELECT count(*) FROM egpgr_escalation WHERE complaint_type_id = ? AND designation_id = ?  AND tenantid = ? " ; 
+	}
 
 	
 

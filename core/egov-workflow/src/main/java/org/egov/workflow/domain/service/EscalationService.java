@@ -53,6 +53,9 @@ public class EscalationService {
 	}
 	public List<EscalationTimeType> getAllEscalationTimeTypes(final EscalationTimeTypeGetReq escalationGetRequest) {
         return escalationRepository.getAllEscalationTimeTypes(escalationGetRequest);
-
     }
+	
+	public boolean checkRecordExists (EscalationTimeTypeReq escalationTimeTypeReq) {
+		return escalationRepository.checkRecordExists(escalationTimeTypeReq);
+	}
 }

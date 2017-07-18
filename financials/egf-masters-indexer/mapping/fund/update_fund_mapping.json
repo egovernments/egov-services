@@ -4,7 +4,7 @@
     },
     "properties": {
         "id": {
-            "type": "long"
+            "type": "keyword"
         },
         "name": {
             "type": "keyword"

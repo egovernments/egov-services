@@ -33,7 +33,7 @@ public class IntegrationService {
 		
 		
 		List<SearchColumn>  searchColumns = reportDefinition.getSearchParams();
-		List<SearchColumn> columnDetails = metadataResponse.getReportDetails().getSearchParams();
+		List<ColumnDetail> columnDetails = metadataResponse.getReportDetails().getSearchParams();
 		Map<String, ColumnDetail> colNameMap = columnDetails.stream().collect(Collectors.toMap(ColumnDetail::getName, Function.identity()));
 		
 		LOGGER.info("colNameMap:"+colNameMap);

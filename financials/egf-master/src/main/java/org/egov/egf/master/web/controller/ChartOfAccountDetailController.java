@@ -125,7 +125,7 @@ public class ChartOfAccountDetailController {
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<ChartOfAccountDetailContract> search(
 			@ModelAttribute ChartOfAccountDetailSearchContract chartOfAccountDetailSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		ChartOfAccountDetailSearch domain = new ChartOfAccountDetailSearch();

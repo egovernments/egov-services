@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-import org.egov.lams.brokers.producer.AgreementProducer;
+
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -36,21 +36,16 @@ import org.egov.lams.web.contract.Position;
 import org.egov.lams.web.contract.PositionResponse;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class AgreementService {
 	public static final Logger logger = LoggerFactory.getLogger(AgreementService.class);
-	
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@Autowired
 	private AgreementRepository agreementRepository;
@@ -62,7 +57,7 @@ public class AgreementService {
 	private LamsConfigurationService lamsConfigurationService;
 
 	@Autowired
-	private AgreementProducer agreementProducer;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;	
 
 	@Autowired
 	private DemandRepository demandRepository;
@@ -114,7 +109,6 @@ public class AgreementService {
 		logger.info("createAgreement service::" + agreement);
 		String requesterId = requestInfo.getUserInfo().getId().toString();
 		String kafkaTopic = null;
-		String agreementValue = null;
 		agreement.setCreatedBy(requesterId);
 		agreement.setCreatedDate(new Date());
 		agreement.setLastmodifiedBy(requesterId);
@@ -160,17 +154,10 @@ public class AgreementService {
 			}
 		agreement.setId(agreementRepository.getAgreementID());
 		}
-		
-		try {
-			agreementValue = objectMapper.writeValueAsString(agreementRequest);
-			logger.info("agreementValue::" + agreementValue);
-		} catch (JsonProcessingException JsonProcessingException) {
-			logger.info("AgreementService : " + JsonProcessingException.getMessage(), JsonProcessingException);
-			throw new RuntimeException(JsonProcessingException.getMessage());
-		}
 
 		try {
-			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
+			logger.info("agreement before sending" +agreement);
+			kafkaTemplate.send(kafkaTopic, "save-agreement", agreementRequest);
 		} catch (Exception exception) {
 			logger.info("AgreementService : " + exception.getMessage(), exception);
 			throw exception;
@@ -191,7 +178,6 @@ public class AgreementService {
 		logger.info("update agreement service::" + agreement);
 		String requesterId = requestInfo.getUserInfo().getId().toString();
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		String agreementValue = null;
 		String kafkaTopic = null;
 		agreement.setLastmodifiedBy(requesterId);
 		agreement.setLastmodifiedDate(new Date());
@@ -222,11 +208,7 @@ public class AgreementService {
 			}
 		}
 		try {
-			agreementValue = objectMapper.writeValueAsString(agreementRequest);
-			agreementProducer.sendMessage(kafkaTopic, "save-agreement", agreementValue);
-		} catch (JsonProcessingException jsonProcessingException) {
-			logger.error("AgreementService : " + jsonProcessingException.getMessage(), jsonProcessingException);
-			throw new RuntimeException(jsonProcessingException.getMessage());
+			kafkaTemplate.send(kafkaTopic, "save-agreement", agreementRequest);
 		} catch (Exception exception) {
 			logger.error("AgreementService : " + exception.getMessage(), exception);
 			throw exception;
@@ -350,7 +332,7 @@ public class AgreementService {
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if (demandReasons.isEmpty())
 			throw new RuntimeException("No demand reason found for given criteria");
-		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
+     	logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
 		return demandReasons;
 	}
 

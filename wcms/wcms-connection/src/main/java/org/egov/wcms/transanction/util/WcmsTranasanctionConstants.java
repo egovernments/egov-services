@@ -265,6 +265,9 @@ public class WcmsTranasanctionConstants {
     public static final String SOURCETYPE_INVALID_CODE = "wcms.0040";
     public static final String SOURCETYPE_INVALID_FIELD_NAME = "sourceType.name";
     public static final String SOURCETYPE_INVALID_ERROR_MESSAGE = "SourceType name doesn't Exist";
+    public static final String TREATPLANT_INVALID_CODE = "wcms.0048";
+    public static final String TREATPLANT_INVALID_FIELD_NAME = "waterTreatment";
+    public static final String TREATPLANT_INVALID_ERROR_MESSAGE = "Water Treatment name doesn't Exist";
     
     
     

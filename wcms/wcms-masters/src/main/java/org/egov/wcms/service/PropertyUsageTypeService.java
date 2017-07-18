@@ -65,7 +65,7 @@ public class PropertyUsageTypeService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private RestExternalMasterService restExternalMasterService;
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypeUsageTypeReq create(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         return propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest);
@@ -91,14 +91,14 @@ public class PropertyUsageTypeService {
         if (propUsageTypeGetRequest.getPropertyType() != null) {
             final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     propUsageTypeGetRequest.getPropertyType(), propUsageTypeGetRequest.getTenantId());
-            if (propertyType != null)
+            if (propertyType.getPropertyTypesSize())
                 propUsageTypeGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
         if (propUsageTypeGetRequest.getUsageType() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                     propUsageTypeGetRequest.getUsageType(), propUsageTypeGetRequest.getTenantId());
-            if (usageType != null)
+            if (usageType.getUsageTypesSize())
                 propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }

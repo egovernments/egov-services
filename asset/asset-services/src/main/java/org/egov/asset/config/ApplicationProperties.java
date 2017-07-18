@@ -53,135 +53,142 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
-	public static final String SEARCH_PAGENO_MAX = "search.pageno.max";
-	public static final String SEARCH_PAGESIZE_MAX = "search.pagesize.max";
+    private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
+    public static final String SEARCH_PAGENO_MAX = "search.pageno.max";
+    public static final String SEARCH_PAGESIZE_MAX = "search.pagesize.max";
 
-	@Value("${egov.assetcategory.async}")
-	private Boolean assetCategoryAsync;
+    @Value("${egov.assetcategory.async}")
+    private Boolean assetCategoryAsync;
 
-	@Value("${kafka.topics.save.asset}")
-	private String createAssetTopicName;
+    @Value("${kafka.topics.save.asset}")
+    private String createAssetTopicName;
 
-	@Value("${kafka.topics.update.asset}")
-	private String updateAssetTopicName;
+    @Value("${kafka.topics.update.asset}")
+    private String updateAssetTopicName;
 
-	@Value("${kafka.topics.save.assetcategory}")
-	private String createAssetCategoryTopicName;
+    @Value("${kafka.topics.save.assetcategory}")
+    private String createAssetCategoryTopicName;
 
-	@Value("${kafka.topics.update.assetcategory}")
-	private String updateAssetCategoryTopicName;
+    @Value("${kafka.topics.update.assetcategory}")
+    private String updateAssetCategoryTopicName;
 
-	@Value("${kafka.topics.save.revaluation}")
-	private String createAssetRevaluationTopicName;
+    @Value("${kafka.topics.save.revaluation}")
+    private String createAssetRevaluationTopicName;
 
-	@Value("${kafka.topics.save.disposal}")
-	private String createAssetDisposalTopicName;
+    @Value("${kafka.topics.save.disposal}")
+    private String createAssetDisposalTopicName;
 
-	@Value("${egov.services.egf_service.hostname}")
-	private String egfServiceHostName;
+    @Value("${egov.services.egf_service.hostname}")
+    private String egfServiceHostName;
 
-	@Value("${egov.services.egf_service.chartofaccounts.searchpath}")
-	private String egfServiceChartOfAccountsSearchPath;
+    @Value("${egov.services.egf_service.chartofaccounts.searchpath}")
+    private String egfServiceChartOfAccountsSearchPath;
 
-	@Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
-	private String egfServiceChartOfAccountsDetailsSearchPath;
+    @Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
+    private String egfServiceChartOfAccountsDetailsSearchPath;
 
-	@Value("${egov.services.egf_service.voucher.createpath}")
-	private String egfServiceVoucherCreatePath;
+    @Value("${egov.services.egf_service.voucher.createpath}")
+    private String egfServiceVoucherCreatePath;
 
-	@Value("${egov.services.reevaluation.voucher.name}")
-	private String reevaluationVoucherName;
+    @Value("${egov.services.reevaluation.voucher.name}")
+    private String reevaluationVoucherName;
 
-	@Value("${egov.services.reevaluation.voucher.description}")
-	private String reevaluationVoucherDescription;
+    @Value("${egov.services.reevaluation.voucher.description}")
+    private String reevaluationVoucherDescription;
 
-	@Value("${egov.municipality.host}")
-	private String municipalityHostName;
+    @Value("${egov.municipality.host}")
+    private String municipalityHostName;
 
-	@Value("${egov.services.disposal.voucher.name}")
-	private String disposalVoucherName;
+    @Value("${egov.services.disposal.voucher.name}")
+    private String disposalVoucherName;
 
-	@Value("${egov.services.disposal.voucher.description}")
-	private String disposalVoucherDescription;
+    @Value("${egov.services.disposal.voucher.description}")
+    private String disposalVoucherDescription;
 
-	@Autowired
-	private Environment environment;
+    @Value("${egov.services.asset.enable.vouchergeneration}")
+    private boolean enableVoucherGenration;
 
-	public String commonsSearchPageSizeDefault() {
-		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
-	}
+    @Autowired
+    private Environment environment;
 
-	public String commonsSearchPageNumberMax() {
-		return environment.getProperty(SEARCH_PAGENO_MAX);
-	}
+    public String commonsSearchPageSizeDefault() {
+        return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
+    }
 
-	public String commonsSearchPageSizeMax() {
-		return environment.getProperty(SEARCH_PAGESIZE_MAX);
-	}
+    public String commonsSearchPageNumberMax() {
+        return environment.getProperty(SEARCH_PAGENO_MAX);
+    }
 
-	public Boolean getAssetCategoryAsync() {
-		return assetCategoryAsync;
-	}
+    public String commonsSearchPageSizeMax() {
+        return environment.getProperty(SEARCH_PAGESIZE_MAX);
+    }
 
-	public String getCreateAssetCategoryTopicName() {
-		return createAssetCategoryTopicName;
-	}
+    public Boolean getAssetCategoryAsync() {
+        return assetCategoryAsync;
+    }
 
-	public String getCreateAssetTopicName() {
-		return createAssetTopicName;
-	}
+    public String getCreateAssetCategoryTopicName() {
+        return createAssetCategoryTopicName;
+    }
 
-	public String getUpdateAssetTopicName() {
-		return updateAssetTopicName;
-	}
+    public String getCreateAssetTopicName() {
+        return createAssetTopicName;
+    }
 
-	public String getUpdateAssetCategoryTopicName() {
-		return updateAssetCategoryTopicName;
-	}
+    public String getUpdateAssetTopicName() {
+        return updateAssetTopicName;
+    }
 
-	public String getCreateAssetRevaluationTopicName() {
-		return createAssetRevaluationTopicName;
-	}
+    public String getUpdateAssetCategoryTopicName() {
+        return updateAssetCategoryTopicName;
+    }
 
-	public String getCreateAssetDisposalTopicName() {
-		return createAssetDisposalTopicName;
-	}
+    public String getCreateAssetRevaluationTopicName() {
+        return createAssetRevaluationTopicName;
+    }
 
-	public String getEgfServiceHostName() {
-		return egfServiceHostName;
-	}
+    public String getCreateAssetDisposalTopicName() {
+        return createAssetDisposalTopicName;
+    }
 
-	public String getEgfServiceVoucherCreatePath() {
-		return egfServiceVoucherCreatePath;
-	}
+    public String getEgfServiceHostName() {
+        return egfServiceHostName;
+    }
 
-	public String getEgfServiceChartOfAccountsSearchPath() {
-		return egfServiceChartOfAccountsSearchPath;
-	}
+    public String getEgfServiceVoucherCreatePath() {
+        return egfServiceVoucherCreatePath;
+    }
 
-	public String getReevaluationVoucherName() {
-		return reevaluationVoucherName;
-	}
+    public String getEgfServiceChartOfAccountsSearchPath() {
+        return egfServiceChartOfAccountsSearchPath;
+    }
 
-	public String getReevaluationVoucherDescription() {
-		return reevaluationVoucherDescription;
-	}
+    public String getReevaluationVoucherName() {
+        return reevaluationVoucherName;
+    }
 
-	public String getEgfServiceChartOfAccountsDetailsSearchPath() {
-		return egfServiceChartOfAccountsDetailsSearchPath;
-	}
+    public String getReevaluationVoucherDescription() {
+        return reevaluationVoucherDescription;
+    }
 
-	public String getMunicipalityHostName() {
-		return municipalityHostName;
-	}
+    public String getEgfServiceChartOfAccountsDetailsSearchPath() {
+        return egfServiceChartOfAccountsDetailsSearchPath;
+    }
 
-	public String getDisposalVoucherName() {
-		return disposalVoucherName;
-	}
+    public String getMunicipalityHostName() {
+        return municipalityHostName;
+    }
 
-	public String getDisposalVoucherDescription() {
-		return disposalVoucherDescription;
-	}
+    public String getDisposalVoucherName() {
+        return disposalVoucherName;
+    }
+
+    public String getDisposalVoucherDescription() {
+        return disposalVoucherDescription;
+    }
+
+    public boolean getEnableVoucherGenration() {
+        return enableVoucherGenration;
+    }
 
 }

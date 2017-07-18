@@ -111,7 +111,7 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			RestTemplate restTemplate = new RestTemplate();
 			StringBuilder uri = new StringBuilder();
 			Map<String, String> params = new HashMap<String, String>();
-			uri.append(environment.getProperty("egov.services.pt_propertye.hostname"));
+			uri.append(environment.getProperty("egov.services.pt_property.hostname"));
 			uri.append(environment.getProperty("egov.services.pt_property.basepath"));
 			uri.append(environment.getProperty("egov.services.pt_property.search"));
 			params.put("tenantId", calculationFactor.getTenantId());
@@ -350,6 +350,7 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
+	@Transactional
 	public TaxPeriodResponse createTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
@@ -374,6 +375,7 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
+	@Transactional
 	public TaxPeriodResponse updateTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {

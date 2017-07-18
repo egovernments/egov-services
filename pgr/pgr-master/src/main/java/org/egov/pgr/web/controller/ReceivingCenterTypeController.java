@@ -84,7 +84,7 @@ public class ReceivingCenterTypeController {
 
 	@Autowired
 	private ReceivingCenterTypeService receivingCenterService;
-
+	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 	
@@ -193,7 +193,7 @@ public class ReceivingCenterTypeController {
 	private List<ErrorField> getErrorFields(final ReceivingCenterTypeReq categoryRequest,boolean flag) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addReceivingCenterNameAndCodeValidationErrors(categoryRequest, errorFields,flag);
-		checkReceivingCenterNameUniqueness(categoryRequest, errorFields);
+		checkReceivingCenterNameUniqueness(categoryRequest, errorFields,flag);
 		addTeanantIdValidationErrors(categoryRequest, errorFields);
 		return errorFields;
 	}
@@ -225,9 +225,9 @@ public class ReceivingCenterTypeController {
 	}
 	
 	private void checkReceivingCenterNameUniqueness(final ReceivingCenterTypeReq receivingCenterRequest,
-			final List<ErrorField> errorFields) {
+			final List<ErrorField> errorFields, boolean flag) {	
 		final ReceivingCenterType receivingCenter = receivingCenterRequest.getCenterType();
-			if (receivingCenterService.checkReceivingCenterNameExists(receivingCenter.getName(), receivingCenter.getTenantId())) {
+			if (receivingCenterService.checkReceivingCenterNameExists(receivingCenter, flag)) {
 				final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.RECEIVINGCENTER_NAME_UNIQUE_CODE)
 						.message(PgrMasterConstants.RECEIVINGCENTER_UNQ_ERROR_MESSAGE)
 						.field(PgrMasterConstants.RECEIVINGCENTER_NAME_UNQ_FIELD_NAME).build();

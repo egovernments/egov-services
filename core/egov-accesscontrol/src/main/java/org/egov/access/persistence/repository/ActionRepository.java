@@ -376,4 +376,109 @@ public class ActionRepository {
 
 	}
 
+	public List<Action> getAllActions(ActionRequest actionRequest) {
+
+		List<Module> moduleList = null;
+
+		List<Module> allServiceList = null;
+
+		Map<String, List<Action>> actionMap = getActionsQueryBuilder(actionRequest);
+
+		if (actionMap.size() > 0) {
+
+			moduleList = getServiceQueryBuilder(actionRequest, actionMap);
+
+		}
+
+		if (moduleList != null && moduleList.size() > 0) {
+
+			allServiceList = getAllServicesQueryBuilder(actionRequest, moduleList);
+
+		}
+
+		List<Action> actionList = new ArrayList<Action>();
+
+		Set<Entry<String, List<Action>>> set = actionMap.entrySet();
+
+		Iterator<Entry<String, List<Action>>> iterator = set.iterator();
+
+		while (iterator.hasNext()) {
+
+			Entry<String, List<Action>> entry = iterator.next();
+
+			List<Action> actions = entry.getValue();
+
+			for (Action action : actions) {
+
+				String path = getPath(action.getServiceCode(), allServiceList);
+				action.setPath(path + "." + action.getName());
+
+				actionList.add(action);
+			}
+		}
+
+		return actionList;
+	}
+
+	private String getPath(String serviceCode, List<Module> modules) {
+
+		String path = "";
+
+		for (Module module : modules) {
+
+			if (serviceCode.equals(module.getCode())) {
+
+				if (module.getParentModule() == null || module.getParentModule().isEmpty()) {
+
+					path = module.getName();
+					return path;
+
+				} else if (module.getParentModule() != null && module.getParentModule() != "") {
+
+					path = module.getName();
+
+					path = getCompletePath(module, path, modules);
+
+				}
+
+			}
+		}
+
+		return path;
+	}
+
+	private String getCompletePath(Module module, String path, List<Module> modules) {
+
+		if (modules.size() > 0) {
+
+			for (Module loopmodule : modules) {
+
+				if ((loopmodule.getParentModule() == null || loopmodule.getParentModule() == "")
+						&& module.getParentModule() != null
+						&& module.getParentModule().equals(loopmodule.getId().toString())) {
+
+					path = loopmodule.getName() + "." + path;
+					return path;
+
+				} else {
+					if (loopmodule.getParentModule() != null && loopmodule.getParentModule() != ""
+							&& module.getParentModule().equals(loopmodule.getId().toString())) {
+
+						String path1 = "";
+						path = loopmodule.getName() + "." + path;
+
+						String path2 = getCompletePath(loopmodule, path1, modules);
+
+						if (path2 != "") {
+							path = path2 + path;
+
+						}
+					}
+				}
+
+			}
+		}
+		return path;
+	}
+
 }

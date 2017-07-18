@@ -40,24 +40,11 @@
 
 package org.egov.collection.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.Department;
-import org.egov.collection.model.DepartmentSearchCriteria;
-import org.egov.collection.model.DesignationSearchCriteria;
-import org.egov.collection.model.EmployeeInfo;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
-import org.egov.collection.model.Task;
-import org.egov.collection.model.TaskResponse;
-import org.egov.collection.model.UserSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.WorkflowRepository;
-import org.egov.collection.web.contract.Designation;
-import org.egov.collection.web.contract.ProcessInstance;
-import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,62 +67,7 @@ public class WorkflowService {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
-	public List<Department> getDepartments(DepartmentSearchCriteria departmentSearchCriteria){
-		logger.info("DepartmentSearchCriteria:"+departmentSearchCriteria.toString());
-		List<Department> departments = new ArrayList<>();
-		Object response = workflowRepository.getDepartments(departmentSearchCriteria);
-		try{
-			departments.addAll(JsonPath.read(response, "$.Department"));
-		}catch(Exception e){
-			logger.error("Zero departments returned from the service: "+e.getCause());
-			departments = null;
-			return departments;
-		}
-		logger.info("Departments received: "+departments.toString());
-
-		return departments;
-	}
-	
-	public List<Designation> getDesignations(DesignationSearchCriteria designationSearchCriteria){
-		List<Designation> designation = new ArrayList<>();
-		if(null == designationSearchCriteria.getBuisnessKey() ||designationSearchCriteria.getBuisnessKey().isEmpty()){
-			designation = null;
-			return designation;		
-		}
-		Object response = workflowRepository.getDesignations(designationSearchCriteria);
-		try{
-			designation.addAll(JsonPath.read(response, "$.Designations"));
-		}catch(Exception e){
-			logger.error("Zero departments returned from the service: "+e.getCause());
-			designation = null;
-			return designation;
-		}
-		logger.info("Designations received: "+designation.toString());
-
-		return designation;
-	}
-
-	public List<EmployeeInfo> getUsers(UserSearchCriteriaWrapper userSeachCriteriaWrapper){
-		logger.info("UserSearchCriteria:"+userSeachCriteriaWrapper.toString());
-		List<EmployeeInfo> users = new ArrayList<>();
-		if(0L == userSeachCriteriaWrapper.getUserSearchCriteria().getDepartmentId() && 
-				0L == userSeachCriteriaWrapper.getUserSearchCriteria().getDesignationId()){
-			return null;
-		}
-		Object response = workflowRepository.getUsers(userSeachCriteriaWrapper);
-		try{
-			users.addAll(JsonPath.read(response, "$.Employee"));
-		}catch(Exception e){
-			logger.error("Zero users returned from the service: "+e.getCause());
-			users = null;
-			return users;
-		}
-		logger.info("Users received: "+users.toString());
-
-		return users;
-	}
-	
+		
 	public Long getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
 		logger.info("PositionSearchCriteria:"+positionSearchCriteriaWrapper.toString());
 
@@ -174,38 +106,6 @@ public class WorkflowService {
 			return null;
 		}
 		return workflowDetails;
-	}
-	
-	public ProcessInstance startWorkflow(WorkflowDetails workflowDetails){
-		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
-		try{
-			processInstanceResponse = workflowRepository.startWorkflow(workflowDetails);
-		}catch(Exception e){
-			logger.error("ProcessInstance id couldn't be fetched from workflow svc", e.getCause());
-		}
-		if(null == processInstanceResponse){
-			logger.error("Repository returned null processInstanceResponse");
-			return null;
-
-		}
-		logger.info("Proccess Instance Id received is: "+processInstanceResponse.getProcessInstance().getId());
-		return processInstanceResponse.getProcessInstance();
-	}
-	
-	public Task updateWorkflow(WorkflowDetails workflowDetails){
-		TaskResponse taskResponse = new TaskResponse();
-		try{
-			taskResponse = workflowRepository.updateWorkflow(workflowDetails);
-		}catch(Exception e){
-			logger.error("Task Id id couldn't be fetched from workflow svc", e.getCause());
-		}
-		if(null == taskResponse){
-			logger.error("Repository returned null taskResponse");
-			return null;
-
-		}
-		logger.info("Task Id received is: "+taskResponse.getTask().getId());
-		return taskResponse.getTask();
 	}
 	
 	

@@ -146,9 +146,12 @@ public class DemandValidator implements Validator {
 							&& demand.getTaxPeriodTo().compareTo(t.ge) = 0)*/
 		for (Demand demand : demands) {
 			List<TaxPeriod> taxPeriods = taxPeriodMap.get(demand.getBusinessService());
+			if(taxPeriods.isEmpty())
+				errors.rejectValue("Demands", "",
+						"no taxperiods found for value of Demand.businessService : "+ demand.getBusinessService() +"please give a valid businessService code");
 			TaxPeriod taxPeriod = taxPeriods.stream()
-					.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) <= 0 
-					 && demand.getTaxPeriodTo().compareTo(t.getToDate()) >= 0)
+					.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0 
+					 && demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
 					.findAny().orElse(null);
 			if (taxPeriod == null)
 				errors.rejectValue("Demands", "", "the given taxPeriod value periodFrom : '" + demand.getTaxPeriodFrom()

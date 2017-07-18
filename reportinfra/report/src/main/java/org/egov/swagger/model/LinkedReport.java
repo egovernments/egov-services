@@ -3,49 +3,20 @@ package org.egov.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+
 import javax.validation.constraints.*;
+/**
+ * next drill down report. In case the report is on the values in the report 
+ */
+
 
 
 public class LinkedReport   {
   @JsonProperty("reportName")
   private String reportName = null;
 
-  /**
-   * Gets or Sets linkType
-   */
-  public enum LinkTypeEnum {
-    COLUMN("COLUMN"),
-    
-    COLUMNVALUE("COLUMNVALUE"),
-    
-    FIXEDURL("FIXEDURL");
-
-    private String value;
-
-    LinkTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static LinkTypeEnum fromValue(String text) {
-      for (LinkTypeEnum b : LinkTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-
-  @JsonProperty("linkType")
-  private LinkTypeEnum linkType = null;
+  @JsonProperty("linkedColumn")
+  private String linkedColumn = null;
 
   public LinkedReport reportName(String reportName) {
     this.reportName = reportName;
@@ -57,6 +28,7 @@ public class LinkedReport   {
    * @return reportName
   **/
   
+  @NotNull
   public String getReportName() {
     return reportName;
   }
@@ -65,22 +37,22 @@ public class LinkedReport   {
     this.reportName = reportName;
   }
 
-  public LinkedReport linkType(LinkTypeEnum linkType) {
-    this.linkType = linkType;
+  public LinkedReport linkedColumn(String linkedColumn) {
+    this.linkedColumn = linkedColumn;
     return this;
   }
 
    /**
-   * Get linkType
-   * @return linkType
+   * The drill downs are defined for each column (or if defined on the report level they have same drill down report for all the columns). In case the drill down report is on the actual value in the table this column indicates the additional column whose value should be provided as search parameter value. This should be teh name of one o the source columns within its report. Also, the calculated link for the linked report will go as part of defaultValue in the SourceColumn value to help client to create the necessary linking 
+   * @return linkedColumn
   **/
   
-  public LinkTypeEnum getLinkType() {
-    return linkType;
+  public String getLinkedColumn() {
+    return linkedColumn;
   }
 
-  public void setLinkType(LinkTypeEnum linkType) {
-    this.linkType = linkType;
+  public void setLinkedColumn(String linkedColumn) {
+    this.linkedColumn = linkedColumn;
   }
 
 
@@ -92,23 +64,23 @@ public class LinkedReport   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LinkedReport linkedReport = (LinkedReport) o;
-    return Objects.equals(this.reportName, linkedReport.reportName) &&
-        Objects.equals(this.linkType, linkedReport.linkType);
+    LinkedReport sourceColumnLinkedReport = (LinkedReport) o;
+    return Objects.equals(this.reportName, sourceColumnLinkedReport.reportName) &&
+        Objects.equals(this.linkedColumn, sourceColumnLinkedReport.linkedColumn);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(reportName, linkType);
+    return Objects.hash(reportName, linkedColumn);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LinkedReport {\n");
+    sb.append("class SourceColumnLinkedReport {\n");
     
     sb.append("    reportName: ").append(toIndentedString(reportName)).append("\n");
-    sb.append("    linkType: ").append(toIndentedString(linkType)).append("\n");
+    sb.append("    linkedColumn: ").append(toIndentedString(linkedColumn)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -124,4 +96,6 @@ public class LinkedReport   {
     return o.toString().replace("\n", "\n    ");
   }
 }
+
+
 

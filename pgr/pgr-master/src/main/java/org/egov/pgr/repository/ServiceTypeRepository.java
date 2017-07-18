@@ -201,7 +201,7 @@ public class ServiceTypeRepository {
 	
 	public boolean checkComplaintNameIfExists(final String serviceName, final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(serviceName);
+		preparedStatementValues.add(serviceName.toUpperCase());
 		preparedStatementValues.add(tenantId);
 		final String query = ServiceTypeQueryBuilder.checkServiceNameIfExists();
 		final List<Map<String, Object>> serviceTypes = jdbcTemplate.queryForList(query,

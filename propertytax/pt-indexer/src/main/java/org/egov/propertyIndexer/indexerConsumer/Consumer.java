@@ -90,7 +90,7 @@ public class Consumer {
 
 	@Bean
 	public JestClient getClient() {
-		String url=	"http://"+environment.getProperty("elasticsearch.host")+":"+environment.getProperty("elasticsearch.port");
+		String url=	"http://"+environment.getProperty("es.host")+":"+environment.getProperty("es.port");
 		if (this.client==null){
 			JestClientFactory factory = new JestClientFactory();
 			factory.setHttpClientConfig(new HttpClientConfig

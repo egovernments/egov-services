@@ -49,11 +49,13 @@ public class DemandReasonService {
 			queryStr.append(" and dr.egInstallmentMaster.installmentType=:installmenttype");
 		}
 		if (demandReasonCriteria.getFromDate() != null) {
-			queryStr.append(" and dr.egInstallmentMaster.fromDate>=:fromDate");
+			queryStr.append(" and dr.egInstallmentMaster.toDate>=:fromDate");
 		}
 		if (demandReasonCriteria.getToDate() != null) {
-			queryStr.append(" and dr.egInstallmentMaster.fromDate<=:toDate");
+			queryStr.append(" and dr.egInstallmentMaster.toDate<=:toDate");
 		}
+		queryStr.append(" order by dr.egInstallmentMaster.toDate");
+		
 		final Query query = entityManager.unwrap(Session.class).createQuery(queryStr.toString());
 		query.setString("tenantId", demandReasonCriteria.getTenantId());
 		if (demandReasonCriteria.getModuleName() != null) {
@@ -80,6 +82,7 @@ public class DemandReasonService {
 			LOGGER.error("the exception in demandReasonService : " + e);
 			throw new RuntimeException(e);
 		}
+		
 		return (List<EgDemandReason>) query.list();
 	}
 }

@@ -43,10 +43,10 @@ public class TaxHeadMasterQueryBuilderTest {
 			+ " taxhead.service taxheadService, taxhead.createdby AS taxcreatedby, taxhead.createdtime AS taxcreatedtime,"
 			+ " taxhead.lAStmodifiedby AS taxlAStmodifiedby, taxhead.lAStmodifiedtime AS taxlAStmodifiedtime,"
 			+ "glcode.id AS glCodeId, glcode.tenantid AS glCodeTenantId,glcode.service AS glCodeService,"
-			+ " glcode.createdby AS glcreatedby, glcode.createdtime AS glcreatedtime, glcode.lastmodifiedby AS gllastmodifiedby,"
-			+ " glcode.lastmodifiedtime AS gllastmodifiedtime"
-			+ " FROM egbs_taxheadmaster taxhead"
-			+ " INNER Join egbs_glcodemaster glcode  ON taxhead.code=glcode.taxhead and taxhead.tenantid=glcode.tenantid "
+			+ " glcode.createdby AS glcreatedby, glcode.createdtime AS glcreatedtime,"
+			+ " glcode.lastmodifiedby AS gllastmodifiedby, glcode.lastmodifiedtime AS gllastmodifiedtime"
+			+ " FROM egbs_taxheadmaster taxhead LEFT OUTER Join egbs_glcodemaster glcode "
+			+ " ON taxhead.code=glcode.taxhead and taxhead.tenantid=glcode.tenantid "
 			+ " WHERE taxhead.tenantId = ?  ORDER BY name LIMIT ? OFFSET ?";
 	
 	private String insertQuery = "INSERT INTO egbs_taxheadmaster(id, tenantid, category, service, name, code,"

@@ -29,9 +29,11 @@ public class User {
 	private Long id = null;
 
 	@JsonProperty("userName")
+	@Size(min=1,max=64)
 	private String userName = null;
 
 	@JsonProperty("password")
+	@Size(max=64)
 	private String password = null;
 
 	@JsonProperty("salutation")
@@ -57,7 +59,7 @@ public class User {
 	private String emailId = null;
 
 	@JsonProperty("altContactNumber")
-	@Size(max = 16)
+	@Size(max = 10)
 	private String altContactNumber = null;
 
 	@JsonProperty("pan")
@@ -65,7 +67,7 @@ public class User {
 	private String pan = null;
 
 	@JsonProperty("aadhaarNumber")
-	@Pattern(regexp = "[0-9]")
+	@Pattern(regexp = "[0-9]{12}")
 	@Size(max = 12)
 	private String aadhaarNumber = null;
 
@@ -105,7 +107,7 @@ public class User {
 
 	@JsonProperty("locale")
 	@NotNull
-	@Size(max = 5)
+	@Size(max = 10)
 	private String locale = null;
 
 	@JsonProperty("type")

@@ -139,7 +139,7 @@ class grievanceCreate extends Component {
     this.setState({type:localStorage.getItem('type')});
     let {initForm} = this.props;
     initForm(localStorage.getItem('type'));
-    console.log(localStorage.getItem('type'));
+    //console.log(localStorage.getItem('type'));
     var currentThis = this;
 
     //Get City details for tenant
@@ -660,14 +660,14 @@ class grievanceCreate extends Component {
                 <Grid>
                   <Row>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} hintText="Min: 10 Characters" floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
+                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
                     </Col>
                     <Col xs={12} md={3}>
                       <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
                     </Col>
                     <Col xs={12} md={6}>
                       <AutoComplete
-                        hintText="Type your location or select it from maps"
+                        hintText={translate('pgr.lbl.selectmap')}
                         ref="autocomplete"
                         floatingLabelText={translate('pgr.lbl.grievance.location')+' *'}
                         filter={AutoComplete.noFilter}
@@ -853,6 +853,7 @@ const mapDispatchToProps = dispatch => ({
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
     if(property === 'addressId'){
+      dispatch({type: "ADD_MANDATORY", property: 'addressId', value: '', isRequired : true, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '', isRequired : false, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lng', value: '', isRequired : false, pattern: ''});
     }

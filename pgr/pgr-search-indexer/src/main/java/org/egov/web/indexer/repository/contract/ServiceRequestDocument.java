@@ -1,11 +1,9 @@
 package org.egov.web.indexer.repository.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -24,17 +22,14 @@ public class ServiceRequestDocument {
     @JsonProperty("crn")
     private String crn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("createdDate")
-    private Date createdDate;
+    private String createdDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("lastModifiedDate")
-    private Date lastModifiedDate;
+    private String lastModifiedDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
     @JsonProperty("escalationDate")
-    private Date escalationDate;
+    private String escalationDate;
 
     @JsonProperty("serviceStatusName")
     private String serviceStatusName;

@@ -584,6 +584,23 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("fixedAssetAccount")));
             }
             break;
+        case 'financialYears':
+            if (!localStorage.getItem("financialYears") || localStorage.getItem("financialYears") == "undefined") {
+                var queryString = {tenantId, active: true};
+                if (params && typeof params == "object")
+                    queryString = Object.assign(queryString, params);
+                commonApiPost("egf-masters", "financialyears", "_search", queryString, function(err, res) {
+                    if (res) {
+                        localStorage.setItem("financialYears", JSON.stringify(res["financialYears"]));
+                        cb(res["financialYears"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("financialYears")));
+            }
+            break;
     }
 }
 

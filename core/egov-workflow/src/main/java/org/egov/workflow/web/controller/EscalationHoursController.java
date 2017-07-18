@@ -83,7 +83,7 @@ public class EscalationHoursController {
 		}
 		logger.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
 
-		final List<ErrorResponse> errorResponses = escalationTimeTypeValidator.validateServiceGroupRequest(escalationTimeTypeRequest);
+		final List<ErrorResponse> errorResponses = escalationTimeTypeValidator.validateServiceGroupRequest(escalationTimeTypeRequest, true);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		
@@ -117,7 +117,7 @@ public class EscalationHoursController {
 		escalationTimeTypeRequest.getEscalationTimeType().setId(id);
 		logger.info("EscalationTimeTypeRequest::" + escalationTimeTypeRequest);
 
-		final List<ErrorResponse> errorResponses = escalationTimeTypeValidator.validateServiceGroupRequest(escalationTimeTypeRequest);
+		final List<ErrorResponse> errorResponses = escalationTimeTypeValidator.validateServiceGroupRequest(escalationTimeTypeRequest, false);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		

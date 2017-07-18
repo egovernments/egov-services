@@ -14,16 +14,19 @@ public class RoleActionService {
 	@Autowired
 	private RoleActionRepository actionRepository;
 
-   public List<RoleAction> createRoleActions(final RoleActionsRequest rolActionRequest){
-    	
-    	return actionRepository.createRoleActions(rolActionRequest);
-    }
-	
-	public boolean checkActionNamesAreExistOrNot(final RoleActionsRequest rolActionRequest){
-		
+	public List<RoleAction> createRoleActions(final RoleActionsRequest rolActionRequest) {
+
+		return actionRepository.createRoleActions(rolActionRequest);
+	}
+
+	public boolean checkActionNamesAreExistOrNot(final RoleActionsRequest rolActionRequest) {
+
 		return actionRepository.checkActionNamesAreExistOrNot(rolActionRequest);
 	}
 
+	public boolean addUniqueValidationForTenantAndRoleAndAction(final RoleActionsRequest rolActionRequest) {
+
+		
+		return actionRepository.addUniqueValidationForTenantAndRoleAndAction(rolActionRequest);
+	}
 }
-
-

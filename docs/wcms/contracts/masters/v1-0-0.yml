@@ -1727,7 +1727,8 @@
         plantType:
           type: string
           description: Type of the water plant 
-          maxLength: 20
+          enum:
+            - Sand gravel
         storageReservoir :
           type: string
           description: Storage Reservoir drop down should be displayed

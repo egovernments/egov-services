@@ -230,7 +230,7 @@ public class MovementRepository {
         final Employee employee = employeeService.getEmployee(movementRequest);
         final Movement movement = movementRequest.getMovement().get(0);
         final String source = movement.getTenantId();
-        final String destination = "ap.kurnool";
+        final String destination = "";
         final RequestInfo sourceRequestInfo = movementRequest.getRequestInfo();
         final RequestInfo destinationRequestInfo = movementRequest.getRequestInfo();
         destinationRequestInfo.getUserInfo().setTenantId(destination);
@@ -287,12 +287,15 @@ public class MovementRepository {
         assignment.setTenantId(destination);
         employee.getAssignments().add(assignment);
 
-        final List<HRStatus> hrStatus = employeeService.getHRStatuses("Employee Master", null, employee.getEmployeeStatus(),
+        final List<HRStatus> hrStatus = employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesEmployeesKey(),
+                null, employee.getEmployeeStatus(),
                 source,
                 sourceRequestInfo);
         if (!hrStatus.isEmpty()) {
-            final Long destinationHRStatusId = employeeService.getHRStatuses("Employee Master", hrStatus.get(0).getCode(), null,
-                    destination, destinationRequestInfo).get(0).getId();
+            final Long destinationHRStatusId = employeeService
+                    .getHRStatuses(propertiesManager.getHrMastersServiceStatusesEmployeesKey(), hrStatus.get(0).getCode(), null,
+                            destination, destinationRequestInfo)
+                    .get(0).getId();
             employee.setEmployeeStatus(destinationHRStatusId);
         }
 

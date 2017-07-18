@@ -1,3 +1,9 @@
+var localationData={
+  "reports.pgr.complaintcategorytype":"Complaint Category Type",
+  "reports.pgr.positiontype":"Position Type",
+  "reports.pgr.wardtype":"Ward Type"
+}
+
 export function translate(locale_text){
   if(locale_text &&  localStorage.getItem("lang_response")){
 		var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function( obj ) {
@@ -6,7 +12,7 @@ export function translate(locale_text){
 		if(langresult[0])
       return Object.values(langresult[0])[1];
     else
-      return locale_text;
+      return localationData[locale_text] || locale_text;
 	}
 }
 
@@ -19,7 +25,7 @@ export function validate_fileupload(files, formats){
     let filesize = file.size;
     //console.log('came to file:', filename, filename.length, filesize, fileext, formats);
     //file length validation
-    if(filename.length <= 50){
+    if(filename.length <= 30){
       //console.log('file name length validation success');
       if(formats.indexOf(fileext) >= 0){
         //console.log('file formats validation success');
@@ -32,7 +38,7 @@ export function validate_fileupload(files, formats){
         return 'Allowed file formats is '+formats+'';
       }
     }else {
-      return 'File name length should not exceed 50 characters';
+      return 'File name length should not exceed 30 characters';
     }
   }
   return true;

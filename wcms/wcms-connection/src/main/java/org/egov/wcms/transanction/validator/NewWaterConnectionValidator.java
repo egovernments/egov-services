@@ -196,7 +196,11 @@ public class NewWaterConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-
+        if(waterConnectionRequest.getConnection().getProperty()!=null && 
+                waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
+        {
+            restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
+        }
         isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
         if (!isRequestValid) {
             final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.PROPERTY_CATEGORY_INVALID_CODE)
@@ -241,7 +245,7 @@ public class NewWaterConnectionValidator {
                         .build();
                 errorFields.add(errorField);
             }
-
+        if(waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)){
         final DonationResponseInfo donationresInfo = restConnectionService.validateDonationAmount(waterConnectionRequest);
         if (donationresInfo == null) {
             final ErrorField errorField = ErrorField.builder()
@@ -251,11 +255,11 @@ public class NewWaterConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
+        }
 
         return errorFields;
     }
 
-    // validatePropertyUsageMapping master validation need to do
 
     /*
      * private boolean validateDocumentApplicationType(final WaterConnectionReq waterConnectionRequest) { LOGGER.info(
@@ -286,7 +290,6 @@ public class NewWaterConnectionValidator {
         isRequestValid = true;
         return isRequestValid;
 
-        // Refactoring needed to reduce the if-else ladder and other optimization.
     }
 
     public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {
@@ -314,6 +317,14 @@ public class NewWaterConnectionValidator {
                     .code(WcmsTranasanctionConstants.SOURCETYPE_INVALID_CODE)
                     .message(WcmsTranasanctionConstants.SOURCETYPE_INVALID_FIELD_NAME)
                     .field(WcmsTranasanctionConstants.SOURCETYPE_INVALID_ERROR_MESSAGE)
+                    .build();
+            errorFields.add(errorField);
+        }
+        if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsTranasanctionConstants.TREATPLANT_INVALID_CODE)
+                    .message(WcmsTranasanctionConstants.TREATPLANT_INVALID_FIELD_NAME)
+                    .field(WcmsTranasanctionConstants.TREATPLANT_INVALID_ERROR_MESSAGE)
                     .build();
             errorFields.add(errorField);
         }

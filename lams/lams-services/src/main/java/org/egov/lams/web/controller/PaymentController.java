@@ -57,7 +57,7 @@ public class PaymentController {
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody BillReceiptInfoReq billReceiptInfoReq) {
 		
-		System.out.print("lams-services PaymentController update request info  ::: "+billReceiptInfoReq.getRequestInfo());
+//		System.out.print("lams-services PaymentController update request info  ::: "+billReceiptInfoReq.getRequestInfo());
 		return paymentService.updateDemand(billReceiptInfoReq);
 	}
 

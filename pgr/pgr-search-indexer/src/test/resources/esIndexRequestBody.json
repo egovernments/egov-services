@@ -1,9 +1,9 @@
 {
     "id": "id",
     "crn": "CRN",
-    "createdDate": null,
-    "lastModifiedDate": null,
-    "escalationDate": null,
+    "createdDate": "2016-12-23T09:45:00.000+0000",
+    "lastModifiedDate": "2016-12-26T23:15:40.000+0000",
+    "escalationDate": "2016-12-30T09:25:00.000+0000",
     "serviceStatusName": null,
     "serviceStatusCode": null,
     "requesterName": null,

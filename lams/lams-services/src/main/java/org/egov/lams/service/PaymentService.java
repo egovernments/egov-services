@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.egov.lams.brokers.producer.AgreementProducer;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -45,6 +44,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.Source;
 
 @Service
 public class PaymentService {
@@ -59,9 +59,6 @@ public class PaymentService {
 
 	@Autowired
 	AgreementService agreementService;
-
-	@Autowired
-	AgreementProducer agreementProducer;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -282,6 +279,7 @@ public class PaymentService {
 		LOGGER.info("PaymentService- updateDemand - setPaymentInfos done");
 
 		// / FIXME put update workflow here here
+		
 		updateWorkflow(billInfo.getConsumerCode(), requestInfo);
 		isAdvanceCollection(billInfo.getConsumerCode(),currentDemand);
 		LOGGER.info("the consumer code from bill object ::: " + billInfo.getConsumerCode());
@@ -304,12 +302,15 @@ public class PaymentService {
 			LOGGER.info("exception while fetching agreemment in paymentService");
 		}
 		LOGGER.info("the result form jdbc query ::: " + agreements);
+		Agreement agreement = agreements.get(0);
+		if(agreement.getSource().equals(Source.SYSTEM)){
 		AgreementRequest agreementRequest = new AgreementRequest();
 		agreementRequest.setRequestInfo(requestInfo);
-		agreementRequest.setAgreement(agreements.get(0));
+		agreementRequest.setAgreement(agreement);
 		LOGGER.info("calling agreement service todo agreement update");
 		agreementService.updateAgreement(agreementRequest);
 		LOGGER.info("Workflow update for collection has been put into Kafka Queue");
+		}
 	}
 
 	private List<PaymentInfo> setPaymentInfos(BillReceiptReq billReceiptInfo) {

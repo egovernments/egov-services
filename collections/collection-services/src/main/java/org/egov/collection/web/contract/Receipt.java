@@ -1,6 +1,8 @@
 package org.egov.collection.web.contract;
 
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.WorkflowDetails;
 
@@ -25,13 +27,15 @@ public class Receipt   {
   private String instrumentType;
 
   private String instrumentHeader;
-    
-  @JsonProperty("BillWrapper")
-  private BillWrapper billInfoWrapper; //for collection-service
+  
+  @NotNull
+  @JsonProperty("Bill")
+  private Bill bill;
 
   @JsonProperty("Bank")
   private Bank bank;
   
+  @NotNull
   @JsonProperty("BankAccount")
   private BankAccount bankAccount;  
   

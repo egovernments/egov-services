@@ -35,5 +35,7 @@ public class Action {
     private Date lastModifiedDate;
 
     private Long lastModifiedBy;
+    
+    private String path;
 
 }

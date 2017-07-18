@@ -37,9 +37,6 @@ public class ApplicationProperties {
     @Value("${egov.services.workflow_service.taskpath}")
     private String workflowServiceTaskPAth;
 
-    @Value("${egov.services.workflow_service.hostname.businesskey}")
-    private String workflowServiceBusinessKey;
-
     @Value("${kafka.topics.workflow.start.name}")
     private String kafkaStartWorkflowTopic;
 
@@ -51,6 +48,27 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.workflow.update.key}")
     private String kafkaUpdateworkflowTopicKey;
+    
+    @Value("${BD_SEARCH_URI}")
+    private String businessDetailsSearch;
+    
+    @Value("${COA_SEARCH_URI}")
+    private String chartOfAccountsSearch;
+    
+    @Value("${STATUS_SEARCH_URI}")
+    private String statusCodeSearch;
+    
+    @Value("${ID_GEN_URI}")
+    private String idGeneration;
+    
+    @Value("${GET_POSITION_URI}")
+    private String getPosition;
+    
+    @Value("${GET_POSITION_URI_APPEND}")
+    private String getPositionUriAppend;
+    
+    
+    
     
     
     

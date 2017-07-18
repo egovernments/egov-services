@@ -64,17 +64,18 @@ public class FunctionService {
 	}
 
 	public List<Function> fetchRelated(List<Function> functions) {
-		for (Function function : functions) {
-			// fetch related items
-			if (function.getParentId() != null) {
-				Function parentId = functionRepository.findById(function.getParentId());
-				if (parentId == null) {
-					throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+		if (!functions.isEmpty())
+			for (Function function : functions) {
+				// fetch related items
+				if (function.getParentId() != null) {
+					Function parentId = functionRepository.findById(function.getParentId());
+					if (parentId == null) {
+						throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+					}
+					function.setParentId(parentId);
 				}
-				function.setParentId(parentId);
-			}
 
-		}
+			}
 
 		return functions;
 	}

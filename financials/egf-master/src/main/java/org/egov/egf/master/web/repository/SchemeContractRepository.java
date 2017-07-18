@@ -32,7 +32,7 @@ public class SchemeContractRepository {
 		}
 
 		if (schemeContract.getTenantId() != null) {
-			content.append("tenantId=" + schemeContract.getTenantId());
+			content.append("&tenantId=" + schemeContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<SchemeContract> result = objectMapper.convertValue(

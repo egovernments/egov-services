@@ -2,7 +2,6 @@ package org.egov.egf.master.web.repository;
 
 import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.FinancialYearContract;
-import org.egov.egf.master.web.contract.FinancialYearSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;

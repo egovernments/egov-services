@@ -32,7 +32,7 @@ public class SubSchemeContractRepository {
 		}
 
 		if (subSchemeContract.getTenantId() != null) {
-			content.append("tenantId=" + subSchemeContract.getTenantId());
+			content.append("&tenantId=" + subSchemeContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<SubSchemeContract> result = objectMapper.convertValue(

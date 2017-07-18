@@ -66,4 +66,11 @@ public class EmployeeEducation {
 	@JsonProperty("qualificationcreatedby")
 	private String qualificationCreatedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("qualificationlastmodifieddate")
+	private Date qualificationLastModifiedDate;
+
+	@JsonProperty("qualificationlastmodifiedby")
+	private String qualificationLastModifiedBy;
+
 }

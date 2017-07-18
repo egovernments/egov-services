@@ -98,13 +98,6 @@ public class EmployeeDetails {
 	@JsonProperty("dateofbirth")
 	private Date dateOfBirth;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("employeecreateddate")
-	private Date employeeCreatedDate;
-
-	@JsonProperty("employeecreatedby")
-	private String employeeCreatedBy;
-
 	@JsonProperty("recruitmentmode")
 	private String recruitmentMode;
 
@@ -199,5 +192,19 @@ public class EmployeeDetails {
 
 	@JsonProperty("identificationmark")
 	private String identificationMark;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("employeecreateddate")
+	private Date employeeCreatedDate;
+
+	@JsonProperty("employeecreatedby")
+	private String employeeCreatedBy;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("employeelastmodifieddate")
+	private Date employeeLastModifiedDate;
+
+	@JsonProperty("employeelastmodifiedby")
+	private String employeeLastModifiedBy;
 
 }

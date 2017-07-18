@@ -70,5 +70,11 @@ public class EmployeeRegularisation {
 
 	@JsonProperty("regularisationcreatedby")
 	private String regularisationCreatedBy;
-	
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("regularisationlastmodifieddate")
+	private Date regularisationLastModifiedDate;
+
+	@JsonProperty("regularisationlastmodifiedby")
+	private String regularisationLastModifiedBy;
 }

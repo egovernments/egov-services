@@ -62,5 +62,12 @@ public class EmployeeTest {
 
 	@JsonProperty("testcreatedby")
 	private String testCreatedBy;
-	
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("testlastmodifieddate")
+	private Date testLastModifiedDate;
+
+	@JsonProperty("testlastmodifiedby")
+	private String testLastModifiedBy;
+
 }

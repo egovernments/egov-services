@@ -40,6 +40,7 @@
 package org.egov.collection.indexer.contract;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -64,6 +65,7 @@ public class Bill {
 
 	private Boolean isCancelled;
 
+    @JsonProperty("BillDetail")
 	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
 	
 	private String tenantId;

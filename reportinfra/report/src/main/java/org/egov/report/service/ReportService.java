@@ -10,8 +10,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
-import org.egov.domain.model.ReportYamlMetaData;
-import org.egov.domain.model.ReportYamlMetaData.sourceColumns;
 import org.egov.domain.model.Response;
 import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ColumnDetail;
@@ -31,12 +29,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
-
 @Service
 public class ReportService {
-
-	
 
 	@Autowired
 	private ReportRepository reportRepository;
@@ -53,7 +47,7 @@ public class ReportService {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinitions rds = ReportApp.getReportDefs();
 		ReportDefinition reportDefinition = new ReportDefinition();
-		System.out.println("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
+		LOGGER.info("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
 		reportDefinition = rds.getReportDefinition(metaDataRequest.getReportName());
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportDefinition.getReportName());
@@ -64,7 +58,8 @@ public class ReportService {
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
 			reportheader.setName(cd.getName());
-			TypeEnum te = getType(cd.getType().toString());
+			TypeEnum te = TypeEnum.valueOf(cd.getType().toString().toUpperCase());
+			
 			reportheader.setType(te);
 			reportHeaders.add(reportheader);
             
@@ -73,7 +68,7 @@ public class ReportService {
 			
 			ColumnDetail sc = new ColumnDetail();
 			
-			TypeEnum te = getType(cd.getType().toString());
+			TypeEnum te = TypeEnum.valueOf(cd.getType().toString().toUpperCase());
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
@@ -89,25 +84,7 @@ public class ReportService {
 		return metadataResponse;
 	}
 
-	public TypeEnum getType(String type) {
-		if (type.equals("string")) {
-			return ColumnDetail.TypeEnum.STRING;
-		}
-		if (type.equals("number")) {
-			return ColumnDetail.TypeEnum.NUMBER;
-		}
-		if (type.equals("epoch")) {
-			return ColumnDetail.TypeEnum.EPOCH;
-		}
-		if (type.equals("singlevaluelist")) {
-			return ColumnDetail.TypeEnum.SINGLEVALUELIST;
-		}
-		if (type.equals("url")) {
-			return ColumnDetail.TypeEnum.URL;
-		}
-		
-		return null;
-	}
+	
 
 	public ResponseEntity<?> getSuccessResponse(final MetadataResponse metadataResponse, final RequestInfo requestInfo,
 			String tenantID) {
@@ -161,7 +138,7 @@ public class ReportService {
 		//Let's check whether there's a linked report, we will set the default value in header columns according to that
 				
 				String pattern = null;
-				String defaultValue = "test";
+				String defaultValue = null;
 				
 				
 				List<SourceColumn> columns = reportDefinition.getSourceColumns();
@@ -170,7 +147,7 @@ public class ReportService {
 					defaultValue="";
 					if (sc.getLinkedReport() != null)
 					{
-						System.out.println("Linked Report Pattern is: "+sc.getLinkedReport());
+						LOGGER.info("Linked Report Pattern is: "+sc.getLinkedReport());
 						pattern = sc.getLinkedReport().getLinkedColumn();
 						defaultValue = pattern.replace("{reportName}", sc.getLinkedReport().getReportName());
 						sc.setDefaultValue(defaultValue.replace("{currentColumnName}", sc.getName()));

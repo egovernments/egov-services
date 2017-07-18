@@ -3,9 +3,6 @@ package org.egov.report.repository;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.egov.ReportApp;
-import org.egov.domain.model.ReportYamlMetaData;
 import org.egov.report.repository.builder.ReportQueryBuilder;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.ReportRequest;
@@ -41,7 +38,7 @@ public class ReportRepository {
 		if(endTime-startTime>maxExecutionTime)
 			LOGGER.error("Sql query is taking time query:"+query);
 			
-		System.out.println("maps : "+maps);
+		LOGGER.info("maps : "+maps);
 		return maps;
 	}
 

@@ -2,18 +2,22 @@ package org.egov.report.repository.builder;
 
 import java.util.List;
 
-import org.egov.domain.model.ReportYamlMetaData;
+import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReportQueryBuilder {
-		
+		 
+	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
+	   
 	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
-		System.out.println("searchParams:" + searchParams);
+		LOGGER.info("searchParams:" + searchParams);
 		
 		String baseQuery = reportDefinition.getQuery();
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
@@ -29,7 +33,7 @@ public class ReportQueryBuilder {
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),"'"+value.toString()+"'");
 			
 		}
-		System.out.println("baseQuery :"+baseQuery);
+		LOGGER.info("baseQuery :"+baseQuery);
 		return baseQuery;
 	}
 

@@ -5,7 +5,6 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.repository.BudgetRepository;
@@ -37,12 +36,14 @@ public class BudgetService {
 	private FinancialYearContractRepository financialYearContractRepository;
 
 	@Autowired
-	public BudgetService(SmartValidator validator, BudgetRepository budgetRepository) {
+	public BudgetService(SmartValidator validator, BudgetRepository budgetRepository,
+			FinancialYearContractRepository financialYearContractRepository) {
 		this.validator = validator;
 		this.budgetRepository = budgetRepository;
+		this.financialYearContractRepository = financialYearContractRepository;
 	}
 
-	private BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {
+	public BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -76,16 +77,16 @@ public class BudgetService {
 		for (Budget budget : budgets) {
 			// fetch related items
 
-			if (budget.getFinancialYear() != null) {
+			if (budget.getFinancialYear() != null && budget.getFinancialYear().getId() != null
+					&& budget.getFinancialYear().getTenantId() != null) {
 				FinancialYearSearchContract contract = new FinancialYearSearchContract();
 				contract.setId(budget.getFinancialYear().getId());
 				contract.setTenantId(budget.getFinancialYear().getTenantId());
-				CommonResponse<FinancialYearContract> financialYear = financialYearContractRepository
-						.getFinancialYearById(contract);
+				FinancialYearContract financialYear = financialYearContractRepository.findById(contract);
 				if (financialYear == null) {
 					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
 				}
-				budget.setFinancialYear(financialYear.getData().get(0));
+				budget.setFinancialYear(financialYear);
 			}
 
 			if (budget.getParent() != null && budget.getParent().getId() != null

@@ -243,8 +243,6 @@ public class DemandService {
 				if(tax.doubleValue()>=0){
 				demandDetail.setTaxAmount(tax);
 				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(demandDetail2.getCollectionAmount()));
-				}else{
-					//TODO throw exception
 				}
 				
 				AuditDetail demandDetailAudit = demandDetail.getAuditDetail();

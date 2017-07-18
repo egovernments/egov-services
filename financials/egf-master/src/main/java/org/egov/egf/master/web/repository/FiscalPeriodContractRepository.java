@@ -14,11 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class FiscalPeriodContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/fiscalperiods/search?";
+	public static final String SEARCH_URL = "/egf-master/fiscalperiods/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public FiscalPeriodContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public FiscalPeriodContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}
@@ -32,7 +32,7 @@ public class FiscalPeriodContractRepository {
 		}
 
 		if (fiscalPeriodContract.getTenantId() != null) {
-			content.append("tenantId=" + fiscalPeriodContract.getTenantId());
+			content.append("&tenantId=" + fiscalPeriodContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<FiscalPeriodContract> result = objectMapper.convertValue(

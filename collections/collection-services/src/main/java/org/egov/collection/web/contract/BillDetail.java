@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class BillDetail   {
 	
 	private String billDescription;
 
-	private String billNumber;
+	private String billNumber; //refNo
 
 	private String consumerCode;
 
@@ -44,17 +45,34 @@ public class BillDetail   {
 	private BigDecimal totalAmount;
 	
 	private List<String> collectionModesNotAllowed = new ArrayList<String>();
-    
-	@JsonProperty("BillAccountDetail")
-	private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();//for billing-service
 		
 	private String tenantId;
 	
-	private String businessService;
+	private String businessService; //buisnessDetailsCode
 
 	private String displayMessage;
 
 	private Boolean callBackForApportioning;	
+	
+	private String receiptNumber;
 
+	private Timestamp receiptDate;
+	
+	private String receiptType;
+
+	private String channel;
+  
+	private String voucherHeader;
+    
+	private String collectionType;
+  
+	private String boundary;
+
+	private String reasonForCancellation;
+	
+	private BigDecimal amountPaid;
+
+	@JsonProperty("BillAccountDetail")
+	private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();//for billing-service
 }
 

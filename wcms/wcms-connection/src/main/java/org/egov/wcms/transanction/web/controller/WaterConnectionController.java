@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.transanction.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -50,10 +51,13 @@ import org.egov.wcms.transanction.config.ApplicationProperties;
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.service.WaterConnectionService;
 import org.egov.wcms.transanction.validator.NewWaterConnectionValidator;
+import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transanction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.contract.WaterConnectionRes;
 import org.egov.wcms.transanction.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.transanction.web.errorhandlers.Error;
+import org.egov.wcms.transanction.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.transanction.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +65,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,6 +85,8 @@ public class WaterConnectionController {
     @Autowired
     private ApplicationProperties applicationProperties;
     
+    @Autowired
+    private ErrorHandler errHandler;     
 
     @Autowired
     private NewWaterConnectionValidator newWaterConnectionValidator;
@@ -109,7 +116,9 @@ public class WaterConnectionController {
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
-        return getSuccessResponse(connection, waterConnectionRequest.getRequestInfo());
+        List<Connection> connectionList = new ArrayList<>();
+        connectionList.add(connection);
+        return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
 
     }
     @PostMapping(value = "/{ackNumber}/_update")
@@ -142,7 +151,9 @@ public class WaterConnectionController {
         final Connection connection = waterConnectionService.updateWaterConnection(
                 applicationProperties.getUpdateNewConnectionTopicName(),
                 "newconnection-update", waterConnectionRequest);
-        return getSuccessResponse(connection, waterConnectionRequest.getRequestInfo());
+        List<Connection> connectionList = new ArrayList<>();
+        connectionList.add(connection);
+        return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
 
     }
     @PostMapping(value = "/legacy/_create")
@@ -168,18 +179,47 @@ public class WaterConnectionController {
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateLegacyConnectionTopicName(),
                 "legacyconnection-create", legacyConnectionRequest);
-        return getSuccessResponse(connection, legacyConnectionRequest.getRequestInfo());
+        List<Connection> connectionList = new ArrayList<>();
+        connectionList.add(connection);
+        return getSuccessResponse(connectionList, legacyConnectionRequest.getRequestInfo());
 
     }
+    
+    
+    @PostMapping("/_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-    private ResponseEntity<?> getSuccessResponse(final Connection connection,
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+
+        // Call service
+        List<Connection> connectionList = null;
+        try {
+        	connectionList =   waterConnectionService.getConnectionDetails(waterConnectionGetReq);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + waterConnectionGetReq, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getSuccessResponse(connectionList, requestInfo);
+    }
+
+    private ResponseEntity<?> getSuccessResponse(final List<Connection> connectionList,
             final RequestInfo requestInfo) {
         final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();
         ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         waterConnectionRes.setResponseInfo(responseInfo);
-        waterConnectionRes.setConnection(connection);
+        waterConnectionRes.setConnections(connectionList);
         return new ResponseEntity<>(waterConnectionRes, HttpStatus.OK);
 
     }

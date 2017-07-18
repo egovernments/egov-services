@@ -69,6 +69,20 @@ public class ActionController {
 
 	}
 
+	@PostMapping(value = "_get")
+	public ResponseEntity<?> getAllActions(@RequestBody final ActionRequest actionRequest) {
+
+		final List<ErrorResponse> errorResponses = validateActionRequest(actionRequest, "get");
+
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		List<Action> actionList = actionService.getAllActions(actionRequest);
+
+		return getNewListSuccessResponse(actionRequest.getRequestInfo(), actionList);
+
+	}
+
 	@PostMapping(value = "_validate")
 	public ValidateActionResponse validateAction(@RequestBody ValidateActionRequest validateActionRequest) {
 		ActionValidation actionValidation = actionService.validate(validateActionRequest.toDomain());
@@ -82,6 +96,16 @@ public class ActionController {
 		ActionSearchResponse response = new ActionSearchResponse();
 		response.setResponseInfo(responseInfo);
 		response.setModules(moduleList);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	private ResponseEntity<?> getNewListSuccessResponse(final RequestInfo requestInfo, final List<Action> actionList) {
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		ActionSearchResponse response = new ActionSearchResponse();
+		response.setResponseInfo(responseInfo);
+		response.setActions(actionList);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -181,7 +205,7 @@ public class ActionController {
 	private List<ErrorField> getErrorFields(final ActionRequest actionRequest, final String action) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 
-		if (action.equals("list")) {
+		if (action.equals("list") || action.equals("get")) {
 
 			addTenantIdValidationError(actionRequest, errorFields);
 			addRoleLenthValidationError(actionRequest, errorFields);

@@ -75,6 +75,7 @@ public class VoucherService {
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
                 + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
+        logger.debug("Voucher API Request URL :: " + createVoucherUrl);
         logger.debug("VoucherRequest :: " + voucherRequest);
         Error err = new Error();
         VoucherResponse voucherRes = new VoucherResponse();
@@ -104,9 +105,11 @@ public class VoucherService {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsDetailsSearchPath() + "?tenantId=" + tenantId
                 + "&id=" + accountId;
+        logger.debug("subledger details check URL :: " + url);
+        logger.debug("subledger details request info :: " + requestInfo);
         final ChartOfAccountDetailContractResponse coAccountDetailContractResponse = restTemplate.postForObject(url,
                 requestInfo, ChartOfAccountDetailContractResponse.class);
-        logger.debug("Chart of account detail response for subledger details :: "+coAccountDetailContractResponse);
+        logger.debug("subledger details response :: " + coAccountDetailContractResponse);
         return coAccountDetailContractResponse.getChartOfAccountDetails();
     }
 
@@ -119,38 +122,33 @@ public class VoucherService {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
-        logger.debug("Chart of Account id :: "+accountId);
-        try {
-            chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
-                    ChartOfAccountContractResponse.class);
-            logger.debug("Chart of Account Response :: "+chartOfAccountContractResponse);
+        logger.debug("Chart of Account URL ::" + url);
+        logger.debug("Chart of Account Request Info :: " + requestInfo);
+        chartOfAccountContractResponse = restTemplate.postForObject(url, requestInfo,
+                ChartOfAccountContractResponse.class);
+        logger.debug("Chart of Account Response :: " + chartOfAccountContractResponse);
 
-            final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
+        final List<ChartOfAccountContract> chartOfAccounts = chartOfAccountContractResponse.getChartOfAccounts();
 
-            if (!chartOfAccounts.isEmpty()) {
-                final ChartOfAccountContract chartOfAccount = chartOfAccounts.get(0);
-                logger.debug("Chart Of Account : " + chartOfAccount);
-                if (!chartOfAccount.getIsActiveForPosting())
-                    throw new RuntimeException(
-                            "Chart of Account " + chartOfAccount.getName() + " is not active for posting");
-                else
-                    debitAccountCodeDetail.setGlcode(chartOfAccount.getGlcode());
-            } else
-                throw new RuntimeException("Chart of Account is not present for account : " + accountId);
-            if (iscredit)
-                debitAccountCodeDetail.setCreditAmount(amount);
-            if (isDebit)
-                debitAccountCodeDetail.setDebitAmount(amount);
+        if (!chartOfAccounts.isEmpty()) {
+            final ChartOfAccountContract chartOfAccount = chartOfAccounts.get(0);
+            logger.debug("Chart Of Account : " + chartOfAccount);
+            if (!chartOfAccount.getIsActiveForPosting())
+                throw new RuntimeException(
+                        "Chart of Account " + chartOfAccount.getName() + " is not active for posting");
+            else
+                debitAccountCodeDetail.setGlcode(chartOfAccount.getGlcode());
+        } else
+            throw new RuntimeException("Chart of Account is not present for account : " + accountId);
+        if (iscredit)
+            debitAccountCodeDetail.setCreditAmount(amount);
+        if (isDebit)
+            debitAccountCodeDetail.setDebitAmount(amount);
 
-            final Function function = new Function();
-            function.setId(functionId);
-            debitAccountCodeDetail.setFunction(function);
+        final Function function = new Function();
+        function.setId(functionId);
+        debitAccountCodeDetail.setFunction(function);
         logger.debug("Account Code Detail :: " + debitAccountCodeDetail);
-            
-        } catch (final Exception ex) {
-            logger.debug("Some problem occured while getting account details : ", ex);
-            throw new RuntimeException(ex);
-        }
 
         return debitAccountCodeDetail;
     }

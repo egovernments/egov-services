@@ -55,7 +55,7 @@ public class ReceiptControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Test
+/*	@Test
 	public void test_should_search_receipts_as_per_criteria() throws Exception {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
@@ -66,7 +66,7 @@ public class ReceiptControllerTest {
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("receiptResponse.json")));
 
-	}
+	} */
 
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

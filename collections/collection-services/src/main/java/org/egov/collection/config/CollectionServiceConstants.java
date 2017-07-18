@@ -76,7 +76,7 @@ public class CollectionServiceConstants {
 	public static final String RECEIPT_DATE_MISSING_MESSAGE = "Receipt Date is mising";
 	
 	public static final String BD_CODE_MISSING_CODE = "egcl_006";
-	public static final String BD_CODE_MISSING_FIELD = "businessDetailsCode";
+	public static final String BD_CODE_MISSING_FIELD = "businessService";
 	public static final String BD_CODE_MISSING_MESSAGE = "Business Details Code is mising";
 	
 	public static final String COA_MISSING_CODE = "egcl_007";

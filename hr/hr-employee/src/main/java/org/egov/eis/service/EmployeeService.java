@@ -290,8 +290,8 @@ public class EmployeeService {
         if (!isEmpty(employee.getAprDetails())) {
             aprDetailRepository.save(employeeRequest);
         }
-        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
         employeeDataSyncService.createDataSync(userRequest);
     }
 
@@ -353,8 +353,8 @@ public class EmployeeService {
         educationalQualificationService.update(employee);
         aprDetailService.update(employee);
         employeeDocumentsService.update(employee);
-        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
 
+        UserRequest userRequest = employeeHelper.getUserRequest(employeeRequest);
         employeeDataSyncService.createDataSync(userRequest);
     }
 

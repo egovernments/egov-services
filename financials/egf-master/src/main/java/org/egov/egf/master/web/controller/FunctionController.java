@@ -120,7 +120,7 @@ public class FunctionController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FunctionContract> search(@ModelAttribute FunctionSearchContract functionSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FunctionSearch domain = new FunctionSearch();

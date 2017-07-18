@@ -1,17 +1,18 @@
 package org.egov.egf.budget.web.mapper;
 
-import org.egov.common.master.web.contract.BoundaryContract;
-import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
 import org.egov.egf.budget.domain.model.EgfStatus;
+import org.egov.egf.budget.web.contract.Boundary;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
+import org.egov.egf.budget.web.contract.Department;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
@@ -24,8 +25,9 @@ public class BudgetDetailMapper {
 
 		budgetDetail.setId(contract.getId());
 		budgetDetail.setBudgetGroup(contract.getBudgetGroup());
-		budgetDetail.setBudget(
-				Budget.builder().id(contract.getBudget() != null ? contract.getBudget().getId() : null).build());
+		Budget budget = Budget.builder().id(contract.getBudget() != null ? contract.getBudget().getId() : null).build();
+		budget.setTenantId(contract.getBudget() != null ? contract.getBudget().getTenantId() : null);
+		budgetDetail.setBudget(budget);
 		budgetDetail.setOriginalAmount(contract.getOriginalAmount());
 		budgetDetail.setApprovedAmount(contract.getApprovedAmount());
 		budgetDetail.setBudgetAvailable(contract.getBudgetAvailable());
@@ -103,9 +105,9 @@ public class BudgetDetailMapper {
 		budgetDetailSearch.setApprovedAmount(contract.getApprovedAmount());
 		budgetDetailSearch.setBudgetAvailable(contract.getBudgetAvailable());
 		budgetDetailSearch.setAnticipatoryAmount(contract.getAnticipatoryAmount());
-		budgetDetailSearch.setUsingDepartment(DepartmentContract.builder()
+		budgetDetailSearch.setUsingDepartment(Department.builder()
 				.id(contract.getUsingDepartment() != null ? contract.getUsingDepartment().getId() : null).build());
-		budgetDetailSearch.setExecutingDepartment(DepartmentContract.builder()
+		budgetDetailSearch.setExecutingDepartment(Department.builder()
 				.id(contract.getExecutingDepartment() != null ? contract.getExecutingDepartment().getId() : null)
 				.build());
 		budgetDetailSearch.setFunction(FunctionContract.builder()
@@ -116,10 +118,10 @@ public class BudgetDetailMapper {
 				FundContract.builder().id(contract.getFund() != null ? contract.getFund().getId() : null).build());
 		budgetDetailSearch.setSubScheme(SubSchemeContract.builder()
 				.id(contract.getSubScheme() != null ? contract.getSubScheme().getId() : null).build());
-		budgetDetailSearch.setFunctionary(FunctionContract.builder()
+		budgetDetailSearch.setFunctionary(FunctionaryContract.builder()
 				.id(contract.getFunctionary() != null ? contract.getFunctionary().getId() : null).build());
-		budgetDetailSearch.setBoundary(BoundaryContract.builder()
-				.id(contract.getBoundary() != null ? contract.getBoundary().getId() : null).build());
+		budgetDetailSearch.setBoundary(
+				Boundary.builder().id(contract.getBoundary() != null ? contract.getBoundary().getId() : null).build());
 		budgetDetailSearch.setMaterializedPath(contract.getMaterializedPath());
 		budgetDetailSearch.setDocumentNumber(contract.getDocumentNumber());
 		budgetDetailSearch.setUniqueNo(contract.getUniqueNo());

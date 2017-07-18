@@ -122,7 +122,7 @@ public class EgfStatusController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<EgfStatusContract> search(@ModelAttribute EgfStatusSearchContract egfStatusSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		EgfStatusSearch domain = new EgfStatusSearch();

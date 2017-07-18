@@ -129,5 +129,11 @@ public class EmployeeAssignment {
 	@JsonProperty("assignmentcreatedby")
 	private String assignmentCreatedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("assignmentlastmodifieddate")
+	private Date assignmentLastModifiedDate;
+
+	@JsonProperty("assignmentlastmodifiedby")
+	private String assignmentLastModifiedBy;
 
 }

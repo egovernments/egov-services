@@ -45,12 +45,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.master.web.contract.BoundaryContract;
-import org.egov.common.master.web.contract.DepartmentContract;
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.egov.egf.master.web.contract.EgfStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
@@ -100,13 +99,13 @@ public class BudgetDetailContract extends AuditableContract {
 	 * usingDepartment is the department for which the budget line item is
 	 * actually budgeted for.
 	 */
-	private DepartmentContract usingDepartment;
+	private Department usingDepartment;
 
 	/**
 	 * executingDepartment is the department which uses the budget to execute
 	 * the work which is defined in the budget of using department.
 	 */
-	private DepartmentContract executingDepartment;
+	private Department executingDepartment;
 
 	/**
 	 * fund is the MIS or financial transaction attribute which contributes the
@@ -137,13 +136,13 @@ public class BudgetDetailContract extends AuditableContract {
 	 * functionary is the MIS or financial transaction attribute which
 	 * contributes the budget details definition
 	 */
-	private FunctionContract functionary;
+	private FunctionaryContract functionary;
 
 	/**
 	 * boundary is also the MIS attribute which is used incase the budget need
 	 * to be defined and idetified by boundaries of the organization.
 	 */
-	private BoundaryContract boundary;
+	private Boundary boundary;
 
 	/**
 	 * anticipatoryAmount is the anticipated amount while processing the

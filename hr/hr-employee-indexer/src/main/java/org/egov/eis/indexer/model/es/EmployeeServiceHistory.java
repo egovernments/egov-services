@@ -67,5 +67,12 @@ public class EmployeeServiceHistory {
 	@JsonProperty("servicecreatedby")
 	private String serviceCreatedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("servicelastmodifieddate")
+	private Date serviceLastModifiedDate;
+
+	@JsonProperty("servicelastmodifiedby")
+	private String serviceLastModifiedBy;
+
 }
 

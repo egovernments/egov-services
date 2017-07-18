@@ -33,7 +33,7 @@ var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
 
-        console.log('isTimeLong =>', isTimeLong);
+        //console.log('isTimeLong =>', isTimeLong);
         var url = context;
 
         if (!doNotOverride)

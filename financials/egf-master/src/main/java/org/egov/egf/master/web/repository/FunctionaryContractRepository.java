@@ -14,11 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class FunctionaryContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = " /egf-master/functionaries/search?";
+	public static final String SEARCH_URL = "/egf-master/functionaries/_search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public FunctionaryContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public FunctionaryContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}
@@ -32,7 +32,7 @@ public class FunctionaryContractRepository {
 		}
 
 		if (functionaryContract.getTenantId() != null) {
-			content.append("tenantId=" + functionaryContract.getTenantId());
+			content.append("&tenantId=" + functionaryContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<FunctionaryContract> result = objectMapper.convertValue(

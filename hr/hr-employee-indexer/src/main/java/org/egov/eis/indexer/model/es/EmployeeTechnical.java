@@ -65,4 +65,11 @@ public class EmployeeTechnical {
 	@JsonProperty("technicalcreatedby")
 	private String technicalCreatedBy;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("technicallastmodifieddate")
+	private Date technicalLastModifiedDate;
+
+	@JsonProperty("technicallastmodifiedby")
+	private String technicalLastModifiedBy;
+
 }

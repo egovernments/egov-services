@@ -60,4 +60,8 @@ public class BoundaryResponse {
     @JsonProperty("Boundary")
     private List<Boundary> boundarys = new ArrayList<>();
 
+    public boolean getBoundarySize() {
+        return this.boundarys.size() > 0;
+    }
+
 }

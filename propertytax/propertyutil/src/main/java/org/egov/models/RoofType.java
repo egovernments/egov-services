@@ -23,7 +23,7 @@ public class RoofType {
 
 	@JsonProperty("tenantId")
 	@NotNull
-	@Size(min = 8, max = 128)
+	@Size(min = 4, max = 128)
 	private String tenantId = null;
 
 	@JsonProperty("name")

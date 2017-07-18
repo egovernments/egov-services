@@ -1,6 +1,7 @@
 package org.egov.eis.indexer.service;
 
 import java.net.URI;
+import java.util.List;
 
 import org.egov.commons.model.Category;
 import org.egov.commons.model.Community;
@@ -55,7 +56,7 @@ public class CommonMasterService {
 	}
 
 	// Language
-	public Language getLanguage(Long id, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+	public List<Language> getLanguages(List<Long> id, String tenantId, RequestInfoWrapper requestInfoWrapper) {
 
 		URI url = null;
 		LanguageResponse languageResponse = null;
@@ -72,7 +73,8 @@ public class CommonMasterService {
 			LOGGER.error("Following exception occurred while accessing Language API : " + e.getMessage());
 			return null;
 		}
-		return languageResponse.getLanguage().get(0);
+
+		return languageResponse.getLanguage();
 	}
 
 	// Community

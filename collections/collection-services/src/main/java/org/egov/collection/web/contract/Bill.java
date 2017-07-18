@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.egov.collection.model.AuditDetails;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Getter
 @Setter
 @ToString
@@ -32,7 +34,10 @@ public class Bill   {
 	private Boolean isActive;
 
 	private Boolean isCancelled;
+	
+	private String paidBy;
 
+	@JsonProperty("BillDetail")
 	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
 	
 	private String tenantId;

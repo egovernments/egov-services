@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.egov.wcms.model.enums.ApplicationType;
+import org.egov.wcms.model.enums.PlantType;
 import org.egov.wcms.model.enums.ReservoirType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +67,14 @@ public class CommonMastersController {
         for (final ReservoirType key : ReservoirType.values())
             reservoirType.put(key.name(), key);
         return reservoirType;
+    }
+
+    @RequestMapping(value = "/_getplanttypes")
+    public Map<String, PlantType> getPlantTypeEnum() {
+        final Map<String, PlantType> plantType = new HashMap<>();
+        for (final PlantType key : PlantType.values())
+            plantType.put(key.name(), key);
+        return plantType;
     }
 
 }

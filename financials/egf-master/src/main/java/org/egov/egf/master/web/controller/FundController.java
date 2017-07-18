@@ -49,9 +49,9 @@ public class FundController {
 		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
 		fundResponse.setResponseInfo(getResponseInfo(fundRequest.getRequestInfo()));
 		List<Fund> funds = new ArrayList<>();
-		Fund fund = null;
-		List<FundContract> fundContracts = new ArrayList<FundContract>();
-		FundContract contract = null;
+		Fund fund;
+		List<FundContract> fundContracts = new ArrayList<>();
+		FundContract contract;
 
 		fundRequest.getRequestInfo().setAction("create");
 
@@ -80,7 +80,7 @@ public class FundController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundContract> update(@RequestBody @Valid CommonRequest<FundContract> fundContractRequest,
+	public CommonResponse<FundContract> update(@RequestBody CommonRequest<FundContract> fundContractRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
@@ -90,9 +90,10 @@ public class FundController {
 		ModelMapper model = new ModelMapper();
 		CommonResponse<FundContract> fundResponse = new CommonResponse<>();
 		List<Fund> funds = new ArrayList<>();
-		Fund fund = null;
-		FundContract contract = null;
-		List<FundContract> fundContracts = new ArrayList<FundContract>();
+		fundResponse.setResponseInfo(getResponseInfo(fundContractRequest.getRequestInfo()));
+		Fund fund;
+		FundContract contract;
+		List<FundContract> fundContracts = new ArrayList<>();
 
 		for (FundContract fundContract : fundContractRequest.getData()) {
 			fund = new Fund();
@@ -120,14 +121,14 @@ public class FundController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public CommonResponse<FundContract> search(@ModelAttribute FundSearchContract fundSearchContract,
-			@RequestBody RequestInfo requestInfo, BindingResult errors) {
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FundSearch domain = new FundSearch();
 		mapper.map(fundSearchContract, domain);
-		FundContract contract = null;
+		FundContract contract;
 		ModelMapper model = new ModelMapper();
-		List<FundContract> fundContracts = new ArrayList<FundContract>();
+		List<FundContract> fundContracts = new ArrayList<>();
 		Pagination<Fund> funds = fundService.search(domain);
 
 		for (Fund fund : funds.getPagedData()) {
@@ -139,7 +140,7 @@ public class FundController {
 		CommonResponse<FundContract> response = new CommonResponse<>();
 		response.setData(fundContracts);
 		response.setPage(new PaginationContract(funds));
-		response.setResponseInfo(getResponseInfo(requestInfo)); 
+		response.setResponseInfo(getResponseInfo(requestInfo));
 
 		return response;
 

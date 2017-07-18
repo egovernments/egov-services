@@ -51,6 +51,7 @@ import org.egov.wcms.transanction.model.enums.BillingType;
 import org.egov.wcms.transanction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transanction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transanction.repository.rowmapper.WaterConnectionRowMapper;
+import org.egov.wcms.transanction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,9 @@ public class WaterConnectionRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private WaterConnectionQueryBuilder waterConnectionQueryBuilder; 
 
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -105,10 +109,9 @@ public class WaterConnectionRepository {
                 statement.setLong(15, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
-                statement.setString(18, waterConnectionRequest.getConnection().getProperty()
-                        .getPropertyidentifier());
-                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageType());
-                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyType());
+                statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
+                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
+                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
                 statement.setString(21
                         , "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
@@ -228,4 +231,12 @@ public class WaterConnectionRepository {
         Connection connection = jdbcTemplate.queryForObject(WaterConnectionQueryBuilder.getWaterConnectionByacknowledgenumber(), new WaterConnectionRowMapper(), acknowledgeNumber);
         return connection;
      }
+    
+    
+    public List<Connection> getConnectionDetails(WaterConnectionGetReq waterConnectionGetReq) { 
+    	List<Object> preparedStatementValues = new ArrayList<>();
+    	String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
+    	List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(), new WaterConnectionRowMapper());
+    	return connectionList;
+    }
 }

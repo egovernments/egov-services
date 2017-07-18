@@ -88,7 +88,7 @@ public class QueryFactory {
                                                      BoolQueryBuilder boolQueryBuilder) {
         if (criteria.getEscalationDate() != null) {
             final RangeQueryBuilder rangeQueryBuilder = rangeQuery(ESCALATION_DATE)
-                .gte(criteria.getEscalationDate().toString(ES_DATE_TIME_FORMAT));
+                .lte(criteria.getEscalationDate().toString(ES_DATE_TIME_FORMAT));
             boolQueryBuilder = boolQueryBuilder.filter(rangeQueryBuilder);
         }
         return boolQueryBuilder;

@@ -37,28 +37,36 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.common.master.web.contract;
+package org.egov.wcms.transanction.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Builder
-@Getter
-@Setter
 @AllArgsConstructor
+@EqualsAndHashCode
+@Getter
 @NoArgsConstructor
-
-@JsonPropertyOrder({ "id", "name" })
-public class DepartmentContract {
-
-	private String id;
-
+@Setter
+@ToString
+public class WaterConnectionGetReq {
+	
+	private List<Long> id;
+	private String tenantId;
+	private String legacyConsumerNumber;
+	private String acknowledgementNumber; 
+	private String consumerNumber;
+	private Long asgineeId;
 	private String name;
+	private String mobileNumber;
+	private String locality;
+	private String revenueWard;
+	private String doorNumber;
+	
 
-	private String code;
 }

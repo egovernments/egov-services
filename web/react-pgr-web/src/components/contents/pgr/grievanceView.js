@@ -62,7 +62,7 @@ class grievanceView extends Component{
 
   loadSRN = () =>{
 
-    let {initForm, addMandatory, handleChange} = this.props;
+    let {initForm, handleChange} = this.props;
     initForm();
 
     Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
@@ -91,7 +91,11 @@ class grievanceView extends Component{
              currentThis.setState({[k] : item[k]});
            }
         }
-        addMandatory();
+        if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED')){
+          currentThis.props.ADD_MANDATORY('rating');
+          if(currentThis.state.rating)
+            handleChange(currentThis.state.rating, "rating", true, "");
+        }
         if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
           handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
         }
@@ -839,10 +843,6 @@ const mapDispatchToProps = dispatch => ({
   },
   ADD_MANDATORY : (property) => {
      dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
-  },
-  addMandatory : () => {
-    if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.status === 'COMPLETED' || currentThis.state.status === 'REJECTED'))
-      dispatch({type: "ADD_MANDATORY", property: "rating", value: '', isRequired : true, pattern: ''})
   },
   handleChange: (value, property, isRequired, pattern) => {
       dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});

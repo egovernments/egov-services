@@ -33,7 +33,7 @@ public class AccountCodePurposeContractRepository {
 		}
 
 		if (accountCodePurposeContract.getTenantId() != null) {
-			content.append("tenantId=" + accountCodePurposeContract.getTenantId());
+			content.append("&tenantId=" + accountCodePurposeContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<AccountCodePurposeContract> result = objectMapper.convertValue(

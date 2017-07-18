@@ -92,6 +92,29 @@ chip: {
 };
 
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+
 class AssessmentDetails extends Component {
 
   constructor(props) {
@@ -107,8 +130,6 @@ class AssessmentDetails extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-
-    let isTimeLong;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
         console.log(res);
@@ -128,7 +149,6 @@ class AssessmentDetails extends Component {
         }).catch((err)=> {
           console.log(err)
         })
-
 
   }      
 
@@ -174,7 +194,7 @@ class AssessmentDetails extends Component {
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Reason for Creation"
+                                                  floatingLabelText="Reason for Creation *"
                                                   errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
                                                   onChange={(event, index, value) => {
@@ -198,7 +218,7 @@ class AssessmentDetails extends Component {
 
                                           {(assessmentDetails.reasonForCreation == 2) && <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Parent UPIC No."
+                                                  floatingLabelText="Parent UPIC No. *"
                                                   errorText={fieldErrors.parentUpicNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.parentUpicNo}</span> : ""}
                                                   value={assessmentDetails.parentUpicNo ? assessmentDetails.parentUpicNo : ""}
                                                   onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
@@ -212,7 +232,7 @@ class AssessmentDetails extends Component {
                                           </Col>}
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Type"
+                                                  floatingLabelText="Property Type *"
                                                   errorText={fieldErrors.assessmentPropertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentPropertyType}</span> : ""}
                                                   value={assessmentDetails.assessmentPropertyType ? assessmentDetails.assessmentPropertyType : ""}
                                                   onChange={(event, index, value) => {
@@ -233,7 +253,7 @@ class AssessmentDetails extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Sub-type"
+                                                  floatingLabelText="Property Sub-type *"
                                                   errorText={fieldErrors.assessmentPropertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentPropertySubType}</span> : ""}
                                                   value={assessmentDetails.assessmentPropertySubType ? assessmentDetails.assessmentPropertySubType : ""}
                                                   onChange={(event, index, value) => {
@@ -252,9 +272,11 @@ class AssessmentDetails extends Component {
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
                                           </Col>
-                                          <Col xs={12} md={3} sm={6}>
+										  {(getNameById(this.state.propertytypes ,assessmentDetails.assessmentPropertyType).match('Central Government') ||
+											getNameById(this.state.propertytypes ,assessmentDetails.assessmentPropertyType).match('State Government')) 
+											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Assessment Department"
+                                                  floatingLabelText="Department"
                                                   errorText={fieldErrors.assessmentDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentDepartment}</span> : ""}
                                                   value={assessmentDetails.assessmentDepartment ? assessmentDetails.assessmentDepartment : ""}
                                                   onChange={(event, index, value) => {
@@ -273,9 +295,10 @@ class AssessmentDetails extends Component {
                                                   {renderOption(this.state.departments)}
                                               </SelectField>
                                           </Col>
+                                          }
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Extent of Site (Sq. Mtrs)"
+                                                  floatingLabelText="Extent of Site (Sq. Mtrs) *"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
                                                   onChange={(e) => {handleChange(e, "extentOfSite", true, "")}}

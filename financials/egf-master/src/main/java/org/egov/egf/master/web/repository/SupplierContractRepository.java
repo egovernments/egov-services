@@ -32,7 +32,7 @@ public class SupplierContractRepository {
 		}
 
 		if (supplierContract.getTenantId() != null) {
-			content.append("tenantId=" + supplierContract.getTenantId());
+			content.append("&tenantId=" + supplierContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<SupplierContract> result = objectMapper.convertValue(

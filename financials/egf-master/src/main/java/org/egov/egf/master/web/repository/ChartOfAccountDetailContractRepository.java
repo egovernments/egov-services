@@ -33,7 +33,7 @@ public class ChartOfAccountDetailContractRepository {
 		}
 
 		if (chartOfAccountDetailContract.getTenantId() != null) {
-			content.append("tenantId=" + chartOfAccountDetailContract.getTenantId());
+			content.append("&tenantId=" + chartOfAccountDetailContract.getTenantId());
 		}
 		url = url + content.toString();
 		CommonResponse<ChartOfAccountDetailContract> result = objectMapper.convertValue(

@@ -90,7 +90,7 @@ const Main = () => {
     <Switch>
       <Route exact path= {base + '/'} component={Login}/>
 
-      <Route exact path= {base + '/create/:moduleName'} component={Create}/>
+      <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
 

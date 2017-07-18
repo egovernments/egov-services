@@ -464,7 +464,7 @@ class grievanceCreate extends Component {
     let validFile = validate_fileupload(e.target.files, formats);
     if(validFile === true){
       if(this.props.files.length === 0 && this.state.isMapsEnabled){
-        EXIF.getData(this.props.files[0], function() {
+        EXIF.getData(e.target.files[0], function() {
           var imagelat = EXIF.getTag(this, "GPSLatitude"),
           imagelongt = EXIF.getTag(this, "GPSLongitude");
           if(imagelat && imagelongt){

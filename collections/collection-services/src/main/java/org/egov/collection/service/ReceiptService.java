@@ -41,11 +41,16 @@
 package org.egov.collection.service;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
+import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
@@ -77,25 +82,38 @@ public class ReceiptService {
 			String receiptNumber = receiptRepository.generateReceiptNumber(receiptReq);
 			logger.info("Receipt Number generated is: "+receiptNumber);
 			billdetails.setReceiptNumber(receiptNumber);
-			Object businessDetails = receiptRepository.getBusinessDetails(billdetails.getBusinessService(), receiptReq);
+			BusinessDetailsResponse businessDetailsRes = receiptRepository.getBusinessDetails(billdetails.getBusinessService(), receiptReq);
+			if(null == businessDetailsRes){
+				logger.error("All business details fields are not available");
+				return null;
+			}
 			String fund = null;
 			String fundSource = null;
 			String function = null;
 			String department = null;
 			try{
-				fund = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].fund");
-				fundSource = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].fundSource");
-				function= JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].function");
-				department = JsonPath.read(businessDetails, "$.BusinessDetailsInfo[0].department");
+				fund = businessDetailsRes.getBusinessDetails().get(0).getFund();
+				fundSource = businessDetailsRes.getBusinessDetails().get(0).getFundSource();
+				function = businessDetailsRes.getBusinessDetails().get(0).getFunction();
+				department = businessDetailsRes.getBusinessDetails().get(0).getDepartment();
 			}catch(Exception e){
-	        	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
-				logger.error("All business details fields are not available: "+e.getCause());
+				logger.error("All business details fields are not available");
+				return null;
+			}
+			if(((null == fund || null == fundSource) || null == function) || null == department ){
+				logger.error("All business details fields are not available");
+				return null;
+			}else if(((fund.isEmpty() || fundSource.isEmpty()) || function.isEmpty()) || department.isEmpty()){
+				logger.error("All business details fields are not available");
 				return null;
 			}
         	logger.info("FUND: "+fund+" FUNDSOURCE: "+fundSource+" FUNCTION: "+function+" DEPARTMENT: "+department);
         	
 			for(BillAccountDetail billAccountDetails: billdetails.getBillAccountDetails()){
-				if(!receiptRepository.validateGLCode(billAccountDetails.getGlcode(), receiptReq.getReceipt().getTenantId(), receiptReq.getRequestInfo())){
+				List<Object> chartOfAccount = receiptRepository.getChartOfAccountOnGlCode(billAccountDetails.getGlcode(), 
+						receiptReq.getReceipt().getTenantId(), receiptReq.getRequestInfo());
+				logger.info("chartOfAccount: "+chartOfAccount);
+				if(chartOfAccount.size() <= 0){
 					logger.error("Glcode invalid!: "+billAccountDetails.getGlcode());
 					return null;
 				}

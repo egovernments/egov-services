@@ -154,7 +154,7 @@ class FloorDetails extends Component {
 
         Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
           console.log(res);
-          currentThis.setState({occupancies : res.occupancies})
+          currentThis.setState({occupancies : res.occuapancyMasters})
         }).catch((err)=> {
           console.log(err)
         })
@@ -165,46 +165,26 @@ class FloorDetails extends Component {
         }).catch((err)=> {
           console.log(err)
         })
+		
+		var temp = this.state.floorNumber;
+		
+		for(var i=4;i<=33;i++){
+			var commonFloors = {
+				id:i,
+				name:(i-3)+ " Floor"
+			}
+			temp.push(commonFloors);
+			
+		}
+		
+		this.setState({
+				floorNumber:temp
+			});
+		
+		
       	
 		this.createFloorObject();
   }
-
-  setRoomsInArray = () => {
-     var currentThis = this;
-    setTimeout(function() {
-         var temArray = [];
-
-    let {floorDetails} = currentThis.props;
-
-    if(floorDetails.floors){  
-      for(let i = 0; i<floorDetails.floors.length;i++){
-		 floorDetails.floors[i].uniquePosition = i;
-        if(floorDetails.floors[i].unitType == 1){
-			
-          if(floorDetails.floors[i].units){
-			
-             for(let j=0; j< floorDetails.floors[i].units.length; j++){
-				floorDetails.floors[i].units[j].uniquePosition = i;
-				floorDetails.floors[i].units[j].uniqueSubPosition = j;
-               temArray.push(floorDetails.floors[i].units[j]);
-            }
-          } else {
-            temArray.push(floorDetails.floors[i]);
-          }
-        } else {
-			temArray.push(floorDetails.floors[i]);
-        }
-      }
-
-	     
-      currentThis.setState({
-        rooms : temArray
-      })
-    }
-
-    }, 300) 
-  }
-  
   
   createFloorObject = () => {
 	  
@@ -342,6 +322,7 @@ class FloorDetails extends Component {
   
    render(){
 	   
+	   console.log(this.state.floorNumber);
 	   
 		var _this = this;   
 		   
@@ -385,7 +366,7 @@ class FloorDetails extends Component {
 												<Row>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Floor Number"
+														  floatingLabelText="Floor Number *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.floorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.floorNo}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.floorNo : ""}
 														  onChange={(event, index, value) => {
@@ -431,7 +412,7 @@ class FloorDetails extends Component {
 													</Col>
 													{(floorDetails.floor ? (floorDetails.floor.unitType == '1' ? true: false ): false) && <Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Flat Number"
+														  floatingLabelText="Flat Number *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", true, /^\d+$/g)}}
@@ -444,7 +425,7 @@ class FloorDetails extends Component {
 													</Col>}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Unit Number"
+														  floatingLabelText="Unit Number *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"unitNo", true, /^\d{3}$/g)}}
@@ -457,7 +438,7 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Construction type"
+														  floatingLabelText="Construction type *"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.constructionType? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionType}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constructionType : ""}
 														  onChange={(event, index, value) => {
@@ -478,7 +459,7 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage type"
+														  floatingLabelText="Usage type *"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usage? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.usage}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usage : ""}
 														  onChange={(event, index, value) => {
@@ -500,7 +481,7 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Usage sub type"
+														  floatingLabelText="Usage sub type *"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usageSubType : ""}
 														  onChange={(event, index, value) => {
@@ -534,7 +515,7 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Occupancy"
+														  floatingLabelText="Occupancy *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyType?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyType}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyType : ""}
 														  onChange={(event, index, value) => {
@@ -567,7 +548,9 @@ class FloorDetails extends Component {
 														/>
 													</Col>
 													
-													<Col xs={12} md={3} sm={6}>
+													{(floorDetails.floor? getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : false) 
+													
+													&& <Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Annual Rent"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.annualRent ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.annualRent}</span>:""): ""}
@@ -579,7 +562,7 @@ class FloorDetails extends Component {
 														  maxLength={9}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
-													</Col>
+													</Col>}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Manual ARV"
@@ -595,7 +578,7 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<DatePicker  className="fullWidth datepicker"
-														  floatingLabelText="Construction Date"
+														  floatingLabelText="Construction Date *"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionDate}</span> :""): ""}
 														  defaultDate={ floorDetails.floor ? (floorDetails.floor.constructionDate ? new Date(floorDetails.floor.constructionDate) : new Date() ):  new Date()}
 														  onChange={(event,date) => {
@@ -614,16 +597,16 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<DatePicker  className="fullWidth datepicker"
-														  floatingLabelText="Effective From Date"
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.effectiveDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.effectiveDate}</span> : "") : ""}
-														  defaultDate={ floorDetails.floor ? (floorDetails.floor.effectiveDate ? new Date(floorDetails.floor.effectiveDate) : new Date() ):  new Date()}
+														  floatingLabelText="Effective From Date *"
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.effectiveFromDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.effectiveFromDate}</span> : "") : ""}
+														  defaultDate={ floorDetails.floor ? (floorDetails.floor.effectiveFromDate ? new Date(floorDetails.floor.effectiveFromDate) : new Date() ):  new Date()}
 														  onChange={(event,date) => {
 															  var e = {
 																target:{
 																	value: date
 																}
 															  }
-															  handleChangeNextOne(e,"floor" ,"effectiveDate", true, "")}}
+															  handleChangeNextOne(e,"floor" ,"effectiveFromDate", true, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -633,7 +616,7 @@ class FloorDetails extends Component {
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText="Unstructured land"
+														  floatingLabelText="Unstructured land *"
 														  errorText={fieldErrors.floor ? ( fieldErrors.floor.unstructuredLand?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unstructuredLand}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.unstructuredLand : ""}
 														  onChange={(event, index, value) => {
@@ -683,7 +666,7 @@ class FloorDetails extends Component {
 													{(floorDetails.floor ? (floorDetails.floor.unitType == '1' ? false : true ): true) && <div className="clearfix"></div>}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Plinth Area"
+														  floatingLabelText="Plinth Area *"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.plinthArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.plinthArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.plinthArea : ""}
 														  onChange={(e) => {handleChangeNextOne(e, "floor","plinthArea", true, "")}}
@@ -828,7 +811,7 @@ class FloorDetails extends Component {
                                                     <td>{i.annualRent}</td>
                                                     <td>{i.manualArv}</td>
                                                     <td>{i.constructionDate}</td>
-                                                    <td>{i.effectiveDate}</td>
+                                                    <td>{i.effectiveFromDate}</td>
                                                     <td>{i.unstructuredLand}</td>
                                                     <td>{i.length}</td>
                                                     <td>{i.breadth}</td>

@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 
-export default class UiEmailField extends Component {
+export default class UiSingleFileUpload extends Component {
 	constructor(props) {
        super(props);
    	}
 
-	renderEmailBox = (item) => {
+	renderSingleFileUpload = (item) => {
 		switch (this.props.ui) {
 			case 'google': 
 				return (
 					<TextField 
 						fullWidth={true} 
-						type="email"
+						multiple={true}
+						type="file"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={eval(item.jsonpath)}
 						disabled={item.isDisabled}
@@ -25,7 +26,7 @@ export default class UiEmailField extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderEmailBox(this.props.item)}
+	        {this.renderSingleFileUpload(this.props.item)}
 	      </div>
 	    );
 	}

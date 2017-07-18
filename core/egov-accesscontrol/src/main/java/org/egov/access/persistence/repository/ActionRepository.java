@@ -154,9 +154,7 @@ public class ActionRepository {
 
 	}
 
-	private Map<String, List<Action>> getActionsQueryBuilder(ActionRequest actionRequest) {
-
-		ActionSearchRowMapper actionRowMapper = new ActionSearchRowMapper();
+	private List<Action> getActionsQueryBuilder(ActionRequest actionRequest) {
 
 		final Map<String, Object> parametersMap = new HashMap<String, Object>();
 
@@ -166,17 +164,16 @@ public class ActionRepository {
 		String query = "select id,name,displayname,servicecode,url,queryparams,enabled,parentmodule,ordernumber from eg_action action where id IN(select actionid from eg_roleaction roleaction where roleaction.rolecode IN ( select code from eg_ms_role where code in (:code)) and roleaction.tenantid =:tenantid and action.id = roleaction.actionid )";
 
 		if (actionRequest.getEnabled() != null) {
-			query = query + " and enabled =:enabled ORDER BY id ASC";
+			query = query + " and enabled =:enabled ORDER BY parentmodule";
 			parametersMap.put("enabled", actionRequest.getEnabled());
 		} else {
-		  query = query +" ORDER BY id ASC";
+			query = query + " ORDER BY parentmodule";
 		}
-		
-		LOGGER.info("Action Query : " + query);
-		namedParameterJdbcTemplate.query(query, parametersMap, actionRowMapper);
-		Map<String, List<Action>> actionMap = actionRowMapper.actionMap;
 
-		return actionMap;
+		LOGGER.info("Action Query : " + query);
+		List<Action> actionList = namedParameterJdbcTemplate.query(query, parametersMap, new ActionSearchRowMapper());
+
+		return actionList;
 	}
 
 	private List<Module> getServiceQueryBuilder(ActionRequest actionRequest, Map<String, List<Action>> actionMap) {
@@ -213,16 +210,16 @@ public class ActionRepository {
 
 	}
 
-	private List<Module> getAllServicesQueryBuilder(ActionRequest actionRequest, List<Module> moduleList) {
+	private List<Module> getAllServicesQueryBuilder(ActionRequest actionRequest, List<Long> moduleCodes) {
 
 		StringBuilder allservicesQueryBuilder = new StringBuilder();
 
 		ModuleSearchRowMapper moduleRowMapper = new ModuleSearchRowMapper();
 
-		List<Long> moduleCodes = new ArrayList<>();
-		for (Module module : moduleList) {
-			moduleCodes.add(module.getId());
-		}
+		/*
+		 * List<Long> moduleCodes = new ArrayList<>(); for (Module module :
+		 * moduleList) { moduleCodes.add(module.getId()); }
+		 */
 
 		final Map<String, Object> parametersMap = new HashMap<String, Object>();
 
@@ -243,12 +240,12 @@ public class ActionRepository {
 			allservicesQueryBuilder.append(" and s1.tenantid = :tenantid )");
 		}
 
-		allservicesQueryBuilder.append(" SELECT * FROM nodes ORDER BY parentmodule )" + " UNION"
+		allservicesQueryBuilder.append(" SELECT * FROM nodes)" + " UNION"
 				+ " (WITH RECURSIVE nodes(id,code,name,parentmodule,displayname) AS ("
 				+ " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname" + " FROM service s1 WHERE "
 				+ " id IN (:moduleCodes) UNION ALL" + " SELECT s1.id,s1.code, s1.name, s1.parentmodule,s1.displayname"
 				+ " FROM nodes s2, service s1 WHERE CAST(s2.parentmodule as bigint) = s1.id"
-				+ " and s1.tenantid =:tenantid )" + " SELECT * FROM nodes ORDER BY parentmodule );");
+				+ " and s1.tenantid =:tenantid )" + " SELECT * FROM nodes );");
 
 		LOGGER.info("All Services Query : " + allservicesQueryBuilder.toString());
 		List<Module> allServiceList = namedParameterJdbcTemplate.query(allservicesQueryBuilder.toString(),
@@ -261,40 +258,45 @@ public class ActionRepository {
 
 		ActionService service = new ActionService();
 
-		service.setModules(new ArrayList<Module>());
-
-		List<Module> moduleList = null;
-
-		List<Module> allServiceList = null;
-
-		Map<String, List<Action>> actionMap = getActionsQueryBuilder(actionRequest);
-
-		if (actionMap.size() > 0) {
-
-			moduleList = getServiceQueryBuilder(actionRequest, actionMap);
-
-		}
-
-		if (moduleList != null && moduleList.size() > 0) {
-
-			allServiceList = getAllServicesQueryBuilder(actionRequest, moduleList);
-
-		}
-
-		if (allServiceList != null && allServiceList.size() > 0) {
-
-			List<Module> rootModules = prepareListOfRootModules(allServiceList, actionMap);
-
-			for (Module module : rootModules) {
-
-				getSubmodule(module, allServiceList, actionMap);
-
-			}
-
-			removeMainModuleDoesnotExistActions(rootModules);
-
-			service.setModules(rootModules);
-		}
+		/*
+		 * service.setModules(new ArrayList<Module>());
+		 * 
+		 * List<Module> moduleList = null;
+		 * 
+		 * List<Module> allServiceList = null;
+		 * 
+		 * List<Action> actionList = getActionsQueryBuilder(actionRequest);
+		 * 
+		 * if (actionList.size() > 0) {
+		 * 
+		 * // moduleList = getServiceQueryBuilder(actionRequest, actionMap);
+		 * 
+		 * }
+		 * 
+		 * 
+		 * if (moduleList != null && moduleList.size() > 0) {
+		 * 
+		 * allServiceList = getAllServicesQueryBuilder(actionRequest,
+		 * moduleList);
+		 * 
+		 * }
+		 * 
+		 * 
+		 * if (allServiceList != null && allServiceList.size() > 0) {
+		 * 
+		 * //List<Module> rootModules = prepareListOfRootModules(allServiceList,
+		 * actionMap);
+		 * 
+		 * for (Module module : rootModules) {
+		 * 
+		 * getSubmodule(module, allServiceList, actionMap);
+		 * 
+		 * }
+		 * 
+		 * removeMainModuleDoesnotExistActions(rootModules);
+		 * 
+		 * service.setModules(rootModules); }
+		 */
 
 		return service;
 	}
@@ -380,16 +382,30 @@ public class ActionRepository {
 
 	public List<Action> getAllActions(ActionRequest actionRequest) {
 
-		List<Module> moduleList = null;
+		// List<Module> moduleList = null;
 
 		List<Module> allServiceList = null;
 
-		Map<String, List<Action>> actionMap = getActionsQueryBuilder(actionRequest);
+		List<Action> actions = getActionsQueryBuilder(actionRequest);
 
-		if (actionMap.size() > 0) {
+		/*
+		 * if (actionMap.size() > 0) {
+		 * 
+		 * moduleList = getServiceQueryBuilder(actionRequest, actionMap);
+		 * 
+		 * }
+		 */
 
-			moduleList = getServiceQueryBuilder(actionRequest, actionMap);
+		List<Long> moduleList = new ArrayList<Long>();
 
+		for (Action action : actions) {
+
+			try {
+				moduleList.add(Long.valueOf(action.getParentModule()));
+			} catch (NumberFormatException nfe) {
+
+				System.out.println("in catch block");
+			}
 		}
 
 		if (moduleList != null && moduleList.size() > 0) {
@@ -398,41 +414,27 @@ public class ActionRepository {
 
 		}
 
-		List<Action> actionList = new ArrayList<Action>();
+		for (Action action : actions) {
 
-		Set<Entry<String, List<Action>>> set = actionMap.entrySet();
+			String path = getPath(action.getParentModule(), allServiceList);
 
-		Iterator<Entry<String, List<Action>>> iterator = set.iterator();
-
-		while (iterator.hasNext()) {
-
-			Entry<String, List<Action>> entry = iterator.next();
-
-			List<Action> actions = entry.getValue();
-
-			for (Action action : actions) {
-
-				String path = getPath(action.getServiceCode(), allServiceList);
-
-				if (path != "") {
-					path = path + "." + action.getName();
-				}
-				action.setPath(path);
-
-				actionList.add(action);
+			if (path != "") {
+				path = path + "." + action.getName();
 			}
+			action.setPath(path);
+
 		}
 
-		return actionList;
+		return actions;
 	}
 
-	private String getPath(String serviceCode, List<Module> modules) {
+	private String getPath(String parentModule, List<Module> modules) {
 
 		String path = "";
 
 		for (Module module : modules) {
 
-			if (serviceCode.equals(module.getCode())) {
+			if (parentModule.equals(module.getId().toString())) {
 
 				if (module.getParentModule() == null || module.getParentModule().isEmpty()) {
 

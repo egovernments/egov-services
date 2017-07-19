@@ -20,6 +20,7 @@ public class ModuleSearchRowMapper implements RowMapper<Module> {
 		module.setName(rs.getString("name"));
 		module.setDisplayName(rs.getString("displayname"));
 		module.setParentModule(rs.getString("parentmodule"));
+		module.setEnabled(rs.getBoolean("enabled"));
 		return module;
 	}
 

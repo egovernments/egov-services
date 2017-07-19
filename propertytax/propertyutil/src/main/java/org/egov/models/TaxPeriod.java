@@ -3,6 +3,8 @@ package org.egov.models;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +20,11 @@ public class TaxPeriod {
 	private String	tenantId;	
 	
 	@NotNull
+	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm:ss")
 	private String	fromDate;	
 	
 	@NotNull
+	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm:ss")
 	private String	toDate;	
 	
 	@Size(min=4,max=128)

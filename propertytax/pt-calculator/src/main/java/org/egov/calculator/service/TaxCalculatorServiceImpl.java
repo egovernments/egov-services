@@ -160,13 +160,16 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         for (TaxperiodWrapper taxWrapper : taxperiods) {
             for (UnitWrapper wrapper : taxWrapper.getUnits()) {
                 Unit unit = wrapper.getUnit();
+                DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
+                Date fromDate = dateFormat.parse( taxWrapper.getTaxPeriod().getFromDate());
+                String date = new SimpleDateFormat(environment.getProperty("date.input.format")).format(fromDate);
                 List<CalculationFactor> factorsList = getFactorsByTenantIdAndValidDate(tenantId,
-                        taxWrapper.getTaxPeriod().getFromDate());
+                        date);
                 Map<String, Double> factors = factorsList.stream().collect(
                         Collectors.toMap(factor -> factor.getFactorType().toString() + factor.getFactorCode(),
                                 factor -> factor.getFactorValue()));
                 wrapper.setFactors(factors);
-                List<TaxRates> taxRates = getTaxRateByTenantAndDate(tenantId, taxWrapper.getTaxPeriod().getFromDate());
+                List<TaxRates> taxRates = getTaxRateByTenantAndDate(tenantId, date);
                 wrapper.setTaxRates(taxRates);
                 GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
                         calculationRequest.getRequestInfo(), tenantId,
@@ -291,13 +294,13 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
      
         Date todayDate = new Date();
-        String currentDate= new SimpleDateFormat("dd/MM/yyyy").format(todayDate);
+        String currentDate= new SimpleDateFormat(environment.getProperty("date.input.format")).format(todayDate);
         TaxPeriod taxperiod = taxPeriodRespository.getToDateForTaxCalculation(tenantId,currentDate);
         String currentFinincialYear = taxperiod.getToDate();
         TaxPeriod taxperiodForFrom = taxPeriodRespository.getToDateForTaxCalculation(tenantId, unit.getOccupancyDate());
         DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
         Date occupancy = dateFormat.parse(taxperiodForFrom.getFromDate());
-        String date = dateFormat.format(occupancy);
+        String date = new SimpleDateFormat(environment.getProperty("date.input.format")).format(occupancy);
         List<TaxPeriod> taxPeriodsList = getTaxPeriodsByTenantIdAndDate(tenantId, date,
                 currentFinincialYear);
         return taxPeriodsList;

@@ -172,7 +172,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                         calculationRequest.getRequestInfo(), tenantId,
                         calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
                         unit.getStructure(),
-                        calculationRequest.getProperty().getPropertyDetail().getUsage(), null, unit.getOccupancyType(),
+                       unit.getUsage(), null, unit.getOccupancyType(),
                         unit.getOccupancyDate());
                 Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
                 wrapper.setGuidanceValue(guidanceValue);
@@ -403,12 +403,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         }
 
         List<TaxRates> independentTaxes = unitWrapper.getTaxRates().stream()
-                .filter(taxRate -> taxRate.getDependentTaxHead() == null).collect(Collectors.toList());
+                .filter(taxRate -> taxRate.getDependentTaxHead() == null ||  taxRate.getDependentTaxHead().isEmpty()).collect(Collectors.toList());
         List<HeadWiseTax> headWiseTaxes = new ArrayList<HeadWiseTax>();
         Map<String, List<TaxRates>> independentTaxesMap = independentTaxes.stream()
                 .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
         List<TaxRates> dependentTaxes = unitWrapper.getTaxRates().stream()
-                .filter(taxRate -> taxRate.getDependentTaxHead() != null).collect(Collectors.toList());
+                .filter(taxRate -> taxRate.getDependentTaxHead()!=null && !taxRate.getDependentTaxHead().isEmpty()).collect(Collectors.toList());
         Map<String, List<TaxRates>> depenentTaxesMap = dependentTaxes.stream()
                 .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
 

@@ -24,7 +24,7 @@ public class GuidanceValueBuilder {
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("SELECT * FROM egpt_mstr_guidancevalue WHERE tenantId = '" + tenantId + "'"
 				+ " AND boundary = '" + boundary + "' " + " AND structure = '" + structure + "' AND usage = '" + usage
-				+ "' " + " AND subusage = '" + subUsage + "' AND occupancy = '" + occupancy + "'" + " AND  to_date('" + validDate+"','dd/MM/yyyy')"
+				+ "' " + "  AND occupancy = '" + occupancy + "'" + " AND  to_date('" + validDate+"','dd/MM/yyyy')"
 				+ " between fromdate::date and todate::date");
 
 		return searchSql.toString();

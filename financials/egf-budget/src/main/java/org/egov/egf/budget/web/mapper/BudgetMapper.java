@@ -44,13 +44,7 @@ public class BudgetMapper {
 		contract.setId(budget.getId());
 		contract.setName(budget.getName());
 		if (budget.getFinancialYear() != null)
-			contract.setFinancialYear(FinancialYearContract.builder().id(budget.getFinancialYear().getId())
-					.active(budget.getFinancialYear().getActive()).endingDate(budget.getFinancialYear().getEndingDate())
-					.finYearRange(budget.getFinancialYear().getFinYearRange())
-					.isActiveForPosting(budget.getFinancialYear().getIsActiveForPosting())
-					.isClosed(budget.getFinancialYear().getIsClosed())
-					.startingDate(budget.getFinancialYear().getStartingDate())
-					.transferClosingBalance(budget.getFinancialYear().getTransferClosingBalance()).build());
+			contract.setFinancialYear(budget.getFinancialYear());
 		contract.setEstimationType(budget.getEstimationType());
 		if (budget.getParent() != null) {
 			contract.setParent(toContract(budget.getParent()));

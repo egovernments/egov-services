@@ -57,6 +57,7 @@ public class SchemeController {
 		for (SchemeContract schemeContract : schemeContractRequest.getData()) {
 			scheme = new Scheme();
 			model.map(schemeContract, scheme);
+			scheme.setCreatedDate(new Date());
 			scheme.setCreatedBy(schemeContractRequest.getRequestInfo().getUserInfo());
 			scheme.setLastModifiedBy(schemeContractRequest.getRequestInfo().getUserInfo());
 			schemes.add(scheme);
@@ -66,6 +67,7 @@ public class SchemeController {
 
 		for (Scheme f : schemes) {
 			contract = new SchemeContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			schemeContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class SchemeController {
 		for (SchemeContract schemeContract : schemeContractRequest.getData()) {
 			scheme = new Scheme();
 			model.map(schemeContract, scheme);
+			scheme.setLastModifiedDate(new Date());
 			scheme.setLastModifiedBy(schemeContractRequest.getRequestInfo().getUserInfo());
 			schemes.add(scheme);
 		}
@@ -106,6 +109,7 @@ public class SchemeController {
 		for (Scheme schemeObj : schemes) {
 			contract = new SchemeContract();
 			model.map(schemeObj, contract);
+			contract.setLastModifiedDate(new Date());
 			schemeContracts.add(contract);
 		}
 

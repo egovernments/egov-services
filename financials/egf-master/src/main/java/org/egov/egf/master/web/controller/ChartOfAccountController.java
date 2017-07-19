@@ -58,6 +58,7 @@ public class ChartOfAccountController {
 		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getData()) {
 			chartOfAccount = new ChartOfAccount();
 			model.map(chartOfAccountContract, chartOfAccount);
+			chartOfAccount.setCreatedDate(new Date());
 			chartOfAccount.setCreatedBy(chartOfAccountContractRequest.getRequestInfo().getUserInfo());
 			chartOfAccount.setLastModifiedBy(chartOfAccountContractRequest.getRequestInfo().getUserInfo());
 			chartofaccounts.add(chartOfAccount);
@@ -67,6 +68,7 @@ public class ChartOfAccountController {
 
 		for (ChartOfAccount f : chartofaccounts) {
 			contract = new ChartOfAccountContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			chartOfAccountContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class ChartOfAccountController {
 		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getData()) {
 			chartOfAccount = new ChartOfAccount();
 			model.map(chartOfAccountContract, chartOfAccount);
+			chartOfAccount.setLastModifiedDate(new Date());
 			chartOfAccount.setLastModifiedBy(chartOfAccountContractRequest.getRequestInfo().getUserInfo());
 			chartofaccounts.add(chartOfAccount);
 		}
@@ -108,6 +111,7 @@ public class ChartOfAccountController {
 		for (ChartOfAccount chartOfAccountObj : chartofaccounts) {
 			contract = new ChartOfAccountContract();
 			model.map(chartOfAccountObj, contract);
+			contract.setLastModifiedDate(new Date());
 			chartOfAccountContracts.add(contract);
 		}
 

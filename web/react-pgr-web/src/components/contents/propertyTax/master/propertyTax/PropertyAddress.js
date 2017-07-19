@@ -133,7 +133,7 @@ class PropertyAddress extends Component {
           console.log(err)
         }) 
 
-       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVANUE"}).then((res)=>{
+       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -143,7 +143,7 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({ward : res.Boundary})
         }).catch((err)=> {
@@ -153,28 +153,28 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVANUE"}).then((res)=>{
+         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({block : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"REVANUE"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
           currentThis.setState({street : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVANUE", hierarchyTypeName:"REVANUE"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ELECTION", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);
           currentThis.setState({election : res.Boundary})
         }).catch((err)=> {
@@ -236,6 +236,40 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
+										  <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+                                                  floatingLabelText="Appartment/Complex name"
+                                                  errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.appComplexName}</span>: ""}
+                                                  value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
+                                                  onChange={(event, index, value) => {
+                                                      var e = {
+                                                        target: {
+                                                          value: value
+                                                        }
+                                                      };
+                                                      handleChange(e, "appComplexName", true, "")}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                              >
+                                                    {renderOption(this.state.apartments)}
+                                              </SelectField>
+                                          </Col>
+										  <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText="Door No. *"
+                                                  errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
+                                                  value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
+                                                  onChange={(e) => handleChange(e, "doorNo", true, '')}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  maxLength={12}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                              />
+                                          </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Locality *"
@@ -257,25 +291,25 @@ class PropertyAddress extends Component {
                                                       {renderOption(this.state.locality)}
                                               </SelectField>
                                           </Col>
-                                          <Col xs={12} md={3} sm={6}>
+										   <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Appartment/Complex name"
-                                                  errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.appComplexName}</span>: ""}
-                                                  value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
+                                                  floatingLabelText="Election ward *"
+                                                  errorText={fieldErrors.electionWard ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.electionWard}</span> : ""}
+                                                  value={propertyAddress.electionWard ? propertyAddress.electionWard : ""}
                                                   onChange={(event, index, value) => {
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "appComplexName", true, "")}
+                                                      handleChange(e, "electionWard", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-                                                    {renderOption(this.state.apartments)}
+                                                    {renderOption(this.state.election)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -382,40 +416,6 @@ class PropertyAddress extends Component {
                                               >
                                                     {renderOption(this.state.revanue)}
                                               </SelectField>
-                                          </Col>
-                                          <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Election ward *"
-                                                  errorText={fieldErrors.electionCard ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.electionCard}</span> : ""}
-                                                  value={propertyAddress.electionCard ? propertyAddress.electionCard : ""}
-                                                  onChange={(event, index, value) => {
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
-                                                      handleChange(e, "electionWard", true, "")}
-                                                  }
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
-                                                    {renderOption(this.state.election)}
-                                              </SelectField>
-                                          </Col>
-                                          <Col xs={12} md={3} sm={6}>
-                                              <TextField  className="fullWidth"
-                                                  floatingLabelText="Door No. *"
-                                                  errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
-                                                  value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
-                                                  onChange={(e) => handleChange(e, "doorNo", true, '')}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  maxLength={12}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              />
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"

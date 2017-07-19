@@ -128,6 +128,8 @@ class Header extends Component {
 
   componentDidMount()
   {
+	  
+	  console.log(this.props.actionList);
     //When api ready asssign api response to menuItems
     let menuItems=[{
             id:0,

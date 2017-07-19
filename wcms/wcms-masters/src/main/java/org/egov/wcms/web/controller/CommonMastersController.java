@@ -40,41 +40,87 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.model.CommonDataModel;
 import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.model.enums.PlantType;
 import org.egov.wcms.model.enums.ReservoirType;
+import org.egov.wcms.web.contract.CommonEnumResponse;
+import org.egov.wcms.web.contract.RequestInfoWrapper;
+import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
+import org.egov.wcms.web.errorhandlers.ErrorHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/master")
 public class CommonMastersController {
+	
+	@Autowired
+    private ErrorHandler errHandler; 
+	
+	@Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
     @RequestMapping(value = "/_getapplicationtypes")
-    public Map<String, ApplicationType> getApplicationTypeEnum() {
-        final Map<String, ApplicationType> applicationType = new HashMap<>();
-        for (final ApplicationType key : ApplicationType.values())
-            applicationType.put(key.name(), key);
-        return applicationType;
+    public ResponseEntity<?> getApplicationTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+
+        List<CommonDataModel> modelList = new ArrayList<>(); 
+        for (final ApplicationType key : ApplicationType.values()) { 
+        	modelList.add(new CommonDataModel(key.name(), key));
+        }
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
     @RequestMapping(value = "/_getreservoirtypes")
-    public Map<String, ReservoirType> getReservoirTypeEnum() {
-        final Map<String, ReservoirType> reservoirType = new HashMap<>();
-        for (final ReservoirType key : ReservoirType.values())
-            reservoirType.put(key.name(), key);
-        return reservoirType;
+    public ResponseEntity<?> getReservoirTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+
+        List<CommonDataModel> modelList = new ArrayList<>(); 
+        for (final ReservoirType key : ReservoirType.values()) { 
+        	modelList.add(new CommonDataModel(key.name(), key));
+        }
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
     @RequestMapping(value = "/_getplanttypes")
-    public Map<String, PlantType> getPlantTypeEnum() {
-        final Map<String, PlantType> plantType = new HashMap<>();
-        for (final PlantType key : PlantType.values())
-            plantType.put(key.name(), key);
-        return plantType;
+    public ResponseEntity<?> getPlantTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+
+        List<CommonDataModel> modelList = new ArrayList<>(); 
+        for (final PlantType key : PlantType.values()) { 
+        	modelList.add(new CommonDataModel(key.name(), key));
+        }
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
+    private ResponseEntity<?> getSuccessResponse(final List<CommonDataModel> modelList,
+            final RequestInfo requestInfo) {
+        final CommonEnumResponse response = new CommonEnumResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        response.setResponseInfo(responseInfo);
+        response.setDataModelList(modelList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }

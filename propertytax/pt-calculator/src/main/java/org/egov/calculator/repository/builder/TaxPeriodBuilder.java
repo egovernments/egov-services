@@ -40,14 +40,14 @@ public class TaxPeriodBuilder {
 
 	public static String getToDateForTaxCalculation(String tenantId,String date){
 	    String searchQuery="SELECT * FROM  egpt_mstr_taxperiods WHERE  tenantId='"+tenantId+"' "
-	            + "and todate::date  >= '"+date+"'::date ORDER BY todate ASC LIMIT 1";
+	            + "and todate::date  >= to_date('"+date+"','dd/MM/yyyy') ORDER BY todate ASC LIMIT 1";
 	    return searchQuery;
 	    
 	}
 	
 	public static String getFromDateForTaxCalculation(String tenantId,String date){
             String searchQuery="SELECT * FROM  egpt_mstr_taxperiods WHERE  tenantId='"+tenantId+"' "
-                    + "and fromdate::date  <= '"+date+"'::date ORDER BY todate DESC LIMIT 1";
+                    + "and fromdate::date  <= to_date('"+date+"','dd/MM/yyyy') ORDER BY todate DESC LIMIT 1";
             return searchQuery;
             
         }

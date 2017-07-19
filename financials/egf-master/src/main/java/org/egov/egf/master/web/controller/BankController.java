@@ -55,6 +55,7 @@ public class BankController {
 
 			bank = new Bank();
 			model.map(bankContract, bank);
+			bank.setCreatedDate(new Date());
 			bank.setCreatedBy(bankContractRequest.getRequestInfo().getUserInfo());
 			bank.setLastModifiedBy(bankContractRequest.getRequestInfo().getUserInfo());
 			banks.add(bank);
@@ -68,6 +69,7 @@ public class BankController {
 		for (Bank bankDomain : banks) {
 
 			contract = new BankContract();
+			contract.setCreatedDate(new Date());
 			model.map(bankDomain, contract);
 			bankContracts.add(contract);
 		}
@@ -94,6 +96,7 @@ public class BankController {
 
 			bank = new Bank();
 			model.map(bankContract, bank);
+			bank.setLastModifiedDate(new Date());
 			bank.setLastModifiedBy(bankContractRequest.getRequestInfo().getUserInfo());
 			banks.add(bank);
 
@@ -106,6 +109,7 @@ public class BankController {
 
 			contract = new BankContract();
 			model.map(bankObj, contract);
+			contract.setLastModifiedDate(new Date());
 			bankContracts.add(contract);
 		}
 		bankContractRequest.setData(bankContracts);

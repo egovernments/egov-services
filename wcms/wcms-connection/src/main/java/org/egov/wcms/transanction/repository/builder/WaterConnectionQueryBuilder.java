@@ -176,6 +176,14 @@ public class WaterConnectionQueryBuilder {
 			preparedStatementValues.add(waterConnectionGetReq.getConsumerNumber());
 		}
 		
+		if((null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) 
+				|| (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) 
+				|| (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty())  
+				|| (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()) 
+				|| (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty())) { 
+			
+		}
+		
 	/*	if (null != waterConnectionGetReq.getAsgineeId()) { 
 			isAppendAndClause = true;
 			selectQuery.append(" connection.legacyconsumernumber = ?");
@@ -216,6 +224,11 @@ public class WaterConnectionQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" connection.id IN " + getIdQuery(waterConnectionGetReq.getId()));
 		}
+		
+		if (null != waterConnectionGetReq.getPropertyIdentifierList() && waterConnectionGetReq.getPropertyIdentifierList().size() > 0) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" propertyidentifier.id IN " + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
+		}
 /*
 		if (serviceGroupRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -246,6 +259,16 @@ public class WaterConnectionQueryBuilder {
 			query.append(idList.get(0).toString());
 			for (int i = 1; i < idList.size(); i++)
 				query.append(", " + idList.get(i));
+		}
+		return query.append(")").toString();
+	}
+	
+	private static String getPropertyIdentifierQuery(final List<Long> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append("'" + idList.get(0).toString() + "'");
+			for (int i = 1; i < idList.size(); i++)
+				query.append(",'" + idList.get(i)+"'");
 		}
 		return query.append(")").toString();
 	}

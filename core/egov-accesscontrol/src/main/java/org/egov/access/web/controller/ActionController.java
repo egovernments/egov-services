@@ -13,6 +13,7 @@ import org.egov.access.web.contract.action.ActionContract;
 import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.access.web.contract.action.ActionResponse;
 import org.egov.access.web.contract.action.ActionSearchResponse;
+import org.egov.access.web.contract.action.Module;
 import org.egov.access.web.contract.factory.ResponseInfoFactory;
 import org.egov.access.web.contract.validateaction.ActionValidationContract;
 import org.egov.access.web.contract.validateaction.ValidateActionRequest;
@@ -54,6 +55,20 @@ public class ActionController {
 		return getSuccessResponse(actionsList);
 	}
 
+	@PostMapping(value = "_list")
+	public ResponseEntity<?> getAllActionsBasedOnRoles(@RequestBody final ActionRequest actionRequest) {
+
+		final List<ErrorResponse> errorResponses = validateActionRequest(actionRequest, "list");
+
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		List<Module> moduleList = actionService.getAllActionsBasedOnRoles(actionRequest);
+
+		return getListSuccessResponse(actionRequest.getRequestInfo(), moduleList);
+
+	}
+
 	@PostMapping(value = "_get")
 	public ResponseEntity<?> getAllActions(@RequestBody final ActionRequest actionRequest) {
 
@@ -72,6 +87,16 @@ public class ActionController {
 	public ValidateActionResponse validateAction(@RequestBody ValidateActionRequest validateActionRequest) {
 		ActionValidation actionValidation = actionService.validate(validateActionRequest.toDomain());
 		return getValidateActionResponse(actionValidation);
+	}
+
+	private ResponseEntity<?> getListSuccessResponse(final RequestInfo requestInfo, final List<Module> moduleList) {
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		ActionSearchResponse response = new ActionSearchResponse();
+		response.setResponseInfo(responseInfo);
+		response.setModules(moduleList);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	private ResponseEntity<?> getNewListSuccessResponse(final RequestInfo requestInfo, final List<Action> actionList) {

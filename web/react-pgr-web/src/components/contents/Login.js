@@ -133,8 +133,6 @@ class Login extends Component {
      setLoadingStatus("loading");
      setHome(false);
      this.handleLocaleChange(this.state.locale);
-
-
    }
 
    componentWillUnmount() {
@@ -202,17 +200,16 @@ class Login extends Component {
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
-
-        Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response)
-        {
-          // console.log(response)
-          localStorage.setItem("modules", JSON.stringify(response.modules));
-          setActionList(response.modules)
+		
+		
+   Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response){		        
+				
+				//console.log(response)
+		  localStorage.setItem("modules", JSON.stringify(response.modules));
+			setActionList(response.modules)
         },function(err) {
             console.log(err);
         });
-
-
 
       }).catch(function(response) {
 		  current.props.setLoadingStatus('hide');

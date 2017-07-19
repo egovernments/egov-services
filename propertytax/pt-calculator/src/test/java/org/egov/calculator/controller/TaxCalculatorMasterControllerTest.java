@@ -251,7 +251,7 @@ public class TaxCalculatorMasterControllerTest {
 	/**
 	 * Description: Test case for search guidance value using rest controller
 	 */
-	@Test
+	/*@Test
 	public void testShouldSearchGuidanceValue() {
 
 		GuidanceValueResponse guidanceValueResponse = new GuidanceValueResponse();
@@ -286,7 +286,7 @@ public class TaxCalculatorMasterControllerTest {
 		}
 
 		assertTrue(Boolean.TRUE);
-	}
+	}*/
 
 	/**
 	 * This test will test whether the tax period is created successfully or not

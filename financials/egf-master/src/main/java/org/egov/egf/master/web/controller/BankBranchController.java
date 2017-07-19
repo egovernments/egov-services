@@ -57,6 +57,8 @@ public class BankBranchController {
 		for (BankBranchContract bankBranchContract : bankBranchContractRequest.getData()) {
 			bankBranch = new BankBranch();
 			model.map(bankBranchContract, bankBranch);
+			bankBranch.setLastModifiedDate(new Date());
+			bankBranch.setCreatedDate(new Date());
 			bankBranch.setCreatedBy(bankBranchContractRequest.getRequestInfo().getUserInfo());
 			bankBranch.setLastModifiedBy(bankBranchContractRequest.getRequestInfo().getUserInfo());
 			bankbranches.add(bankBranch);
@@ -67,6 +69,7 @@ public class BankBranchController {
 		for (BankBranch f : bankbranches) {
 			contract = new BankBranchContract();
 			model.map(f, contract);
+			contract.setLastModifiedDate(new Date());
 			bankBranchContracts.add(contract);
 		}
 

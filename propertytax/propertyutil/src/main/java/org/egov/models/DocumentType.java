@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import javax.validation.constraints.Size;
+
 import org.egov.enums.ApplicationEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +20,10 @@ import lombok.NoArgsConstructor;
 public class DocumentType {
 	@JsonProperty("id")
 	private Long id = null;
+	
+	@JsonProperty("tenantId")
+	@Size(min=4,max=128)
+	private String tenantId = null;
 
 	@JsonProperty("name")
 	private String name = null;

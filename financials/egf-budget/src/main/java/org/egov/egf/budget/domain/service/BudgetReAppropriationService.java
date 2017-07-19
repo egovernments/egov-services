@@ -28,14 +28,21 @@ public class BudgetReAppropriationService {
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
 
-	@Autowired
 	private BudgetReAppropriationRepository budgetReAppropriationRepository;
 
-	@Autowired
 	private SmartValidator validator;
 
-	@Autowired
 	private BudgetDetailRepository budgetDetailRepository;
+
+	@Autowired
+	public BudgetReAppropriationService(BudgetReAppropriationRepository budgetReAppropriationRepository,
+			SmartValidator validator, BudgetDetailRepository budgetDetailRepository) {
+
+		this.budgetReAppropriationRepository = budgetReAppropriationRepository;
+		this.validator = validator;
+		this.budgetDetailRepository = budgetDetailRepository;
+
+	}
 
 	private BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
 			BindingResult errors) {
@@ -69,19 +76,21 @@ public class BudgetReAppropriationService {
 	}
 
 	public List<BudgetReAppropriation> fetchRelated(List<BudgetReAppropriation> budgetreappropriations) {
-		for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
-			// fetch related items
-			if (budgetReAppropriation.getBudgetDetail() != null
-					&& budgetReAppropriation.getBudgetDetail().getId() != null
-					&& budgetReAppropriation.getBudgetDetail().getTenantId() != null) {
-				BudgetDetail budgetDetail = budgetDetailRepository.findById(budgetReAppropriation.getBudgetDetail());
-				if (budgetDetail == null) {
-					throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
+		if (budgetreappropriations != null)
+			for (BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
+				// fetch related items
+				if (budgetReAppropriation.getBudgetDetail() != null
+						&& budgetReAppropriation.getBudgetDetail().getId() != null
+						&& budgetReAppropriation.getBudgetDetail().getTenantId() != null) {
+					BudgetDetail budgetDetail = budgetDetailRepository
+							.findById(budgetReAppropriation.getBudgetDetail());
+					if (budgetDetail == null) {
+						throw new InvalidDataException("budgetDetail", "budgetDetail.invalid", " Invalid budgetDetail");
+					}
+					budgetReAppropriation.setBudgetDetail(budgetDetail);
 				}
-				budgetReAppropriation.setBudgetDetail(budgetDetail);
-			}
 
-		}
+			}
 
 		return budgetreappropriations;
 	}

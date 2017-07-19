@@ -1,3 +1,4 @@
+
 function getValueByName(name, id) {
     for (var i = 0; i < assetCategories.length; i++) {
         if (assetCategories[i].id == id) {
@@ -111,41 +112,95 @@ $(document).ready(function() {
 
 
         var doc = new jsPDF();
+        doc.setFontSize(14);
         doc.setFontType("bold");
-        doc.text(15, 20, tenantId.split(".")[1] + ' Municipal Corporation');
-        doc.text(15, 30, tenantId.split(".")[1] + ' District');
-        doc.text(15, 40, 'Asset Category Lease/Agreement Notice');
+        doc.text(105, 20, tenantId.split(".")[1] , 'center');
+        doc.text(105, 27, tenantId.split(".")[1] + ' District', 'center');
+        doc.text(105, 34, 'Asset Category Lease/Agreement Notice', 'center');
         doc.setLineWidth(0.5);
-        doc.line(15, 42, 195, 42);
+        doc.line(15, 38, 195, 38);
         doc.text(15, 47, 'Lease details: ');
         doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
         doc.text(15, 57, 'Lease Name: ' + noticeData.allotteeName);
         doc.text(110, 57, 'Asset No: ' + noticeData.assetNo);
         doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
 
+        
         doc.setFontType("normal");
-        doc.text(15, 77, doc.splitTextToSize('1.The period of lease shall be ' + noticeData.agreementPeriod * 12 + ' months commencing from ' + commencementDate + '(dd/mm/yyyy) to ' + expiryDate + '(dd/mm/yyyy).', (210 - 15 - 15)));
-        doc.text(15, 100, doc.splitTextToSize('2.The property leased is shop No ' + noticeData.assetNo + ' and shall be leased for a sum of Rs. ' + noticeData.rent + '/-DDD (' + noticeData.rentInWord + ') per month exclusive of the payment of electricity and other charges.', (210 - 15 - 15)));
-        doc.text(15, 123, doc.splitTextToSize('3.The lessee has paid a sum of Rs. ' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ') as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
-        doc.text(15, 163, doc.splitTextToSize('4.The rent for every month shall be payable on or before ' + rentPayableDate + ' of the succeeding month.', (210 - 15 - 15)));
-        doc.text(15, 178, doc.splitTextToSize('5.The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
-        doc.text(15, 193, doc.splitTextToSize('6.The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
-        doc.text(15, 208, doc.splitTextToSize('7.The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
-        doc.addPage()
-        doc.text(15, 20, doc.splitTextToSize('8.The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
-        doc.text(15, 35, doc.splitTextToSize('9.The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
-        doc.text(15, 50, doc.splitTextToSize('10. The lessee on the expiry of the lease period of ' + expiryDate + ' months shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
+        doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be ' ));
+        doc.setFontType("bold");
+        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.agreementPeriod * 12 + ' '));
+        doc.setFontType("normal");
+        doc.text(93, 77, doc.splitTextToSize('months commencing from')); 
+        doc.setFontType("bold");
+        doc.text(15, 83, doc.splitTextToSize(' ' + commencementDate + ' '));
+        doc.setFontType("normal");
+        doc.text(42, 83, doc.splitTextToSize('(dd/mm/yyyy) to' )); 
+        doc.setFontType("bold");
+        doc.text(77, 83, doc.splitTextToSize(' ' + expiryDate + ' ')); 
+        doc.setFontType("normal");
+        doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
+        doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
+        doc.setFontType("bold");
+        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.assetNo + ' '));
+        doc.setFontType("normal");
+        doc.text(101, 91, doc.splitTextToSize('and shall be leased for a sum of ')); 
+        doc.setFontType("bold");
+        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- (' + noticeData.rentInWord + ')'));
+        doc.setFontType("normal");
+        doc.text(111, 97, doc.splitTextToSize('per month exclusive of the payment'));
+        doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
+        doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
+        doc.setFontType("bold");
+        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ')')); 
+        doc.setFontType("normal");
+        doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
+        doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
+        doc.setFontType("bold");
+        doc.text(143, 143, doc.splitTextToSize(' ' + rentPayableDate + ' '));
+        doc.setFontType("normal");
+        doc.text(169, 143, doc.splitTextToSize('of the'));
+        doc.text(15, 149, doc.splitTextToSize('succeeding month.', (210 - 15 - 15)));
+        doc.text(15, 158, doc.splitTextToSize('5.   The lessee shall pay electricity charges to the Electricity Board every month without fail.', (210 - 15 - 15)));
+        doc.text(15, 172, doc.splitTextToSize('6.   The lessor or his agent shall have a right to inspect the shop at any hour during the day time.', (210 - 15 - 15)));
+        doc.text(15, 187, doc.splitTextToSize('7.   The Lessee shall use the shop let out duly for the business of General Merchandise and not use the same for any other purpose.  (The lessee shall not enter into partnership) and conduct the business in the premises in the name of the firm.  The lessee can only use the premises for his own business.', (210 - 15 - 15)));
+        doc.text(15, 214, doc.splitTextToSize('8.    The lessee shall not have any right to assign, sub-let, re-let, under-let or transfer the tenancy or any portion thereof.', (210 - 15 - 15)));
+        doc.text(15, 229, doc.splitTextToSize('9.    The lessee shall not carry out any addition or alteration to the shop without the previous consent and approval in writing of the lessor.', (210 - 15 - 15)));
+        doc.text(15, 244, doc.splitTextToSize('10.   The lessee on the expiry of the lease period of'));
+        doc.setFontType("bold");
+        doc.text(128, 244, doc.splitTextToSize(' ' + expiryDate + ' '));
+        doc.setFontType("normal");
+        doc.text(156, 244, doc.splitTextToSize('months'));
+        doc.text(15, 250, doc.splitTextToSize('shall hand over vacant possession of the ceased shop peacefully or the lease agreement can be renewed for a further period on mutually agreed terms.', (210 - 15 - 15)));
+       doc.text(15, 266, noticeData.commissionerName?noticeData.commissionerName:"");
+       doc.text(160, 266, 'LESSEE');
+       doc.text(15, 274, 'Signature:   ');
+        doc.text(160, 274, 'Signature:  ');
+        doc.setFontType("bold");
+        doc.text(15, 282, tenantId.split(".")[1]);
+        
+        
+        
+        
+        
 
-        doc.text(15, 90, noticeData.commissionerName?noticeData.commissionerName:"");
-        doc.text(160, 90, 'LESSEE');
-        doc.text(15, 100, 'Signature:   ');
-        doc.text(160, 100, 'Signature:  ');
-        doc.text(15, 110, tenantId.split(".")[1]);
+        
+        
+        
+        
 
         doc.save('Notice.pdf');
         setTimeout(function () {
           open(location, '_self').close();
         }, 5000);
+    }
+
+    function setFonttype(doc, text){
+         doc.setFontType("bold");
+        //  var text= noticeData.agreementPeriod * 12;
+        //   doc.setFontType("normal");
+        
+        return text;
     }
 
     // function wordWrap(doc, paragraph, lMargin, rMargin, pdfInMM) {

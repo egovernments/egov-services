@@ -58,6 +58,7 @@ public class AccountDetailKeyController {
 		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyContractRequest.getData()) {
 			accountDetailKey = new AccountDetailKey();
 			model.map(accountDetailKeyContract, accountDetailKey);
+			accountDetailKey.setCreatedDate(new Date());
 			accountDetailKey.setCreatedBy(accountDetailKeyContractRequest.getRequestInfo().getUserInfo());
 			accountDetailKey.setLastModifiedBy(accountDetailKeyContractRequest.getRequestInfo().getUserInfo());
 			accountdetailkeys.add(accountDetailKey);
@@ -67,6 +68,7 @@ public class AccountDetailKeyController {
 
 		for (AccountDetailKey f : accountdetailkeys) {
 			contract = new AccountDetailKeyContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			accountDetailKeyContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class AccountDetailKeyController {
 		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyContractRequest.getData()) {
 			accountDetailKey = new AccountDetailKey();
 			model.map(accountDetailKeyContract, accountDetailKey);
+			accountDetailKey.setLastModifiedDate(new Date());
 			accountDetailKey.setLastModifiedBy(accountDetailKeyContractRequest.getRequestInfo().getUserInfo());
 			accountdetailkeys.add(accountDetailKey);
 		}
@@ -108,6 +111,7 @@ public class AccountDetailKeyController {
 		for (AccountDetailKey accountDetailKeyObj : accountdetailkeys) {
 			contract = new AccountDetailKeyContract();
 			model.map(accountDetailKeyObj, contract);
+			contract.setLastModifiedDate(new Date());
 			accountDetailKeyContracts.add(contract);
 		}
 

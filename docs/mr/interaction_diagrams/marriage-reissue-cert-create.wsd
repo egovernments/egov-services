@@ -1,0 +1,68 @@
+title Create Reissue Marriage Certificate Flow
+
+Client->+MarriageRegnSvc: Create Reissue Marriage Certificate Request
+note over Client,MarriageRegnSvc
+    municipal employee, CSC center
+    posts a ReissueCertificate request 
+    using admin console
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: validate Request Format
+note over MarriageRegnSvc
+    All request format validations like 
+    email, phone, string and number fields
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: business Validations
+note over MarriageRegnSvc
+    Business validations e.g. application
+    could not be accepted due to some 
+    business reason
+end note
+
+opt isNonLegacy
+MarriageRegnSvc->IDGenSvc: create application Number
+end
+MarriageRegnSvc->DemandSvc: generateDemand
+
+MarriageRegnSvc->+KafkaQSvc: Send to Kafka Q for further processing
+note over KafkaQSvc
+    All the lines originating from KafkaQSvc to other
+    services are consumers on the Q that are making
+    appropriate Services by listening to Kafka Topic 
+    as indicated in the notes
+    
+    Rest layer will publish on topic: 
+    for new reissue: marriage.reissue.validated
+    for legacy reissue: marriage.reissue.validated.legacy
+end note over 
+
+MarriageRegnSvc-->-Client: return Reissue Certificate Response
+
+alt isNonLegacyReissueAppl
+  KafkaQSvc->+WorkflowSvc: initiate Workflow
+  note over KafkaQSvc
+  Read from topic: marriage.reissue.validated
+  Publish to topic: marriage.reissue.create
+  end note over 
+
+  KafkaQSvc->MarriageRegnSvc: Persist in DB
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.create
+  end note over
+
+  KafkaQSvc->ESSvc: Persist in ES
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.create
+  end note over
+else isLegacyReissueUpload
+  KafkaQSvc->MarriageRegnSvc: Persist in DB
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.create.legacy
+  end note over
+
+  KafkaQSvc->ESSvc: Persist in ES
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.create.legacy
+  end note over
+end

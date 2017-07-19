@@ -58,6 +58,7 @@ public class AccountEntityController {
 		for (AccountEntityContract accountEntityContract : accountEntityContractRequest.getData()) {
 			accountEntity = new AccountEntity();
 			model.map(accountEntityContract, accountEntity);
+			accountEntity.setCreatedDate(new Date());
 			accountEntity.setCreatedBy(accountEntityContractRequest.getRequestInfo().getUserInfo());
 			accountEntity.setLastModifiedBy(accountEntityContractRequest.getRequestInfo().getUserInfo());
 			accountentities.add(accountEntity);
@@ -67,6 +68,7 @@ public class AccountEntityController {
 
 		for (AccountEntity f : accountentities) {
 			contract = new AccountEntityContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			accountEntityContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class AccountEntityController {
 		for (AccountEntityContract accountEntityContract : accountEntityContractRequest.getData()) {
 			accountEntity = new AccountEntity();
 			model.map(accountEntityContract, accountEntity);
+			accountEntity.setLastModifiedDate(new Date());
 			accountEntity.setLastModifiedBy(accountEntityContractRequest.getRequestInfo().getUserInfo());
 			accountentities.add(accountEntity);
 		}
@@ -108,6 +111,7 @@ public class AccountEntityController {
 		for (AccountEntity accountEntityObj : accountentities) {
 			contract = new AccountEntityContract();
 			model.map(accountEntityObj, contract);
+			contract.setLastModifiedDate(new Date());
 			accountEntityContracts.add(contract);
 		}
 

@@ -57,6 +57,7 @@ public class FunctionaryController {
 		for (FunctionaryContract functionaryContract : functionaryContractRequest.getData()) {
 			functionary = new Functionary();
 			model.map(functionaryContract, functionary);
+			functionary.setCreatedDate(new Date());
 			functionary.setCreatedBy(functionaryContractRequest.getRequestInfo().getUserInfo());
 			functionary.setLastModifiedBy(functionaryContractRequest.getRequestInfo().getUserInfo());
 			functionaries.add(functionary);
@@ -66,6 +67,7 @@ public class FunctionaryController {
 
 		for (Functionary f : functionaries) {
 			contract = new FunctionaryContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			functionaryContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class FunctionaryController {
 		for (FunctionaryContract functionaryContract : functionaryContractRequest.getData()) {
 			functionary = new Functionary();
 			model.map(functionaryContract, functionary);
+			functionary.setLastModifiedDate(new Date());
 			functionary.setLastModifiedBy(functionaryContractRequest.getRequestInfo().getUserInfo());
 			functionaries.add(functionary);
 		}
@@ -106,6 +109,7 @@ public class FunctionaryController {
 		for (Functionary functionaryObj : functionaries) {
 			contract = new FunctionaryContract();
 			model.map(functionaryObj, contract);
+			contract.setLastModifiedDate(new Date());
 			functionaryContracts.add(contract);
 		}
 

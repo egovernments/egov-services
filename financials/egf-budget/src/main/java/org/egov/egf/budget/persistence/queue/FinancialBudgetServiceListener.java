@@ -17,7 +17,6 @@ import org.egov.egf.budget.web.mapper.BudgetMapper;
 import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +28,11 @@ public class FinancialBudgetServiceListener {
 
 	@Value("${kafka.topics.egf.budget.service.completed.topic}")
 	private String completedTopic;
-
+	
 	@Autowired
-	ApplicationContext applicationContext;
+	private ObjectMapper objectMapper;
 
-	@Autowired
-	ObjectMapper objectMapper;
+	private ObjectMapperFactory objectMapperFactory;
 
 	@Autowired
 	private FinancialProducer financialProducer;
@@ -50,6 +48,8 @@ public class FinancialBudgetServiceListener {
 
 	@KafkaListener(id = "${kafka.topics.egf.budget.service.validated.id}", topics = "${kafka.topics.egf.budget.service.validated.topic}", group = "${kafka.topics.egf.budget.service.validated.group}")
 	public void process(HashMap<String, CommonRequest<?>> mastersMap) {
+		
+		objectMapperFactory = new ObjectMapperFactory(objectMapper);
 
 		BudgetMapper budgetMapper = new BudgetMapper();
 		BudgetDetailMapper budgetDetailMapper = new BudgetDetailMapper();
@@ -57,7 +57,7 @@ public class FinancialBudgetServiceListener {
 
 		if (mastersMap.get("budgetcontract_create") != null) {
 
-			CommonRequest<BudgetContract> request = objectMapper.convertValue(mastersMap.get("budgetcontract_create"),
+			CommonRequest<BudgetContract> request = objectMapperFactory.create().convertValue(mastersMap.get("budgetcontract_create"),
 					new TypeReference<CommonRequest<BudgetContract>>() {
 					});
 
@@ -73,7 +73,7 @@ public class FinancialBudgetServiceListener {
 
 		if (mastersMap.get("budgetcontract_update") != null) {
 
-			CommonRequest<BudgetContract> request = objectMapper.convertValue(mastersMap.get("budgetcontract_update"),
+			CommonRequest<BudgetContract> request = objectMapperFactory.create().convertValue(mastersMap.get("budgetcontract_update"),
 					new TypeReference<CommonRequest<BudgetContract>>() {
 					});
 
@@ -89,7 +89,7 @@ public class FinancialBudgetServiceListener {
 
 		if (mastersMap.get("budgetdetailcontract_create") != null) {
 
-			CommonRequest<BudgetDetailContract> request = objectMapper.convertValue(
+			CommonRequest<BudgetDetailContract> request = objectMapperFactory.create().convertValue(
 					mastersMap.get("budgetdetailcontract_create"),
 					new TypeReference<CommonRequest<BudgetDetailContract>>() {
 					});
@@ -108,7 +108,7 @@ public class FinancialBudgetServiceListener {
 
 		{
 
-			CommonRequest<BudgetDetailContract> request = objectMapper.convertValue(
+			CommonRequest<BudgetDetailContract> request = objectMapperFactory.create().convertValue(
 					mastersMap.get("budgetdetailcontract_update"),
 					new TypeReference<CommonRequest<BudgetDetailContract>>() {
 					});
@@ -125,7 +125,7 @@ public class FinancialBudgetServiceListener {
 
 		if (mastersMap.get("budgetreappropriationcontract_create") != null) {
 
-			CommonRequest<BudgetReAppropriationContract> request = objectMapper.convertValue(
+			CommonRequest<BudgetReAppropriationContract> request = objectMapperFactory.create().convertValue(
 					mastersMap.get("budgetreappropriationcontract_create"),
 					new TypeReference<CommonRequest<BudgetReAppropriationContract>>() {
 					});
@@ -143,7 +143,7 @@ public class FinancialBudgetServiceListener {
 
 		{
 
-			CommonRequest<BudgetReAppropriationContract> request = objectMapper.convertValue(
+			CommonRequest<BudgetReAppropriationContract> request = objectMapperFactory.create().convertValue(
 					mastersMap.get("budgetreappropriationcontract_update"),
 					new TypeReference<CommonRequest<BudgetReAppropriationContract>>() {
 					});

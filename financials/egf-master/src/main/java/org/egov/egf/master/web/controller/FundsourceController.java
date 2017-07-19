@@ -57,6 +57,7 @@ public class FundsourceController {
 		for (FundsourceContract fundsourceContract : fundsourceContractRequest.getData()) {
 			fundsource = new Fundsource();
 			model.map(fundsourceContract, fundsource);
+			fundsource.setCreatedDate(new Date());
 			fundsource.setCreatedBy(fundsourceContractRequest.getRequestInfo().getUserInfo());
 			fundsource.setLastModifiedBy(fundsourceContractRequest.getRequestInfo().getUserInfo());
 			fundsources.add(fundsource);
@@ -66,6 +67,7 @@ public class FundsourceController {
 
 		for (Fundsource f : fundsources) {
 			contract = new FundsourceContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			fundsourceContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class FundsourceController {
 		for (FundsourceContract fundsourceContract : fundsourceContractRequest.getData()) {
 			fundsource = new Fundsource();
 			model.map(fundsourceContract, fundsource);
+			fundsource.setLastModifiedDate(new Date());
 			fundsource.setLastModifiedBy(fundsourceContractRequest.getRequestInfo().getUserInfo());
 			fundsources.add(fundsource);
 		}
@@ -106,6 +109,7 @@ public class FundsourceController {
 		for (Fundsource fundsourceObj : fundsources) {
 			contract = new FundsourceContract();
 			model.map(fundsourceObj, contract);
+			contract.setLastModifiedDate(new Date());
 			fundsourceContracts.add(contract);
 		}
 

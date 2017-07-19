@@ -99,7 +99,7 @@ class Workflow extends Component {
     this.state= {
         designation: [],
         workflowDepartment:[],
-          approverName:[],
+        approver:[],
     }
   } 
 
@@ -119,9 +119,9 @@ class Workflow extends Component {
       console.log(err)
     })
 
-     Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation',{}, {},false, true).then((res)=>{
+     Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
       console.log(res);
-      currentThis.setState({designation: res.designation})
+      currentThis.setState({designation: res})
     }).catch((err)=> {
       currentThis.setState({
         designation:[]
@@ -143,13 +143,13 @@ class Workflow extends Component {
     if(type == 'department' && e.target.value != '' && this.props.workflow.designation) {
       query = {
           departmentId: e.target.value,
-          designationId: this.props.workflow.designation
+          designationId: this.props.workflow.workflowDesignation
       }
       hasData = true;
 
     } else if(type == 'designation' && e.target.value != '' && this.props.workflow.department) {
       query = {
-          departmentId: this.props.workflow.department,
+          departmentId: this.props.workflow.workflowDepartment,
           designationId: e.target.value
       }
       hasData = true;
@@ -160,10 +160,10 @@ class Workflow extends Component {
     if(hasData){
         Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
          console.log(res);
-          currentThis.setState({approverName: res.approverName})
+          currentThis.setState({approver: res.approverName})
       }).catch((err)=> {
         currentThis.setState({
-          approverName:[]
+          approver:[]
         })
         console.log(err);
       })
@@ -264,21 +264,21 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Approver Name"
-                                                  errorText={fieldErrors.approverName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.approverName}</span>: ""}
-                                                  value={workflow.approverName ? workflow.approverName :""}
+                                                  errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.approver}</span>: ""}
+                                                  value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
                                                     var e = {
                                                       target: {
                                                         value: value
                                                       }
                                                     };
-                                                    handleChange(e, "approverName", false, "")}}
+                                                    handleChange(e, "approver", false, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
-                                                    <MenuItem value={4} primaryText="Options" />
+                                                    {renderOption(this.state.approver)}
                                               </SelectField>
                                         </Col>
                                     </Row>

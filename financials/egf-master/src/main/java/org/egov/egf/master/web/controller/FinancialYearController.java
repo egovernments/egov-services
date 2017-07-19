@@ -58,6 +58,7 @@ public class FinancialYearController {
 		for (FinancialYearContract financialYearContract : financialYearContractRequest.getData()) {
 			financialYear = new FinancialYear();
 			model.map(financialYearContract, financialYear);
+			financialYear.setCreatedDate(new Date());
 			financialYear.setCreatedBy(financialYearContractRequest.getRequestInfo().getUserInfo());
 			financialYear.setLastModifiedBy(financialYearContractRequest.getRequestInfo().getUserInfo());
 			financialyears.add(financialYear);
@@ -67,6 +68,7 @@ public class FinancialYearController {
 
 		for (FinancialYear f : financialyears) {
 			contract = new FinancialYearContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			financialYearContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class FinancialYearController {
 		for (FinancialYearContract financialYearContract : financialYearContractRequest.getData()) {
 			financialYear = new FinancialYear();
 			model.map(financialYearContract, financialYear);
+			financialYear.setLastModifiedDate(new Date());
 			financialYear.setLastModifiedBy(financialYearContractRequest.getRequestInfo().getUserInfo());
 			financialyears.add(financialYear);
 		}
@@ -108,6 +111,7 @@ public class FinancialYearController {
 		for (FinancialYear financialYearObj : financialyears) {
 			contract = new FinancialYearContract();
 			model.map(financialYearObj, contract);
+			contract.setLastModifiedDate(new Date());
 			financialYearContracts.add(contract);
 		}
 

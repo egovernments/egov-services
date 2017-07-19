@@ -1,13 +1,18 @@
 package org.egov.egf.master.index;
 
-import org.egov.egf.master.web.interceptor.CorrelationIdAwareRestTemplate;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 import org.egov.egf.web.interceptor.CorrelationIdInterceptor;
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -26,21 +31,39 @@ public class EgfMasterIndexerApplication {
 		SpringApplication.run(EgfMasterIndexerApplication.class, args);
 	}
 
-	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		// DateFormat std=DateFormat.getInstance().f
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		// mapper.setDateFormat(std);
 		converter.setObjectMapper(mapper);
 		return converter;
 	}
 
+	@Primary
 	@Bean
-	public RestTemplate getRestTemplate() {
-		return new CorrelationIdAwareRestTemplate();
+	public RestTemplate getRestTemplate(LogAwareRestTemplate restTemplate) {
+
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+		converter.setObjectMapper(mapper);
+
+		MappingJackson2HttpMessageConverter mk = null;
+
+		for (HttpMessageConverter<?> ob : restTemplate.getMessageConverters()) {
+
+			if (ob.getClass().getSimpleName().equals("MappingJackson2HttpMessageConverter")) {
+				mk = (MappingJackson2HttpMessageConverter) ob;
+				break;
+			}
+		}
+		restTemplate.getMessageConverters().remove(mk);
+		restTemplate.getMessageConverters().add(converter);
+		return restTemplate;
+
 	}
 
 	@Bean
@@ -55,6 +78,18 @@ public class EgfMasterIndexerApplication {
 			@Override
 			public void addInterceptors(InterceptorRegistry registry) {
 				registry.addInterceptor(new CorrelationIdInterceptor());
+			}
+
+			@Override
+			public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+				MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+				mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+				converter.setObjectMapper(mapper);
+				converters.add(converter);
+				super.configureMessageConverters(converters);
 			}
 		};
 	}

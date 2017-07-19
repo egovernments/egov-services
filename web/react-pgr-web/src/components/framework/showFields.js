@@ -56,12 +56,12 @@ export default class ShowFields extends Component {
   		case 'text':
   			 return <UiTextField ui="google" item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
-  		// case 'singleValueList':
-  		// 	return <UiSelectField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  		// 	break;
-  		// case 'multiValueList':
-  		// 	return <UiMultiSelectField ui="google" item={item} />
-  		// 	break;
+  		case 'singleValueList':
+  			return <UiSelectField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			break;
+  		case 'multiValueList':
+  			return <UiMultiSelectField ui="google" item={item} />
+  			break;
   		case 'number':
   			return <UiNumberField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;

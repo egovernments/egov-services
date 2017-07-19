@@ -42,7 +42,7 @@ public class ElasticSearchRepositoryTest {
         String expectedUri = "http://host/indexName/documentType/";
         server.expect(once(), requestTo(expectedUri))
                 .andExpect(header("Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="))
-                .andExpect(method(HttpMethod.PUT))
+                .andExpect(method(HttpMethod.POST))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(new Resources().getFileContents("esIndexRequestBody.json")))
                 .andRespond(withSuccess());
@@ -67,20 +67,8 @@ public class ElasticSearchRepositoryTest {
         collectionDocument1.setReceiptNumber("test123");
         collectionDocument1.setPaymentMode("Cash");
 
-        ReceiptRequestDocument collectionDocument2 = new ReceiptRequestDocument();
-        collectionDocument2.setConsumerName("Egovernments");
-        collectionDocument2.setConsumerCode("0002");
-        collectionDocument2.setTenantId("default");
-        collectionDocument2.setTotalAmount(new BigDecimal(2000));
-        collectionDocument2.setStatus("Approved");
-        collectionDocument2.setBillingService("TradeLicence");
-        collectionDocument2.setReceiptNumber("test234");
-        collectionDocument2.setPaymentMode("dd");
-        collectionDocument2.setCityName("Bangalore");
-        collectionDocument2.setBillNumber("Bill002");
 
         documents.add(collectionDocument1);
-        documents.add(collectionDocument2);
 
         return documents;
     }

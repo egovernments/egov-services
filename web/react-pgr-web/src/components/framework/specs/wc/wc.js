@@ -1,6 +1,6 @@
 var dat = {
 	"wc.create": {
-		"numCols": 2,
+		"numCols": 12/3,
 		"url": "/connections/v1/_create",
 		"groups": [
 			{
@@ -138,7 +138,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": true,
 							"isDisabled": false,
-							"url": "",
+							"url": "/wcms-connection/connection/_getconnectiontypes",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -150,19 +150,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "SourceType",
-							"jsonPath": "connection.sourceType",
-							"label": "wc.create.groups.connectionDetails.sourceType",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"url": "",
+							"url": "/wcms/masters/sourcetype/_search",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -174,7 +162,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
+							"url": "/pt-property/property/propertytypes/_search",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -186,7 +174,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
+							"url": "/wcms/masters/propertytype-categorytype/_search",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -198,7 +186,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
+							"url": "/wcms/masters/propertytype-usagetype/_search",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -210,7 +198,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
+							"url": "/wcms/masters/propertytype-pipesize/_search",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -250,7 +238,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
+							"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

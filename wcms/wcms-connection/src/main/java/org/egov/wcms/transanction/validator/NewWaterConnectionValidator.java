@@ -196,7 +196,7 @@ public class NewWaterConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if(waterConnectionRequest.getConnection().getProperty()!=null && 
+        /*if(waterConnectionRequest.getConnection().getProperty()!=null && 
                 waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
         {
             restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
@@ -216,7 +216,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_ERROR_MESSAGE)
                     .field(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        }
+        }*/
 
         /*
          * if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) { isRequestValid =

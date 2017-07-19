@@ -1,0 +1,68 @@
+title Create Marriage Registration Flow
+
+Client->+MarriageRegnSvc: create Marriage Regn Request
+note over Client,MarriageRegnSvc
+    municipal employee, CSC center
+    posts a create new MarriageRegn request 
+    using admin console
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: validate Request Format
+note over MarriageRegnSvc
+    All request format validations like 
+    email, phone, string and number fields
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: business Validations
+note over MarriageRegnSvc
+    Business validations e.g. documents validation,
+    valid userid for groom and bride
+end note
+
+opt isNewMarriageRegn
+    MarriageRegnSvc->IDGenSvc: create application Number
+end
+
+MarriageRegnSvc->DemandSvc: generateDemand if fee > 0
+
+MarriageRegnSvc->+KafkaQSvc: Send to Kafka Q for further processing
+note over KafkaQSvc
+    All the lines originating from KafkaQSvc to other
+    services are consumers on the Q that are making
+    appropriate Services by listening to Kafka Topic 
+    as indicated in the notes
+    
+    Rest layer will publish on topic: 
+        for new registration: marriage.create
+        for legacy registration: marriage.create.legacy
+end note over 
+
+MarriageRegnSvc-->-Client: return Marriage Regn Response
+
+alt isNewMarriageRegn    
+    KafkaQSvc->+WorkflowSvc: initiate Workflow
+    note over KafkaQSvc
+    Read from topic: marriage.create
+    Publish to topic: marriage.create.persist
+    end note over 
+
+    KafkaQSvc->MarriageRegnSvc: Persist in DB
+    note over KafkaQSvc
+        Read from topic: marriage.create.persist
+    end note over
+    
+    KafkaQSvc->ESSvc: Persist in ES
+    note over KafkaQSvc
+        Read from topic: marriage.create.persist
+    end note over
+
+else isLegacyMarriageRegnUpload
+    KafkaQSvc->MarriageRegnSvc: Queue to consumer to save in db
+        note over KafkaQSvc
+        Read from topic: marriage.create.legacy
+    end note over
+    KafkaQSvc->ESSvc: Persist in ES
+        note over KafkaQSvc
+        Read from topic: marriage.create.legacy
+    end note over
+end

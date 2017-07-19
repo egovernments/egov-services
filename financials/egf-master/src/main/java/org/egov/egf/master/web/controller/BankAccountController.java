@@ -57,6 +57,7 @@ public class BankAccountController {
 		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getData()) {
 			bankAccount = new BankAccount();
 			model.map(bankAccountContract, bankAccount);
+			bankAccount.setCreatedDate(new Date());
 			bankAccount.setCreatedBy(bankAccountContractRequest.getRequestInfo().getUserInfo());
 			bankAccount.setLastModifiedBy(bankAccountContractRequest.getRequestInfo().getUserInfo());
 			bankaccounts.add(bankAccount);
@@ -66,6 +67,7 @@ public class BankAccountController {
 
 		for (BankAccount f : bankaccounts) {
 			contract = new BankAccountContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			bankAccountContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class BankAccountController {
 		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getData()) {
 			bankAccount = new BankAccount();
 			model.map(bankAccountContract, bankAccount);
+			bankAccount.setLastModifiedDate(new Date());
 			bankAccount.setLastModifiedBy(bankAccountContractRequest.getRequestInfo().getUserInfo());
 			bankaccounts.add(bankAccount);
 		}
@@ -106,6 +109,7 @@ public class BankAccountController {
 		for (BankAccount bankAccountObj : bankaccounts) {
 			contract = new BankAccountContract();
 			model.map(bankAccountObj, contract);
+			contract.setLastModifiedDate(new Date());
 			bankAccountContracts.add(contract);
 		}
 

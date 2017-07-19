@@ -57,6 +57,7 @@ public class BudgetGroupController {
 		for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getData()) {
 			budgetGroup = new BudgetGroup();
 			model.map(budgetGroupContract, budgetGroup);
+			budgetGroup.setCreatedDate(new Date());
 			budgetGroup.setCreatedBy(budgetGroupContractRequest.getRequestInfo().getUserInfo());
 			budgetGroup.setLastModifiedBy(budgetGroupContractRequest.getRequestInfo().getUserInfo());
 			budgetgroups.add(budgetGroup);
@@ -66,6 +67,7 @@ public class BudgetGroupController {
 
 		for (BudgetGroup f : budgetgroups) {
 			contract = new BudgetGroupContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			budgetGroupContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class BudgetGroupController {
 		for (BudgetGroupContract budgetGroupContract : budgetGroupContractRequest.getData()) {
 			budgetGroup = new BudgetGroup();
 			model.map(budgetGroupContract, budgetGroup);
+			budgetGroup.setLastModifiedDate(new Date());
 			budgetGroup.setLastModifiedBy(budgetGroupContractRequest.getRequestInfo().getUserInfo());
 			budgetgroups.add(budgetGroup);
 		}
@@ -106,6 +109,7 @@ public class BudgetGroupController {
 		for (BudgetGroup budgetGroupObj : budgetgroups) {
 			contract = new BudgetGroupContract();
 			model.map(budgetGroupObj, contract);
+			contract.setLastModifiedDate(new Date());
 			budgetGroupContracts.add(contract);
 		}
 

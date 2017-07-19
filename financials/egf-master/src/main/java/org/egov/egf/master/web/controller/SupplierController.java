@@ -57,6 +57,7 @@ public class SupplierController {
 		for (SupplierContract supplierContract : supplierContractRequest.getData()) {
 			supplier = new Supplier();
 			model.map(supplierContract, supplier);
+			supplier.setCreatedDate(new Date());
 			supplier.setCreatedBy(supplierContractRequest.getRequestInfo().getUserInfo());
 			supplier.setLastModifiedBy(supplierContractRequest.getRequestInfo().getUserInfo());
 			suppliers.add(supplier);
@@ -66,6 +67,7 @@ public class SupplierController {
 
 		for (Supplier f : suppliers) {
 			contract = new SupplierContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			supplierContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class SupplierController {
 		for (SupplierContract supplierContract : supplierContractRequest.getData()) {
 			supplier = new Supplier();
 			model.map(supplierContract, supplier);
+			supplier.setLastModifiedDate(new Date());
 			supplier.setLastModifiedBy(supplierContractRequest.getRequestInfo().getUserInfo());
 			suppliers.add(supplier);
 		}
@@ -106,6 +109,7 @@ public class SupplierController {
 		for (Supplier supplierObj : suppliers) {
 			contract = new SupplierContract();
 			model.map(supplierObj, contract);
+			contract.setLastModifiedDate(new Date());
 			supplierContracts.add(contract);
 		}
 

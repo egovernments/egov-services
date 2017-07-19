@@ -58,6 +58,7 @@ public class AccountCodePurposeController {
 		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest.getData()) {
 			accountCodePurpose = new AccountCodePurpose();
 			model.map(accountCodePurposeContract, accountCodePurpose);
+			accountCodePurpose.setCreatedDate(new Date());
 			accountCodePurpose.setCreatedBy(accountCodePurposeContractRequest.getRequestInfo().getUserInfo());
 			accountCodePurpose.setLastModifiedBy(accountCodePurposeContractRequest.getRequestInfo().getUserInfo());
 			accountcodepurposes.add(accountCodePurpose);
@@ -67,6 +68,7 @@ public class AccountCodePurposeController {
 
 		for (AccountCodePurpose f : accountcodepurposes) {
 			contract = new AccountCodePurposeContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			accountCodePurposeContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class AccountCodePurposeController {
 		for (AccountCodePurposeContract accountCodePurposeContract : accountCodePurposeContractRequest.getData()) {
 			accountCodePurpose = new AccountCodePurpose();
 			model.map(accountCodePurposeContract, accountCodePurpose);
+			accountCodePurpose.setLastModifiedDate(new Date());
 			accountCodePurpose.setLastModifiedBy(accountCodePurposeContractRequest.getRequestInfo().getUserInfo());
 			accountcodepurposes.add(accountCodePurpose);
 		}
@@ -107,6 +110,7 @@ public class AccountCodePurposeController {
 
 		for (AccountCodePurpose accountCodePurposeObj : accountcodepurposes) {
 			contract = new AccountCodePurposeContract();
+			contract.setLastModifiedDate(new Date());
 			model.map(accountCodePurposeObj, contract);
 			accountCodePurposeContracts.add(contract);
 		}

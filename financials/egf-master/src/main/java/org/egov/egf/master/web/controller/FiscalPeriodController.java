@@ -57,6 +57,7 @@ public class FiscalPeriodController {
 		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractRequest.getData()) {
 			fiscalPeriod = new FiscalPeriod();
 			model.map(fiscalPeriodContract, fiscalPeriod);
+			fiscalPeriod.setCreatedDate(new Date());
 			fiscalPeriod.setCreatedBy(fiscalPeriodContractRequest.getRequestInfo().getUserInfo());
 			fiscalPeriod.setLastModifiedBy(fiscalPeriodContractRequest.getRequestInfo().getUserInfo());
 			fiscalperiods.add(fiscalPeriod);
@@ -66,6 +67,7 @@ public class FiscalPeriodController {
 
 		for (FiscalPeriod f : fiscalperiods) {
 			contract = new FiscalPeriodContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			fiscalPeriodContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class FiscalPeriodController {
 		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractRequest.getData()) {
 			fiscalPeriod = new FiscalPeriod();
 			model.map(fiscalPeriodContract, fiscalPeriod);
+			fiscalPeriod.setLastModifiedDate(new Date());
 			fiscalPeriod.setLastModifiedBy(fiscalPeriodContractRequest.getRequestInfo().getUserInfo());
 			fiscalperiods.add(fiscalPeriod);
 		}
@@ -106,6 +109,7 @@ public class FiscalPeriodController {
 		for (FiscalPeriod fiscalPeriodObj : fiscalperiods) {
 			contract = new FiscalPeriodContract();
 			model.map(fiscalPeriodObj, contract);
+			contract.setLastModifiedDate(new Date());
 			fiscalPeriodContracts.add(contract);
 		}
 

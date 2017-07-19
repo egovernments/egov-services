@@ -58,6 +58,7 @@ public class AccountDetailTypeController {
 		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest.getData()) {
 			accountDetailType = new AccountDetailType();
 			model.map(accountDetailTypeContract, accountDetailType);
+			accountDetailType.setCreatedDate(new Date());
 			accountDetailType.setCreatedBy(accountDetailTypeContractRequest.getRequestInfo().getUserInfo());
 			accountDetailType.setLastModifiedBy(accountDetailTypeContractRequest.getRequestInfo().getUserInfo());
 			accountdetailtypes.add(accountDetailType);
@@ -67,6 +68,7 @@ public class AccountDetailTypeController {
 
 		for (AccountDetailType f : accountdetailtypes) {
 			contract = new AccountDetailTypeContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			accountDetailTypeContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class AccountDetailTypeController {
 		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest.getData()) {
 			accountDetailType = new AccountDetailType();
 			model.map(accountDetailTypeContract, accountDetailType);
+			accountDetailType.setLastModifiedDate(new Date());
 			accountDetailType.setLastModifiedBy(accountDetailTypeContractRequest.getRequestInfo().getUserInfo());
 			accountdetailtypes.add(accountDetailType);
 		}
@@ -108,6 +111,7 @@ public class AccountDetailTypeController {
 		for (AccountDetailType accountDetailTypeObj : accountdetailtypes) {
 			contract = new AccountDetailTypeContract();
 			model.map(accountDetailTypeObj, contract);
+			contract.setLastModifiedDate(new Date());
 			accountDetailTypeContracts.add(contract);
 		}
 

@@ -59,6 +59,7 @@ public class EgfStatusController {
 		for (EgfStatusContract egfStatusContract : egfStatusContractRequest.getData()) {
 			egfStatus = new EgfStatus();
 			model.map(egfStatusContract, egfStatus);
+			egfStatus.setCreatedDate(new Date());
 			egfStatus.setCreatedBy(egfStatusContractRequest.getRequestInfo().getUserInfo());
 			egfStatus.setLastModifiedBy(egfStatusContractRequest.getRequestInfo().getUserInfo());
 			egfstatuses.add(egfStatus);
@@ -68,6 +69,7 @@ public class EgfStatusController {
 
 		for (EgfStatus f : egfstatuses) {
 			contract = new EgfStatusContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			egfStatusContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class EgfStatusController {
 		for (EgfStatusContract egfStatusContract : egfStatusContractRequest.getData()) {
 			egfStatus = new EgfStatus();
 			model.map(egfStatusContract, egfStatus);
+			egfStatus.setLastModifiedDate(new Date());
 			egfStatus.setLastModifiedBy(egfStatusContractRequest.getRequestInfo().getUserInfo());
 			egfstatuses.add(egfStatus);
 		}
@@ -108,6 +111,7 @@ public class EgfStatusController {
 		for (EgfStatus egfStatusObj : egfstatuses) {
 			contract = new EgfStatusContract();
 			model.map(egfStatusObj, contract);
+			contract.setLastModifiedDate(new Date());
 			egfStatusContracts.add(contract);
 		}
 

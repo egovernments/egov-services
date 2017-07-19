@@ -58,6 +58,7 @@ public class FunctionController {
 		for (FunctionContract functionContract : functionContractRequest.getData()) {
 			function = new Function();
 			model.map(functionContract, function);
+			function.setCreatedDate(new Date());
 			function.setCreatedBy(functionContractRequest.getRequestInfo().getUserInfo());
 			function.setLastModifiedBy(functionContractRequest.getRequestInfo().getUserInfo());
 			functions.add(function);
@@ -67,6 +68,7 @@ public class FunctionController {
 
 		for (Function f : functions) {
 			contract = new FunctionContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			functionContracts.add(contract);
 		}
@@ -99,6 +101,7 @@ public class FunctionController {
 		for (FunctionContract functionContract : functionContractRequest.getData()) {
 			function = new Function();
 			model.map(functionContract, function);
+			function.setLastModifiedDate(new Date());
 			function.setLastModifiedBy(functionContractRequest.getRequestInfo().getUserInfo());
 			functions.add(function);
 		}
@@ -108,6 +111,7 @@ public class FunctionController {
 		for (Function functionObj : functions) {
 			contract = new FunctionContract();
 			model.map(functionObj, contract);
+			contract.setLastModifiedDate(new Date());
 			functionContracts.add(contract);
 		}
 

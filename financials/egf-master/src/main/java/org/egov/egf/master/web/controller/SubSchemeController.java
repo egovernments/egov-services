@@ -57,6 +57,7 @@ public class SubSchemeController {
 		for (SubSchemeContract subSchemeContract : subSchemeContractRequest.getData()) {
 			subScheme = new SubScheme();
 			model.map(subSchemeContract, subScheme);
+			subScheme.setCreatedDate(new Date());
 			subScheme.setCreatedBy(subSchemeContractRequest.getRequestInfo().getUserInfo());
 			subScheme.setLastModifiedBy(subSchemeContractRequest.getRequestInfo().getUserInfo());
 			subschemes.add(subScheme);
@@ -66,6 +67,7 @@ public class SubSchemeController {
 
 		for (SubScheme f : subschemes) {
 			contract = new SubSchemeContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			subSchemeContracts.add(contract);
 		}
@@ -97,6 +99,7 @@ public class SubSchemeController {
 		for (SubSchemeContract subSchemeContract : subSchemeContractRequest.getData()) {
 			subScheme = new SubScheme();
 			model.map(subSchemeContract, subScheme);
+			subScheme.setLastModifiedDate(new Date());
 			subScheme.setLastModifiedBy(subSchemeContractRequest.getRequestInfo().getUserInfo());
 			subschemes.add(subScheme);
 		}
@@ -106,6 +109,7 @@ public class SubSchemeController {
 		for (SubScheme subSchemeObj : subschemes) {
 			contract = new SubSchemeContract();
 			model.map(subSchemeObj, contract);
+			contract.setLastModifiedDate(new Date());
 			subSchemeContracts.add(contract);
 		}
 

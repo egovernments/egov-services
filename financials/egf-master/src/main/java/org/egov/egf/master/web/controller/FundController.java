@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.CommonRequest;
@@ -58,6 +56,7 @@ public class FundController {
 		for (FundContract fundContract : fundRequest.getData()) {
 			fund = new Fund();
 			model.map(fundContract, fund);
+			fund.setCreatedDate(new Date());
 			fund.setCreatedBy(fundRequest.getRequestInfo().getUserInfo());
 			fund.setLastModifiedBy(fundRequest.getRequestInfo().getUserInfo());
 			funds.add(fund);
@@ -67,6 +66,7 @@ public class FundController {
 
 		for (Fund f : funds) {
 			contract = new FundContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			fundContracts.add(contract);
 		}
@@ -99,6 +99,7 @@ public class FundController {
 			fund = new Fund();
 			model.map(fundContract, fund);
 			fund.setLastModifiedBy(fundContractRequest.getRequestInfo().getUserInfo());
+			fund.setLastModifiedDate(new Date());
 			funds.add(fund);
 		}
 
@@ -107,6 +108,7 @@ public class FundController {
 		for (Fund fundObj : funds) {
 			contract = new FundContract();
 			model.map(fundObj, contract);
+			fundObj.setLastModifiedDate(new Date());
 			fundContracts.add(contract);
 		}
 

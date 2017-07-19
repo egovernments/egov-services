@@ -1,13 +1,19 @@
 {
-    "tenantId": null,
-    "ResponseInfo": {
-        "apiId": "org.egov.collection",
-        "ver": "1.0",
-        "resMsgId": "uief87324",
-        "msgId": "654654",
-        "status": "200"
+    "RequestInfo":{
+        "apiId":"org.egov.collection",
+        "ver":"1.0",
+        "action":"POST",
+        "did":"4354648646",
+        "key":"xyz",
+        "msgId":"654654",
+        "requesterId":"61",
+        "authToken":"ksnk",
+        "userInfo":
+        {
+        	"id":1
+        }
     },
-    "Receipt": [
+    "Receipt": 
         {
             "tenantId": "default",
             "instrumentType": null,
@@ -29,8 +35,8 @@
                         "billNumber": "REF1234",
                         "consumerCode": "CON12343556",
                         "consumerType": "Good",
-                        "minimumAmount": 125.00,
-                        "totalAmount": 150.00,
+                        "minimumAmount": 125,
+                        "totalAmount": 150,
                         "collectionModesNotAllowed": [
                             "Bill based"
                         ],
@@ -43,11 +49,11 @@
                         "receiptType": "ghj",
                         "channel": "567hfghr",
                         "voucherHeader": "VOUHEAD",
-                        "collectionType": "C",
+                        "collectionType":"C",
                         "boundary": "67",
                         "reasonForCancellation": "Data entry mistake",
                         "amountPaid": null,
-                        "cancellationRemarks": "payee name data entered is not proper",
+                        "cancellationRemarks": "receipt number data entered is not proper",
                         "status": "CREATED",
                         "BillAccountDetail": [
                             {
@@ -58,8 +64,8 @@
                                 "id": "1",
                                 "tenantId": "default",
                                 "billDetail": "1",
-                                "creditAmount": 800.0,
-                                "debitAmount": 600.0,
+                                "creditAmount": 800,
+                                "debitAmount": 600,
                                 "purpose": "REBATE"
                             },
                             {
@@ -70,8 +76,8 @@
                                 "id": "2",
                                 "tenantId": "default",
                                 "billDetail": "1",
-                                "creditAmount": 800.0,
-                                "debitAmount": 700.0,
+                                "creditAmount": 800,
+                                "debitAmount": 700,
                                 "purpose": "REBATE"
                             }
                         ]
@@ -84,5 +90,5 @@
             "auditDetails": null,
             "workflowDetails": null
         }
-    ]
+    
 }

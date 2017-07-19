@@ -1,8 +1,50 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ * accountability and the service delivery of the government  organizations.
+ *
+ *  Copyright (C) 2016  eGovernments Foundation
+ *
+ *  The updated version of eGov suite of products as by eGovernments Foundation
+ *  is available at http://www.egovernments.org
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see http://www.gnu.org/licenses/ or
+ *  http://www.gnu.org/licenses/gpl.html .
+ *
+ *  In addition to the terms of the GPL license to be adhered to in using this
+ *  program, the following additional terms are to be complied with:
+ *
+ *      1) All versions of this program, verbatim or modified must carry this
+ *         Legal Notice.
+ *
+ *      2) Any misrepresentation of the origin of the material is prohibited. It
+ *         is required that all modified versions of this material be marked in
+ *         reasonable ways as different from the original version.
+ *
+ *      3) This license does not grant any rights to any user of the program
+ *         with regards to rights under trademark law for use of the trade names
+ *         or trademarks of eGovernments Foundation.
+ *
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.collection.domain.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +56,14 @@ import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.web.contract.Bill;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.Purpose;
+import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,6 +89,69 @@ public class ReceiptServiceTest {
 
 		ReceiptCommonModel commonModel = receiptService.getReceipts(getReceiptSearchCriteria());
 		assertEquals(getReceiptCommonModel(), commonModel);
+	}
+
+	@Test
+	public void test_should_be_able_to_cancel_receipt_before_bank_remittance() {
+		when(receiptRepository.cancelReceipt(any())).thenReturn(getReceiptRequest());
+		Receipt receipt = receiptService.cancelReceiptBeforeRemittance(getReceiptRequest());
+		assertEquals(getReceipt(), receipt);
+	}
+
+	@Test
+	public void test_should_be_able_to_push_cancel_request_to_kafka() {
+		when(receiptRepository.pushReceiptCancelDetailsToQueue(any())).thenReturn(getReceipt());
+		Receipt receipt = receiptService.cancelReceiptPushToQueue(getReceiptRequest());
+		assertEquals(getReceipt(), receipt);
+	}
+
+	private Receipt getReceipt() {
+		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
+				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+				.debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
+		BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
+				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
+
+		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
+				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
+				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
+				.receiptType("ghj").channel("567hfghr").voucherHeader("VOUHEAD").collectionType("C").boundary("67")
+				.reasonForCancellation("Data entry mistake")
+				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
+				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
+				.receiptDate(Timestamp.valueOf("2016-02-02 00:00:00.0")).businessService("TL").build();
+		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
+				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
+
+		return Receipt.builder().tenantId("default").bill(billInfo).build();
+	}
+
+	private ReceiptReq getReceiptRequest() {
+
+		User userInfo = User.builder().id(1L).build();
+		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
+				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo)
+				.build();
+		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
+				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+				.debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
+		BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
+				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
+
+		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
+				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
+				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
+				.receiptType("ghj").channel("567hfghr").voucherHeader("VOUHEAD").collectionType("C").boundary("67")
+				.reasonForCancellation("Data entry mistake")
+				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
+				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
+				.receiptDate(Timestamp.valueOf("2016-02-02 00:00:00.0")).businessService("TL").build();
+		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
+				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
+		Receipt receipt = Receipt.builder().tenantId("default").bill(billInfo).build();
+		return ReceiptReq.builder().requestInfo(requestInfo).receipt(receipt).build();
 	}
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {

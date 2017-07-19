@@ -7,14 +7,21 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
 
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@Builder
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReceiptReq   {
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -26,6 +33,6 @@ public class ReceiptReq   {
   @NotNull
   @JsonProperty("Receipt")
   private Receipt receipt = null;
-   
-}
 
+
+}

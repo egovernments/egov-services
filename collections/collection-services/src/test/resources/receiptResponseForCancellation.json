@@ -29,8 +29,8 @@
                         "billNumber": "REF1234",
                         "consumerCode": "CON12343556",
                         "consumerType": "Good",
-                        "minimumAmount": 125.00,
-                        "totalAmount": 150.00,
+                        "minimumAmount": 125,
+                        "totalAmount": 150,
                         "collectionModesNotAllowed": [
                             "Bill based"
                         ],
@@ -39,16 +39,16 @@
                         "displayMessage": "receipt created successfully",
                         "callBackForApportioning": null,
                         "receiptNumber": "REC1234",
-                        "receiptDate": 1454371200000,
                         "receiptType": "ghj",
+                        "receiptDate": 1454371200000,
                         "channel": "567hfghr",
                         "voucherHeader": "VOUHEAD",
                         "collectionType": "C",
                         "boundary": "67",
                         "reasonForCancellation": "Data entry mistake",
                         "amountPaid": null,
-                        "cancellationRemarks": "payee name data entered is not proper",
-                        "status": "CREATED",
+                        "cancellationRemarks": "receipt number data entered is not proper",
+                        "status": "CANCELLED",
                         "BillAccountDetail": [
                             {
                                 "glcode": "456",
@@ -58,8 +58,8 @@
                                 "id": "1",
                                 "tenantId": "default",
                                 "billDetail": "1",
-                                "creditAmount": 800.0,
-                                "debitAmount": 600.0,
+                                "creditAmount": 800,
+                                "debitAmount": 600,
                                 "purpose": "REBATE"
                             },
                             {
@@ -70,8 +70,8 @@
                                 "id": "2",
                                 "tenantId": "default",
                                 "billDetail": "1",
-                                "creditAmount": 800.0,
-                                "debitAmount": 700.0,
+                                "creditAmount": 800,
+                                "debitAmount": 700,
                                 "purpose": "REBATE"
                             }
                         ]

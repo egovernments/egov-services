@@ -37,39 +37,29 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.collection.model.enums;
 
-package org.egov.collection.model;
 
-import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-@Builder
-@Setter
-@Getter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-public class AuditDetails {
+public enum ReasonForCancellation {
+	DATAENTRYMISTAKE("Data entry mistake"),OTHERS("Others");
 	
-	  @JsonProperty("createdBy")
-	  private Long createdBy = null;
 	  
-	  @JsonProperty("createdDate")
-	  private Date createdDate = null;
-	  
-	  @JsonProperty("lastModifiedBy")
-	  private Long lastModifiedBy = null;
-	  
-	  @JsonProperty("lastModifiedDate")
-	  private Date lastModifiedDate = null;
+    private String name;
+    
+    ReasonForCancellation(final String name) {
+        this.name = name;
+    }
+    
+    @Override
+    @JsonValue
+    public String toString() {
+    	return String.valueOf(name);
+    }
 
+    public String getName() {
+        return name;
+    }
 }

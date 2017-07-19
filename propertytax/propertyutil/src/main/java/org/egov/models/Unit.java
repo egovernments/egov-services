@@ -119,6 +119,9 @@ public class Unit {
 
 	@JsonProperty("parentid")
 	private Long parentId = null;
+	
+	@JsonProperty("isAuthorised")
+	private Boolean isAuthorised = true;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

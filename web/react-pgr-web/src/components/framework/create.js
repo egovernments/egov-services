@@ -1,6 +1,3 @@
-
-//import will remove when api call for fetching specs
-
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -8,35 +5,26 @@ import RaisedButton from 'material-ui/RaisedButton';
 import _ from "lodash";
 import ShowFields from "./showFields";
 import wcSpecs from './specs/wc/wc';
-// var path=`./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}.js`;
-// console.log(path);
-// var data=require(path);
-  // path);
-// console.log(`./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}`);
-// import specs from `./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}`;
-// './specs/'+window.location.hash.split("/")[2]+"/"+window.location.hash.split("/")[2];
 
-// console.log(window.location.hash);
-
-// import Api from '../../../api/api';
-// import SearchForm from './searchForm';
-// import ReportResult from './reportResult';
-
-
-// console.log(data);
-
-// let moduleName=window.location.hash.split("/")[2];
-// let action=window.location.hash.split("/")[1];
-
+import {translate} from '../common/common';
+import Api from '../../api/api';
+import jp from "jsonpath";
 
 class Report extends Component {
 
-  initData()
+  async initData()
   {
     let {setMetaData,setModuleName,setAtionName}=this.props;
 
     let hashLocation=window.location.hash;
-
+    let obj=wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    for (var i = 0; i <obj.groups.length; i++) {
+      obj.groups[i].label=translate(obj.groups[i].label);
+      for (var j = 0; j < obj.groups[i].fields.length; j++) {
+        obj.groups[i].fields[j].label=translate(obj.groups[i].fields[j].label);
+      }
+    }
+    // console.log(wcSpecs);
     setMetaData(wcSpecs);
 
 
@@ -58,6 +46,7 @@ class Report extends Component {
 
   componentDidMount()
   {
+
       this.initData();
   }
 
@@ -92,7 +81,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} fieldErrors={{}}/>}  
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} fieldErrors={{}}/>}
           <RaisedButton type="submit" disabled={false}  label="Create" />
         </form>
       </div>

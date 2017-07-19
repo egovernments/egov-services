@@ -40,9 +40,11 @@
 package org.egov.egf.instrument.domain.model;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.ChartOfAccountContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,17 +54,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class InstrumentVoucher extends Auditable {
+@EqualsAndHashCode(exclude = { "instrumentType" }, callSuper = false)
+public class InstrumentAccountCode extends Auditable{
 
 	/*
-	 * instrumentHeaderId is the reference of the instrument attached to a
-	 * voucher
+	 * id is the unique reference to Instrument AccountCodes entered in the
+	 * system.
 	 */
-	private Instrument instrument;
+	private String id;
 
 	/*
-	 * voucherHeaderId is the reference of the voucher attached to a instrument.
+	 * instrumentType specifies the mode/type of transaction that can be made -
+	 * i.e Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
 	 */
-	private String voucherHeaderId;
+	private InstrumentType instrumentType;
+
+	/*
+	 * accountCode is the COA that is tagged to a instrument type used in ledger
+	 * posting.
+	 */
+	private ChartOfAccountContract accountCode;
 
 }

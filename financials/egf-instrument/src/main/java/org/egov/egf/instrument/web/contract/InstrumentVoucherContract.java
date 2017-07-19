@@ -37,28 +37,30 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.instrument.domain.model;
+package org.egov.egf.instrument.web.contract;
+import org.egov.common.web.contract.AuditableContract;
 
-import org.egov.common.domain.model.Auditable;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
-public class InstrumentVoucher extends Auditable {
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "instrument","voucherHeaderId"})
+public class InstrumentVoucherContract extends AuditableContract {
 
 	/*
 	 * instrumentHeaderId is the reference of the instrument attached to a
 	 * voucher
 	 */
-	private Instrument instrument;
+	private InstrumentContract instrument;
 
 	/*
 	 * voucherHeaderId is the reference of the voucher attached to a instrument.

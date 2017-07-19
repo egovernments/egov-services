@@ -37,32 +37,65 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.instrument.domain.model;
+package org.egov.egf.instrument.web.contract;
+import java.util.List;
 
-import org.egov.common.domain.model.Auditable;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.egov.common.web.contract.AuditableContract;
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
-public class InstrumentVoucher extends Auditable {
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","name","description","active","instrumentTypeProperties"})
+public class InstrumentTypeContract extends AuditableContract {
 
 	/*
-	 * instrumentHeaderId is the reference of the instrument attached to a
-	 * voucher
+	 * id is the unique reference to instrument type entered in the system.
 	 */
-	private Instrument instrument;
+	private String id;
 
 	/*
-	 * voucherHeaderId is the reference of the voucher attached to a instrument.
+	 * type specifies the mode/type of transaction that can be made - i.e
+	 * Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
 	 */
-	private String voucherHeaderId;
+	@NotNull
+	@NotBlank
+	@Size(max=50,min=2)
+	private String name;
+	
+	/*
+	 * description specifies details of the instrument type . For example 
+	 * type DD description may be Demand Draft
+	 */
+	
+	@Size(max=100)
+	private String description;
+
+	/*
+	 * active specifies whether the type is active for transacting.
+	 */
+	@NotNull
+	private Boolean active;
+	
+	
+	@NotNull
+	@Size(max=2,min=2)
+//	@DrillDownTable
+	private List<InstrumentTypePropertyContract> instrumentTypeProperties;
+
+	
 
 }

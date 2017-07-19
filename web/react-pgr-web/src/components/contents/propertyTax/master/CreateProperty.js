@@ -271,7 +271,7 @@ createPropertyTax = () => {
 				},
 				"owners": createProperty.owners || '',
 				"propertyDetail": {
-					"propertyType": createProperty.ownerShip || '',
+					"propertyType": createProperty.ownerShip || null,
 					"category": createProperty.assessmentPropertySubType || '',
 					"usage": null,
 					"department": createProperty.assessmentDepartment || '',
@@ -288,7 +288,7 @@ createPropertyTax = () => {
 					"woodType": createProperty.woodType || '',
 					"roofType": createProperty.roofType || '',
 					"wallType": createProperty.wallType || '',
-					"floors":createProperty.floorsArr || '',
+					"floors":createProperty.floorsArr || null,
 					"documents": [{
 						"documentType": {						
 							"name": "Photo of Assessment",
@@ -456,12 +456,10 @@ createPropertyTax = () => {
 		  <div className="createProperty">
 				<h3 style={{padding:15}}>Create New Property</h3>
 			  <form onSubmit={(e) => {search(e)}}>
-					
 				  <OwnerDetails />
-				  <CreateNewProperty />              
-				  <PropertyAddress/>                      
+				  <PropertyAddress/>  
+				  <AssessmentDetails />				  
 				  <Amenities />                  
-				  <AssessmentDetails />
 				  <ConstructionTypes/>
 				  {(getNameById(this.state.propertytypes, createProperty.assessmentPropertyType) == "Vacant Land") ? <VacantLand/> : 
 					 <div> {!this.state.addFloor && <Card>

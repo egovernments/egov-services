@@ -140,8 +140,17 @@ class AssessmentDetails extends Component {
         })
         console.log(err)
       })
+  } 
 
-      Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+handleDepartment = (e) => {
+	
+	var currentThis = this;
+	
+	let query = {
+		category : e.target.value
+	}
+	
+      Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({
             departments:res.departments
@@ -150,7 +159,7 @@ class AssessmentDetails extends Component {
           console.log(err)
         })
 
-  }      
+}   
 
 
   render() {
@@ -160,7 +169,7 @@ class AssessmentDetails extends Component {
         {
             return list.map((item)=>
             {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+                return (<MenuItem key={item.id} value={item.code} primaryText={item.name}/>)
             })
         }
     }
@@ -181,7 +190,7 @@ class AssessmentDetails extends Component {
       isAddRoom
     } = this.props;
 
-    let {search} = this;
+    let {search, handleDepartment} = this;
 
     let cThis = this;
 
@@ -241,6 +250,7 @@ class AssessmentDetails extends Component {
                                                           value: value
                                                         }
                                                       };
+													  handleDepartment(e);
                                                       handleChange(e, "assessmentPropertyType", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

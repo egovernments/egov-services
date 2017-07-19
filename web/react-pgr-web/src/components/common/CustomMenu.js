@@ -14,7 +14,6 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 
-
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
 
@@ -36,13 +35,10 @@ class CustomMenu extends Component {
       searchText:"",
       menu:[],
       filterMenu:[],
-      path:'',
-      parentPath:'',
+      level:0,
+      parentLevel:0,
       modules:[],
-      items:[],
-	  allUrls :[],
-	  allPaths :[],
-	  allNames:[]
+      items:[]
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -50,14 +46,10 @@ class CustomMenu extends Component {
 
   setWrapperRef(node) {
     this.wrapperRef = node;
-	console.log(node);
   }
 
   componentDidMount() {
-	let {menuItems,actionList}=this.props;
     document.addEventListener('mousedown', this.handleClickOutside);
-		
-	this.createMenuStructure();
   }
 
   handleClickOutside(event) {
@@ -69,6 +61,7 @@ class CustomMenu extends Component {
   componentDidUpdate()
   {
     let {menuItems,actionList}=this.props;
+    // console.log(actionList);
     // this.setState({
     //   modules:actionList
     // })
@@ -81,7 +74,6 @@ class CustomMenu extends Component {
     // });
     // console.log(this.state.menu);
     // console.log(leaves);
-
   }
 
   // menuLeaves=(items)=>{
@@ -114,10 +106,11 @@ class CustomMenu extends Component {
     })
   }
 
-  handleChange=(e)=> {
-	  this.setState({
-		searchText:e.target.value
-	  })
+  handleChange=(e)=>
+  {
+      this.setState({
+        searchText:e.target.value
+      })
   }
 
   menuChange=(nextLevel, parentLevel) => {
@@ -127,49 +120,28 @@ class CustomMenu extends Component {
     });
   }
 
-  changePath=(path)=>{
+  changeLevel=(level)=>{
     let {searchText}=this.state;
     let {setRoute}=this.props;
     this.setState({
-      path,
-      parentPath:'',
-      searchText:!path?"":searchText
+      level,
+      parentLevel:level-1,
+      searchText:!level?"":searchText
     })
 
-    if (!path) {
-      console.log("path null");
+    if (!level) {
+      console.log("level 0");
       setRoute("/dashboard");
     }
   }
-  
-  
-  createMenuStructure = () => {
 
-	  var allMenuItems = this.props.actionList;
-	  
-	  var allUrls = [], allPaths = [] , allNames = [];
-	  
-	  var menusWithPath = allMenuItems.map((item, index)=>{
-		  if(item.path!=''){
-			allUrls.push(item.url);
-			allPaths.push(item.path);
-			allNames.push(item.name);
-		  }
-	  });
-	  
-	  this.setState({
-		  allUrls,
-		  allPaths,
-		  allNames
-	  })
-	  
-  }
+
 
 
   render() {
     // console.log(this.state.searchText);
-    let {menuItems, handleToggle,actionList} = this.props;
-    let {searchText,filterMenu,path,parentPath,modules,items,changeModulesActions}=this.state;
+    let {menuItems, handleToggle,actionList}=this.props;
+    let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions}=this.state;
     let {menuChange,changeLevel}=this;
     // console.log(actionList);
     // console.log(menuItems.length>0?menuItems[0].title:"");
@@ -218,41 +190,12 @@ class CustomMenu extends Component {
     }
 
     const showMenu=()=>{
-		
-		
-		if(path.length==0){
-			return menuItems.map((item,index)=>{
-				
-              if (item.url && item.path!="" && (item.path.search(/\./)) == -1 ) {
-				
-				console.log(item.path, item.path.search(/\./));
-				if(item.path.search(/\./)){
-					console.log('here again');
-				}
-				
-                return(
-                  <Link  key={index} to={item.url} >
-                    <MenuItem
-                        style={{whiteSpace: "initial"}}
-                         onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
-                         leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-                         primaryText={item.name}
-                      />
-                  </Link>
-                )
-              }
-			})
-		}
-		 
-	
-	
-	 return false;
 
       if(searchText.length==0)
-      { 
+      {
 
         return menuItems.map((item,index)=>{
-            if (item.path==path) {
+            if (item.level==level) {
               if (item.url) {
                 return(
                   <Link  key={index} to={item.url} >
@@ -263,6 +206,8 @@ class CustomMenu extends Component {
                          primaryText={item.name}
                       />
                   </Link>
+
+
                 )
 
               } else {
@@ -283,16 +228,18 @@ class CustomMenu extends Component {
         return(
           <div>
             <MenuItem
+
                  leftIcon={<i className="material-icons">view_module</i>}
                  primaryText={menuItems.length>0?menuItems[0].title:""}
                  rightIcon={<ArrowDropRight />}
                   />
+
             </div>
         )
       }
       else {
+
           return menuItems.map((item,index)=>{
-			 
                 if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
                   return(
                     <Link   key={index} to={item.url} >
@@ -307,6 +254,8 @@ class CustomMenu extends Component {
                 }
 
           })
+
+
       }
     }
 
@@ -417,17 +366,17 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true}>
-        {(path.length>0 || searchText) && <RaisedButton
+        {(level>0 || searchText) && <RaisedButton
                                       primary={true}
                                       icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}
                                       style={{...style, "marginLeft": "2px"}}
                                       onTouchTap={()=>{;handleToggle(false); changeLevel(0)}}
                                     />}
-        { path.length>0 &&  <RaisedButton
+        { level>0 &&  <RaisedButton
                         primary={true}
                         icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>fast_rewind</i>}
                         style={{...style, "float": "right", "marginRight": "2px"}}
-                        onTouchTap={()=>{changeLevel(parentPath)}}
+                        onTouchTap={()=>{changeLevel(parentLevel)}}
                       />}
 
           {/*

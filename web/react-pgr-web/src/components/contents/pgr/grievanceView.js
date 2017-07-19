@@ -15,6 +15,7 @@ import Api from '../../../api/api';
 import {translate, validate_fileupload} from '../../common/common';
 import Fields from '../../common/Fields';
 import LoadingIndicator from '../../common/LoadingIndicator';
+import WorkFlow from '../../common/workflow';
 import  '../../../styles/custom.css';
 var Rating = require('react-rating');
 
@@ -258,39 +259,6 @@ class grievanceView extends Component{
       currentThis.handleError(err.message);
     });
   }
-  renderWorkflow = () =>{
-    if(this.state.workflow != undefined){
-      return this.state.workflow.map((workflow, index) =>
-      {
-        var department;
-        for(var k in workflow.values.department.values){
-          department = Object.values(workflow.values.department.values[k])[1];
-        }
-        return (
-          <Row style={styles.addBorderBottom} key={index}>
-            <Col xs={12} md={2}>
-              {workflow.last_updated}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.sender_name}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.status}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.owner}
-            </Col>
-            <Col xs={12} md={2}>
-              {department}
-            </Col>
-            <Col xs={12} md={2}>
-              {workflow.comments}
-            </Col>
-          </Row>
-        )
-      });
-    }
-  }
   filesUploaded = () =>{
     if(this.state.files != undefined){
       return this.state.files.map((files, index) => {
@@ -472,7 +440,6 @@ class grievanceView extends Component{
       search,
       getReceivingCenter,
       getLocation,
-      renderWorkflow,
       filesUploaded,
       loadServiceDefinition,
       handleUploadValidation
@@ -618,7 +585,7 @@ class grievanceView extends Component{
               : ''}
               <Row style={{padding:'10px'}}>
                 <Col xs={6} md={3}>
-                  Files Uploaded
+                  Files
                 </Col>
                 {this.filesUploaded()}
               </Row>
@@ -637,36 +604,7 @@ class grievanceView extends Component{
         </CardText>
         </Card>
       </Grid>
-      <Grid style={{width:'100%'}}>
-        <Card style={{margin:'15px 0'}}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-           {translate('core.lbl.history')}
-          < /div>}/>
-          <CardText style={{padding:'8px 16px 0'}}>
-            <Row style={styles.addBorderBottom}>
-              <Col xs={12} md={2}>
-                Date
-              </Col>
-              <Col xs={12} md={2}>
-                {translate('pgr.lbl.updatedby')}
-              </Col>
-              <Col xs={12} md={2}>
-                {translate('core.lbl.status')}
-              </Col>
-              <Col xs={12} md={2}>
-                {translate('pgr.lbl.currentowner')}
-              </Col>
-              <Col xs={12} md={2}>
-                {translate('core.lbl.department')}
-              </Col>
-              <Col xs={12} md={2}>
-                {translate('core.lbl.comments')}
-              </Col>
-            </Row>
-            {this.renderWorkflow()}
-          </CardText>
-        </Card>
-      </Grid>
+      <WorkFlow workflowdetails={this.state.workflow} />
       { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.status !== 'REJECTED' && this.state.status !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.status !== 'WITHDRAWN') ?
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>

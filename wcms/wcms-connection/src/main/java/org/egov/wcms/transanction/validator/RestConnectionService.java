@@ -58,6 +58,7 @@ import org.egov.wcms.transanction.web.contract.PropertyUsageTypeResponseInfo;
 import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transanction.web.contract.SupplyResponseInfo;
 import org.egov.wcms.transanction.web.contract.TreatmentPlantResponse;
+import org.egov.wcms.transanction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transanction.web.errorhandlers.Error;
@@ -245,6 +246,127 @@ public class RestConnectionService {
         
         return propResp;
     }
+    
+    public PropertyResponse getPropertyDetailsByName(WaterConnectionGetReq waterConnectionGetReq)
+    {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+        .append(configurationManager.getPropertyServiceSearchPathTopic()).
+        append("?ownerName=").append(waterConnectionGetReq.getName())
+        .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        PropertyResponse propResp=null;
+        try{
+         propResp= new RestTemplate().postForObject(url.toString(), wrapper,
+                PropertyResponse.class);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e.getMessage());
+        }
+        if(propResp!=null && !propResp.getProperties().isEmpty())
+        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
+        
+        return propResp;
+    }
+    
+    public PropertyResponse getPropertyDetailsByMobileNumber(WaterConnectionGetReq waterConnectionGetReq)
+    {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+        .append(configurationManager.getPropertyServiceSearchPathTopic()).
+        append("?mobileNumber=").append(waterConnectionGetReq.getMobileNumber())
+        .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        PropertyResponse propResp=null;
+        try{
+         propResp= new RestTemplate().postForObject(url.toString(), wrapper,
+                PropertyResponse.class);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e.getMessage());
+        }
+        if(propResp!=null && !propResp.getProperties().isEmpty())
+        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
+        
+        return propResp;
+    }
+    
+    public PropertyResponse getPropertyDetailsByLocality(WaterConnectionGetReq waterConnectionGetReq)
+    {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+        .append(configurationManager.getPropertyServiceSearchPathTopic()).
+        append("?locality=").append(waterConnectionGetReq.getLocality())
+        .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        PropertyResponse propResp=null;
+        try{
+         propResp= new RestTemplate().postForObject(url.toString(), wrapper,
+                PropertyResponse.class);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e.getMessage());
+        }
+        if(propResp!=null && !propResp.getProperties().isEmpty())
+        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
+        
+        return propResp;
+    }
+    
+    public PropertyResponse getPropertyDetailsByRevenueWard(WaterConnectionGetReq waterConnectionGetReq)
+    {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+        .append(configurationManager.getPropertyServiceSearchPathTopic()).
+        append("?revenueWard=").append(waterConnectionGetReq.getRevenueWard())
+        .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        PropertyResponse propResp=null;
+        try{
+         propResp= new RestTemplate().postForObject(url.toString(), wrapper,
+                PropertyResponse.class);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e.getMessage());
+        }
+        if(propResp!=null && !propResp.getProperties().isEmpty())
+        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
+        
+        return propResp;
+    }
+    
+    public PropertyResponse getPropertyDetailsByDoorNumber(WaterConnectionGetReq waterConnectionGetReq)
+    {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+        .append(configurationManager.getPropertyServiceSearchPathTopic()).
+        append("?houseNoBldgApt=").append(waterConnectionGetReq.getDoorNumber())
+        .append("&tenantId=").append(waterConnectionGetReq.getTenantId());
+        PropertyResponse propResp=null;
+        try{
+         propResp= new RestTemplate().postForObject(url.toString(), wrapper,
+                PropertyResponse.class);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e.getMessage());
+        }
+        if(propResp!=null && !propResp.getProperties().isEmpty())
+        	waterConnectionGetReq.setPropertyIdentifier(propResp.getProperties().get(0).getUpicNumber());
+        
+        return propResp;
+    }
+    
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
         final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();

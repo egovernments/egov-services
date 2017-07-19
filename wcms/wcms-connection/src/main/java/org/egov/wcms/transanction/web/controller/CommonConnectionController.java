@@ -40,32 +40,73 @@
 
 package org.egov.wcms.transanction.web.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transanction.model.CommonDataModel;
 import org.egov.wcms.transanction.model.enums.BillingType;
 import org.egov.wcms.transanction.model.enums.ConnectionType;
+import org.egov.wcms.transanction.web.contract.CommonEnumResponse;
+import org.egov.wcms.transanction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transanction.web.contract.factory.ResponseInfoFactory;
+import org.egov.wcms.transanction.web.errorhandlers.ErrorHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/connection")
 public class CommonConnectionController {
+	
+	@Autowired
+    private ErrorHandler errHandler; 
+	
+	@Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
     @RequestMapping(value = "/_getconnectiontypes")
-    public Map<String, ConnectionType> getConnectionTypeEnum() {
-        final Map<String, ConnectionType> connectionType = new HashMap<>();
-        for (final ConnectionType key : ConnectionType.values())
-            connectionType.put(key.name(), key);
-        return connectionType;
+    public ResponseEntity<?> getConnectionTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+
+        List<CommonDataModel> modelList = new ArrayList<>(); 
+        for (final ConnectionType key : ConnectionType.values()) { 
+        	modelList.add(new CommonDataModel(key.name(), key));
+        }
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
     @RequestMapping(value = "/_getbillingtypes")
-    public Map<String, BillingType> getBillingTypeEnum() {
-        final Map<String, BillingType> billingType = new HashMap<>();
-        for (final BillingType key : BillingType.values())
-            billingType.put(key.name(), key);
-        return billingType;
+    public ResponseEntity<?> getBillingTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+
+        List<CommonDataModel> modelList = new ArrayList<>(); 
+        for (final BillingType key : BillingType.values()) { 
+        	modelList.add(new CommonDataModel(key.name(), key));
+        }
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
+    private ResponseEntity<?> getSuccessResponse(final List<CommonDataModel> modelList,
+            final RequestInfo requestInfo) {
+        final CommonEnumResponse response = new CommonEnumResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        response.setResponseInfo(responseInfo);
+        response.setDataModelList(modelList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }

@@ -37,37 +37,22 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transanction.web.contract;
 
-import java.util.List;
+package org.egov.wcms.model;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
+@Builder
 @NoArgsConstructor
 @Setter
-@ToString
-public class WaterConnectionGetReq {
-	
-	private List<Long> id;
-	private String tenantId;
-	private String legacyConsumerNumber;
-	private String acknowledgementNumber; 
-	private String consumerNumber;
-	private Long asgineeId;
-	private String name;
-	private String mobileNumber;
-	private String locality;
-	private String revenueWard;
-	private String doorNumber;
-	private String propertyIdentifier;
-	private List<Long> propertyIdentifierList; 
+public class CommonDataModel {
+	private String key;
+	private Object object; 
 
 }

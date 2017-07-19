@@ -51,7 +51,7 @@ import org.springframework.stereotype.Component;
 public class WaterConnectionRowMapper implements RowMapper<Connection> {
     @Override
     public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final Connection connection = new Connection();
+        final Connection connection = new Connection();	
         connection.setTenantId(rs.getString("conn_tenant")); 
         connection.setConnectionType(rs.getString("conn_connType")); 
         connection.setBillingType(rs.getString("conn_billtype")); 

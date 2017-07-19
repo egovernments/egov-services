@@ -39,11 +39,13 @@
  */
 package org.egov.wcms.transanction.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.producers.WaterTransactionProducer;
 import org.egov.wcms.transanction.repository.WaterConnectionRepository;
+import org.egov.wcms.transanction.validator.RestConnectionService;
 import org.egov.wcms.transanction.web.contract.ProcessInstance;
 import org.egov.wcms.transanction.web.contract.Task;
 import org.egov.wcms.transanction.web.contract.WaterConnectionGetReq;
@@ -74,6 +76,9 @@ public class WaterConnectionService {
 
     @Autowired
     private WaterConnectionRepository waterConnectionRepository;
+    
+    @Autowired
+    private RestConnectionService restConnectionService; 
 
     public Connection createWaterConnection(final String topic, final String key,
             final WaterConnectionReq waterConnectionRequest) {
@@ -175,7 +180,36 @@ public class WaterConnectionService {
         return task;
     }
     
-    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) { 
+    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+    	List<Long> propertyIdentifierList = new ArrayList<>();
+    	if(null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()){
+    		restConnectionService.getPropertyDetailsByName(waterConnectionGetReq);
+    		propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+    	}
+    	if(null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) { 
+    		restConnectionService.getPropertyDetailsByMobileNumber(waterConnectionGetReq);
+    		propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+    	}
+    	if(null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) { 
+    		restConnectionService.getPropertyDetailsByLocality(waterConnectionGetReq);
+    		propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+    	}
+    	if(null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()) { 
+    		restConnectionService.getPropertyDetailsByRevenueWard(waterConnectionGetReq); 
+    		propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+    	}
+    	if(null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) {
+    		restConnectionService.getPropertyDetailsByDoorNumber(waterConnectionGetReq); 
+    		propertyIdentifierListPreparator(waterConnectionGetReq, propertyIdentifierList);
+    	}
+    	waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
     	return waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
+    }
+    
+    public void propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<Long> propertyIdentifierList) { 
+    	if(null != waterConnectionGetReq.getPropertyIdentifier() && !waterConnectionGetReq.getPropertyIdentifier().isEmpty()) { 
+			Long propId = Long.parseLong(waterConnectionGetReq.getPropertyIdentifier()); 
+			propertyIdentifierList.add(propId);
+		}
     }
 }

@@ -80,6 +80,9 @@ of messages sent to Kafka.
 forward as necessary. 
  
 #### Change log -
+1.0.2
+- Fixed JSON content type check in LogAwareRestTemplate
+
 1.0.1
 - Only log RestTemplate's request/response body when content type is JSON compatible.
 

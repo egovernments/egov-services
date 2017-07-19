@@ -70,7 +70,7 @@ public class LogAwareRestTemplate extends RestTemplate {
 
     private boolean isBodyNotCompatibleForParsing(HttpMessage httpMessage) {
         final MediaType contentType = httpMessage.getHeaders().getContentType();
-        return contentType == null || !JSON_MEDIA_TYPES.contains(contentType.getType());
+        return contentType == null || !JSON_MEDIA_TYPES.contains(contentType.toString());
     }
 
     private void logResponse(ClientHttpResponse response, URI uri) {

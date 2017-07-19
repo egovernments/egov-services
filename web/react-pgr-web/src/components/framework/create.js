@@ -12,9 +12,9 @@ import jp from "jsonpath";
 
 class Report extends Component {
 
-  async initData()
+  initData()
   {
-    let {setMetaData,setModuleName,setAtionName}=this.props;
+    let {setMetaData,setModuleName,setAtionName,initForm}=this.props;
 
     let hashLocation=window.location.hash;
     let obj=wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
@@ -25,23 +25,14 @@ class Report extends Component {
       }
     }
     // console.log(wcSpecs);
+    initForm();
+
     setMetaData(wcSpecs);
 
-
-
-    // console.log(window.location.hash.split("/")[2] + " "+window.location.hash.split("/")[1]);
     setModuleName(hashLocation.split("/")[2]);
 
     setAtionName(hashLocation.split("/")[1]);
 
-    //Once api is ready for fetching specs will remove hardcoded specs path
-    // let response=Api.commonApiPost("pgr-master/report/metadata/_get",{},{tenantId:"default",reportName:this.props.match.params.reportName}).then(function(response)
-    // {
-    //
-    //   setMetaData(response)
-    // },function(err) {
-    //     console.log(err);
-    // });
   }
 
   componentDidMount()
@@ -60,9 +51,11 @@ class Report extends Component {
   //     // this.initData();
   // }
 
-  handleChange=(e, property, isRequired, pattern)=>
+  handleChange=(e, property, isRequired, pattern,requiredErrMsg="Required",patternErrMsg="Pattern Missmatch")=>
   {
-
+      let {handleChange}=this.props;
+      // console.log(e + " "+ property + " "+ isRequired +" "+pattern);
+      handleChange(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg);
   }
 
 
@@ -70,18 +63,19 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName}=this.props;
+    let {metaData,moduleName,actionName,formData}=this.props;
     let {create,handleChange}=this;
+    console.log(formData);
     // console.log(!_.isEmpty(metaData) && metaData);
     // console.log(moduleName && moduleName);
     // console.log(actionName && actionName);
-    console.log(`${moduleName}.${actionName}`);
+    // console.log(`${moduleName}.${actionName}`);
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} fieldErrors={{}}/>}
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} fieldErrors={{}} formData={formData}/>}
           <RaisedButton type="submit" disabled={false}  label="Create" />
         </form>
       </div>
@@ -89,9 +83,24 @@ class Report extends Component {
   }
 }
 
-const mapStateToProps = state => ({metaData:state.framework.metaData,moduleName:state.framework.moduleName,actionName:state.framework.actionName});
+const mapStateToProps = state => ({metaData:state.framework.metaData,moduleName:state.framework.moduleName,actionName:state.framework.actionName,formData:state.frameworkForm.form});
 
 const mapDispatchToProps = dispatch => ({
+  initForm: () => {
+    dispatch({
+      type: "RESET_STATE",
+      validationData: {
+        required: {
+          current: [],
+          required: [ ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
   setMetaData:(metaData)=>{
     dispatch({type:"SET_META_DATA",metaData})
   },
@@ -100,6 +109,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setAtionName:(actionName)=>{
     dispatch({type:"SET_ACTION_NAME",actionName})
+  },
+  handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
+    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

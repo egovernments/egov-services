@@ -194,7 +194,7 @@ class FloorDetails extends Component {
 		
 		var allFloors = this.state.floorNumber;
 	  
-	    var allRooms = this.props.floorDetails.floors;
+	    var allRooms = floorDetails.floors;
 		
 		if(!allRooms){
 			return false;
@@ -212,7 +212,6 @@ class FloorDetails extends Component {
 				  units:[]
 				}
 			  floor.floorNo = item.floorNo;
-			  delete item.floorNo;
 			  floor.units.push(item);
 			  floorDetails.floorsArr.push(floor);
 		})

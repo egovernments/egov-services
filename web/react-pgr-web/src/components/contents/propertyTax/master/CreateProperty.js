@@ -226,6 +226,27 @@ createPropertyTax = () => {
 	
 	let {createProperty} = this.props;
 	
+	var numberOfFloors='';
+	var plinthArea = 0;
+	if(createProperty && createProperty.hasOwnProperty('floorsArr')){
+		numberOfFloors = createProperty.floorsArr.length;
+		for(let i=0;i<createProperty.floors.length;i++){
+			
+			plinthArea += createProperty.floors[i].plinthArea;
+			
+		}
+	}
+	
+	
+	
+	
+
+	
+	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+	
+	var date = new Date().getTime();
+	
+	
 	var currentThis = this;
       var body = {
 			"properties": [{
@@ -238,14 +259,14 @@ createPropertyTax = () => {
 					"addressNumber": createProperty.doorNo || '',
 					"addressLine1": createProperty.locality || '',
 					"landmark": null,
-					"city": "After login I will get",
+					"city": "Bangalore",
 					"pincode": createProperty.pin || '',
 					"detail": null,
 					"auditDetails": {
-						"createdBy": "egovernments",
-						"lastModifiedBy": "egovernments",
-						"createdTime": 0,
-						"lastModifiedTime": 0
+						"createdBy": userRequest.userName,
+						"lastModifiedBy":userRequest.userName,
+						"createdTime": date,
+						"lastModifiedTime": date
 					}
 				},
 				"owners": createProperty.owners || '',
@@ -258,9 +279,9 @@ createPropertyTax = () => {
 					"siteLength": 12,
 					"siteBreadth": 15,
 					"sitalArea": createProperty.extentOfSite || '',
-					"totalBuiltupArea": "Sum of plinth area",
+					"totalBuiltupArea": plinthArea, 
 					"undividedShare": null,
-					"noOfFloors": "Number of floors added",
+					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
 					"landOwner": null,
 					"floorType":createProperty.floorType || '',
@@ -273,18 +294,18 @@ createPropertyTax = () => {
 							"name": "Photo of Assessment",
 							"application": "CREATE",
 							"auditDetails": {
-								"createdBy": "egovernments",
-								"lastModifiedBy": "egovernments",
-								"createdTime": 0,
-								"lastModifiedTime": 0
+								"createdBy": userRequest.userName,
+								"lastModifiedBy":userRequest.userName,
+								"createdTime": date,
+								"lastModifiedTime": date
 							}
 						},
 						"fileStore": "testing",
 						"auditDetails": {
-							"createdBy": "egovernments",
-							"lastModifiedBy": "egovernments",
-							"createdTime": 0,
-							"lastModifiedTime": 0
+							"createdBy": userRequest.userName,
+							"lastModifiedBy":userRequest.userName,
+							"createdTime": date,
+							"lastModifiedTime": date
 						}
 					}],
 					"stateId": null,
@@ -296,10 +317,10 @@ createPropertyTax = () => {
 						"status": null
 					},
 					"auditDetails": {
-						"createdBy": "egovernments",
-						"lastModifiedBy": "egovernments",
-						"createdTime": 0,
-						"lastModifiedTime": 0
+						"createdBy": userRequest.userName,
+						"lastModifiedBy":userRequest.userName,
+						"createdTime": date,
+						"lastModifiedTime": date
 					}
 				},
 				"vacantLand": {
@@ -313,10 +334,10 @@ createPropertyTax = () => {
 					"resdPlotArea": null,
 					"nonResdPlotArea": null,
 					"auditDetails": {
-						"createdBy": "egovernments",
-						"lastModifiedBy": "egovernments",
-						"createdTime": 0,
-						"lastModifiedTime": 0
+						"createdBy": userRequest.userName,
+						"lastModifiedBy":userRequest.userName,
+						"createdTime": date,
+						"lastModifiedTime": date
 					}
 				},
 
@@ -340,23 +361,23 @@ createPropertyTax = () => {
 					"westBoundedBy": createProperty.west || '',
 					"southBoundedBy": createProperty.south || '',
 					"auditDetails": {
-						"createdBy": "egovernments",
-						"lastModifiedBy": "egovernments",
-						"createdTime": 0,
-						"lastModifiedTime": 0
+						"createdBy": userRequest.userName,
+						"lastModifiedBy":userRequest.userName,
+						"createdTime": date,
+						"lastModifiedTime": date
 					}
 				},
 				"channel": "SYSTEM",
 				"auditDetails": {
-					"createdBy": "egovernments",
-					"lastModifiedBy": "egovernments",
-					"createdTime": 0,
-					"lastModifiedTime": 0
+					"createdBy": userRequest.userName,
+					"lastModifiedBy":userRequest.userName,
+					"createdTime": date,
+					"lastModifiedTime": date
 				}
 			}]
       }
 
-     Api.commonApiPost('pt-property/properties/_create', {},body).then((res)=>{
+     Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
 		 
 		 
 		  if(currentThis.props.files){
@@ -447,7 +468,7 @@ createPropertyTax = () => {
 						<CardText>
 							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
 								  onClick={()=>{
-									cThis.setState({
+									this.setState({
 									  addFloor: true
 									});
 								  }}

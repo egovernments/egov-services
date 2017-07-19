@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.calculator.repository.builder.GuidanceValueBuilder;
-import org.egov.calculator.util.TimeStampUtil;
+import org.egov.calculator.utility.TimeStampUtil;
 import org.egov.models.AuditDetails;
 import org.egov.models.GuidanceValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,12 +122,13 @@ public class GuidanceValueRepostory {
 	public List<GuidanceValue> searchGuidanceValue(String tenantId, String boundary, String structure, String usage,
 			String subUsage, String occupancy, String validDate) {
 
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String guidanceValueSearchSql = GuidanceValueBuilder.getGuidanceValueSearchQuery(tenantId, boundary, structure,
-				usage, subUsage, occupancy, validDate);
+				usage, subUsage, occupancy, validDate, preparedStatementValues);
 
 		List<GuidanceValue> guidanceValues = new ArrayList<GuidanceValue>();
 
-		guidanceValues = getGuidanceValues(guidanceValueSearchSql);
+		guidanceValues = getGuidanceValues(guidanceValueSearchSql, preparedStatementValues);
 
 		return guidanceValues;
 
@@ -142,11 +143,11 @@ public class GuidanceValueRepostory {
 	 * @return {@link GuidanceValue} List of GuidanceValue
 	 */
 	@SuppressWarnings("rawtypes")
-	public List<GuidanceValue> getGuidanceValues(String query) {
+	public List<GuidanceValue> getGuidanceValues(String query, List<Object> preparedStatementValues) {
 
 		List<GuidanceValue> guidanceValues = new ArrayList<>();
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 		for (Map row : rows) {
 			GuidanceValue guidanceValue = new GuidanceValue();
 			guidanceValue.setId(getLong(getString(row.get("id"))));

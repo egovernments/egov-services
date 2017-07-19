@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.calculator.repository.builder.FactorQueryBuilder;
-import org.egov.calculator.util.TimeStampUtil;
+import org.egov.calculator.utility.TimeStampUtil;
 import org.egov.enums.CalculationFactorTypeEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
@@ -122,11 +122,14 @@ public class FactorRepository {
 	 */
 	public List<CalculationFactor> searchFactor(String tenantId, String factorType, String validDate, String code) {
 
-		String factorSearchSql = FactorQueryBuilder.getFactorSearchQuery(tenantId, factorType, validDate, code);
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+
+		String factorSearchSql = FactorQueryBuilder.getFactorSearchQuery(tenantId, factorType, validDate, code,
+				preparedStatementValues);
 
 		List<CalculationFactor> calculationFactors = new ArrayList<CalculationFactor>();
 
-		calculationFactors = geCalculationFactors(factorSearchSql);
+		calculationFactors = geCalculationFactors(factorSearchSql, preparedStatementValues);
 
 		return calculationFactors;
 
@@ -141,11 +144,14 @@ public class FactorRepository {
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-	public List<CalculationFactor> getFactorsByTenantIdAndValidDate(String tenantId,String validDate) {
+	public List<CalculationFactor> getFactorsByTenantIdAndValidDate(String tenantId, String validDate) {
 
-		String factorSearchSql = FactorQueryBuilder.getFactorSearchQueryByTenantIdAndValidDate(tenantId, validDate);
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 
-		List<CalculationFactor> calculationFactors = geCalculationFactors(factorSearchSql);
+		String factorSearchSql = FactorQueryBuilder.getFactorSearchQueryByTenantIdAndValidDate(tenantId, validDate,
+				preparedStatementValues);
+
+		List<CalculationFactor> calculationFactors = geCalculationFactors(factorSearchSql, preparedStatementValues);
 
 		return calculationFactors;
 	}
@@ -158,11 +164,11 @@ public class FactorRepository {
 	 *            String that need to be executed
 	 * @return {@link CalculationFactor} List of calculation factor
 	 */
-	private List<CalculationFactor> geCalculationFactors(String query) {
+	private List<CalculationFactor> geCalculationFactors(String query, List<Object> preparedStatementValues) {
 
 		List<CalculationFactor> calculationFactors = new ArrayList<>();
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 		for (Map<String, Object> row : rows) {
 			CalculationFactor calculationFactor = new CalculationFactor();
 			calculationFactor.setId(getLong(row.get("id")));

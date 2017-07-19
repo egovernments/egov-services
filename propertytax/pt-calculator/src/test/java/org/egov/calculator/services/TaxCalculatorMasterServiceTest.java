@@ -142,7 +142,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		String tenantId = "default";
 		String factorType = "age";
-		String validDate = "2007-06-16";
+		String validDate = "16-06-2007";
 		String code = "propertytax";
 		RequestInfo requestInfo = getRequestInfoObject();
 
@@ -266,13 +266,13 @@ public class TaxCalculatorMasterServiceTest {
 	 * 
 	 * @throws Exception
 	 */
-	/*@Test
+	@Test
 	public void searchGuidanceValue() throws Exception {
 		try {
 
 			String tenantId = "default";
 			String boundary = "b2";
-			String validDate = "2016-11-25";
+			String validDate = "25-11-2016";
 			String structure = "rectangle";
 			String usage = "propertyuse";
 			String subUsage = "propertyusage";
@@ -289,7 +289,7 @@ public class TaxCalculatorMasterServiceTest {
 			assertTrue(false);
 		}
 	}
-*/
+
 	/**
 	 * This will test whether the tax period will be created successfully or not
 	 */
@@ -388,7 +388,7 @@ public class TaxCalculatorMasterServiceTest {
 	public void searchTaxPeriod() {
 
 		String tenantId = "1234";
-		String validDate = "2017-02-03";
+		String validDate = "03-02-2017";
 		String code = "YEAR";
 
 		TaxPeriodResponse taxPeriodResponse = null;
@@ -505,7 +505,7 @@ public class TaxCalculatorMasterServiceTest {
 
 		String tenantId = "default";
 		String taxHead = "taxHead-UU";
-		String validDate = "2017-06-04";
+		String validDate = "04-06-2017";
 		Double validARVAmount = 1100.0;
 		String parentTaxHead = "dependentTaxHead-UU";
 

@@ -1,5 +1,9 @@
 package org.egov.calculator.repository.builder;
 
+import java.util.List;
+
+import org.egov.calculator.utility.ConstantUtility;
+
 /**
  * 
  * @author Anil Kumar S This Class will have all the queries which are used in
@@ -18,14 +22,40 @@ public class GuidanceValueBuilder {
 			+ "value = ?, fromdate = ?, todate = ?,  createdby = ?, lastmodifiedby = ?, createdtime = ?,"
 			+ " lastmodifiedtime = ? WHERE id = ? ";
 
+
+	public static final String BASE_SEARCH_QUERY = "SELECT * FROM " + ConstantUtility.GUIDANCEVALUE_TABLE_NAME
+			+ " WHERE tenantId =? "
+			+ "AND boundary=? AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND todate::date";
+
 	public static String getGuidanceValueSearchQuery(String tenantId, String boundary, String structure, String usage,
-			String subUsage, String occupancy, String validDate) {
+			String subUsage, String occupancy, String validDate, List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("SELECT * FROM egpt_mstr_guidancevalue WHERE tenantId = '" + tenantId + "'"
-				+ " AND boundary = '" + boundary + "' " + " AND structure = '" + structure + "' AND usage = '" + usage
-				+ "' " + "  AND occupancy = '" + occupancy + "'" + " AND  to_date('" + validDate+"','dd/MM/yyyy')"
-				+ " between fromdate::date and todate::date");
+
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+		preparedStatementValues.add(boundary);
+		preparedStatementValues.add(validDate);
+
+		if (structure != null && !structure.isEmpty()) {
+			searchSql.append(" AND structure=?");
+			preparedStatementValues.add(structure);
+		}
+
+		if (usage != null && !usage.isEmpty()) {
+			searchSql.append(" AND usage=?");
+			preparedStatementValues.add(usage);
+		}
+
+		if (subUsage != null && !subUsage.isEmpty()) {
+			searchSql.append(" AND subusage=?");
+			preparedStatementValues.add(subUsage);
+		}
+
+		if (occupancy != null && !occupancy.isEmpty()) {
+			searchSql.append(" AND occupancy=?");
+			preparedStatementValues.add(occupancy);
+		}
 
 		return searchSql.toString();
 

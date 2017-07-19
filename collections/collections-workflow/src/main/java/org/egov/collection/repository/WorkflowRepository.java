@@ -60,9 +60,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Repository
+@AllArgsConstructor
+@NoArgsConstructor
 public class WorkflowRepository {
 	public static final Logger logger = LoggerFactory
 			.getLogger(WorkflowRepository.class);
@@ -127,7 +130,7 @@ public class WorkflowRepository {
 		return taskResponse;
 	}
 	
-    private ProcessInstanceRequest getProcessInstanceRequest(final WorkflowDetails workflowDetails) {
+    public ProcessInstanceRequest getProcessInstanceRequest(final WorkflowDetails workflowDetails) {
 
         final RequestInfo requestInfo = workflowDetails.getRequestInfo();
         final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
@@ -148,7 +151,7 @@ public class WorkflowRepository {
         return processInstanceRequest;
     }
     
-    private TaskRequest getTaskRequest(final WorkflowDetails workflowDetails) {
+    public TaskRequest getTaskRequest(final WorkflowDetails workflowDetails) {
 
         final RequestInfo requestInfo = workflowDetails.getRequestInfo();
 		TaskRequest taskRequest = new TaskRequest();
@@ -184,7 +187,6 @@ public class WorkflowRepository {
     	try{
     		jdbcTemplate.update(query, new Object[] {Long.valueOf(proccessInstanceId), receiptNumber});
     	}catch(Exception e){
-    		e.printStackTrace();
     		logger.error("Couldn't update stateId for the receipt: "+receiptNumber);
         	return isUpdateSuccessful;
 
@@ -201,7 +203,6 @@ public class WorkflowRepository {
     		Long id = jdbcTemplate.queryForObject(query, new Object[] {receiptNumber}, Long.class);
     		stateId = Long.valueOf(id);
     	}catch(Exception e){
-    		e.printStackTrace();
     		logger.error("Couldn't fetch stateId for the receipt: "+receiptNumber);
         	return stateId;
     	}

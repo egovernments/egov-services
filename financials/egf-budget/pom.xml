@@ -216,7 +216,6 @@
 										<!-- fix me  -->
 										<exclude>org.egov.egf.budget.persistence.queue.*</exclude>
 										<exclude>org.egov.egf.budget.web.repository.*</exclude>
-										<exclude>org.egov.egf.budget.domain.service.BudgetReAppropriationService</exclude>
 										<exclude>org.egov.egf.budget.web.advice.CustomControllerAdvice</exclude>
 										
 										<exclude>org.egov.egf.budget.web.contract.*</exclude>

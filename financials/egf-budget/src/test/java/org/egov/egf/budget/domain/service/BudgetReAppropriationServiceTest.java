@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.TestConfiguration;
@@ -17,9 +18,9 @@ import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
 import org.egov.egf.budget.domain.repository.BudgetDetailRepository;
 import org.egov.egf.budget.domain.repository.BudgetReAppropriationRepository;
 import org.egov.egf.master.web.repository.FinancialYearContractRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,7 +32,6 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class BudgetReAppropriationServiceTest {
 
-	@InjectMocks
 	private BudgetReAppropriationService budgetReAppropriationService;
 
 	@Mock
@@ -48,6 +48,12 @@ public class BudgetReAppropriationServiceTest {
 
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
+	@Before
+	public void setup() {
+		budgetReAppropriationService = new BudgetReAppropriationService(budgetReAppropriationRepository, validator,
+				budgetDetailRepository);
+	}
+
 	@Test
 	public final void test_save_for_create() {
 
@@ -56,6 +62,15 @@ public class BudgetReAppropriationServiceTest {
 		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(expextedResult, errors, "create");
 
 		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test(expected = CustomBindException.class)
+	public final void test_save_for_create_with_invalid_req() {
+
+		List<BudgetReAppropriation> expextedResult = null;
+
+		List<BudgetReAppropriation> actualResult = budgetReAppropriationService.save(expextedResult, errors, "create");
 
 	}
 

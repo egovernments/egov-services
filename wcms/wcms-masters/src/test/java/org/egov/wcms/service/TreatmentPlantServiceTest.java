@@ -96,7 +96,6 @@ public class TreatmentPlantServiceTest {
         treatmentPlantList.add(getTreatmentPlant());
         final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
         treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
-        ;
         assertTrue(treatmentPlantList.equals(treatmentPlantService.createTreatmentPlant("", "", treatmentPlantRequest)));
     }
 

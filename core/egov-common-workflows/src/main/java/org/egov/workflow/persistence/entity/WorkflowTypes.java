@@ -58,8 +58,6 @@ public class WorkflowTypes extends AbstractAuditable {
 	@GeneratedValue(generator = SEQ_WORKFLOWTYPES, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	private Long module;
-
 	private String type;
 
 	private String typeFQN;
@@ -82,14 +80,6 @@ public class WorkflowTypes extends AbstractAuditable {
 
 	public void setId(final Long id) {
 		this.id = id;
-	}
-
-	public Long getModule() {
-		return module;
-	}
-
-	public void setModule(Long module) {
-		this.module = module;
 	}
 
 	public String getType() {

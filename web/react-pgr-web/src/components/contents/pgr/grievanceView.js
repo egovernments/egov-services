@@ -14,7 +14,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../api/api';
 import {translate, validate_fileupload} from '../../common/common';
 import Fields from '../../common/Fields';
-import LoadingIndicator from '../../common/LoadingIndicator';
 import ViewSRN from '../../common/viewSRN';
 import EmployeeDocs from '../../common/employeeDocs';
 import WorkFlow from '../../common/workflow';
@@ -40,7 +39,6 @@ class grievanceView extends Component{
   constructor(props){
     super(props);
     this.state={
-      loadingstatus: 'loading',
       open: false,
       isUpdateAllowed : true
     };
@@ -50,9 +48,9 @@ class grievanceView extends Component{
   };
 
   handleClose = () => {
+    this.props.setLoadingStatus('loading');
     this.setState({
-      open: false,
-      loadingstatus:'loading'
+      open: false
     });
     //this.loadSRN();
     window.location.reload();
@@ -68,18 +66,20 @@ class grievanceView extends Component{
     let {initForm, handleChange} = this.props;
     initForm();
 
+    this.props.setLoadingStatus('loading');
+
     Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
     {
       currentThis.setState({SD : response.attributes})
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
 
     Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
       if(response.serviceRequests.length === 0){
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError('Not a valid SRN.');
         return false;
       }
@@ -123,18 +123,18 @@ class grievanceView extends Component{
           currentThis.getDepartmentById();
 
         },function(err) {
-          currentThis.setState({loadingstatus:'hide'});
+          currentThis.props.setLoadingStatus('hide');
           currentThis.handleError(err.message);
         });
 
 
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
 
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
@@ -144,7 +144,7 @@ class grievanceView extends Component{
       currentThis.setState({departmentName : response.Department[0].name});
       currentThis.getReceivingCenter();
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
@@ -155,7 +155,7 @@ class grievanceView extends Component{
         currentThis.setState({receivingCenterName : response.ReceivingCenterType[0].name});
         currentThis.getWardbyId();
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
     }else {
@@ -169,7 +169,7 @@ class grievanceView extends Component{
         currentThis.setState({locationName : response.Boundary[0].name});
         currentThis.getLocation();
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
     else {
@@ -184,7 +184,7 @@ class grievanceView extends Component{
         currentThis.setState({childLocationName : response.Boundary[0].name});
         currentThis.nextStatus();
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
     else {
@@ -199,11 +199,11 @@ class grievanceView extends Component{
         currentThis.setState({nextStatus : response.statuses});
         currentThis.allServices();
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
     }else {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
     }
   }
   allServices = () => {
@@ -214,11 +214,11 @@ class grievanceView extends Component{
         //check update is enabled?
         currentThis.checkUpdateEnabled();
       },function(err) {
-        currentThis.setState({loadingstatus:'hide'});
+        currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
     }else{
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
     }
   }
   checkUpdateEnabled = () => {
@@ -227,7 +227,7 @@ class grievanceView extends Component{
       currentThis.setState({isUpdateAllowed : response.isUpdateAllowed});
       currentThis.getWard();
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
@@ -237,7 +237,7 @@ class grievanceView extends Component{
       currentThis.setState({ward : response.Boundary});
       currentThis.getLocality();
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
@@ -247,7 +247,7 @@ class grievanceView extends Component{
       currentThis.setState({locality : response.Boundary});
       currentThis.getDepartment();
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
@@ -255,15 +255,15 @@ class grievanceView extends Component{
     Api.commonApiPost("/egov-common-masters/departments/_search").then(function(response)
     {
       currentThis.setState({department : response.Department});
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
   search = (e) => {
     e.preventDefault();
-    this.setState({loadingstatus:'loading'});
+    this.props.setLoadingStatus('loading');
     let update = [...currentThis.state.srn];
     let req_obj = {};
     req_obj['serviceRequest'] = update[0];
@@ -288,8 +288,11 @@ class grievanceView extends Component{
     //change serviceCode in serviceRequests
     req_obj.serviceRequest.serviceCode = currentThis.props.grievanceView.serviceCode ? currentThis.props.grievanceView.serviceCode :  currentThis.state.serviceCode;
 
-    currentThis.chckkey('childLocationId', req_obj);
+    if(currentThis.props.grievanceView['childLocationId'])
+      currentThis.chckkey('childLocationId', req_obj);
+
     currentThis.chckkey('approvalComments', req_obj);
+    
     if(localStorage.getItem('type') === 'EMPLOYEE'){
       currentThis.chckkey('PRIORITY', req_obj);
       //currentThis.chckkey('priorityColor', req_obj);
@@ -312,7 +315,7 @@ class grievanceView extends Component{
           req_obj.serviceRequest.attribValues.push(obj);
           currentThis.updateSeva(req_obj);
         },function(err) {
-          currentThis.setState({loadingstatus:'hide'});
+          currentThis.props.setLoadingStatus('hide');
           currentThis.handleError(err.message);
         });
       }
@@ -330,7 +333,7 @@ class grievanceView extends Component{
     if(result.length > 0){
       for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
         if(req_obj.serviceRequest.attribValues[i]['key'] === key){
-          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView[key];
+            req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView[key];
         }
       }
     }else{
@@ -345,14 +348,14 @@ class grievanceView extends Component{
     }
   }
   updateSeva = (req_obj) =>{
-    // console.log('Before Submit',JSON.stringify(req_obj));
+    console.log('Before Submit',JSON.stringify(req_obj));
     Api.commonApiPost("/pgr/seva/v1/_update",{},req_obj).then(function(updateResponse)
     {
       // console.log('After submit',JSON.stringify(updateResponse));
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       {currentThis.handleOpen()}
     },function(err) {
-      currentThis.setState({loadingstatus:'hide'});
+      currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
     });
   }
@@ -423,7 +426,6 @@ class grievanceView extends Component{
     return(
       <div>
       <form autoComplete="off" onSubmit={(e) => { search(e) }}>
-        <LoadingIndicator status={this.state.loadingstatus}/>
         <ViewSRN srn={this.state} />
         <EmployeeDocs srn={this.state.srn}/>
         <WorkFlow workflowdetails={this.state.workflow} />
@@ -677,6 +679,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 });
 

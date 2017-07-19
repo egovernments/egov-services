@@ -331,7 +331,7 @@ public abstract class JdbcRepository {
         else
             sortByList = Arrays.asList(sortBy);
         for (String s : sortByList) {
-            if (s.contains(" ") && (!s.toLowerCase().endsWith("asc") && !s.toLowerCase().endsWith("desc"))) {
+            if (s.contains(" ") && (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
                 invalidDataException.setFieldName(s.split(" ")[0]);
                 invalidDataException.setDefaultMessage("Please send the proper sortBy order for the field " + s.split(" ")[0]);
                 throw invalidDataException;

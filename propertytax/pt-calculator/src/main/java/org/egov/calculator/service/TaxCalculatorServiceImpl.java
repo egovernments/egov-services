@@ -289,27 +289,14 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     public List<TaxPeriod> getTaxPeriodListForUnit(Unit unit, String tenantId) throws ParseException {
 
-       /* int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        if (month >= 3) {
-            year = year + 1;
-        }*/
-        TaxPeriod taxperiod = taxPeriodRespository.getToDateForTaxCalculation(tenantId, new Date().toString());
-        /*
-         * String currentFinincialYear = year + "-" + environment.getProperty("finincial.month") + "-" +
-         * environment.getProperty("finincial.date");
-         */
+     
+        Date todayDate = new Date();
+        String currentDate= new SimpleDateFormat("dd/MM/yyyy").format(todayDate);
+        TaxPeriod taxperiod = taxPeriodRespository.getToDateForTaxCalculation(tenantId,currentDate);
         String currentFinincialYear = taxperiod.getToDate();
-
         TaxPeriod taxperiodForFrom = taxPeriodRespository.getToDateForTaxCalculation(tenantId, unit.getOccupancyDate());
-        //DateFormat sdf = new SimpleDateFormat(environment.getProperty("date.input.format"));
         DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
         Date occupancy = dateFormat.parse(taxperiodForFrom.getFromDate());
-        /*
-         * Calendar cal = Calendar.getInstance(); cal.setTime(occupancy); int monthOfYear=cal.get(Calendar.MONTH);
-         * if(monthOfYear<=2){ cal.set(cal.get(Calendar.YEAR)-1,2,31); } else{ cal.set(cal.get(Calendar.YEAR),2,31); } String date
-         * = dateFormat.format(cal.getTime());
-         */
         String date = dateFormat.format(occupancy);
         List<TaxPeriod> taxPeriodsList = getTaxPeriodsByTenantIdAndDate(tenantId, date,
                 currentFinincialYear);

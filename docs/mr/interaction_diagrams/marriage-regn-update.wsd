@@ -1,0 +1,88 @@
+title Update Marriage Registration Flow
+
+Client->+MarriageRegnSvc: update Marriage Regn Request
+note over Client,MarriageRegnSvc
+    municipal employee, CSC center
+    posts a modified new MarriageRegn request 
+    using admin console
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: validate Request Format
+note over MarriageRegnSvc
+    All request format validations like 
+    email, phone, string and number fields
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: business Validations
+note over MarriageRegnSvc
+    Business validations e.g. documents validation,
+    valid regn number and userid
+end note
+
+opt isNonLegacyRegn
+    alt workFlowAction=Approve
+      MarriageRegnSvc->IDGenSvc: create marriage regn Number
+    else workFlowAction=Reject
+      MarriageRegnSvc->MarriageRegnSvc: process data 
+      note over MarriageRegnSvc
+        set status as REJECTED
+      end note over
+    else workFlowAction=Generate Certificate
+      MarriageRegnSvc->IDGenSvc: create certificate Number
+      MarriageRegnSvc->MarriageRegnSvc: process data 
+      note over MarriageRegnSvc
+          set status as REGISTERED
+          prepare Certificate details
+      end note over
+    end
+end
+MarriageRegnSvc->+KafkaQSvc: Send to Kafka Q for further processing
+note over KafkaQSvc
+    All the lines originating from KafkaQSvc to other
+    services are consumers on the Q that are making
+    appropriate Services by listening to Kafka Topic 
+    as indicated in the notes
+    
+    Rest layer will publish on topic: 
+        for new registration: marriage.update
+        for legacy registration: marriage.update.legacy
+end note over 
+MarriageRegnSvc-->-Client: return Marriage Regn Response
+
+alt isNonLegacyRegn
+  KafkaQSvc->MarriageRegnSvc: Persist in DB
+  note over KafkaQSvc
+      Read from topic: marriage.update
+      Persist update to marriageRegn
+      Persist certificate data if
+      present
+  end note over
+
+  KafkaQSvc->ESSvc: Persist in ES
+  note over KafkaQSvc
+      Read from topic: marriage.update
+  end note over  
+  
+  KafkaQSvc->NotificationSvc: Queue to consumer to notify
+    note over KafkaQSvc
+        Read from topic: marriage.update
+        if status != REGISTERED then ignore message
+        prepare SMS message
+        Publish to topic: egov.core.notification.sms
+        prepare Email message
+        Publish to topic: egov.core.notification.email   
+    end note over
+else islegacyRegn
+  KafkaQSvc->MarriageRegnSvc: Persist in DB
+  note over KafkaQSvc
+      Read from topic: marriage.update.legacy
+  end note over
+
+  KafkaQSvc->ESSvc: Persist in ES
+  note over KafkaQSvc
+      Read from topic: marriage.update.legacy
+  end note over
+end
+
+
+

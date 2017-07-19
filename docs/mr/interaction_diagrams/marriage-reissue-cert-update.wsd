@@ -1,0 +1,85 @@
+title Update Reissue Marriage Certificate Flow
+
+Client->+MarriageRegnSvc: update Reissue Certificate Request
+note over Client,MarriageRegnSvc
+    municipal employee, CSC center
+    posts a modified ReissueCertificate request 
+    using admin console
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: validate Request Format
+note over MarriageRegnSvc
+    All request format validations like 
+    email, phone, string and number fields
+end note
+
+MarriageRegnSvc->MarriageRegnSvc: business Validations
+note over MarriageRegnSvc
+    Business validations e.g. documents validation,
+    valid regn number and userid 
+    business reason
+end note
+
+opt isNonLegacyRegn
+  alt workFlowAction=Reject
+    MarriageRegnSvc->MarriageRegnSvc: process data 
+    note over MarriageRegnSvc
+      set status as REJECTED
+    end note over
+  else workFlowAction=Approve and Generate Certificate
+    MarriageRegnSvc->IDGenSvc: create certificate Number
+    MarriageRegnSvc->MarriageRegnSvc: process data 
+    note over MarriageRegnSvc
+        prepare Certificate details
+        set status as REISSUED
+    end note over
+  end
+end
+
+MarriageRegnSvc->+KafkaQSvc: Send to Kafka Q for further processing
+note over KafkaQSvc
+    All the lines originating from KafkaQSvc to other
+    services are consumers on the Q that are making
+    appropriate Services by listening to Kafka Topic 
+    as indicated in the notes
+    
+    Rest layer will publish on topic: 
+       for new reissue: marriage.reissue.update
+      for legacy reissue: marriage.reissue.update.legacy
+end note over 
+MarriageRegnSvc-->-Client: return Marriage Regn Response
+
+alt isNonLegacyReissueAppl
+  KafkaQSvc->MarriageRegnSvc: Persist in DB
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.update
+  end note over
+
+  KafkaQSvc->ESSvc: Persist in ES
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.update
+  end note over
+
+  KafkaQSvc->NotificationSvc: Queue to consumer to notify
+    note over KafkaQSvc
+        Read from topic: marriage.reissue.update
+        if status != REISSUED then ignore message
+        prepare SMS message
+        Publish to topic: egov.core.notification.sms
+        prepare Email message
+        Publish to topic: egov.core.notification.email   
+    end note over
+else isLegacyReissueUpload
+  KafkaQSvc->MarriageRegnSvc: Persist in DB
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.update.legacy
+  end note over
+
+  KafkaQSvc->ESSvc: Persist in ES
+  note over KafkaQSvc
+      Read from topic: marriage.reissue.update.legacy
+  end note over
+end
+
+
+

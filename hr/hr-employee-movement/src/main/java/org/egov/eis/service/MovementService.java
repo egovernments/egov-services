@@ -159,10 +159,8 @@ public class MovementService {
     private List<Movement> validate(final MovementRequest movementRequest) {
         for (final Movement movement : movementRequest.getMovement()) {
             String errorMsg = "";
-            if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
-                    .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
-                            MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
-                            movementRequest.getRequestInfo()).get(0).getId()))
+            if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
+                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()))
                 errorMsg = validateEmployeeForPromotion(movement, movementRequest.getRequestInfo());
             movement.setErrorMsg(errorMsg);
         }

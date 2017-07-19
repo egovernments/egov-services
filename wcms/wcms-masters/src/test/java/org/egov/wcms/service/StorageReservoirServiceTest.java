@@ -40,6 +40,7 @@
 package org.egov.wcms.service;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.repository.StorageReservoirRepository;
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
+import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -74,6 +76,9 @@ public class StorageReservoirServiceTest {
     @InjectMocks
     private StorageReservoirService storageReservoirService;
 
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
+
     @SuppressWarnings("unchecked")
     @Test(expected = Exception.class)
     public void test_Should_Search_StorageReservoir() {
@@ -83,6 +88,37 @@ public class StorageReservoirServiceTest {
         when(storageReservoirRepository.findForCriteria(storageReservoirGetRequest)).thenThrow(Exception.class);
         assertTrue(storageReservoirList
                 .equals(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)));
+    }
+
+    @Test
+    public void test_throwException_Push_To_Producer_StorageReservoir() {
+        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+        storageReservoirList.add(getStorageReservoir());
+        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+        storageReservoirRequest.setStorageReservoir(storageReservoirList);
+        assertTrue(storageReservoirList.equals(storageReservoirService.createStorageReservoir("", "", storageReservoirRequest)));
+    }
+
+    @Test
+    public void test_throwException_Create_StorageReservoir() {
+
+        final List<StorageReservoir> storageReservoirList = new ArrayList<>();
+        storageReservoirList.add(getStorageReservoir());
+        final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
+        storageReservoirRequest.setStorageReservoir(storageReservoirList);
+        when(storageReservoirRepository.persistCreateStorageReservoir(any(StorageReservoirRequest.class)))
+                .thenReturn(storageReservoirRequest);
+        assertTrue(storageReservoirRequest.equals(storageReservoirService.create(storageReservoirRequest)));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
+    public void test_throwException_Update_StorageReservoir() throws Exception {
+
+        final StorageReservoirRequest storageReservoirRequest = Mockito.mock(StorageReservoirRequest.class);
+        when(storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest)).thenThrow(Exception.class);
+
+        assertTrue(storageReservoirRequest.equals(storageReservoirService.update(storageReservoirRequest)));
     }
 
     private StorageReservoir getStorageReservoir() {

@@ -165,9 +165,14 @@ class ConstructionTypes extends Component {
 						<CardText style={styles.reducePadding}>
 							<Grid fluid>
 								<Row style={{paddingTop:8, paddingBottom:4}}>
-									<Col xs={12} md={3}>
+									<Col xs={12} md={6}>
 									  <Row>
+										<Col xs={12} md={6}>
+											Photo of Assessment
+										</Col>
+										<Col xs={12} md={6}>
 										  <input type="file" accept="image/*" onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
+										</Col>
 									  </Row>
 									</Col>
 									<Col xs={12} md={9} style={{display: 'flex',flexWrap: 'wrap'}}>

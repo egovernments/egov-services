@@ -9,6 +9,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import Api from '../../../../api/api';
 
 
 const $ = require('jquery');
@@ -49,7 +50,11 @@ class PropertyTaxSearch extends Component {
   constructor(props) {
        super(props);
        this.state = {
-         searchBtnText : 'Search'
+         searchBtnText : 'Search',
+		 zone:[],
+		 ward:[],
+		 location:[],
+		 resultList:[]
        }
        this.search=this.search.bind(this);
    }
@@ -65,13 +70,39 @@ class PropertyTaxSearch extends Component {
     let {initForm} = this.props;
     initForm();
     let {toggleDailogAndSetText}=this.props;
-    // let response=Api.commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION" }).then(function(response)
-    // {
-    //
-    // },function(err) {
-    //     toggleDailogAndSetText(true,err)
-    // });
+   
+	 var currentThis = this;
 
+       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          currentThis.setState({location : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            location : []
+          })
+          console.log(err)
+        })
+		
+		
+       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({zone : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            zone : []
+          })
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVANUE"}).then((res)=>{
+          console.log(res);
+          currentThis.setState({ward : res.Boundary})
+        }).catch((err)=> {
+          currentThis.setState({
+            ward : []
+          })
+          console.log(err)
+        })
+   
   }
 
   componentWillUnmount(){
@@ -84,13 +115,37 @@ class PropertyTaxSearch extends Component {
 
   search(e)
   {
-      let {showTable,changeButtonText}=this.props;
+      let {showTable,changeButtonText, propertyTaxSearch}=this.props;
       e.preventDefault();
-      console.log("Show Table");
-      flag=1;
-      changeButtonText("Search Again");
-      // this.setState({searchBtnText:'Search Again'})
+	  
+	var query = {
+		  upicNumber : propertyTaxSearch.assessmentNo || '',
+		  oldUpicNo:propertyTaxSearch.oldAssessmentNo || '',
+		  mobileNumber: propertyTaxSearch.mobileNo || '',
+		  aadhaarNumber:propertyTaxSearch.aadharNo || '',
+		  houseNoBldgApt: propertyTaxSearch.doorNo || '',
+		  revenueZone:propertyTaxSearch.zone || '',
+		  revenueWard:propertyTaxSearch.ward || '',
+		  locality:propertyTaxSearch.location || '',
+		  ownerName: propertyTaxSearch.ownerName || '',
+		  demandFrom:propertyTaxSearch.demandFrom || '',
+		  demandTo:propertyTaxSearch.demandTo || ''
+	  }
+	  
+      Api.commonApiPost('pt-property/properties/_search', query,{}).then((res)=>{   
+		console.log(res);
+		flag=1;
+		changeButtonText("Search Again");
+		this.setState({
+			searchBtnText:'Search Again',
+			resultList:res
+		})
       showTable(true);
+      }).catch((err)=> {
+        console.log(err.message);
+      })
+		 
+     
   }
 
   componentWillUpdate() {
@@ -115,6 +170,17 @@ class PropertyTaxSearch extends Component {
   }
 
   render() {
+	  
+	  const renderOption = function(list,listName="") {
+        if(list)
+        {
+            return list.map((item)=>
+            {
+                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+            })
+        }
+    }
+	  
     let {
       propertyTaxSearch,
       fieldErrors,
@@ -148,173 +214,7 @@ class PropertyTaxSearch extends Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-1" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-              <DropdownButton title="Action" id="dropdown-2" pullRight>
-                  <MenuItem>Create</MenuItem>
-                  <MenuItem>Update</MenuItem>
-              </DropdownButton>
-              </td>
-            </tr>
-
-            <tr>
+          { false && <tr>
               <td>3</td>
               <td>Table cell</td>
               <td>Table cell</td>
@@ -328,7 +228,7 @@ class PropertyTaxSearch extends Component {
                     <MenuItem>Update</MenuItem>
                 </DropdownButton>
               </td>
-            </tr>
+		  </tr>}
           </tbody>
         </Table>
       </CardText>
@@ -417,11 +317,7 @@ class PropertyTaxSearch extends Component {
                                       }
                                     };
                                     handleChange(e, "zone", false, "")}} floatingLabelText="Zone	Drop " >
-                                  <MenuItem value={1} primaryText="Never"/>
-                                  <MenuItem value={2} primaryText="Every Night"/>
-                                  <MenuItem value={3} primaryText="Weeknights"/>
-                                  <MenuItem value={4} primaryText="Weekends"/>
-                                  <MenuItem value={5} primaryText="Weekly"/>
+									{renderOption(this.state.zone)}
                                 </SelectField>
 
                               </Col>
@@ -437,11 +333,7 @@ class PropertyTaxSearch extends Component {
                                     };
                                     handleChange(e, "ward", false, "")}
                                   } floatingLabelText="Ward" >
-                                  <MenuItem value={1} primaryText="Never"/>
-                                  <MenuItem value={2} primaryText="Every Night"/>
-                                  <MenuItem value={3} primaryText="Weeknights"/>
-                                  <MenuItem value={4} primaryText="Weekends"/>
-                                  <MenuItem value={5} primaryText="Weekly"/>
+                                  {renderOption(this.state.ward)}
                                 </SelectField>
                               </Col>
                             </Row>
@@ -457,11 +349,7 @@ class PropertyTaxSearch extends Component {
                                       }
                                     };
                                     handleChange(e, "location", false, "")}} floatingLabelText="Location" >
-                                  <MenuItem value={1} primaryText="Never"/>
-                                  <MenuItem value={2} primaryText="Every Night"/>
-                                  <MenuItem value={3} primaryText="Weeknights"/>
-                                  <MenuItem value={4} primaryText="Weekends"/>
-                                  <MenuItem value={5} primaryText="Weekly"/>
+									{renderOption(this.state.location)}
                                 </SelectField>
                               </Col>
 

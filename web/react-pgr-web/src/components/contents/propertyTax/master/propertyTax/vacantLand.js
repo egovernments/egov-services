@@ -313,24 +313,7 @@ class VacantLand extends Component {
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										  />
 								  </Col>
-								  <Col xs={12} md={3} sm={6}>
-									   <TextField
-											hintText=""
-											floatingLabelText="Layout Permit Number *"
-											errorText={fieldErrors.layoutPermitNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitNumber}</span> : ""}
-											value={vacantLand.layoutPermitNumber ? vacantLand.layoutPermitNumber : ""}
-											onChange={(e) => {
-												handleChange(e,"layoutPermitNumber", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
-											  }
-											}
-											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
-											underlineFocusStyle={styles.underlineFocusStyle}
-											className="fullWidth"
-											maxLength={64}
-											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-										  />
-								  </Col>
+								
 								<Col xs={12} md={3} sm={6}>
 									<DatePicker  className="fullWidth datepicker"
 									  floatingLabelText="Layout Permit Date *"

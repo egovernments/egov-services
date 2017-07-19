@@ -1,4 +1,4 @@
-package org.egov.egf.budget.web.contract.repository;
+package org.egov.egf.budget.web.repository;
 
 import java.util.Date;
 

@@ -18,6 +18,7 @@ import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.service.AssetCategoryService;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.validator.AssetCategoryValidator;
 import org.egov.common.contract.response.ResponseInfo;
@@ -45,6 +46,9 @@ public class AssetCategoryControllerTest {
 
 	@MockBean
 	private AssetCategoryValidator assetCategoryValidator;
+	
+	@MockBean
+        private AssetCommonService assetCommonService;
 
 	@Test
 	public void test_Should_Search_AssetCategory() throws Exception {

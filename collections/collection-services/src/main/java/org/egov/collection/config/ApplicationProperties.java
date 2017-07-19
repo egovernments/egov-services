@@ -22,6 +22,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.receipt.create.key}")
     private String createReceiptTopicKey;
     
+    @Value("${kafka.topics.receipt.cancel.name}")
+    private String cancelReceiptTopicName;
+    
+    @Value("${kafka.topics.receipt.cancel.key}")
+    private String cancelReceiptTopicKey;
+    
     @Value("${egov.services.workflow_service.hostname}")
     private String workflowServiceHostName;
 

@@ -13,6 +13,7 @@ import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.producers.AssetProducer;
 import org.egov.asset.repository.RevaluationRepository;
@@ -45,6 +46,9 @@ public class RevaluationService {
     @Autowired
     private VoucherService voucherService;
 
+    @Autowired
+    private AssetConfigurationService assetConfigurationService;
+
     private static final Logger logger = LoggerFactory.getLogger(RevaluationService.class);
 
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest) {
@@ -60,7 +64,8 @@ public class RevaluationService {
 
         // FIXME uncomment the code once voucher services are up in micro-dev
         // environment.
-        if (applicationProperties.getEnableVoucherGenration())
+        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+                revaluationRequest.getRevaluation().getTenantId()))
             try {
                 logger.info("Commencing Voucher Generation for Asset Revaluation");
                 final Long voucherId = createVoucherForRevaluation(revaluationRequest);
@@ -108,10 +113,10 @@ public class RevaluationService {
     private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest) {
         final Asset asset = assetCurrentAmountService.getAsset(revaluationRequest.getRevaluation().getAssetId(),
                 revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
-        logger.debug("asset for revaluation :: "+asset);
-        
+        logger.debug("asset for revaluation :: " + asset);
+
         final AssetCategory assetCategory = asset.getAssetCategory();
-   
+
         if (revaluationRequest.getRevaluation().getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
             logger.info("subledger details check for Type of change INCREASED");
             final List<ChartOfAccountDetailContract> subledgerDetailsForAssetAccount = voucherService
@@ -144,7 +149,7 @@ public class RevaluationService {
         }
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluationRequest,
                 assetCategory);
-        
+
         logger.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
         final VoucherRequest voucherRequest = voucherService.createVoucherRequestForRevalaution(revaluationRequest,

@@ -3,7 +3,6 @@
     "ResponseInfo": {
         "apiId": "org.egov.collection",
         "ver": "1.0",
-        "ts": "Wed Dec 21 18:30:00 UTC 2016",
         "resMsgId": "uief87324",
         "msgId": "654654",
         "status": "200"
@@ -13,154 +12,72 @@
             "tenantId": "default",
             "instrumentType": null,
             "instrumentHeader": null,
-            "BillWrapper": {
+            "Bill": {
+                "id": null,
+                "payeeName": "abc",
+                "payeeAddress": "abc nagara",
+                "payeeEmail": "abc567@gmail.com",
+                "isActive": null,
+                "isCancelled": null,
                 "paidBy": "abc",
-                "auditDetails": null,
-                "Bill": {
-                    "id": null,
-                    "payeeName": "abc",
-                    "payeeAddress": "abc nagara",
-                    "payeeEmail": "abc567@gmail.com",
-                    "isActive": null,
-                    "isCancelled": null,
-                    "billDetails": [
-                        {
-                            "id": "1",
-                            "bill": null,
-                            "billDate": null,
-                            "billDescription": null,
-                            "billNumber": null,
-                            "consumerCode": "CON12343556",
-                            "consumerType": "Known",
-                            "minimumAmount": 125.0,
-                            "totalAmount": 150.0,
-                            "collectionModesNotAllowed": [
-                                "Bill based"
-                            ],
-                            "tenantId": "default",
-                            "businessService": null,
-                            "displayMessage": "receipt created successfully",
-                            "callBackForApportioning": null,
-                            "BillAccountDetail": [
-                                {
-                                    "glcode": null,
-                                    "order": null,
-                                    "accountDescription": null,
-                                    "isActualDemand": true,
-                                    "id": "1",
-                                    "tenantId": "default",
-                                    "billDetail": "1",
-                                    "creditAmount": 800.0,
-                                    "debitAmount": 600.0,
-                                    "purpose": "REBATE"
-                                },
-                                {
-                                    "glcode": null,
-                                    "order": null,
-                                    "accountDescription": null,
-                                    "isActualDemand": true,
-                                    "id": "2",
-                                    "tenantId": "default",
-                                    "billDetail": "1",
-                                    "creditAmount": 800.0,
-                                    "debitAmount": 700.0,
-                                    "purpose": "REBATE"
-                                }
-                            ]
-                        }
-                    ],
-                    "tenantId": "default"
-                },
-                "BillDetailsWrapper": [
+                "BillDetail": [
                     {
-                        "businessDetailsCode": "TL",                                                
-                        "refNo": "REF1234",
-                        "event": null,
+                        "id": "1",
+                        "bill": null,
+                        "billDate": null,
+                        "billDescription": null,
+                        "billNumber": "REF1234",
+                        "consumerCode": "CON12343556",
+                        "consumerType": "Good",
+                        "minimumAmount": 125.00,
+                        "totalAmount": 150.00,
+                        "collectionModesNotAllowed": [
+                            "Bill based"
+                        ],
+                        "tenantId": "default",
+                        "businessService": "TL",
+                        "displayMessage": "receipt created successfully",
+                        "callBackForApportioning": null,
                         "receiptNumber": "REC1234",
                         "receiptDate": 1454371200000,
-                        "receiptType": "ghj",                                              
+                        "receiptType": "ghj",
                         "channel": "567hfghr",
                         "voucherHeader": "VOUHEAD",
-                        "collectionType": "C",                                                
+                        "collectionType": "C",
                         "boundary": "67",
-                        "reasonForCancellation": "documents not proper",
+                        "reasonForCancellation": "Data entry mistake",
                         "amountPaid": null,
-                        "BillDetail": {
-                            "id": "1",
-                            "bill": null,
-                            "billDate": null,
-                            "billDescription": null,
-                            "billNumber": null,
-                            "consumerCode": "CON12343556",
-                            "consumerType": "Known",
-                            "minimumAmount": 125.0,
-                            "totalAmount": 150.0,
-                            "collectionModesNotAllowed": [
-                                "Bill based"
-                            ],
-                            "tenantId": "default",
-                            "businessService": null,
-                            "displayMessage": "receipt created successfully",
-                            "callBackForApportioning": null,
-                            "BillAccountDetail": [
-                                {
-                                    "glcode": null,
-                                    "order": null,
-                                    "accountDescription": null,
-                                    "isActualDemand": true,
-                                    "id": "1",
-                                    "tenantId": "default",
-                                    "billDetail": "1",
-                                    "creditAmount": 800.0,
-                                    "debitAmount": 600.0,
-                                    "purpose": "REBATE"
-                                },
-                                {
-                                    "glcode": null,
-                                    "order": null,
-                                    "accountDescription": null,
-                                    "isActualDemand": true,
-                                    "id": "2",
-                                    "tenantId": "default",
-                                    "billDetail": "1",
-                                    "creditAmount": 800.0,
-                                    "debitAmount": 700.0,
-                                    "purpose": "REBATE"
-                                }
-                            ]
-                        },
-                        "BillAccountDetailsWrapper": [
+                        "cancellationRemarks": "payee name data entered is not proper",
+                        "status": "CREATED",
+                        "BillAccountDetail": [
                             {
-                                "BillAccountDetail": {
-                                    "glcode": null,
-                                    "order": null,
-                                    "accountDescription": null,
-                                    "isActualDemand": true,
-                                    "id": "1",
-                                    "tenantId": "default",
-                                    "billDetail": "1",
-                                    "creditAmount": 800.0,
-                                    "debitAmount": 600.0,
-                                    "purpose": "REBATE"
-                                }
+                                "glcode": "456",
+                                "order": null,
+                                "accountDescription": null,
+                                "isActualDemand": true,
+                                "id": "1",
+                                "tenantId": "default",
+                                "billDetail": "1",
+                                "creditAmount": 800.0,
+                                "debitAmount": 600.0,
+                                "purpose": "REBATE"
                             },
                             {
-                                "BillAccountDetail": {
-                                    "glcode": null,
-                                    "order": null,
-                                    "accountDescription": null,
-                                    "isActualDemand": true,
-                                    "id": "2",
-                                    "tenantId": "default",
-                                    "billDetail": "1",
-                                    "creditAmount": 800.0,
-                                    "debitAmount": 700.0,
-                                    "purpose": "REBATE"
-                                }
+                                "glcode": "490",
+                                "order": null,
+                                "accountDescription": null,
+                                "isActualDemand": true,
+                                "id": "2",
+                                "tenantId": "default",
+                                "billDetail": "1",
+                                "creditAmount": 800.0,
+                                "debitAmount": 700.0,
+                                "purpose": "REBATE"
                             }
                         ]
                     }
-                ]
+                ],
+                "tenantId": "default"
             },
             "Bank": null,
             "BankAccount": null,

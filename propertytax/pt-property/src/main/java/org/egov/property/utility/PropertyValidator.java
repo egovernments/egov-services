@@ -6,14 +6,18 @@ import java.util.List;
 
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Boundary;
+import org.egov.models.Floor;
 import org.egov.models.Property;
 import org.egov.models.PropertyLocation;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.models.Unit;
 import org.egov.models.WorkFlowDetails;
+import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.InvalidPropertyBoundaryException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.egov.property.repository.BoundaryRepository;
+import org.egov.property.repository.PropertyMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,9 @@ public class PropertyValidator {
 	
 	@Autowired
 	BoundaryRepository boundaryRepository;
+	
+	@Autowired
+        private PropertyMasterRepository propertyMasterRepository;
 
 
 	/**
@@ -144,5 +151,70 @@ public class PropertyValidator {
 	public List<String> getAllBoundaries() {
 		return getFieldsOfType(PropertyLocation.class, Boundary.class);
 	}
+	
+	/**
+         * Description : Checks whether Property Type already exists or not
+         * 
+         * @param property
+         * @param requestInfo
+         */
+        public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
+
+                Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+                                property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
+
+                if (!isExists) {
+                        throw new InvalidCodeException(env.getProperty("invalid.input.propertytype"), requestInfo);
+                }
+
+                for (Floor floor : property.getPropertyDetail().getFloors()) {
+                        for (Unit unit : floor.getUnits()) {
+                                if (unit.getUnits().size() != 0) {
+                                        for (Unit units : unit.getUnits()) {
+                                                validateUnitData(property.getTenantId(), units, requestInfo);
+                                        }
+                                } else {
+                                        validateUnitData(property.getTenantId(), unit, requestInfo);
+                                }
+                        }
+                }
+        }
+
+        /**
+         * Description : Method for validating the unit details
+         * 
+         * @param tenantId
+         * @param unit
+         * @param requestInfo
+         */
+        private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo) {
+
+                Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
+                                ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+                if (!usageExists) {
+                        throw new InvalidCodeException(env.getProperty("invalid.input.usage"), requestInfo);
+                }
+
+                Boolean occupancyTypeExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,
+                                unit.getOccupancyType(), ConstantUtility.OCCUPANCY_TABLE_NAME, null);
+
+                if (!occupancyTypeExists) {
+                        throw new InvalidCodeException(env.getProperty("invalid.input.occupancy"), requestInfo);
+                }
+
+                Boolean ageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getAge(),
+                                ConstantUtility.DEPRECIATION_TABLE_NAME, null);
+
+                if (!ageExists) {
+                        throw new InvalidCodeException(env.getProperty("invalid.input.age"), requestInfo);
+                }
+
+                Boolean structureExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,
+                                unit.getStructure(), ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, null);
+
+                if (!structureExists) {
+                        throw new InvalidCodeException(env.getProperty("invalid.input.structure"), requestInfo);
+                }
+        }
 
 }

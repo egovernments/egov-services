@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.FunctionSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		LOG.debug("init function");
 		init(FunctionEntity.class);
 		LOG.debug("end init function");
+	}
+
+	public FunctionJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public FunctionEntity create(FunctionEntity entity) {
@@ -51,21 +56,18 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":tablename", FunctionEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(functionSearchEntity.getSortBy());
-                    validateEntityFieldName(functionSearchEntity.getSortBy(), FunctionEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + functionSearchEntity.getSortBy();
 
+		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(functionSearchEntity.getSortBy());
+			validateEntityFieldName(functionSearchEntity.getSortBy(), FunctionEntity.class);
+		}
+
+		String orderBy = "order by name asc";
+		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty())
+			orderBy = "order by " + functionSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (functionSearchEntity.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
 			params.append("id =:id");
 			paramValues.put("id", functionSearchEntity.getId());
 		}
@@ -119,8 +121,8 @@ public class FunctionJdbcRepository extends JdbcRepository {
 		} else {
 			searchQuery = searchQuery.replace(":condition", "");
 		}
-		
-	        searchQuery = searchQuery.replace(":orderby", orderBy);
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
 		page = (Pagination<Function>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";

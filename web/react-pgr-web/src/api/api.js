@@ -18,7 +18,7 @@ var authToken = localStorage.getItem("token");
 var requestInfo = {
     "apiId": "org.egov.pt",
     "ver": "1.0",
-    "ts": "12-12-2017 12:12:12",
+    "ts": "27-06-2017 10:30:12",
     "action": "asd",
     "did": "4354648646",
     "key": "xyz",
@@ -33,7 +33,6 @@ var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
 
-        //console.log('isTimeLong =>', isTimeLong);
         var url = context;
 
         if (!doNotOverride)
@@ -47,8 +46,11 @@ module.exports = {
         }
         requestInfo.authToken = localStorage.getItem("token");
         if(isTimeLong){
-            requestInfo.ts = new Date().getTime();
+            requestInfo.ts = new Date().getTime();	
         }
+		
+		console.log(requestInfo.ts);
+		
         body["RequestInfo"] = requestInfo;
 
         return instance.post(url, body).then(function(response) {

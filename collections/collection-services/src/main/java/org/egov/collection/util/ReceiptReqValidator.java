@@ -65,7 +65,7 @@ public class ReceiptReqValidator {
 			errorFields.add(errorField);
 		}
 		
-		for(BillDetail billDetails:  receipt.getBill().getBillDetails()){
+      for(BillDetail billDetails:  receipt.getBill().getBillDetails()){
 			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
 			if(null == billDetails.getReceiptType()|| billDetails.getReceiptType().isEmpty()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
@@ -78,6 +78,12 @@ public class ReceiptReqValidator {
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_DATE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_DATE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.RECEIPT_DATE_MISSING_FIELD).build();
+				errorFields.add(errorField);
+			}
+			if(null == billDetails.getStatus() || billDetails.getStatus().isEmpty()){
+				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.STATUS_MISSING_CODE)
+						.message(CollectionServiceConstants.STATUS_MISSING_MESSAGE)
+						.field(CollectionServiceConstants.STATUS_MISSING_FIELD).build();
 				errorFields.add(errorField);
 			}
 			

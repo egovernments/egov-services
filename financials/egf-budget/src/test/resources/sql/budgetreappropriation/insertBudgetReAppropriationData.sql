@@ -1,0 +1,2 @@
+insert into egf_budgetreappropriation (id,anticipatoryAmount,additionAmount,deductionAmount,originalAdditionAmount,originalDeductionAmount,statusid,budgetdetailid,asOnDate,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)
+values('1',1,1,1,1,1,1,1,now(),1,now(),1,now(),'default');

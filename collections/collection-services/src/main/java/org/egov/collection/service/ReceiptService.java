@@ -88,9 +88,9 @@ public class ReceiptService {
 	private RestTemplate restTemplate;
 	
 
-	public ReceiptCommonModel getReceipts(ReceiptSearchCriteria receiptSearchCriteria) {
-	 return  receiptRepository.findAllReceiptsByCriteria(receiptSearchCriteria);
-	}
+    public ReceiptCommonModel getReceipts(ReceiptSearchCriteria receiptSearchCriteria) {
+   	 return  receiptRepository.findAllReceiptsByCriteria(receiptSearchCriteria);
+   	}
 	
 	public Receipt pushToQueue(ReceiptReq receiptReq){
 		logger.info("Pushing recieptdetail to kafka queue");
@@ -386,6 +386,17 @@ public class ReceiptService {
 
 		return receiptNo;
 	}
+	
+	public Receipt cancelReceiptBeforeRemittance(ReceiptReq receiptRequest) {
+		ReceiptReq request=receiptRepository.cancelReceipt(receiptRequest);
+		 return request.getReceipt();
+	}
+
+	public Receipt cancelReceiptPushToQueue(ReceiptReq receiptRequest) {
+		logger.info("Pushing recieptdetails to kafka queue");
+		return receiptRepository.pushReceiptCancelDetailsToQueue(receiptRequest);
+	}
+	
         		
         		
 	

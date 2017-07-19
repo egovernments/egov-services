@@ -20,6 +20,8 @@ import org.egov.asset.model.Fund;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.common.contract.request.RequestInfo;
@@ -35,131 +37,140 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class VoucherServiceTest {
 
-	@Mock
-	private RestTemplate restTemplate;
+    @Mock
+    private RestTemplate restTemplate;
 
-	@Mock
-	private ObjectMapper objectMapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@Mock
-	private VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails;
+    @Mock
+    private VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails;
 
-	@InjectMocks
-	private VoucherService voucherService;
+    @InjectMocks
+    private VoucherService voucherService;
 
-	@Test
-	public void test_shuould_create_VoucherRequest_For_Reevalaution() {
+    @Mock
+    private AssetConfigurationService assetConfigurationService;
 
-		final RevaluationRequest revaluationRequest = getRevaluationRequest();
-		revaluationRequest.getRevaluation().setFund(Long.valueOf("3"));
+    @Test
+    public void test_shuould_create_VoucherRequest_For_Reevalaution() {
 
-		final Asset asset = get_Asset();
-		final List<VouchercreateAccountCodeDetails> accountCodeDetails = getVouchercreateAccountCodeDetails();
+        final RevaluationRequest revaluationRequest = getRevaluationRequest();
+        revaluationRequest.getRevaluation().setFund(Long.valueOf("3"));
 
-		when(applicationProperties.getReevaluationVoucherName()).thenReturn("Asset Reevaluation Voucher");
-		when(applicationProperties.getReevaluationVoucherDescription())
-				.thenReturn("Creating Voucher for Asset Reevaluation");
+        final Asset asset = get_Asset();
+        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getVouchercreateAccountCodeDetails();
 
-		final VoucherRequest generatedVoucherRequest = voucherService
-				.createVoucherRequestForRevalaution(revaluationRequest, asset, accountCodeDetails);
+        final String tenantId = revaluationRequest.getRevaluation().getTenantId();
 
-		final Fund fund = get_Fund(revaluationRequest);
-		final Voucher voucher = getVoucher(asset, fund);
-		final List<Voucher> vouchers = new ArrayList<>();
-		vouchers.add(voucher);
+        when(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId))
+                        .thenReturn("Asset Revaluation Voucher");
+        when(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
+                        .thenReturn("Creating Voucher for Asset Revaluation");
 
-		final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-		expectedVoucherRequest.setRequestInfo(new RequestInfo());
-		expectedVoucherRequest.setVouchers(vouchers);
+        final VoucherRequest generatedVoucherRequest = voucherService
+                .createVoucherRequestForRevalaution(revaluationRequest, asset, accountCodeDetails);
 
-		System.out.println(generatedVoucherRequest + "\n");
-		System.err.println(expectedVoucherRequest);
+        final Fund fund = get_Fund(revaluationRequest);
+        final Voucher voucher = getVoucher(asset, fund, tenantId);
+        final List<Voucher> vouchers = new ArrayList<>();
+        vouchers.add(voucher);
 
-		assertEquals(expectedVoucherRequest.getVouchers(), generatedVoucherRequest.getVouchers());
+        final VoucherRequest expectedVoucherRequest = new VoucherRequest();
+        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setVouchers(vouchers);
 
-	}
+        System.out.println(generatedVoucherRequest + "\n");
+        System.err.println(expectedVoucherRequest);
 
-	private Voucher getVoucher(final Asset asset, final Fund fund) {
+        assertEquals(expectedVoucherRequest.getVouchers(), generatedVoucherRequest.getVouchers());
 
-		final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		final Voucher voucher = new Voucher();
-		voucher.setType(VoucherType.JOURNALVOUCHER.toString());
-		voucher.setVoucherDate(sdf.format(new Date()));
-		voucher.setLedgers(getVouchercreateAccountCodeDetails());
-		voucher.setDepartment(asset.getDepartment().getId());
-		voucher.setName(applicationProperties.getReevaluationVoucherName());
-		voucher.setDescription(applicationProperties.getReevaluationVoucherDescription());
-		voucher.setFund(fund);
+    }
 
-		return voucher;
-	}
+    private Voucher getVoucher(final Asset asset, final Fund fund, final String tenantId) {
 
-	private List<VouchercreateAccountCodeDetails> getVouchercreateAccountCodeDetails() {
-		final VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails = new VouchercreateAccountCodeDetails();
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        final Voucher voucher = new Voucher();
+        voucher.setType(VoucherType.JOURNALVOUCHER.toString());
+        voucher.setVoucherDate(sdf.format(new Date()));
+        voucher.setLedgers(getVouchercreateAccountCodeDetails());
+        voucher.setDepartment(asset.getDepartment().getId());
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
+        voucher.setFund(fund);
 
-		vouchercreateAccountCodeDetails.setCreditAmount(new BigDecimal("0"));
-		vouchercreateAccountCodeDetails.setDebitAmount(new BigDecimal("10"));
-		vouchercreateAccountCodeDetails.setGlcode("generalLedger6Code");
-		final Function function = new Function();
-		function.setId(Long.valueOf("124"));
+        return voucher;
+    }
 
-		vouchercreateAccountCodeDetails.setFunction(function);
+    private List<VouchercreateAccountCodeDetails> getVouchercreateAccountCodeDetails() {
+        final VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails = new VouchercreateAccountCodeDetails();
+        vouchercreateAccountCodeDetails.setCreditAmount(new BigDecimal("0"));
+        vouchercreateAccountCodeDetails.setDebitAmount(new BigDecimal("10"));
+        vouchercreateAccountCodeDetails.setGlcode("generalLedger6Code");
+        final Function function = new Function();
+        function.setId(Long.valueOf("124"));
 
-		final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<>();
-		accountCodeDetails.add(vouchercreateAccountCodeDetails);
+        vouchercreateAccountCodeDetails.setFunction(function);
 
-		return accountCodeDetails;
-	}
+        final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<>();
+        accountCodeDetails.add(vouchercreateAccountCodeDetails);
 
-	private Fund get_Fund(final RevaluationRequest revaluationRequest) {
-		final Fund fund = new Fund();
-		fund.setId(revaluationRequest.getRevaluation().getFund());
-		return fund;
-	}
+        return accountCodeDetails;
+    }
 
-	private Asset get_Asset() {
-		final Asset asset = new Asset();
-		asset.setId(Long.valueOf("12"));
-		final Department department = new Department();
-		department.setId(Long.valueOf("2"));
-		asset.setDepartment(department);
-		return asset;
-	}
+    private Fund get_Fund(final RevaluationRequest revaluationRequest) {
+        final Fund fund = new Fund();
+        fund.setId(revaluationRequest.getRevaluation().getFund());
+        return fund;
+    }
 
-	private RevaluationRequest getRevaluationRequest() {
-		final RevaluationRequest revaluationRequest = new RevaluationRequest();
-		revaluationRequest.setRequestInfo(new RequestInfo());
-		final Revaluation revaluation = new Revaluation();
-		revaluation.setTenantId("ap.kurnool");
-		revaluation.setAssetId(Long.valueOf("12"));
-		revaluation.setCurrentCapitalizedValue(new BigDecimal("100.58"));
-		revaluation.setTypeOfChange(TypeOfChangeEnum.INCREASED);
-		revaluation.setRevaluationAmount(new BigDecimal("10"));
-		revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
-		revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
-		revaluation.setReevaluatedBy("5");
-		revaluation.setReasonForRevaluation("reasonForRevaluation");
-		revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
-		revaluation.setFunction(Long.valueOf("124"));
-		revaluation.setFund(Long.valueOf("3"));
-		revaluation.setScheme(Long.valueOf("4"));
-		revaluation.setSubScheme(Long.valueOf("5"));
-		revaluation.setComments("coments");
-		revaluation.setStatus("ACTIVE");
+    private Asset get_Asset() {
+        final Asset asset = new Asset();
+        asset.setId(Long.valueOf("12"));
+        final Department department = new Department();
+        department.setId(Long.valueOf("2"));
+        asset.setDepartment(department);
+        return asset;
+    }
 
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("5");
-		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
-		auditDetails.setLastModifiedBy("5");
-		auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
-		revaluation.setAuditDetails(auditDetails);
+    private RevaluationRequest getRevaluationRequest() {
+        final RevaluationRequest revaluationRequest = new RevaluationRequest();
+        revaluationRequest.setRequestInfo(new RequestInfo());
+        final Revaluation revaluation = new Revaluation();
+        revaluation.setTenantId("ap.kurnool");
+        revaluation.setAssetId(Long.valueOf("12"));
+        revaluation.setCurrentCapitalizedValue(new BigDecimal("100.58"));
+        revaluation.setTypeOfChange(TypeOfChangeEnum.INCREASED);
+        revaluation.setRevaluationAmount(new BigDecimal("10"));
+        revaluation.setValueAfterRevaluation(new BigDecimal("90.68"));
+        revaluation.setRevaluationDate(Long.valueOf("1496430744825"));
+        revaluation.setReevaluatedBy("5");
+        revaluation.setReasonForRevaluation("reasonForRevaluation");
+        revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
+        revaluation.setFunction(Long.valueOf("124"));
+        revaluation.setFund(Long.valueOf("3"));
+        revaluation.setScheme(Long.valueOf("4"));
+        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setComments("coments");
+        revaluation.setStatus(Status.APPROVED.toString());
 
-		revaluationRequest.setRevaluation(revaluation);
-		return revaluationRequest;
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy("5");
+        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
+        auditDetails.setLastModifiedBy("5");
+        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
+        revaluation.setAuditDetails(auditDetails);
 
-	}
+        revaluationRequest.setRevaluation(revaluation);
+        return revaluationRequest;
+
+    }
 
 }

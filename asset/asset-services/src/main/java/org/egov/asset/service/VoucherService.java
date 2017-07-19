@@ -21,6 +21,7 @@ import org.egov.asset.model.Function;
 import org.egov.asset.model.Fund;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.common.contract.request.RequestInfo;
 import org.json.JSONObject;
@@ -45,6 +46,9 @@ public class VoucherService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    @Autowired
+    private AssetConfigurationService assetConfigurationService;
+
     private static final Logger logger = LoggerFactory.getLogger(VoucherService.class);
 
     public VoucherRequest createVoucherRequestForRevalaution(final RevaluationRequest revaluationRequest,
@@ -54,13 +58,16 @@ public class VoucherService {
         final Fund fund = new Fund();
         fund.setId(revaluationRequest.getRevaluation().getFund());
 
+        final String tenantId = revaluationRequest.getRevaluation().getTenantId();
         final Voucher voucher = new Voucher();
         voucher.setType(VoucherType.JOURNALVOUCHER.toString());
         voucher.setVoucherDate(sdf.format(new Date()));
         voucher.setLedgers(accountCodeDetails);
         voucher.setDepartment(asset.getDepartment().getId());
-        voucher.setName(applicationProperties.getReevaluationVoucherName());
-        voucher.setDescription(applicationProperties.getReevaluationVoucherDescription());
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
         voucher.setFund(fund);
 
         final List<Voucher> vouchers = new ArrayList<>();
@@ -74,7 +81,7 @@ public class VoucherService {
 
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
-                + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
+                + applicationProperties.getEgfServiceVoucherCreatePath();
         logger.debug("Voucher API Request URL :: " + createVoucherUrl);
         logger.debug("VoucherRequest :: " + voucherRequest);
         Error err = new Error();
@@ -160,13 +167,16 @@ public class VoucherService {
         final Fund fund = new Fund();
         fund.setId(disposalRequest.getDisposal().getFund());
 
+        final String tenantId = disposalRequest.getDisposal().getTenantId();
         final Voucher voucher = new Voucher();
         voucher.setType(VoucherType.JOURNALVOUCHER.toString());
         voucher.setVoucherDate(sdf.format(new Date()));
         voucher.setLedgers(accountCodeDetails);
         voucher.setDepartment(asset.getDepartment().getId());
-        voucher.setName(applicationProperties.getDisposalVoucherName());
-        voucher.setDescription(applicationProperties.getDisposalVoucherDescription());
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
         voucher.setFund(fund);
 
         final List<Voucher> vouchers = new ArrayList<>();

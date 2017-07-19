@@ -69,6 +69,6 @@ public class TreatmentPlantRequest {
     public RequestInfo requestInfo;
 
     @JsonProperty("treatmentPlants")
-    private final List<TreatmentPlant> treatmentPlants = new ArrayList<>();
+    private List<TreatmentPlant> treatmentPlants = new ArrayList<>();
 
 }

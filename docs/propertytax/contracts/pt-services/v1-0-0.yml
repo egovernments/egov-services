@@ -847,6 +847,11 @@ definitions:
         type: integer
         format: int64
         description: unique id of the ApplicationType.
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
       name:
         type: string
         description: name of the document
@@ -860,6 +865,8 @@ definitions:
           - ALTER
           - EDIT
           - AMALGAMATION
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
           
   Document:
     type: object

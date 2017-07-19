@@ -122,25 +122,6 @@ public class ActionServiceTest {
 
 	}
 
-	@Test
-	public void testShouldGetModules() {
-
-		ActionRequest actionRequest = new ActionRequest();
-
-		actionRequest.setRequestInfo(getRequestInfo());
-
-		org.egov.access.web.contract.action.ActionService servcie = new org.egov.access.web.contract.action.ActionService();
-
-		servcie.setModules(getModuleList());
-
-		when(actionRepository.getAllActionsBasedOnRoles(actionRequest)).thenReturn(servcie);
-
-		List<Module> modules = actionService.getAllActionsBasedOnRoles(actionRequest);
-
-		assertThat(servcie.getModules()).isEqualTo(modules);
-
-	}
-
 	private List<Module> getModuleList() {
 
 		List<Module> moduleList = new ArrayList<Module>();

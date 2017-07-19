@@ -80,6 +80,9 @@ of messages sent to Kafka.
 forward as necessary. 
  
 #### Change log -
+1.0.1
+- Only log RestTemplate's request/response body when content type is JSON compatible.
+
 1.0.0
 - For Kafka Listener the @Payload annotation is used to identify the payload parameter.
 - For Kafka Listener @Header(KafkaHeaders.RECEIVED_TOPIC) is used to identify the topic name.

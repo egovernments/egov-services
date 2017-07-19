@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ * accountability and the service delivery of the government  organizations.
+ *
+ *  Copyright (C) 2016  eGovernments Foundation
+ *
+ *  The updated version of eGov suite of products as by eGovernments Foundation
+ *  is available at http://www.egovernments.org
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see http://www.gnu.org/licenses/ or
+ *  http://www.gnu.org/licenses/gpl.html .
+ *
+ *  In addition to the terms of the GPL license to be adhered to in using this
+ *  program, the following additional terms are to be complied with:
+ *
+ *      1) All versions of this program, verbatim or modified must carry this
+ *         Legal Notice.
+ *
+ *      2) Any misrepresentation of the origin of the material is prohibited. It
+ *         is required that all modified versions of this material be marked in
+ *         reasonable ways as different from the original version.
+ *
+ *      3) This license does not grant any rights to any user of the program
+ *         with regards to rights under trademark law for use of the trade names
+ *         or trademarks of eGovernments Foundation.
+ *
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.collection.repository.QueryBuilder;
 
 import java.sql.Timestamp;
@@ -9,14 +48,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import lombok.EqualsAndHashCode;
+
 @EqualsAndHashCode
 @Component
 public class ReceiptDetailQueryBuilder {
 
-	public static final Logger logger = LoggerFactory
-			.getLogger(ReceiptDetailQueryBuilder.class);
-	
-	private static final String BASE_QUERY="Select rh.id as rh_id,rh.payeename as rh_payeename,"
+	public static final Logger logger = LoggerFactory.getLogger(ReceiptDetailQueryBuilder.class);
+
+	private static final String BASE_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payeename,"
 			+ "rh.payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,"
 			+ "rh.referenceNumber as rh_referenceNumber,rh.referenceDate as rh_referenceDate,"
 			+ "rh.receiptType as rh_receiptType,rh.receiptNumber as rh_receiptNumber,rh.receiptDate"
@@ -32,7 +71,7 @@ public class ReceiptDetailQueryBuilder {
 			+ " as rh_consumerType,rh.fund as rh_fund,rh.fundSource as rh_fundSource,"
 			+ "rh.boundary as rh_boundary,rh.department as rh_department,rh.depositedBranch"
 			+ " as rh_depositedBranch,rh.tenantId as rh_tenantId,rh.displayMsg as rh_displayMsg,"
-			+ "rh.voucherheader as rh_voucherheader,"
+			+ "rh.voucherheader as rh_voucherheader,rh.cancellationRemarks as rh_cancellationRemarks,"
 			+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
 			+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,"
 			+ "rd.id as rd_id,rd.receiptHeader as rh_id,"
@@ -40,21 +79,20 @@ public class ReceiptDetailQueryBuilder {
 			+ "rd_actualcramountToBePaid,rd.ordernumber as rd_ordernumber,"
 			+ "rd.description as rd_description,rd.chartOfAccount as rd_chartOfAccount,rd.isActualDemand"
 			+ " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose,"
-			+ "rd.tenantId as rd_tenantId"
-			+ " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
+			+ "rd.tenantId as rd_tenantId" + " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
 			+ " rh.id=rd.receiptHeader";
-	
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
-		addOrderByClause(selectQuery,searchCriteria);
+		addOrderByClause(selectQuery, searchCriteria);
 
 		logger.debug("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
-		
+
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			ReceiptSearchCriteria searchCriteria) {
@@ -89,26 +127,25 @@ public class ReceiptDetailQueryBuilder {
 			preparedStatementValues.add(searchCriteria.getStatus());
 		}
 
-		
-		if(searchCriteria.getCollectedBy() !=null){
+		if (searchCriteria.getCollectedBy() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.createdBy = ?");
 			preparedStatementValues.add(Long.parseLong(searchCriteria.getCollectedBy()));
 		}
-		
-		if(searchCriteria.getFromDate() != null){
+
+		if (searchCriteria.getFromDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.receiptDate >= ?");
 			preparedStatementValues.add(Timestamp.valueOf(searchCriteria.getFromDate()));
 		}
-		
-		if(searchCriteria.getToDate() != null){
+
+		if (searchCriteria.getToDate() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
 			preparedStatementValues.add(Timestamp.valueOf(searchCriteria.getToDate()));
 		}
-		
-		if(searchCriteria.getBusinessCode() != null){
+
+		if (searchCriteria.getBusinessCode() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.businessDetails = ?");
 			preparedStatementValues.add(searchCriteria.getBusinessCode());
@@ -139,10 +176,10 @@ public class ReceiptDetailQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
-	
-	public static String insertReceiptHeader(){
+
+	public static String insertReceiptHeader() {
 		logger.info("Returning insertReceiptHeaderQuery query to the repository");
-		
+
 		return "INSERT INTO egcl_receiptheader(id, payeename, payeeaddress, payeeemail, paidby, referencenumber, receipttype, "
 				+ "receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
 				+ "collmodesnotallwd, consumercode, channel, fund, fundsource, function, boundary, department, voucherheader, "
@@ -156,19 +193,25 @@ public class ReceiptDetailQueryBuilder {
 				+ ":manualreceiptnumber, :manualreceiptdate, :reference_ch_id, :stateid, :location, :isreconciled, "
 				+ ":status)";
 	}
-	
-	public static String insertReceiptDetails(){
+
+	public static String insertReceiptDetails() {
 		logger.info("Returning insertReceiptDetailsQuery query to the repository");
-		
+
 		return "INSERT INTO egcl_receiptdetails(id, chartofaccount, dramount, cramount, ordernumber, receiptheader, actualcramounttobepaid, "
 				+ "description, financialyear, isactualdemand, purpose, tenantid) "
 				+ "VALUES (NEXTVAL('SEQ_EGCL_RECEIPTDETAILS'), :chartofaccount, :dramount, :cramount, :ordernumber, :receiptheader, :actualcramounttobepaid, "
 				+ ":description, :financialyear, :isactualdemand, :purpose, :tenantid)";
 	}
-	
-	public static String getreceiptHeaderId(){
+
+	public static String getreceiptHeaderId() {
 		logger.info("Returning getreceiptHeaderId query to the repository");
-		
+
 		return "SELECT MAX(id) FROM egcl_receiptheader WHERE payeename = ? AND paidby = ? AND createddate = ?";
+	}
+
+	public String getCancelQuery() {
+
+		return "Update egcl_receiptheader set status=? , reasonforcancellation=? , cancellationremarks=? ,"
+				+ " lastmodifiedby=? , lastmodifieddate=?" + " where id =? and tenantId=?";
 	}
 }

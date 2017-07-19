@@ -41,6 +41,7 @@
 package org.egov.collection.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -76,7 +77,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receipts/v1")
+@RequestMapping("/receipts")
 public class ReceiptController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
 
@@ -113,15 +114,32 @@ public class ReceiptController {
 			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 		if (requestBodyBindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		List<Receipt> receipts =new ArrayList<>();
+		List<Receipt> receipts = new ArrayList<>();
 		try {
-		receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+			receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 		return getSuccessResponse(receipts, requestInfo);
 	}
+
+	@PostMapping("/_cancel")
+	@ResponseBody
+	public ResponseEntity<?> cancelReceipt(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+		Receipt receipt = receiptService.cancelReceiptPushToQueue(receiptRequest);
+		return getSuccessResponse(Collections.singletonList(receipt), receiptRequest.getRequestInfo());
+	}
+
 
 	@PostMapping("/_create")
 	@ResponseBody

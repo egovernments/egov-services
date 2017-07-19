@@ -1005,7 +1005,7 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: woodTypeRequest
             in: body
-            description: Wood Type Request
+            description: Depreciation Request
             schema:
               $ref: '#/definitions/DepreciationRequest'
         responses:
@@ -1027,7 +1027,7 @@ paths:
         parameters:
           - name: woodTypeRequest
             in: body
-            description: Wood Type Request
+            description: Depreciation Request
             schema:
               $ref: '#/definitions/DepreciationRequest'
         responses:
@@ -1035,6 +1035,84 @@ paths:
             description: Depreciation updated Successfully
             schema:
               $ref: '#/definitions/DepreciationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /documenttypes/_search:
+      post:
+        summary: Get the list of documenttype(s)
+        description: documenttypes
+        tags: 
+          - DocumentType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: application
+            type: array
+            items: 
+              type: string
+            format: int64
+            in: query
+            maxItems: 50
+            description: type of application
+          - name: name
+            type: integer
+            in: query
+            description: name of the document
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: DocumentType retrieved Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /documenttypes/_create:
+      post:
+        summary: Create  new  DocumentType(s)
+        description: Create  new DocumentType(s)
+        tags: 
+          - DocumentType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: documentTypeRequest
+            in: body
+            description: Document Type Request
+            schema:
+              $ref: '#/definitions/DocumentTypeRequest'
+        responses:
+          201:
+            description: DocumentType(s) created Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /documenttypes/_update:
+      post:
+        summary: Update any of the DocumentType
+        description: Update any of the DocumentType
+        tags: 
+          - DocumentType
+        parameters:
+          - name: DocumentTypeRequest
+            in: body
+            description: Document Type Request
+            schema:
+              $ref: '#/definitions/DocumentTypeRequest'
+        responses:
+          200:
+            description: DocumentType updated Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
           400:
             description: Invalid Input
             schema:
@@ -1746,6 +1824,28 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/Depreciation'
+            
+    DocumentTypeRequest:
+      description: Contract class to receive request. Array of Depreciation items are used in case of create, whereas single Depreciation item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Depreciations:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/DocumentType'
+    DocumentTypeResponse:
+      description: Contract class to send response. Array of Depreciation items are used in case of search results or response for create, whereas single Depreciation item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Depreciations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/DocumentType'
 
 parameters:
     pageSize:

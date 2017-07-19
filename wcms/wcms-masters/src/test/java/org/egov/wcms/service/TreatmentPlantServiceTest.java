@@ -40,6 +40,7 @@
 package org.egov.wcms.service;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.TreatmentPlantRepository;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
+import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -71,6 +73,9 @@ public class TreatmentPlantServiceTest {
     @Mock
     private ApplicationProperties applicationProperties;
 
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
+
     @InjectMocks
     private TreatmentPlantService treatmentPlantService;
 
@@ -83,6 +88,37 @@ public class TreatmentPlantServiceTest {
         when(treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest)).thenThrow(Exception.class);
         assertTrue(treatmentPlantList
                 .equals(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)));
+    }
+
+    @Test
+    public void test_throwException_Push_To_Producer_TreatmentPlant() {
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        treatmentPlantList.add(getTreatmentPlant());
+        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+        assertTrue(treatmentPlantList.equals(treatmentPlantService.createTreatmentPlant("", "", treatmentPlantRequest)));
+    }
+
+    @Test
+    public void test_throwException_Create_TreatmentPlant() {
+
+        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
+        treatmentPlantList.add(getTreatmentPlant());
+        final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
+        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+        when(treatmentPlantRepository.persistCreateTreatmentPlant(any(TreatmentPlantRequest.class)))
+                .thenReturn(treatmentPlantRequest);
+        assertTrue(treatmentPlantRequest.equals(treatmentPlantService.create(treatmentPlantRequest)));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
+    public void test_throwException_Update_TreatmentPlant() throws Exception {
+
+        final TreatmentPlantRequest treatmentPlantRequest = Mockito.mock(TreatmentPlantRequest.class);
+        when(treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest)).thenThrow(Exception.class);
+
+        assertTrue(treatmentPlantRequest.equals(treatmentPlantService.update(treatmentPlantRequest)));
     }
 
     private TreatmentPlant getTreatmentPlant() {

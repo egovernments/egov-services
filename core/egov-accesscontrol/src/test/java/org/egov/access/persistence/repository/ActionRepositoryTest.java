@@ -89,29 +89,6 @@ public class ActionRepositoryTest {
 		assertThat(actions.get(0).getUrl().equals("/test/getAllReceivingMode"));
 	}
 
-	@Test
-	@Sql(scripts = { "/sql/clearAction.sql", "/sql/insertActionData.sql"})
-	public void testShouldGetmodules() {
-
-		ActionRequest actionRequest = new ActionRequest();
-
-		actionRequest.setRequestInfo(getRequestInfo());
-
-		actionRequest.setTenantId("ap.public");
-
-		List<String> roleCodes = new ArrayList<String>();
-
-		roleCodes.add("SUPERUSER");
-
-		actionRequest.setRoleCodes(roleCodes);
-		
-		actionRequest.setEnabled(false);
-
-		List<Module> modules = actionRepository.getAllActionsBasedOnRoles(actionRequest).getModules();
-
-		assertThat(modules.size()).isEqualTo(0);
-	}
-
 	private List<Action> getActions() {
 
 		List<Action> actionList = new ArrayList<Action>();

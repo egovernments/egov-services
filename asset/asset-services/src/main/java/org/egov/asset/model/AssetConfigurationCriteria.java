@@ -2,8 +2,6 @@ package org.egov.asset.model;
 
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -29,17 +27,7 @@ public class AssetConfigurationCriteria {
 
     private Long effectiveFrom;
 
-    private String sortBy;
-
-    private String sortOrder;
-
     @NotNull
     private String tenantId;
-
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
-
-    private Short pageNumber;
 
 }

@@ -15,7 +15,7 @@ import org.egov.common.contract.response.ResponseInfo;
 @ToString
 public class ReceiptRes   {
   
-	private String tenantId;
+  private String tenantId;
 
   @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo;
@@ -25,4 +25,3 @@ public class ReceiptRes   {
 
 
 }
-

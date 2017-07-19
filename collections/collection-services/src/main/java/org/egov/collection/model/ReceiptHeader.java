@@ -47,6 +47,8 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -148,6 +150,8 @@ public class ReceiptHeader {
     
     private Date lastModifiedDate;
     
+    private String cancellationRemarks;
+    
     
     
     public ReceiptHeader toDomainModel(){
@@ -158,8 +162,9 @@ public class ReceiptHeader {
     			.reasonForCancellation(reasonForCancellation).channel(channel).minimumAmount(minimumAmount).totalAmount(totalAmount)
     			.consumerCode(consumerCode).consumerType(consumerType).fund(fund).collModesNotAllwd(collModesNotAllwd).fundSource
     			(fundSource).function(function).boundary(boundary).receiptType(receiptType).receiptNumber(receiptNumber)
-    			.reference_ch_id(reference_ch_id).receiptDate(receiptDate).department(department).depositedBranch(depositedBranch)
-    			.tenantId(tenantId).displayMsg(displayMsg).voucherheader(voucherheader).version(version).createdBy(createdBy)
-    			.createdDate(createdDate).lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).build();
+    			.cancellationRemarks(cancellationRemarks).reference_ch_id(reference_ch_id).receiptDate(receiptDate).
+    			department(department).depositedBranch(depositedBranch).tenantId(tenantId).displayMsg(displayMsg).
+    			voucherheader(voucherheader).version(version).createdBy(createdBy).createdDate(createdDate).
+    			lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).build();
     }
 }

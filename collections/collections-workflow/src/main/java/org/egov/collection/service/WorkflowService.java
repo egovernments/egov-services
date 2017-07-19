@@ -93,6 +93,7 @@ public class WorkflowService {
 
 		}
 		logger.info("Task Id received is: "+taskResponse.getTask().getId());
+		workflowRepository.updateStateId(workflowDetails.getReceiptNumber(), taskResponse.getTask().getId());
 		return taskResponse.getTask();
 	}
 	

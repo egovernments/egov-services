@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.egov.models.Department;
 import org.egov.models.Depreciation;
 import org.egov.models.FloorType;
@@ -32,6 +33,7 @@ import org.egov.property.repository.builder.UsageMasterBuilder;
 import org.egov.property.repository.builder.UtilityBuilder;
 import org.egov.property.repository.builder.WallTypesBuilder;
 import org.egov.property.repository.builder.WoodTypeBuilder;
+import org.egov.property.utility.ConstantUtility;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -40,8 +42,6 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -143,11 +143,14 @@ public class PropertyMasterRepository {
 			Integer pageSize, Integer offSet) {
 
 		List<Department> departments = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 
-		String departmentSearchSql = SearchMasterBuilder.buildSearchQuery("egpt_mstr_department", tenantId, ids, name,
-				nameLocal, code, null, null, null, null, pageSize, offSet);
+		String departmentSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.DEPARTMENT_TABLE_NAME,
+				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues,
+				null, null);
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-		departments = jdbcTemplate.query(departmentSearchSql.toString(), new BeanPropertyRowMapper(Department.class));
+		departments = jdbcTemplate.query(departmentSearchSql.toString(), preparedStatementValues.toArray(),
+				new BeanPropertyRowMapper(Department.class));
 		for (Department department : departments) {
 			Department departMentData = gson.fromJson(department.getData(), Department.class);
 			department.setCategory(departMentData.getCategory());
@@ -257,12 +260,14 @@ public class PropertyMasterRepository {
 			String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet) {
 
 		List<OccuapancyMaster> occupancyMasters = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 
-		String occuapancySearchSql = SearchMasterBuilder.buildSearchQuery("egpt_mstr_occuapancy", tenantId, ids, name,
-				nameLocal, code, active, null, orderNumber, null, pageSize, offSet);
+		String occuapancySearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.OCCUPANCY_TABLE_NAME,
+				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
+				preparedStatementValues, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-		occupancyMasters = jdbcTemplate.query(occuapancySearchSql.toString(),
+		occupancyMasters = jdbcTemplate.query(occuapancySearchSql.toString(), preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(OccuapancyMaster.class));
 		for (OccuapancyMaster occuapancyType : occupancyMasters) {
 			OccuapancyMaster occuapancyData = gson.fromJson(occuapancyType.getData(), OccuapancyMaster.class);
@@ -374,12 +379,14 @@ public class PropertyMasterRepository {
 			String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet) {
 
 		List<PropertyType> propertyTypes = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 
-		String propertyTypeSearchSql = SearchMasterBuilder.buildSearchQuery("egpt_mstr_propertytype", tenantId, ids,
-				name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet);
+		String propertyTypeSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.PROPERTY_TYPE_TABLE_NAME,
+				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
+				preparedStatementValues, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-		propertyTypes = jdbcTemplate.query(propertyTypeSearchSql.toString(),
+		propertyTypes = jdbcTemplate.query(propertyTypeSearchSql.toString(), preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(PropertyType.class));
 		for (PropertyType propertyType : propertyTypes) {
 			PropertyType propertyData = gson.fromJson(propertyType.getData(), PropertyType.class);
@@ -488,11 +495,14 @@ public class PropertyMasterRepository {
 			Integer pageSize, Integer offSet) {
 		List<FloorType> floorTypes = new ArrayList<FloorType>();
 
-		String searchQuery = SearchMasterBuilder.buildSearchQuery("egpt_mstr_floortype", tenantId, ids, name, nameLocal,
-				code, null, null, null, null, pageSize, offSet);
+		List<Object> preparedStatementValues = new ArrayList<>();
+
+		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.FLOOR_TYPE_TABLE_NAME, tenantId, ids,
+				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-		floorTypes = jdbcTemplate.query(searchQuery.toString(), new BeanPropertyRowMapper(FloorType.class));
+		floorTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
+				new BeanPropertyRowMapper(FloorType.class));
 		for (FloorType floor : floorTypes) {
 			FloorType floorData = gson.fromJson(floor.getData(), FloorType.class);
 
@@ -595,12 +605,13 @@ public class PropertyMasterRepository {
 	public List<RoofType> searchRoofType(String tenantId, Integer[] ids, String name, String code, String nameLocal,
 			Integer pageSize, Integer offSet) {
 		List<RoofType> roofTypes = new ArrayList<RoofType>();
-
-		String searchQuery = SearchMasterBuilder.buildSearchQuery("egpt_mstr_Rooftype", tenantId, ids, name, nameLocal,
-				code, null, null, null, null, pageSize, offSet);
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.ROOF_TYPE_TABLE_NAME, tenantId, ids,
+				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-		roofTypes = jdbcTemplate.query(searchQuery.toString(), new BeanPropertyRowMapper(RoofType.class));
+		roofTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
+				new BeanPropertyRowMapper(RoofType.class));
 		for (RoofType roof : roofTypes) {
 			FloorType floorData = gson.fromJson(roof.getData(), FloorType.class);
 
@@ -706,12 +717,14 @@ public class PropertyMasterRepository {
 	public List<WoodType> searchWoodType(String tenantId, Integer[] ids, String name, String code, String nameLocal,
 			Integer pageSize, Integer offSet) {
 		List<WoodType> woodTypes = new ArrayList<WoodType>();
+		List<Object> preparedStatementValues = new ArrayList<>();
 
-		String searchQuery = SearchMasterBuilder.buildSearchQuery("egpt_mstr_Woodtype", tenantId, ids, name, nameLocal,
-				code, null, null, null, null, pageSize, offSet);
+		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.WOOD_TYPE_TABLE_NAME, tenantId, ids,
+				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-		woodTypes = jdbcTemplate.query(searchQuery.toString(), new BeanPropertyRowMapper(WoodType.class));
+		woodTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
+				new BeanPropertyRowMapper(WoodType.class));
 		for (WoodType wood : woodTypes) {
 			FloorType floorData = gson.fromJson(wood.getData(), FloorType.class);
 
@@ -739,9 +752,12 @@ public class PropertyMasterRepository {
 
 	public List<WallType> searchWallType(String tenantId, Integer[] ids, String name, String code, String nameLocal,
 			Integer pageSize, Integer offSet) {
-		String wallTypeMasterSearchQuery = SearchMasterBuilder.buildSearchQuery("egpt_mstr_walltype", tenantId, ids,
-				name, nameLocal, code, null, null, null, null, pageSize, offSet);
-		List<WallType> wallTypes = jdbcTemplate.query(wallTypeMasterSearchQuery,
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String wallTypeMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.WALL_TYPE_TABLE_NAME,
+				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues,
+				null, null);
+		List<WallType> wallTypes = jdbcTemplate.query(wallTypeMasterSearchQuery, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(WallType.class));
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -776,9 +792,11 @@ public class PropertyMasterRepository {
 	public List<UsageMaster> searchUsage(String tenantId, Integer[] ids, String name, String code, String nameLocal,
 			Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize, Integer offSet) {
 
-		String usageMasterSearchQuery = SearchMasterBuilder.buildSearchQuery("egpt_mstr_usage", tenantId, ids, name,
-				nameLocal, code, active, isResidential, orderNumber, null, pageSize, offSet);
-		List<UsageMaster> usageTypes = jdbcTemplate.query(usageMasterSearchQuery,
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String usageMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.USAGE_TYPE_TABLE_NAME,
+				tenantId, ids, name, nameLocal, code, active, isResidential, orderNumber, null, pageSize, offSet,
+				preparedStatementValues, null, null);
+		List<UsageMaster> usageTypes = jdbcTemplate.query(usageMasterSearchQuery, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(UsageMaster.class));
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -1049,11 +1067,13 @@ public class PropertyMasterRepository {
 	public List<StructureClass> searchStructureClass(String tenantId, Integer[] ids, String name, String code,
 			String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet) {
 
-		String structureClassSearchQuery = SearchMasterBuilder.buildSearchQuery("egpt_mstr_structureclass", tenantId,
-				ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet);
+		List<Object> preparedStatementValues = new ArrayList<>();
+		String structureClassSearchQuery = SearchMasterBuilder.buildSearchQuery(
+				ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, tenantId, ids, name, nameLocal, code, active, null,
+				orderNumber, null, pageSize, offSet, preparedStatementValues, null, null);
 
 		List<StructureClass> structureClasses = jdbcTemplate.query(structureClassSearchQuery,
-				new BeanPropertyRowMapper(StructureClass.class));
+				preparedStatementValues.toArray(), new BeanPropertyRowMapper(StructureClass.class));
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
@@ -1200,10 +1220,13 @@ public class PropertyMasterRepository {
 	public List<Depreciation> searchDepreciations(String tenantId, Integer[] ids, Integer fromYear, Integer toYear,
 			String code, String nameLocal, Integer pageSize, Integer offset) {
 
-		String searchDepreciationSql = DepreciationBuilder.searchQuery(tenantId, ids, fromYear, toYear, code, nameLocal,
-				pageSize, offset);
+		List<Object> preparedStatementValues = new ArrayList<>();
 
-		List<Depreciation> depreciations = jdbcTemplate.query(searchDepreciationSql,
+		String searchDepreciationSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.DEPRECIATION_TABLE_NAME,
+				tenantId, ids, null, nameLocal, code, null, null, null, null, pageSize, offset, preparedStatementValues,
+				fromYear, toYear);
+
+		List<Depreciation> depreciations = jdbcTemplate.query(searchDepreciationSql, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(Depreciation.class));
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -1315,10 +1338,13 @@ public class PropertyMasterRepository {
 	public List<MutationMaster> searchMutation(String tenantId, Integer[] ids, String name, String code,
 			String nameLocal, Integer pageSize, Integer offSet) {
 
-		String searchMutationQuery = MutationMasterBuilder.searchQuery(tenantId, ids, code, name, nameLocal, pageSize,
-				offSet);
+		List<Object> preparedStatemetValues = new ArrayList<>();
 
-		List<MutationMaster> mutationMasters = jdbcTemplate.query(searchMutationQuery,
+		String searchMutationQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.MUTATION_MASTER_TABLE_NAME,
+				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatemetValues,
+				null, null);
+
+		List<MutationMaster> mutationMasters = jdbcTemplate.query(searchMutationQuery, preparedStatemetValues.toArray(),
 				new BeanPropertyRowMapper(MutationMaster.class));
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();

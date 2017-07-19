@@ -40,6 +40,7 @@
 package org.egov.collection.domain.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -49,6 +50,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
@@ -103,6 +105,70 @@ public class ReceiptServiceTest {
 		when(receiptRepository.pushReceiptCancelDetailsToQueue(any())).thenReturn(getReceipt());
 		Receipt receipt = receiptService.cancelReceiptPushToQueue(getReceiptRequest());
 		assertEquals(getReceipt(), receipt);
+	}
+
+	@Test
+	public void test_should_be_able_to_return_true_if_voucherCreation_is_true_and_receiptDate_is_greater_than_voucherCutOffDate() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 57);
+		Calendar calender2 = Calendar.getInstance();
+		calender2.set(2017, 12, 22, 18, 13, 56);
+		Boolean value = receiptService.checkVoucherCreation(true, calender2.getTime(), calender1.getTime());
+		assertTrue(value.equals(true));
+	}
+
+	@Test
+	public void test_should_be_able_to_return_false_if_voucherCreation_is_false_and_receiptDate_is_greater_than_voucherCutOffDate() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 57);
+		Calendar calender2 = Calendar.getInstance();
+		calender2.set(2017, 12, 22, 18, 13, 56);
+		Boolean value = receiptService.checkVoucherCreation(false, calender2.getTime(), calender1.getTime());
+		assertTrue(value.equals(false));
+	}
+
+	@Test
+	public void test_should_be_able_to_return_true_if_voucherCutOffDate_is_null_and_voucherCreation_is_true() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 57);
+		Boolean value = receiptService.checkVoucherCreation(true, null, calender1.getTime());
+		assertTrue(value.equals(true));
+	}
+
+	@Test
+	public void test_should_be_able_to_return_false_if_voucherCutOffDate_is_null_and_voucherCreation_is_false() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 57);
+		Boolean value = receiptService.checkVoucherCreation(false, null, calender1.getTime());
+		assertTrue(value.equals(false));
+	}
+
+	@Test
+	public void test_should_be_able_to_return_false_if_voucherCutOffDate_is_null_and_voucherCreation_is_null() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 57);
+		Boolean value = receiptService.checkVoucherCreation(null, null, calender1.getTime());
+		assertTrue(value.equals(false));
+	}
+
+	@Test
+	public void test_should_be_able_to_return_false_if_voucherCreation_is_true_and_receiptDate_is_equalto_voucherCutOffDate() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 56);
+		Calendar calender2 = Calendar.getInstance();
+		calender2.set(2017, 12, 22, 18, 13, 56);
+		Boolean value = receiptService.checkVoucherCreation(true, calender2.getTime(), calender1.getTime());
+		assertTrue(value.equals(false));
+	}
+
+	@Test
+	public void test_should_be_able_to_return_false_if_voucherCreation_is_true_and_receiptDate_is_less_than_voucherCutOffDate() {
+		Calendar calender1 = Calendar.getInstance();
+		calender1.set(2017, 12, 22, 18, 13, 55);
+		Calendar calender2 = Calendar.getInstance();
+		calender2.set(2017, 12, 22, 18, 13, 56);
+		Boolean value = receiptService.checkVoucherCreation(true, calender2.getTime(), calender1.getTime());
+		assertTrue(value.equals(false));
 	}
 
 	private Receipt getReceipt() {

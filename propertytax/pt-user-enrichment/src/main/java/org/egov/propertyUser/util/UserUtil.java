@@ -58,6 +58,7 @@ public class UserUtil {
         if (userResponse.getUser().size() == 0) {
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
                 userRequestInfo.setRequestInfo(requestInfo);
+                user.setPassword(environment.getProperty("default.password"));
                 userRequestInfo.setUser(user);
                 UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(), userRequestInfo,
                                 UserResponseInfo.class);

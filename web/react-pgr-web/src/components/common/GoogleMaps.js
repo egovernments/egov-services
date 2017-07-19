@@ -53,7 +53,12 @@ export default class SimpleMap extends Component {
 
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      center : {lat: 0.0, lng:0.0},
+      markers : [{
+        position: {lat: 0.0 , lng: 0.0}
+      }]
+    };
   }
 
   componentDidMount(){

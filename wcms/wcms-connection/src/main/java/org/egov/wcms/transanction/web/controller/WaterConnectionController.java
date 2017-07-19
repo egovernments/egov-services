@@ -124,64 +124,42 @@ public class WaterConnectionController {
     @PostMapping(value = "/{ackNumber}/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
-            final BindingResult errors,@PathVariable("applicationCode") final String applicationCode) {
+            final BindingResult errors,@PathVariable("ackNumber") final String applicationCode) {
         String [] acknumarray=applicationCode.split(Pattern.quote("{"));
         String acknumer=acknumarray[1].split(Pattern.quote("}"))[0];
+         Connection connection=null;
         waterConnectionRequest.getConnection().setAcknowledgementNumber(acknumer);
         if (errors.hasErrors()) {
             final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
-                .validateWaterConnectionRequest(waterConnectionRequest);
         Connection waterConn=waterConnectionService.findByApplicationNmber(acknumer);
-        if(waterConn!=null){
+        if(waterConn==null){
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = new Error();
-        error.setDescription("");
+        error.setDescription("Entered AcknowledgementNumber is not valid");
         errorResponse.setError(error);
         }
+        else
+        {
+         waterConnectionRequest.getConnection().setIsLegacy(waterConn!=null ?waterConn.getIsLegacy():Boolean.FALSE);
+         waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
+        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+                .validateWaterConnectionRequest(waterConnectionRequest);
+        
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         
         waterConnectionRequest.getConnection().setId(waterConn.getId());
-
-        // Call to service.
-        final Connection connection = waterConnectionService.updateWaterConnection(
+        connection = waterConnectionService.updateWaterConnection(
                 applicationProperties.getUpdateNewConnectionTopicName(),
                 "newconnection-update", waterConnectionRequest);
+        }
         List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
-
-    }
-    @PostMapping(value = "/legacy/_create")
-    @ResponseBody
-    public ResponseEntity<?> legacyConnectionCreate(@RequestBody @Valid final WaterConnectionReq legacyConnectionRequest,
-            final BindingResult errors) {
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-        }
-        logger.info("Legacy WaterConnectionRequest::" + legacyConnectionRequest);
-        if(legacyConnectionRequest.getConnection().getLegacyConsumerNumber() !=null)
-            legacyConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
-        else
-            legacyConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
-        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
-                .validateWaterConnectionRequest(legacyConnectionRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
-        // Call to service.
-        legacyConnectionRequest.getConnection().setAcknowledgementNumber(newWaterConnectionValidator.generateAcknowledgementNumber(legacyConnectionRequest));
-        final Connection connection = waterConnectionService.createWaterConnection(
-                applicationProperties.getCreateLegacyConnectionTopicName(),
-                "legacyconnection-create", legacyConnectionRequest);
-        List<Connection> connectionList = new ArrayList<>();
-        connectionList.add(connection);
-        return getSuccessResponse(connectionList, legacyConnectionRequest.getRequestInfo());
+        
 
     }
     

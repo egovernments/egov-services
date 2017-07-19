@@ -17,6 +17,7 @@ import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.StatusValue;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -40,6 +41,9 @@ public class AssetMasterControllerTest {
 
     @MockBean
     private AssetMasterService assetMasterService;
+    
+    @MockBean
+    private AssetCommonService assetCommonService;
 
     @Test
     public void test_Should_Return_Status() throws Exception {

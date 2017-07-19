@@ -16,7 +16,8 @@ import lombok.Setter;
 public class BudgetSearchEntity extends BudgetEntity {
 	private Integer pageSize;
 	private Integer offset;
-
+	private String sortBy;
+	
 	@Override
 	public Budget toDomain() {
 		Budget budget = new Budget();
@@ -28,6 +29,7 @@ public class BudgetSearchEntity extends BudgetEntity {
 		super.toEntity((Budget) budgetSearch);
 		this.pageSize = budgetSearch.getPageSize();
 		this.offset = budgetSearch.getOffset();
+		this.sortBy = budgetSearch.getSortBy();
 		return this;
 	}
 

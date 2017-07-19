@@ -90,23 +90,8 @@ public class ApplicationProperties {
     @Value("${egov.services.egf_service.voucher.createpath}")
     private String egfServiceVoucherCreatePath;
 
-    @Value("${egov.services.reevaluation.voucher.name}")
-    private String reevaluationVoucherName;
-
-    @Value("${egov.services.reevaluation.voucher.description}")
-    private String reevaluationVoucherDescription;
-
     @Value("${egov.municipality.host}")
     private String municipalityHostName;
-
-    @Value("${egov.services.disposal.voucher.name}")
-    private String disposalVoucherName;
-
-    @Value("${egov.services.disposal.voucher.description}")
-    private String disposalVoucherDescription;
-
-    @Value("${egov.services.asset.enable.vouchergeneration}")
-    private boolean enableVoucherGenration;
 
     @Autowired
     private Environment environment;
@@ -163,14 +148,6 @@ public class ApplicationProperties {
         return egfServiceChartOfAccountsSearchPath;
     }
 
-    public String getReevaluationVoucherName() {
-        return reevaluationVoucherName;
-    }
-
-    public String getReevaluationVoucherDescription() {
-        return reevaluationVoucherDescription;
-    }
-
     public String getEgfServiceChartOfAccountsDetailsSearchPath() {
         return egfServiceChartOfAccountsDetailsSearchPath;
     }
@@ -179,16 +156,5 @@ public class ApplicationProperties {
         return municipalityHostName;
     }
 
-    public String getDisposalVoucherName() {
-        return disposalVoucherName;
-    }
-
-    public String getDisposalVoucherDescription() {
-        return disposalVoucherDescription;
-    }
-
-    public boolean getEnableVoucherGenration() {
-        return enableVoucherGenration;
-    }
 
 }

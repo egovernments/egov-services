@@ -324,21 +324,6 @@ class grievanceView extends Component{
     var date = dat.split("/").join("-");
     req_obj.serviceRequest['updatedDatetime'] = date+' '+time;
 
-    // let checkStatus = currentThis.props.grievanceView.status ? currentThis.props.grievanceView.status : currentThis.state.status;
-    // if(checkStatus === 'FORWARDED'){
-    //   if(currentThis.props.grievanceView.positionId === undefined){
-    //     currentThis.setState({loadingstatus:'hide'});
-    //     currentThis.handleError(translate('pgr.lbl.selectpos'));
-    //     return false;
-    //   }
-    // }else if(checkStatus === 'REGISTERED'){
-    //   if(currentThis.props.grievanceView.positionId){
-    //     currentThis.setState({loadingstatus:'hide'});
-    //     currentThis.handleError('Select the status as FORWARDED. Since you are trying to change the position.');
-    //     return false;
-    //   }
-    // }
-
     //change status, position, ward, location in attribValues
     for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
       if(req_obj.serviceRequest.attribValues[i]['key'] === 'status'){
@@ -612,7 +597,7 @@ class grievanceView extends Component{
                   {translate('core.lbl.location')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.state.childLocationName + " - " + this.state.locationName}
+                  {this.state.childLocationName ? this.state.childLocationName + " - " + this.state.locationName : this.state.locationName}
                 </Col>
                 <Col xs={6} md={3}>
                   {translate('core.lbl.landmark')}

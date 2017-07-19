@@ -24,7 +24,7 @@ Create table egf_budgetdetail(
   createddate timestamp without time zone,
   lastmodifiedby varchar(50),
   lastmodifieddate timestamp without time zone,
-  tenantId varchar(250),
+  tenantId varchar(250) NOT NULL,
   version bigint
 );
 alter table egf_budgetdetail add constraint pk_egf_budgetdetail primary key (id);

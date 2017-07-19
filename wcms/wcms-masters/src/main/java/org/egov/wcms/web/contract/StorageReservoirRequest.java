@@ -69,6 +69,6 @@ public class StorageReservoirRequest {
     public RequestInfo requestInfo;
 
     @JsonProperty("storageReservoir")
-    private final List<StorageReservoir> storageReservoir = new ArrayList<>();
+    private List<StorageReservoir> storageReservoir = new ArrayList<>();
 
 }

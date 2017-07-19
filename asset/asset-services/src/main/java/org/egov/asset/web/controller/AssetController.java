@@ -50,24 +50,22 @@ import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
-import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.DisposalService;
 import org.egov.asset.service.RevaluationService;
 import org.egov.asset.web.validator.AssetValidator;
-import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -98,6 +96,9 @@ public class AssetController {
     @Autowired
     private DisposalService disposalService;
 
+    @Autowired
+    private AssetCommonService assetCommonService;
+
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -105,7 +106,7 @@ public class AssetController {
         logger.debug("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
@@ -124,7 +125,7 @@ public class AssetController {
             final BindingResult bindingResult) {
         logger.debug("create asset:" + assetRequest);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         // TODO Input field validation, it will be a part of phase-2
@@ -140,7 +141,7 @@ public class AssetController {
             @RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
@@ -159,7 +160,7 @@ public class AssetController {
 
         logger.debug("create reevaluate:" + revaluationRequest);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
@@ -176,7 +177,7 @@ public class AssetController {
 
         logger.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         assetValidator.validateRevaluationCriteria(revaluationCriteria);
@@ -193,7 +194,7 @@ public class AssetController {
 
         logger.info("create dispose:" + disposalRequest);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
@@ -212,7 +213,7 @@ public class AssetController {
 
         logger.debug("disposalSearch disposalCriteria:" + disposalCriteria);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         assetValidator.validateDisposalCriteria(disposalCriteria);
@@ -231,7 +232,7 @@ public class AssetController {
 
         logger.debug("getAssetCurrentValue assetId:" + assetId + ",tenantId:" + tenantId);
         if (bindingResult.hasErrors()) {
-            final ErrorResponse errorResponse = populateErrors(bindingResult);
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
@@ -242,20 +243,4 @@ public class AssetController {
         return new ResponseEntity<AssetCurrentValueResponse>(assetCurrentValueResponse, HttpStatus.OK);
     }
 
-    private ErrorResponse populateErrors(final BindingResult errors) {
-        final ErrorResponse errRes = new ErrorResponse();
-
-        final ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-        errRes.setResponseInfo(responseInfo);
-
-        final Error error = new Error();
-        error.setCode(1);
-        error.setDescription("Error while binding request");
-        if (errors.hasFieldErrors())
-            for (final FieldError errs : errors.getFieldErrors())
-                error.getFields().put(errs.getField(), errs.getRejectedValue());
-        errRes.setError(error);
-        return errRes;
-    }
 }

@@ -1,6 +1,6 @@
 var dat = {
 	"wc.create": {
-		"numCols": 3,
+		"numCols": 2,
 		"url": "/connections/v1/_create",
 		"groups": [
 			{
@@ -17,7 +17,7 @@ var dat = {
 							"isDisabled": false,
 							"autoCompleteUrl": "",
 							"autoFillFields": {
-								"NameOfApplicant": "", 
+								"NameOfApplicant": "",
 								"MobileNumber": "",
 								"Email": "",
 								"AadharNumber": ""

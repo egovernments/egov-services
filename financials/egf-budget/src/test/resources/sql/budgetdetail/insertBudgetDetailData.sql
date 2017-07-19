@@ -1,0 +1,2 @@
+insert into egf_budgetdetail (id,anticipatoryAmount,approvedAmount,budgetAvailable,originalAmount,budgetid,budgetgroupid,planningPercent,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)
+values('1',1,1,1,1,'1','1',1500,1,now(),1,now(),'default');

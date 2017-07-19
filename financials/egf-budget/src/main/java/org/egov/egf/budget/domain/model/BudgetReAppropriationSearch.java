@@ -13,4 +13,5 @@ import lombok.Setter;
 public class BudgetReAppropriationSearch extends BudgetReAppropriation {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

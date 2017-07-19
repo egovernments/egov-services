@@ -1,4 +1,4 @@
-package org.egov.egf.budget.web.contract.repository;
+package org.egov.egf.budget.web.repository;
 
 import org.egov.egf.budget.web.contract.Boundary;
 import org.egov.egf.budget.web.contract.BoundaryResponse;

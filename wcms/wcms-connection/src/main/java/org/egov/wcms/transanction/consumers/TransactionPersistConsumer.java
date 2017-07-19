@@ -65,7 +65,8 @@ public class TransactionPersistConsumer {
     @Autowired
     private WaterConnectionService waterConnectionService;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = { "${kafka.topics.newconnection.create.name}",
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics =
+        { "${kafka.topics.newconnection.create.name}","${kafka.topics.newconnection.update.name}",
             "${kafka.topics.legacyconnection.create.name}" })
 
     public void listen(final ConsumerRecord<String, String> record) {
@@ -74,9 +75,12 @@ public class TransactionPersistConsumer {
         try {
             if (record.topic().equals(applicationProperties.getCreateNewConnectionTopicName()))
                 waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
-            if (record.topic().equals(applicationProperties.getCreateLegacyConnectionTopicName()))
+            if (record.topic().equals(applicationProperties.getUpdateNewConnectionTopicName()))
+                waterConnectionService.update(objectMapper.readValue(record.value(), WaterConnectionReq.class));
+    
+          /*  if (record.topic().equals(applicationProperties.getCreateLegacyConnectionTopicName()))
                 waterConnectionService.create(objectMapper.readValue(record.value(), WaterConnectionReq.class));
-        } catch (final IOException e) {
+     */   } catch (final IOException e) {
             LOGGER.error("Exception Encountered : " + e);
         }
     }

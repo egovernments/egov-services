@@ -73,7 +73,7 @@ public class EstimationCharge {
     private double pipelineToHomeDistance;
 
     @NotNull
-    private double estimationCharges;;
+    private double estimationCharges;
 
     @NotNull
     private double supervisionCharges;

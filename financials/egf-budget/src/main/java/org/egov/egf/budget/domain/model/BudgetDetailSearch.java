@@ -13,4 +13,5 @@ import lombok.Setter;
 public class BudgetDetailSearch extends BudgetDetail {
 	private Integer pageSize;
 	private Integer offset;
+	private String sortBy;
 }

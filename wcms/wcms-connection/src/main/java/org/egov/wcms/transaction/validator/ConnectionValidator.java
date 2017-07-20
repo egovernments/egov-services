@@ -197,8 +197,8 @@ public class ConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if(waterConnectionRequest.getConnection().getProperty()!=null && 
-                waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
+        if(waterConnectionRequest.getConnection().getProperty()!=null && !waterConnectionRequest.getConnection().getProperty().getPropertyidentifier().equals("")
+               && waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
         {
              PropertyResponse propResp=  restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
             if(propResp==null && propResp.getProperties()!=null && propResp.getProperties().isEmpty()){
@@ -328,14 +328,14 @@ public class ConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-      /*  if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
+        if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsTranasanctionConstants.TREATPLANT_INVALID_CODE)
-                    .message(WcmsTranasanctionConstants.TREATPLANT_INVALID_FIELD_NAME)
-                    .field(WcmsTranasanctionConstants.TREATPLANT_INVALID_ERROR_MESSAGE)
+                    .code(WcmsConnectionConstants.TREATPLANT_INVALID_CODE)
+                    .message(WcmsConnectionConstants.TREATPLANT_INVALID_FIELD_NAME)
+                    .field(WcmsConnectionConstants.TREATPLANT_INVALID_ERROR_MESSAGE)
                     .build();
             errorFields.add(errorField);
-        }*/
+        }
         if (restConnectionService.getSupplyTypeByName(waterConnectionRequest) .getSupplytypes().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConnectionConstants.SUPPLYTYPE_INVALID_CODE)

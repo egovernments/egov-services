@@ -3,6 +3,8 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/connections/v1/_create",
 		"useTimestamp": true,
+		"tenantIdRequired": false,
+		"objectName": "connection",
 		"groups": [
 			{
 				"label": "wc.create.groups.applicantDetails.title",

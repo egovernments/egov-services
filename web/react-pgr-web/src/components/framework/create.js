@@ -49,9 +49,11 @@ class Report extends Component {
 
       formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
-    
+
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, "Success!");
+      self.props.initData();
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
@@ -125,8 +127,8 @@ const mapDispatchToProps = dispatch => ({
   setAtionName:(actionName)=>{
     dispatch({type:"SET_ACTION_NAME",actionName})
   },
-  handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
-    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
+  handleChange:(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
+    dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});

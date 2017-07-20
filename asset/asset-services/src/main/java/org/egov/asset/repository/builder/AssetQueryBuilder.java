@@ -289,4 +289,7 @@ public class AssetQueryBuilder {
             + " WHERE code = ? and tenantid = ?";
     public final static String ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?"
             + " WHERE code = ? and tenantid = ?";
+
+    public final static String YEARWISEDEPRECIATIONDELETEQUERY = "DELETE FROM egasset_yearwisedepreciation ywd where "
+            + "ywd.finanfinancialyear = ? and ywd.assetid = ? and ywd.tenantid = ?";
 }

@@ -261,23 +261,59 @@ public class AssetRepository {
     private void updateDepreciationData(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
         final List<Asset> assets = findAssetByCode(asset.getCode());
-        if (assets != null && !assets.isEmpty()) {
-            final Asset oldAsset = assets.get(0);
-            if (!oldAsset.getEnableYearWiseDepreciation() && asset.getEnableYearWiseDepreciation()) {
-                final String queryForPrevDepreciationCheck = AssetQueryBuilder.DATACHECKINYEARWISEDEPRECIATION;
-                final List<YearWiseDepreciation> yearWiseDepreciations = jdbcTemplate.query(
-                        queryForPrevDepreciationCheck, new Long[] { oldAsset.getId() }, yearWiseDepreciationRowMapper);
-
-                if (yearWiseDepreciations != null && yearWiseDepreciations.size() >= 1) {
-                    updateYearWiseDepreciation(assetRequest);
-                    updateAssetDepreciationRate(asset, false);
-                } else {
-                    saveYearWiseDepreciation(assetRequest);
-                    updateAssetDepreciationRate(asset, false);
-                }
+        final Asset oldAsset = assets.get(0);
+        if (!oldAsset.getEnableYearWiseDepreciation() && asset.getEnableYearWiseDepreciation()) {
+            final String queryForPrevDepreciationCheck = AssetQueryBuilder.DATACHECKINYEARWISEDEPRECIATION;
+            final List<YearWiseDepreciation> yearWiseDepreciations = jdbcTemplate.query(queryForPrevDepreciationCheck,
+                    new Long[] { oldAsset.getId() }, yearWiseDepreciationRowMapper);
+            if (!yearWiseDepreciations.isEmpty()) {
+                validateYearWiseDepreciations(yearWiseDepreciations, assetRequest);
+                updateAssetDepreciationRate(asset, false);
+            } else {
+                saveYearWiseDepreciation(assetRequest);
+                updateAssetDepreciationRate(asset, false);
             }
-            if (oldAsset.getEnableYearWiseDepreciation() && !asset.getEnableYearWiseDepreciation())
-                updateAssetDepreciationRate(asset, true);
+        }
+        if (oldAsset.getEnableYearWiseDepreciation() && !asset.getEnableYearWiseDepreciation())
+            updateAssetDepreciationRate(asset, true);
+    }
+
+    private void validateYearWiseDepreciations(final List<YearWiseDepreciation> oldYearWiseDepr,
+            final AssetRequest assetRequest) {
+        final List<YearWiseDepreciation> yearWiseDepreciations = assetRequest.getAsset().getYearWiseDepreciation();
+        if (oldYearWiseDepr.size() != yearWiseDepreciations.size()) {
+            logger.info("adding and updating year wise depreciations");
+            addUpdateYearWiseDepreciation(oldYearWiseDepr, yearWiseDepreciations, assetRequest);
+        } else {
+            logger.info("updating year wise depreciations");
+            updateYearWiseDepreciation(assetRequest);
+        }
+    }
+
+    private void addUpdateYearWiseDepreciation(final List<YearWiseDepreciation> oldYearWiseDepr,
+            final List<YearWiseDepreciation> yearWiseDepreciations, final AssetRequest assetRequest) {
+        final List<YearWiseDepreciation> iywds = new ArrayList<YearWiseDepreciation>();
+        final List<YearWiseDepreciation> uywds = new ArrayList<YearWiseDepreciation>();
+        for (final YearWiseDepreciation ywd : yearWiseDepreciations)
+            for (final YearWiseDepreciation oldYwd : oldYearWiseDepr) {
+                final boolean checkForNewData = ywd.getFinancialYear().equals(oldYwd.getFinancialYear())
+                        && ywd.getAssetId().equals(oldYwd.getAssetId());
+                if (!checkForNewData)
+                    iywds.add(ywd);
+                if (checkForNewData && !ywd.getDepreciationRate().equals(oldYwd.getDepreciationRate()))
+                    uywds.add(ywd);
+            }
+        logger.debug("year wise depreciations will be inserted :: " + iywds);
+        logger.debug("year wise depreciations will be updated :: " + uywds);
+        if (!iywds.isEmpty()) {
+            assetRequest.getAsset().setYearWiseDepreciation(iywds);
+            logger.debug("Asset Request for inserting year wise depreciations :: " + assetRequest);
+            saveYearWiseDepreciation(assetRequest);
+        }
+        if (!uywds.isEmpty()) {
+            assetRequest.getAsset().setYearWiseDepreciation(uywds);
+            logger.debug("Asset Request for updating year wise depreciations :: " + assetRequest);
+            updateYearWiseDepreciation(assetRequest);
         }
 
     }
@@ -288,7 +324,7 @@ public class AssetRepository {
             depreciationRateUpdateQuery = AssetQueryBuilder.ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY;
         else
             depreciationRateUpdateQuery = AssetQueryBuilder.ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY;
-        logger.info("Asset Depreciation Rate Update Query : " + depreciationRateUpdateQuery);
+        logger.debug("Asset Depreciation Rate Update Query : " + depreciationRateUpdateQuery);
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(asset.getEnableYearWiseDepreciation());
         if (changeDepRateInAsset)
@@ -304,11 +340,11 @@ public class AssetRepository {
         final Asset asset = assetRequest.getAsset();
         final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
+        logger.debug("Year Wise Details Insert Query ::" + AssetQueryBuilder.BATCHINSERTQUERY);
         jdbcTemplate.batchUpdate(AssetQueryBuilder.BATCHINSERTQUERY, new BatchPreparedStatementSetter() {
 
             @Override
             public void setValues(final PreparedStatement ps, final int index) throws SQLException {
-                // TODO Auto-generated method stub
                 final YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
                 ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
                 ps.setString(2, yearWiseDepreciation.getFinancialYear());
@@ -323,7 +359,6 @@ public class AssetRepository {
 
             @Override
             public int getBatchSize() {
-                // TODO Auto-generated method stub
                 return yearWiseDepreciations.size();
             }
         });
@@ -334,11 +369,11 @@ public class AssetRepository {
         final Asset asset = assetRequest.getAsset();
         final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
+        logger.debug("Year Wise Details Update Query ::" + AssetQueryBuilder.BATCHUPDATEQUERY);
         jdbcTemplate.batchUpdate(AssetQueryBuilder.BATCHUPDATEQUERY, new BatchPreparedStatementSetter() {
 
             @Override
             public void setValues(final PreparedStatement ps, final int index) throws SQLException {
-                // TODO Auto-generated method stub
                 final YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
                 ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
                 ps.setObject(2, yearWiseDepreciation.getUsefulLifeInYears());
@@ -353,7 +388,6 @@ public class AssetRepository {
 
             @Override
             public int getBatchSize() {
-                // TODO Auto-generated method stub
                 return yearWiseDepreciations.size();
             }
         });

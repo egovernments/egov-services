@@ -84,4 +84,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UiSelectField);
+export default connect(mapStateToProps, mapDispatchToProps)(UiMultiSelectField);

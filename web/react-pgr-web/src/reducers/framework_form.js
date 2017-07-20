@@ -113,7 +113,7 @@ export default(state = defaultState, action) => {
     case "HANDLE_CHANGE_VERSION_TWO":
       validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.property, action.value, state.validationData,action.requiredErrMsg,action.patternErrMsg);
-      var currentState=state;
+      var currentState= Object.assign({}, state);
       // console.log(currentState);
       _.set(currentState.form,action.property,action.value);
       currentState.fieldErrors= {
@@ -123,7 +123,7 @@ export default(state = defaultState, action) => {
       currentState.validationData=validationData.validationData;
       currentState.isFormValid=validationData.isFormValid;
 
-      // console.log(currentState);
+      //console.log(currentState);
       return currentState;
       // return {
       //   ...state,

@@ -46,8 +46,8 @@ class Report extends Component {
     e.preventDefault();
   }
 
-  getVal = () => {
-    return "";
+  getVal = (path) => {
+    return _.get(this.props.formData, path);
   }
 
   // componentDidUpdate()
@@ -67,9 +67,9 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName,formData}=this.props;
+    let {metaData, moduleName, actionName, formData}=this.props;
     let {create,handleChange, getVal}=this;
-    console.log(formData);
+    console.log("formData");
     // console.log(!_.isEmpty(metaData) && metaData);
     // console.log(moduleName && moduleName);
     // console.log(actionName && actionName);

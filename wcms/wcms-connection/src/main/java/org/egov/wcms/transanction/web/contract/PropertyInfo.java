@@ -1,5 +1,9 @@
 package org.egov.wcms.transanction.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,7 +32,13 @@ public class PropertyInfo {
 	@JsonProperty("upicNumber")
 	@Size(min = 6, max = 128)
 	private String upicNumber = null;
-
+	@JsonProperty("boundary")
+        @NotNull
+        private PropertyLocation boundary = null;
 	
 
+        @JsonProperty("owners")
+        @Valid
+        @NotNull
+        private List<OwnerInfo> owners = new ArrayList<OwnerInfo>();
 }

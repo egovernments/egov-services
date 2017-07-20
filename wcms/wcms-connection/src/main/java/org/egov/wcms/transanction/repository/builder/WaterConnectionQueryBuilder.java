@@ -76,6 +76,32 @@ public class WaterConnectionQueryBuilder {
         return "INSERT INTO egwtr_meter(metermake,connectionid,meterreading,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
                 + " values(nextval('seq_egwtr_meter'),?,?,?,?,?,?,?)";
     }
+    public static String insertEstimationCharge() {
+
+        return "INSERT INTO egwtr_estimationcharge("
+                + "id,connectionid,existingdistributionpipeline,"
+                + "pipelinetohomedistance,estimationcharges,supervisioncharges,"
+                + "materialcharges,tenantid,createdby,lastmodifiedby,createdtime,lastmodifiedtime)"
+                + " values(nextval('seq_egwtr_estimationcharge'),?,?,?,?,?,?,?,"
+                + "?,?,?,?)";
+    }
+    public static String updateEstimationCharge() {
+
+        return "Update egwtr_estimationcharge Set "
+                + " existingdistributionpipeline=?"
+                + "pipelinetohomedistance=?,estimationcharges=?,supervisioncharges=?,"
+                + "materialcharges=?,tenantid=?,lastmodifiedby=?,lastmodifiedtime=? where id=?";
+                
+    }
+    public static String insertMaterial() {
+
+        return "INSERT INTO egwtr_material("
+                + "id,estimationchargeid,name,"
+                + "quantity,size,amountdetails,"
+                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
+                + " values(nextval('seq_egwtr_material'),?,?,?,?,?,?,?,"
+                + "?,?,?)";
+    }
 
     public static String insertConnectionQuery() {
 

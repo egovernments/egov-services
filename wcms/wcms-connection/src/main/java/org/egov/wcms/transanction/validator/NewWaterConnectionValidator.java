@@ -46,6 +46,7 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transanction.util.WcmsTranasanctionConstants;
 import org.egov.wcms.transanction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transanction.web.contract.PipeSizeResponseInfo;
+import org.egov.wcms.transanction.web.contract.PropertyResponse;
 import org.egov.wcms.transanction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transanction.web.errorhandlers.Error;
 import org.egov.wcms.transanction.web.errorhandlers.ErrorResponse;
@@ -196,10 +197,17 @@ public class NewWaterConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        /*if(waterConnectionRequest.getConnection().getProperty()!=null && 
+        if(waterConnectionRequest.getConnection().getProperty()!=null && 
                 waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
         {
-            restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
+             PropertyResponse propResp=  restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
+            if(propResp==null && propResp.getProperties()!=null && propResp.getProperties().isEmpty()){
+                final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.
+                        PROPERTY_IDENTIFIER_CODE)
+                        .message(WcmsTranasanctionConstants.PROPERTY_CATEGORY_INVALID_ERROR_MESSAGE)
+                        .field(WcmsTranasanctionConstants.PROPERTY_CATEGORY_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+               }
         }
         isRequestValid = restConnectionService.validatePropertyCategoryMapping(waterConnectionRequest);
         if (!isRequestValid) {
@@ -216,7 +224,7 @@ public class NewWaterConnectionValidator {
                     .message(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_ERROR_MESSAGE)
                     .field(WcmsTranasanctionConstants.PROPERTY_USAGE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        }*/
+        }
 
         /*
          * if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) { isRequestValid =

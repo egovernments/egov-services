@@ -63,7 +63,7 @@ public class Material {
     private long id;
 
     @NotNull
-    private long connectionId;
+    private long estimationChargeId;
 
     @NotNull
     private String name;

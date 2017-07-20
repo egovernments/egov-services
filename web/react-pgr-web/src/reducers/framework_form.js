@@ -123,7 +123,6 @@ export default(state = defaultState, action) => {
 
       currentState.validationData=validationData.validationData;
       currentState.isFormValid=validationData.isFormValid;
-
       return currentState;
       // return {
       //   ...state,

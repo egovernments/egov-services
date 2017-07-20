@@ -49,7 +49,7 @@ class Report extends Component {
 
       formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
-    return console.log(formData);
+    
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
     }, function(err) {

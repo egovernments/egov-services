@@ -137,6 +137,12 @@ public class ConfigurationManager {
     @Value("${id.demandBillFormat}")
     private String demandBillGenFormatServiceTopic;
     
+    @Value("${egov.services.finance_service.hostname}")
+    private String financeServiceHostName; 
+    
+    @Value("${egov.services.finance_service.searchpath}")
+    private String financeServiceSearchPath; 
+    
     @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
     private String waterMasterPropCategoryMappingTopic;
     

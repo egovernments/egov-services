@@ -40,10 +40,12 @@
 package org.egov.wcms.transaction.validator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
@@ -51,6 +53,8 @@ import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
 import org.egov.wcms.transaction.web.contract.CategoryResponseInfo;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
+import org.egov.wcms.transaction.web.contract.FinYearReq;
+import org.egov.wcms.transaction.web.contract.FinYearRes;
 import org.egov.wcms.transaction.web.contract.IdGenErrorRes;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyCategoryResponseInfo;
@@ -419,6 +423,41 @@ public class RestConnectionService {
         return ackNumber;
     }
     
+    public String getFinancialYear(final String tenantId) { 
+            StringBuilder url = new StringBuilder();
+            String year = getFiscalYear();
+            String finYear = null;
+            url.append(configurationManager.getFinanceServiceHostName())
+                    .append(configurationManager.getFinanceServiceSearchPath());
+            url.append("?tenantId=" + tenantId);
+            url.append("&finYearRange=" + year);
+            final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+            FinYearReq finYearReq = new FinYearReq(); 
+            finYearReq.setRequestInfo(requestInfo);
+            String response = null;
+            try {
+                response = new RestTemplate().postForObject(url.toString(), finYearReq, String.class);
+            } catch (Exception ex) {
+                throw new FinYearException("Error While obtaining Financial Year", "Error While obtaining Financial Year",
+                        requestInfo);
+            }
+            Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+            IdGenErrorRes errorResponse = gson.fromJson(response, IdGenErrorRes.class);
+            FinYearRes finYearResponse = gson.fromJson(response, FinYearRes.class);
+            if (!errorResponse.getErrors().isEmpty()) {
+                throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number",
+                        requestInfo);
+            } else if (finYearResponse.getResponseInfo() != null) {
+                if (finYearResponse.getResponseInfo().getStatus().toString()
+                        .equalsIgnoreCase("SUCCESSFUL")) {
+                    if (finYearResponse.getFinancialYear() != null && !finYearResponse.getFinancialYear().isEmpty())
+                        finYear = finYearResponse.getFinancialYear();
+                }
+            }
+
+            return finYear;
+    }
+    
     public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic) {
         StringBuilder url = new StringBuilder();
         String ackNumber = null;
@@ -453,9 +492,19 @@ public class RestConnectionService {
                             ackNumber = idResponse.getIdResponses().get(0).getId();
                 }
         }
+        
+        if(!nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
+        	//Enable the below method call to get financial year from the Finance Service
+            //String finYear = getFinancialYear(tenantId);
+            String finYear = getFiscalYear();
+            if(null!=finYear && !finYear.isEmpty()) { 
+            	return tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
+            }	
+        }
 
         return tenantId.substring(0,4).concat(ackNumber);
     }
+    
     public List<ErrorResponse> populateErrors() {
         final ErrorResponse errRes = new ErrorResponse();
         final Error error = new Error();
@@ -465,5 +514,16 @@ public class RestConnectionService {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         errorResponses.add(errRes);
         return errorResponses;
+    }
+    
+    private String getFiscalYear() { 
+    	Calendar calendarDate; 
+    	final int FIRST_FISCAL_MONTH = Calendar.MARCH;
+    	calendarDate = Calendar.getInstance();
+    	int month = calendarDate.get(Calendar.MONTH);
+        int year = calendarDate.get(Calendar.YEAR);
+        int value = (month >= FIRST_FISCAL_MONTH) ? year : year - 1;
+        String finYear = Integer.toString(value)+ "-"+Integer.toString(value+1).substring(2, 4);
+        return finYear;
     }
 }

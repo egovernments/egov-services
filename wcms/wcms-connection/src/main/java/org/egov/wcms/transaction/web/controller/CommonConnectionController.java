@@ -106,6 +106,8 @@ public class CommonConnectionController {
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
     
+    // This is just an end point to check the working of various ID Generation. 
+    // The internal methods will be used in different sections of API and this API will be removed later
     @RequestMapping(value = "/_generateIds")
     public ResponseEntity<?> getIDGen(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {

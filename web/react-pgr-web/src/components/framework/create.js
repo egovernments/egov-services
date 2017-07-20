@@ -9,6 +9,7 @@ import wcSpecs from './specs/wc/wc';
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
+import UiButton from './components/UiButton';
 
 class Report extends Component {
 
@@ -46,6 +47,10 @@ class Report extends Component {
     e.preventDefault();
   }
 
+  getVal = (path) => {
+    return _.get(this.props.formData, path);
+  }
+
   // componentDidUpdate()
   // {
   //     // this.initData();
@@ -63,9 +68,8 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName,formData, getVal}=this.props;
-    let {create,handleChange}=this;
-    console.log(formData);
+    let {metaData, moduleName, actionName, formData}=this.props;
+    let {create,handleChange, getVal}=this;
     // console.log(!_.isEmpty(metaData) && metaData);
     // console.log(moduleName && moduleName);
     // console.log(actionName && actionName);
@@ -75,8 +79,12 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} getVal={getVal} fieldErrors={{}} formData={formData}/>}
-          <RaisedButton type="submit" disabled={false}  label="Create" />
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={{}}/>}
+          <div style={{"textAlign": "center"}}>
+            <br/>
+            <UiButton item={{"label": "Create", "uiType":"submit"}} handler={""} ui="google"/>
+            <br/>
+          </div>
         </form>
       </div>
     );
@@ -112,9 +120,6 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
     dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
-  },
-  getVal: () => {
-
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

@@ -152,7 +152,7 @@ public class ReceiptControllerTest {
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
-		return Receipt.builder().tenantId("default").bill(billInfo).build();
+		return Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
 	}
 
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {

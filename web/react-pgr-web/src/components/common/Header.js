@@ -128,7 +128,7 @@ class Header extends Component {
 
   componentDidMount()
   {
-	  
+
 	  console.log(this.props.actionList);
     //When api ready asssign api response to menuItems
     let menuItems=[{
@@ -808,7 +808,7 @@ class Header extends Component {
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
           {/*<div id="menu"></div>*/}
-          {this.props.actionList.length && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
+          {this.props.actionList && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}
         </Drawer>
 
         {/*

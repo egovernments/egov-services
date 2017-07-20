@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CollectionServiceConstants {
-	
+
 	public static final String INVALID_RECEIPT_REQUEST = "Receipt create request is invalid";
 	public static final String INVALID_DEPT_REQUEST = "Get departments request is invalid";
 	public static final String INVALID_DESIG_REQUEST = "Get designation request is invalid";
@@ -52,42 +52,39 @@ public class CollectionServiceConstants {
 	public static final String INVALID_REQ_DESC = "Some fields entered are either syntactically or logically incorrect";
 	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
 
-
-
-	
 	public static final String TENANT_ID_MISSING_CODE = "egcl_001";
 	public static final String TENANT_ID_MISSING_FIELD = "tenantId";
 	public static final String TENANT_ID_MISSING_MESSAGE = "Tenant id is mising";
-	
+
 	public static final String PAYEE_NAME_MISSING_CODE = "egcl_002";
 	public static final String PAYEE_NAME_MISSING_FIELD = "payeeName";
 	public static final String PAYEE_NAME_MISSING_MESSAGE = "Payee Name is mising";
-	
+
 	public static final String PAID_BY_MISSING_CODE = "egcl_003";
 	public static final String PAID_BY_MISSING_FIELD = "paidBy";
 	public static final String PAID_BY_MISSING_MESSAGE = "Paid by id is mising";
-	
+
 	public static final String RECEIPT_TYPE_MISSING_CODE = "egcl_004";
 	public static final String RECEIPT_TYPE_MISSING_FIELD = "receiptType";
 	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type can only be: Adhoc, BillBased, Challan";
-	
+
 	public static final String RECEIPT_DATE_MISSING_CODE = "egcl_005";
 	public static final String RECEIPT_DATE_MISSING_FIELD = "receiptDate";
 	public static final String RECEIPT_DATE_MISSING_MESSAGE = "Receipt Date is mising";
-	
+
 	public static final String BD_CODE_MISSING_CODE = "egcl_006";
 	public static final String BD_CODE_MISSING_FIELD = "businessService";
 	public static final String BD_CODE_MISSING_MESSAGE = "Business Details Code is mising";
-	
+
 	public static final String COA_MISSING_CODE = "egcl_007";
 	public static final String COA_MISSING_FIELD = "glcode";
 	public static final String COA_MISSING_MESSAGE = "Chart of Account Code/ GL Code is mising";
-	
+
 	public static final String PURPOSE_MISSING_CODE = "egcl_008";
 	public static final String PURPOSE_MISSING_FIELD = "purpose";
 	public static final String PURPOSE_MISSING_MESSAGE = "Purpose can only be: ARREAR_AMOUNT, CURRENT_AMOUNT, ADVANCE_AMOUNT"
 			+ "ARREAR_LATEPAYMENT_CHARGES, CURRENT_LATEPAYMENT_CHARGES, CHEQUE_BOUNCE_PENALTY, REBATE, OTHERS";
-	
+
 	public static final String COLLECTIONTYPE_MISSING_CODE = "egcl_009";
 	public static final String COLLECTIONTYPE_MISSING_FIELD = "collectionType";
 	public static final String COLLECTIONTYPE_MISSING_MESSAGE = "Collection type can only be: Counter, Field, Online";
@@ -95,21 +92,13 @@ public class CollectionServiceConstants {
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_CODE = "egcl_010";
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_FIELD = "collectionModesNotAllowed";
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_MESSAGE = "Collection Modes Not Allowed is mising";
-	
+
 	public static final String COLL_ID_NAME = "collection.receiptno";
-	public static final String COLL_ID_FORMAT = "GN-CL-[yyyy/MM/dd]-[SEQ_COLL_RCPT_NUM]"; // FIXME:  Actual format - [MM/Fin-Yr/6-digit]
-																						
+	//TODO: FIXME: Actual format - [MM/Fin-Yr/6-digit]
+	public static final String COLL_ID_FORMAT = "GN-CL-[yyyy/MM/dd]-[SEQ_COLL_RCPT_NUM]"; 
+
 	public static final String STATUS_MISSING_CODE = "egcl_011";
 	public static final String STATUS_MISSING_MESSAGE = "status";
-	public static final String STATUS_MISSING_FIELD = "Status is missing"; 
-
-
-
-
-
-
-
-
-
+	public static final String STATUS_MISSING_FIELD = "Status is missing";
 
 }

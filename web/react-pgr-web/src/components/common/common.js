@@ -25,7 +25,9 @@ var localationData={
   "wc.create.groups.approvalDetails.fields.department":"Approver Department",
   "wc.create.groups.approvalDetails.fields.designation":"Approver Designation",
   "wc.create.groups.approvalDetails.fields.approver":"Approver  ",
-  "wc.create.groups.approvalDetails.fields.comments":"Comments"
+  "wc.create.groups.approvalDetails.fields.comments":"Comments",
+  "wc.create.categorytype*":"Category Type*",
+  "wc.create.categorytype.title":"Create Category Type"
 }
 
 export function translate(locale_text){

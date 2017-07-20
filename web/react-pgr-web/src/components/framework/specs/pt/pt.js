@@ -8,9 +8,9 @@ var dat = {
 				"name": "createNewProperty",
 				"fields": [
 					{
-						"name": "SourceType",
-						"jsonPath": "connection.sourceType",
-						"label": "pt.create.groups.connectionDetails.sourceType",
+						"name": "propertyType",
+						"jsonPath": "propertyDetail.propertyType",
+						"label": "Category of ownership",
 						"pattern": "",
 						"type": "singleValueList",
 						"isRequired": false,
@@ -19,129 +19,192 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
+					{
+						"name": "apartment",
+						"jsonPath": "propertyDetail.apartment",
+						"label": "Apartment/ Complex name",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": false,
+						"isDisabled": false,
+						"url": "",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "department",
+						"jsonPath": "propertyDetail.department",
+						"label": "Department",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": false,
+						"isDisabled": false,
+						"url": "/pt-property/property/departments/_search?tenantId=default|$..id|$..name",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+				]
+			},
+			{
+				"label": "Property Address",
+				"name": "propertyAddress",
+				"fields": [
 						{
-							"name": "NameOfApplicant",
-							"jsonPath": "connection.asset.nameOfApplicant",
-							"label": "pt.create.groups.applicantDetails.nameOfApplicant",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": true,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "MobileNumber",
-							"jsonPath": "connection.asset.mobileNumber",
-							"label": "pt.create.groups.applicantDetails.mobileNumber",
-							"pattern": "",
-							"type": "number",
-							"isRequired": false,
-							"isDisabled": true,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "Email",
-							"jsonPath": "connection.asset.email",
-							"label": "pt.create.groups.applicantDetails.email",
-							"pattern": "",
-							"type": "email",
-							"isRequired": false,
-							"isDisabled": true,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "AadharNumber",
-							"jsonPath": "connection.asset.adharNumber",
-							"label": "pt.create.groups.applicantDetails.adharNumber",
+							"name": "",
+							"jsonPath": "",
+							"label": "Reference property number",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": true,
+							"isDisabled": false,
+							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
 						{
-							"name": "Locality",
-							"jsonPath": "connection.asset.locality",
-							"label": "pt.create.groups.applicantDetails.locality",
+							"name": "",
+							"jsonPath": "",
+							"label": "Appartment/Complex name",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Locality *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Election ward *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Zone No. *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Ward No. *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Block No.",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Street",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Revenue circle *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Door No. *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Pin",
 							"pattern": "",
 							"type": "number",
 							"isRequired": false,
-							"isDisabled": true,
+							"isDisabled": false,
+							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
 						{
-							"name": "Address",
-							"jsonPath": "connection.asset.address",
-							"label": "pt.create.groups.applicantDetails.address",
+							"name": "",
+							"jsonPath": "",
+							"label": "Is correspondence address different from property address?",
 							"pattern": "",
-							"type": "textarea",
+							"type": "checkbox",
 							"isRequired": false,
-							"isDisabled": true,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "Zone",
-							"jsonPath": "connection.asset.zone",
-							"label": "pt.create.groups.applicantDetails.zone",
-							"pattern": "",
-							"type": "textarea",
-							"isRequired": false,
-							"isDisabled": true,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "adharNumber",
-							"jsonPath": "connection.asset.adharNumber",
-							"label": "No of floors",
-							"pattern": "",
-							"type": "number",
-							"isRequired": false,
-							"isDisabled": true,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "propertyTaxDue",
-							"jsonPath": "connection.property.propertyTaxDue",
-							"label": "pt.create.groups.applicantDetails.propertyTaxDue",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": true,
+							"isDisabled": false,
+							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
 				]
 			},
 			{
-				"label": "pt.create.groups.connectionDetails.title",
-				"name": "connectionDetails",
+				"label": "Amenities",
+				"name": "Amenities",
 				"fields": [
 						{
-							"name": "ConnectionType",
-							"jsonPath": "connection.connectionType",
-							"label": "pt.create.groups.connectionDetails.connectionType",
+							"name": "",
+							"jsonPath": "",
+							"label": "Lift",
 							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": true,
-							"isDisabled": false,
-							"url": "",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "SourceType",
-							"jsonPath": "connection.sourceType",
-							"label": "pt.create.groups.connectionDetails.sourceType",
-							"pattern": "",
-							"type": "singleValueList",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
@@ -149,11 +212,11 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "SourceType",
-							"jsonPath": "connection.sourceType",
-							"label": "pt.create.groups.connectionDetails.sourceType",
+							"name": "",
+							"jsonPath": "",
+							"label": "Toilet",
 							"pattern": "",
-							"type": "singleValueList",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
@@ -161,11 +224,11 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "PropertyType",
-							"jsonPath": "connection.property.propertyType",
-							"label": "pt.create.groups.connectionDetails.propertyType",
+							"name": "",
+							"jsonPath": "",
+							"label": "water tap",
 							"pattern": "",
-							"type": "singleValueList",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
@@ -173,85 +236,124 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "CategoryType",
-							"jsonPath": "connection.categoryType",
-							"label": "pt.create.groups.connectionDetails.categoryType",
+							"name": "",
+							"jsonPath": "",
+							"label": "electricity",
 							"pattern": "",
-							"type": "singleValueList",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
-						},
-						{
-							"name": "UsageType",
-							"jsonPath": "connection.property.usageType",
-							"label": "pt.create.groups.connectionDetails.usageType",
+						},{
+							"name": "",
+							"jsonPath": "",
+							"label": "Attached bathroom",
 							"pattern": "",
-							"type": "singleValueList",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
-						},
-						{
-							"name": "hscPipeSizeType",
-							"jsonPath": "connection.hscPipeSizeType",
-							"label": "pt.create.groups.connectionDetails.hscPipeSizeType",
+						},{
+							"name": "",
+							"jsonPath": "",
+							"label": "Cable connection",
 							"pattern": "",
-							"type": "singleValueList",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
-						},
-						{
-							"name": "sumpCapacity",
-							"jsonPath": "connection.sumpCapacity",
-							"label": "pt.create.groups.connectionDetails.fields.sumpCapacity",
+						},{
+							"name": "",
+							"jsonPath": "",
+							"label": "Water harvesting",
 							"pattern": "",
-							"type": "number",
+							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "numberOfPersons",
-							"jsonPath": "connection.numberOfPersons",
-							"label": "pt.create.groups.connectionDetails.fields.numberOfPersons",
-							"pattern": "",
-							"type": "number",
-							"isRequired": false,
-							"isDisabled": false,
+							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
 				]
-			},
-			{
-				"label": "pt.create.groups.approvalDetails.title",
-				"name": "approvalDetails",
+			}
+			,{
+				"label": "assessmentDetails",
+				"name": "Assessment details",
 				"fields": [
 						{
-							"name": "department",
-							"jsonPath": "connection.workflowDetails.department",
-							"label": "pt.create.groups.approvalDetails.fields.department",
+							"name": "",
+							"jsonPath": "",
+							"label": "Reason for Creation *",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Property Type *",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Property Sub-type *",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},{
+							"name": "",
+							"jsonPath": "",
+							"label": "Extent of Site (Sq. Mtrs) *",
+							"pattern": "",
+							"type": "checkbox",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
+				]
+			},{
+				"label": "workflow",
+				"name": "Workflow",
+				"fields": [
+						{
+							"name": "departmentName",
+							"jsonPath": "",
+							"label": "Department Name",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "",
+							"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
 						{
 							"name": "designation",
 							"jsonPath": "connection.workflowDetails.designation",
-							"label": "pt.create.groups.approvalDetails.fields.designation",
+							"label": "Designation Name",
 							"pattern": "",
 							"type": "singleValueList",
 							"isRequired": false,
@@ -260,22 +362,11 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
-							"name": "approver",
-							"jsonPath": "connection.workflowDetails.approver",
-							"label": "pt.create.groups.approvalDetails.fields.approver",
+							"name": "",
+							"jsonPath": "",
+							"label": "Approver Name",
 							"pattern": "",
 							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "comments",
-							"jsonPath": "connection.workflowDetails.comments",
-							"label": "pt.create.groups.approvalDetails.fields.comments",
-							"pattern": "",
-							"type": "textarea",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -288,3 +379,8 @@ var dat = {
 }
 
 export default dat;
+
+
+//doubts
+
+//Reference property number

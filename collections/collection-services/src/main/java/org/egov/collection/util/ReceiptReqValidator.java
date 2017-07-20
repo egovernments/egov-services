@@ -51,21 +51,21 @@ public class ReceiptReqValidator {
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBill().getPayeeName() || receipt.getBill().getPayeeName().isEmpty()){
+		if(null == receipt.getBill().get(0).getPayeeName() || receipt.getBill().get(0).getPayeeName().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAYEE_NAME_MISSING_CODE)
 					.message(CollectionServiceConstants.PAYEE_NAME_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAYEE_NAME_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBill().getPaidBy() || receipt.getBill().getPaidBy().isEmpty()){
+		if(null == receipt.getBill().get(0).getPaidBy() || receipt.getBill().get(0).getPaidBy().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAID_BY_MISSING_CODE)
 					.message(CollectionServiceConstants.PAID_BY_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAID_BY_MISSING_FIELD).build();
 			errorFields.add(errorField);
 		}
 		
-      for(BillDetail billDetails:  receipt.getBill().getBillDetails()){
+		for(BillDetail billDetails:  receipt.getBill().get(0).getBillDetails()){
 			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
 			if(null == billDetails.getReceiptType()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)

@@ -1060,6 +1060,10 @@
           type: integer
           format: int64
           description: unique identifier of category type object
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
@@ -1069,6 +1073,7 @@
       required:
         - propertyTypeId
         - categoryTypeId
+        - active
         - tenantId
           
   # Proprty Type and PipeSize Type mapping definition
@@ -1108,6 +1113,10 @@
           type: integer
           format: int64
           description: unique identifier of pipe size type object
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant
@@ -1117,6 +1126,7 @@
       required:
         - propertyTypeId
         - pipeSizeId
+        - active
         - tenantId
 
   # Proprty Type and Usage Type mapping definition
@@ -1156,6 +1166,10 @@
           type: integer
           format: int64
           description: unique identifier of property usage type object
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
@@ -1165,6 +1179,7 @@
       required:
         - propertyTypeId
         - usageTypeId
+        - active
         - tenantId
 
   # Document Type and Application Type mapping definition
@@ -1223,6 +1238,7 @@
         - documentTypeId
         - applicationType
         - mandatory
+        - active
         - tenantId
 
   # Application Type definitions
@@ -1359,6 +1375,7 @@
       required:
         - code
         - name
+        - active
         - tenantId    
 
   # Water Supply Type definitions
@@ -1416,6 +1433,7 @@
       required:
         - code
         - name
+        - active
         - tenantId
 
   # Document Type definitions
@@ -1473,6 +1491,7 @@
       required:
         - code
         - name
+        - active
         - tenantId
   
   # PipeSize definitions
@@ -1532,6 +1551,7 @@
       required:
         - code
         - sizeInMilimeter
+        - active
         - tenantId
         
  # Donation definitions
@@ -1612,6 +1632,7 @@
         - donationAmount
         - fromDate
         - toDate
+        - active
         - tenantId  
     
 
@@ -1671,6 +1692,7 @@
       required:
         - code
         - name
+        - active
         - tenantId
         
   # Water treatment plant  Master definitions
@@ -1836,3 +1858,4 @@
         - ward
         - storageCapacity
         - tenantId
+        

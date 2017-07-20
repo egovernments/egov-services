@@ -65,23 +65,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/connection")
 public class CommonConnectionController {
-	
-	@Autowired
-    private ErrorHandler errHandler; 
-	
-	@Autowired
+
+    @Autowired
+    private ErrorHandler errHandler;
+
+    @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @RequestMapping(value = "/_getconnectiontypes")
     public ResponseEntity<?> getConnectionTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
 
-        List<CommonDataModel> modelList = new ArrayList<>(); 
-        for (final ConnectionType key : ConnectionType.values()) { 
-        	modelList.add(new CommonDataModel(key.name(), key));
-        }
+        final List<CommonDataModel> modelList = new ArrayList<>();
+        for (final ConnectionType key : ConnectionType.values())
+            modelList.add(new CommonDataModel(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
@@ -89,15 +89,15 @@ public class CommonConnectionController {
     public ResponseEntity<?> getBillingTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
 
-        List<CommonDataModel> modelList = new ArrayList<>(); 
-        for (final BillingType key : BillingType.values()) { 
-        	modelList.add(new CommonDataModel(key.name(), key));
-        }
+        final List<CommonDataModel> modelList = new ArrayList<>();
+        for (final BillingType key : BillingType.values())
+            modelList.add(new CommonDataModel(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
+
     private ResponseEntity<?> getSuccessResponse(final List<CommonDataModel> modelList,
             final RequestInfo requestInfo) {
         final CommonEnumResponse response = new CommonEnumResponse();

@@ -54,6 +54,7 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
 import org.junit.Test;
@@ -67,117 +68,120 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class PropertyUsageTypeRepositoryTest {
 
-	@Mock
-	private JdbcTemplate jdbcTemplate;
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
-	@Mock
-	private PropertyUsageTypeRowMapper propUsageTypeMapper;
+    @Mock
+    private PropertyUsageTypeRowMapper propUsageTypeMapper;
 
-	@Mock
-	private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
+    @Mock
+    private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
 
-	@InjectMocks
-	private PropertyUsageTypeRepository propUsageTypeRepository;
+    @InjectMocks
+    private PropertyUsageTypeRepository propUsageTypeRepository;
 
-	@Test
-	public void test_Should_Create_PropertyUsageType() {
-		final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
-		final RequestInfo requestInfo = new RequestInfo();
-		final User user = new User();
-		user.setId(2L);
-		requestInfo.setUserInfo(user);
-		propUsageTypeRequest.setRequestInfo(requestInfo);
-		final PropertyTypeUsageType propUsageType = Mockito.mock(PropertyTypeUsageType.class);
-		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+    @Mock
+    private RestWaterExternalMasterService restExternalMasterService;
 
-		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-		assertTrue(propUsageTypeRequest.equals(propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest)));
-	}
+    @Test
+    public void test_Should_Create_PropertyUsageType() {
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(2L);
+        requestInfo.setUserInfo(user);
+        propUsageTypeRequest.setRequestInfo(requestInfo);
+        final PropertyTypeUsageType propUsageType = Mockito.mock(PropertyTypeUsageType.class);
+        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
 
-	@Test
-	public void test_Should_Update_PropertyUsageType() {
-		final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
-		final RequestInfo requestInfo = new RequestInfo();
-		final User user = new User();
-		user.setId(2L);
-		requestInfo.setUserInfo(user);
-		propUsageTypeRequest.setRequestInfo(requestInfo);
-		final PropertyTypeUsageType propUsageType = Mockito.mock(PropertyTypeUsageType.class);
-		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(propUsageTypeRequest.equals(propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest)));
+    }
 
-		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-		assertTrue(propUsageTypeRequest.equals(propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest)));
-	}
+    @Test
+    public void test_Should_Update_PropertyUsageType() {
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(2L);
+        requestInfo.setUserInfo(user);
+        propUsageTypeRequest.setRequestInfo(requestInfo);
+        final PropertyTypeUsageType propUsageType = Mockito.mock(PropertyTypeUsageType.class);
+        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
 
-	@Test
-	public void test_Should_Create_PropertyUsageType_NotNullCheck() {
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(propUsageTypeRequest.equals(propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest)));
+    }
 
-		final PropertyTypeUsageTypeReq propUsageTypeRequest = getPropertyUsageType();
-		final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getId(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), new Date(new java.util.Date().getTime()),
-				propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
-		when(jdbcTemplate.update("query", obj)).thenReturn(1);
-		assertNotNull(propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest));
-	}
+    @Test
+    public void test_Should_Create_PropertyUsageType_NotNullCheck() {
 
-	@Test
-	public void test_Should_Update_PropertyUsageType_NotNullCheck() {
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = getPropertyUsageType();
+        final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getId(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), new Date(new java.util.Date().getTime()),
+                propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
+        when(jdbcTemplate.update("query", obj)).thenReturn(1);
+        assertNotNull(propUsageTypeRepository.persistCreateUsageType(propUsageTypeRequest));
+    }
 
-		final PropertyTypeUsageTypeReq propUsageTypeRequest = getPropertyUsageType();
-		final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getId(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
-				propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), new Date(new java.util.Date().getTime()),
-				propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
-		when(jdbcTemplate.update("query", obj)).thenReturn(1);
-		assertNotNull(propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest));
-	}
+    @Test
+    public void test_Should_Update_PropertyUsageType_NotNullCheck() {
 
-	@Test
-	public void test_Should_Find_PropertyUsageType_Valid() {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
-		final String queryString = "MyQuery";
-		when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues))
-				.thenReturn(queryString);
-		final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
-		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
-				.thenReturn(propUsageTypes);
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = getPropertyUsageType();
+        final Object[] obj = new Object[] { propUsageTypeRequest.getPropertyTypeUsageType().getId(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getPropertyType(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getActive(),
+                propUsageTypeRequest.getPropertyTypeUsageType().getTenantId(), new Date(new java.util.Date().getTime()),
+                propUsageTypeRequest.getRequestInfo().getUserInfo().getId() };
+        when(jdbcTemplate.update("query", obj)).thenReturn(1);
+        assertNotNull(propUsageTypeRepository.persistUpdateUsageType(propUsageTypeRequest));
+    }
 
-		assertTrue(propUsageTypes.equals(propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest)));
-	}
+    @Test
+    public void test_Should_Find_PropertyUsageType_Valid() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
+        final String queryString = "MyQuery";
+        when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues))
+                .thenReturn(queryString);
+        final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
+                .thenReturn(propUsageTypes);
 
-	@Test
-	public void test_Should_Find_PropertyUsageType_Invalid() {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
-		final String queryString = "MyQuery";
-		when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(null);
-		final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
-		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
-				.thenReturn(propUsageTypes);
+        assertTrue(propUsageTypes.equals(propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest)));
+    }
 
-		assertTrue(propUsageTypes.equals(propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest)));
-	}
+    @Test
+    public void test_Should_Find_PropertyUsageType_Invalid() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest = Mockito.mock(PropertyTypeUsageTypeGetReq.class);
+        final String queryString = "MyQuery";
+        when(propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues)).thenReturn(null);
+        final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), propUsageTypeMapper))
+                .thenReturn(propUsageTypes);
 
-	private PropertyTypeUsageTypeReq getPropertyUsageType() {
-		final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
-		final PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
-		propUsageType.setActive(true);
-		propUsageType.setId(2L);
-		propUsageType.setPropertyType("RES");
-		propUsageType.setTenantId("DEFAULT");
-		propUsageType.setUsageType("COM");
-		final User user = new User();
-		user.setId(2L);
-		final RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setUserInfo(user);
-		propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
-		propUsageTypeRequest.setRequestInfo(requestInfo);
-		return propUsageTypeRequest;
-	}
+        assertTrue(propUsageTypes.equals(propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest)));
+    }
+
+    private PropertyTypeUsageTypeReq getPropertyUsageType() {
+        final PropertyTypeUsageTypeReq propUsageTypeRequest = new PropertyTypeUsageTypeReq();
+        final PropertyTypeUsageType propUsageType = new PropertyTypeUsageType();
+        propUsageType.setActive(true);
+        propUsageType.setId(2L);
+        propUsageType.setPropertyType("RES");
+        propUsageType.setTenantId("DEFAULT");
+        propUsageType.setUsageType("COM");
+        final User user = new User();
+        user.setId(2L);
+        final RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setUserInfo(user);
+        propUsageTypeRequest.setPropertyTypeUsageType(propUsageType);
+        propUsageTypeRequest.setRequestInfo(requestInfo);
+        return propUsageTypeRequest;
+    }
 }

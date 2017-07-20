@@ -563,11 +563,11 @@ definitions:
       occupancyDate:
         type: string
         format: date
-        description: The date of occupancy of this unit/floor
+        description: The date of occupancy of this unit/floor. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       effectiveDate:
         type: string
         format: date
-        description: The tax effective date
+        description: The tax effective date. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       depreciation:
         type: number
         format: double
@@ -612,17 +612,17 @@ definitions:
     description: Details of tax calculation
     properties:
       fromDate:
-        description: start date from when the tax is applicable
+        description: start date from when the tax is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
         type: string
         format: date
       toDate:
-        description: end date till when the tax is applicable
+        description: end date till when the tax is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
         type: string
         format: date
       effectiveDate:
         type: string
         format: date
-        description: The date from which tax is effective
+        description: The date from which tax is effective. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
       propertyTaxes:
         $ref: "#/definitions/CommonTaxDetails"
       unitTaxes:

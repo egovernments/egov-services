@@ -14,7 +14,8 @@ import UiButton from './components/UiButton';
 class Report extends Component {
 
   initData()
-  {
+  { 
+
     let {setMetaData,setModuleName,setAtionName,initForm}=this.props;
     let reqRequired = [], patRequired = [];
     let hashLocation=window.location.hash;
@@ -53,7 +54,7 @@ class Report extends Component {
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, "Success!");
-      self.props.initData();
+      self.initData();
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);

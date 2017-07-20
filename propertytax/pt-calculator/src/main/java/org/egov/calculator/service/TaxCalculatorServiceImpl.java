@@ -593,7 +593,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 	private String getFormatedDate(String date) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date efiectivedate = dateFormat.parse(date);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String formatedEffectivedate = simpleDateFormat.format(efiectivedate);
 		return formatedEffectivedate;
 	}

@@ -113,6 +113,30 @@ public class ConfigurationManager {
     @Value("${id.format}")
     private String idGenFormatServiceTopic;
     
+    @Value("${id.hscName}")
+    private String hscGenNameServiceTopic;
+    
+    @Value("${id.hscFormat}")
+    private String hscGenFormatServiceTopic;
+    
+    @Value("${id.EstName}")
+    private String estimateGenNameServiceTopic;
+    
+    @Value("${id.EstFormat}")
+    private String estimateGenFormatServiceTopic;
+    
+    @Value("${id.WOName}")
+    private String workOrderGenNameServiceTopic; 
+    
+    @Value("${id.WOFormat}")
+    private String workOrderGenFormatServiceTopic;
+    
+    @Value("${id.demandBillName}")
+    private String demandBillGenNameServiceTopic;
+    
+    @Value("${id.demandBillFormat}")
+    private String demandBillGenFormatServiceTopic;
+    
     @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
     private String waterMasterPropCategoryMappingTopic;
     

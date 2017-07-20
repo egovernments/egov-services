@@ -418,7 +418,44 @@ public class RestConnectionService {
 
         return ackNumber;
     }
+    
+    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic) {
+        StringBuilder url = new StringBuilder();
+        String ackNumber = null;
+        url.append(configurationManager.getIdGenServiceBasePathTopic())
+                .append(configurationManager.getIdGenServiceCreatePathTopic());
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+        List<AckIdRequest> idRequests = new ArrayList<>();
+        AckIdRequest idrequest = new AckIdRequest();
+        
+        idrequest.setIdName(nameServiceTopic);
+        idrequest.setTenantId(tenantId);
+        idrequest.setFormat(formatServiceTopic);
+        AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
+        idRequests.add(idrequest);
+        idGeneration.setIdRequests(idRequests);
+        idGeneration.setRequestInfo(requestInfo);
+        String response = null;
+        try {
+                response = new RestTemplate().postForObject(url.toString(), idGeneration, String.class);
+        } catch (Exception ex) {
+            throw new IdGenerationException("Error While generating " +nameServiceTopic+" number", "Error While generating " + nameServiceTopic + " number", requestInfo);
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+        IdGenErrorRes errorResponse = gson.fromJson(response, IdGenErrorRes.class);
+        AckNoGenerationResponse idResponse = gson.fromJson(response, AckNoGenerationResponse.class);
+        if ( !errorResponse.getErrors().isEmpty()) {
+                throw new IdGenerationException("Error While generating " + nameServiceTopic + " number", "Error While generating " + nameServiceTopic + " number", requestInfo);
+        } else if (idResponse.getResponseInfo() != null) {
+                if (idResponse.getResponseInfo().getStatus().toString()
+                                .equalsIgnoreCase("SUCCESSFUL")) {
+                        if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
+                            ackNumber = idResponse.getIdResponses().get(0).getId();
+                }
+        }
 
+        return tenantId.substring(0,4).concat(ackNumber);
+    }
     public List<ErrorResponse> populateErrors() {
         final ErrorResponse errRes = new ErrorResponse();
         final Error error = new Error();

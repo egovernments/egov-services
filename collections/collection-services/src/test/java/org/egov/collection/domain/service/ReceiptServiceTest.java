@@ -190,7 +190,7 @@ public class ReceiptServiceTest {
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
-		return Receipt.builder().tenantId("default").bill(billInfo).build();
+		return Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
 	}
 
 	private ReceiptReq getReceiptRequest() {
@@ -216,7 +216,7 @@ public class ReceiptServiceTest {
 				.receiptDate(Timestamp.valueOf("2016-02-02 00:00:00.0")).businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-		Receipt receipt = Receipt.builder().tenantId("default").bill(billInfo).build();
+		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
 		return ReceiptReq.builder().requestInfo(requestInfo).receipt(receipt).build();
 	}
 

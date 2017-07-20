@@ -12,7 +12,7 @@
             "tenantId": "default",
             "instrumentType": null,
             "instrumentHeader": null,
-            "Bill": {
+            "Bill": [ {
                 "id": null,
                 "payeeName": "abc",
                 "payeeAddress": "abc nagara",
@@ -78,7 +78,7 @@
                     }
                 ],
                 "tenantId": "default"
-            },
+            } ],
             "Bank": null,
             "BankAccount": null,
             "auditDetails": null,

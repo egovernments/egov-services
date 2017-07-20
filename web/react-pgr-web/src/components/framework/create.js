@@ -83,6 +83,7 @@ class Report extends Component {
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Create", "uiType":"submit"}} handler={""} ui="google"/>
+            <br/>
           </div>
         </form>
       </div>

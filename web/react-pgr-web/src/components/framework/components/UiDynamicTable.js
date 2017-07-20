@@ -23,48 +23,48 @@ class UiDynamicTable extends Component {
    	}
 
    	render() {
-
+   		let self = this;
    		const renderFields = function(field) {
    			switch(field.type) {
    				case 'text':
    					return (
-   						<UiTextField ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiTextField ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'singleValueList':
    					return (
-   						<UiSelectField ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiSelectField ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'multiValueList':
    					return (
-   						<UiMultiSelectField ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiMultiSelectField ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'number':
    					return (
-   						<UiNumberField ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiNumberField ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'textarea':
    					return (
-   						<UiTextArea ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiTextArea ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'mobileNumber':
    					return (
-   						<UiMobileNumber ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiMobileNumber ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'email':
    					return (
-   						<UiEmailField ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiEmailField ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'datePicker':
    					return (
-   						<UiDatePicker ui="google" item={field}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+   						<UiDatePicker ui="google" getVal={self.props.getVal} item={field}  fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					);
    				case 'pan':
 			        return (
-			        	<UiPanCard ui="google" item={field} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+			        	<UiPanCard ui="google" getVal={self.props.getVal} item={field} fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
 			    	)
 			    case 'aadhar':
 			        return (
-			        	<UiAadharCard ui="google" item={field} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+			        	<UiAadharCard ui="google" getVal={self.props.getVal} item={field} fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					)
    				case 'table':
    					renderTable(field);
@@ -104,7 +104,7 @@ class UiDynamicTable extends Component {
    		}
 
    		return (
-   			{renderTable(this.props.item)}
+   			{renderTable(self.props.item)}
    		)
    	}
 }

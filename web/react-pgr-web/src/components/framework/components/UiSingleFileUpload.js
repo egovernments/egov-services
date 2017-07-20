@@ -14,7 +14,7 @@ export default class UiSingleFileUpload extends Component {
 						fullWidth={true} 
 						type="file"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
-						value={eval(item.jsonPath)}
+						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />

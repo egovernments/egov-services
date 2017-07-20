@@ -52,7 +52,7 @@ class UiMultiSelectField extends Component {
 						fullWidth={true}
 						multiple={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						value={eval(item.jsonPath)}
+						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						onChange={(ev, key, val) => {
 							this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}

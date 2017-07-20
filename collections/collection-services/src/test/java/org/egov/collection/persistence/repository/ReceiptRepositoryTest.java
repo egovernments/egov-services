@@ -164,7 +164,7 @@ public class ReceiptRepositoryTest {
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.receiptDate((new Date()).getTime()).businessService("TL").build();
+				.businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
@@ -200,7 +200,6 @@ public class ReceiptRepositoryTest {
 				.channel("567hfghr").consumerType("Known").fund("56").fundSource("78").function("678").boundary("67")
 				.department("78").voucherheader("VOUHEAD").depositedBranch("ICICI").version(1L).createdBy(1L)
 				.lastModifiedBy(1L).tenantId("default").build();
-
 		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header))
 				.receiptDetails(Arrays.asList(detail1, detail2)).build();
 	}
@@ -218,18 +217,18 @@ public class ReceiptRepositoryTest {
 				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
 				.tenantId("default").build());
 		ReceiptHeader header1 = ReceiptHeader.builder().id(1L).payeename("abc").payeeAddress("abc nagara")
-				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ghj")
+				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ADHOC")
 				.receiptNumber("REC1234").referenceDesc("REFDESC45").manualReceiptNumber("MAN67").businessDetails("TL")
-				.collectionType("C").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
+				.collectionType(CollectionType.valueOf("COUNTER").toString()).displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
 				.location(1L).isReconciled(true).status("CREATED").reasonForCancellation("documents not proper")
 				.minimumAmount(125.00).totalAmount(150.00).collModesNotAllwd("Bill based").consumerCode("CON12343556")
 				.channel("567hfghr").consumerType("Known").fund("56").fundSource("78").function("678").boundary("67")
 				.department("78").voucherheader("VOUHEAD").depositedBranch("ICICI").version(1L).createdBy(1L)
 				.lastModifiedBy(1L).tenantId("default").receiptDetails(setReceipt).build();
 		ReceiptHeader header2 = ReceiptHeader.builder().id(1L).payeename("abc").payeeAddress("abc nagara")
-				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ghj")
+				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ADHOC")
 				.receiptNumber("REC1234").referenceDesc("REFDESC45").manualReceiptNumber("MAN67").businessDetails("TL")
-				.collectionType("C").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
+				.collectionType(CollectionType.valueOf("COUNTER").toString()).displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
 				.location(1L).isReconciled(true).status("CREATED").reasonForCancellation("documents not proper")
 				.minimumAmount(125.00).totalAmount(150.00).collModesNotAllwd("Bill based").consumerCode("CON12343556")
 				.channel("567hfghr").consumerType("Known").fund("56").fundSource("78").function("678").boundary("67")

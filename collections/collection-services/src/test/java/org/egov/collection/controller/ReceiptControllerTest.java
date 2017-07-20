@@ -112,7 +112,7 @@ public class ReceiptControllerTest {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
 		when(receiptService.getReceipts(getReceiptSearchCriteria())).thenReturn(getReceiptCommonModel());
-		mockMvc.perform(post("/receipts/_search?fromDate=2016-02-02 00:00:00&toDate=2017-07-11 13:25:45.794050"
+		mockMvc.perform(post("/receipts/v1/_search?fromDate=2016-02-02 00:00:00&toDate=2017-07-11 13:25:45.794050"
 				+ "&tenantId=default&collectedBy=1&status=CREATED&sortBy=payeename&sortOrder=desc")
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(getFileContents("receiptRequest.json")))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -127,7 +127,7 @@ public class ReceiptControllerTest {
 		when(receiptService.cancelReceiptPushToQueue(any())).thenReturn(getReceipt());
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
-		mockMvc.perform(post("/receipts/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/receipts/v1/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("receiptRequestForCancellation.json"))).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("receiptResponseForCancellation.json")));
@@ -148,7 +148,7 @@ public class ReceiptControllerTest {
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.receiptDate((new Date()).getTime()).businessService("TL").build();
+				.businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
@@ -158,9 +158,9 @@ public class ReceiptControllerTest {
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc").payeeAddress("abc nagara")
-				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("Adhoc")
+				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ADHOC")
 				.receiptNumber("REC1234").referenceDesc("REFDESC45").manualReceiptNumber("MAN67").businessDetails("TL")
-				.collectionType("Counter").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
+				.collectionType("COUNTER").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
 				.location(1L).isReconciled(true).status("CREATED").reasonForCancellation("Data entry mistake")
 				.minimumAmount(125.00).totalAmount(150.00).collModesNotAllwd("Bill based").consumerCode("CON12343556")
 				.channel("567hfghr").consumerType("Good").fund("56").fundSource("78").function("678").boundary("67")

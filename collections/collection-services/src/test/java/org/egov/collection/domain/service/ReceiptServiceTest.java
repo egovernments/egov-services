@@ -189,7 +189,7 @@ public class ReceiptServiceTest {
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.receiptDate((new Date()).getTime()).businessService("TL").build();
+			.businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
@@ -216,7 +216,7 @@ public class ReceiptServiceTest {
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.receiptDate((new Date()).getTime()).businessService("TL").build();
+				.businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();

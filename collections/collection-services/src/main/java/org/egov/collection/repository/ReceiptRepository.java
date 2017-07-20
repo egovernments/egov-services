@@ -68,9 +68,11 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
+import org.egov.collection.repository.rowmapper.UserRowMapper;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +103,9 @@ public class ReceiptRepository {
 
 	@Autowired
 	private ReceiptRowMapper receiptRowMapper;
+
+    @Autowired
+    private UserRowMapper userRowMapper;
 	
     @Autowired
 	private RestTemplate restTemplate;
@@ -192,8 +197,8 @@ public class ReceiptRepository {
 		List<ReceiptDetail> uniqueReceiptDetails = receiptDetails.stream()
 				.filter(accountdetail -> accountdetail.getId() != null)
 				.collect(collectingAndThen(
-						toCollection(() -> new TreeSet<>(comparingLong(ReceiptDetail::getId))),
-						ArrayList::new));
+                        toCollection(() -> new TreeSet<>(comparingLong(ReceiptDetail::getId))),
+                        ArrayList::new));
 		List<ReceiptHeader> unqReceiptheader = uniqueReceiptheader.stream()
 		.map(unqheader -> unqheader.toDomainModel()).collect(Collectors.toList());
 		return new ReceiptCommonModel(unqReceiptheader,uniqueReceiptDetails);
@@ -251,6 +256,19 @@ public class ReceiptRepository {
     	}
     	logger.info("StateId obtained for receipt: "+receiptNumber+" is: "+stateId);
     	return stateId;
+    }
+
+    public List<User> getReceiptCreators() {
+        String queryString = receiptDetailQueryBuilder.searchQuery();
+        List<User> receiptCreators = jdbcTemplate.query(queryString,
+                userRowMapper);
+        return receiptCreators;
+    }
+
+    public List<String> getReceiptStatus() {
+        String queryString = receiptDetailQueryBuilder.searchStatusQuery();
+        List<String> statusList = jdbcTemplate.queryForList(queryString,String.class);
+        return statusList;
     }
 
 }

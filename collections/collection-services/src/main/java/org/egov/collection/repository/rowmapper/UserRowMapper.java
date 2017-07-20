@@ -38,37 +38,27 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.web.contract;
+package org.egov.collection.repository.rowmapper;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.egov.collection.model.EmployeeInfo;
-import org.egov.common.contract.request.User;
-import org.egov.common.contract.response.ResponseInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.collection.model.ReceiptHeader;
+import org.egov.common.contract.request.User;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 @EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class UserResponse {
+@Component
+public class UserRowMapper implements RowMapper<User> {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-
-	@JsonProperty("Users")
-	private List<EmployeeInfo> users = new ArrayList<EmployeeInfo>();
-
-    private List<User> receiptCreators = new ArrayList<User>();
+    @Override
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        User user = new User();
+        user.setId((Long) rs.getObject("user_id"));
+        user.setName(rs.getString("user_name"));
+        return user;
+    }
 }

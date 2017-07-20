@@ -40,35 +40,21 @@
 
 package org.egov.collection.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.egov.collection.model.EmployeeInfo;
-import org.egov.common.contract.request.User;
-import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.egov.common.contract.response.ResponseInfo;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
+import java.util.List;
+
 @Setter
-@ToString
-public class UserResponse {
+public class StatusResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    private String tenantId;
 
-	@JsonProperty("Users")
-	private List<EmployeeInfo> users = new ArrayList<EmployeeInfo>();
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    private List<User> receiptCreators = new ArrayList<User>();
+    @JsonProperty("status")
+    private List<String> status;
 }

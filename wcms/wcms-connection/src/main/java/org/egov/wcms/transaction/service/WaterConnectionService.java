@@ -45,6 +45,7 @@ import java.util.List;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.producers.WaterTransactionProducer;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.validator.RestConnectionService;
@@ -138,14 +139,26 @@ public class WaterConnectionService {
     public Connection update(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for create/update Connection");
         try {
-            if(waterConnectionRequest.getConnection().getEstimationCharge()!=null && 
-                    !waterConnectionRequest.getConnection().getEstimationCharge().isEmpty()){
+            Connection connection=waterConnectionRequest.getConnection();
+            if(connection.getStatus()!=null && connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name()) && 
+                    (waterConnectionRequest.getConnection().getEstimationCharge()!=null && 
+                    !waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())){
             createDemand(waterConnectionRequest);
             }
+            if(connection.getStatus()!=null && connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
+                connection.setStatus(NewConnectionStatus.VERIFIED.name());
+            if(connection.getWorkflowDetails()!=null && connection.getWorkflowDetails().getAction()!=null)
+                if(connection.getWorkflowDetails().getAction().equals("Approve") && connection.getStatus()!=null && 
+                    connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()))
+                connection.setStatus(NewConnectionStatus.APPROVED.name());
+            if(connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))
+                connection.setStatus(NewConnectionStatus.SANCTIONED.name());
+            
+            waterConnectionRequest.setConnection(connection);
             updateWorkFlow(waterConnectionRequest);
             waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {
-            logger.error("Persisting failed due to db exception", e);
+            logger.error("update Connection failed due to db exception", e);
         }
         return waterConnectionRequest.getConnection();
     }

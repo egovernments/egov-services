@@ -32,9 +32,7 @@ var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId
 
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
-
         var url = context;
-
         if (!doNotOverride)
             url += "?tenantId=" + tenantId;
         else
@@ -49,7 +47,6 @@ module.exports = {
             requestInfo.ts = new Date().getTime();	
         }
 		
-		console.log(requestInfo.ts);
 		
         body["RequestInfo"] = requestInfo;
 
@@ -57,7 +54,6 @@ module.exports = {
             return response.data;
         }).catch(function(response) {
             if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
-                console.log(response.error);
                 var _err = response.response.data[0].error.message || "";
                 if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
                     for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {

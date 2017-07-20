@@ -2,6 +2,7 @@ var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"url": "/connections/v1/_create",
+		"useTimestamp": true,
 		"groups": [
 			{
 				"label": "wc.create.groups.applicantDetails.title",

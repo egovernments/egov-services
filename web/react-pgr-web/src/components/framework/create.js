@@ -36,15 +36,18 @@ class Report extends Component {
 
   }
 
-  componentDidMount()
-  {
-
+  componentDidMount() {
       this.initData();
   }
 
-  create=(e)=>
-  {
+  create=(e) => {
+    let self = this;
     e.preventDefault();
+    Api.commonApiPost(self.props.metaData.url, "", self.props.formData, "", true).then(function(response){
+      console.log(response);
+    }, function(err) {
+      console.log(err.message);
+    })
   }
 
   getVal = (path) => {
@@ -82,7 +85,7 @@ class Report extends Component {
         {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={{}}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Create", "uiType":"submit"}} handler={""} ui="google"/>
+            <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>
             <br/>
           </div>
         </form>

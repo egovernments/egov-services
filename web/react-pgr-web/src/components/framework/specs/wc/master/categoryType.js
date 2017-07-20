@@ -1,27 +1,20 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/connections/v1/_create",
+		"url": "/wcms/masters/categorytype/_create",
 		"groups": [
 			{
-				"label": "wc.create.groups.applicantDetails.title",
-				"name": "applicantDetails",
+				"label": "wc.create.categorytype.title",
+				"name": "createCategoryType",
 				"fields": [
 						{
-							"name": "AssessmentNumber",
-							"jsonPath": "connection.property.propertyIdentifier",
-							"label": "wc.create.groups.applicantDetails.propertyIdentifier",
+							"name": "name",
+							"jsonPath": "CategoryType.name",
+							"label": "wc.create.categorytype*",
 							"pattern": "",
-							"type": "number",
+							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
-							"autoCompleteUrl": "",
-							"autoFillFields": {
-								"NameOfApplicant": "",
-								"MobileNumber": "",
-								"Email": "",
-								"AadharNumber": ""
-							},
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

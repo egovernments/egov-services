@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.repository;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -51,6 +52,8 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyPipeSizeRowMapper;
+import org.egov.wcms.service.PropertyTypePipeSizeService;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.junit.Test;
@@ -58,10 +61,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@WebAppConfiguration
 public class PropertyPipeSizeRepositoryTest {
 
     @Mock
@@ -76,20 +82,27 @@ public class PropertyPipeSizeRepositoryTest {
     @Mock
     private PropertyPipeSizeRowMapper propertyPipeSizeRowMapper;
 
-    @Test
-    public void test_Should_Search_PropertyPipeSize() {
+    @MockBean
+    private PropertyTypePipeSizeService propertyTypePipeSizeService;
 
+    @Mock
+    private RestWaterExternalMasterService restExternalMasterService;
+
+    @Test
+    public void test_Should_Search_PropertyPipeSize() throws Exception {
+        final List<Object> preparedStatementValues = new ArrayList<>();
         final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         final PropertyTypePipeSize propertyPipeSize = getPropertyPipeSize();
         propertyPipeSizes.add(propertyPipeSize);
 
-        when(propertyPipeSizeQueryBuilder.getQuery(any(PropertyTypePipeSizeGetRequest.class), any(List.class)))
-                .thenReturn("");
-        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(PropertyPipeSizeRowMapper.class)))
+        // when(propertyPipeSizeQueryBuilder.getQuery(any(PropertyTypePipeSizeGetRequest.class), any(List.class)))
+        // .thenReturn("");
+        final PropertyTypePipeSizeGetRequest propertyPipeSizeRequest = Mockito.mock(PropertyTypePipeSizeGetRequest.class);
+        when(jdbcTemplate.query("query", preparedStatementValues.toArray(), propertyPipeSizeRowMapper))
                 .thenReturn(propertyPipeSizes);
 
-        assertTrue(
-                propertyPipeSizes.equals(propertyPipeSizeRepository.findForCriteria(new PropertyTypePipeSizeGetRequest())));
+        assertNotNull(propertyPipeSizeRepository.findForCriteria(propertyPipeSizeRequest));
+
     }
 
     @Test

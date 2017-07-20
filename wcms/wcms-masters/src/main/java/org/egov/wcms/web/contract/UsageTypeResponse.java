@@ -56,13 +56,13 @@ import lombok.ToString;
 @ToString
 public class UsageTypeResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	@JsonProperty("usageMasters")
-	private List<PropertyTaxResponseInfo> usageMasters;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    @JsonProperty("usageMasters")
+    private List<PropertyTaxResponseInfo> usageMasters;
 
-	public boolean getUsageTypesSize() {
-		return this.usageMasters.size() > 0;
-	}
+    public boolean getUsageTypesSize() {
+        return this.usageMasters.size() > 0;
+    }
 
 }

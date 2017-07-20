@@ -135,10 +135,10 @@ definitions:
         type: integer
         format: int64
         description: unique identifier of a material object
-      connectionId:
+      estimationChargeId:
         type: integer
         format: int64
-        description: unique identifier of connection object
+        description: unique identifier of EstimationCharge object
       name:
         type: string
         minLength: 5

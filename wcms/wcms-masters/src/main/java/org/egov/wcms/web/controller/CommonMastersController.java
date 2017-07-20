@@ -66,23 +66,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/master")
 public class CommonMastersController {
-	
-	@Autowired
-    private ErrorHandler errHandler; 
-	
-	@Autowired
+
+    @Autowired
+    private ErrorHandler errHandler;
+
+    @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @RequestMapping(value = "/_getapplicationtypes")
     public ResponseEntity<?> getApplicationTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
 
-        List<CommonDataModel> modelList = new ArrayList<>(); 
-        for (final ApplicationType key : ApplicationType.values()) { 
-        	modelList.add(new CommonDataModel(key.name(), key));
-        }
+        final List<CommonDataModel> modelList = new ArrayList<>();
+        for (final ApplicationType key : ApplicationType.values())
+            modelList.add(new CommonDataModel(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
@@ -90,12 +90,12 @@ public class CommonMastersController {
     public ResponseEntity<?> getReservoirTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
 
-        List<CommonDataModel> modelList = new ArrayList<>(); 
-        for (final ReservoirType key : ReservoirType.values()) { 
-        	modelList.add(new CommonDataModel(key.name(), key));
-        }
+        final List<CommonDataModel> modelList = new ArrayList<>();
+        for (final ReservoirType key : ReservoirType.values())
+            modelList.add(new CommonDataModel(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 
@@ -103,15 +103,15 @@ public class CommonMastersController {
     public ResponseEntity<?> getPlantTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
 
-        List<CommonDataModel> modelList = new ArrayList<>(); 
-        for (final PlantType key : PlantType.values()) { 
-        	modelList.add(new CommonDataModel(key.name(), key));
-        }
+        final List<CommonDataModel> modelList = new ArrayList<>();
+        for (final PlantType key : PlantType.values())
+            modelList.add(new CommonDataModel(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
+
     private ResponseEntity<?> getSuccessResponse(final List<CommonDataModel> modelList,
             final RequestInfo requestInfo) {
         final CommonEnumResponse response = new CommonEnumResponse();

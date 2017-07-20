@@ -46,6 +46,10 @@ class Report extends Component {
     e.preventDefault();
   }
 
+  getVal = (path) => {
+    return _.get(this.props.formData, path);
+  }
+
   // componentDidUpdate()
   // {
   //     // this.initData();
@@ -63,9 +67,9 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName,formData}=this.props;
-    let {create,handleChange}=this;
-    console.log(formData);
+    let {metaData, moduleName, actionName, formData}=this.props;
+    let {create,handleChange, getVal}=this;
+    console.log("formData");
     // console.log(!_.isEmpty(metaData) && metaData);
     // console.log(moduleName && moduleName);
     // console.log(actionName && actionName);
@@ -75,7 +79,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} fieldErrors={{}} formData={formData}/>}
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} getVal={getVal} fieldErrors={{}} formData={formData}/>}
           <RaisedButton type="submit" disabled={false}  label="Create" />
         </form>
       </div>

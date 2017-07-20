@@ -9,7 +9,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.egov.demand.repository.builder.TaxHeadMasterQueryBuilder;
+import org.egov.demand.repository.querybuilder.TaxHeadMasterQueryBuilder;
 import org.egov.demand.repository.rowmapper.TaxHeadMasterRowMapper;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.springframework.beans.factory.annotation.Autowired;

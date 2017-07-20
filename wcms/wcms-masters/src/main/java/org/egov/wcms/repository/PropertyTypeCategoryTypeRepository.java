@@ -48,9 +48,12 @@ import java.util.Map;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
+import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,6 +73,9 @@ public class PropertyTypeCategoryTypeRepository {
 
     @Autowired
     private PropertyCategoryRowMapper propertyCategoryRowMapper;
+
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypeCategoryTypeReq persistCreatePropertyCategory(
             final PropertyTypeCategoryTypeReq propertyCategoryRequest) {
@@ -129,25 +135,23 @@ public class PropertyTypeCategoryTypeRepository {
 
     public PropertyTypeCategoryTypesRes findForCriteria(final PropertyCategoryGetRequest propertyCategoryRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        try {
-            if (propertyCategoryRequest.getCategoryType() != null)
-                propertyCategoryRequest.setCategoryTypeId(jdbcTemplate.queryForObject(
-                        PropertyTypeCategoryTypeQueryBuilder.getCategoryId(), new Object[] {
-                                propertyCategoryRequest.getCategoryType(), propertyCategoryRequest.getTenantId() },
-                        Long.class));
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty RS.");
-
-        }
+        List<Integer> propertyTypeIdsList = new ArrayList<>();
         final String queryStr = propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues);
-        final String categoryNameQuery = PropertyTypeCategoryTypeQueryBuilder.getCategoryTypeName();
         final List<PropertyTypeCategoryType> propertyCategories = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), propertyCategoryRowMapper);
-        for (final PropertyTypeCategoryType propertyTypeCategoryType : propertyCategories)
-            propertyTypeCategoryType.setCategoryTypeName(jdbcTemplate.queryForObject(categoryNameQuery, new Object[] {
-                    propertyTypeCategoryType.getCategoryTypeId(), propertyCategoryRequest.getTenantId() },
-                    String.class));
+        // fetch property type Id and set the property type name here
+        for (PropertyTypeCategoryType propertyCategory : propertyCategories) {
+            propertyTypeIdsList.add(Integer.valueOf(propertyCategory.getPropertyTypeId()));
+        }
+        Integer[] propertypeIds = propertyTypeIdsList.toArray(new Integer[propertyTypeIdsList.size()]);
+        final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyNameFromPTModule(
+                propertypeIds, propertyCategoryRequest.getTenantId());
+        for (PropertyTypeCategoryType propertyCategory : propertyCategories) {
+            for (PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes())
+                if (propertyResponse.getId().equals(propertyCategory.getPropertyTypeId()))
+                    propertyCategory.setPropertyTypeName(propertyResponse.getName());
 
+        }
         log.info("PropertyCategoryList: " + propertyCategories.toString());
         final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
         propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);

@@ -292,7 +292,7 @@ class grievanceView extends Component{
       currentThis.chckkey('childLocationId', req_obj);
 
     currentThis.chckkey('approvalComments', req_obj);
-    
+
     if(localStorage.getItem('type') === 'EMPLOYEE'){
       currentThis.chckkey('PRIORITY', req_obj);
       //currentThis.chckkey('priorityColor', req_obj);
@@ -425,7 +425,7 @@ class grievanceView extends Component{
     ];
     return(
       <div>
-      <form autoComplete="off" onSubmit={(e) => { search(e) }}>
+      <form autoComplete="off">
         <ViewSRN srn={this.state} />
         <EmployeeDocs srn={this.state.srn}/>
         <WorkFlow workflowdetails={this.state.workflow} />
@@ -545,7 +545,7 @@ class grievanceView extends Component{
               </Row> : ""}
                 <Row>
                   <div style={{textAlign: 'center'}}>
-                    <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
+                    <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" backgroundColor={"#5a3e1b"} labelColor={white}/>
                   </div>
                 </Row>
             </CardText>

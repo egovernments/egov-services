@@ -37,40 +37,23 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.demand.contract;
+package org.egov.wcms.transaction.web.contract;
 
-import java.util.Set;
-
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.request.RequestInfo;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @ToString
-@Builder
-public class TaxPeriodCriteria {
+@AllArgsConstructor
+@NoArgsConstructor
+public class FinYearReq {
+	
+	private RequestInfo requestInfo;
 
-    @NotNull
-    private String tenantId;
-
-    @NotNull
-    private String service;
-    
-    private String periodCycle;
-
-    private Set<String> id;
-
-    private String code;
-
-    private Long fromDate;
-
-    private Long toDate;
 }

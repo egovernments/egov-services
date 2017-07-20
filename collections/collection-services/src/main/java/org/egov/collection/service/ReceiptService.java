@@ -68,6 +68,7 @@ import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -522,5 +523,13 @@ public class ReceiptService {
 		//update repo call
 		return workflowDetails;
 	}
+
+    public List<User> getReceiptCreators() {
+        return receiptRepository.getReceiptCreators();
+    }
+
+    public List<String> getReceiptStatus() {
+        return receiptRepository.getReceiptStatus();
+    }
 
 }

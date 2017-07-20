@@ -145,6 +145,7 @@ public class WaterConnectionController {
         {
          waterConnectionRequest.getConnection().setIsLegacy(waterConn!=null ?waterConn.getIsLegacy():Boolean.FALSE);
          waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
+         waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
         final List<ErrorResponse> errorResponses = newWaterConnectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         

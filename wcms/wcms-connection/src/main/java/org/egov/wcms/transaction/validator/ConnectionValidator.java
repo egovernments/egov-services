@@ -197,8 +197,8 @@ public class ConnectionValidator {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if(waterConnectionRequest.getConnection().getProperty()!=null && !waterConnectionRequest.getConnection().getProperty().getPropertyidentifier().equals("")
-               && waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()!=null)
+        if(waterConnectionRequest.getConnection().getProperty()!=null && waterConnectionRequest.getConnection().getProperty().getPropertyidentifier() !=null && !waterConnectionRequest.getConnection().getProperty().getPropertyidentifier().equals("")
+               )
         {
              PropertyResponse propResp=  restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
             if(propResp==null && propResp.getProperties()!=null && propResp.getProperties().isEmpty()){

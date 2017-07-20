@@ -38,37 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.web.contract;
+package org.egov.eis.web.contract.enums;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import org.egov.collection.model.EmployeeInfo;
-import org.egov.common.contract.request.User;
-import org.egov.common.contract.response.ResponseInfo;
+public enum Gender {
+	MALE("MALE"), FEMALE("FEMALE"), OTHERS("OTHERS");
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+	private String value;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+	Gender(String value) {
+		this.value = value;
+	}
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class UserResponse {
+	@Override
+	@JsonValue
+    public String toString() {
+        return name();
+    }
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-
-	@JsonProperty("Users")
-	private List<EmployeeInfo> users = new ArrayList<EmployeeInfo>();
-
-    private List<User> receiptCreators = new ArrayList<User>();
+	@JsonCreator
+	public static Gender fromValue(String passedValue) {
+		for (Gender obj : Gender.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
+	}
 }

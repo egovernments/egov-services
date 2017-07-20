@@ -120,9 +120,9 @@ export default(state = defaultState, action) => {
         ...state.fieldErrors,
         [action.property]: validationData.errorText
       };
+
       currentState.validationData=validationData.validationData;
       currentState.isFormValid=validationData.isFormValid;
-
       return currentState;
       // return {
       //   ...state,

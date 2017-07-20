@@ -18,9 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Service
-public class CollectionConsumer {
+public class WorkflowConsumer {
 	
-	public static final Logger logger = LoggerFactory.getLogger(CollectionConsumer.class);
+	public static final Logger logger = LoggerFactory.getLogger(WorkflowConsumer.class);
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;

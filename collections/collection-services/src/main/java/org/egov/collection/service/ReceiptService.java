@@ -53,6 +53,7 @@ import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -206,6 +207,7 @@ public class ReceiptService {
 				logger.error("Department not available");
 				return false;
 			}
+
 			logger.info("FUND: " + fund + " DEPARTMENT: " + department);
 		}
 		return true;
@@ -228,6 +230,7 @@ public class ReceiptService {
 				statusCode = "TO BE SUBMITTED";
 			}
 			logger.info("StatusCode: " + statusCode);
+			billdetails.setStatus(statusCode);
 			final Map<String, Object> parametersMap = new HashMap<>();
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billdetails.getBusinessService(), receiptReq);
@@ -500,6 +503,12 @@ public class ReceiptService {
 		logger.info("Pushing recieptdetails to kafka queue");
 		return receiptRepository
 				.pushReceiptCancelDetailsToQueue(receiptRequest);
+	}
+	
+	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails){
+		logger.info("WorkflowDetails: "+workflowDetails.toString());
+		//update repo call
+		return workflowDetails;
 	}
 
 }

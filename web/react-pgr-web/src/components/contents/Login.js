@@ -202,10 +202,10 @@ class Login extends Component {
         }
 
 
-   Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response){
+   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes}).then(function(response){
 
 				//console.log(response)
-		  localStorage.setItem("modules", JSON.stringify(response.modules));
+		  localStorage.setItem("actions", JSON.stringify(response.actions));
 			setActionList(response.modules)
         },function(err) {
             console.log(err);

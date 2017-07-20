@@ -38,7 +38,8 @@ class CustomMenu extends Component {
       level:0,
       parentLevel:0,
       modules:[],
-      items:[]
+      items:[],
+      path:""
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -61,7 +62,7 @@ class CustomMenu extends Component {
   componentDidUpdate()
   {
     let {menuItems,actionList}=this.props;
-    // console.log(actionList);
+    console.log(actionList);
     // this.setState({
     //   modules:actionList
     // })
@@ -141,7 +142,7 @@ class CustomMenu extends Component {
   render() {
     // console.log(this.state.searchText);
     let {menuItems, handleToggle,actionList}=this.props;
-    let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions}=this.state;
+    let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions,path}=this.state;
     let {menuChange,changeLevel}=this;
     // console.log(actionList);
     // console.log(menuItems.length>0?menuItems[0].title:"");
@@ -259,98 +260,93 @@ class CustomMenu extends Component {
       }
     }
 
-    // const showMenuOne=(modules=[],actionList=[])=>{
-    //   menuItems=[...modules,...actionList];
-    //   // console.log(menuItems);
-    //   if(searchText.length==0)
-    //   {
-    //     return menuItems.map((item,index)=>{
-    //         if (item.hasOwnProperty("actionList")) {
-    //             <MenuItem
-    //                 key={index}
-    //                 leftIcon={<i className="material-icons">view_module</i>}
-    //                 primaryText={item.displayName}
-    //                 rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
-    //                 onTouchTap={()=>{changeModulesActions(item.subModules, item.actionList)}}
-    //             />
-    //         } else {
-    //
-    //         }
-    //     })
-    //   }
-    //
-    //
-    //   // if(searchText.length==0)
-    //   // {
-    //   //   return menuItems.map((item,index)=>{
-    //   //
-    //   //
-    //   //       // if (item.level==level) {
-    //   //       //   if (item.url) {
-    //   //       //     return(
-    //   //       //       <Link   key={index} to={item.url} >
-    //   //       //         <MenuItem
-    //   //       //
-    //   //       //
-    //   //       //              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
-    //   //       //
-    //   //       //              leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-    //   //       //              primaryText={item.name}
-    //   //       //           />
-    //   //       //       </Link>
-    //   //       //
-    //   //       //
-    //   //       //     )
-    //   //       //
-    //   //       //   }
-    //   //       //
-    //   //       //   else {
-    //   //       //     return (
-    //   //       //           <MenuItem
-    //   //       //               key={index}
-    //   //       //                leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-    //   //       //                primaryText={item.name}
-    //   //       //                rightIcon={<i className="material-icons">{item.rightIcon}</i>}
-    //   //       //                onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
-    //   //       //             />
-    //   //       //         )
-    //   //       //   }
-    //   //       //
-    //   //       // }
-    //   //   })
-    //   //   return(
-    //   //     <div>
-    //   //       <MenuItem
-    //   //            leftIcon={<i className="material-icons">view_module</i>}
-    //   //            primaryText={menuItems.length>0?menuItems[0].title:""}
-    //   //            rightIcon={<ArrowDropRight />}
-    //   //             />
-    //   //
-    //   //       </div>
-    //   //   )
-    //   // }
-    //   // else {
-    //   //
-    //   //     return menuItems.map((item,index)=>{
-    //   //           if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
-    //   //             return(
-    //   //               <Link   key={index} to={item.url} >
-    //   //                 <MenuItem
-    //   //                      onTouchTap={()=>{handleToggle(false)}}
-    //   //                      leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-    //   //                      primaryText={item.name}
-    //   //                   />
-    //   //               </Link>
-    //   //             )
-    //   //           }
-    //   //
-    //   //     })
-    //   //
-    //   //
-    //   // }
-    // }
-    // console.log(constructMenu(menuItems.length>0?menuItems[0].items:[]));
-    return (
+    const showMenuTwo=()=>{
+
+      if(searchText.length==0)
+      {
+
+        return actionList.map((item,index)=>{
+            if (!path && item.path) {
+              let splitArray=item.path.split(".");
+              return (
+                        <MenuItem
+
+                             key={index}
+                             leftIcon={<i className="material-icons">view_module</i>}
+                             primaryText={item.displayName}
+                             rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
+
+                          />
+                      )
+
+            } else {
+
+            }
+            // if (item.level==level) {
+            //   if (item.url) {
+            //     return(
+            //       <Link  key={index} to={item.url} >
+            //         <MenuItem
+            //             style={{whiteSpace: "initial"}}
+            //              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+            //              leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+            //              primaryText={item.name}
+            //           />
+            //       </Link>
+            //
+            //
+            //     )
+            //
+            //   } else {
+            //     return (
+            //           <MenuItem
+            //
+            //                key={index}
+            //                leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+            //                primaryText={item.name}
+            //                rightIcon={<i className="material-icons">{item.rightIcon}</i>}
+            //                onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
+            //             />
+            //         )
+            //   }
+            //
+            // }
+        })
+        // return(
+        //   <div>
+        //     <MenuItem
+        //
+        //          leftIcon={<i className="material-icons">view_module</i>}
+        //          primaryText={menuItems.length>0?menuItems[0].title:""}
+        //          rightIcon={<ArrowDropRight />}
+        //           />
+        //
+        //     </div>
+        // )
+      }
+      else {
+
+          return menuItems.map((item,index)=>{
+                if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+                  return(
+                    <Link   key={index} to={item.url} >
+                      <MenuItem
+                          style={{whiteSpace: "initial"}}
+                           onTouchTap={()=>{handleToggle(false)}}
+                           leftIcon={<i className="material-icons">{item.leftIcon}</i>}
+                           primaryText={item.name}
+                        />
+                    </Link>
+                  )
+                }
+
+          })
+
+
+      }
+    }
+
+      return (
       <div className="custom-menu" style={style}  ref={this.setWrapperRef}>
           {
             <TextField
@@ -379,55 +375,12 @@ class CustomMenu extends Component {
                         onTouchTap={()=>{changeLevel(parentLevel)}}
                       />}
 
-          {/*
-            <MenuItem
-              primaryText="Application"
-              leftIcon={<i className="material-icons">view_module</i>}
-              rightIcon={<ArrowDropRight />}
-              />
-            */}
-
             {showMenu()}
 
-            {/*modules.length>0 && showMenuOne(modules,items)*/}
+            {/*showMenuTwo()*/}
 
-          {/*constructMenu()*/}
-        {/*  <MenuItem>
-            <Link to="/">
-                Favourites
-            </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/propertyTaxSearch">
-                Property Search
-            </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/propertyCreate">
-                Property Create
-            </Link>
-          </MenuItem>*/}
           </Menu>
 
-      {/*  <DropDownMenu value={1}>
-          <MenuItem value={1} primaryText="Never" />
-          <MenuItem value={2} primaryText="Every Night" />
-          <MenuItem value={3} primaryText="Weeknights" />
-          <MenuItem value={4} primaryText="Weekends" />
-          <MenuItem value={5} primaryText="Weekly" />
-
-
-            <DropDownMenu value={1}>
-              <MenuItem value={1} primaryText="Never" />
-              <MenuItem value={2} primaryText="Every Night" />
-              <MenuItem value={3} primaryText="Weeknights" />
-              <MenuItem value={4} primaryText="Weekends" />
-              <MenuItem value={5} primaryText="Weekly" />
-            </DropDownMenu>
-
-
-        </DropDownMenu>
-      */}
 
       </div>
     );

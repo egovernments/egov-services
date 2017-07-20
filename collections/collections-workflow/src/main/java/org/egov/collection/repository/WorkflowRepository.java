@@ -109,7 +109,7 @@ public class WorkflowRepository {
 		long stateId = getStateId(workflowDetails.getReceiptNumber());
 		StringBuilder uri = new StringBuilder();
 		String basePath = applicationProperties.getWorkflowServiceHostName();
-		String searchPath = applicationProperties.getWorkflowServiceUpdatePath().replaceAll("\\{id\\}", ""+stateId+"");
+		String searchPath = applicationProperties.getWorkflowServiceUpdatePath().replaceAll("\\{id\\}", ""+workflowDetails.getStateId()+"");
 		uri.append(basePath).append(searchPath);
 		TaskRequest taskRequest = new TaskRequest();
 		taskRequest = getTaskRequest(workflowDetails);

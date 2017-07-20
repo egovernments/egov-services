@@ -9,6 +9,7 @@ import wcSpecs from './specs/wc/wc';
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
+import UiButton from './components/UiButton';
 
 class Report extends Component {
 
@@ -35,19 +36,24 @@ class Report extends Component {
 
   }
 
-  componentDidMount()
-  {
-
+  componentDidMount() {
       this.initData();
   }
 
-  create=(e)=>
-  {
+  create=(e) => {
+    let self = this;
     e.preventDefault();
+    self.props.setLoadingStatus('loading');
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", self.props.formData, "", true).then(function(response){
+      self.props.setLoadingStatus('hide');
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
   }
 
-  getVal = () => {
-    return "";
+  getVal = (path) => {
+    return _.get(this.props.formData, path);
   }
 
   // componentDidUpdate()
@@ -67,20 +73,20 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName,formData}=this.props;
+    let {metaData, moduleName, actionName, formData}=this.props;
     let {create,handleChange, getVal}=this;
-    console.log(formData);
-    // console.log(!_.isEmpty(metaData) && metaData);
-    // console.log(moduleName && moduleName);
-    // console.log(actionName && actionName);
-    // console.log(`${moduleName}.${actionName}`);
+    console.log(metaData);
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} getVal={getVal} fieldErrors={{}} formData={formData}/>}
-          <RaisedButton type="submit" disabled={false}  label="Create" />
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={{}} useTimestamp={metaData[`${moduleName}.${actionName}`].useTimestamp || false}/>}
+          <div style={{"textAlign": "center"}}>
+            <br/>
+            <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>
+            <br/>
+          </div>
         </form>
       </div>
     );
@@ -116,6 +122,12 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
     dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

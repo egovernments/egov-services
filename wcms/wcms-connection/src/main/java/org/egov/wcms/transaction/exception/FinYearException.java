@@ -37,64 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.model;
-
-import javax.validation.constraints.NotNull;
+package org.egov.wcms.transaction.exception;
 
 import org.egov.common.contract.request.RequestInfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
-@ToString
-@Builder
-public class WorkflowDetails {
+public class FinYearException extends RuntimeException {
 
-	@JsonProperty("RequestInfo")
+	private static final long serialVersionUID = 1L;
+
+	private String customMsg;
+
+	private String msgDetails;
+
 	private RequestInfo requestInfo;
-	
-	@NotNull
-	private String tenantId;
-	
-	@NotNull
-	private String receiptNumber;
-	
-    private long department;
-
-    private long designation;
-    
-    private String businessKey;
-
-    @NotNull
-    private long user;
-
-    private String comments;
-    
-    private Long initiatorPosition;
-    
-    private Long assignee;
-    
-    @NotNull
-    private String action;
-
-    
-    private String status;
-    
-    @NotNull
-    private String state;
-    
-    private long stateId;
 
 }

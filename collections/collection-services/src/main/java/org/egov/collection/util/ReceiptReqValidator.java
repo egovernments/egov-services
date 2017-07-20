@@ -67,27 +67,13 @@ public class ReceiptReqValidator {
 		
 		for(BillDetail billDetails:  receipt.getBill().get(0).getBillDetails()){
 			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
-			if(null == billDetails.getReceiptType()|| billDetails.getReceiptType().isEmpty()){
+			if(null == billDetails.getReceiptType()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.RECEIPT_TYPE_MISSING_FIELD).build();
 				errorFields.add(errorField);
-			}
-			
-			if(null == billDetails.getReceiptDate()){
-				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_DATE_MISSING_CODE)
-						.message(CollectionServiceConstants.RECEIPT_DATE_MISSING_MESSAGE)
-						.field(CollectionServiceConstants.RECEIPT_DATE_MISSING_FIELD).build();
-				errorFields.add(errorField);
-			}
-			if(null == billDetails.getStatus() || billDetails.getStatus().isEmpty()){
-				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.STATUS_MISSING_CODE)
-						.message(CollectionServiceConstants.STATUS_MISSING_MESSAGE)
-						.field(CollectionServiceConstants.STATUS_MISSING_FIELD).build();
-				errorFields.add(errorField);
-			}
-			
-			if(null == billDetails.getCollectionType() || billDetails.getCollectionType().isEmpty() ){
+			}			
+			if(null == billDetails.getCollectionType()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.COLLECTIONTYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.COLLECTIONTYPE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.COLLECTIONTYPE_MISSING_FIELD).build();

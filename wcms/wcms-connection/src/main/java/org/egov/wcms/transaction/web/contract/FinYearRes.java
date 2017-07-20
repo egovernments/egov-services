@@ -37,64 +37,24 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.model;
+package org.egov.wcms.transaction.web.contract;
 
-import javax.validation.constraints.NotNull;
-
-import org.egov.common.contract.request.RequestInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.response.ResponseInfo;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class WorkflowDetails {
-
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@AllArgsConstructor
+@NoArgsConstructor
+public class FinYearRes {
 	
-	@NotNull
-	private String tenantId;
-	
-	@NotNull
-	private String receiptNumber;
-	
-    private long department;
+	 private ResponseInfo responseInfo;
 
-    private long designation;
-    
-    private String businessKey;
-
-    @NotNull
-    private long user;
-
-    private String comments;
-    
-    private Long initiatorPosition;
-    
-    private Long assignee;
-    
-    @NotNull
-    private String action;
-
-    
-    private String status;
-    
-    @NotNull
-    private String state;
-    
-    private long stateId;
-
+	 private String financialYear; 
 }

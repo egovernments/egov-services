@@ -1,16 +1,16 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_create",
+		"url": "/wcms/masters/documenttype/_create",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
+				"label": "wc.create.documenttype.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
-							"label": "Category",
+							"jsonPath": "documentTypes.name",
+							"label": "wc.create.documenttype*",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -37,6 +37,7 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
+							"default": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}

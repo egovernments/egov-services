@@ -94,5 +94,7 @@ public class WorkflowDetails {
     
     @NotNull
     private String state;
+    
+    private long stateId;
 
 }

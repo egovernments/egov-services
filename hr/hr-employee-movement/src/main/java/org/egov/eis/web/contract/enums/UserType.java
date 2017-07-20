@@ -38,38 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.model;
+package org.egov.eis.web.contract.enums;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public enum UserType {
+	EMPLOYEE("EMPLOYEE"), CITIZEN("CITIZEN"), SYSTEM("SYSTEM");
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-@Builder
-@Setter
-@Getter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-public class AuditDetails {
-	
-	  @JsonProperty("createdBy")
-	  private Long createdBy = null;
-	  
-	  @JsonProperty("createdDate")
-	  private Long createdDate = null;
-	  
-	  @JsonProperty("lastModifiedBy")
-	  private Long lastModifiedBy = null;
-	  
-	  @JsonProperty("lastModifiedDate")
-	  private Long lastModifiedDate = null;
+	private String value;
 
+	UserType(String value) {
+		this.value = value;
+	}
+
+	@Override
+	@JsonValue
+    public String toString() {
+        return name();
+    }
+
+	@JsonCreator
+	public static UserType fromValue(String passedValue) {
+		for (UserType obj : UserType.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
+	}
 }

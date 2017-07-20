@@ -2,6 +2,7 @@ var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"url": "/connections/v1/_create",
+		"useTimestamp": true,
 		"groups": [
 			{
 				"label": "wc.create.groups.applicantDetails.title",
@@ -162,7 +163,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/pt-property/property/propertytypes/_search",
+							"url": "/pt-property/property/propertytypes/_search?|$..id|$..propertyType",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -186,7 +187,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-usagetype/_search?tenantId=default|$..id|$..name",
+							"url": "/wcms/masters/propertytype-usagetype/_search?|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

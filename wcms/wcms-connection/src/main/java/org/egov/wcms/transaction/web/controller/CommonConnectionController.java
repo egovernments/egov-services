@@ -47,9 +47,11 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
+import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.EnumResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
@@ -71,6 +73,12 @@ public class CommonConnectionController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private RestConnectionService restConnectionService; 
+	
+	@Autowired
+    private ConfigurationManager configurationManager;
 
     @RequestMapping(value = "/_getconnectiontypes")
     public ResponseEntity<?> getConnectionTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -97,7 +105,35 @@ public class CommonConnectionController {
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-
+    
+    // This is just an end point to check the working of various ID Generation. 
+    // The internal methods will be used in different sections of API and this API will be removed later
+    @RequestMapping(value = "/_generateIds")
+    public ResponseEntity<?> getIDGen(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+        StringBuilder builder = new StringBuilder();
+        EnumData model1 = new EnumData();
+        EnumData model2 = new EnumData();
+        EnumData model3 = new EnumData();
+        EnumData model4 = new EnumData();
+        EnumData model5 = new EnumData();
+        
+        model1.setKey("## Ack Number Generated : " + restConnectionService.generateAcknowledgementNumber("default"));
+        model2.setKey("## HSC Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getHscGenNameServiceTopic(), configurationManager.getHscGenFormatServiceTopic()));
+        model3.setKey("## Demand Bill Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getDemandBillGenNameServiceTopic(), configurationManager.getDemandBillGenFormatServiceTopic()));
+        model4.setKey("## Work Order Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getWorkOrderGenNameServiceTopic(), configurationManager.getWorkOrderGenFormatServiceTopic()));
+        model5.setKey("## Estimation Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getEstimateGenNameServiceTopic(), configurationManager.getEstimateGenFormatServiceTopic()));
+        List<EnumData> modelList = new ArrayList<>(); 
+        modelList.add(model1);
+        modelList.add(model2);
+        modelList.add(model3);
+        modelList.add(model4);
+        modelList.add(model5);
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
     private ResponseEntity<?> getSuccessResponse(final List<EnumData> modelList,
             final RequestInfo requestInfo) {
         final EnumResponse response = new EnumResponse();

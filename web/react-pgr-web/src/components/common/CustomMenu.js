@@ -377,7 +377,7 @@ class CustomMenu extends Component {
 
             {showMenu()}
 
-            {showMenuTwo()}
+            {/*showMenuTwo()*/}
 
           </Menu>
 

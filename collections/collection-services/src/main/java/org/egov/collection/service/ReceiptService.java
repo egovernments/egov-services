@@ -103,8 +103,8 @@ public class ReceiptService {
 
 	public Receipt pushToQueue(ReceiptReq receiptReq) {
 		logger.info("Pushing recieptdetail to kafka queue");
-		Bill bill = receiptReq.getReceipt().getBill().get(0);
-		Bill apportionBill = receiptReq.getReceipt().getBill().get(0);
+		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
+		Bill apportionBill = receiptReq.getReceipt().get(0).getBill().get(0);
 		apportionBill.getBillDetails().clear();
 		for (BillDetail billdetail : bill.getBillDetails()) {
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
@@ -131,15 +131,15 @@ public class ReceiptService {
 		apportionBill = getApportionListFromBillingService(
 				receiptReq.getRequestInfo(), apportionBill).get(0);
 		bill.getBillDetails().addAll(apportionBill.getBillDetails());
-		receiptReq.getReceipt().getBill().clear();
-		receiptReq.getReceipt().getBill().add(bill);
+		receiptReq.getReceipt().get(0).getBill().clear();
+		receiptReq.getReceipt().get(0).getBill().add(bill);
 		setReceiptNumber(receiptReq);
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo().getId());
 		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo().getUserInfo().getId());
 		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime())).getTime());
 		auditDetails.setLastModifiedDate((new Date(new java.util.Date().getTime())).getTime());
-		receiptReq.getReceipt().setAuditDetails(auditDetails);
+		receiptReq.getReceipt().get(0).setAuditDetails(auditDetails);
 		
 		
 	//	return receiptRepository.pushToQueue(receiptReq); //async call
@@ -148,7 +148,7 @@ public class ReceiptService {
 	}
 
 	private void setReceiptNumber(ReceiptReq receiptReq) {
-		Bill bill = receiptReq.getReceipt().getBill().get(0);
+		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
 		for (BillDetail billdetail : bill.getBillDetails()) {
 			String receiptNumber = generateReceiptNumber(
 					receiptReq.getRequestInfo(), bill.getTenantId());
@@ -230,7 +230,7 @@ public class ReceiptService {
 	public Receipt create(ReceiptReq receiptReq) {
 		logger.info("Persisting recieptdetail");
 
-		Receipt receiptInfo = receiptReq.getReceipt();
+		Receipt receiptInfo = receiptReq.getReceipt().get(0);
 		String statusCode;
 		long receiptHeaderId;
 
@@ -321,7 +321,7 @@ public class ReceiptService {
 					final Map<String, Object> parameterMap = new HashMap<>();
 					List<Object> chartOfAccount = getChartOfAccountOnGlCode(
 							billAccountDetails.getGlcode(), receiptReq
-									.getReceipt().getTenantId(),
+									.getReceipt().get(0).getTenantId(),
 							receiptReq.getRequestInfo());
 					if (!chartOfAccount.isEmpty()) {
 						parameterMap.put("chartofaccount",
@@ -356,7 +356,7 @@ public class ReceiptService {
 						parametersReceiptDetails, receiptHeaderId);
 			}
 		}
-		return receiptReq.getReceipt();
+		return receiptReq.getReceipt().get(0);
 	}
 
 	public BusinessDetailsResponse getBusinessDetails(
@@ -366,7 +366,7 @@ public class ReceiptService {
 		StringBuilder builder = new StringBuilder();
 		String baseUri = applicationProperties.getBusinessDetailsSearch();
 		String searchCriteria = "?businessDetailsCode=" + businessDetailsCode
-				+ "&tenantId=" + receiptReq.getReceipt().getTenantId();
+				+ "&tenantId=" + receiptReq.getReceipt().get(0).getTenantId();
 		builder.append(baseUri).append(searchCriteria);
 
 		logger.info("URI being hit to get Business Details: "
@@ -507,12 +507,12 @@ public class ReceiptService {
 		return createVoucherForBillingService;
 	}
 
-	public Receipt cancelReceiptBeforeRemittance(ReceiptReq receiptRequest) {
+	public List<Receipt> cancelReceiptBeforeRemittance(ReceiptReq receiptRequest) {
 		ReceiptReq request = receiptRepository.cancelReceipt(receiptRequest);
 		return request.getReceipt();
 	}
 
-	public Receipt cancelReceiptPushToQueue(ReceiptReq receiptRequest) {
+	public List<Receipt> cancelReceiptPushToQueue(ReceiptReq receiptRequest) {
 		logger.info("Pushing recieptdetails to kafka queue");
 		return receiptRepository
 				.pushReceiptCancelDetailsToQueue(receiptRequest);

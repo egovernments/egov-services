@@ -124,7 +124,7 @@ public class ReceiptControllerTest {
 	public void test_should_be_able_to_cancel_receipts_before_bank_remmitance() throws Exception {
 		List<ErrorResponse> errorResponses = new ArrayList<>();
 		when(receiptReqValidator.validatecreateReceiptRequest(any())).thenReturn(errorResponses);
-		when(receiptService.cancelReceiptPushToQueue(any())).thenReturn(getReceipt());
+		when(receiptService.cancelReceiptPushToQueue(any())).thenReturn(Arrays.asList(getReceipt()));
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
 		mockMvc.perform(post("/receipts/v1/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)

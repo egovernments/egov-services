@@ -42,7 +42,8 @@ public class ReceiptReqValidator {
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			final List<ErrorField> errorFields) {
 	try{	
-		final Receipt receipt = receiptRequest.getReceipt();
+		final List<Receipt> receipts = receiptRequest.getReceipt();
+		for(Receipt receipt:receipts){
 		
 		if(null == receipt.getTenantId() || receipt.getTenantId().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.TENANT_ID_MISSING_CODE)
@@ -108,6 +109,7 @@ public class ReceiptReqValidator {
 							.field(CollectionServiceConstants.COA_MISSING_FIELD).build();
 					errorFields.add(errorField);
 				}
+			}
 			}
 		}
 	}catch(Exception e){

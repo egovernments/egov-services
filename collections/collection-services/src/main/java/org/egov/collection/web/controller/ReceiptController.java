@@ -136,8 +136,8 @@ public class ReceiptController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		Receipt receipt = receiptService.cancelReceiptPushToQueue(receiptRequest);
-		return getSuccessResponse(Collections.singletonList(receipt), receiptRequest.getRequestInfo());
+		List<Receipt> receipt = receiptService.cancelReceiptPushToQueue(receiptRequest);
+		return getSuccessResponse(receipt, receiptRequest.getRequestInfo());
 	}
 
 

@@ -52,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
@@ -99,15 +100,15 @@ public class ReceiptServiceTest {
 	@Test
 	public void test_should_be_able_to_cancel_receipt_before_bank_remittance() {
 		when(receiptRepository.cancelReceipt(any())).thenReturn(getReceiptRequest());
-		Receipt receipt = receiptService.cancelReceiptBeforeRemittance(getReceiptRequest());
-		assertEquals(getReceipt(), receipt);
+		List<Receipt> receipt = receiptService.cancelReceiptBeforeRemittance(getReceiptRequest());
+		assertEquals(Arrays.asList(getReceipt()), receipt);
 	}
 
 	@Test
 	public void test_should_be_able_to_push_cancel_request_to_kafka() {
-		when(receiptRepository.pushReceiptCancelDetailsToQueue(any())).thenReturn(getReceipt());
-		Receipt receipt = receiptService.cancelReceiptPushToQueue(getReceiptRequest());
-		assertEquals(getReceipt(), receipt);
+		when(receiptRepository.pushReceiptCancelDetailsToQueue(any())).thenReturn(Arrays.asList(getReceipt()));
+		List<Receipt> receipt = receiptService.cancelReceiptPushToQueue(getReceiptRequest());
+		assertEquals(Arrays.asList(getReceipt()), receipt);
 	}
 
 	@Test
@@ -220,7 +221,7 @@ public class ReceiptServiceTest {
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
-		return ReceiptReq.builder().requestInfo(requestInfo).receipt(receipt).build();
+		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {

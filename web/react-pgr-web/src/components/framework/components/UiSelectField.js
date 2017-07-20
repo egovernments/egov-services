@@ -75,14 +75,10 @@ class UiSelectField extends Component {
 					<SelectField
 						fullWidth={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						value={item.jsonPath}
+						value={eval(item.jsonPath)}
 						onChange={(event, key, value) =>{
-							let e={
-							target:{
-								value
-								}
-							}
-						this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}}
+							this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+						}}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						maxHeight={200}>

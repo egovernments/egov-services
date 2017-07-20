@@ -13,10 +13,10 @@ export default class UiPanCard extends Component {
 					<TextField 
 						fullWidth={true} 
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
-						value={eval(item.jsonpath)}
+						value={eval(item.jsonPath)}
 						disabled={item.isDisabled}
-						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '/^[a-zA-z]{5}\d{4}[a-zA-Z]{1}$/', item.requiredErrMsg, item.patternErrMsg)} />
+						errorText={this.props.fieldErrors[item.jsonPath]}
+						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '/^[a-zA-z]{5}\d{4}[a-zA-Z]{1}$/', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

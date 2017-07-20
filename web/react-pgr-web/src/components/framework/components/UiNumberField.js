@@ -14,10 +14,10 @@ export default class UiNumberField extends Component {
 						fullWidth={true} 
 						type="number"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
-						value={eval(item.jsonpath)}
+						value={eval(item.jsonPath)}
 						disabled={item.isDisabled}
-						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
+						errorText={this.props.fieldErrors[item.jsonPath]}
+						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

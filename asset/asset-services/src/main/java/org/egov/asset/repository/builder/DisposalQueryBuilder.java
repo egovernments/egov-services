@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.DisposalCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class DisposalQueryBuilder {
+import lombok.extern.slf4j.Slf4j;
 
-	private static final Logger logger = LoggerFactory.getLogger(RevaluationQueryBuilder.class);
+@Component
+@Slf4j
+public class DisposalQueryBuilder {
+	
 
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -32,10 +32,10 @@ public class DisposalQueryBuilder {
 	@SuppressWarnings("rawtypes")
 	public String getQuery(final DisposalCriteria disposalCriteria, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		logger.info("get query");
+		log.info("get query");
 		addWhereClause(selectQuery, preparedStatementValues, disposalCriteria);
 		addPagingClause(selectQuery, preparedStatementValues, disposalCriteria);
-		logger.info("Query from asset querybuilde for search : " + selectQuery);
+		log.info("Query from asset querybuilde for search : " + selectQuery);
 		return selectQuery.toString();
 	}
 
@@ -78,7 +78,7 @@ public class DisposalQueryBuilder {
 		// handle limit(also called pageSize) here
 
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+		long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
 		if (disposalCriteria.getSize() != null)
 			pageSize = disposalCriteria.getSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize

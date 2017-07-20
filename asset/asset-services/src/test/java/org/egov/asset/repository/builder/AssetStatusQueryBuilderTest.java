@@ -41,7 +41,7 @@ public class AssetStatusQueryBuilderTest {
     @Test
     public void getQueryWithTenantIdTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT objectname,code,name,description,tenantid,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate FROM egasset_statuses as status WHERE status.tenantId = ?";
         final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder().tenantId("ap.kurnool").build();
@@ -55,7 +55,7 @@ public class AssetStatusQueryBuilderTest {
     @Test
     public void getQueryWithObjectNameTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT objectname,code,name,description,tenantid,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate FROM egasset_statuses as status WHERE status.objectname = ?";
         final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder()
@@ -70,7 +70,7 @@ public class AssetStatusQueryBuilderTest {
     @Test
     public void getQueryWithCodeTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT objectname,code,name,description,tenantid,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate FROM egasset_statuses as status WHERE status.code = ?";
         final AssetStatusCriteria assetStatusCriteria = AssetStatusCriteria.builder()

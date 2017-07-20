@@ -48,113 +48,57 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
+import lombok.Getter;
+
 @Configuration
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
+@Getter
 public class ApplicationProperties {
 
-    private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
-    public static final String SEARCH_PAGENO_MAX = "search.pageno.max";
-    public static final String SEARCH_PAGESIZE_MAX = "search.pagesize.max";
+	private  String searchPageSizeDefault = "search.pagesize.default";
+	private  String searchPagenoMax = "search.pageno.max";
+	private  String searchPageSizeMax = "search.pagesize.max";
 
-    @Value("${egov.assetcategory.async}")
-    private Boolean assetCategoryAsync;
+	@Value("${egov.assetcategory.async}")
+	private Boolean assetCategoryAsync;
 
-    @Value("${kafka.topics.save.asset}")
-    private String createAssetTopicName;
+	@Value("${kafka.topics.save.asset}")
+	private String createAssetTopicName;
 
-    @Value("${kafka.topics.update.asset}")
-    private String updateAssetTopicName;
+	@Value("${kafka.topics.update.asset}")
+	private String updateAssetTopicName;
 
-    @Value("${kafka.topics.save.assetcategory}")
-    private String createAssetCategoryTopicName;
+	@Value("${kafka.topics.save.assetcategory}")
+	private String createAssetCategoryTopicName;
 
-    @Value("${kafka.topics.update.assetcategory}")
-    private String updateAssetCategoryTopicName;
+	@Value("${kafka.topics.update.assetcategory}")
+	private String updateAssetCategoryTopicName;
 
-    @Value("${kafka.topics.save.revaluation}")
-    private String createAssetRevaluationTopicName;
+	@Value("${kafka.topics.save.revaluation}")
+	private String createAssetRevaluationTopicName;
 
-    @Value("${kafka.topics.save.disposal}")
-    private String createAssetDisposalTopicName;
+	@Value("${kafka.topics.save.disposal}")
+	private String createAssetDisposalTopicName;
 
-    @Value("${egov.services.egf_service.hostname}")
-    private String egfServiceHostName;
+	@Value("${egov.services.egf_service.hostname}")
+	private String egfServiceHostName;
 
-    @Value("${egov.services.egf_service.chartofaccounts.searchpath}")
-    private String egfServiceChartOfAccountsSearchPath;
+	@Value("${egov.services.egf_service.chartofaccounts.searchpath}")
+	private String egfServiceChartOfAccountsSearchPath;
 
-    @Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
-    private String egfServiceChartOfAccountsDetailsSearchPath;
+	@Value("${egov.services.egf_service.chartofaccountsdetails.searchpath}")
+	private String egfServiceChartOfAccountsDetailsSearchPath;
 
-    @Value("${egov.services.egf_service.voucher.createpath}")
-    private String egfServiceVoucherCreatePath;
+	@Value("${egov.services.egf_service.voucher.createpath}")
+	private String egfServiceVoucherCreatePath;
 
-    @Value("${egov.municipality.host}")
-    private String municipalityHostName;
+	@Value("${egov.municipality.host}")
+	private String municipalityHostName;
 
-    @Autowired
-    private Environment environment;
+	@Value("${egov.services.asset.current.value.sequence}")
+	private String currentValueServiceSequence;
 
-    public String commonsSearchPageSizeDefault() {
-        return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
-    }
-
-    public String commonsSearchPageNumberMax() {
-        return environment.getProperty(SEARCH_PAGENO_MAX);
-    }
-
-    public String commonsSearchPageSizeMax() {
-        return environment.getProperty(SEARCH_PAGESIZE_MAX);
-    }
-
-    public Boolean getAssetCategoryAsync() {
-        return assetCategoryAsync;
-    }
-
-    public String getCreateAssetCategoryTopicName() {
-        return createAssetCategoryTopicName;
-    }
-
-    public String getCreateAssetTopicName() {
-        return createAssetTopicName;
-    }
-
-    public String getUpdateAssetTopicName() {
-        return updateAssetTopicName;
-    }
-
-    public String getUpdateAssetCategoryTopicName() {
-        return updateAssetCategoryTopicName;
-    }
-
-    public String getCreateAssetRevaluationTopicName() {
-        return createAssetRevaluationTopicName;
-    }
-
-    public String getCreateAssetDisposalTopicName() {
-        return createAssetDisposalTopicName;
-    }
-
-    public String getEgfServiceHostName() {
-        return egfServiceHostName;
-    }
-
-    public String getEgfServiceVoucherCreatePath() {
-        return egfServiceVoucherCreatePath;
-    }
-
-    public String getEgfServiceChartOfAccountsSearchPath() {
-        return egfServiceChartOfAccountsSearchPath;
-    }
-
-    public String getEgfServiceChartOfAccountsDetailsSearchPath() {
-        return egfServiceChartOfAccountsDetailsSearchPath;
-    }
-
-    public String getMunicipalityHostName() {
-        return municipalityHostName;
-    }
-
-
+	@Autowired
+	private Environment environment;
 }

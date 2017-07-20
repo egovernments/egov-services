@@ -2,8 +2,10 @@ package org.egov.asset.web.validator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,7 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
@@ -25,11 +28,12 @@ import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetConfigurationService;
-import org.egov.asset.service.AssetCurrentAmountService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
+import org.egov.asset.service.CurrentValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +52,13 @@ public class AssetValidator {
     private AssetService assetService;
 
     @Autowired
-    private AssetCurrentAmountService assetCurrentAmountService;
-
-    @Autowired
     private AssetMasterService assetMasterService;
+    
+    @Autowired
+    private CurrentValueService currentValueService;
+    
+    @Autowired
+    private AssetRepository assetRepository;
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
@@ -158,8 +165,11 @@ public class AssetValidator {
     public void validateDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         validateRequestHeaderSessionId(headers);
         final Disposal disposal = disposalRequest.getDisposal();
-        final Asset asset = assetCurrentAmountService.getAsset(disposal.getAssetId(), disposal.getTenantId(),
-                disposalRequest.getRequestInfo());
+        List<Long> assetIds = new ArrayList<>();
+		assetIds.add(disposalRequest.getDisposal().getAssetId());
+		final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
+				disposalRequest.getDisposal().getTenantId()).id(assetIds).build()).get(0);
+        validateAssetForCapitalizedStatus(asset);
         validateAssetForCapitalizedStatus(asset);
 
         if (StringUtils.isEmpty(disposal.getBuyerName()))
@@ -234,8 +244,11 @@ public class AssetValidator {
     public void validateRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         validateRequestHeaderSessionId(headers);
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final Asset asset = assetCurrentAmountService.getAsset(revaluation.getAssetId(), revaluation.getTenantId(),
-                revaluationRequest.getRequestInfo());
+        List<Long> assetIds = new ArrayList<>();
+		assetIds.add(revaluation.getAssetId());
+		final Asset asset = assetRepository.findForCriteria(AssetCriteria.builder().tenantId(
+				revaluation.getTenantId()).id(assetIds).build()).get(0);
+        validateAssetForCapitalizedStatus(asset);
         validateAssetForCapitalizedStatus(asset);
         final boolean enableVoucherGeneration = assetConfigurationService
                 .getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION, revaluation.getTenantId());
@@ -254,9 +267,11 @@ public class AssetValidator {
         if (revaluation.getFunction() == null)
             throw new RuntimeException("Function from financials is necessary for asset revaluation");
 
-        final BigDecimal assetCurrentAmount = assetCurrentAmountService
-                .getCurrentAmount(asset.getId(), revaluation.getTenantId(), revaluationRequest.getRequestInfo())
-                .getAssetCurrentValue().getCurrentAmmount();
+        Set<Long> assetIdsForCurrentAmt = new HashSet<>();
+        assetIdsForCurrentAmt.add(asset.getId());
+		final BigDecimal assetCurrentAmount = currentValueService
+				.getCurrentValues(assetIdsForCurrentAmt, revaluation.getTenantId(), revaluationRequest.getRequestInfo())
+				.getAssetCurrentValues().get(0).getCurrentAmount();
 
         if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                 && (revaluation.getValueAfterRevaluation().compareTo(assetCurrentAmount) == 0
@@ -312,8 +327,10 @@ public class AssetValidator {
 
     public void validateAssetForUpdate(final AssetRequest assetRequest) {
         final Asset assetFromReq = assetRequest.getAsset();
-        final Asset asset = assetCurrentAmountService.getAsset(assetFromReq.getId(), assetFromReq.getTenantId(),
-                assetRequest.getRequestInfo());
+        List<Long> ids = new ArrayList<>();
+        ids.add(assetFromReq.getId());
+        AssetCriteria assetCriteria = AssetCriteria.builder().id(ids).tenantId(assetFromReq.getTenantId()).build();
+        final Asset asset = assetService.getAssets(assetCriteria,assetRequest.getRequestInfo()).getAssets().get(0);
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
         else

@@ -44,7 +44,7 @@ public class AssetQueryBuilderTest {
     public void getQueryWithTenantIdTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").build();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,"
                 + "asset.code as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,"
                 + "ywd.id as ywd_id,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as "
@@ -66,7 +66,7 @@ public class AssetQueryBuilderTest {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
                 .grossValue(Double.valueOf("15.0")).build();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
                 + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
                 + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
@@ -89,7 +89,7 @@ public class AssetQueryBuilderTest {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
                 .toCapitalizedValue(Double.valueOf("15.0")).build();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
                 + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
                 + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
@@ -112,7 +112,7 @@ public class AssetQueryBuilderTest {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool")
                 .fromCapitalizedValue(Double.valueOf("15")).toCapitalizedValue(Double.valueOf("150")).build();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
                 + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
                 + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
@@ -142,7 +142,7 @@ public class AssetQueryBuilderTest {
         final AssetCriteria assetCriteriaQueryWithTenantId = AssetCriteria.builder().tenantId("ap.kurnool").id(ids)
                 .block(Long.valueOf(20)).code(String.valueOf(560042)).department(Long.valueOf(30))
                 .description(String.valueOf(123)).build();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
                 + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
                 + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "
@@ -170,7 +170,7 @@ public class AssetQueryBuilderTest {
                 .electionWard(Long.valueOf(20)).grossValue(Double.valueOf(30)).locality(Long.valueOf(40)).name("Land")
                 .offset(Long.valueOf(50)).pinCode(Long.valueOf(60)).revenueWard(Long.valueOf(70)).size(Long.valueOf(80))
                 .status(Status.CREATED.toString()).street(Long.valueOf(90)).zone(Long.valueOf(100)).build();
-        Mockito.doReturn("80").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("80").when(applicationProperties).getSearchPageSizeDefault();
         final String queryWithTenantId = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,asset.name as assetname,asset.code"
                 + " as assetcode,assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,"
                 + "ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate FROM "

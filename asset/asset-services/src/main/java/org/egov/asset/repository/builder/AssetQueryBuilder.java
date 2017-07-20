@@ -283,7 +283,7 @@ public class AssetQueryBuilder {
     public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 
     public final static String GETYEARWISEDEPRECIATIONQUERY = "select depreciationrate,financialyear,usefullifeinyears,tenantid from "
-            + "egasset_yearwisedepreciation where assetid = ?";
+            + "egasset_yearwisedepreciation where assetid = ? and tenantid = ?";
 
     public final static String ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?,depriciationrate=?"
             + " WHERE code = ? and tenantid = ?";

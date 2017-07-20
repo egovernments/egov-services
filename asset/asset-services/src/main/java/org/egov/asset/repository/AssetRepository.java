@@ -292,9 +292,13 @@ public class AssetRepository {
     private void updateYearWiseDepreciationData(final AssetRequest assetRequest, final Asset asset,
             final Asset oldAsset) {
         final String queryToGetYearWiseDepreciation = AssetQueryBuilder.GETYEARWISEDEPRECIATIONQUERY;
-        logger.debug("Get Year Wise Depreciation Query :: " +queryToGetYearWiseDepreciation);
+        logger.debug("Get Year Wise Depreciation Query :: " + queryToGetYearWiseDepreciation);
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(oldAsset.getId());
+        preparedStatementValues.add(oldAsset.getTenantId());
+        logger.debug("parameters for searching year wise depreciations :: " + preparedStatementValues);
         final List<YearWiseDepreciation> yearWiseDepreciations = jdbcTemplate.query(queryToGetYearWiseDepreciation,
-                new Long[] { oldAsset.getId() }, yearWiseDepreciationRowMapper);
+                preparedStatementValues.toArray(), yearWiseDepreciationRowMapper);
         if (!yearWiseDepreciations.isEmpty()) {
             validateYearWiseDepreciations(yearWiseDepreciations, assetRequest);
             updateAssetDepreciationRate(asset, false);
@@ -313,7 +317,7 @@ public class AssetRepository {
         } else {
             logger.info("updating year wise depreciations");
             updateYearWiseDepreciation(assetRequest);
-        } 
+        }
     }
 
     private void addUpdateYearWiseDepreciation(final List<YearWiseDepreciation> oldYearWiseDepr,
@@ -367,6 +371,7 @@ public class AssetRepository {
         final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
         logger.debug("Year Wise Details Insert Query ::" + AssetQueryBuilder.BATCHINSERTQUERY);
+        logger.debug("Year Wise Depreciations for Insert ::" + yearWiseDepreciations);
         jdbcTemplate.batchUpdate(AssetQueryBuilder.BATCHINSERTQUERY, new BatchPreparedStatementSetter() {
 
             @Override
@@ -396,6 +401,7 @@ public class AssetRepository {
         final List<YearWiseDepreciation> yearWiseDepreciations = asset.getYearWiseDepreciation();
 
         logger.debug("Year Wise Details Update Query ::" + AssetQueryBuilder.BATCHUPDATEQUERY);
+        logger.debug("Year Wise Depreciations for Update ::" + yearWiseDepreciations);
         jdbcTemplate.batchUpdate(AssetQueryBuilder.BATCHUPDATEQUERY, new BatchPreparedStatementSetter() {
 
             @Override

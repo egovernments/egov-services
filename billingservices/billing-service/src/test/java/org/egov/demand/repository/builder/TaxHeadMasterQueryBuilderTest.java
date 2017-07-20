@@ -9,6 +9,7 @@ import java.util.List;
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMasterCriteria;
+import org.egov.demand.repository.querybuilder.TaxHeadMasterQueryBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

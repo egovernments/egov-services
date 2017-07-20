@@ -1,4 +1,4 @@
-package org.egov.demand.repository.builder;
+package org.egov.demand.repository.querybuilder;
 
 import java.util.List;
 import java.util.Set;

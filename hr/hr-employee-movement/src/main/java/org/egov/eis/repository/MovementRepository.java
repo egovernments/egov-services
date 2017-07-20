@@ -211,7 +211,7 @@ public class MovementRepository {
         final Date effectiveFromDate = movement.getEffectiveFrom();
         final Calendar calendar = Calendar.getInstance();
         final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
-        final SimpleDateFormat inputPED = new SimpleDateFormat("yyyy-MM-dd");
+        final SimpleDateFormat inputPED = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
         calendar.setTime(effectiveFromDate);
         calendar.add(Calendar.DATE, -1);

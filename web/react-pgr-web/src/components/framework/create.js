@@ -9,6 +9,7 @@ import wcSpecs from './specs/wc/wc';
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
+import UiButton from './components/UiButton';
 
 class Report extends Component {
 
@@ -78,8 +79,11 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} getVal={getVal} fieldErrors={{}} formData={formData}/>}
-          <RaisedButton type="submit" disabled={false}  label="Create" />
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={{}}/>}
+          <div style={{"textAlign": "center"}}>
+            <br/>
+            <UiButton item={{"label": "Create", "uiType":"submit"}} handler={""} ui="google"/>
+          </div>
         </form>
       </div>
     );

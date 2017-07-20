@@ -23,7 +23,6 @@ class UiDynamicTable extends Component {
    	}
 
    	render() {
-   		let item = {this.props};
 
    		const renderFields = function(field) {
    			switch(field.type) {
@@ -67,10 +66,12 @@ class UiDynamicTable extends Component {
 			        return (
 			        	<UiAadharCard ui="google" item={field} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
    					)
+   				case 'table':
+   					renderTable(field);
    			}
    		}
 
-   		const renderTable = function() {
+   		const renderTable = function(item) {
    			return (
    				<Card>
 			      <CardHeader title={<strong> {item.label} </strong>}/>
@@ -93,7 +94,8 @@ class UiDynamicTable extends Component {
 					                      <td>{renderFields(item2)}</td>
 					                    </tr>
 					                   )
-				                })}
+				                	})
+				                }
 				          </tbody>
 			          </Table>
 			      	</CardText>
@@ -102,7 +104,7 @@ class UiDynamicTable extends Component {
    		}
 
    		return (
-   			{renderTable()}
+   			{renderTable(this.props.item)}
    		)
    	}
 }

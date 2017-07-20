@@ -1,4 +1,4 @@
-package org.egov.calculator.util;
+package org.egov.calculator.utility;
 
 /**
  * 

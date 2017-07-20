@@ -160,19 +160,22 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         for (TaxperiodWrapper taxWrapper : taxperiods) {
             for (UnitWrapper wrapper : taxWrapper.getUnits()) {
                 Unit unit = wrapper.getUnit();
+                DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
+                Date fromDate = dateFormat.parse( taxWrapper.getTaxPeriod().getFromDate());
+                String date = new SimpleDateFormat(environment.getProperty("date.input.format")).format(fromDate);
                 List<CalculationFactor> factorsList = getFactorsByTenantIdAndValidDate(tenantId,
-                        taxWrapper.getTaxPeriod().getFromDate());
+                        date);
                 Map<String, Double> factors = factorsList.stream().collect(
                         Collectors.toMap(factor -> factor.getFactorType().toString() + factor.getFactorCode(),
                                 factor -> factor.getFactorValue()));
                 wrapper.setFactors(factors);
-                List<TaxRates> taxRates = getTaxRateByTenantAndDate(tenantId, taxWrapper.getTaxPeriod().getFromDate());
+                List<TaxRates> taxRates = getTaxRateByTenantAndDate(tenantId, date);
                 wrapper.setTaxRates(taxRates);
                 GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
                         calculationRequest.getRequestInfo(), tenantId,
                         calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
                         unit.getStructure(),
-                        calculationRequest.getProperty().getPropertyDetail().getUsage(), null, unit.getOccupancyType(),
+                       unit.getUsage(), null, unit.getOccupancyType(),
                         unit.getOccupancyDate());
                 Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
                 wrapper.setGuidanceValue(guidanceValue);
@@ -291,13 +294,13 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
      
         Date todayDate = new Date();
-        String currentDate= new SimpleDateFormat("dd/MM/yyyy").format(todayDate);
+        String currentDate= new SimpleDateFormat(environment.getProperty("date.input.format")).format(todayDate);
         TaxPeriod taxperiod = taxPeriodRespository.getToDateForTaxCalculation(tenantId,currentDate);
         String currentFinincialYear = taxperiod.getToDate();
         TaxPeriod taxperiodForFrom = taxPeriodRespository.getToDateForTaxCalculation(tenantId, unit.getOccupancyDate());
         DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
         Date occupancy = dateFormat.parse(taxperiodForFrom.getFromDate());
-        String date = dateFormat.format(occupancy);
+        String date = new SimpleDateFormat(environment.getProperty("date.input.format")).format(occupancy);
         List<TaxPeriod> taxPeriodsList = getTaxPeriodsByTenantIdAndDate(tenantId, date,
                 currentFinincialYear);
         return taxPeriodsList;
@@ -403,12 +406,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         }
 
         List<TaxRates> independentTaxes = unitWrapper.getTaxRates().stream()
-                .filter(taxRate -> taxRate.getDependentTaxHead() == null).collect(Collectors.toList());
+                .filter(taxRate -> taxRate.getDependentTaxHead() == null ||  taxRate.getDependentTaxHead().isEmpty()).collect(Collectors.toList());
         List<HeadWiseTax> headWiseTaxes = new ArrayList<HeadWiseTax>();
         Map<String, List<TaxRates>> independentTaxesMap = independentTaxes.stream()
                 .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
         List<TaxRates> dependentTaxes = unitWrapper.getTaxRates().stream()
-                .filter(taxRate -> taxRate.getDependentTaxHead() != null).collect(Collectors.toList());
+                .filter(taxRate -> taxRate.getDependentTaxHead()!=null && !taxRate.getDependentTaxHead().isEmpty()).collect(Collectors.toList());
         Map<String, List<TaxRates>> depenentTaxesMap = dependentTaxes.stream()
                 .collect(Collectors.groupingBy(taxRate -> taxRate.getTaxHead()));
 

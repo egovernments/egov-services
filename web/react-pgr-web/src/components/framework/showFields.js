@@ -13,9 +13,10 @@ import UiTextArea from './components/UiTextArea'
 import UiMultiSelectField from './components/UiMultiSelectField'
 import UiNumberField from './components/UiNumberField'
 import UiDatePicker from './components/UiDatePicker'
-import UiMultiFielUpload from './components/UiMultiFileUpload'
+import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
-
+import UiAadharCard from './components/UiAadharCard'
+import UiPanCard from './components/UiPanCard'
 
 
 export default class ShowFields extends Component {
@@ -23,7 +24,7 @@ export default class ShowFields extends Component {
        super(props);
   }
 
-  renderGroups=(groups,noCols,uiFramework="google")=>
+  renderGroups=(groups, noCols, uiFramework="google")=>
   {
     let {renderField}=this;
     switch (uiFramework) {
@@ -54,41 +55,45 @@ export default class ShowFields extends Component {
   renderField=(item)=> {
   	switch(item.type) {
   		case 'text':
-  			 return <UiTextField ui="google" item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			 return <UiTextField ui="google" getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'singleValueList':
-  			return <UiSelectField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiSelectField ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'multiValueList':
-  			return <UiMultiSelectField ui="google" item={item} />
+  			return <UiMultiSelectField ui="google" getVal={this.props.getVal} item={item} />
   			break;
   		case 'number':
-  			return <UiNumberField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiNumberField ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'textarea':
-  			return <UiTextArea ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiTextArea ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'mobileNumber':
-  			return <UiMobileNumber ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiMobileNumber ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'checkbox':
-  			return <UiCheckBox ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiCheckBox ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'email':
-  			return <UiEmailField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiEmailField ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'button':
-  			return <UiButton ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiButton ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'datePicker':
-  			return <UiDatePicker ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiDatePicker ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
         break;
       case 'singleFileUpload':
-  			return <UiSingleFileUpload ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiSingleFileUpload ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
         break;
       case 'multiFileUpload':
-    		return <UiMultiSelectField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  	}
+    		return <UiMultiSelectField ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  	  case 'pan':
+        return <UiPanCard ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'aadhar':
+        return <UiAadharCard ui="google" getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+    }
   }
 
   render() {

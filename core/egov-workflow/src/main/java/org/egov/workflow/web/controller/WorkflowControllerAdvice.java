@@ -5,6 +5,7 @@ import org.egov.workflow.web.validation.ValidationErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +26,14 @@ public class WorkflowControllerAdvice {
                 .map(fieldError -> new FieldErrorDTO(fieldError.getField(), fieldError.getDefaultMessage()))
                 .collect(Collectors.toList()));
 
+        return new ResponseEntity(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity handle(MissingServletRequestParameterException exception) {
+        ValidationErrorDTO dto = new ValidationErrorDTO();
         return new ResponseEntity(dto, HttpStatus.BAD_REQUEST);
     }
 

@@ -37,150 +37,137 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.instrument.domain.model;
-
+package org.egov.egf.instrument.web.contract;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
-import org.ja.annotation.DrillDown;
-import org.ja.annotation.DrillDownTable;
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
-@EqualsAndHashCode(exclude = { "ECSType", "instrumentVouchers", "instrumentType", "status" }, callSuper = false)
-public class InstrumentHeader {
+@AllArgsConstructor
+@NoArgsConstructor
+
+@JsonPropertyOrder({ "id","transactionNumber","transactionDate","amount","instrumentType","bank","branchName","bankAccount","instrumentStatus","transactionType","payee","drawer","surrendarReason","serialNo","instrumentVouchers"})
+public class InstrumentContract extends AuditableContract {
 
 	/*
-	 * id is the unique reference to Instrument Header entered in the system.
+	 * id is the unique reference to InstrumentContract Header entered in the system.
 	 */
 	private String id;
-	
+
 	/*
-	 * instrumentNumber is the Cheque numbers assigned for the payment which is
-	 * unique for a given bank account number and financial year. In case of
-	 * receipt, it the cheque number entered in the receipt which is having no
-	 * unique constraints as it will repeat. This will be null in case of RTGS
-	 * payment.
+	 * transactionNumber unique number of the instrument. For cheque type this
+	 * is cheque date. For DD type it is DD number
+	 * 
 	 */
-	private String instrumentNumber;
+	@NotBlank
+	@Size(max=50,min=6)
+	private String transactionNumber;
 
 	/*
-	 * instrumentDate is the cheque date of instrument assigned in
-	 * payment/receipt.
+	 * transactionDate is the date of instrument . For cheque type it is cheque
+	 * date. for DD it is DD date
 	 */
-	private Date instrumentDate;
-
+	@NotNull
+	private Date transactionDate;
 
 	/*
-	 * instrumentAmount is the (total) amount entered for the instrument in the
-	 * payment or receipt.
+	 * amount is the instrument amount. For cheque type it is cheque amount.
 	 */
-	private BigDecimal instrumentAmount;
+	@NotNull
+	@Min(value=1)
+	@Max(value=999999999)
+	private BigDecimal amount;
 
-	
-	
-	
 	/*
-	 * instrumentType specifies the type of the instrument - i.e Cheque/DD/RTGS.
-	 * For receipt - Cheque/DD/RTGS
+	 * instrumentType specifies the type of the instrument - The folowing are
+	 * the different types Cash,Cheque,DD,POC
+	 * 
 	 */
-	private InstrumentType instrumentType;
+	private InstrumentTypeContract instrumentType;
 
-	
 	/*
-	 * bankAccount is the reference of the Bank account from which the payment
+	 * bank references to the bank from which the payment/Receipt is made.
+	 */
+	private BankContract bank;
+
+	/*
+	 * branchName is the branch name entered in the collection Receipt.
+	 */
+
+	@Size(max=50)
+	private String branchName;
+
+	/* bankAccount
+	 *  is the reference of the Bank account from which the payment
 	 * instrument is assigned
 	 */
 	private BankAccountContract bankAccount;
 
 	/*
-	 * status gives the current status of the instrument. (Receipt/Payment)
+	 * instrumentStatus gives the current status of the instrument.
 	 */
-	private EgfStatus status;
+	private InstrumentStatusContract instrumentStatus;
 
 	/*
-	 * bankId reference to the bank from which the payment/Receipt is made.
+	 * transactionType are of two kinds -Debit and Credit. When its a receipt
+	 * instrument it is Debit and in case of payment instrument its credit.
 	 */
-	private BankContract bank;
-
+	private TransactionType transactionType;
 
 	/*
-	 * isPayCheque is the identifier to flag whether it is a payment instrument
-	 * to receipt instrument.
+	 * payee is the entity who is making the payment via instrument
 	 */
-	private String isPayCheque;
-
-	
-	/*
-	 * detailTypeId is the reference of the sub ledger type to whom the
-	 * instrument (Cheque/RTGS) is assigned with reference to the payment and
-	 * receipts made.
-	 */
-	private String detailKeyId;
-
-	
-	/*
-	 * payee in receipt, is the payee name entered in receipt by USER.
-	 */
+	@Size(max=50)
 	private String payee;
 
-	
 	/*
-	 * payTo is the payee name (entered in the payment - populated from
-	 * sub-ledger or from the configuration specific to the transaction.
-	 * Editable in payment screen.
+	 * drawer is the entity to which the payment is made.
 	 */
-	private String payTo;
-
-	
-	/*
-	 * bankBranchName is the branch name entered in the collection Receipt.
-	 */
-	
-	
-	private String bankBranchName;
+	@Size(max=100)
+	private String drawer;
 
 	/*
 	 * surrendarReason is the reason from the defined list seleted while
 	 * surrendering a payment cheque. Depending on the reason, the cheque can be
 	 * re-used or not is decided.
 	 */
-	private String surrendarReason;
+	private SurrenderReasonContract surrendarReason;
 
 	/*
-	 * FinancialYear serialNo is the series of the cheque numbers from which the
+	 * serialNo is the series of the cheque numbers from which the
 	 * instrument is assigned from. The cheque numbers in an account is defined
 	 * based on Year, Bank account and tagged to a department.
 	 */
+	@NotBlank
+	@Size(max=50,min=2)
 	private String serialNo;
 
 	/*
-	 * 
-	 * ECSType is the type of ECS receipt made. Ex - ICICI, ONLINE, etc,.
+	 * instrumentVouchers is the reference to the payment vouchers for which the
+	 * instrument is attached.
 	 */
-	private ECSType ECSType;
+	//@DrillDownTable
+	private Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<InstrumentVoucherContract>(0);
 
-	/*
-	 * instrumentVouchers is the reference to the payment voucher/s for which
-	 * the instrument is attached.
-	 */
-	@DrillDownTable
-	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
-	
-	@DrillDown
-	private InstrumentDetails instrumentDetails;
 }

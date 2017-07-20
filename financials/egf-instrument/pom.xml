@@ -77,7 +77,6 @@
 			<artifactId>egf-master</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<classifier>client</classifier>
-			 
 		</dependency>
 		
 

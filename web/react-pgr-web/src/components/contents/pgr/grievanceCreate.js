@@ -70,11 +70,10 @@ class grievanceCreate extends Component {
   };
 
   handleView = () => {
-    let {initForm, history} = this.props;
+    let {initForm, setRoute} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    history.push("/pgr/viewGrievance/"+this.state.serviceRequestId);
-    window.location.reload();
+    setRoute("/pgr/viewGrievance/"+this.state.serviceRequestId);
   };
 
   validateOTP = () => {
@@ -892,7 +891,8 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-  }
+  },
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(grievanceCreate);

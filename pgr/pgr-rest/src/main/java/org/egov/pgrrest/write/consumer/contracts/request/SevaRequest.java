@@ -33,7 +33,7 @@ public class SevaRequest {
         return ServiceRequestRecord.builder()
             .CRN(getCRN())
             .latitude(getLatitude())
-            .latitude(getLongitude())
+            .longitude(getLongitude())
             .description(this.getServiceRequest().getDetails())
             .landmarkDetails(this.getServiceRequest().getLandmarkDetails())
             .createdBy(this.getRequesterId())

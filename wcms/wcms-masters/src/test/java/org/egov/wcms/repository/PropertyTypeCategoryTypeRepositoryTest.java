@@ -51,6 +51,7 @@ import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyCategoryRowMapper;
 import org.egov.wcms.service.PropertyCategoryService;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
@@ -79,7 +80,7 @@ public class PropertyTypeCategoryTypeRepositoryTest {
     private PropertyCategoryRowMapper propertyCategoryRowMapper;
 
     @MockBean
-    private PropertyCategoryService propertyCAtegoryService;
+    private PropertyCategoryService propertyCategoryService;
 
     @MockBean
     private ErrorHandler errHandler;
@@ -92,6 +93,9 @@ public class PropertyTypeCategoryTypeRepositoryTest {
 
     @InjectMocks
     private PropertyTypeCategoryTypeRepository propertyCategoryRepository;
+    
+    @Mock
+    private RestWaterExternalMasterService restExternalMasterService;
 
     @Test
     public void test_Should_Find_PropertyCategory() throws Exception {
@@ -102,11 +106,10 @@ public class PropertyTypeCategoryTypeRepositoryTest {
         propertyCategory.setCategoryTypeName("category");
         propertyCategory.setPropertyTypeName("property");
         propertyCategory.setTenantId("1");
-
         propertyCategories.add(propertyCategory);
 
         final PropertyCategoryGetRequest propertyCategoryRequest = Mockito.mock(PropertyCategoryGetRequest.class);
-        when(propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues)).thenReturn("query");
+       // when(propertyCategoryueryBuilder.getQuery(propertyCategoryRequest, preparedStatementValues)).thenReturn("query");
         when(jdbcTemplate.query("query", preparedStatementValues.toArray(), propertyCategoryRowMapper))
                 .thenReturn(propertyCategories);
 

@@ -26,14 +26,16 @@
                 rentForMonth = Math.round(rentForMonth * 100.0) / 100.0;
                 System.out.println(rentForMonth+"rent for month");
        UnitTax unitTax=taxService.calculateUnitTax(unitWrapper,taxPeriod,rentForMonth,factorsList.get(age),0.1);  
-      if(!property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
-      HeadWiseTax headWiseTax=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
-      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).collect(java.util.stream.Collectors.toList()).get(0);
-     int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(headWiseTax);
+       if(!property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
+      List<HeadWiseTax> headWiseTaxList=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
+      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).collect(java.util.stream.Collectors.toList());
+      if(headWiseTaxList!=null){
+     int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(headWiseTaxList.get(0));
      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
+     }
       }
       System.out.println("unit tax"+unitTax);
-       return  unitTax;    
+       return  unitTax;   
 }
 
 

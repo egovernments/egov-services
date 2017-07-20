@@ -39,9 +39,10 @@
  */
 package org.egov.egf.instrument.domain.model;
 
+import org.egov.common.domain.model.Auditable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,14 +52,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "instrumentHeaderId" }, callSuper = false)
-public class InstrumentVoucher {
+public class InstrumentVoucher extends Auditable {
 
 	/*
 	 * instrumentHeaderId is the reference of the instrument attached to a
 	 * voucher
 	 */
-	private InstrumentHeader instrumentHeader;
+	private Instrument instrument;
 
 	/*
 	 * voucherHeaderId is the reference of the voucher attached to a instrument.

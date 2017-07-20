@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.transanction.model;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -82,6 +84,8 @@ public class EstimationCharge {
     private double materialCharges;
     
     private double roadCutCharges;
+    
+    private List<Material> materials;
     
     private double specialSecurityCharges;
 

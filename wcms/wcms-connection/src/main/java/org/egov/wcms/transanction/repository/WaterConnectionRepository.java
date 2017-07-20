@@ -46,6 +46,8 @@ import java.util.List;
 
 import org.egov.wcms.transanction.model.Connection;
 import org.egov.wcms.transanction.model.DocumentOwner;
+import org.egov.wcms.transanction.model.EstimationCharge;
+import org.egov.wcms.transanction.model.Material;
 import org.egov.wcms.transanction.model.MeterReading;
 import org.egov.wcms.transanction.model.enums.BillingType;
 import org.egov.wcms.transanction.model.enums.NewConnectionStatus;
@@ -217,8 +219,60 @@ public class WaterConnectionRepository {
         final Connection connection = waterConnectionReq.getConnection();
         if (waterConnectionReq.getConnection().getId() != 0)
             insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
+        long estmId = 0;
+        if(!waterConnectionReq.getConnection().getEstimationCharge().isEmpty())
+        {
+        for(EstimationCharge estmaCharge:waterConnectionReq.getConnection().getEstimationCharge())
+        {
+            final String insertestQuery = WaterConnectionQueryBuilder.insertEstimationCharge();
+            try {
+        
+                final KeyHolder keyHolder = new GeneratedKeyHolder();
+                jdbcTemplate.update((PreparedStatementCreator) connectiontemp -> {
+                    final String[] returnValColumn = new String[] { "id" };
+                    final PreparedStatement statement = connectiontemp.prepareStatement(insertestQuery,
+                            returnValColumn);
+                    statement.setLong(1, connection.getId());
+                    statement.setString(2, estmaCharge.getExistingDistributionPipeline());
+                    statement.setDouble(3, estmaCharge.getPipelineToHomeDistance());
+                    
+                    statement.setDouble(4,estmaCharge.getEstimationCharges());
+                    statement.setDouble(5, estmaCharge.getSupervisionCharges());  
+                    statement.setDouble(6, estmaCharge.getMaterialCharges());  
+                    statement.setString(7, connection.getTenantId());
+                    statement.setLong(8, waterConnectionReq.getRequestInfo().getUserInfo().getId());
+                    statement.setLong(9, waterConnectionReq.getRequestInfo().getUserInfo().getId());
+                    statement.setDate(10, new Date(new java.util.Date().getTime()));
+                    statement.setDate(11, new Date(new java.util.Date().getTime()));
+                    
+                    return statement;
+                }, keyHolder);
 
-        insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
+                estmId = keyHolder.getKey().longValue();
+                
+                
+            } catch (final Exception e) {
+                LOGGER.error("Inserting estimation Charge failed!", e);
+            }
+
+        
+            final List<Object[]> values = new ArrayList<>();
+            final String insertMaterialQuery = WaterConnectionQueryBuilder.insertMaterial();
+            for(Material matObj:estmaCharge.getMaterials()){
+                final Object[] objct = new Object[] {estmId,matObj.getName(),matObj.getQuantity(),matObj.getSize(),
+                        matObj.getAmountDetails(),waterConnectionReq.getConnection().getTenantId(),
+                        waterConnectionReq.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                        waterConnectionReq.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
+                values.add(objct);
+                try {
+                    jdbcTemplate.batchUpdate(insertMaterialQuery, values);
+                } catch (final Exception e) {
+                    LOGGER.error("Inserting material failed!", e);
+                }
+            }
+        }
+        }
+       
         final Object[] obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
                 connection.getCategoryType(), connection.getBillingType(),
                 connection.getHscPipeSizeType(), connection.getSourceType(), connection.getConnectionStatus(),
@@ -227,6 +281,7 @@ public class WaterConnectionRepository {
                 new Date(new java.util.Date().getTime()), connection.getStatus(), connection.getStateId(),
                 connection.getDemandid(), connection.getAcknowledgementNumber() };
         jdbcTemplate.update(insertQuery, obj);
+        
         return waterConnectionReq;
     }
 

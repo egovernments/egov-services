@@ -54,30 +54,45 @@ import lombok.ToString;
 @Order(0)
 public class PropertiesManager {
 
-	@Value("${egov.services.pt_property.hostname}")
-	private String propertTaxServiceBasePathTopic;
+    @Value("${egov.services.pt_property.hostname}")
+    private String propertTaxServiceBasePathTopic;
 
-	@Value("${egov.services.pt_property_propertytype.searchpath}")
-	private String propertyTaxServicePropertyTypeSearchPathTopic;
-	
-	@Value("${egov.services.pt_property_usagetype.searchpath}")
-	private String propertyTaxServiceUsageTypeSearchPathTopic;
-	
-	@Value("${egov.services.boundary_service.hostname}")
-        private String locationServiceBasePathTopic;
+    @Value("${egov.services.pt_property_propertytype.searchpath.name}")
+    private String propertyTaxServicePropertyTypeSearchByNamePathTopic;
 
-        @Value("${egov.services.boundary_service.searchpath}")
-        private String locationServiceBoundarySearchPathTopic;
+    @Value("${egov.services.pt_property_propertytype.searchpath.id}")
+    private String propertyTaxServicePropertyTypeSearchByIdPathTopic;
 
-	public String getPropertTaxServiceBasePathTopic() {
-		return propertTaxServiceBasePathTopic;
-	}
+    @Value("${egov.services.pt_property_usagetype.searchpath.name}")
+    private String propertyTaxServiceUsageTypeSearchByNamePathTopic;
 
-	public String getPropertyTaxServicePropertyTypeSearchPathTopic() {
-		return propertyTaxServicePropertyTypeSearchPathTopic;
-	}
-	public String getPropertyTaxServiceUsageTypeSearchPathTopic() {
-		return propertyTaxServiceUsageTypeSearchPathTopic;
-	}
+    @Value("${egov.services.pt_property_usagetype.searchpath.id}")
+    private String propertyTaxServiceUsageTypeSearchByIdPathTopic;
+
+    @Value("${egov.services.boundary_service.hostname}")
+    private String locationServiceBasePathTopic;
+
+    @Value("${egov.services.boundary_service.searchpath}")
+    private String locationServiceBoundarySearchPathTopic;
+
+    public String getPropertTaxServiceBasePathTopic() {
+        return propertTaxServiceBasePathTopic;
+    }
+
+    public String getPropertyTaxServicePropertyTypeSearchByNamePathTopic() {
+        return propertyTaxServicePropertyTypeSearchByNamePathTopic;
+    }
+
+    public String getPropertyTaxServicePropertyTypeSearchByIdPathTopic() {
+        return propertyTaxServicePropertyTypeSearchByIdPathTopic;
+    }
+
+    public String getPropertyTaxServiceUsageTypeSearchByNamePathTopic() {
+        return propertyTaxServiceUsageTypeSearchByNamePathTopic;
+    }
+
+    public String getPropertyTaxServiceUsageTypeSearchIdPathTopic() {
+        return propertyTaxServiceUsageTypeSearchByIdPathTopic;
+    }
 
 }

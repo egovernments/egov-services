@@ -200,10 +200,10 @@ class Login extends Component {
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
-		
-		
-   Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response){		        
-				
+
+
+   Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response){
+
 				//console.log(response)
 		  localStorage.setItem("modules", JSON.stringify(response.modules));
 			setActionList(response.modules)
@@ -442,12 +442,10 @@ class Login extends Component {
       }
    }
    openAnonymousComplaint = () => {
-     let {history, setHome} = this.props;
-     history.push('/pgr/createGrievance');
+     let {setRoute, setHome} = this.props;
+     setRoute('/pgr/createGrievance');
      setHome(true);
-
    }
-
    render() {
       //console.log("IN LOGIN");
       let {

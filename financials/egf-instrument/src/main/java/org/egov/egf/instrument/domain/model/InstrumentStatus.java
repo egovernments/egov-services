@@ -46,6 +46,7 @@ import javax.validation.constraints.Size;
 import org.egov.common.domain.model.Auditable;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,8 +57,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class EgfStatus extends Auditable {
+@Builder
+public class InstrumentStatus extends Auditable {
 
+	/**
+	 * Unique Identifier of the status
+	 */
 	@NotNull
 	private String id;
 
@@ -65,10 +70,16 @@ public class EgfStatus extends Auditable {
 	@Size(min = 3, max = 50)
 	private String moduleType;
 
+	/**
+	 * name is the status name 
+	 */
 	@NotNull
 	@Size(min = 3, max = 20)
-	private String code;
+	private String name;
 
+	/**
+	 * description is the detailed description of the status
+	 */
 	@NotNull
 	@Size(min = 3, max = 250)
 	private String description;

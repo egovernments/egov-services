@@ -247,6 +247,11 @@ public class WcmsTranasanctionConstants {
     public static final String SUPPLYTYPE_NAME_UNQ_FIELD_NAME = "name";
     public static final String SUPPLYTYPE_UNQ_ERROR_MESSAGE = "Entered Supply Type already exist";
     
+    public static final String PROPERTY_IDENTIFIER_CODE = "wcms.0043";
+    public static final String PROPERTY_IDENTIFIERFIELD_NAME = "propertyIdentifier";
+    public static final String PROPERTY_IDENTIFIER_ERROR_MESSAGE = "Property Identifier Doesnt Exist";
+    
+    
     public static final String SUPPLYTYPE_NAME_MANDATORY_CODE = "wcms.0037";
     public static final String SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Supply Type is required";

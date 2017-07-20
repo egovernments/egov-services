@@ -564,7 +564,7 @@ class Login extends Component {
               </Row>
               <Row style={styles.marginTop}>
                   <Col xs={12} md={6} mdPush={6} style={styles.marginBottom}>
-					<form autoComplete="on" onSubmit={(e) => {
+					<form autoComplete="off" onSubmit={(e) => {
 					loginRequest(e)}}>
                     <Card>
                       <CardText>
@@ -755,7 +755,7 @@ class Login extends Component {
                   onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
                 />
               ]}
-              modal={false}
+              modal={true}
               open={open3}
               onRequestClose={(e) => {handleClose("open3")}}
               contentStyle={{"width": "500"}}

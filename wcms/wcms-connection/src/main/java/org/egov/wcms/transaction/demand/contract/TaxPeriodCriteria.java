@@ -39,10 +39,16 @@
  */
 package org.egov.wcms.transaction.demand.contract;
 
-import lombok.*;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
@@ -57,6 +63,8 @@ public class TaxPeriodCriteria {
 
     @NotNull
     private String service;
+    
+    private String periodCycle;
 
     private Set<String> id;
 

@@ -15,7 +15,7 @@ class UiMultiSelectField extends Component {
    	}
 
    	componentDidMount() {
-		let {item,setDropDownData}=this.props;
+		let {item, setDropDownData, useTimestamp}=this.props;
 		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
 		{
 			let splitArray=item.url.split("?");
@@ -25,9 +25,9 @@ class UiMultiSelectField extends Component {
 				context+=splitArray[0].split("/")[j]+"/";
 			}
 
-			Api.commonApiPost(context,id).then(function(response) {
-				let keys=jp.query(response,splitArray[1].split("|")[1]);
-				let values=jp.query(response,splitArray[1].split("|")[2]);
+			Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+				let keys=jp.query(response, splitArray[1].split("|")[1]);
+				let values=jp.query(response, splitArray[1].split("|")[2]);
 				let dropDownData=[];
 				for (var k = 0; k < keys.length; k++) {
 						let obj={};

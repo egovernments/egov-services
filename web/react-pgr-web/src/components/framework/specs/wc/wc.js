@@ -163,7 +163,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/pt-property/property/propertytypes/_search",
+							"url": "/pt-property/property/propertytypes/_search?|$..id|$..propertyType",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -187,7 +187,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-usagetype/_search?tenantId=default|$..id|$..name",
+							"url": "/wcms/masters/propertytype-usagetype/_search?$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

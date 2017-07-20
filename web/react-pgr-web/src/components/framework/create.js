@@ -43,10 +43,12 @@ class Report extends Component {
   create=(e) => {
     let self = this;
     e.preventDefault();
+    self.props.setLoadingStatus('loading');
     Api.commonApiPost(self.props.metaData.url, "", self.props.formData, "", true).then(function(response){
-      console.log(response);
+      self.props.setLoadingStatus('hide');
     }, function(err) {
-      console.log(err.message);
+      self.props.setLoadingStatus('loading');
+      self.props.toggleSnackbarAndSetText(true, err.message);
     })
   }
 
@@ -73,16 +75,13 @@ class Report extends Component {
   render() {
     let {metaData, moduleName, actionName, formData}=this.props;
     let {create,handleChange, getVal}=this;
-    // console.log(!_.isEmpty(metaData) && metaData);
-    // console.log(moduleName && moduleName);
-    // console.log(actionName && actionName);
-    // console.log(`${moduleName}.${actionName}`);
+    console.log(metaData);
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={{}}/>}
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={{}} useTimestamp={metaData[`${moduleName}.${actionName}`].useTimestamp || false}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>
@@ -123,6 +122,12 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
     dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

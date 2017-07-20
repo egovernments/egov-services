@@ -1,5 +1,6 @@
 package org.egov.eis.service.helper;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.egov.eis.config.ApplicationProperties;
@@ -21,6 +22,7 @@ public class PositionSearchURLHelper {
                 + propertiesManager.getHrEmployeeServiceVacantPositionsBasePath()
                 + propertiesManager.getHrEmployeeServiceEmployeesSearchPath();
         final StringBuilder searchURL = new StringBuilder(baseUrl + "?");
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         if (tenantId == null)
             return searchURL.toString();
@@ -28,7 +30,7 @@ public class PositionSearchURLHelper {
             searchURL.append("tenantId=" + tenantId);
 
         if (asOnDate != null)
-            searchURL.append("&asOnDate=" + asOnDate);
+            searchURL.append("&asOnDate=" + sdf.format(asOnDate));
 
         if (designationId != null)
             searchURL.append("&designationId=" + designationId);

@@ -151,10 +151,12 @@ public class WaterConnectionService {
                 if(connection.getWorkflowDetails().getAction().equals("Approve") && connection.getStatus()!=null && 
                     connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()))
                 connection.setStatus(NewConnectionStatus.APPROVED.name());
-            if(connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))
+            if(connection.getStatus()!=null && connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))
                 connection.setStatus(NewConnectionStatus.SANCTIONED.name());
             
             waterConnectionRequest.setConnection(connection);
+            
+            createDemand(waterConnectionRequest);
             updateWorkFlow(waterConnectionRequest);
             waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
         } catch (final Exception e) {

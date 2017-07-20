@@ -28,7 +28,7 @@ public class WorkflowServiceTest {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	@Test
+/*	@Test
 	public void test_should_start_workflow(){
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		ProcessInstance processInstance = new ProcessInstance();
@@ -42,7 +42,7 @@ public class WorkflowServiceTest {
 				
 		verify(workflowRepository).startWorkflow(workflowDetails);
 		
-	}
+	} */
 	
 	@Test(expected = Exception.class)
 	public void test_should_start_workflow_exception(){

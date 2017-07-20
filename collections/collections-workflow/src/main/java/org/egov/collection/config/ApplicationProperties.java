@@ -43,7 +43,11 @@ public class ApplicationProperties {
     @Value("${kafka.topics.workflow.update.key}")
     private String kafkaUpdateworkflowTopicKey;
     
+    @Value("${kafka.topics.stateId.update.name}")
+    private String kafkaUpdateStateIdTopic;
     
-    
+    @Value("${kafka.topics.stateId.update.key}")
+    private String kafkaUpdateStateIdTopicKey;
+       
 
 }

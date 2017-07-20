@@ -77,7 +77,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/receipts")
+@RequestMapping("/receipts/v1")
 public class ReceiptController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
 

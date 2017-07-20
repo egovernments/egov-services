@@ -51,11 +51,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.web.contract.Bill;
@@ -182,11 +185,11 @@ public class ReceiptServiceTest {
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
 				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-				.receiptType("ghj").channel("567hfghr").voucherHeader("VOUHEAD").collectionType("C").boundary("67")
+				.receiptType(ReceiptType.valueOf("ADHOC")).channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.receiptDate(Timestamp.valueOf("2016-02-02 00:00:00.0")).businessService("TL").build();
+				.receiptDate((new Date()).getTime()).businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
@@ -209,11 +212,11 @@ public class ReceiptServiceTest {
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
 				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-				.receiptType("ghj").channel("567hfghr").voucherHeader("VOUHEAD").collectionType("C").boundary("67")
+				.receiptType(ReceiptType.valueOf("ADHOC")).channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.receiptDate(Timestamp.valueOf("2016-02-02 00:00:00.0")).businessService("TL").build();
+				.receiptDate((new Date()).getTime()).businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 		Receipt receipt = Receipt.builder().tenantId("default").bill(billInfo).build();
@@ -229,9 +232,9 @@ public class ReceiptServiceTest {
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc").payeeAddress("abc nagara")
-				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ghj")
+				.payeeEmail("abc567@gmail.com").paidBy("abc").referenceNumber("REF1234").receiptType("ADHOC")
 				.receiptNumber("REC1234").referenceDesc("REFDESC45").manualReceiptNumber("MAN67").businessDetails("TL")
-				.collectionType("C").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
+				.collectionType("COUNTER").displayMsg("receipt created successfully").reference_ch_id(1L).stateId(3L)
 				.location(1L).isReconciled(true).status("CREATED").reasonForCancellation("documents not proper")
 				.minimumAmount(125.00).totalAmount(150.00).collModesNotAllwd("Bill based").consumerCode("CON12343556")
 				.channel("567hfghr").consumerType("Known").fund("56").fundSource("78").function("678").boundary("67")

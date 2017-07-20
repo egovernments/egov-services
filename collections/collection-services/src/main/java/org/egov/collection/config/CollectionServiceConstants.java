@@ -69,7 +69,7 @@ public class CollectionServiceConstants {
 	
 	public static final String RECEIPT_TYPE_MISSING_CODE = "egcl_004";
 	public static final String RECEIPT_TYPE_MISSING_FIELD = "receiptType";
-	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type is mising";
+	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type can only be: Adhoc, BillBased, Challan";
 	
 	public static final String RECEIPT_DATE_MISSING_CODE = "egcl_005";
 	public static final String RECEIPT_DATE_MISSING_FIELD = "receiptDate";
@@ -90,7 +90,7 @@ public class CollectionServiceConstants {
 	
 	public static final String COLLECTIONTYPE_MISSING_CODE = "egcl_009";
 	public static final String COLLECTIONTYPE_MISSING_FIELD = "collectionType";
-	public static final String COLLECTIONTYPE_MISSING_MESSAGE = "Collection type is mising";
+	public static final String COLLECTIONTYPE_MISSING_MESSAGE = "Collection type can only be: Counter, Field, Online";
 	
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_CODE = "egcl_010";
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_FIELD = "collectionModesNotAllowed";
@@ -103,14 +103,6 @@ public class CollectionServiceConstants {
 	public static final String STATUS_MISSING_MESSAGE = "status";
 	public static final String STATUS_MISSING_FIELD = "Status is missing"; 
 
-
-	// URIs for other micro services collection depends on
-	public static final String BD_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egov-common-masters/businessDetails/_search";
-	public static final String COA_SEARCH_URI = "http://egov-micro-dev.egovernments.org/egf-masters/chartofaccounts/_search";
-	public static final String STATUS_SEARCH_URI = "egov-micro-dev.egovernments.org/collection/collectionStatus/_search";
-	public static final String ID_GEN_URI = "http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate";
-	public static final String GET_POSITION_URI = "http://egov-micro-dev.egovernments.org/hr-employee/employees/";
-	public static final String GET_POSITION_URI_APPEND = "/positions/_search";
 
 
 

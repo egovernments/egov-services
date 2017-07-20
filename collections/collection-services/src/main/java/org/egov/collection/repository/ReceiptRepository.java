@@ -126,8 +126,8 @@ public class ReceiptRepository {
 
 		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo().getId());
 		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setCreatedDate(new Date(new java.util.Date().getTime()));
-		auditDetails.setLastModifiedDate(new Date(new java.util.Date().getTime()));
+		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime())).getTime());
+		auditDetails.setLastModifiedDate((new Date(new java.util.Date().getTime())).getTime());
 		receiptInfo.setAuditDetails(auditDetails);
 
 		try {
@@ -238,5 +238,20 @@ public class ReceiptRepository {
 		return receiptInfo;
 
 	}
+	
+    public long getStateId(String receiptNumber){
+    	logger.info("Updating stateId..");
+    	long stateId = 0L;
+    	String query = "SELECT stateid FROM egcl_receiptheader WHERE receiptnumber=?";
+    	try{
+    		Long id = jdbcTemplate.queryForObject(query, new Object[] {receiptNumber}, Long.class);
+    		stateId = Long.valueOf(id);
+    	}catch(Exception e){
+    		logger.error("Couldn't fetch stateId for the receipt: "+receiptNumber);
+        	return stateId;
+    	}
+    	logger.info("StateId obtained for receipt: "+receiptNumber+" is: "+stateId);
+    	return stateId;
+    }
 
 }

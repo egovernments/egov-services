@@ -53,6 +53,7 @@ import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
@@ -132,8 +133,9 @@ public class ReceiptService {
 					return null;
 				}
 			}
-
+			billdetails.setReceiptDate(new Date().getTime());
 		}
+		
 		return receiptRepository.pushToQueue(receiptReq);
 	}
 
@@ -153,6 +155,7 @@ public class ReceiptService {
 				statusCode = "TO BE SUBMITTED";
 			}
 			logger.info("StatusCode: " + statusCode);
+			billdetails.setStatus(statusCode);
 			final Map<String, Object> parametersMap = new HashMap<>();
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(billdetails.getBusinessService(),
 					receiptReq);
@@ -180,11 +183,11 @@ public class ReceiptService {
 					parametersMap.put("payeeemail", receiptInfo.getBill().getPayeeEmail());
 					parametersMap.put("paidby", receiptInfo.getBill().getPaidBy());
 					parametersMap.put("referencenumber", billdetails.getBillNumber());
-					parametersMap.put("receipttype", billdetails.getReceiptType());
+					parametersMap.put("receipttype", billdetails.getReceiptType().toString());
 					parametersMap.put("receiptdate", billdetails.getReceiptDate());
 					parametersMap.put("receiptnumber", billdetails.getReceiptNumber());
 					parametersMap.put("businessdetails", billdetails.getBusinessService());
-					parametersMap.put("collectiontype", billdetails.getCollectionType());
+					parametersMap.put("collectiontype", billdetails.getCollectionType().toString());
 					parametersMap.put("reasonforcancellation", billdetails.getReasonForCancellation());
 					parametersMap.put("minimumamount", billdetails.getMinimumAmount());
 					parametersMap.put("totalamount", billdetails.getTotalAmount());
@@ -211,7 +214,7 @@ public class ReceiptService {
 					parametersMap.put("stateid", null);
 					parametersMap.put("location", null);
 					parametersMap.put("isreconciled", false);
-					parametersMap.put("status", statusCode);
+					parametersMap.put("status", billdetails.getStatus());
 
 					receiptHeaderId = receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
 
@@ -407,6 +410,12 @@ public class ReceiptService {
 	public Receipt cancelReceiptPushToQueue(ReceiptReq receiptRequest) {
 		logger.info("Pushing recieptdetails to kafka queue");
 		return receiptRepository.pushReceiptCancelDetailsToQueue(receiptRequest);
+	}
+	
+	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails){
+		logger.info("WorkflowDetails: "+workflowDetails.toString());
+		//update repo call
+		return workflowDetails;
 	}
 
 }

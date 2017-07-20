@@ -44,10 +44,10 @@ class Report extends Component {
     let self = this;
     e.preventDefault();
     self.props.setLoadingStatus('loading');
-    Api.commonApiPost(self.props.metaData.url, "", self.props.formData, "", true).then(function(response){
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", self.props.formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
     }, function(err) {
-      self.props.setLoadingStatus('loading');
+      self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
     })
   }

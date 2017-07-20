@@ -30,8 +30,8 @@ class UiSelectField extends Component {
 				context+=splitArray[0].split("/")[j]+"/";
 			}
 
-			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response)
-			{
+			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+				
 					let keys=jp.query(response,splitArray[1].split("|")[1]);
 					let values=jp.query(response,splitArray[1].split("|")[2]);
 					let dropDownData=[];

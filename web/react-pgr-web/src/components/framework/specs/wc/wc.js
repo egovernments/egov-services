@@ -187,7 +187,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-usagetype/_search?$..id|$..name",
+							"url": "/wcms/masters/propertytype-usagetype/_search?|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

@@ -64,7 +64,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/taxperiod")
+@RequestMapping("/taxperiods")
 public class TaxPeriodController {
 
     private static final Logger logger = LoggerFactory.getLogger(TaxPeriodController.class);

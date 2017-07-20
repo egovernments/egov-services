@@ -14,8 +14,10 @@ import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
+import org.egov.asset.service.AssetMasterService;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.Test;
@@ -30,98 +32,97 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class AssetRepositoryTest {
 
-	@Mock
-	private JdbcTemplate jdbcTemplate;
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
-	@Mock
-	private AssetRowMapper assetRowMapper;
+    @Mock
+    private AssetRowMapper assetRowMapper;
 
-	@Mock
-	private AssetQueryBuilder assetQueryBuilder;
+    @Mock
+    private AssetQueryBuilder assetQueryBuilder;
 
-	@InjectMocks
-	private AssetRepository assetRepository;
+    @InjectMocks
+    private AssetRepository assetRepository;
 
-	@Mock
-	private ObjectMapper objectMapper;
+    @Mock
+    private ObjectMapper objectMapper;
+    
+    @Mock
+    private AssetMasterService assetMasterService;
 
-	@Test
-	public void testFindForCriteria() {
+    @Test
+    public void testFindForCriteria() {
 
-		final List<Asset> assets = new ArrayList<>();
-		assets.add(getAsset());
-		final String query = "";
-		when(assetQueryBuilder.getQuery(any(AssetCriteria.class), any(List.class))).thenReturn(query);
-		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(AssetRowMapper.class))).thenReturn(assets);
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(getAsset());
+        final String query = "";
+        when(assetQueryBuilder.getQuery(any(AssetCriteria.class), any(List.class))).thenReturn(query);
+        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(AssetRowMapper.class))).thenReturn(assets);
 
-		assertTrue(assets.equals(assetRepository.findForCriteria(new AssetCriteria())));
-	}
+        assertTrue(assets.equals(assetRepository.findForCriteria(new AssetCriteria())));
+    }
 
-	/*
-	 * @Test public void testGetAssetCode() {
-	 * 
-	 * String query = "0000001";
-	 * when(jdbcTemplate.queryForObject(any(String.class),any(RowMapper.class)))
-	 * .thenReturn(1);
-	 * 
-	 * assertTrue(query.equals(assetRepository.getAssetCode())); }
-	 */
+    /*
+     * @Test public void testGetAssetCode() { String query = "0000001";
+     * when(jdbcTemplate.queryForObject(any(String.class),any(RowMapper.class)))
+     * .thenReturn(1); assertTrue(query.equals(assetRepository.getAssetCode()));
+     * }
+     */
 
-	@Test
-	public void testCreateAsset() {
+    @Test
+    public void testCreateAsset() {
 
-		final AssetRequest assetRequest = new AssetRequest();
-		final RequestInfo requestInfo = new RequestInfo();
-		final User user = new User();
-		user.setId(1l);
-		requestInfo.setUserInfo(user);
-		assetRequest.setRequestInfo(requestInfo);
-		final Asset asset = getAsset();
-		assetRequest.setAsset(asset);
+        final AssetRequest assetRequest = new AssetRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        assetRequest.setRequestInfo(requestInfo);
+        final Asset asset = getAsset();
+        assetRequest.setAsset(asset);
 
-		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-		assertTrue(asset.equals(assetRepository.create(assetRequest)));
-	}
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(asset.equals(assetRepository.create(assetRequest)));
+    }
 
-	@Test
-	public void testUpdateAsset() {
+    @Test
+    public void testUpdateAsset() {
+        final AssetRequest assetRequest = new AssetRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        assetRequest.setRequestInfo(requestInfo);
+        final Asset asset = getAsset();
+        assetRequest.setAsset(asset);
 
-		final AssetRequest assetRequest = new AssetRequest();
-		final RequestInfo requestInfo = new RequestInfo();
-		final User user = new User();
-		user.setId(1l);
-		requestInfo.setUserInfo(user);
-		assetRequest.setRequestInfo(requestInfo);
-		final Asset asset = getAsset();
-		assetRequest.setAsset(asset);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(asset.equals(assetRepository.update(assetRequest)));
+    }
 
-		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-		assertTrue(asset.equals(assetRepository.update(assetRequest)));
-	}
+    private Asset getAsset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setName("asset name");
+        asset.setStatus(Status.CREATED.toString());
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+        asset.setEnableYearWiseDepreciation(true);
 
-	private Asset getAsset() {
-		final Asset asset = new Asset();
-		asset.setTenantId("ap.kurnool");
-		asset.setName("asset name");
-		asset.setStatus("CREATED");
-		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-		asset.setEnableYearWiseDepreciation(true);
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
 
-		final Location location = new Location();
-		location.setLocality(4l);
-		location.setDoorNo("door no");
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(1l);
+        assetCategory.setName("category name");
 
-		final AssetCategory assetCategory = new AssetCategory();
-		assetCategory.setId(1l);
-		assetCategory.setName("category name");
+        asset.setLocationDetails(location);
+        asset.setAssetCategory(assetCategory);
 
-		asset.setLocationDetails(location);
-		asset.setAssetCategory(assetCategory);
+        final Department department = new Department();
+        asset.setDepartment(department);
 
-		final Department department = new Department();
-		asset.setDepartment(department);
-
-		return asset;
-	}
+        return asset;
+    }
 
 }

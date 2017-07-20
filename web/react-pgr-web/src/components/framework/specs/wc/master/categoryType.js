@@ -20,7 +20,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "",
+							"jsonPath": "CategoryType.description",
 							"label": "Description",
 							"pattern": "",
 							"type": "text",
@@ -31,7 +31,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "",
+							"jsonPath": "CategoryType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

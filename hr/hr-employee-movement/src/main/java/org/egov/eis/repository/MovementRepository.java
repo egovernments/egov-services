@@ -234,7 +234,7 @@ public class MovementRepository {
         if (employee.getUser().getDob() != null)
             employee.getUser().setDob(output.format(inputDOB.parse(employee.getUser().getDob())));
         if (employee.getUser().getPwdExpiryDate() != null)
-            employee.getUser().setPwdExpiryDate(inputPED.format(employee.getUser().getPwdExpiryDate()));
+            employee.getUser().setPwdExpiryDate(output.format(inputPED.parse(employee.getUser().getPwdExpiryDate())));
         employeeService.updateEmployee(employee, movement.getTenantId(),
                 movementRequest.getRequestInfo());
     }

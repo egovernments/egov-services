@@ -2,6 +2,7 @@ package org.egov.workflow.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.workflow.Resources;
+import org.egov.workflow.TestConfiguration;
 import org.egov.workflow.domain.service.Workflow;
 import org.egov.workflow.persistence.entity.Task;
 import org.egov.workflow.web.contract.Attribute;
@@ -13,6 +14,7 @@ import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(WorkFlowController.class)
+@Import(TestConfiguration.class)
 public class WorkFlowControllerTest {
 
     private static final String TENANT_ID = "tenantId";

@@ -211,7 +211,6 @@ public class MovementRepository {
         final Date effectiveFromDate = movement.getEffectiveFrom();
         final Calendar calendar = Calendar.getInstance();
         final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
-        final SimpleDateFormat inputPED = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
         calendar.setTime(effectiveFromDate);
         calendar.add(Calendar.DATE, -1);
@@ -235,8 +234,6 @@ public class MovementRepository {
         employee.getAssignments().add(assignment);
         if (employee.getUser().getDob() != null)
             employee.getUser().setDob(output.format(inputDOB.parse(employee.getUser().getDob())));
-        if (employee.getUser().getPwdExpiryDate() != null)
-            employee.getUser().setPwdExpiryDate(output.format(inputPED.parse(employee.getUser().getPwdExpiryDate())));
         employeeService.updateEmployee(employee, movement.getTenantId(),
                 movementRequest.getRequestInfo());
     }

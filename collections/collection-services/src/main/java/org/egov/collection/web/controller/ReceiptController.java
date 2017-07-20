@@ -132,7 +132,7 @@ public class ReceiptController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 
-		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -150,7 +150,7 @@ public class ReceiptController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("Request: "+ receiptRequest.toString());		
-		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 

@@ -120,15 +120,7 @@ public class ReceiptRepository {
 		
 	}
 	
-	public Receipt pushToQueue(ReceiptReq receiptReq) {
-		Receipt receiptInfo = receiptReq.getReceipt();
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime())).getTime());
-		auditDetails.setLastModifiedDate((new Date(new java.util.Date().getTime())).getTime());
-		receiptInfo.setAuditDetails(auditDetails);
-		
+	public Receipt pushToQueue(ReceiptReq receiptReq) {	
 		try{
 			collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(),
 					applicationProperties.getCreateReceiptTopicKey(), receiptReq);
@@ -137,7 +129,7 @@ public class ReceiptRepository {
 			logger.error("Pushing to Queue FAILED! ", e.getMessage());
 			return null;
 		}
-		return receiptInfo;
+		return receiptReq.getReceipt();
 	}
 			
 	public long persistToReceiptHeader(Map<String, Object> parametersMap, Receipt receiptInfo){

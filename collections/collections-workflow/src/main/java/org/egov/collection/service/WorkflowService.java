@@ -85,6 +85,7 @@ public class WorkflowService {
 		}
 		logger.info("Proccess Instance Id received is: "+processInstanceResponse.getProcessInstance().getId());
 		workflowDetails.setStateId(Long.valueOf(processInstanceResponse.getProcessInstance().getId()));
+		workflowDetails.setStatus(processInstanceResponse.getProcessInstance().getStatus());
 	    pushToQueue(workflowDetails);
 		return processInstanceResponse.getProcessInstance();
 	}
@@ -103,6 +104,7 @@ public class WorkflowService {
 		}
 		logger.info("Task Id received is: "+taskResponse.getTask().getId());
 		workflowDetails.setStateId(Long.valueOf(taskResponse.getTask().getId()));
+		workflowDetails.setStatus(taskResponse.getTask().getStatus());
 		pushToQueue(workflowDetails);
 		return taskResponse.getTask();
 	}

@@ -48,12 +48,14 @@ import java.util.Map;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -131,7 +133,17 @@ public class ReceiptService {
 		receiptReq.getReceipt().getBill().clear();
 		receiptReq.getReceipt().getBill().add(bill);
 		setReceiptNumber(receiptReq);
-		return receiptRepository.pushToQueue(receiptReq);
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo().getId());
+		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo().getUserInfo().getId());
+		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime())).getTime());
+		auditDetails.setLastModifiedDate((new Date(new java.util.Date().getTime())).getTime());
+		receiptReq.getReceipt().setAuditDetails(auditDetails);
+		
+		
+	//	return receiptRepository.pushToQueue(receiptReq); //async call
+		
+		return create(receiptReq);
 	}
 
 	private void setReceiptNumber(ReceiptReq receiptReq) {
@@ -223,7 +235,7 @@ public class ReceiptService {
 
 		for (BillDetail billdetails : receiptInfo.getBill().get(0)
 				.getBillDetails()) {
-
+			billdetails.setCollectionType(CollectionType.valueOf("COUNTER"));
 			if (billdetails.getCollectionType().equals("ONLINE")) {
 				statusCode = "PENDING";
 			} else {
@@ -248,14 +260,14 @@ public class ReceiptService {
 						.getPaidBy());
 				parametersMap.put("referencenumber",
 						billdetails.getBillNumber());
-				parametersMap.put("receipttype", billdetails.getReceiptType());
+				parametersMap.put("receipttype", billdetails.getReceiptType().toString());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("receiptnumber",
 						billdetails.getReceiptNumber());
 				parametersMap.put("businessdetails",
 						billdetails.getBusinessService());
 				parametersMap.put("collectiontype",
-						billdetails.getCollectionType());
+						billdetails.getCollectionType().toString());
 				parametersMap.put("reasonforcancellation",
 						billdetails.getReasonForCancellation());
 				parametersMap.put("minimumamount",

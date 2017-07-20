@@ -46,6 +46,10 @@ class Report extends Component {
     e.preventDefault();
   }
 
+  getVal = () => {
+    return "";
+  }
+
   // componentDidUpdate()
   // {
   //     // this.initData();
@@ -63,8 +67,8 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName,formData, getVal}=this.props;
-    let {create,handleChange}=this;
+    let {metaData,moduleName,actionName,formData}=this.props;
+    let {create,handleChange, getVal}=this;
     console.log(formData);
     // console.log(!_.isEmpty(metaData) && metaData);
     // console.log(moduleName && moduleName);
@@ -112,9 +116,6 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
     dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
-  },
-  getVal: () => {
-
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

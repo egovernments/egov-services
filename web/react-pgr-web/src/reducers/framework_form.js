@@ -113,9 +113,9 @@ export default(state = defaultState, action) => {
     case "HANDLE_CHANGE_VERSION_TWO":
       validationData = undefined;
       validationData = validate(action.isRequired, action.pattern, action.property, action.value, state.validationData,action.requiredErrMsg,action.patternErrMsg);
-      var currentState= Object.assign({}, state);
+      var currentState= JSON.parse(JSON.stringify(state));
       // console.log(currentState);
-      _.set(currentState.form,action.property,action.value);
+      _.set(currentState.form, action.property, action.value);
       currentState.fieldErrors= {
         ...state.fieldErrors,
         [action.property]: validationData.errorText

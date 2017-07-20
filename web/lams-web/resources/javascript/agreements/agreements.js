@@ -1228,6 +1228,7 @@ function uploadFiles(agreement, cb) {
             })
         }
     } else {
+        agreement.documents = null;
         cb(null, agreement);
     }
 }

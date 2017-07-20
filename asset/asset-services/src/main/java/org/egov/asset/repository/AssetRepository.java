@@ -252,8 +252,10 @@ public class AssetRepository {
         logger.debug("assetStatus check for asset update:: " + assetStatuses);
         if (!assetStatuses.isEmpty()) {
             final AssetStatus assetStatus = assetStatuses.get(0);
-            if (!assetStatus.getStatusValues().get(0).getCode().equalsIgnoreCase(status))
+            if (!assetStatus.getStatusValues().get(0).getCode().equalsIgnoreCase(status)) {
+                logger.debug("Updating Depreciation Data for asset :: " + asset.getName());
                 updateDepreciationData(assetRequest);
+            }
         }
         return asset;
     }
@@ -262,20 +264,44 @@ public class AssetRepository {
         final Asset asset = assetRequest.getAsset();
         final List<Asset> assets = findAssetByCode(asset.getCode());
         final Asset oldAsset = assets.get(0);
-        if (!oldAsset.getEnableYearWiseDepreciation() && asset.getEnableYearWiseDepreciation()) {
-            final String queryForPrevDepreciationCheck = AssetQueryBuilder.DATACHECKINYEARWISEDEPRECIATION;
-            final List<YearWiseDepreciation> yearWiseDepreciations = jdbcTemplate.query(queryForPrevDepreciationCheck,
-                    new Long[] { oldAsset.getId() }, yearWiseDepreciationRowMapper);
-            if (!yearWiseDepreciations.isEmpty()) {
-                validateYearWiseDepreciations(yearWiseDepreciations, assetRequest);
-                updateAssetDepreciationRate(asset, false);
-            } else {
-                saveYearWiseDepreciation(assetRequest);
-                updateAssetDepreciationRate(asset, false);
-            }
+        logger.debug("Old Asset :: " + oldAsset);
+        final boolean oldAssetEnableYWD = oldAsset.getEnableYearWiseDepreciation();
+        final boolean reqAssetEnableYWD = asset.getEnableYearWiseDepreciation();
+        if (!oldAssetEnableYWD && reqAssetEnableYWD) {
+            logger.info("false to true");
+            updateYearWiseDepreciationData(assetRequest, asset, oldAsset);
         }
-        if (oldAsset.getEnableYearWiseDepreciation() && !asset.getEnableYearWiseDepreciation())
+
+        if (oldAssetEnableYWD && !reqAssetEnableYWD) {
+            logger.info("true to false");
             updateAssetDepreciationRate(asset, true);
+        }
+
+        if (oldAssetEnableYWD && reqAssetEnableYWD) {
+            logger.info("true to true");
+            updateYearWiseDepreciationData(assetRequest, asset, oldAsset);
+        }
+
+        if (!oldAssetEnableYWD && !reqAssetEnableYWD) {
+            logger.info("false to false");
+            updateAssetDepreciationRate(asset, true);
+        }
+
+    }
+
+    private void updateYearWiseDepreciationData(final AssetRequest assetRequest, final Asset asset,
+            final Asset oldAsset) {
+        final String queryToGetYearWiseDepreciation = AssetQueryBuilder.GETYEARWISEDEPRECIATIONQUERY;
+        logger.debug("Get Year Wise Depreciation Query :: " +queryToGetYearWiseDepreciation);
+        final List<YearWiseDepreciation> yearWiseDepreciations = jdbcTemplate.query(queryToGetYearWiseDepreciation,
+                new Long[] { oldAsset.getId() }, yearWiseDepreciationRowMapper);
+        if (!yearWiseDepreciations.isEmpty()) {
+            validateYearWiseDepreciations(yearWiseDepreciations, assetRequest);
+            updateAssetDepreciationRate(asset, false);
+        } else {
+            saveYearWiseDepreciation(assetRequest);
+            updateAssetDepreciationRate(asset, false);
+        }
     }
 
     private void validateYearWiseDepreciations(final List<YearWiseDepreciation> oldYearWiseDepr,
@@ -287,7 +313,7 @@ public class AssetRepository {
         } else {
             logger.info("updating year wise depreciations");
             updateYearWiseDepreciation(assetRequest);
-        }
+        } 
     }
 
     private void addUpdateYearWiseDepreciation(final List<YearWiseDepreciation> oldYearWiseDepr,
@@ -331,7 +357,7 @@ public class AssetRepository {
             preparedStatementValues.add(asset.getDepreciationRate());
         preparedStatementValues.add(asset.getCode());
         preparedStatementValues.add(asset.getTenantId());
-        logger.info("Asset Depreciation Rate Update Parameters : " + preparedStatementValues);
+        logger.debug("Asset Depreciation Rate Update Parameters : " + preparedStatementValues);
         jdbcTemplate.update(depreciationRateUpdateQuery, preparedStatementValues.toArray());
     }
 

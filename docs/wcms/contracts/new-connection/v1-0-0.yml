@@ -100,6 +100,43 @@ paths:
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  # Connection Types API
+  /connection/_getconnectiontypes:
+      post:
+        summary: Get all existing Connection Type values
+        tags:
+          - ConnectionType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/CommonEnumRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    # Billing Types API
+  /connection/_getbillingtypes: 
+      post:
+        summary: Get all existing Billing Type values
+        tags:
+          - BillingType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/CommonEnumRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
 
             
 definitions:
@@ -135,10 +172,10 @@ definitions:
         type: integer
         format: int64
         description: unique identifier of a material object
-      connectionId:
+      estimationChargeId:
         type: integer
         format: int64
-        description: unique identifier of connection object
+        description: unique identifier of EstimationCharge object
       name:
         type: string
         minLength: 5
@@ -617,6 +654,26 @@ definitions:
         maximum: 500
         items:
          $ref: '#/definitions/Connection'
+         
+  CommonDataModel:
+      type: object
+      properties:
+        key:
+         type: string
+         description : This field holds the name of the enumerator
+        object:
+         description: This field holds any object of enumerator
+
+  CommonEnumRes:
+      type: object
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DataModelList:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/CommonDataModel'
          
 parameters:
   updateCode:

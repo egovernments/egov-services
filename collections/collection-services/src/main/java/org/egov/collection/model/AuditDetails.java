@@ -64,12 +64,12 @@ public class AuditDetails {
 	  private Long createdBy = null;
 	  
 	  @JsonProperty("createdDate")
-	  private Date createdDate = null;
+	  private Long createdDate = null;
 	  
 	  @JsonProperty("lastModifiedBy")
 	  private Long lastModifiedBy = null;
 	  
 	  @JsonProperty("lastModifiedDate")
-	  private Date lastModifiedDate = null;
+	  private Long lastModifiedDate = null;
 
 }

@@ -7,10 +7,10 @@ export default class UiButton extends Component {
    	}
 
 	renderBtn = (item) => {
-		switch (item.ui) {
+		switch (this.props.ui) {
 			case 'google': 
 				return (
-					<RaisedButton label={item.label} primary={true} onClick={this.props.handler}/>
+					<RaisedButton type={item.uiType || "button"} label={item.label} primary={true} onClick={this.props.handler || function(){}}/>
 				);
 		}
 	}

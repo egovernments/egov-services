@@ -3,6 +3,8 @@ package org.egov.collection.domain.service;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.repository.WorkflowRepository;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WorkflowServiceTest {
@@ -21,13 +24,17 @@ public class WorkflowServiceTest {
 	@Mock
 	private WorkflowRepository workflowRepository;
 	
+	@Mock
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 /*	@Test
 	public void test_should_start_workflow(){
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		ProcessInstance processInstance = new ProcessInstance();
 		processInstance.setId("A");
 		processInstanceResponse.setProcessInstance(processInstance);
-		WorkflowDetails workflowDetails = new WorkflowDetails();
+		WorkflowDetails workflowDetails = getWorkflowDetails();
 		WorkflowService workflowService = new WorkflowService();
 		Mockito.when(workflowRepository.startWorkflow(workflowDetails)).thenReturn(processInstanceResponse);
 
@@ -76,6 +83,16 @@ public class WorkflowServiceTest {
 		
 		WorkflowService workflowService = new WorkflowService();
 		assertNotNull(workflowService.updateWorkflow(workflowDetails));
+	}
+	
+	private WorkflowDetails getWorkflowDetails(){
+		WorkflowDetails workflowDetails = new WorkflowDetails();
+		workflowDetails = WorkflowDetails.builder()
+				.action("Approve").assignee(1L).businessKey(CollectionServiceConstants.BUSINESS_KEY)
+				.comments("Comments").department(1L).designation(1L).initiatorPosition(1l).receiptNumber("")
+				.state("Receipt Submitted").status("Receipt Submitted").tenantId("default").user(1L).build();
+		
+		return workflowDetails;
 	}
 
 }

@@ -84,14 +84,6 @@ public class PropertyTypePipeSizeService {
         return propertyPipeSizeRequest.getPropertyTypePipeSize();
     }
 
-    public boolean checkPropertyByPipeSize(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
-        getPropertyTypeByName(propertyPipeSizeRequest);
-        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyTypePipeSize().getId(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeId(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getPipeSize(),
-                propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId());
-    }
-
     public List<PropertyTypePipeSize> getPropertyPipeSizes(
             final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
         if (propertyPipeSizeGetRequest.getPropertyTypeName() != null) {
@@ -99,7 +91,6 @@ public class PropertyTypePipeSizeService {
                     propertyPipeSizeGetRequest.getPropertyTypeName(), propertyPipeSizeGetRequest.getTenantId());
             if (propertyTypes.getPropertyTypesSize())
                 propertyPipeSizeGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
-
         }
         return propertyPipeSizeRepository.findForCriteria(propertyPipeSizeGetRequest);
 
@@ -120,6 +111,14 @@ public class PropertyTypePipeSizeService {
         }
         return isValidProperty;
 
+    }
+
+    public boolean checkPropertyByPipeSize(final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
+        getPropertyTypeByName(propertyPipeSizeRequest);
+        return propertyPipeSizeRepository.checkPropertyByPipeSize(propertyPipeSizeRequest.getPropertyTypePipeSize().getId(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getPropertyTypeId(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getPipeSize(),
+                propertyPipeSizeRequest.getPropertyTypePipeSize().getTenantId());
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {

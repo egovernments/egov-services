@@ -85,12 +85,11 @@ public class PropertyCategoryService {
 
     public PropertyTypeCategoryTypesRes getPropertyCategories(
             final PropertyCategoryGetRequest propertyCategoryGetRequest) {
-        if (propertyCategoryGetRequest.getPropertyType() != null) {
+        if (propertyCategoryGetRequest.getPropertyTypeName() != null) {
             final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyIdFromPTModule(
-                    propertyCategoryGetRequest.getPropertyType(), propertyCategoryGetRequest.getTenantId());
+                    propertyCategoryGetRequest.getPropertyTypeName(), propertyCategoryGetRequest.getTenantId());
             if (propertyTypes.getPropertyTypesSize())
                 propertyCategoryGetRequest.setPropertyTypeId(propertyTypes.getPropertyTypes().get(0).getId());
-
         }
         return propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest);
 

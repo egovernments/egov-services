@@ -399,26 +399,60 @@
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
     # Application Type API
-    /applicationtype/_search:
+    /master/_getapplicationtypes:
       post:
-        summary: searches existing values
+        summary: Get all existing Application Type values
         tags:
           - ApplicationType
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
         responses:
           200: 
             description: Successful response
             schema:
-              $ref: '#/definitions/ApplicationTypesRes'
+              $ref: '#/definitions/CommonEnumRes'
           400:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+    # Reservoir Types API
+    /master/_getreservoirtypes:
+      post:
+        summary: Get all existing Reservoir Type values
+        tags:
+          - ReservoirType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/CommonEnumRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    # Plant Types API
+    /master/_getplanttypes:
+      post:
+        summary: Get all existing Plant Type values
+        tags:
+          - PlantType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/CommonEnumRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    
               
   # Property Type Category Type API
     /propertytype-categorytype/_create:
@@ -1060,6 +1094,10 @@
           type: integer
           format: int64
           description: unique identifier of category type object
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
@@ -1069,6 +1107,7 @@
       required:
         - propertyTypeId
         - categoryTypeId
+        - active
         - tenantId
           
   # Proprty Type and PipeSize Type mapping definition
@@ -1108,6 +1147,10 @@
           type: integer
           format: int64
           description: unique identifier of pipe size type object
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant
@@ -1117,6 +1160,7 @@
       required:
         - propertyTypeId
         - pipeSizeId
+        - active
         - tenantId
 
   # Proprty Type and Usage Type mapping definition
@@ -1156,6 +1200,10 @@
           type: integer
           format: int64
           description: unique identifier of property usage type object
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
@@ -1165,6 +1213,7 @@
       required:
         - propertyTypeId
         - usageTypeId
+        - active
         - tenantId
 
   # Document Type and Application Type mapping definition
@@ -1223,6 +1272,7 @@
         - documentTypeId
         - applicationType
         - mandatory
+        - active
         - tenantId
 
   # Application Type definitions
@@ -1266,6 +1316,26 @@
       required:
         - code
         - name
+        
+    CommonDataModel:
+      type: object
+      properties:
+        key:
+         type: string
+         description : This field holds the name of the enumerator
+        object:
+         description: This field holds any object of enumerator
+
+    CommonEnumRes:
+      type: object
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DataModelList:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/CommonDataModel'
 
   # WaterConnection Type definitions
     ConnectionTypesRes:
@@ -1359,6 +1429,7 @@
       required:
         - code
         - name
+        - active
         - tenantId    
 
   # Water Supply Type definitions
@@ -1416,6 +1487,7 @@
       required:
         - code
         - name
+        - active
         - tenantId
 
   # Document Type definitions
@@ -1473,6 +1545,7 @@
       required:
         - code
         - name
+        - active
         - tenantId
   
   # PipeSize definitions
@@ -1532,6 +1605,7 @@
       required:
         - code
         - sizeInMilimeter
+        - active
         - tenantId
         
  # Donation definitions
@@ -1612,6 +1686,7 @@
         - donationAmount
         - fromDate
         - toDate
+        - active
         - tenantId  
     
 
@@ -1671,6 +1746,7 @@
       required:
         - code
         - name
+        - active
         - tenantId
         
   # Water treatment plant  Master definitions
@@ -1836,3 +1912,4 @@
         - ward
         - storageCapacity
         - tenantId
+        

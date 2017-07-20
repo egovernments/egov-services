@@ -36,6 +36,8 @@ public class BillAccountDetail   {
 
 	private String billDetail;
 	
+	private BigDecimal crAmountToBePaid;
+	
 	private BigDecimal creditAmount;
 
 	private BigDecimal debitAmount;

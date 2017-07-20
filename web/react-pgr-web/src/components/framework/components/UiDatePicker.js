@@ -13,7 +13,7 @@ export default class UiEmailField extends Component {
 					<DatePicker 
 						hintText={item.label + (item.isRequired ? " *" : "")} 
 						disabled={item.isDisabled} 
-						value={eval(item.jsonPath)}
+						value={this.props.getVal(item.jsonPath)}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						onChange={(ev, dat) => {
 							this.props.handler({target: {value: dat}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)

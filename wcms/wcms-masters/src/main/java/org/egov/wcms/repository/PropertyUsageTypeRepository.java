@@ -47,8 +47,12 @@ import java.util.Map;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -67,6 +71,9 @@ public class PropertyUsageTypeRepository {
 
     @Autowired
     private PropertyUsageTypeQueryBuilder propUsageTypeQueryBuilder;
+
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypeUsageTypeReq persistCreateUsageType(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         log.info("Property Usage Type Request::" + propUsageTypeRequest);
@@ -96,9 +103,33 @@ public class PropertyUsageTypeRepository {
 
     public List<PropertyTypeUsageType> getPropertyUsageType(final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
+        final List<Integer> propertyTypeIdsList = new ArrayList<>();
+        final List<Integer> usageTypeIdsList = new ArrayList<>();
         final String queryStr = propUsageTypeQueryBuilder.getQuery(propUsageTypeGetRequest, preparedStatementValues);
         final List<PropertyTypeUsageType> propUsageTypes = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), propUsageTypeMapper);
+
+        // fetch property type Id and set the property type name here
+        for (final PropertyTypeUsageType propertyTypeUsage : propUsageTypes)
+            propertyTypeIdsList.add(Integer.valueOf(propertyTypeUsage.getPropertyTypeId()));
+        final Integer[] propertypeIds = propertyTypeIdsList.toArray(new Integer[propertyTypeIdsList.size()]);
+        final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyNameFromPTModule(
+                propertypeIds, propUsageTypeGetRequest.getTenantId());
+        for (final PropertyTypeUsageType propertyTypeUsageType : propUsageTypes)
+            for (final PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes())
+                if (propertyResponse.getId().equals(propertyTypeUsageType.getPropertyTypeId()))
+                    propertyTypeUsageType.setPropertyType(propertyResponse.getName());
+
+        // fetch usage type Id and set the usage type name here
+        for (final PropertyTypeUsageType propertyTypeUsage : propUsageTypes)
+            usageTypeIdsList.add(Integer.valueOf(propertyTypeUsage.getUsageTypeId()));
+        final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
+        final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
+                usageTypeIds, propUsageTypeGetRequest.getTenantId());
+        for (final PropertyTypeUsageType propertyTypeUsageType : propUsageTypes)
+            for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
+                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId()))
+                    propertyTypeUsageType.setUsageType(propertyResponse.getName());
         return propUsageTypes;
     }
 

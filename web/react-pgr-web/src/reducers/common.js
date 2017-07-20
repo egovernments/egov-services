@@ -7,7 +7,7 @@ const defaultState = {
   complaintsLength: 0,
   pleaseWait: false,
   showMenu: false,
-  actionList:JSON.parse(localStorage.getItem("modules")) || [],
+  actionList:JSON.parse(localStorage.getItem("actions")) || [],
   showHome: false
 };
 

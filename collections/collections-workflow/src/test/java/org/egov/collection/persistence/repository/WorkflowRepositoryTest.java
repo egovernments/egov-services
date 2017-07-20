@@ -34,7 +34,6 @@ public class WorkflowRepositoryTest {
 	JdbcTemplate jdbcTemplate;
 
 	@Mock
-	@Autowired
 	private ApplicationProperties applicationProperties;
 
 	@Mock

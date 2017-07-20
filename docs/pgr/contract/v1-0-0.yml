@@ -854,7 +854,122 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-###########################################################################      
+###########################################################################  
+    #Save Draft API
+    /draft/v1/_create:
+      post:
+        summary: Create draft
+        description: To Create draft
+        parameters:
+          - name: draft
+            in: body
+            description: The  draft request.
+            required: true
+            schema:
+              $ref: '#/definitions/DraftCreateRequest'
+        tags:
+          - Draft
+        responses:
+          '200':
+            description: Draft Created
+            schema:
+              $ref: '#/definitions/DraftCreateResponse'
+          '400':
+            description:
+              serviceCode or tenantId was not provided or General service
+              error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+###########################################################################  
+    #Update Draft API
+    /draft/v1/_update:
+      post:
+        summary: Update draft
+        description: To Update draft
+        parameters:
+          - name: draft
+            in: body
+            description: The  draft request.
+            required: true
+            schema:
+              $ref: '#/definitions/DraftUpdateRequest'
+        tags:
+          - Draft
+        responses:
+          '200':
+            description: Draft Updated
+            schema:
+              $ref: '#/definitions/DraftResponse'
+          '400':
+            description:
+              id or draft was not provided or General service
+              error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+########################################################################### 
+    #Delete Draft API
+    /draft/v1/_delete:
+      post:
+        summary: Delete draft
+        description: To Delete draft
+        parameters:
+          - name: draft
+            in: body
+            description: The  draft request.
+            required: true
+            schema:
+              $ref: '#/definitions/DraftDeleteRequest'
+        tags:
+          - Draft
+        responses:
+          '200':
+            description: Draft Deleted
+            schema:
+              $ref: '#/definitions/DraftResponse'
+          '400':
+            description:
+              id  was not provided or General service
+              error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+########################################################################### 
+   #Search Draft API
+    /draft/v1/_search:         
+      post:
+        summary: Query Draft
+        description: Return draft for a given tenantid and search params.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the draft details.
+            required: true
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+          - name: tenantId
+            in: query
+            description: Unique id for city/ulb.
+            required: true
+            type: string
+          - name: serviceCode
+            in: query
+            description:
+              Allows one to search for requests which have a specific service code.
+            required: false
+            type: string
+        tags:
+          -  Draft
+        responses:
+          '200':
+            description: seva
+            schema:
+              $ref: '#/definitions/DraftSearchResponse'
+          '400':
+            description:
+              tenantId was not provided or General
+              service error
+            schema:
+              $ref: '#/definitions/ErrorRes'
+###########################################################################                  
 parameters:
     id:
       name: id
@@ -1213,7 +1328,7 @@ definitions:
 ###########################################################################          
   ErrorRes:
     properties:
-      resposneInfo:
+      responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       error:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
@@ -1566,3 +1681,111 @@ definitions:
         - noofhours
         - designation
         - tenantId      
+#####################################################################################
+  DraftCreateRequest:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        serviceCode: 
+          type: string
+          description: service code.
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+        draft:
+          properties:
+           map:
+            type: object
+            additionalProperties:
+              type: string
+          description: json to be saved.
+      required:
+        - tenantId     
+        - serviceCode
+        - draft
+#####################################################################################
+  DraftCreateResponse:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        id:
+         type: integer
+         format: int64
+         description : id of the draft saved.
+#####################################################################################
+  DraftSearchResponse:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        drafts:
+          type: array
+          items:
+            $ref: '#/definitions/draft'
+#####################################################################################
+  draft:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : id of the draft saved.
+        draft:
+          properties:
+           map:
+            type: object
+            additionalProperties:
+              type: string
+          description: json to be saved.
+#####################################################################################
+  DraftUpdateRequest:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        id:
+         type: integer
+         format: int64
+         description : id of the draft saved.
+        draft:
+          properties:
+           map:
+            type: object
+            additionalProperties:
+              type: string
+          description: json to be saved.
+      required:
+        - id
+        - draft
+#####################################################################################
+  DraftResponse:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        isSuccessful:
+          type: boolean
+          description: return true if draft saved else return false
+#####################################################################################
+  DraftDeleteRequest:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        ids:
+          type: array
+          items:
+            $ref: '#/definitions/draftIds'
+      required:
+        - ids
+#####################################################################################
+  draftIds:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : id of the draft saved.
+#####################################################################################        

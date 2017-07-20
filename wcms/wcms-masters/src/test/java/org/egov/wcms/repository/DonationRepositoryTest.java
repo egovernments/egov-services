@@ -54,8 +54,8 @@ import org.egov.common.contract.request.User;
 import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.builder.DonationQueryBuilder;
-import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.junit.Test;
@@ -68,129 +68,131 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class DonationRepositoryTest {
 
-	@Mock
-	private JdbcTemplate jdbcTemplate;
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
-	@Mock
-	private DonationRowMapper donationRowMapper;
+    @Mock
+    private DonationRowMapper donationRowMapper;
 
-	@InjectMocks
-	private DonationRepository donationRepository;
-	
-	 @Mock
-	 private DonationQueryBuilder donationQueryBuilder;
+    @InjectMocks
+    private DonationRepository donationRepository;
 
+    @Mock
+    private DonationQueryBuilder donationQueryBuilder;
 
-	@Test
-	public void test_Should_Create_Donation_Valid() {
-		final DonationRequest donationRequest = getDonationRequest();
-		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-		assertTrue(donationRequest.equals(donationRepository.persistDonationDetails(donationRequest)));
-	}
+    @Mock
+    private RestWaterExternalMasterService restExternalMasterService;
 
-	@Test
-	public void test_Should_Create_Donation_Invalid() {
-		final DonationRequest donationRequest = getDonationRequest();
-		final Donation donation = donationRequest.getDonation();
-		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-		assertTrue(!donation.equals(donationRepository.persistDonationDetails(donationRequest)));
-	}
+    @Test
+    public void test_Should_Create_Donation_Valid() {
+        final DonationRequest donationRequest = getDonationRequest();
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(donationRequest.equals(donationRepository.persistDonationDetails(donationRequest)));
+    }
 
-	@Test
-	public void test_Should_Find_Donation_Valid() {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final DonationGetRequest donationRequest = getDonationvalidaRequest();
-		final String queryString = "MyQuery";
-		final List<Donation> donations = new ArrayList<>();
-		when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), donationRowMapper))
-				.thenReturn(donations);
+    @Test
+    public void test_Should_Create_Donation_Invalid() {
+        final DonationRequest donationRequest = getDonationRequest();
+        final Donation donation = donationRequest.getDonation();
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+        assertTrue(!donation.equals(donationRepository.persistDonationDetails(donationRequest)));
+    }
 
-		assertTrue(donations.equals(donationRepository.findForCriteria(donationRequest)));
-	}
+    @Test
+    public void test_Should_Find_Donation_Valid() {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final DonationGetRequest donationRequest = getDonationvalidaRequest();
+        final String queryString = "MyQuery";
+        final List<Donation> donations = new ArrayList<>();
+        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), donationRowMapper))
+                .thenReturn(donations);
 
-	private DonationGetRequest getDonationvalidaRequest() {
-		final DonationGetRequest donation = new DonationGetRequest();
-		donation.setCategoryType("1");
-		donation.setPropertyType("2");
-		donation.setUsageType("3");
-		donation.setMaxPipeSize(4d);
-		donation.setMinPipeSize(1d);
-		donation.setFromDate(new Date());
-		donation.setToDate(new Date());
+        assertTrue(donations.equals(donationRepository.findForCriteria(donationRequest)));
+    }
 
-		donation.setActive(true);
+    private DonationGetRequest getDonationvalidaRequest() {
+        final DonationGetRequest donation = new DonationGetRequest();
+        donation.setCategoryType("1");
+        donation.setPropertyType("2");
+        donation.setUsageType("3");
+        donation.setMaxPipeSize(4d);
+        donation.setMinPipeSize(1d);
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
 
-		return donation;
-	}
+        donation.setActive(true);
 
-	private DonationRequest getDonationRequest() {
-		final DonationRequest donationReq = new DonationRequest();
-		final Donation donation = new Donation();
-		donation.setCategoryTypeId(1L);
-		donation.setPropertyTypeId("2");
-		donation.setUsageTypeId("3");
-		donation.setMaxPipeSizeId(2L);
-		donation.setMinPipeSizeId(2L);
-		donation.setFromDate(new Date());
-		donation.setToDate(new Date());
+        return donation;
+    }
 
-		donation.setActive(true);
-		final RequestInfo requestInfo = new RequestInfo();
-		final User newUser = new User();
-		newUser.setId(2L);
-		requestInfo.setUserInfo(newUser);
-		donationReq.setRequestInfo(requestInfo);
-		donationReq.setDonation(donation);
-		return donationReq;
-	}
+    private DonationRequest getDonationRequest() {
+        final DonationRequest donationReq = new DonationRequest();
+        final Donation donation = new Donation();
+        donation.setCategoryTypeId(1L);
+        donation.setPropertyTypeId("2");
+        donation.setUsageTypeId("3");
+        donation.setMaxPipeSizeId(2L);
+        donation.setMinPipeSizeId(2L);
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
 
-	@Test
-	public void test_Should_Modify_Donation() throws Exception {
-		final DonationRequest donationRequest = new DonationRequest();
+        donation.setActive(true);
+        final RequestInfo requestInfo = new RequestInfo();
+        final User newUser = new User();
+        newUser.setId(2L);
+        requestInfo.setUserInfo(newUser);
+        donationReq.setRequestInfo(requestInfo);
+        donationReq.setDonation(donation);
+        return donationReq;
+    }
 
-		final RequestInfo requestInfo = new RequestInfo();
-		final User user = new User();
-		user.setId(1L);
-		requestInfo.setUserInfo(user);
-		final Donation donation = new Donation();
-		final AuditDetails auditDetails = new AuditDetails();
-		donation.setAuditDetails(auditDetails);
-		donation.setActive(true);
-		donation.setCategoryTypeId(2L);
-		donation.setPropertyTypeId("2");
-		donation.setUsageTypeId("2");
-		donation.setFromDate(new Date());
-		donation.setToDate(new Date());
-		donation.setMaxPipeSizeId(2L);
-		donation.setMinPipeSizeId(2L);
-		donation.getAuditDetails().setCreatedBy(1L);
-		donationRequest.setRequestInfo(requestInfo);
-		donationRequest.setDonation(donation);
+    @Test
+    public void test_Should_Modify_Donation() throws Exception {
+        final DonationRequest donationRequest = new DonationRequest();
 
-		assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1L);
+        requestInfo.setUserInfo(user);
+        final Donation donation = new Donation();
+        final AuditDetails auditDetails = new AuditDetails();
+        donation.setAuditDetails(auditDetails);
+        donation.setActive(true);
+        donation.setCategoryTypeId(2L);
+        donation.setPropertyTypeId("2");
+        donation.setUsageTypeId("2");
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
+        donation.setMaxPipeSizeId(2L);
+        donation.setMinPipeSizeId(2L);
+        donation.getAuditDetails().setCreatedBy(1L);
+        donationRequest.setRequestInfo(requestInfo);
+        donationRequest.setDonation(donation);
 
-	}
+        assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
 
-	@Test(expected = Exception.class)
-	public void test_throwException_Modify_Donation() throws Exception {
-		final DonationRequest donationRequest = new DonationRequest();
-		final RequestInfo requestInfo = new RequestInfo();
-		final Donation donation = new Donation();
-		donation.setActive(true);
-		donation.getAuditDetails().setCreatedBy(1L);
-		donation.setCategoryTypeId(2L);
-		donation.setPropertyTypeId("2");
-		donation.setUsageTypeId("2");
-		donation.setFromDate(new Date());
-		donation.setToDate(new Date());
-		donation.setMaxPipeSizeId(2L);
-		donation.setMinPipeSizeId(2L);
+    }
 
-		donationRequest.setRequestInfo(requestInfo);
-		donationRequest.setDonation(donation);
+    @Test(expected = Exception.class)
+    public void test_throwException_Modify_Donation() throws Exception {
+        final DonationRequest donationRequest = new DonationRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final Donation donation = new Donation();
+        donation.setActive(true);
+        donation.getAuditDetails().setCreatedBy(1L);
+        donation.setCategoryTypeId(2L);
+        donation.setPropertyTypeId("2");
+        donation.setUsageTypeId("2");
+        donation.setFromDate(new Date());
+        donation.setToDate(new Date());
+        donation.setMaxPipeSizeId(2L);
+        donation.setMinPipeSizeId(2L);
 
-		assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
+        donationRequest.setRequestInfo(requestInfo);
+        donationRequest.setDonation(donation);
 
-	}
+        assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
+
+    }
 
 }

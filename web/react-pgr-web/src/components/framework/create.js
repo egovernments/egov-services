@@ -9,41 +9,57 @@ import wcSpecs from './specs/wc/wc';
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
+import UiButton from './components/UiButton';
 
 class Report extends Component {
 
   initData()
   {
     let {setMetaData,setModuleName,setAtionName,initForm}=this.props;
-
+    let reqRequired = [], patRequired = [];
     let hashLocation=window.location.hash;
     let obj=wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     for (var i = 0; i <obj.groups.length; i++) {
       obj.groups[i].label=translate(obj.groups[i].label);
       for (var j = 0; j < obj.groups[i].fields.length; j++) {
         obj.groups[i].fields[j].label=translate(obj.groups[i].fields[j].label);
+        if(obj.groups[i].fields[j].isRequired)
+          reqRequired.push(obj.groups[i].fields[j].jsonPath);
       }
     }
-    // console.log(wcSpecs);
-    initForm();
-
+    
+    initForm(reqRequired, patRequired);
     setMetaData(wcSpecs);
-
     setModuleName(hashLocation.split("/")[2]);
-
     setAtionName(hashLocation.split("/")[1]);
-
   }
 
-  componentDidMount()
-  {
-
+  componentDidMount() {
       this.initData();
   }
 
-  create=(e)=>
-  {
+  create=(e) => {
+    let self = this;
     e.preventDefault();
+    self.props.setLoadingStatus('loading');
+    var formData = Object.assign(this.props.formData);
+    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
+      if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
+
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    }
+    
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
+      self.props.setLoadingStatus('hide');
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
+  }
+
+  getVal = (path) => {
+    return _.get(this.props.formData, path);
   }
 
   // componentDidUpdate()
@@ -51,11 +67,11 @@ class Report extends Component {
   //     // this.initData();
   // }
 
-  handleChange=(e, property, isRequired, pattern,requiredErrMsg="Required",patternErrMsg="Pattern Missmatch")=>
+  handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch")=>
   {
       let {handleChange}=this.props;
       // console.log(e + " "+ property + " "+ isRequired +" "+pattern);
-      handleChange(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg);
+      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
   }
 
 
@@ -63,40 +79,39 @@ class Report extends Component {
 
 
   render() {
-    let {metaData,moduleName,actionName,formData}=this.props;
-    let {create,handleChange}=this;
-    console.log(formData);
-    // console.log(!_.isEmpty(metaData) && metaData);
-    // console.log(moduleName && moduleName);
-    // console.log(actionName && actionName);
-    // console.log(`${moduleName}.${actionName}`);
+    let {metaData, moduleName, actionName, formData, fieldErrors}=this.props;
+    let {create, handleChange, getVal}=this;
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} uiFramework="google" handler={handleChange} fieldErrors={{}} formData={formData}/>}
-          <RaisedButton type="submit" disabled={false}  label="Create" />
+        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={metaData[`${moduleName}.${actionName}`].useTimestamp || false}/>}
+          <div style={{"textAlign": "center"}}>
+            <br/>
+            <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>
+            <br/>
+          </div>
         </form>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({metaData:state.framework.metaData,moduleName:state.framework.moduleName,actionName:state.framework.actionName,formData:state.frameworkForm.form});
+const mapStateToProps = state => ({metaData:state.framework.metaData,moduleName:state.framework.moduleName,actionName:state.framework.actionName,formData:state.frameworkForm.form, fieldErrors: state.frameworkForm.fieldErrors});
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
+  initForm: (reqRequired, patRequired) => {
     dispatch({
       type: "RESET_STATE",
       validationData: {
         required: {
           current: [],
-          required: [ ]
+          required: reqRequired
         },
         pattern: {
           current: [],
-          required: []
+          required: patRequired
         }
       }
     });
@@ -112,6 +127,12 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange:(e,property,isRequired,pattern,requiredErrMsg,patternErrMsg)=>{
     dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern,requiredErrMsg,patternErrMsg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

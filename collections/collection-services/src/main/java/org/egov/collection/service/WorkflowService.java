@@ -44,6 +44,7 @@ import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.producer.CollectionProducer;
+import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.repository.WorkflowRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,9 @@ public class WorkflowService {
 	
 	@Autowired
 	private WorkflowRepository workflowRepository;
+	
+	@Autowired
+	private ReceiptRepository receiptRepository;
 	
 	@Autowired
 	private CollectionProducer collectionProducer;
@@ -96,7 +100,8 @@ public class WorkflowService {
 		return workflowDetails;
 	}
 	
-	public WorkflowDetails update(WorkflowDetails workflowDetails) {		
+	public WorkflowDetails update(WorkflowDetails workflowDetails) {
+		workflowDetails.setStateId(receiptRepository.getStateId(workflowDetails.getReceiptNumber()));
 		try{
 			collectionProducer.producer(applicationProperties.getKafkaUpdateworkflowTopic(),
 					applicationProperties.getKafkaUpdateworkflowTopicKey(), workflowDetails);

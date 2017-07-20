@@ -18,7 +18,7 @@ class UiSelectField extends Component {
 
 	componentDidMount()
 	{
-		let {item,setDropDownData}=this.props;
+		let {item, setDropDownData, useTimestamp}=this.props;
 		// console.log(this.props.item);
 		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
 		{
@@ -30,8 +30,8 @@ class UiSelectField extends Component {
 				context+=splitArray[0].split("/")[j]+"/";
 			}
 
-			var response=Api.commonApiPost(context,id).then(function(response)
-			{
+			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+				
 					let keys=jp.query(response,splitArray[1].split("|")[1]);
 					let values=jp.query(response,splitArray[1].split("|")[2]);
 					let dropDownData=[];
@@ -75,7 +75,7 @@ class UiSelectField extends Component {
 					<SelectField
 						fullWidth={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						value={eval(item.jsonPath)}
+						value={this.props.getVal(item.jsonPath)}
 						onChange={(event, key, value) =>{
 							this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
 						}}

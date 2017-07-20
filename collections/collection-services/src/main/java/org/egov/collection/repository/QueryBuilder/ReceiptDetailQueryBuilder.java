@@ -214,4 +214,12 @@ public class ReceiptDetailQueryBuilder {
 		return "Update egcl_receiptheader set status=? , reasonforcancellation=? , cancellationremarks=? ,"
 				+ " lastmodifiedby=? , lastmodifieddate=?" + " where id =? and tenantId=?";
 	}
+
+    public String searchQuery() {
+        return "select distinct u.id as user_id,u.name as user_name from eg_user u RIGHT JOIN egcl_receiptheader rh ON u.id=rh.createdby ";
+    }
+
+    public String searchStatusQuery() {
+        return "select distinct status from egcl_receiptheader order by status ASC";
+    }
 }

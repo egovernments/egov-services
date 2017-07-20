@@ -12,7 +12,7 @@
             "tenantId": "default",
             "instrumentType": null,
             "instrumentHeader": null,
-            "Bill": {
+            "Bill": [ {
                 "id": null,
                 "payeeName": "abc",
                 "payeeAddress": "abc nagara",
@@ -39,11 +39,10 @@
                         "displayMessage": "receipt created successfully",
                         "callBackForApportioning": null,
                         "receiptNumber": "REC1234",
-                        "receiptType": "ghj",
-                        "receiptDate": 1454371200000,
+                        "receiptType": "ADHOC",
                         "channel": "567hfghr",
                         "voucherHeader": "VOUHEAD",
-                        "collectionType": "C",
+                        "collectionType": "COUNTER",
                         "boundary": "67",
                         "reasonForCancellation": "Data entry mistake",
                         "amountPaid": null,
@@ -78,7 +77,7 @@
                     }
                 ],
                 "tenantId": "default"
-            },
+            } ],
             "Bank": null,
             "BankAccount": null,
             "auditDetails": null,

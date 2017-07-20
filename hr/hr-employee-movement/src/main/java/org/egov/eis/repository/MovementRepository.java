@@ -216,12 +216,12 @@ public class MovementRepository {
         calendar.setTime(effectiveFromDate);
         calendar.add(Calendar.DATE, -1);
         final Date yesterday = calendar.getTime();
-        for (final Assignment employeeAssignment : employee.getAssignments())
+        for (final Assignment employeeAssignment : employee.getAssignments()) {
             if (employeeAssignment.getFromDate().before(effectiveFromDate)
-                    && employeeAssignment.getToDate().after(effectiveFromDate)) {
+                    && employeeAssignment.getToDate().after(effectiveFromDate))
                 employeeAssignment.setToDate(yesterday);
-                employeeAssignment.setIsPrimary(false);
-            }
+            employeeAssignment.setIsPrimary(false);
+        }
         final Assignment assignment = new Assignment();
         assignment.setPosition(movement.getPositionAssigned());
         assignment.setFund(movement.getFundAssigned());

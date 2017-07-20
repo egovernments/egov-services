@@ -13,9 +13,10 @@ import UiTextArea from './components/UiTextArea'
 import UiMultiSelectField from './components/UiMultiSelectField'
 import UiNumberField from './components/UiNumberField'
 import UiDatePicker from './components/UiDatePicker'
-import UiMultiFielUpload from './components/UiMultiFileUpload'
+import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
-
+import UiAadharCard from './components/UiAadharCard'
+import UiPanCard from './components/UiPanCard'
 
 
 export default class ShowFields extends Component {
@@ -88,7 +89,11 @@ export default class ShowFields extends Component {
         break;
       case 'multiFileUpload':
     		return <UiMultiSelectField ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
-  	}
+  	  case 'pan':
+        return <UiPanCard ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'aadhar':
+        return <UiAadharCard ui="google" item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+    }
   }
 
   render() {

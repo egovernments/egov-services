@@ -1,7 +1,5 @@
 package org.egov.tracer.http;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -13,6 +11,7 @@ import org.springframework.http.MediaType;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +22,7 @@ import java.util.UUID;
 public class CorrelationIdFilter implements Filter {
 
     private static final String FAILED_TO_DESERIALIZE_MESSAGE = "Failed to deserialize body";
+    private static final String FAILED_TO_UPDATE_REQUEST_MESSAGE = "Failed to update request body with correlation id";
     private static final List<String> JSON_MEDIA_TYPES =
         Arrays.asList(MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_VALUE);
     private static final String POST = "POST";
@@ -94,40 +94,59 @@ public class CorrelationIdFilter implements Filter {
         }
     }
 
-    private void setCorrelationIdFromBody(HttpServletRequest httpRequest) throws IOException {
-        final String correlationIdFromRequestBody = getCorrelationIdFromRequestBody(httpRequest);
-        if (correlationIdFromRequestBody == null) {
+    private void setCorrelationIdFromBody(MultiReadRequestWrapper httpRequest) throws IOException {
+        final RequestCorrelationId correlationIdFromRequestBody = getCorrelationIdFromRequestBody(httpRequest);
+        final String correlationId = correlationIdFromRequestBody.get();
+        if (correlationId == null) {
             log.warn(NO_CORRELATION_ID_IN_BODY_MESSAGE, httpRequest.getRequestURI());
             setCorrelationIdFromHeader(httpRequest);
+            setCorrelationIdToRequestBody(httpRequest, correlationIdFromRequestBody);
         } else {
             log.info(FOUND_CORRELATION_ID_IN_BODY_MESSAGE, correlationIdFromRequestBody, httpRequest.getRequestURI());
-            RequestContext.setId(correlationIdFromRequestBody);
+            RequestContext.setId(correlationId);
         }
     }
 
     private boolean isBodyCompatibleForParsing(HttpServletRequest httpRequest) {
         return POST.equals(httpRequest.getMethod())
-        && JSON_MEDIA_TYPES.contains(httpRequest.getContentType());
+            && JSON_MEDIA_TYPES.contains(httpRequest.getContentType());
     }
 
     private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {
         return httpRequest.getHeader(RequestHeader.CORRELATION_ID);
     }
 
-    private String getCorrelationIdFromRequestBody(HttpServletRequest httpRequest) throws IOException {
+    private RequestCorrelationId getCorrelationIdFromRequestBody(MultiReadRequestWrapper httpRequest) {
         try {
-            @SuppressWarnings("unchecked")
-            final HashMap<String, Object> requestBody = (HashMap<String, Object>)
+            @SuppressWarnings("unchecked") final HashMap<String, Object> requestBody = (HashMap<String, Object>)
                 objectMapper.readValue(httpRequest.getInputStream(), HashMap.class);
-            return new RequestCorrelationId(requestBody).get();
-        } catch (JsonParseException | JsonMappingException e) {
+            return new RequestCorrelationId(requestBody);
+        } catch (IOException e) {
             log.error(FAILED_TO_DESERIALIZE_MESSAGE, e);
-            return null;
+            return new RequestCorrelationId(null);
         }
     }
 
+    private void setCorrelationIdToRequestBody(MultiReadRequestWrapper httpRequest,
+                                               RequestCorrelationId requestCorrelationId) {
+        try {
+            updateRequestInfoWithCorrelationId(httpRequest, requestCorrelationId);
+        } catch (IOException e) {
+            log.error(FAILED_TO_UPDATE_REQUEST_MESSAGE, e);
+        }
+    }
+
+    private void updateRequestInfoWithCorrelationId(MultiReadRequestWrapper httpRequest,
+                                                    RequestCorrelationId requestCorrelationId) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final String correlationId = RequestContext.getId();
+        final HashMap<String, Object> updatedRequestInfo = requestCorrelationId.update(correlationId);
+        objectMapper.writeValue(out, updatedRequestInfo);
+        httpRequest.update(out);
+    }
+
     private void logRequestBody(MultiReadRequestWrapper requestWrapper) {
-        if(inboundHttpRequestBodyLoggingEnabled) {
+        if (inboundHttpRequestBodyLoggingEnabled) {
             try {
                 final String requestBody = IOUtils.toString(requestWrapper.getInputStream(), UTF_8);
                 log.info(REQUEST_BODY_LOG_MESSAGE, requestBody);

@@ -24,6 +24,17 @@ public class RequestCorrelationId {
         return null;
     }
 
+    public HashMap<String, Object> update(String correlationId) {
+        if(this.requestMap == null) {
+            return null;
+        }
+        final HashMap<String, Object> requestInfo = getRequestInfo();
+        if (requestInfo != null) {
+            requestInfo.put(CORRELATION_ID_FIELD_NAME, correlationId);
+        }
+        return requestMap;
+    }
+
     @SuppressWarnings("unchecked")
     private HashMap<String, Object> getRequestInfo() {
         final Object requestInfo1 = requestMap.get(REQUEST_INFO_FIELD_NAME_IN_JAVA_CLASS_CASE);

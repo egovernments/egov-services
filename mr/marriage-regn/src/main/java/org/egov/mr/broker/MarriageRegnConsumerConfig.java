@@ -42,7 +42,7 @@ public class MarriageRegnConsumerConfig {
 	@Bean
 	KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
 		System.out.println("kafkaListenerContainerFactory");
-		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<String, String>();
 		factory.setConsumerFactory(consumerFactory());
 		factory.setConcurrency(3);
 		factory.getContainerProperties().setPollTimeout(3000);
@@ -52,13 +52,13 @@ public class MarriageRegnConsumerConfig {
 	@Bean
 	public ConsumerFactory<String, String> consumerFactory() {
 		System.out.println("consumerFactory");
-		return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+		return new DefaultKafkaConsumerFactory<String, String>(consumerConfigs());
 	}
 
 	@Bean
 	public Map<String, Object> consumerConfigs() {
 		// TODO - Load configs from env vars
-		Map<String, Object> propsMap = new HashMap<>();
+		Map<String, Object> propsMap = new HashMap<String, Object>();
 		propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
 		propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
 		propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);

@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
+import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
@@ -65,6 +66,9 @@ public class ConnectionValidator {
     private RestConnectionService restConnectionService;
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ConnectionValidator.class);
+    
+    @Autowired
+    private ConfigurationManager  configurationManager;
 
     public ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
@@ -348,6 +352,11 @@ public class ConnectionValidator {
     }
     public String generateAcknowledgementNumber(final WaterConnectionReq waterConnectionRequest)
     {
-        return restConnectionService.generateAcknowledgementNumber(waterConnectionRequest.getConnection().getTenantId());
+        return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(),
+                configurationManager.getIdGenNameServiceTopic(),configurationManager.getIdGenFormatServiceTopic());
+    }
+    public String generateConsumerNumber(final WaterConnectionReq waterConnectionRequest)
+    {
+        return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(), configurationManager.getHscGenNameServiceTopic(), configurationManager.getHscGenFormatServiceTopic());
     }
 }

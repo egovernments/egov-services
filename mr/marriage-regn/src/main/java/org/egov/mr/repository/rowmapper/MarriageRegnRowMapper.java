@@ -43,7 +43,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 
 	private Map<String, MarriageRegnInfo> getMarriageRegnInfoMap(ResultSet rs) throws SQLException {
 		@SuppressWarnings("unchecked")
-		Map<String, MarriageRegnInfo> marriageRegnInfoMap = new LinkedHashMap<>();
+		Map<String, MarriageRegnInfo> marriageRegnInfoMap = new LinkedHashMap<String, MarriageRegnInfo>();
 		while (rs.next()) {
 			String marriageRegnId = (String) rs.getObject("mr_applicationNumber");
 			MarriageRegnInfo marriageRegnInfo = marriageRegnInfoMap.get(marriageRegnId);
@@ -219,7 +219,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 	}
 
 	private List<MarriageRegn> getMarriageRegnList(Map<String, MarriageRegnInfo> marriageRegnInfoMap) {
-		List<MarriageRegn> marriageRegnList = new ArrayList<>();
+		List<MarriageRegn> marriageRegnList = new ArrayList<MarriageRegn>();
 		for (Map.Entry<String, MarriageRegnInfo> marriageRegnInfoEntry : marriageRegnInfoMap.entrySet()) {
 			MarriageRegnInfo marriageRegnInfo = marriageRegnInfoEntry.getValue();
 
@@ -235,14 +235,14 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					.source(marriageRegnInfo.source).stateId(marriageRegnInfo.stateId)
 					.tenantId(marriageRegnInfo.tenantId).build();
 
-			List<Witness> witnessList = new ArrayList<>();
+			List<Witness> witnessList = new ArrayList<Witness>();
 			for (Map.Entry<String, Witness> witnessEntry : marriageRegnInfo.getWitnesses().entrySet()) {
 				Witness witness = witnessEntry.getValue();
 				witnessList.add(witness);
 			}
 			marriageRegn.setWitnesses(witnessList);
 
-			List<MarriageCertificate> certificateList = new ArrayList<>();
+			List<MarriageCertificate> certificateList = new ArrayList<MarriageCertificate>();
 			for (Map.Entry<String, MarriageCertificate> certificateEntry : marriageRegnInfo.getCertificates()
 					.entrySet()) {
 				MarriageCertificate certificate = certificateEntry.getValue();
@@ -280,13 +280,13 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 
 		private MarryingPerson bride;
 
-		private Map<String, Witness> witnesses = new HashMap<>();
+		private Map<String, Witness> witnesses = new HashMap<String, Witness>();
 
 		private PriestInfo priest;
 
 		private List<MarriageDocument> documents = new ArrayList<MarriageDocument>();
 
-		private Map<String, MarriageCertificate> certificates = new HashMap<>();
+		private Map<String, MarriageCertificate> certificates = new HashMap<String, MarriageCertificate>();
 
 		private String serialNo;
 

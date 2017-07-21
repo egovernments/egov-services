@@ -216,10 +216,10 @@ public class ReceiptDetailQueryBuilder {
 	}
 
     public String searchQuery() {
-        return "select distinct u.id as user_id,u.name as user_name from eg_user u RIGHT JOIN egcl_receiptheader rh ON u.id=rh.createdby ";
+        return "select distinct createdby from egcl_receiptheader where tenantId = ?";
     }
 
     public String searchStatusQuery() {
-        return "select distinct status from egcl_receiptheader order by status ASC";
+        return "select distinct status from egcl_receiptheader where tenantId = ? order by status ASC";
     }
 }

@@ -79,6 +79,12 @@ public class ApplicationProperties {
     @Value("${GET_POSITION_URI_APPEND}")
     private String getPositionUriAppend;
     
+    @Value("${CREATE_INSTRUMENT}")
+    private String createInstrument;
+    
+    @Value("${SEARCH_INSTRUMENT}")
+    private String searchInstrument;
+    
     @Value("${egov.services.billing_service.hostname}")
     private String billingServiceHostName;
 

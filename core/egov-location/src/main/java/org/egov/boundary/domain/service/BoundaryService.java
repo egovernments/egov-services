@@ -135,6 +135,7 @@ public class BoundaryService {
 
 		return boundaryRepository.getAllBoundariesByBoundaryTypeIdAndTenantId(boundaryTypeId, tenantId);
 	}
+	
 
 	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId, final String tenantId) {
 
@@ -184,6 +185,12 @@ public class BoundaryService {
 			final String hierarchyTypeName) {
 		return boundaryJpaRepository.findActiveBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
 				hierarchyTypeName);
+	}
+	
+	public List<Boundary> getAllBoundariesByBoundaryIdsAndTenant(final String tenantId,
+			final List<Long> boundaryids) {
+		return boundaryJpaRepository.findAllBoundariesByBoundaryIdsAndTenant(tenantId,
+				boundaryids);
 	}
 
 	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,

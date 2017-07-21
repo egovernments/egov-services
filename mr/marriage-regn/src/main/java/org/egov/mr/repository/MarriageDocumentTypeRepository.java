@@ -28,7 +28,7 @@ public class MarriageDocumentTypeRepository {
 	private MarriageDocumentTypeQueryBuilder marriageDocumentTypeQueryBuilder;
 
 	public List<MarriageDocumentType> search(MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria) {
-		List<Object> preparedStatementValues = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		// Getting Query
 		List<MarriageDocumentType> marriageDocumentTypesList = jdbcTemplate.query(marriageDocumentTypeQueryBuilder
 				.getSelectQuery(marriageDocumentTypeSearchCriteria, preparedStatementValues),

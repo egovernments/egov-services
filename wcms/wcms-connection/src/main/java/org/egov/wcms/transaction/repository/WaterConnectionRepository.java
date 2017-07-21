@@ -214,13 +214,30 @@ public class WaterConnectionRepository {
 
     }
 
+    public WaterConnectionReq updateConnectionWorkflow(final WaterConnectionReq waterConnectionReq)
+    {
+        String insertQuery = "";
+        insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
+        final Connection connection = waterConnectionReq.getConnection();
+        final Object[] obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
+                connection.getBillingType(), connection.getCategoryId(),
+                connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
+                connection.getSumpCapacity(), connection.getNumberOfTaps(),
+                connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
+                new Date(new java.util.Date().getTime()), connection.getStatus(), connection.getStateId(),
+                connection.getDemandid(), connection.getAcknowledgementNumber() };
+        jdbcTemplate.update(insertQuery, obj);
+        
+        return waterConnectionReq;
+    }
+    
     public WaterConnectionReq updateWaterConnection(final WaterConnectionReq waterConnectionReq) {
         String insertQuery = "";
         final Connection connection = waterConnectionReq.getConnection();
         if (waterConnectionReq.getConnection().getId() != 0)
             insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
         long estmId = 0;
-        if(!waterConnectionReq.getConnection().getEstimationCharge().isEmpty())
+        if(waterConnectionReq.getConnection().getEstimationCharge()!=null && !waterConnectionReq.getConnection().getEstimationCharge().isEmpty())
         {
         for(EstimationCharge estmaCharge:waterConnectionReq.getConnection().getEstimationCharge())
         {

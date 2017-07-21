@@ -40,7 +40,6 @@
 package org.egov.collection.model;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,7 +98,7 @@ public class ReceiptCommonModel {
 					.collectionModesNotAllowed(Arrays.asList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId()).displayMessage(receiptHeader.getDisplayMsg())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
-					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()))
+					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()).toString())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
 					.collectionType(CollectionType.valueOf(receiptHeader.getCollectionType())).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation()).

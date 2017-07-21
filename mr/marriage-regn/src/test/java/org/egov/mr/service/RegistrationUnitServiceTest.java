@@ -59,7 +59,7 @@ public class RegistrationUnitServiceTest {
 			List<RegistrationUnit> actualRegistrationUnitsList = registrationUnitService
 					.search(registrationUnitSearchCriteria);
 
-			List<RegistrationUnit> expectedRegistrationUnits = new ArrayList<>();
+			List<RegistrationUnit> expectedRegistrationUnits = new ArrayList();
 			expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(0));
 			expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(1));
 			expectedRegistrationUnits.add(regnUnitResponse.getRegnUnits().get(2));
@@ -78,7 +78,7 @@ public class RegistrationUnitServiceTest {
 
 	// Virtual DB
 	private List<RegistrationUnit> getRegnUnitsFromDB() {
-		List<RegistrationUnit> regnunitsList = new ArrayList<>();
+		List<RegistrationUnit> regnunitsList = new ArrayList();
 		AuditDetails auditDetails = AuditDetails.builder().createdBy("123").lastModifiedBy("156").createdTime(159L)
 				.lastModifiedTime(147L).build();
 		// Data For Search

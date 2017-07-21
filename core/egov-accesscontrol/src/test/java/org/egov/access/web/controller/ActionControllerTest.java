@@ -24,7 +24,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;	
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -128,7 +128,7 @@ public class ActionControllerTest {
 	}
 	
 	@Test
-	public void updateAction() throws Exception {
+	public void testShouldNotUpdateAction() throws Exception {
 
 		List<Action> actions = getActions();
 
@@ -143,6 +143,57 @@ public class ActionControllerTest {
 				.content(new Resources().getFileContents("actionUpdateRequest.json"))).andExpect(status().isBadRequest())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("actionUpdateResponse.json")));
+
+	}
+	
+	@Test
+	public void testShouldUpdateAction() throws Exception {
+
+		List<Action> actions = new ArrayList<Action>();
+
+		Action action1 = new Action();
+		
+		Action action2 = new Action();
+		
+    	action1.setId(1l);
+		action1.setName("test1");
+		action1.setUrl("/test");
+		action1.setDisplayName("Create  Test");
+		action1.setEnabled(true);
+		action1.setOrderNumber(1);
+		action1.setCreatedBy(1l);
+		action1.setLastModifiedBy(1l);
+		
+		action2.setId(2l);
+		action2.setName("test2");
+		action2.setUrl("/test/test2");
+		action2.setDisplayName("Update Test");
+		action2.setEnabled(true);
+		action2.setOrderNumber(2);
+		action2.setCreatedBy(1l);
+		action2.setLastModifiedBy(1l);
+		
+		actions.add(action1);
+		actions.add(action2);
+
+		when(actionService.updateAction(any(ActionRequest.class))).thenReturn(actions);
+		
+		when(actionService.checkActionNameExit(any(String.class))).thenReturn(true);
+		
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+		
+		responseInfo.setApiId("org.egov.accesscontrol");
+		responseInfo.setTs("Thu Mar 09 18:30:00 UTC 2017");
+		responseInfo.setResMsgId("uief87324");
+		
+     	mockMvc.perform(post("/v1/actions/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("actionUpdateRequest.json")))
+		        .andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("actionUpdateSuccessResponse.json")));
 
 	}
 	

@@ -54,7 +54,7 @@ public class RegistrationUnitController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		List<RegistrationUnit> registrationUnitsList = new ArrayList<>();
+		List<RegistrationUnit> registrationUnitsList = new ArrayList();
 
 		try {
 			registrationUnitsList = registrationUnitService.createAsync(regnUnitRequest);
@@ -86,7 +86,7 @@ public class RegistrationUnitController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		List<RegistrationUnit> registrationUnitsList = new ArrayList<>();
+		List<RegistrationUnit> registrationUnitsList = new ArrayList();
 
 		try {
 			registrationUnitsList = registrationUnitService.search(regnUnitSearchCriteria);
@@ -116,7 +116,7 @@ public class RegistrationUnitController {
 			return errorResponseEntity;
 
 		// KafKa
-		List<RegistrationUnit> registrationUnitsList = new ArrayList<>();
+		List<RegistrationUnit> registrationUnitsList = new ArrayList();
 		try {
 			registrationUnitsList = registrationUnitService.updateAsync(regnUnitRequest);
 			if (registrationUnitsList.isEmpty()) {

@@ -16,6 +16,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import Fields from '../../common/Fields';
 import Api from '../../../api/api';
 import {translate, validate_fileupload, format_lat_long} from '../../common/common';
 var axios = require('axios');
@@ -104,22 +105,40 @@ class grievanceCreate extends Component {
     });
   }
 
-   loadReceivingCenter(value){
-     var currentThis = this;
-     currentThis.setState({isReceivingCenterReq : false});
-     if(value === 'MANUAL'){
-       Api.commonApiPost("/pgr-master/receivingcenter/v1/_search").then(function(response)
-       {
-         currentThis.setState({receivingCenter : response.ReceivingCenterType});
-       },function(err) {
-         currentThis.handleError(err.message);
-       });
-       this.props.ADD_MANDATORY('receivingCenter');
-     }else{
-       this.props.REMOVE_MANDATORY('receivingCenter');
-       this.props.REMOVE_MANDATORY('externalCRN');
-     }
-   }
+  loadReceivingCenter(value){
+    this.setState({isReceivingCenterReq : false});
+    if(value === 'MANUAL'){
+      Api.commonApiPost("/pgr-master/receivingcenter/v1/_search").then(function(response)
+      {
+        _this.setState({receivingCenter : response.ReceivingCenterType});
+      },function(err) {
+        _this.handleError(err.message);
+      });
+      this.props.ADD_MANDATORY('receivingCenter');
+      this.props.handleChange('', 'receivingCenter', true, '');
+    }else{
+      this.props.REMOVE_MANDATORY('receivingCenter');
+      this.props.handleChange('', 'receivingCenter', false, '');
+      this.props.REMOVE_MANDATORY('externalCRN');
+      this.props.handleChange('', 'externalCRN', false, '');
+    }
+  }
+
+  loadReceivingCenterDD =  (name) => {
+    this.props.ADD_MANDATORY(name);
+    return (
+      <Col xs={12} md={3}>
+        <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={this.props.grievanceCreate.receivingCenter?  this.props.grievanceCreate.receivingCenter:""} onChange={(event, key, value) => {
+          this.loadCRN(value);
+          this.props.handleChange(value, name, true, '') }}
+          errorText={this.props.fieldErrors.receivingCenter ? this.props.fieldErrors.receivingCenter : ""} >
+          {this.state.receivingCenter.map((receivingcenter, index) => (
+              receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
+          ))}
+        </SelectField>
+      </Col>
+    );
+  }
 
    loadGrievanceType(value){
      var currentThis = this;
@@ -233,6 +252,32 @@ class grievanceCreate extends Component {
     });
   }
 
+  serviceDefinition = (code) => {
+    this.props.setLoadingStatus('loading');
+    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : code }).then(function(response)
+    {
+      _this.setState({attributes : response.attributes});
+      _this.props.setLoadingStatus('hide');
+    },function(err) {
+      _this.props.setLoadingStatus('hide');
+      _this.handleError(err.message);
+    });
+  }
+
+  loadSD = () => {
+    if(this.state.attributes.length > 0){
+      return this.state.attributes.map((item, index) => {
+        if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf('CREATE') > -1){
+          if(item.required)
+            this.props.ADD_MANDATORY(item.code)
+          return (
+            <Fields key={index} obj={item} value={this.props.grievanceCreate[item.code] ? this.props.grievanceCreate[item.code] : ''} handler={_this.props.handleChange}/>
+          )
+        }
+      });
+    }
+  }
+
   search(e)
   {
       e.preventDefault();
@@ -321,12 +366,15 @@ class grievanceCreate extends Component {
     if(this.props.grievanceCreate.receivingCenter) {
       finobj = {
         key: 'receivingCenter',
-        name: this.props.grievanceCreate.receivingCenter ? this.props.grievanceCreate.receivingCenter : ''
+        name: this.props.grievanceCreate.receivingCenter
       };
       data['attribValues'].push(finobj);
+    }
+
+    if(this.props.grievanceCreate.externalCRN){
       finobj = {
         key: 'externalCRN',
-        name: this.props.grievanceCreate.externalCRN ? this.props.grievanceCreate.externalCRN : ''
+        name: this.props.grievanceCreate.externalCRN
       };
       data['attribValues'].push(finobj);
     }
@@ -437,7 +485,6 @@ class grievanceCreate extends Component {
     //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
   }
 
-
   handleTouchTap = () => {
     this.setState({
       toastOpen: true,
@@ -450,32 +497,25 @@ class grievanceCreate extends Component {
     });
   };
 
-  handleRCChange = (e) => {
-    var currentThis = this;
-    var valid = false;
+  loadCRN = (RCValue) => {
 
+    var valid = false;
     this.state.receivingCenter.forEach(function(item, index){
-      if(item.id === e.target.value){
-        currentThis.setState({isReceivingCenterReq : item.iscrnrequired});
+      if(item.id === RCValue){
         valid = item.iscrnrequired;
-        //currentThis.props.ADD_MANDATORY('externalCRN');
-      }else{
-        //currentThis.props.REMOVE_MANDATORY('externalCRN');
       }
     });
 
-    if(valid)
-      currentThis.props.ADD_MANDATORY('externalCRN');
-    else
-      currentThis.props.REMOVE_MANDATORY('externalCRN');
-
-  }
-
-  loadCRN = (valid) => {
-    if(valid)
+    if(valid){
       this.props.ADD_MANDATORY('externalCRN');
-    else
+      this.props.handleChange('', 'externalCRN', true, '');
+      this.setState({isReceivingCenterReq : valid});
+    }else{
       this.props.REMOVE_MANDATORY('externalCRN');
+      this.props.handleChange('', 'externalCRN', false, '');
+      this.setState({isReceivingCenterReq : false});
+    }
+
   }
 
   handleUploadValidation = (e, formats, limit) => {
@@ -552,11 +592,8 @@ class grievanceCreate extends Component {
       handleUpload,
       files,
       handleChange,
-      loadReceivingCenterDD,
       setCategoryandType,
       handleAutoCompleteKeyUp,
-      handleChangeNextOne,
-      handleChangeNextTwo,
       buttonText
     } = this.props;
     let {search, processCreate, isMapsEnabled, loadCRN, handleUploadValidation, getAddress} = this;
@@ -572,14 +609,9 @@ class grievanceCreate extends Component {
                     <Row>
                       {this.state.type === 'EMPLOYEE' ?
                         <Col xs={12} md={3}>
-                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, index, value) => {
-                            var e = {
-                              target: {
-                                value: value
-                              }
-                            };
-                            this.loadReceivingCenter(e.target.value)
-                            handleChange(e, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
+                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, key, value) => {
+                            this.loadReceivingCenter(value)
+                            handleChange(value, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
                             {this.state.receivingModes !== undefined ?
                             this.state.receivingModes.map((receivingmode, index) => (
                                 receivingmode.active ? <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} /> : ''
@@ -588,29 +620,28 @@ class grievanceCreate extends Component {
                         </Col> : ''
                       }
                       {grievanceCreate.receivingMode === 'MANUAL' ?
-                        loadReceivingCenterDD('receivingCenter')
+                        this.loadReceivingCenterDD('receivingCenter')
                          : ''
                       }
-                      {this.state.isReceivingCenterReq === true ?
-                        //loadCRN(this.state.isReceivingCenterReq)
+                      {this.state.isReceivingCenterReq ?
                         <Col xs={12} md={3}>
-                          <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} onChange={(e) => this.props.handleChange(e, "externalCRN", true, '')}/>
+                          <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} onChange={(event, value) => this.props.handleChange(value, "externalCRN", true, '')}/>
                         </Col>
-                        : ''}
+                      : ''}
                     </Row>
                     <Row>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(e) => handleChange(e, "firstName", true, '')}
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} onChange={(event, value) => handleChange(value, "firstName", true, '')}
                         />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(e) => handleChange(e, "phone", true, /^\d{10}$/g)} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g)} />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(e) => handleChange(e, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} onChange={(event, value) => handleChange(value, "email", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}  />
                       </Col>
                       <Col xs={12} md={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(e) => handleChange(e, "requesterAddress", false, '')} />
+                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} onChange={(event, value) => handleChange(value, "requesterAddress", false, '')} />
                       </Col>
                     </Row>
                   </Grid>
@@ -626,6 +657,7 @@ class grievanceCreate extends Component {
                       <div>
                         {this.state.topComplaintTypes.map((topComplaint, index) => (
                             <RaisedButton label={topComplaint.serviceName} key={index} style={{margin:'15px 5px'}} onTouchTap={(event) => {
+                              this.serviceDefinition(topComplaint.serviceCode);
                               setCategoryandType({serviceCode : topComplaint.serviceCode, groupId : topComplaint.groupId})
                             }} />
                         ))}
@@ -644,14 +676,9 @@ class grievanceCreate extends Component {
                   </Row> : ''}
                   <Row>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, index, value) => {
-                        var e = {
-                          target: {
-                            value: value
-                          }
-                        };
-                        this.loadGrievanceType(e.target.value),
-                        handleChange(e, "serviceCategory", true, "")}}>
+                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, key, value) => {
+                        this.loadGrievanceType(value),
+                        handleChange(value, "serviceCategory", true, "")}}>
                         {this.state.grievanceCategory !== undefined ?
                         this.state.grievanceCategory.map((grievanceCategory, index) => (
                           <MenuItem value={grievanceCategory.id} key={index} primaryText={grievanceCategory.name} />
@@ -659,13 +686,9 @@ class grievanceCreate extends Component {
                       </SelectField>
                     </Col>
                     <Col xs={12} md={3}>
-                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, index, value) => {
-                        var e = {
-                          target: {
-                            value: value
-                          }
-                        };
-                        handleChange(e, "serviceCode", true, "")}}>
+                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, key, value) => {
+                        this.serviceDefinition(value);
+                        handleChange(value, "serviceCode", true, "")}}>
                         {this.state.grievanceType.map((grievanceType, index) => (
                             <MenuItem value={grievanceType.serviceCode} key={index} primaryText={grievanceType.serviceName} />
                         ))}
@@ -679,12 +702,13 @@ class grievanceCreate extends Component {
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.moredetails')} < /div>}/>
               <CardText style={{paddingTop:0}}>
                 <Grid>
+                  {this.state.attributes ? this.loadSD() : ''}
                   <Row>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(e) => handleChange(e, "description", true, /^.{10,500}$/)}/>
+                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} onChange={(event, value) => handleChange(value, "description", true, /^.{10,500}$/)}/>
                     </Col>
                     <Col xs={12} md={3}>
-                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(e) => handleChange(e, "address", false, '')}/>
+                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} onChange={(event, value) => handleChange(value, "address", false, '')}/>
                     </Col>
                     <Col xs={12} md={6}>
                       <AutoComplete
@@ -702,12 +726,7 @@ class grievanceCreate extends Component {
                           if(index === -1){
                             this.refs['autocomplete'].setState({searchText:''});
                           }else {
-                            var e = {
-                              target: {
-                                value: chosenRequest
-                              }
-                            };
-                            handleChange(e, "addressId", true, "");
+                            handleChange(chosenRequest, "addressId", true, "");
                           }
                        }}
                       />
@@ -768,9 +787,9 @@ class grievanceCreate extends Component {
 const mapDispatchToProps = dispatch => ({
   initForm: (type) => {
     var requiredArray = [];
-    if(type == 'CITIZEN'){
+    if(type === 'CITIZEN'){
       requiredArray = ["serviceCategory","serviceCode","description","addressId"]
-    }else if(type == 'EMPLOYEE'){
+    }else if(type === 'EMPLOYEE'){
       requiredArray = ["receivingMode","firstName","phone","serviceCategory","serviceCode","description","addressId"]
     }else{
       requiredArray = ["firstName","phone","serviceCategory","serviceCode","description","addressId"]
@@ -793,32 +812,12 @@ const mapDispatchToProps = dispatch => ({
     });
   },
   ADD_MANDATORY : (property) => {
-     dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : false, pattern: ''});
-     dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
+     dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
+     //dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
   },
   REMOVE_MANDATORY : (property) => {
-     dispatch({type: "REMOVE_MANDATORY", property, value: '', isRequired : false, pattern: ''});
-     dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
-  },
-  loadReceivingCenterDD: (name) => {
-    dispatch({type: "ADD_MANDATORY", property: name, value: '', isRequired : true, pattern: ''});
-    return (
-      <Col xs={12} md={3}>
-        <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={_this.props.grievanceCreate.receivingCenter?  _this.props.grievanceCreate.receivingCenter:""} onChange={(event, index, value) => {
-          var e = {
-            target: {
-              value: value
-            }
-          };
-          dispatch({type: "HANDLE_CHANGE", property: name, value: e.target.value, isRequired : true, pattern: ''});
-          _this.handleRCChange(e)
-          }} errorText={_this.props.fieldErrors.receivingCenter ? _this.props.fieldErrors.receivingCenter : ""} >
-          {_this.state.receivingCenter.map((receivingcenter, index) => (
-              receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
-          ))}
-        </SelectField>
-      </Col>
-    );
+     dispatch({type: "REMOVE_MANDATORY", property, value: '', isRequired : true, pattern: ''});
+     //dispatch({type: "HANDLE_CHANGE", property, value:'', isRequired:false, pattern:''});
   },
   handleAutoCompleteKeyUp : (e) => {
     var currentThis = _this;
@@ -837,24 +836,13 @@ const mapDispatchToProps = dispatch => ({
     var group = e.groupId;
     var sCode = e.serviceCode;
 
-    var e = {
-      target: {
-        value: e.groupId
-      }
-    };
-
-    dispatch({type: "HANDLE_CHANGE", property: 'serviceCategory', value: e.target.value, isRequired : true, pattern: ''});
+    dispatch({type: "HANDLE_CHANGE", property: 'serviceCategory', value: group, isRequired : true, pattern: ''});
 
     var currentThis = _this;
     Api.commonApiPost("/pgr-master/service/v1/_search", {type:'category', categoryId : group}).then(function(response)
     {
       currentThis.setState({grievanceType : response.Service});
-      e = {
-        target: {
-          value: sCode
-        }
-      };
-      dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: e.target.value, isRequired : true, pattern: ''});
+      dispatch({type: "HANDLE_CHANGE", property: 'serviceCode', value: sCode, isRequired : true, pattern: ''});
     },function(err) {
       currentThis.handleError(err.message);
     });
@@ -870,8 +858,8 @@ const mapDispatchToProps = dispatch => ({
   handleUpload: (e) => {
     dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
   },
-  handleChange: (e, property, isRequired, pattern) => {
-    dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
+  handleChange: (value, property, isRequired, pattern) => {
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
     if(property === 'addressId'){
       dispatch({type: "ADD_MANDATORY", property: 'addressId', value: '', isRequired : true, pattern: ''});
       dispatch({type: "HANDLE_CHANGE", property:'lat', value: '', isRequired : false, pattern: ''});

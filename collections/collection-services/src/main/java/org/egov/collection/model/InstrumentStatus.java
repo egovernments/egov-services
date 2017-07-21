@@ -38,27 +38,48 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.repository.rowmapper;
+package org.egov.collection.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import lombok.EqualsAndHashCode;
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.common.contract.request.User;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
+public class InstrumentStatus {
 
-@EqualsAndHashCode
-@Component
-public class UserRowMapper implements RowMapper<User> {
+	/**
+	 * Unique Identifier of the status
+	 */
+	@NotNull
+	private String id;
 
-    @Override
-    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-        User user = new User();
-        user.setId((Long) rs.getObject("user_id"));
-        user.setName(rs.getString("user_name"));
-        return user;
-    }
+	@NotNull
+	@Size(min = 3, max = 50)
+	private String moduleType;
+
+	/**
+	 * name is the status name 
+	 */
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String name;
+
+	/**
+	 * description is the detailed description of the status
+	 */
+	@NotNull
+	@Size(min = 3, max = 250)
+	private String description;
+
 }

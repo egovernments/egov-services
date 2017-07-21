@@ -27,3 +27,4 @@ CREATE TABLE egmr_serviceConfigurationValues (
 
 	CONSTRAINT pk_egmr_serviceConfigurationValues PRIMARY KEY (Id,tenantId)
 );
+

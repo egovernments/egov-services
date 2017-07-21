@@ -1,6 +1,5 @@
 package org.egov.access.web.controller;
 
-
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,47 +34,41 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(TestConfiguration.class)
 public class RoleControllerTest {
 
-    @MockBean
-    private RoleService roleService;
-    
-    @MockBean
-    private ResponseInfoFactory responseInfoFactory;
-    
-    @Autowired
-    private MockMvc mockMvc;
+	@MockBean
+	private RoleService roleService;
 
-    @Test
-    public void testShouldGetRolesForCodes() throws Exception {
-        List<Role> roles = getRoles();
-        RoleSearchCriteria criteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
-        when(roleService.getRoles(criteria)).thenReturn(roles);
+	@MockBean
+	private ResponseInfoFactory responseInfoFactory;
 
-        mockMvc.perform(post("/v1/roles/_search")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(new Resources().getFileContents("roleRequest.json"))
-                .param("code", "CITIZEN,EMPLOYEE"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
+	@Autowired
+	private MockMvc mockMvc;
 
-    }
+	@Test
+	public void testShouldGetRolesForCodes() throws Exception {
+		List<Role> roles = getRoles();
+		RoleSearchCriteria criteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
+		when(roleService.getRoles(criteria)).thenReturn(roles);
 
-    @Test
-    public void testShouldGetRolesShouldTrimWhiteSpacesInCodes() throws Exception {
-        List<Role> roles = getRoles();
-        RoleSearchCriteria criteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
-        when(roleService.getRoles(criteria)).thenReturn(roles);
+		mockMvc.perform(post("/v1/roles/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleRequest.json")).param("code", "CITIZEN,EMPLOYEE"))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
 
-        mockMvc.perform(post("/v1/roles/_search")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(new Resources().getFileContents("roleRequest.json"))
-                .param("code", "  CITIZEN,   EMPLOYEE   "))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
+	}
 
-    }
-    
+	@Test
+	public void testShouldGetRolesShouldTrimWhiteSpacesInCodes() throws Exception {
+		List<Role> roles = getRoles();
+		RoleSearchCriteria criteria = RoleSearchCriteria.builder().codes(Arrays.asList("CITIZEN", "EMPLOYEE")).build();
+		when(roleService.getRoles(criteria)).thenReturn(roles);
+
+		mockMvc.perform(post("/v1/roles/_search").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleRequest.json")).param("code", "  CITIZEN,   EMPLOYEE   "))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
+
+	}
+
 	@Test
 	public void createRole() throws Exception {
 
@@ -94,7 +87,7 @@ public class RoleControllerTest {
 				.andExpect(content().json(new Resources().getFileContents("roleResponse.json")));
 
 	}
-	
+
 	@Test
 	public void testShouldNotCreateRoleWithoutRole() throws Exception {
 
@@ -109,14 +102,13 @@ public class RoleControllerTest {
 
 		mockMvc.perform(post("/v1/roles/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("roleRequestWithoutRoles.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("roleResponseWithoutRoles.json")));
 
 	}
-	
+
 	@Test
-	public void updateRole() throws Exception {
+	public void testShouldNotupdateRole() throws Exception {
 
 		List<Role> roles = getRoles();
 
@@ -133,7 +125,40 @@ public class RoleControllerTest {
 				.andExpect(content().json(new Resources().getFileContents("roleUpdateResponse.json")));
 
 	}
-	
+
+	@Test
+	public void testShouldupdateRole() throws Exception {
+
+		List<Role> roles = new ArrayList<>();
+		Role role1 = Role.builder().id(1L).name("test1test1").code("testonecode112234324")
+				.description("test1description").build();
+		Role role2 = Role.builder().id(2L).name("test2test2").code("testtwocode11234354")
+				.description("test2codedescription").build();
+		roles.add(role1);
+		roles.add(role2);
+
+		when(roleService.updateRole(any(RoleRequest.class))).thenReturn(roles);
+
+		when(roleService.checkRoleNameDuplicationValidationErrors(any(String.class))).thenReturn(true);
+
+		ResponseInfo responseInfo = ResponseInfo.builder().build();
+		
+		responseInfo.setApiId("org.egov.accesscontrol");
+		responseInfo.setMsgId("20170310130900");
+		responseInfo.setResMsgId("uief87324");
+		responseInfo.setTs("Thu Mar 09 18:30:00 UTC 2017");
+		responseInfo.setVer("1.0");
+
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class)))
+				.thenReturn(responseInfo);
+
+		mockMvc.perform(post("/v1/roles/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(new Resources().getFileContents("roleUpdateRequest.json"))).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(new Resources().getFileContents("roleUpdateSuccessResponse.json")));
+
+	}
+
 	@Test
 	public void testShouldNotUpdateRoleIfNoName() throws Exception {
 
@@ -148,20 +173,18 @@ public class RoleControllerTest {
 
 		mockMvc.perform(post("/v1/roles/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(new Resources().getFileContents("roleUpdateRequestWithoutName.json")))
-		        .andExpect(status().isBadRequest())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(new Resources().getFileContents("roleUpdateResponseWithoutName.json")));
 
 	}
 
-    private List<Role> getRoles() {
-        List<Role> roles = new ArrayList<>();
-        Role role1 = Role.builder().id(1L).name("Citizen").code("CITIZEN")
-                .description("Citizen of a demography").build();
-        Role role2 = Role.builder().id(2L).name("Employee").code("EMPLOYEE")
-                .description("Employee of an org").build();
-        roles.add(role1);
-        roles.add(role2);
-        return roles;
-    }
+	private List<Role> getRoles() {
+		List<Role> roles = new ArrayList<>();
+		Role role1 = Role.builder().id(1L).name("Citizen").code("CITIZEN").description("Citizen of a demography")
+				.build();
+		Role role2 = Role.builder().id(2L).name("Employee").code("EMPLOYEE").description("Employee of an org").build();
+		roles.add(role1);
+		roles.add(role2);
+		return roles;
+	}
 }

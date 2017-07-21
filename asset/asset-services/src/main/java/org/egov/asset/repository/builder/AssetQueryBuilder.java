@@ -282,7 +282,7 @@ public class AssetQueryBuilder {
 
     public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 
-    public final static String GETYEARWISEDEPRECIATIONQUERY = "select depreciationrate,financialyear,usefullifeinyears,tenantid from "
+    public final static String GETYEARWISEDEPRECIATIONQUERY = "select assetid,depreciationrate,financialyear,usefullifeinyears,tenantid from "
             + "egasset_yearwisedepreciation where assetid = ? and tenantid = ?";
 
     public final static String ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?,depriciationrate=?"
@@ -291,5 +291,5 @@ public class AssetQueryBuilder {
             + " WHERE code = ? and tenantid = ?";
 
     public final static String YEARWISEDEPRECIATIONDELETEQUERY = "DELETE FROM egasset_yearwisedepreciation ywd where "
-            + "ywd.finanfinancialyear = ? and ywd.assetid = ? and ywd.tenantid = ?";
+            + "ywd.financialyear = ? and ywd.assetid = ? and ywd.tenantid = ?";
 }

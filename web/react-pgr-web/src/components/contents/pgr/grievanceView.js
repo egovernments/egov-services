@@ -68,22 +68,17 @@ class grievanceView extends Component{
 
     this.props.setLoadingStatus('loading');
 
-    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
-    {
-      currentThis.setState({SD : response.attributes})
-    },function(err) {
-      currentThis.props.setLoadingStatus('hide');
-      currentThis.handleError(err.message);
-    });
-
     Api.commonApiPost("/pgr/seva/v1/_search",{serviceRequestId:currentThis.props.match.params.srn},{}).then(function(response)
     {
+
       if(response.serviceRequests.length === 0){
         currentThis.props.setLoadingStatus('hide');
         currentThis.handleError('Not a valid SRN.');
         return false;
       }
+
       currentThis.setState({srn : response.serviceRequests});
+
       currentThis.state.srn.map((item, index) => {
         for(var k in item){
            if(item[k] instanceof Array){
@@ -99,9 +94,9 @@ class grievanceView extends Component{
           if(currentThis.state.rating)
             handleChange(currentThis.state.rating, "rating", true, "");
         }
-        if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
-          handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
-        }
+        // if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
+        //   handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
+        // }
         if(currentThis.state.status === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE'){
           currentThis.props.ADD_MANDATORY('designationId');
           currentThis.props.ADD_MANDATORY('positionId');
@@ -109,6 +104,7 @@ class grievanceView extends Component{
           handleChange('', "positionId", true, "");
         }
         handleChange(currentThis.state.status, "status", false, "");
+
       });
 
       Api.commonApiPost('/workflow/history/v1/_search',{workflowId : currentThis.state.stateId}).then(function(response)
@@ -120,19 +116,45 @@ class grievanceView extends Component{
         {
           //console.log(JSON.stringify(response));
           currentThis.setState({files : response.files});
-          currentThis.getDepartmentById();
-
+          currentThis.SDAPI();
         },function(err) {
           currentThis.props.setLoadingStatus('hide');
           currentThis.handleError(err.message);
         });
-
-
       },function(err) {
         currentThis.props.setLoadingStatus('hide');
         currentThis.handleError(err.message);
       });
 
+    },function(err) {
+      currentThis.props.setLoadingStatus('hide');
+      currentThis.handleError(err.message);
+    });
+  }
+  SDAPI = () => {
+    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
+    {
+      currentThis.setState({SD : response.attributes});
+      //ADD MANDATORY & DISPATCH based on SD
+      //Required for SD
+      if(response.attributes.length > 0 && localStorage.getItem('type') === 'EMPLOYEE'){
+        let FormFields = response.attributes.filter(function (el) {
+          return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
+        });
+        if(FormFields.length > 0){
+          //check condition
+            FormFields.map((item,index) =>
+            {
+              if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf('UPDATE') > -1){
+                if(currentThis.state[item.code])
+                  currentThis.props.handleChange(currentThis.state[item.code], item.code, item.required, "");
+                if(item.required)
+                  currentThis.props.ADD_MANDATORY(item.code);
+              }
+            });
+        }
+      }
+      currentThis.getDepartmentById();
     },function(err) {
       currentThis.props.setLoadingStatus('hide');
       currentThis.handleError(err.message);
@@ -291,13 +313,16 @@ class grievanceView extends Component{
     if(currentThis.props.grievanceView['childLocationId'])
       currentThis.chckkey('childLocationId', req_obj);
 
-    currentThis.chckkey('approvalComments', req_obj);
+    if(currentThis.props.grievanceView['approvalComments'])
+      currentThis.chckkey('approvalComments', req_obj);
 
     if(localStorage.getItem('type') === 'EMPLOYEE'){
-      currentThis.chckkey('PRIORITY', req_obj);
+      if(currentThis.props.grievanceView['PRIORITY'])
+        currentThis.chckkey('PRIORITY', req_obj);
       //currentThis.chckkey('priorityColor', req_obj);
     }else if(localStorage.getItem('type') === 'CITIZEN'){
-        currentThis.chckkey('rating', req_obj);
+        if(currentThis.props.grievanceView['rating'])
+          currentThis.chckkey('rating', req_obj);
     }
 
     if(currentThis.props.files.length > 0){
@@ -348,7 +373,7 @@ class grievanceView extends Component{
     }
   }
   updateSeva = (req_obj) =>{
-    console.log('Before Submit',JSON.stringify(req_obj));
+    //console.log('Before Submit',JSON.stringify(req_obj));
     Api.commonApiPost("/pgr/seva/v1/_update",{},req_obj).then(function(updateResponse)
     {
       // console.log('After submit',JSON.stringify(updateResponse));
@@ -376,20 +401,20 @@ class grievanceView extends Component{
     //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
   }
   loadServiceDefinition = () => {
-    var currentThis = this;
-    if(currentThis.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
-      let FormFields = currentThis.state.SD.filter(function (el) {
+    if(this.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE'){
+      let FormFields = this.state.SD.filter(function (el) {
         return (el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS') ;
       });
       if(FormFields.length > 0){
-        return FormFields.map((item,index) =>
-        {
-          if(item.required)
-            this.props.ADD_MANDATORY(item.code)
-          return (
-            <Fields key={index} obj={item} value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state.PRIORITY} handler={currentThis.props.handleChange}/>
-          );
-        })
+        //check condition
+          return FormFields.map((item,index) =>
+          {
+            if(item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf('UPDATE') > -1){
+              return (
+                <Fields key={index} obj={item} value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state[item.code]} handler={currentThis.props.handleChange}/>
+              );
+            }
+          });
       }
     }
   }
@@ -592,7 +617,7 @@ const mapDispatchToProps = dispatch => ({
      dispatch({type: "ADD_MANDATORY", property, value: '', isRequired : true, pattern: ''});
   },
   handleChange: (value, property, isRequired, pattern) => {
-      dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
   },
   handleStatusChange: (value, property, isRequired, pattern) => {
     if(value === 'FORWARDED'){

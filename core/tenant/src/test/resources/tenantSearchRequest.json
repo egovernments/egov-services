@@ -2,5 +2,5 @@
   "RequestInfo": {
        "apiId" : "emp"
    },
-  "tenantCodes": ["AP.KURNOOL", "AP.GUNTOOR"]
+  "code": ["AP.KURNOOL", "AP.GUNTOOR"]
 }

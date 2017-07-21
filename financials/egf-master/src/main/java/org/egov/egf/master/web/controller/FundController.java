@@ -133,10 +133,12 @@ public class FundController {
 		List<FundContract> fundContracts = new ArrayList<>();
 		Pagination<Fund> funds = fundService.search(domain);
 
-		for (Fund fund : funds.getPagedData()) {
-			contract = new FundContract();
-			model.map(fund, contract);
-			fundContracts.add(contract);
+		if(funds.getPagedData() != null) {
+			for (Fund fund : funds.getPagedData()) {
+				contract = new FundContract();
+				model.map(fund, contract);
+				fundContracts.add(contract);
+			}
 		}
 
 		CommonResponse<FundContract> response = new CommonResponse<>();

@@ -286,7 +286,7 @@ public class BoundaryController {
 			@RequestParam(value = "boundaryIds", required = true) final List<Long> boundaryIds) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 
-		if (boundaryIds != null && !boundaryIds.isEmpty() && boundaryIds.size() > 0) {
+		if (boundaryIds != null && !boundaryIds.isEmpty() && boundaryIds.size() > 0 && tenantId!=null && tenantId!="" ) {
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			boundaryResponse.setResponseInfo(responseInfo);
@@ -296,8 +296,12 @@ public class BoundaryController {
 
 			boundaryResponse.setBoundarys(allBoundarys);
 			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
-		} else
+		} else{
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+			boundaryResponse.setResponseInfo(responseInfo);
 			return new ResponseEntity<>(boundaryResponse, HttpStatus.BAD_REQUEST);
+		}
 
 	}
 }

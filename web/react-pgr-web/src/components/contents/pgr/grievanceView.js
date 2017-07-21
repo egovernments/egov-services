@@ -94,9 +94,6 @@ class grievanceView extends Component{
           if(currentThis.state.rating)
             handleChange(currentThis.state.rating, "rating", true, "");
         }
-        // if(currentThis.state.PRIORITY && localStorage.getItem('type') === 'EMPLOYEE'){
-        //   handleChange(currentThis.state.PRIORITY, "PRIORITY", true, "");
-        // }
         if(currentThis.state.status === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE'){
           currentThis.props.ADD_MANDATORY('designationId');
           currentThis.props.ADD_MANDATORY('positionId');
@@ -132,7 +129,7 @@ class grievanceView extends Component{
     });
   }
   SDAPI = () => {
-    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : 'COMPLAINT' }).then(function(response)
+    Api.commonApiPost("/pgr/servicedefinition/v1/_search",{serviceCode : this.state.serviceCode }).then(function(response)
     {
       currentThis.setState({SD : response.attributes});
       //ADD MANDATORY & DISPATCH based on SD

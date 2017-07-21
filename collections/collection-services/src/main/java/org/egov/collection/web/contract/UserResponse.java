@@ -70,5 +70,6 @@ public class UserResponse {
 	@JsonProperty("Users")
 	private List<EmployeeInfo> users = new ArrayList<EmployeeInfo>();
 
+    @JsonProperty("user")
     private List<User> receiptCreators = new ArrayList<User>();
 }

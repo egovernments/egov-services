@@ -40,22 +40,7 @@
 
 package org.egov.collection.repository;
 
-import static java.util.Comparator.comparingLong;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
+import lombok.AllArgsConstructor;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
@@ -65,11 +50,11 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.repository.rowmapper.UserRowMapper;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +62,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
-import lombok.AllArgsConstructor;
+import java.sql.Date;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 @AllArgsConstructor
 @Repository
@@ -101,11 +94,8 @@ public class ReceiptRepository {
 	@Autowired
 	private ReceiptRowMapper receiptRowMapper;
 
-	@Autowired
-	private UserRowMapper userRowMapper;
-
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private UserRepository userRepository;
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -261,15 +251,15 @@ public class ReceiptRepository {
 		return stateId;
 	}
 
-	public List<User> getReceiptCreators() {
+	public List<User> getReceiptCreators(final RequestInfo requestInfo,final String tenantId) {
 		String queryString = receiptDetailQueryBuilder.searchQuery();
-		List<User> receiptCreators = jdbcTemplate.query(queryString, userRowMapper);
-		return receiptCreators;
+		List<Long> receiptCreators = jdbcTemplate.queryForList(queryString, Long.class,new Object[]{tenantId});
+        return userRepository.getUsersById(receiptCreators,requestInfo,tenantId);
 	}
 
-	public List<String> getReceiptStatus() {
+	public List<String> getReceiptStatus(final String tenantId) {
 		String queryString = receiptDetailQueryBuilder.searchStatusQuery();
-		List<String> statusList = jdbcTemplate.queryForList(queryString, String.class);
+		List<String> statusList = jdbcTemplate.queryForList(queryString, String.class,new Object[]{tenantId});
 		return statusList;
 	}
 

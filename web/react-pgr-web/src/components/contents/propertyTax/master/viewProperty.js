@@ -587,7 +587,7 @@ class ViewProperty extends Component {
 										  <ListGroupItem>
 											<Row>
 											  <Col xs={4} md={6} style={styles.bold}>
-												   Floor Type
+												   Floor Number
 											  </Col>
 											  <Col xs={8} md={6}>
 												 
@@ -597,21 +597,17 @@ class ViewProperty extends Component {
 										<ListGroupItem>
 											<Row>
 											  <Col xs={4} md={6} style={styles.bold}>
-												   Wall Type
+												   Classification of Building
 											  </Col>
 											  <Col xs={8} md={6}>
 												 
 											  </Col>
 											</Row>
 										  </ListGroupItem>							  
-									  </ListGroup>
-									</Col>
-									<Col md={6} xs={12}>
-										<ListGroup>
 										  <ListGroupItem>
 											<Row>
 											  <Col xs={4} md={6} style={styles.bold}>
-												   Roof Type
+												   Nature of Usage
 											  </Col>
 											  <Col xs={8} md={6}>
 												
@@ -621,7 +617,111 @@ class ViewProperty extends Component {
 										  <ListGroupItem>
 											<Row>
 											  <Col xs={4} md={6} style={styles.bold}>
-												   Wood Type
+												   Firm Name
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Occupancy
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Occupant Name
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Construction Date	
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Effective From Date	
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+									  </ListGroup>
+									</Col>
+									<Col md={6} xs={12}>
+										<ListGroup>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Unstructured land
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Length
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Breadth
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Plinth area (Sq.Mtrs)
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Building Permission no
+											  </Col>
+											  <Col xs={8} md={6}>
+												
+											  </Col>
+											</Row>
+										  </ListGroupItem>
+										  <ListGroupItem>
+											<Row>
+											  <Col xs={4} md={6} style={styles.bold}>
+												   Building Permission Date
 											  </Col>
 											  <Col xs={8} md={6}>
 												

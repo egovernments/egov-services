@@ -143,15 +143,17 @@ public class PropertyTypeCategoryTypeRepository {
         for (PropertyTypeCategoryType propertyCategory : propertyCategories) {
             propertyTypeIdsList.add(Integer.valueOf(propertyCategory.getPropertyTypeId()));
         }
-        Integer[] propertypeIds = propertyTypeIdsList.toArray(new Integer[propertyTypeIdsList.size()]);
+        Integer[] propertypeIds =  propertyTypeIdsList.stream().distinct().toArray(Integer[]::new);
         final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyNameFromPTModule(
                 propertypeIds, propertyCategoryRequest.getTenantId());
-        for (PropertyTypeCategoryType propertyCategory : propertyCategories) {
-            for (PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes())
-                if (propertyResponse.getId().equals(propertyCategory.getPropertyTypeId()))
-                    propertyCategory.setPropertyTypeName(propertyResponse.getName());
-
-        }
+      
+        propertyCategories.forEach(int1 -> {
+            propertyTypes.getPropertyTypes().forEach(int2->{
+                if (int2.getId().equals(int1.getPropertyTypeId()))
+                {
+                    int1.setPropertyTypeName(int2.getName());}
+                    });
+        });
         log.info("PropertyCategoryList: " + propertyCategories.toString());
         final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
         propertyCategoryResponse.setPropertyTypeCategoryTypes(propertyCategories);

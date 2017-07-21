@@ -855,6 +855,9 @@ definitions:
       name:
         type: string
         description: name of the document
+      code:
+        type: string
+        description: code of the document, should be unique to the combination of name, application and tenentid
       application:
         type: string
         description: Application type.
@@ -867,6 +870,11 @@ definitions:
           - AMALGAMATION
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+     - tenantId
+     - name
+     - code
+     - application
           
   Document:
     type: object
@@ -877,7 +885,8 @@ definitions:
         format: int64
         description: unique id of the ApplicationType.
       documentType:
-        $ref: '#/definitions/DocumentType'
+        type: string
+        description: unique document type code, should be validated with document type master
       fileStore:
         type: string
         description: File store reference key.

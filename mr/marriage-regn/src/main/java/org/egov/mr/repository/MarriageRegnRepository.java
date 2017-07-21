@@ -39,7 +39,7 @@ public class MarriageRegnRepository {
 			+ " bridegroomid, brideid, priestname, priestreligion, priestaddress, priestaadhaar, priestmobileno,"
 			+ " priestemail, serialno, volumeno, applicationnumber,"
 			+ " regnnumber, regndate, status, source, stateid, isactive, approvaldepartment, approvaldesignation, approvalassignee,"
-			+ " approvalaction, approvalstatus, approvalcomments, createdby, createdtime, lastmodifiedby, lastmodifiedtime, tenantid)"
+			+ " approvalaction, approvalstatus, aprovalcomments, createdby, createdtime, lastmodifiedby, lastmodifiedtime, tenantid)"
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 	public static final String UPDATE_MARRIAGE_REGN_QUERY = "UPDATE egmr_marriage_regn"
@@ -47,7 +47,7 @@ public class MarriageRegnRepository {
 			+ " bridegroomid, brideid, priestname, priestreligion, priestaddress, priestaadhaar, priestmobileno,"
 			+ " priestemail, serialno, volumeno,"
 			+ " regnnumber, regndate, status, source, stateid, isactive, approvaldepartment, approvaldesignation, approvalassignee,"
-			+ " approvalaction, approvalstatus, approvalcomments, lastmodifiedby, lastmodifiedtime)"
+			+ " approvalaction, approvalstatus, aprovalcomments, lastmodifiedby, lastmodifiedtime)"
 			+ " = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			+ " WHERE applicationnumber = ? AND tenantid = ?";
 
@@ -83,13 +83,12 @@ public class MarriageRegnRepository {
 				marriageRegn.getPriest().getAddress(), marriageRegn.getPriest().getAadhaar(),
 				marriageRegn.getPriest().getMobileNo(), marriageRegn.getPriest().getEmail(), marriageRegn.getSerialNo(),
 				marriageRegn.getVolumeNo(), marriageRegn.getApplicationNumber(), marriageRegn.getRegnNumber(),
-				marriageRegn.getRegnDate(), marriageRegn.getStatus().toString(), marriageRegn.getSource().toString(),
-				marriageRegn.getStateId(), marriageRegn.getIsActive(),
+				marriageRegn.getRegnDate(), "Approved", marriageRegn.getSource().toString(),
+				marriageRegn.getStateId(), marriageRegn.getIsActive(),marriageRegn.getApprovalDetails().getComments(),
 				marriageRegn.getApprovalDetails().getDepartment(), marriageRegn.getApprovalDetails().getDesignation(),
 				marriageRegn.getApprovalDetails().getAssignee(), marriageRegn.getApprovalDetails().getAction(),
-				marriageRegn.getApprovalDetails().getStatus(), marriageRegn.getApprovalDetails().getComments(),
-				marriageRegn.getAuditDetails().getCreatedBy(), marriageRegn.getAuditDetails().getCreatedTime(),
-				marriageRegn.getAuditDetails().getLastModifiedBy(),
+				marriageRegn.getApprovalDetails().getStatus(),marriageRegn.getAuditDetails().getCreatedBy(),
+				marriageRegn.getAuditDetails().getCreatedTime(),marriageRegn.getAuditDetails().getLastModifiedBy(),
 				marriageRegn.getAuditDetails().getLastModifiedTime(), marriageRegn.getTenantId() };
 		jdbcTemplate.update(INSERT_MARRIAGE_REGN_QUERY, obj);
 
@@ -100,7 +99,10 @@ public class MarriageRegnRepository {
 	}
 
 	public String generateApplicationNumber() {
-		return jdbcTemplate.queryForObject("SELECT nextval('seq_egmr_marriageregn_application_number')", String.class);
+		String applicationnumber = jdbcTemplate.queryForObject("SELECT nextval('seq_egmr_marriageregn_application_number')",String.class);
+		
+		System.out.println("applicationnumber-------------------->"+applicationnumber);
+		return applicationnumber;
 	}
 
 	public void update(MarriageRegn marriageRegn) {

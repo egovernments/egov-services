@@ -56,10 +56,10 @@ public class RegistrationUnitRepository {
 	public List<RegistrationUnit> search(RegistrationUnitSearchCriteria regnUnitSearchCriteria) {
 		LOGGER.info(regnUnitSearchCriteria.toString());
 		// for search method
-		List<Object> preparedStatementValues = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria,
 				preparedStatementValues);
-		List<RegistrationUnit> registrationUnitList = new ArrayList<>();
+		List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
 		registrationUnitList = jdbcTemplate.query(selectQuery, preparedStatementValues.toArray(), rowMapper);
 		return registrationUnitList;
 	}
@@ -95,7 +95,7 @@ public class RegistrationUnitRepository {
 		regnUnitSearchIdAndTenantId.setId(registrationUnit.getId());
 		regnUnitSearchIdAndTenantId.setTenantId(registrationUnit.getTenantId());
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String query = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchIdAndTenantId,
 				preparedStatementValues);
 

@@ -537,12 +537,12 @@ public class ReceiptService {
 		return workflowDetails;
 	}
 
-    public List<User> getReceiptCreators() {
-        return receiptRepository.getReceiptCreators();
+    public List<User> getReceiptCreators(final RequestInfo requestInfo,final String tenantId) {
+        return receiptRepository.getReceiptCreators(requestInfo,tenantId);
     }
 
-    public List<String> getReceiptStatus() {
-        return receiptRepository.getReceiptStatus();
+    public List<String> getReceiptStatus(final String tenantId) {
+        return receiptRepository.getReceiptStatus(tenantId);
     }
     
     public Long getInstrumentId(Receipt receipt){

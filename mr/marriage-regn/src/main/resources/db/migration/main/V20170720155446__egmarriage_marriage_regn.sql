@@ -34,7 +34,7 @@ CREATE TABLE egmr_marriage_regn(
         approvalassignee INTEGER,
         approvalaction CHARACTER VARYING(250),
 		approvalstatus CHARACTER VARYING(250),
-        aprovalcomments CHARACTER VARYING(250),
+        approvalcomments CHARACTER VARYING(250),
         createdby CHARACTER VARYING(250) NOT NULL,
         lastmodifiedby CHARACTER VARYING(250) NOT NULL,
         createdtime BIGINT NOT NULL,
@@ -46,4 +46,5 @@ CREATE TABLE egmr_marriage_regn(
 		CONSTRAINT uk_egmr_brideid UNIQUE (brideid),
 		CONSTRAINT uk_egmr_regnnumber UNIQUE (regnnumber)
 )
+
 

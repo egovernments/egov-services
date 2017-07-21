@@ -1,0 +1,1 @@
+update attribute_definition set required = 'N' where code = 'PRIORITY' and tenantid='default';

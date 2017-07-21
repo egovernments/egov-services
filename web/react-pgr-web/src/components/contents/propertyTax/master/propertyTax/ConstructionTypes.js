@@ -160,7 +160,7 @@ class ConstructionTypes extends Component {
         {
             return list.map((item)=>
             {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+                return (<MenuItem key={item.id} value={item.code} primaryText={item.name}/>)
             })
         }
     }

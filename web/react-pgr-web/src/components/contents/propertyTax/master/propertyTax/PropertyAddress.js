@@ -226,6 +226,7 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Reference property number"
+												  hintText="000001111122222"
                                                   errorText={fieldErrors.refPropertyNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.refPropertyNumber}</span> : ""}
                                                   value={propertyAddress.refPropertyNumber ? propertyAddress.refPropertyNumber : ""}
                                                   onChange={(e) => handleChange(e, "refPropertyNumber", false, /^\d{15}$/g)}
@@ -260,6 +261,7 @@ class PropertyAddress extends Component {
 										  <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Door No. *"
+												  hintText="301"
                                                   errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
                                                   value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
                                                   onChange={(e) => handleChange(e, "doorNo", true, '')}
@@ -420,6 +422,7 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Pin"
+												  hintText="201301"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
                                                   onChange={(e) => handleChange(e, "pin", false, '')}
@@ -450,6 +453,7 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText="Door No. *"
+														hintText="302"
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
                                                         onChange={(e) => handleChange(e, "cDoorno", true, '')}
@@ -467,6 +471,7 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText="Address 1 *"
+														hintText="Street, location, city"
                                                         errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}
@@ -483,6 +488,7 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText="Pin"
+														hintText="302301"
                                                         errorText={fieldErrors.pinTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pinTwo}</span> : ""}
                                                         value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
                                                         onChange={(e) => handleChange(e, "pinTwo", true, '')}

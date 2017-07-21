@@ -11,28 +11,38 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 
+let reqRequired = []; 
 class Report extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  initData()
-  { 
+  setLabelAndReturnRequired(configObject) {
+    for(var i=0; i<configObject.groups.length; i++) {
+      configObject.groups[i].label = translate(configObject.groups[i].label);
+      for (var j = 0; j < configObject.groups[i].fields.length; j++) {
+            configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+            if (configObject.groups[i].fields[j].isRequired)
+                reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+      }
 
-    let {setMetaData,setModuleName,setAtionName,initForm}=this.props;
-    let reqRequired = [], patRequired = [];
-    let hashLocation=window.location.hash;
-    let obj=wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-    for (var i = 0; i <obj.groups.length; i++) {
-      obj.groups[i].label=translate(obj.groups[i].label);
-      for (var j = 0; j < obj.groups[i].fields.length; j++) {
-        obj.groups[i].fields[j].label=translate(obj.groups[i].fields[j].label);
-        if(obj.groups[i].fields[j].isRequired)
-          reqRequired.push(obj.groups[i].fields[j].jsonPath);
+      if(configObject.groups[i].children && configObject.groups[i].children.length) {
+        for(var k=0; k<configObject.groups[i].children.length; k++) {
+          this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+        }
       }
     }
-    
-    initForm(reqRequired, patRequired);
+  }
+
+  initData() {
+    let { setMetaData, setModuleName, setActionName, initForm } = this.props;
+    let hashLocation = window.location.hash;
+    let obj = wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    this.setLabelAndReturnRequired(obj);
+    initForm(reqRequired, []);
     setMetaData(wcSpecs);
     setModuleName(hashLocation.split("/")[2]);
-    setAtionName(hashLocation.split("/")[1]);
+    setActionName(hashLocation.split("/")[1]);
   }
 
   componentDidMount() {
@@ -44,6 +54,7 @@ class Report extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = Object.assign(this.props.formData);
+    
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -62,7 +73,7 @@ class Report extends Component {
   }
 
   getVal = (path) => {
-    return _.get(this.props.formData, path);
+    return _.get(this.props.formData, path) || "";
   }
 
   // componentDidUpdate()
@@ -125,7 +136,7 @@ const mapDispatchToProps = dispatch => ({
   setModuleName:(moduleName)=>{
     dispatch({type:"SET_MODULE_NAME",moduleName})
   },
-  setAtionName:(actionName)=>{
+  setActionName:(actionName)=>{
     dispatch({type:"SET_ACTION_NAME",actionName})
   },
   handleChange:(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{

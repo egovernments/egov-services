@@ -27,7 +27,13 @@ var localationData={
   "wc.create.groups.approvalDetails.fields.approver":"Approver  ",
   "wc.create.groups.approvalDetails.fields.comments":"Comments",
   "wc.create.categorytype*":"Category Type*",
-  "wc.create.categorytype.title":"Create Category Type"
+  "wc.create.categorytype.title":"Create Category Type",
+  "wc.create.groups.floorDetails.title": "Floor Details",
+  "wc.create.groups.roomDetails.title": "Room Details",
+  "wc.create.groups.floorDetails.floorNo": "Floor No",
+  "wc.create.groups.floorDetails.floorName": "Floor Name",
+  "wc.create.groups.roomDetails.roomNo": "Room No",
+  "wc.create.groups.roomDetails.roomName": "Room Name"
 }
 
 export function translate(locale_text){

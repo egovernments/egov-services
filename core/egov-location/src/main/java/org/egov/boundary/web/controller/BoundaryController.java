@@ -230,7 +230,6 @@ public class BoundaryController {
 		return errRes;
 	}
 
-	
 	@PostMapping("/isshapefileexist")
 	@ResponseBody
 	public ResponseEntity<?> isShapeFileExist(@RequestParam(value = "tenantId", required = true) String tenantId,
@@ -258,7 +257,8 @@ public class BoundaryController {
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
 		errorResponse.setResponseInfo(responseInfo);
 		final List<ErrorField> errorFields = new ArrayList<>();
-		final ErrorField errorField = ErrorField.builder().code(EgovLocationConstants.TENANTID_MANDATORY_CODE).message(EgovLocationConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+		final ErrorField errorField = ErrorField.builder().code(EgovLocationConstants.TENANTID_MANDATORY_CODE)
+				.message(EgovLocationConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
 				.field(EgovLocationConstants.TENANTID_MANADATORY_FIELD_NAME).build();
 		errorFields.add(errorField);
 		Error error = new Error();
@@ -277,6 +277,27 @@ public class BoundaryController {
 		shapeFile.setFileExist(fileExist);
 		shapeFileExist.setShapeFile(shapeFile);
 		return new ResponseEntity<ShapeFileResponse>(shapeFileExist, HttpStatus.OK);
+
+	}
+
+	@PostMapping(value = "/_search")
+	@ResponseBody
+	public ResponseEntity<?> boundarySearch(@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "boundaryIds", required = true) final List<Long> boundaryIds) {
+		BoundaryResponse boundaryResponse = new BoundaryResponse();
+
+		if (boundaryIds != null && !boundaryIds.isEmpty() && boundaryIds.size() > 0) {
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			boundaryResponse.setResponseInfo(responseInfo);
+
+			List<Boundary> allBoundarys = mapToContractBoundaryList(
+					boundaryService.getAllBoundariesByBoundaryIdsAndTenant(tenantId, boundaryIds));
+
+			boundaryResponse.setBoundarys(allBoundarys);
+			return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(boundaryResponse, HttpStatus.BAD_REQUEST);
 
 	}
 }

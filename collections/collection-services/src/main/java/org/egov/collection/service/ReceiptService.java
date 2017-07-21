@@ -52,6 +52,7 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
+import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.WorkflowDetails;
@@ -547,11 +548,25 @@ public class ReceiptService {
     
     public Long getInstrumentId(Receipt receipt){
     	Long instrumentId = null;
-    	
+		StringBuilder builder = new StringBuilder();
+		String baseUri = applicationProperties.getCreateInstrument();
+		builder.append(baseUri);
+		Instrument instrument = receipt.getInstrument();
+		Object response = null;
+
     	try{
-    		//create instrument call.
-    	}catch(Exception e){
+			response = restTemplate.postForObject(builder.toString(),
+					instrument, Object.class);    	
+	    }catch(Exception e){
     		logger.error("Couldn't create instrument in the instrument service.", e.getCause());
+    		return instrumentId;
+    	}
+		logger.info("Response from instrument service: " + response.toString());
+
+    	try{
+    		
+    	}catch(Exception e){
+    		logger.error("Couldn't fetch instrument id from instrument service.", e.getCause());
     		return instrumentId;
     	}
     	return instrumentId;

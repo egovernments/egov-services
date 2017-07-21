@@ -35,7 +35,7 @@ public class TenantServiceTest {
 
     @Test
     public void test_should_retrieve_tenants() {
-        TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(asList("code1", "code2"), null);
+        TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(asList("code1", "code2"));
         when(tenantRepository.find(tenantSearchCriteria)).thenReturn(tenants);
 
         List<Tenant> result = tenantService.find(tenantSearchCriteria);

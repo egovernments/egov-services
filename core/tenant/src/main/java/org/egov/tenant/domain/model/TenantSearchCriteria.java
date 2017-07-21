@@ -12,11 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class TenantSearchCriteria {
-    private List<String> code;
-    
-    private List<Long> id;
-    
-    public TenantSearchCriteria() {
-        
-    }
+    private List<String> tenantCodes;
 }

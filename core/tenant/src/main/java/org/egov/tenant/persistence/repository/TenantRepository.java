@@ -45,10 +45,10 @@ public class TenantRepository {
 
     public List<org.egov.tenant.domain.model.Tenant> find(TenantSearchCriteria tenantSearchCriteria) {
         List<Tenant> tenants = Collections.emptyList();
-        if (CollectionUtils.isEmpty(tenantSearchCriteria.getCode()) && CollectionUtils.isEmpty(tenantSearchCriteria.getId()))
+        if(CollectionUtils.isEmpty(tenantSearchCriteria.getTenantCodes()))
             tenants = getAllTenants();
         else
-            tenants = getTenantsForGivenCriteria(tenantSearchCriteria);
+            tenants = getTenantsForGivenCodes(tenantSearchCriteria);
 
         return tenants.stream()
             .map(Tenant::toDomain)
@@ -60,24 +60,11 @@ public class TenantRepository {
         return namedParameterJdbcTemplate.query(TENANT_BASE_QUERY, new TenantRowMapper());
     }
 
-    private List<Tenant> getTenantsForGivenCriteria(TenantSearchCriteria tenantSearchCriteria){
-        final Map<String, Object> parametersMap = new HashMap<String, Object>();
-        if (!CollectionUtils.isEmpty(tenantSearchCriteria.getCode()))
-            parametersMap.put("code", tenantSearchCriteria.getCode());
-        if (!CollectionUtils.isEmpty(tenantSearchCriteria.getId()))
-            parametersMap.put("id", tenantSearchCriteria.getId());
-        
-        String query = TENANT_BASE_QUERY + " WHERE ";
-        if (!CollectionUtils.isEmpty(tenantSearchCriteria.getCode()))
-            query += "code in (:code) ";
-        if (!CollectionUtils.isEmpty(tenantSearchCriteria.getCode()) && !CollectionUtils.isEmpty(tenantSearchCriteria.getId()))
-            query += "AND ";
-        if (!CollectionUtils.isEmpty(tenantSearchCriteria.getId()))
-            query += "id in (:id) ";
-        
-        query += "order by id";
-            
-        return namedParameterJdbcTemplate.query(query, parametersMap, new TenantRowMapper());
+    private List<Tenant> getTenantsForGivenCodes(TenantSearchCriteria tenantSearchCriteria){
+        final Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put("code", tenantSearchCriteria.getTenantCodes());
+        }};
+        return namedParameterJdbcTemplate.query(TENANT_BASE_QUERY+" WHERE code in (:code) ORDER BY ID", parametersMap, new TenantRowMapper());
     }
 
     private org.egov.tenant.domain.model.Tenant getCityForTenant(org.egov.tenant.domain.model.Tenant tenant) {

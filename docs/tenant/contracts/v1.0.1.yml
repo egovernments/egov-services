@@ -28,18 +28,10 @@ paths:
         - in: query
           name: code
           description: Tenant codes to retrieve the tenants. (AP.KURNOOL, AP.GUNTOOR etc.,)
-          required: false
+          required: true
           type: array
           items:
             type: string
-          collectionFormat: multi
-        - in: id
-          name: id
-          description: Tenant ids to retrieve the tenants.
-          required: false
-          type: array
-          items:
-            type: long
           collectionFormat: multi
       responses:
         200:

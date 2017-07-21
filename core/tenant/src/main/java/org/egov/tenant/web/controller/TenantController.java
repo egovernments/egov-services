@@ -3,8 +3,6 @@ package org.egov.tenant.web.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.tenant.domain.model.TenantSearchCriteria;
@@ -20,7 +18,6 @@ import org.egov.tenant.web.contract.TenantResponse;
 import org.egov.tenant.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,8 +39,9 @@ public class TenantController {
 	}
 
 	@PostMapping(value = "_search")
-	public SearchTenantResponse search(@ModelAttribute @Valid TenantSearchCriteria tenantSearchCriteria,
+	public SearchTenantResponse search(@RequestParam(value = "code", required = false) List<String> code,
 			@RequestBody SearchTenantRequest searchTenantRequest) {
+		TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(code);
 		List<Tenant> tenants = tenantService.find(tenantSearchCriteria).stream()
 				.map(tenant -> new Tenant(tenant, new City(tenant.getCity()))).collect(Collectors.toList());
 

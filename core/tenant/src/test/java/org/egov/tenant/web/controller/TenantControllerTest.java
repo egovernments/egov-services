@@ -17,11 +17,11 @@ import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
 import org.egov.tenant.domain.exception.TenantInvalidCodeException;
 import org.egov.tenant.domain.model.City;
 import org.egov.tenant.domain.model.Tenant;
+import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.domain.service.TenantService;
 import org.egov.tenant.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,8 +44,10 @@ public class TenantControllerTest {
 
     @Test
     public void test_should_search_tenants() throws Exception {
+        List<String> codes = asList("AP.KURNOOL", "AP.GUNTOOR");
+        TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(codes);
         List<Tenant> tenants = getListOfTenants();
-        when(tenantService.find(Mockito.any())).thenReturn(tenants);
+        when(tenantService.find(tenantSearchCriteria)).thenReturn(tenants);
 
         ResponseInfo responseInfo = ResponseInfo.builder().apiId("emp").build();
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class),any(Boolean.class))).thenReturn(responseInfo);

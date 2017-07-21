@@ -82,20 +82,43 @@ public class RestWaterExternalMasterService {
 
     public PropertyTypeResponse getPropertyIdFromPTModule(final String propertyTypeName, final String tenantId) {
         String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchPathTopic();
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchByNamePathTopic();
         url = url.replace("{name}", propertyTypeName);
         url = url.replace("{tenantId}", tenantId);
         final PropertyTypeResponse propertyTypes = getPropertyTypes(url);
         return propertyTypes;
     }
 
+    public PropertyTypeResponse getPropertyNameFromPTModule(final Integer[] propertyTypeId, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServicePropertyTypeSearchByIdPathTopic();
+        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final PropertyTypeResponse propertyTypes = restTemplate.postForObject(url.toString(), request,
+                PropertyTypeResponse.class,propertyTypeId,tenantId);
+        return propertyTypes;
+        
+    }
     public UsageTypeResponse getUsageIdFromPTModule(final String usageTypeName, final String tenantId) {
         String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchPathTopic();
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByNamePathTopic();
         url = url.replace("{name}", usageTypeName);
         url = url.replace("{tenantId}", tenantId);
         final UsageTypeResponse usageType = getUsageTypes(url);
         return usageType;
+    }
+    
+    public UsageTypeResponse getUsageNameFromPTModule(final Integer[] usageTypeId, final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByIdPathTopic();
+        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final UsageTypeResponse usageTypes = restTemplate.postForObject(url.toString(), request,
+                UsageTypeResponse.class,usageTypeId,tenantId);
+        return usageTypes;
+        
     }
     
     public BoundaryResponse getBoundaryId(final String boundaryTypeName, final String hierarchiTypeName, final String tenantId) {

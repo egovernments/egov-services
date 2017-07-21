@@ -6,7 +6,8 @@ const defaultState = {
   reportResult:{},
   flag:0,
   moduleName:"",
-  actionName:""
+  actionName:"",
+  dropDownData:{}
 };
 
 export default(state = defaultState, action) => {
@@ -16,6 +17,15 @@ export default(state = defaultState, action) => {
         ...state,
         metaData:action.metaData
       }
+
+      case "SET_DROPDWON_DATA":
+        return {
+          ...state,
+          dropDownData:{
+            ...state.dropDownData,
+            [action.fieldName]:action.dropDownData
+          }
+        }
 
       case "SET_MODULE_NAME":
         return {
@@ -47,6 +57,8 @@ export default(state = defaultState, action) => {
           ...state,
           flag: action.flag
         }
+
+
 
     default:
       return state;

@@ -1,5 +1,9 @@
 package org.egov.calculator.repository.builder;
 
+import java.util.List;
+
+import org.egov.calculator.utility.ConstantUtility;
+
 /**
  * <h1>TaxPeriodBuilder</h1>This class contains all the queries related to the
  * tax period
@@ -17,38 +21,58 @@ public class TaxPeriodBuilder {
 			+ ",todate=?,code=?,periodType=?,financialYear=?,createdby=?,lastmodifiedby=?,createdtime=?,"
 			+ "lastmodifiedtime=? WHERE tenantid =?";
 
-	public static String getSearchQuery(String tenantId, String validDate, String code) {
+	public static final String BASE_SEARCH_QUERY = "SELECT * FROM " + ConstantUtility.TAXPERIODS_TABLE_NAME
+			+ " WHERE tenantId =?";
+
+	public static String getSearchQuery(String tenantId, String validDate, String code,
+			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("SELECT * FROM egpt_mstr_taxperiods WHERE tenantId = '" + tenantId + "'");
-		
-		if ( code!=null && !code.isEmpty())
-			searchSql.append(" AND code ='" + code + "'");
-			
-		searchSql.append( " AND ('" + validDate + "' BETWEEN fromdate AND  todate )");
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+
+		if (code != null && !code.isEmpty()) {
+			searchSql.append(" AND code =?");
+			preparedStatementValues.add(code);
+		}
+
+		searchSql.append(" AND (to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date )");
+		preparedStatementValues.add(validDate);
 
 		return searchSql.toString();
 	}
-	
-	public static String getTaxperiodsByDateAndTenantId(String tenantId, String fromDate,String toDate) {
-	        // TODO Auto-generated method stub
-	        StringBuffer searchSql = new StringBuffer();
-	        searchSql.append("SELECT * FROM egpt_mstr_taxperiods WHERE tenantId = '" + tenantId + "'");
-	        searchSql.append(" AND (fromdate::date>='" + fromDate + "' And  todate::date<='"+toDate+"')");
-	        return searchSql.toString();
-	    }
 
-	public static String getToDateForTaxCalculation(String tenantId,String date){
-	    String searchQuery="SELECT * FROM  egpt_mstr_taxperiods WHERE  tenantId='"+tenantId+"' "
-	            + "and todate::date  >= to_date('"+date+"','dd/MM/yyyy') ORDER BY todate ASC LIMIT 1";
-	    return searchQuery;
-	    
+	public static String getTaxperiodsByDateAndTenantId(String tenantId, String fromDate, String toDate,
+			List<Object> preparedStatementValues) {
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+		searchSql.append(" AND (fromdate::date>= to_date(?,'dd/MM/yyy') And  todate::date<= to_date(?,'dd/MM/yyy'))");
+		preparedStatementValues.add(fromDate);
+		preparedStatementValues.add(toDate);
+		return searchSql.toString();
 	}
-	
-	public static String getFromDateForTaxCalculation(String tenantId,String date){
-            String searchQuery="SELECT * FROM  egpt_mstr_taxperiods WHERE  tenantId='"+tenantId+"' "
-                    + "and fromdate::date  <= to_date('"+date+"','dd/MM/yyyy') ORDER BY todate DESC LIMIT 1";
-            return searchQuery;
-            
-        }
+
+	public static String getToDateForTaxCalculation(String tenantId, String date,
+			List<Object> preparedStatementValues) {
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+		searchSql.append(" and todate::date  >= to_date(?,'dd/MM/yyyy') ORDER BY todate ASC LIMIT 1");
+		preparedStatementValues.add(date);
+		return searchSql.toString();
+
+	}
+
+	public static String getFromDateForTaxCalculation(String tenantId, String date,
+			List<Object> preparedStatementValues) {
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+		searchSql.append("and fromdate::date  <= to_date(?,'dd/MM/yyyy') ORDER BY todate DESC LIMIT 1");
+		preparedStatementValues.add(date);
+
+		return searchSql.toString();
+
+	}
 }

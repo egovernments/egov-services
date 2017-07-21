@@ -81,7 +81,7 @@ public class VoucherService {
 
     public Long createVoucher(final VoucherRequest voucherRequest, final String tenantId) {
         final String createVoucherUrl = applicationProperties.getMunicipalityHostName()
-                + applicationProperties.getEgfServiceVoucherCreatePath();
+                + applicationProperties.getEgfServiceVoucherCreatePath() + "?tenantId=" + tenantId;
         logger.debug("Voucher API Request URL :: " + createVoucherUrl);
         logger.debug("VoucherRequest :: " + voucherRequest);
         Error err = new Error();

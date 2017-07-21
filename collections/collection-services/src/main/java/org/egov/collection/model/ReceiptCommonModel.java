@@ -46,6 +46,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
@@ -96,18 +99,17 @@ public class ReceiptCommonModel {
 					.collectionModesNotAllowed(Arrays.asList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId()).displayMessage(receiptHeader.getDisplayMsg())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
-					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
+					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()))
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
-					.collectionType(receiptHeader.getCollectionType()).boundary(receiptHeader.getBoundary())
+					.collectionType(CollectionType.valueOf(receiptHeader.getCollectionType())).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
 					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
-					billAccountDetails(billAccountDetails).receiptDate(Timestamp.valueOf(sdf.format(receiptHeader.getReceiptDate()))).build();
+					billAccountDetails(billAccountDetails).receiptDate((receiptHeader.getReceiptDate().getTime())).build();
 			Bill billInfo = Bill.builder().payeeName(receiptHeader.getPayeename())
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
-			Receipt receipt = new Receipt();
-			receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).bill(billInfo).build();
+			Receipt receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
 			receipts.add(receipt);
 		}
 

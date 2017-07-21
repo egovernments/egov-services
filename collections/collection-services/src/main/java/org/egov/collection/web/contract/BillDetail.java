@@ -44,6 +44,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.ReceiptType;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -95,15 +97,15 @@ public class BillDetail {
 
 	private String receiptNumber;
 
-	private Timestamp receiptDate;
+	private Long receiptDate;
 
-	private String receiptType;
+	private ReceiptType receiptType;
 
 	private String channel;
 
 	private String voucherHeader;
 
-	private String collectionType;
+	private CollectionType collectionType;
 
 	private String boundary;
 

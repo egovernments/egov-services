@@ -40,6 +40,8 @@
 
 package org.egov.eis.repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -188,29 +190,41 @@ public class MovementRepository {
                         MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
                         movementRequest.getRequestInfo()).get(0).getId())
                 && movement.getEmployeeAcceptance())
-            promoteEmployee(movementRequest);
+            try {
+                promoteEmployee(movementRequest);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER)
                 || movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION)) && movement.getStatus()
                         .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
                                 MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
                                 movementRequest.getRequestInfo()).get(0).getId())
                 && movement.getEmployeeAcceptance())
-            transferEmployee(movementRequest);
+            try {
+                transferEmployee(movementRequest);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         return movement;
     }
 
-    private void promoteEmployee(final MovementRequest movementRequest) {
+    private void promoteEmployee(final MovementRequest movementRequest) throws ParseException {
         final Employee employee = employeeService.getEmployee(movementRequest);
         final Movement movement = movementRequest.getMovement().get(0);
         final Date effectiveFromDate = movement.getEffectiveFrom();
         final Calendar calendar = Calendar.getInstance();
+        final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
+        final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
         calendar.setTime(effectiveFromDate);
         calendar.add(Calendar.DATE, -1);
         final Date yesterday = calendar.getTime();
-        for (final Assignment employeeAssignment : employee.getAssignments())
+        for (final Assignment employeeAssignment : employee.getAssignments()) {
             if (employeeAssignment.getFromDate().before(effectiveFromDate)
                     && employeeAssignment.getToDate().after(effectiveFromDate))
                 employeeAssignment.setToDate(yesterday);
+            employeeAssignment.setIsPrimary(false);
+        }
         final Assignment assignment = new Assignment();
         assignment.setPosition(movement.getPositionAssigned());
         assignment.setFund(movement.getFundAssigned());
@@ -222,15 +236,19 @@ public class MovementRepository {
         assignment.setToDate(employee.getDateOfRetirement());
         assignment.setTenantId(movement.getTenantId());
         employee.getAssignments().add(assignment);
+        if (employee.getUser().getDob() != null)
+            employee.getUser().setDob(output.format(inputDOB.parse(employee.getUser().getDob())));
         employeeService.updateEmployee(employee, movement.getTenantId(),
                 movementRequest.getRequestInfo());
     }
 
-    private void transferEmployee(final MovementRequest movementRequest) {
+    private void transferEmployee(final MovementRequest movementRequest) throws ParseException {
         final Employee employee = employeeService.getEmployee(movementRequest);
         final Movement movement = movementRequest.getMovement().get(0);
+        final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
+        final SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
         final String source = movement.getTenantId();
-        final String destination = "";
+        final String destination = movement.getRemarks();
         final RequestInfo sourceRequestInfo = movementRequest.getRequestInfo();
         final RequestInfo destinationRequestInfo = movementRequest.getRequestInfo();
         destinationRequestInfo.getUserInfo().setTenantId(destination);
@@ -238,6 +256,8 @@ public class MovementRepository {
         employee.setId(null);
         employee.getUser().setId(null);
         employee.getUser().setTenantId(destination);
+        if (employee.getUser().getDob() != null)
+            employee.getUser().setDob(output.format(inputDOB.parse(employee.getUser().getDob())));
         for (final Role role : employee.getUser().getRoles())
             role.setId(null);
         for (final ServiceHistory history : employee.getServiceHistory()) {

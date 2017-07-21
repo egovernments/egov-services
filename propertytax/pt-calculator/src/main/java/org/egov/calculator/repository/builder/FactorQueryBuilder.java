@@ -1,9 +1,15 @@
 package org.egov.calculator.repository.builder;
+
+import java.util.List;
+
+import org.egov.calculator.utility.ConstantUtility;
+
 /**
  * 
- * @author Pavan Kumar Kamma 
+ * @author Pavan Kumar Kamma
  * 
- * This Class will have all the queries which are used in the factor API's
+ *         This Class will have all the queries which are used in the factor
+ *         API's
  *
  */
 public class FactorQueryBuilder {
@@ -16,27 +22,38 @@ public class FactorQueryBuilder {
 			+ " SET tenantId = ?, factorCode = ?, factorType = ?, factorValue = ?, fromdate = ?, todate = ?,"
 			+ " lastModifiedtime = ? WHERE id = ?";
 
-	public static String getFactorSearchQuery(String tenantId,
-			String factorType, String validDate, String code) {
+	public static final String BASE_SEARCH_QUERY = "select * from " + ConstantUtility.FACTOR_TABLE_NAME
+			+ " WHERE tenantId=?";
+
+	public static String getFactorSearchQuery(String tenantId, String factorType, String validDate, String code,
+			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("SELECT * FROM egpt_mstr_factor WHERE tenantId = '"
-				+ tenantId + "' AND factorType = '" + factorType+"'");
-		if ( code!=null && !code.isEmpty())
-			searchSql.append( " AND factorCode = '" + code + "'");
-		
-				searchSql.append(" AND (fromdate < '"+validDate + "' AND todate > '" + validDate + "')");
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+
+		searchSql.append(" AND factorType =?");
+		preparedStatementValues.add(factorType);
+
+		if (code != null && !code.isEmpty()) {
+			searchSql.append(" AND factorCode =?");
+			preparedStatementValues.add(code);
+		}
+
+		searchSql.append(" AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date  AND todate::date");
+		preparedStatementValues.add(validDate);
 
 		return searchSql.toString();
 	}
 
-	public static String getFactorSearchQueryByTenantIdAndValidDate(
-			String tenantId, String validDate) {
+	public static String getFactorSearchQueryByTenantIdAndValidDate(String tenantId, String validDate,
+			List<Object> preparedStatementValues) {
 
 		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("SELECT * FROM egpt_mstr_factor WHERE tenantId = '"
-				+ tenantId + "'  AND (fromdate <= '" + validDate
-				+ "' AND todate >= '" + validDate + "')");
+		searchSql.append(BASE_SEARCH_QUERY);
+		preparedStatementValues.add(tenantId);
+		searchSql.append(" AND ( to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND todate::date)");
+		preparedStatementValues.add(validDate);
 
 		return searchSql.toString();
 	}

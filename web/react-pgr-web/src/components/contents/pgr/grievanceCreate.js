@@ -70,11 +70,10 @@ class grievanceCreate extends Component {
   };
 
   handleView = () => {
-    let {initForm, history} = this.props;
+    let {initForm, setRoute} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    history.push("/pgr/viewGrievance/"+this.state.serviceRequestId);
-    window.location.reload();
+    setRoute("/pgr/viewGrievance/"+this.state.serviceRequestId);
   };
 
   validateOTP = () => {
@@ -564,9 +563,7 @@ class grievanceCreate extends Component {
 
     return (
       <div className="grievanceCreate">
-        <form autoComplete="off" onSubmit={(e) => {
-          search(e)
-        }}>
+        <form autoComplete="off">
           {this.state.type === 'EMPLOYEE' || this.state.type === null ?
             <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('core.lbl.contact.information')}< /div>}/>
@@ -738,7 +735,7 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <div style={{textAlign: 'center'}}>
-            <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
+            <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
           </div>
         </form>
         <div>
@@ -892,7 +889,8 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-  }
+  },
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(grievanceCreate);

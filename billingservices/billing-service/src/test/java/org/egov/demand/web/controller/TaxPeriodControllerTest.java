@@ -102,7 +102,7 @@ public class TaxPeriodControllerTest {
         when(taxPeriodService.searchTaxPeriods(Matchers.any(TaxPeriodCriteria.class), Matchers.any(RequestInfo.class)))
                 .thenReturn(taxPeriodResponse);
 
-        mockMvc.perform(post("/taxperiod/_search").param("service", "Test Service").param("tenantId", "ap.kurnool")
+        mockMvc.perform(post("/taxperiods/_search").param("service", "Test Service").param("tenantId", "ap.kurnool")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -121,7 +121,7 @@ public class TaxPeriodControllerTest {
 
         when(taxPeriodService.createAsync(any(TaxPeriodRequest.class))).thenReturn(taxPeriodResponse);
 
-        mockMvc.perform(post("/taxperiod/_create").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/taxperiods/_create").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("taxperiodcreaterequest.json"))).andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("taxperiodcreateresponse.json")));
@@ -138,7 +138,7 @@ public class TaxPeriodControllerTest {
 
         when(taxPeriodService.updateAsync(any(TaxPeriodRequest.class))).thenReturn(taxPeriodResponse);
 
-        mockMvc.perform(post("/taxperiod/_update").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/taxperiods/_update").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("taxperiodupdaterequest.json"))).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("taxperiodupdateresponse.json")));

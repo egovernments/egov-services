@@ -53,232 +53,243 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssetQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(AssetQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(AssetQueryBuilder.class);
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT *," + "asset.id AS assetId,assetcategory.id AS assetcategoryId,"
-			+ "asset.name as assetname,asset.code as assetcode,"
-			+ "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
-			+ " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
-			+ "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
-			+ "ON asset.id = ywd.assetid";
+    private static final String BASE_QUERY = "SELECT *," + "asset.id AS assetId,assetcategory.id AS assetcategoryId,"
+            + "asset.name as assetname,asset.code as assetcode,"
+            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
+            + " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
+            + "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
+            + "ON asset.id = ywd.assetid";
 
-	@SuppressWarnings("rawtypes")
-	public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
-		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		logger.info("get query");
-		addWhereClause(selectQuery, preparedStatementValues, searchAsset);
-		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-		logger.info("Query from asset querybuilde for search : " + selectQuery);
-		return selectQuery.toString();
-	}
+    @SuppressWarnings("rawtypes")
+    public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        logger.info("get query");
+        addWhereClause(selectQuery, preparedStatementValues, searchAsset);
+        addPagingClause(selectQuery, preparedStatementValues, searchAsset);
+        logger.info("Query from asset querybuilde for search : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final AssetCriteria searchAsset) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final AssetCriteria searchAsset) {
 
-		if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
-				&& searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
-				&& searchAsset.getTenantId() == null && searchAsset.getDoorNo() == null)
-			// FIXME location object criterias need to be added to if block
-			// assetcategory is mandatory
-			return;
+        if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
+                && searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
+                && searchAsset.getTenantId() == null && searchAsset.getDoorNo() == null)
+            // FIXME location object criterias need to be added to if block
+            // assetcategory is mandatory
+            return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
 
-		if (searchAsset.getTenantId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.tenantId = ?");
-			preparedStatementValues.add(searchAsset.getTenantId());
-		}
+        if (searchAsset.getTenantId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.tenantId = ?");
+            preparedStatementValues.add(searchAsset.getTenantId());
+        }
 
-		if (searchAsset.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.id IN (" + getIdQuery(searchAsset.getId()));
-		}
+        if (searchAsset.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.id IN (" + getIdQuery(searchAsset.getId()));
+        }
 
-		if (searchAsset.getName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.name ilike ?");
-			preparedStatementValues.add("%" + searchAsset.getName() + "%");
-		}
+        if (searchAsset.getName() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.name ilike ?");
+            preparedStatementValues.add("%" + searchAsset.getName() + "%");
+        }
 
-		if (searchAsset.getCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.code like ?");
-			preparedStatementValues.add("%" + searchAsset.getCode() + "%");
-		}
+        if (searchAsset.getCode() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.code like ?");
+            preparedStatementValues.add("%" + searchAsset.getCode() + "%");
+        }
 
-		if (searchAsset.getDepartment() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.department = ?");
-			preparedStatementValues.add(searchAsset.getDepartment());
-		}
+        if (searchAsset.getDepartment() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.department = ?");
+            preparedStatementValues.add(searchAsset.getDepartment());
+        }
 
-		if (searchAsset.getAssetCategory() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.assetCategory = ?");
-			preparedStatementValues.add(searchAsset.getAssetCategory());
-		}
+        if (searchAsset.getAssetCategory() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.assetCategory = ?");
+            preparedStatementValues.add(searchAsset.getAssetCategory());
+        }
 
-		if (searchAsset.getStatus() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.status = ?");
-			preparedStatementValues.add(searchAsset.getStatus());
-		}
+        if (searchAsset.getStatus() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.status = ?");
+            preparedStatementValues.add(searchAsset.getStatus());
+        }
 
-		if (searchAsset.getLocality() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.locality = ?");
-			preparedStatementValues.add(searchAsset.getLocality());
-		}
+        if (searchAsset.getLocality() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.locality = ?");
+            preparedStatementValues.add(searchAsset.getLocality());
+        }
 
-		if (searchAsset.getZone() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.zone = ?");
-			preparedStatementValues.add(searchAsset.getZone());
-		}
+        if (searchAsset.getZone() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.zone = ?");
+            preparedStatementValues.add(searchAsset.getZone());
+        }
 
-		if (searchAsset.getRevenueWard() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.revenueWard = ?");
-			preparedStatementValues.add(searchAsset.getRevenueWard());
-		}
+        if (searchAsset.getRevenueWard() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.revenueWard = ?");
+            preparedStatementValues.add(searchAsset.getRevenueWard());
+        }
 
-		if (searchAsset.getBlock() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.block = ?");
-			preparedStatementValues.add(searchAsset.getBlock());
-		}
+        if (searchAsset.getBlock() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.block = ?");
+            preparedStatementValues.add(searchAsset.getBlock());
+        }
 
-		if (searchAsset.getStreet() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.street = ?");
-			preparedStatementValues.add(searchAsset.getStreet());
-		}
+        if (searchAsset.getStreet() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.street = ?");
+            preparedStatementValues.add(searchAsset.getStreet());
+        }
 
-		if (searchAsset.getElectionWard() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.electionWard = ?");
-			preparedStatementValues.add(searchAsset.getElectionWard());
-		}
+        if (searchAsset.getElectionWard() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.electionWard = ?");
+            preparedStatementValues.add(searchAsset.getElectionWard());
+        }
 
-		if (searchAsset.getPinCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.pinCode = ?");
-			preparedStatementValues.add(searchAsset.getPinCode());
-		}
+        if (searchAsset.getPinCode() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.pinCode = ?");
+            preparedStatementValues.add(searchAsset.getPinCode());
+        }
 
-		if (searchAsset.getDoorNo() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.doorno = ?");
-			preparedStatementValues.add(searchAsset.getDoorNo());
-		}
+        if (searchAsset.getDoorNo() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.doorno = ?");
+            preparedStatementValues.add(searchAsset.getDoorNo());
+        }
 
-		if (searchAsset.getAssetReference() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.assetreference = ?");
-			preparedStatementValues.add(searchAsset.getAssetReference());
-		}
+        if (searchAsset.getAssetReference() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.assetreference = ?");
+            preparedStatementValues.add(searchAsset.getAssetReference());
+        }
 
-		if (searchAsset.getDescription() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.description ilike ?");
-			preparedStatementValues.add("%" + searchAsset.getDescription() + "%");
-		}
+        if (searchAsset.getDescription() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.description ilike ?");
+            preparedStatementValues.add("%" + searchAsset.getDescription() + "%");
+        }
 
-		if (searchAsset.getGrossValue() != null && searchAsset.getFromCapitalizedValue() == null
-				&& searchAsset.getToCapitalizedValue() == null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.grossvalue = ?");
-			preparedStatementValues.add(searchAsset.getGrossValue());
-		}
-		if (searchAsset.getGrossValue() == null && searchAsset.getFromCapitalizedValue() == null
-				&& searchAsset.getToCapitalizedValue() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.grossvalue BETWEEN 1 AND ?");
-			preparedStatementValues.add(searchAsset.getToCapitalizedValue());
-		}
-		if (searchAsset.getGrossValue() == null && searchAsset.getFromCapitalizedValue() != null
-				&& searchAsset.getToCapitalizedValue() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ASSET.grossvalue BETWEEN ? AND ?");
-			preparedStatementValues.add(searchAsset.getFromCapitalizedValue());
-			preparedStatementValues.add(searchAsset.getToCapitalizedValue());
-		}
-	}
+        if (searchAsset.getGrossValue() != null && searchAsset.getFromCapitalizedValue() == null
+                && searchAsset.getToCapitalizedValue() == null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.grossvalue = ?");
+            preparedStatementValues.add(searchAsset.getGrossValue());
+        }
+        if (searchAsset.getGrossValue() == null && searchAsset.getFromCapitalizedValue() == null
+                && searchAsset.getToCapitalizedValue() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.grossvalue BETWEEN 1 AND ?");
+            preparedStatementValues.add(searchAsset.getToCapitalizedValue());
+        }
+        if (searchAsset.getGrossValue() == null && searchAsset.getFromCapitalizedValue() != null
+                && searchAsset.getToCapitalizedValue() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.grossvalue BETWEEN ? AND ?");
+            preparedStatementValues.add(searchAsset.getFromCapitalizedValue());
+            preparedStatementValues.add(searchAsset.getToCapitalizedValue());
+        }
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final AssetCriteria searchAsset) {
-		// handle limit(also called pageSize) here
-		selectQuery.append(" ORDER BY asset.name");
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final AssetCriteria searchAsset) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" ORDER BY asset.name");
 
-		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
-		if (searchAsset.getSize() != null)
-			pageSize = searchAsset.getSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+        if (searchAsset.getSize() != null)
+            pageSize = searchAsset.getSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
 
-		// handle offset here
-		selectQuery.append(" OFFSET ?");
-		long pageNumber = 0; // Default pageNo is zero meaning first page
-		if (searchAsset.getOffset() != null)
-			pageNumber = searchAsset.getOffset() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-															// pageNo * pageSize
-	}
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        long pageNumber = 0; // Default pageNo is zero meaning first page
+        if (searchAsset.getOffset() != null)
+            pageNumber = searchAsset.getOffset() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+                                                            // pageNo * pageSize
+    }
 
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 *
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
-		return true;
-	}
+    /**
+     * This method is always called at the beginning of the method so that and
+     * is prepended before the field's predicate is handled.
+     *
+     * @param appendAndClauseFlag
+     * @param queryString
+     * @return boolean indicates if the next predicate should append an "AND"
+     */
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
+        return true;
+    }
 
-	private static String getIdQuery(final List<Long> idList) {
-		StringBuilder query = null;
-		if (idList.size() >= 1) {
-			query = new StringBuilder(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++)
-				query.append("," + idList.get(i));
-		}
-		return query.append(")").toString();
-	}
+    private static String getIdQuery(final List<Long> idList) {
+        StringBuilder query = null;
+        if (idList.size() >= 1) {
+            query = new StringBuilder(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append("," + idList.get(i));
+        }
+        return query.append(")").toString();
+    }
 
-	public String getInsertQuery() {
-		return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
-				+ "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
-				+ "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
-				+ "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation,depriciationrate)"
-				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	}
+    public String getInsertQuery() {
+        return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
+                + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
+                + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
+                + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation,depriciationrate)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    }
 
-	public String getUpdateQuery() {
-		return "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,"
-				+ "width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
-				+ "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,enableyearwisedepriciation=?,depriciationrate=? "
-				+ "WHERE code=? and tenantid=?";
-	}
+    public String getUpdateQuery() {
+        return "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,"
+                + "totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
+                + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?"
+                + "WHERE code=? and tenantid=?";
+    }
 
-	public final static String BATCHINSERTQUERY = "INSERT INTO egasset_yearwisedepreciation "
-			+ "(depreciationrate,financialyear,assetid,usefullifeinyears,tenantid,createdby,createddate,"
-			+ "lastmodifiedby,lastmodifieddate) values (?,?,?,?,?,?,?,?,?)";
+    public final static String BATCHINSERTQUERY = "INSERT INTO egasset_yearwisedepreciation "
+            + "(depreciationrate,financialyear,assetid,usefullifeinyears,tenantid,createdby,createddate,"
+            + "lastmodifiedby,lastmodifieddate) values (?,?,?,?,?,?,?,?,?)";
 
-	public final static String BATCHUPDATEQUERY = "UPDATE egasset_yearwisedepreciation SET"
-			+ " depreciationrate=?,usefullifeinyears=?,"
-			+ "createdby=?,createddate=?,lastmodifiedby=?,lastmodifieddate=? "
-			+ "WHERE  assetid=? AND financialyear=? AND tenantid=?";
+    public final static String BATCHUPDATEQUERY = "UPDATE egasset_yearwisedepreciation SET"
+            + " depreciationrate=?,usefullifeinyears=?,"
+            + "createdby=?,createddate=?,lastmodifiedby=?,lastmodifieddate=? "
+            + "WHERE  assetid=? AND financialyear=? AND tenantid=?";
 
-	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
+    public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
+
+    public final static String GETYEARWISEDEPRECIATIONQUERY = "select depreciationrate,financialyear,usefullifeinyears,tenantid from "
+            + "egasset_yearwisedepreciation where assetid = ? and tenantid = ?";
+
+    public final static String ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?,depriciationrate=?"
+            + " WHERE code = ? and tenantid = ?";
+    public final static String ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?"
+            + " WHERE code = ? and tenantid = ?";
+
+    public final static String YEARWISEDEPRECIATIONDELETEQUERY = "DELETE FROM egasset_yearwisedepreciation ywd where "
+            + "ywd.finanfinancialyear = ? and ywd.assetid = ? and ywd.tenantid = ?";
 }

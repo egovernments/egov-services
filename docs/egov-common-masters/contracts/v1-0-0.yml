@@ -420,7 +420,7 @@ paths:
   /departments/_create:
     post:
       summary: Create a new Department into the system.
-      description: To create a new department we need to call POST.
+      description: To create a new department with defined values.
       parameters:
         - name: department
           in: body
@@ -439,12 +439,10 @@ paths:
           description: Invalid input.
           schema:
             $ref: '#/definitions/ErrorRes'
-  '/department/{code}/_update':
-    parameters:
-      - $ref: '#/parameters/departmentCode'
-    post:
-      summary: Update existing department data for the code passed
-      description: To update an existing department master data.
+  '/department/_update':
+     post:
+      summary: Update existing department data.
+      description: To update an existing department master, set the new set of values for the particular department code, name or id.
       parameters:
         - name: department
           in: body
@@ -1720,7 +1718,7 @@ definitions:
         format: varchar
         description: TRUE for active departments and FALSE for inactive departments.
       tenantId:
-        description: Unique id for for a tenant.
+        description: Unique id for a tenant.
         type: string
     required:
       - tenantId
@@ -2142,16 +2140,6 @@ parameters:
     required: true
     type: string
     format: varchar
-  departmentCode:
-    name: code
-    in: path
-    required: true
-    description: The code of the department master.
-    type: string
-    minLength: 0
-    maxLength: 256
-    exclusiveMinimum: true
-    exclusiveMaximum: false
   languageName:
     name: name
     in: path

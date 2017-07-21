@@ -48,8 +48,11 @@ import java.util.Map;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyPipeSizeRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeGetRequest;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -69,6 +72,9 @@ public class PropertyPipeSizeRepository {
 
     @Autowired
     private PropertyPipeSizeQueryBuilder propertyPipeSizeQueryBuilder;
+
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public PropertyTypePipeSizeRequest persistCreatePropertyPipeSize(
             final PropertyTypePipeSizeRequest propertyPipeSizeRequest) {
@@ -122,6 +128,25 @@ public class PropertyPipeSizeRepository {
         return propertyPipeSizeRequest;
     }
 
+    public List<PropertyTypePipeSize> findForCriteria(final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final List<Integer> propertyTypeIdsList = new ArrayList<>();
+        final String queryStr = propertyPipeSizeQueryBuilder.getQuery(propertyPipeSizeGetRequest, preparedStatementValues);
+        final List<PropertyTypePipeSize> propertyPipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                propertyPipeSizeRowMapper);
+        // fetch property type Id and set the property type name here
+        for (final PropertyTypePipeSize propertyPipeSize : propertyPipeSizes)
+            propertyTypeIdsList.add(Integer.valueOf(propertyPipeSize.getPropertyTypeId()));
+        final Integer[] propertypeIds = propertyTypeIdsList.toArray(new Integer[propertyTypeIdsList.size()]);
+        final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyNameFromPTModule(
+                propertypeIds, propertyPipeSizeGetRequest.getTenantId());
+        for (final PropertyTypePipeSize propertyTypePipeSize : propertyPipeSizes)
+            for (final PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes())
+                if (propertyResponse.getId().equals(propertyTypePipeSize.getPropertyTypeId()))
+                    propertyTypePipeSize.setPropertyTypeName(propertyResponse.getName());
+        return propertyPipeSizes;
+    }
+
     public boolean checkPropertyByPipeSize(final Long id, final String propertyTypeId, final Double pipeSize,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
@@ -152,30 +177,6 @@ public class PropertyPipeSizeRepository {
             return false;
 
         return true;
-    }
-
-    public List<PropertyTypePipeSize> findForCriteria(final PropertyTypePipeSizeGetRequest propertyPipeSizeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        try {
-            if (propertyPipeSizeGetRequest.getPipeSize() != null)
-                propertyPipeSizeGetRequest
-                        .setPipeSizeId(jdbcTemplate.queryForObject(PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery(),
-                                new Object[] { propertyPipeSizeGetRequest.getPipeSize(),
-                                        propertyPipeSizeGetRequest.getTenantId() },
-                                Long.class));
-        } catch (final EmptyResultDataAccessException e) {
-            log.error("EmptyResultDataAccessException: Query returned empty RS.");
-
-        }
-
-        final String queryStr = propertyPipeSizeQueryBuilder.getQuery(propertyPipeSizeGetRequest, preparedStatementValues);
-        final String pipeSizeInmmQuery = PropertyPipeSizeQueryBuilder.getPipeSizeInmm();
-        final List<PropertyTypePipeSize> propertyPipeSizes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-                propertyPipeSizeRowMapper);
-        for (final PropertyTypePipeSize propertyPipeSize : propertyPipeSizes)
-            propertyPipeSize.setPipeSize(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
-                    new Object[] { propertyPipeSize.getPipeSizeId(), propertyPipeSize.getTenantId() }, Double.class));
-        return propertyPipeSizes;
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {

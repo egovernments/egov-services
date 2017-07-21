@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Api from '../../../api/api';
+import jp from "jsonpath";
+import _ from 'lodash';
 
-export default class UiMultiSelectField extends Component {
+class UiMultiSelectField extends Component {
 	constructor(props) {
        super(props);
 			 this.state={
@@ -10,21 +14,52 @@ export default class UiMultiSelectField extends Component {
 			}
    	}
 
+   	componentDidMount() {
+		let {item, setDropDownData, useTimestamp}=this.props;
+		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
+		{
+			let splitArray=item.url.split("?");
+			let context="";
+			let id={};
+			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+				context+=splitArray[0].split("/")[j]+"/";
+			}
+
+			Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+				let keys=jp.query(response, splitArray[1].split("|")[1]);
+				let values=jp.query(response, splitArray[1].split("|")[2]);
+				let dropDownData=[];
+				for (var k = 0; k < keys.length; k++) {
+						let obj={};
+						obj["key"]=keys[k];
+						obj["value"]=values[k];
+						dropDownData.push(obj);
+				}
+
+				setDropDownData(item.jsonPath, dropDownData);
+			},function(err) {
+				console.log(err);
+			});
+		}
+	}
+
 	renderMultiSelect = (item) => {
-		let {dropDownData}=this.state;
+		let {dropDownData}=this.props;
 		switch (this.props.ui) {
 			case 'google':
 				return (
 					<SelectField
 						fullWidth={true}
-						multi={true}
+						multiple={true}
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						value={eval(item.jsonpath)}
+						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
-						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
+						onChange={(ev, key, val) => {
+							this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
+						}
+						errorText={this.props.fieldErrors[item.jsonPath]}
 						maxHeight={200}>
-				            {dropDownData.map((dd, index) => (
+				            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
 				                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
 				            ))}
 		            </SelectField>
@@ -40,3 +75,13 @@ export default class UiMultiSelectField extends Component {
 	    );
 	}
 }
+
+const mapStateToProps = state => ({dropDownData: state.framework.dropDownData});
+
+const mapDispatchToProps = dispatch => ({
+  setDropDownData:(fieldName,dropDownData)=>{
+    dispatch({type:"SET_DROPDWON_DATA", fieldName, dropDownData})
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UiMultiSelectField);

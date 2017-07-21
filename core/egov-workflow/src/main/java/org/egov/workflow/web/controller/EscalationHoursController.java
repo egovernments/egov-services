@@ -1,18 +1,10 @@
 package org.egov.workflow.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.workflow.domain.model.EscalationHoursSearchCriteria;
 import org.egov.workflow.domain.model.EscalationTimeType;
 import org.egov.workflow.domain.service.EscalationService;
 import org.egov.workflow.util.PgrMasterConstants;
-import org.egov.workflow.web.contract.EscalationHoursRequest;
-import org.egov.workflow.web.contract.EscalationHoursResponse;
 import org.egov.workflow.web.contract.EscalationTimeTypeGetReq;
 import org.egov.workflow.web.contract.EscalationTimeTypeReq;
 import org.egov.workflow.web.contract.EscalationTimeTypeRes;
@@ -28,14 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/escalation-hours")
@@ -59,20 +48,6 @@ public class EscalationHoursController {
         this.escalationService = escalationService;
     }
 
-    @PostMapping("/disabledAPI/_search")
-    public EscalationHoursResponse getEscalationDate(@RequestParam(value="tenantId",required=true) String tenantId,
-                                                     @RequestParam("designationId") Long designationId,
-                                                     @RequestParam("complaintTypeId") Long complaintTypeId,
-                                                     @RequestBody EscalationHoursRequest escalationHoursRequest) {
-        final EscalationHoursSearchCriteria searchCriteria = EscalationHoursSearchCriteria.builder()
-            .tenantId(tenantId)
-            .designationId(designationId)
-            .complaintTypeId(complaintTypeId)
-            .build();
-        final int escalationHours = escalationService.getEscalationHours(searchCriteria);
-        return new EscalationHoursResponse(null, escalationHours,tenantId);
-    }
-    
 	@PostMapping(value = "/v1/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,

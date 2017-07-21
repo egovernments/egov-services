@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.calculator.repository.builder.TaxRatesBuilder;
-import org.egov.calculator.util.TimeStampUtil;
+import org.egov.calculator.utility.TimeStampUtil;
 import org.egov.models.AuditDetails;
 import org.egov.models.TaxRates;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,10 +122,11 @@ public class TaxRatesRepository {
 	public List<TaxRates> searchTaxRates(String tenantId, String taxHead, String validDate, Double validARVAmount,
 			String parentTaxHead) {
 
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String taxRatesSelect = TaxRatesBuilder.getTaxRatesSearchQuery(tenantId, taxHead, validDate, validARVAmount,
-				parentTaxHead);
+				parentTaxHead, preparedStatementValues);
 		List<TaxRates> listOfTaxRates = new ArrayList();
-		listOfTaxRates = geTaxRates(taxRatesSelect);
+		listOfTaxRates = geTaxRates(taxRatesSelect, preparedStatementValues);
 
 		return listOfTaxRates;
 	}
@@ -138,11 +139,11 @@ public class TaxRatesRepository {
 	 * @return {@link TaxRates} List of TaxRates
 	 */
 	@SuppressWarnings("rawtypes")
-	public List<TaxRates> geTaxRates(String query) {
+	public List<TaxRates> geTaxRates(String query, List<Object> preparedStatementValues) {
 
 		List<TaxRates> taxRates = new ArrayList<>();
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
 
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 		for (Map row : rows) {
 			TaxRates taxRate = new TaxRates();
 			taxRate.setId(getLong(row.get("id")));
@@ -170,9 +171,12 @@ public class TaxRatesRepository {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<TaxRates> searchTaxRatesByTenantAndDate(String tenantId, String validDate) {
-		String taxRatesSelect = TaxRatesBuilder.getTaxRatesByTenantAndDate(tenantId, validDate);
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String taxRatesSelect = TaxRatesBuilder.getTaxRatesByTenantAndDate(tenantId, validDate,
+				preparedStatementValues);
 		List<TaxRates> listOfTaxRates = new ArrayList();
-		listOfTaxRates = jdbcTemplate.query(taxRatesSelect, new BeanPropertyRowMapper(TaxRates.class));
+		listOfTaxRates = jdbcTemplate.query(taxRatesSelect, preparedStatementValues.toArray(),
+				new BeanPropertyRowMapper(TaxRates.class));
 
 		return listOfTaxRates;
 	}

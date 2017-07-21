@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 
 export default class UiCheckBox extends Component {
 	constructor(props) {
@@ -10,14 +10,12 @@ export default class UiCheckBox extends Component {
 		switch (this.props.ui) {
 			case 'google': 
 				return (
-					<TextField 
-						fullWidth={true} 
-						type="checkbox"
-						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
-						value={eval(item.jsonpath)}
+					<Checkbox 
+						label={item.label + (item.isRequired ? " *" : "")} 
+						checked={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
-						errorText={this.props.fieldErrors[eval(item.jsonpath)]}
-						onChange={(e) => this.props.handler(e, eval(item.jsonpath), item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
+						errorText={this.props.fieldErrors[item.jsonPath]}
+						onCheck={(e) => this.props.handler({target: {value: e.target.checked}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

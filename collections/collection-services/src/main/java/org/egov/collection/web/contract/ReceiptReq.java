@@ -3,6 +3,8 @@ package org.egov.collection.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -32,7 +34,7 @@ public class ReceiptReq   {
   
   @NotNull
   @JsonProperty("Receipt")
-  private Receipt receipt = null;
+  private List<Receipt> receipt = null;
 
 
 }

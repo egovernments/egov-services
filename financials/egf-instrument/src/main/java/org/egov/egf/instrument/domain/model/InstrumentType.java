@@ -39,12 +39,16 @@
  */
 package org.egov.egf.instrument.domain.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -54,8 +58,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "instrumentAccountCodes" }, callSuper = false)
-public class InstrumentType {
+public class InstrumentType extends Auditable {
 
 	/*
 	 * id is the unique reference to instrument type entered in the system.
@@ -64,18 +67,33 @@ public class InstrumentType {
 
 	/*
 	 * type specifies the mode/type of transaction that can be made - i.e
-	 * Cheque/DD/RTGS. For receipt - Cheque/DD/RTGS
+	 * Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
 	 */
-	private String type;
+	@NotNull
+	@NotBlank
+	@Size(max=50,min=2)
+	private String name;
+	
+	/*
+	 * description specifies details of the instrument type . For example 
+	 * type DD description may be Demand Draft
+	 */
+	
+	@Size(max=100)
+	private String description;
 
 	/*
 	 * active specifies whether the type is active for transacting.
 	 */
+	@NotNull
 	private Boolean active;
+	
+	
+	@NotNull
+	@Size(max=2,min=2)
+	//@DrillDownTable
+	private List<InstrumentTypeProperty> instrumentTypeProperties;
 
-	/*
-	 * instrumentAccountCodes is the COAs that can be tagged to a given type.
-	 */
-	private Set instrumentAccountCodes = new HashSet<InstrumentAccountCodes>();
+	
 
 }

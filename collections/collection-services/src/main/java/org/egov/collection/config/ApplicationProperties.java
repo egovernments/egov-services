@@ -55,6 +55,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.workflow.update.key}")
     private String kafkaUpdateworkflowTopicKey;
     
+    @Value("${kafka.topics.stateId.update.name}")
+    private String kafkaUpdateStateIdTopic;
+    
+    @Value("${kafka.topics.stateId.update.key}")
+    private String kafkaUpdateStateIdTopicKey;
+    
     @Value("${BD_SEARCH_URI}")
     private String businessDetailsSearch;
     
@@ -73,10 +79,10 @@ public class ApplicationProperties {
     @Value("${GET_POSITION_URI_APPEND}")
     private String getPositionUriAppend;
     
-    
-    
-    
-    
-    
+    @Value("${egov.services.billing_service.hostname}")
+    private String billingServiceHostName;
 
+    @Value("${egov.services.billing_service.apportion}")
+    private String billingServiceApportion;
+    
 }

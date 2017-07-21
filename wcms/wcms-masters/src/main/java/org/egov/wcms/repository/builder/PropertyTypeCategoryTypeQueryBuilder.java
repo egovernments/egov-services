@@ -56,8 +56,10 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT id, propertytypeid, categorytypeid, active, tenantId"
-            + " FROM egwtr_property_category_type";
+    private static final String BASE_QUERY = "SELECT propcategory.id AS propcategory_id ,category.name as categoryName, propcategory.categorytypeid as categoryTypeId, propcategory.propertytypeid as propertyTypeId,"
+            + "propcategory.active as propcategory_active,"
+            + " propcategory.tenantid as propcategory_tenantId from egwtr_property_category_type  propcategory"
+            + " LEFT JOIN egwtr_category category ON propcategory.categorytypeid = category.id";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final PropertyCategoryGetRequest propertyCategoryGetRequest,
@@ -76,9 +78,9 @@ public class PropertyTypeCategoryTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final PropertyCategoryGetRequest propertyCategoryGetRequest) {
 
-        if (propertyCategoryGetRequest.getId() == null && propertyCategoryGetRequest.getPropertyType() == null
+        if (propertyCategoryGetRequest.getId() == null && propertyCategoryGetRequest.getPropertyTypeName() == null
                 && propertyCategoryGetRequest.getActive() == null && propertyCategoryGetRequest.getTenantId() == null
-                && propertyCategoryGetRequest.getCategoryType() == null)
+                && propertyCategoryGetRequest.getCategoryTypeName() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -86,30 +88,30 @@ public class PropertyTypeCategoryTypeQueryBuilder {
 
         if (propertyCategoryGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
-            selectQuery.append(" tenantId = ?");
+            selectQuery.append(" propcategory.tenantid = ?");
             preparedStatementValues.add(propertyCategoryGetRequest.getTenantId());
         }
 
         if (propertyCategoryGetRequest.getId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" id IN " + getIdQuery(propertyCategoryGetRequest.getId()));
+            selectQuery.append(" propcategory.id IN " + getIdQuery(propertyCategoryGetRequest.getId()));
         }
 
-        if (propertyCategoryGetRequest.getPropertyType() != null) {
+        if (propertyCategoryGetRequest.getPropertyTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" propertytypeid = ?");
+            selectQuery.append(" propcategory.propertytypeid = ?");
             preparedStatementValues.add(propertyCategoryGetRequest.getPropertyTypeId());
         }
 
-        if (propertyCategoryGetRequest.getCategoryType() != null) {
+        if (propertyCategoryGetRequest.getCategoryTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" categorytypeid = ?");
-            preparedStatementValues.add(propertyCategoryGetRequest.getCategoryTypeId());
+            selectQuery.append(" category.name = ?");
+            preparedStatementValues.add(propertyCategoryGetRequest.getCategoryTypeName());
         }
 
         if (propertyCategoryGetRequest.getActive() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" active = ?");
+            selectQuery.append(" propcategory.active = ?");
             preparedStatementValues.add(propertyCategoryGetRequest.getActive());
         }
     }

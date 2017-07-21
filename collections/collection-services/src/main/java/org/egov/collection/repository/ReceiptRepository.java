@@ -57,7 +57,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
@@ -66,9 +65,12 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
+import org.egov.collection.repository.rowmapper.UserRowMapper;
+import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +102,9 @@ public class ReceiptRepository {
 	private ReceiptRowMapper receiptRowMapper;
 
 	@Autowired
+	private UserRowMapper userRowMapper;
+
+	@Autowired
 	private RestTemplate restTemplate;
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -118,18 +123,6 @@ public class ReceiptRepository {
 	}
 
 	public Receipt pushToQueue(ReceiptReq receiptReq) {
-		Receipt receiptInfo = receiptReq.getReceipt();
-		AuditDetails auditDetails = new AuditDetails();
-
-		// TODO: Trigger Apportioning logic from billingservice if the
-		// amountPaid is less than the totalAmount
-
-		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setCreatedDate(new Date(new java.util.Date().getTime()));
-		auditDetails.setLastModifiedDate(new Date(new java.util.Date().getTime()));
-		receiptInfo.setAuditDetails(auditDetails);
-
 		try {
 			collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(),
 					applicationProperties.getCreateReceiptTopicKey(), receiptReq);
@@ -138,7 +131,7 @@ public class ReceiptRepository {
 			logger.error("Pushing to Queue FAILED! ", e.getMessage());
 			return null;
 		}
-		return receiptInfo;
+		return receiptReq.getReceipt().get(0);
 	}
 
 	public long persistToReceiptHeader(Map<String, Object> parametersMap, Receipt receiptInfo) {
@@ -154,9 +147,9 @@ public class ReceiptRepository {
 
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
 		try {
-			id = jdbcTemplate.queryForObject(
-					receiptHeaderIdQuery, new Object[] { receiptInfo.getBill().getPayeeName(),
-							receiptInfo.getBill().getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
+			id = jdbcTemplate.queryForObject(receiptHeaderIdQuery,
+					new Object[] { receiptInfo.getBill().get(0).getPayeeName(),
+							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class);
 		} catch (Exception e) {
 			logger.error("Couldn't fetch receiptheader entry id ", e.getCause());
@@ -181,12 +174,10 @@ public class ReceiptRepository {
 	}
 
 	public ReceiptCommonModel findAllReceiptsByCriteria(ReceiptSearchCriteria receiptSearchCriteria) {
-
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String queryString = receiptDetailQueryBuilder.getQuery(receiptSearchCriteria, preparedStatementValues);
 		List<ReceiptHeader> listOfHeadersFromDB = jdbcTemplate.query(queryString, preparedStatementValues.toArray(),
 				receiptRowMapper);
-
 		Set<ReceiptDetail> receiptDetails = new LinkedHashSet<>(0);
 		for (ReceiptHeader header : listOfHeadersFromDB) {
 			receiptDetails.add((ReceiptDetail) header.getReceiptDetails().toArray()[0]);
@@ -208,7 +199,16 @@ public class ReceiptRepository {
 	}
 
 	public ReceiptReq cancelReceipt(ReceiptReq receiptReq) {
-		List<BillDetail> details = receiptReq.getReceipt().getBill().getBillDetails();
+		List<Receipt> receiptInfo = receiptReq.getReceipt();
+		List<Bill> billInfo = new ArrayList<>();
+		for (Receipt receipt : receiptInfo) {
+			billInfo.addAll(receipt.getBill());
+		}
+		List<BillDetail> details = new ArrayList<>();
+		for (Bill bill : billInfo) {
+			details.addAll(bill.getBillDetails());
+		}
+
 		List<Object[]> batchArgs = new ArrayList<>();
 		for (BillDetail detail : details) {
 			Object[] obj = { detail.getStatus(), detail.getReasonForCancellation(), detail.getCancellationRemarks(),
@@ -220,10 +220,17 @@ public class ReceiptRepository {
 		return receiptReq;
 	}
 
-	public Receipt pushReceiptCancelDetailsToQueue(ReceiptReq receiptReq) {
-		Receipt receiptInfo = receiptReq.getReceipt();
+	public List<Receipt> pushReceiptCancelDetailsToQueue(ReceiptReq receiptReq) {
+		List<Receipt> receiptInfo = receiptReq.getReceipt();
+		List<Bill> billInfo = new ArrayList<>();
+		for (Receipt receipt : receiptInfo) {
+			billInfo.addAll(receipt.getBill());
+		}
+		List<BillDetail> details = new ArrayList<>();
+		for (Bill bill : billInfo) {
+			details.addAll(bill.getBillDetails());
+		}
 
-		List<BillDetail> details = receiptReq.getReceipt().getBill().getBillDetails();
 		for (BillDetail detail : details) {
 			detail.setStatus(ReceiptStatus.CANCELLED.toString());
 		}
@@ -237,6 +244,33 @@ public class ReceiptRepository {
 		}
 		return receiptInfo;
 
+	}
+
+	public long getStateId(String receiptNumber) {
+		logger.info("Updating stateId..");
+		long stateId = 0L;
+		String query = "SELECT stateid FROM egcl_receiptheader WHERE receiptnumber=?";
+		try {
+			Long id = jdbcTemplate.queryForObject(query, new Object[] { receiptNumber }, Long.class);
+			stateId = Long.valueOf(id);
+		} catch (Exception e) {
+			logger.error("Couldn't fetch stateId for the receipt: " + receiptNumber);
+			return stateId;
+		}
+		logger.info("StateId obtained for receipt: " + receiptNumber + " is: " + stateId);
+		return stateId;
+	}
+
+	public List<User> getReceiptCreators() {
+		String queryString = receiptDetailQueryBuilder.searchQuery();
+		List<User> receiptCreators = jdbcTemplate.query(queryString, userRowMapper);
+		return receiptCreators;
+	}
+
+	public List<String> getReceiptStatus() {
+		String queryString = receiptDetailQueryBuilder.searchStatusQuery();
+		List<String> statusList = jdbcTemplate.queryForList(queryString, String.class);
+		return statusList;
 	}
 
 }

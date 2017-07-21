@@ -80,6 +80,9 @@ of messages sent to Kafka.
 forward as necessary. 
  
 #### Change log -
+1.1.0
+- Correlation id filter enriches RequestInfo with the newly generated correlation id.
+
 1.0.2
 - Fixed JSON content type check in LogAwareRestTemplate
 

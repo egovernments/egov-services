@@ -48,15 +48,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PropertyCategoryRowMapper implements RowMapper<PropertyTypeCategoryType> {
-	@Override
-	public PropertyTypeCategoryType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+    @Override
+    public PropertyTypeCategoryType mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-		final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
-		propertyCategory.setId(rs.getLong("id"));
-		propertyCategory.setPropertyTypeId(rs.getString("propertytypeid"));
-		propertyCategory.setCategoryTypeId(rs.getLong("categorytypeid"));
-		propertyCategory.setActive(rs.getBoolean("active"));
-		propertyCategory.setTenantId(rs.getString("tenantId"));
-		return propertyCategory;
-	}
+        final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
+        propertyCategory.setId(rs.getLong("propcategory_id"));
+        propertyCategory.setPropertyTypeId(rs.getString("propertyTypeId"));
+        propertyCategory.setCategoryTypeId(rs.getLong("categoryTypeId"));
+        propertyCategory.setActive(rs.getBoolean("propcategory_active"));
+        propertyCategory.setTenantId(rs.getString("propcategory_tenantId"));
+        propertyCategory.setCategoryTypeName(rs.getString("categoryName"));
+        return propertyCategory;
+    }
 }

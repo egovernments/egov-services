@@ -45,11 +45,13 @@ import java.util.List;
 
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.builder.DonationQueryBuilder;
-import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
-import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
+import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
+import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
+import org.egov.wcms.web.contract.PropertyTypeResponse;
+import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -69,6 +71,9 @@ public class DonationRepository {
 
     @Autowired
     private DonationQueryBuilder donationQueryBuilder;
+
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
     public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
         log.info("Donation Request::" + donationRequest);
@@ -165,51 +170,75 @@ public class DonationRepository {
         return donationRequest;
     }
 
-    public List<Donation> findForCriteria(final DonationGetRequest donation) {
+    public List<Donation> findForCriteria(final DonationGetRequest donationRequest) {
 
         final List<Object> preparedStatementValues = new ArrayList<>();
+        final List<Integer> propertyTypeIdsList = new ArrayList<>();
+        final List<Integer> usageTypeIdsList = new ArrayList<>();
         try {
-            if (donation.getCategoryType() != null)
-                donation.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
-                        new Object[] { donation.getCategoryType(),donation.getTenantId() }, Long.class));
+            if (donationRequest.getCategoryType() != null)
+                donationRequest.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
+                        new Object[] { donationRequest.getCategoryType(), donationRequest.getTenantId() }, Long.class));
         } catch (final EmptyResultDataAccessException e) {
             log.info("EmptyResultDataAccessException: Query returned empty set for category type.");
         }
 
-            try {
-                if (donation.getMaxPipeSize() != null)
-                    donation.setMaxPipeSizeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getPipeSizeIdQuery(),
-                                    new Object[] { donation.getMaxPipeSize(),
-                                            donation.getTenantId() },
-                                    Long.class));
-            } catch (final EmptyResultDataAccessException e) {
-                log.error("EmptyResultDataAccessException: Query returned empty RS.");
+        try {
+            if (donationRequest.getMaxPipeSize() != null)
+                donationRequest.setMaxPipeSizeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getPipeSizeIdQuery(),
+                        new Object[] { donationRequest.getMaxPipeSize(),
+                                donationRequest.getTenantId() },
+                        Long.class));
+        } catch (final EmptyResultDataAccessException e) {
+            log.error("EmptyResultDataAccessException: Query returned empty RS.");
 
-            }
-            try {
-                if (donation.getMinPipeSize() != null)
-                    donation.setMinPipeSizeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getPipeSizeIdQuery(),
-                                    new Object[] { donation.getMinPipeSize(),
-                                            donation.getTenantId() },
-                                    Long.class));
-            } catch (final EmptyResultDataAccessException e) {
-                log.error("EmptyResultDataAccessException: Query returned empty RS.");
+        }
+        try {
+            if (donationRequest.getMinPipeSize() != null)
+                donationRequest.setMinPipeSizeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getPipeSizeIdQuery(),
+                        new Object[] { donationRequest.getMinPipeSize(),
+                                donationRequest.getTenantId() },
+                        Long.class));
+        } catch (final EmptyResultDataAccessException e) {
+            log.error("EmptyResultDataAccessException: Query returned empty RS.");
 
-            }
+        }
 
-        final String queryStr = donationQueryBuilder.getQuery(donation, preparedStatementValues);
+        final String queryStr = donationQueryBuilder.getQuery(donationRequest, preparedStatementValues);
         final String categoryNameQuery = DonationQueryBuilder.getCategoryTypeName();
         final String pipeSizeInmmQuery = DonationQueryBuilder.getPipeSizeInmm();
         final List<Donation> donationList = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 donationRowMapper);
         for (final Donation donations : donationList) {
             donations.setCategory(jdbcTemplate.queryForObject(categoryNameQuery,
-                    new Object[] { donations.getCategoryTypeId(),donations.getTenantId() }, String.class));
+                    new Object[] { donations.getCategoryTypeId(), donations.getTenantId() }, String.class));
             donations.setMaxPipeSize(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
-                    new Object[] { donations.getMaxPipeSizeId(),donations.getTenantId() }, Double.class));
+                    new Object[] { donations.getMaxPipeSizeId(), donations.getTenantId() }, Double.class));
             donations.setMinPipeSize(jdbcTemplate.queryForObject(pipeSizeInmmQuery,
-                    new Object[] { donations.getMinPipeSizeId(),donations.getTenantId() }, Double.class));
+                    new Object[] { donations.getMinPipeSizeId(), donations.getTenantId() }, Double.class));
         }
+
+        // fetch property type Id and set the property type name here
+        for (final Donation donationObj : donationList)
+            propertyTypeIdsList.add(Integer.valueOf(donationObj.getPropertyTypeId()));
+        final Integer[] propertypeIds = propertyTypeIdsList.toArray(new Integer[propertyTypeIdsList.size()]);
+        final PropertyTypeResponse propertyTypes = restExternalMasterService.getPropertyNameFromPTModule(
+                propertypeIds, donationRequest.getTenantId());
+        for (final Donation donation : donationList)
+            for (final PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes())
+                if (propertyResponse.getId().equals(donation.getPropertyTypeId()))
+                    donation.setPropertyType(propertyResponse.getName());
+
+        // fetch usage type Id and set the usage type name here
+        for (final Donation donation : donationList)
+            usageTypeIdsList.add(Integer.valueOf(donation.getUsageTypeId()));
+        final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
+        final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
+                usageTypeIds, donationRequest.getTenantId());
+        for (final Donation donation : donationList)
+            for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
+                if (propertyResponse.getId().equals(donation.getUsageTypeId()))
+                    donation.setUsageType(propertyResponse.getName());
         return donationList;
 
     }

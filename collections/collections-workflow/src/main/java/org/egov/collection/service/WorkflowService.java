@@ -40,9 +40,11 @@
 
 package org.egov.collection.service;
 
+import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.Task;
 import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.producer.WorkflowProducer;
 import org.egov.collection.repository.WorkflowRepository;
 import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
@@ -61,6 +63,12 @@ public class WorkflowService {
 	
 	@Autowired
 	private WorkflowRepository workflowRepository;
+	
+	@Autowired
+	private WorkflowProducer workflowProducer;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 			
 	
 	public ProcessInstance startWorkflow(WorkflowDetails workflowDetails){
@@ -76,7 +84,9 @@ public class WorkflowService {
 
 		}
 		logger.info("Proccess Instance Id received is: "+processInstanceResponse.getProcessInstance().getId());
-		workflowRepository.updateStateId(workflowDetails.getReceiptNumber(), processInstanceResponse.getProcessInstance().getId());
+		workflowDetails.setStateId(Long.valueOf(processInstanceResponse.getProcessInstance().getId()));
+		workflowDetails.setStatus(processInstanceResponse.getProcessInstance().getStatus());
+	    pushToQueue(workflowDetails);
 		return processInstanceResponse.getProcessInstance();
 	}
 	
@@ -93,9 +103,27 @@ public class WorkflowService {
 
 		}
 		logger.info("Task Id received is: "+taskResponse.getTask().getId());
-		workflowRepository.updateStateId(workflowDetails.getReceiptNumber(), taskResponse.getTask().getId());
+		workflowDetails.setStateId(Long.valueOf(taskResponse.getTask().getId()));
+		workflowDetails.setStatus(taskResponse.getTask().getStatus());
+		pushToQueue(workflowDetails);
 		return taskResponse.getTask();
 	}
+	
+	public WorkflowDetails pushToQueue(WorkflowDetails workflowDetails) {
+		logger.info("Pushing recieptdetail to kafka queue");
+	
+		try {
+			workflowProducer.producer(applicationProperties.getKafkaUpdateStateIdTopic(),
+					applicationProperties.getKafkaUpdateStateIdTopicKey(), workflowDetails);
+
+		} catch (Exception e) {
+			logger.error("Pushing to Queue FAILED! ", e.getMessage());
+			return null;
+		}
+
+		return workflowDetails;
+	}
+
 	
 	
 }

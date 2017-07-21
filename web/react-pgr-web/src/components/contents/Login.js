@@ -200,12 +200,12 @@ class Login extends Component {
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
-		
-		
-   Api.commonApiPost("access/v1/actions/_list",{},{tenantId:"default",roleCodes}).then(function(response){		        
-				
+
+
+   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes}).then(function(response){
+
 				//console.log(response)
-		  localStorage.setItem("modules", JSON.stringify(response.modules));
+		  localStorage.setItem("actions", JSON.stringify(response.actions));
 			setActionList(response.modules)
         },function(err) {
             console.log(err);
@@ -442,12 +442,10 @@ class Login extends Component {
       }
    }
    openAnonymousComplaint = () => {
-     let {history, setHome} = this.props;
-     history.push('/pgr/createGrievance');
+     let {setRoute, setHome} = this.props;
+     setRoute('/pgr/createGrievance');
      setHome(true);
-
    }
-
    render() {
       //console.log("IN LOGIN");
       let {
@@ -566,7 +564,7 @@ class Login extends Component {
               </Row>
               <Row style={styles.marginTop}>
                   <Col xs={12} md={6} mdPush={6} style={styles.marginBottom}>
-					<form autoComplete="on" onSubmit={(e) => {
+					<form autoComplete="off" onSubmit={(e) => {
 					loginRequest(e)}}>
                     <Card>
                       <CardText>
@@ -757,7 +755,7 @@ class Login extends Component {
                   onTouchTap={(e)=>{!optSent ? generateSignUpOTP() : signUp()}}
                 />
               ]}
-              modal={false}
+              modal={true}
               open={open3}
               onRequestClose={(e) => {handleClose("open3")}}
               contentStyle={{"width": "500"}}

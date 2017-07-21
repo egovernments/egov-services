@@ -120,7 +120,7 @@ public class CommonConnectionController {
         EnumData model4 = new EnumData();
         EnumData model5 = new EnumData();
         
-        model1.setKey("## Ack Number Generated : " + restConnectionService.generateAcknowledgementNumber("default"));
+        model1.setKey("## Ack Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default",configurationManager.getIdGenNameServiceTopic(),configurationManager.getIdGenFormatServiceTopic()));
         model2.setKey("## HSC Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getHscGenNameServiceTopic(), configurationManager.getHscGenFormatServiceTopic()));
         model3.setKey("## Demand Bill Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getDemandBillGenNameServiceTopic(), configurationManager.getDemandBillGenFormatServiceTopic()));
         model4.setKey("## Work Order Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getWorkOrderGenNameServiceTopic(), configurationManager.getWorkOrderGenFormatServiceTopic()));

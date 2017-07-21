@@ -11,6 +11,8 @@ import java.util.Map;
 
 import org.egov.models.Address;
 import org.egov.models.AuditDetails;
+import org.egov.models.Demand;
+import org.egov.models.DemandId;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
 import org.egov.models.Floor;
@@ -47,6 +49,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 /**
  * 
@@ -77,10 +80,6 @@ public class PropertyRepository {
 	public Integer saveProperty(Property property) throws Exception {
 		Long createdTime = new Date().getTime();
 
-		ObjectMapper obj = new ObjectMapper();
-
-		String demands = obj.writeValueAsString(property.getDemands());
-
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -102,12 +101,19 @@ public class PropertyRepository {
 				ps.setString(13, property.getAuditDetails().getLastModifiedBy());
 				ps.setLong(14, getLong(createdTime));
 				ps.setLong(15, getLong(createdTime));
+				List<DemandId> demandIdList = new ArrayList<DemandId>();
 
+				for (Demand demand : property.getDemands()) {
+					DemandId id = new DemandId();
+					id.setId(demand.getId());
+					demandIdList.add(id);
+				}
+
+				Gson gson = new Gson();
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
-				jsonObject.setValue(demands);
-
-				ps.setObject(16, property.getDemands());
+				jsonObject.setValue(gson.toJson(demandIdList));
+				ps.setObject(16, jsonObject);
 				return ps;
 			}
 		};

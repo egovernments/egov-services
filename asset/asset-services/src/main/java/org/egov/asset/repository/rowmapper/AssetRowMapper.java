@@ -157,7 +157,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				assetCategory.setName(rs.getString("assetCategoryName"));
 				assetCategory.setCode(rs.getString("assetcategorycode"));
 				assetCategory.setParent((Long) rs.getObject("parentId"));
-				assetCategory.setDepreciationRate(rs.getDouble("depriciationRate"));
+				assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
 				assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
 				assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
 				assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));

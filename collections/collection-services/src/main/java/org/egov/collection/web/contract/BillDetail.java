@@ -99,7 +99,7 @@ public class BillDetail {
 
 	private Long receiptDate;
 
-	private ReceiptType receiptType;
+	private String receiptType;
 
 	private String channel;
 

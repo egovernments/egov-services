@@ -261,7 +261,7 @@ public class ReceiptService {
 						.getPaidBy());
 				parametersMap.put("referencenumber",
 						billdetails.getBillNumber());
-				parametersMap.put("receipttype", billdetails.getReceiptType().toString());
+				parametersMap.put("receipttype", businessDetails.getBusinessType());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("receiptnumber",
 						billdetails.getReceiptNumber());

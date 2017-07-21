@@ -206,7 +206,7 @@ class Login extends Component {
 
 				//console.log(response)
 		  localStorage.setItem("actions", JSON.stringify(response.actions));
-			setActionList(response.modules)
+			setActionList(response.actions)
         },function(err) {
             console.log(err);
         });

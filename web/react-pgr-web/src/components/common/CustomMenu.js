@@ -12,7 +12,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-
+import jp from "jsonpath";
+import _ from "lodash";
 
 // import {brown500} from 'material-ui/styles/colors';
 // import { stack as Menu } from 'react-burger-menu'
@@ -39,7 +40,8 @@ class CustomMenu extends Component {
       parentLevel:0,
       modules:[],
       items:[],
-      path:""
+      path:"",
+      menuItems:[]
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -49,8 +51,44 @@ class CustomMenu extends Component {
     this.wrapperRef = node;
   }
 
+  componentWillReceivePropsMount()
+  {
+    this.resetMenu();
+  }
+
   componentDidMount() {
+
     document.addEventListener('mousedown', this.handleClickOutside);
+    // console.log(actionList);
+    // duplicteMenuItems=jp.query(actionList,'$...path');
+    // console.log(duplicteMenuItems);
+
+    this.resetMenu();
+
+  }
+
+  resetMenu=()=>{
+    let {actionList}=this.props;
+    let menuItems=[];
+    for (var i = 0; i < actionList.length; i++) {
+      if (actionList[i].path!="") {
+        let splitArray=actionList[i].path.split(".");
+        if (splitArray.length>1) {
+            if (!_.some(menuItems,{ 'name':splitArray[0]} )) {
+              menuItems.push({path:"",name:splitArray[0],url:""});
+            }
+        } else{
+          menuItems.push({path:"",name:actionList.displayName,url:actionList.url});
+        }
+      }
+    }
+
+
+    // console.log(menuItems);
+    this.setState({
+      menuItems,
+      path:""
+    })
   }
 
   handleClickOutside(event) {
@@ -61,20 +99,7 @@ class CustomMenu extends Component {
 
   componentDidUpdate()
   {
-    let {menuItems,actionList}=this.props;
-    console.log(actionList);
-    // this.setState({
-    //   modules:actionList
-    // })
 
-    // this.menuLeaves(menuItems.length>0?menuItems[0].items:[]);
-    // console.log(menuItems);
-    // this.setState({
-    //   menu:[...this.state.menu,
-    //       this.menuLeaves(menuItems.length>0?menuItems[0].items:[])]
-    // });
-    // console.log(this.state.menu);
-    // console.log(leaves);
   }
 
   // menuLeaves=(items)=>{
@@ -121,18 +146,53 @@ class CustomMenu extends Component {
     });
   }
 
-  changeLevel=(level)=>{
+  menuChangeTwo=(path) => {
+    // let tempPath=path;
+    let {actionList}=this.props;
+    let menuItems=[];
+    for (var i = 0; i < actionList.length; i++) {
+      if (actionList[i].path!="" && actionList[i].path.search(path)>-1) {
+        let splitArray=actionList[i].path.split(path)[1].split(".");
+        if (splitArray.length>2) {
+            if (!_.some(menuItems,{ 'name':splitArray[1]} )) {
+              menuItems.push({path:path+"."+splitArray[1],name:splitArray[1],url:""});
+            }
+            // tempPath=path+"."+splitArray[1];
+        } else{
+          menuItems.push({path:path+"."+splitArray[1],name:actionList[i].displayName,url:actionList[i].url});
+        }
+      }
+    }
+
+
+    // console.log(menuItems);
+    this.setState({
+      menuItems,
+      path
+    })
+  }
+
+  changeLevel=(path)=>{
     let {searchText}=this.state;
     let {setRoute}=this.props;
-    this.setState({
-      level,
-      parentLevel:level-1,
-      searchText:!level?"":searchText
-    })
 
-    if (!level) {
-      console.log("level 0");
+
+
+
+    if (!path) {
+      this.resetMenu();
+      // console.log("level 0");
       setRoute("/dashboard");
+    }
+    else {
+      let splitArray=_.split(path, '.');
+      var x = splitArray.slice(0, splitArray.length - 1).join(".") ;
+      if (x!="" && splitArray.length>1) {
+            this.menuChangeTwo(x);
+      } else {
+            this.resetMenu();
+      }
+
     }
   }
 
@@ -141,9 +201,9 @@ class CustomMenu extends Component {
 
   render() {
     // console.log(this.state.searchText);
-    let {menuItems, handleToggle,actionList}=this.props;
-    let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions,path}=this.state;
-    let {menuChange,changeLevel}=this;
+    let {handleToggle,actionList}=this.props;
+    let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions,path,menuItems}=this.state;
+    let {menuChange,changeLevel,menuChangeTwo}=this;
     // console.log(actionList);
     // console.log(menuItems.length>0?menuItems[0].title:"");
     // const constructMenu=(items)=>{
@@ -265,22 +325,30 @@ class CustomMenu extends Component {
       if(searchText.length==0)
       {
 
-        return actionList.map((item,index)=>{
-            if (!path && item.path) {
-              let splitArray=item.path.split(".");
+        return menuItems.map((item,index)=>{
+            if (!item.url) {
               return (
                         <MenuItem
-
+                             style={{whiteSpace: "initial"}}
                              key={index}
                              leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.displayName}
+                             primaryText={item.name}
                              rightIcon={<i className="material-icons">keyboard_arrow_right</i>}
-
+                             onTouchTap={()=>{menuChangeTwo(!item.path?item.name:item.path)}}
                           />
                       )
 
-            } else {
-
+            }
+            else {
+              return (
+                        <MenuItem
+                             style={{whiteSpace: "initial"}}
+                             key={index}
+                             leftIcon={<i className="material-icons">view_module</i>}
+                             primaryText={item.name}
+                             onTouchTap={()=>{menuChangeTwo(item.name)}}
+                          />
+                      )
             }
             // if (item.level==level) {
             //   if (item.url) {
@@ -326,15 +394,15 @@ class CustomMenu extends Component {
       }
       else {
 
-          return menuItems.map((item,index)=>{
-                if (item.url && item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+          return actionList.map((item,index)=>{
+                if (item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
                   return(
                     <Link   key={index} to={item.url} >
                       <MenuItem
                           style={{whiteSpace: "initial"}}
                            onTouchTap={()=>{handleToggle(false)}}
-                           leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-                           primaryText={item.name}
+                           leftIcon={<i className="material-icons">view_module</i>}
+                           primaryText={item.displayName}
                         />
                     </Link>
                   )
@@ -362,22 +430,22 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true}>
-        {(level>0 || searchText) && <RaisedButton
+        {(path|| searchText) && <RaisedButton
                                       primary={true}
                                       icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>home</i>}
                                       style={{...style, "marginLeft": "2px"}}
-                                      onTouchTap={()=>{;handleToggle(false); changeLevel(0)}}
+                                      onTouchTap={()=>{;handleToggle(false); changeLevel("")}}
                                     />}
-        { level>0 &&  <RaisedButton
+        { path &&  <RaisedButton
                         primary={true}
                         icon={<i className="material-icons" style={{"color": "#FFFFFF"}}>fast_rewind</i>}
                         style={{...style, "float": "right", "marginRight": "2px"}}
-                        onTouchTap={()=>{changeLevel(parentLevel)}}
+                        onTouchTap={()=>{changeLevel(path)}}
                       />}
 
-            {showMenu()}
+            {/*showMenu()*/}
 
-            {/*showMenuTwo()*/}
+            {showMenuTwo()}
 
           </Menu>
 

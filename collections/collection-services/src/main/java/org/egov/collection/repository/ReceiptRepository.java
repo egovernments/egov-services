@@ -272,5 +272,12 @@ public class ReceiptRepository {
 		List<String> statusList = jdbcTemplate.queryForList(queryString, String.class);
 		return statusList;
 	}
+	
+    public boolean persistIntoReceiptInstrument(Long instrumentId, Long receiptHeaderId){
+		logger.info("Persisting into receipt Instrument");
+    	boolean isInsertionSuccessful = false;
+    	
+    	return isInsertionSuccessful;
+    }
 
 }

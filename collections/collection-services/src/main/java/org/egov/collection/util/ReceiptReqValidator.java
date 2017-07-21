@@ -68,6 +68,7 @@ public class ReceiptReqValidator {
 		
 		for(BillDetail billDetails:  receipt.getBill().get(0).getBillDetails()){
 			List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();
+		
 		/*	if(null == billDetails.getReceiptType()){
 				final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RECEIPT_TYPE_MISSING_CODE)
 						.message(CollectionServiceConstants.RECEIPT_TYPE_MISSING_MESSAGE)

@@ -144,7 +144,14 @@ public class ReceiptService {
 		
 	//	return receiptRepository.pushToQueue(receiptReq); //async call
 		
-		return create(receiptReq);
+		 Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
+		 Receipt receipt = null;
+		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){
+			 return null;
+		 }else{
+			receipt = create(receiptReq);
+		 }
+		 return receipt;
 	}
 
 	private void setReceiptNumber(ReceiptReq receiptReq) {
@@ -312,7 +319,13 @@ public class ReceiptService {
 
 				receiptHeaderId = receiptRepository.persistToReceiptHeader(
 						parametersMap, receiptInfo);
-
+				if(receiptHeaderId == 0L){
+					break;
+				}
+				
+				receiptRepository.persistIntoReceiptInstrument(Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()), 
+						receiptHeaderId);
+				
 				Map<String, Object>[] parametersReceiptDetails = new Map[billdetails
 						.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;
@@ -530,6 +543,18 @@ public class ReceiptService {
 
     public List<String> getReceiptStatus() {
         return receiptRepository.getReceiptStatus();
+    }
+    
+    public Long getInstrumentId(Receipt receipt){
+    	Long instrumentId = null;
+    	
+    	try{
+    		//create instrument call.
+    	}catch(Exception e){
+    		logger.error("Couldn't create instrument in the instrument service.", e.getCause());
+    		return instrumentId;
+    	}
+    	return instrumentId;
     }
 
 }

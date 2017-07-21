@@ -52,7 +52,7 @@ public class TenantRepositoryTest {
     @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql","/sql/updateTenantData.sql"})
     public void test_should_retrieve_tenant() throws Exception {
         TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
-            .tenantCodes(TENANT_CODES)
+            .code(TENANT_CODES)
             .build();
 
         City guntoorCity = City.builder().id(1L).build();
@@ -71,7 +71,7 @@ public class TenantRepositoryTest {
     @Sql(scripts = {"/sql/clearCity.sql", "/sql/clearTenant.sql", "/sql/insertTenantData.sql","/sql/updateTenantData.sql"})
     public void test_should_return_all_tenants() throws Exception {
         TenantSearchCriteria tenantSearchCriteria = TenantSearchCriteria.builder()
-            .tenantCodes(null)
+            .code(null)
             .build();
         City kurnoolCity = City.builder().id(2L).build();
         City guntoorCity = City.builder().id(1L).build();

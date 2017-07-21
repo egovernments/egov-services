@@ -34,7 +34,7 @@ public class MarriageRegnQueryBuilderTest {
 	public void testEmptyQuery() {
 		Mockito.doReturn("3").when(applicationProperties).marriageRegnSearchPageSizeDefault();
 		MarriageRegnCriteria marriageRegnCriteria = MarriageRegnCriteria.builder().tenantId("1").build();
-		List<Object> preparedStatementValues = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList();
 
 		String queryString = marriageRegnQueryBuilder.getQueryForListOfMarriageRegnIds(marriageRegnCriteria, preparedStatementValues);
 		String expectedQueryString = "SELECT distinct mr.applicationnumber as mr_applicationnumber"
@@ -55,11 +55,11 @@ public class MarriageRegnQueryBuilderTest {
     @Test
 	public void testApplicationNoQuery() {
 		Mockito.doReturn("3").when(applicationProperties).marriageRegnSearchPageSizeDefault();
-		List<String> appNos = new ArrayList<>();
+		List<String> appNos = new ArrayList();
 		appNos.add("9");
 		appNos.add("10");
 		MarriageRegnCriteria marriageRegnCriteria = MarriageRegnCriteria.builder().tenantId("1").applicationNumber(appNos).build();
-		List<Object> preparedStatementValues = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList();
 
 		String queryString = marriageRegnQueryBuilder.getQueryForListOfMarriageRegnIds(marriageRegnCriteria, preparedStatementValues);
 		String expectedQueryString = "SELECT distinct mr.applicationnumber as mr_applicationnumber"
@@ -80,11 +80,11 @@ public class MarriageRegnQueryBuilderTest {
     @Test
    	public void testSelectQuery() {
    		Mockito.doReturn("3").when(applicationProperties).marriageRegnSearchPageSizeDefault();
-   		List<String> appNos = new ArrayList<>();
+   		List<String> appNos = new ArrayList();
    		appNos.add("9");
    		appNos.add("10");
    		MarriageRegnCriteria marriageRegnCriteria = MarriageRegnCriteria.builder().tenantId("1").build();
-   		List<Object> preparedStatementValues = new ArrayList<>();
+   		List<Object> preparedStatementValues = new ArrayList();
 
    		String queryString = marriageRegnQueryBuilder.getQuery(marriageRegnCriteria, preparedStatementValues, appNos);
    		String expectedQueryString = "SELECT mr.marriagedate as mr_marriagedate, mr.venue as mr_venue,"

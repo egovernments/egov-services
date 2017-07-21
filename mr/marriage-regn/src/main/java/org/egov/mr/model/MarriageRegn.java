@@ -82,7 +82,7 @@ public class MarriageRegn {
 	
 	private String remarks;
 
-	private List<MarriageCertificate> certificates = new ArrayList<>();
+	private List<MarriageCertificate> certificates = new ArrayList<MarriageCertificate>();
 	
 	private List<Long> demands = new ArrayList<Long>();
 

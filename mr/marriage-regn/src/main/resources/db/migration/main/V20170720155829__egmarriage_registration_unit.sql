@@ -13,7 +13,7 @@ CREATE TABLE egmr_registartion_unit(
 		street BIGINT,
 		electionward BIGINT,
 		doorno CHARACTER VARYING(250),
-		pincode INTEGER,y
+		pincode INTEGER,
 		createdby CHARACTER VARYING(250),
 		lastmodifiedby CHARACTER VARYING(250),
 		createdtime BIGINT,

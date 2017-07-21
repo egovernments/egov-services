@@ -29,7 +29,7 @@ public class ServiceConfigurationRepository {
 
 	public Map<String, List<String>> findForCriteria(
 			ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria) {
-		List<Object> preparedStatementValues = new ArrayList<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String query = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
 

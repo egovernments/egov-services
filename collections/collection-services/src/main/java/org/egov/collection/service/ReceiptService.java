@@ -52,6 +52,7 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.IdGenRequestInfo;
 import org.egov.collection.model.IdRequest;
 import org.egov.collection.model.IdRequestWrapper;
+import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.WorkflowDetails;
@@ -144,7 +145,14 @@ public class ReceiptService {
 		
 	//	return receiptRepository.pushToQueue(receiptReq); //async call
 		
-		return create(receiptReq);
+		 Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
+		 Receipt receipt = null;
+		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){
+			 return null;
+		 }else{
+			receipt = create(receiptReq);
+		 }
+		 return receipt;
 	}
 
 	private void setReceiptNumber(ReceiptReq receiptReq) {
@@ -312,7 +320,13 @@ public class ReceiptService {
 
 				receiptHeaderId = receiptRepository.persistToReceiptHeader(
 						parametersMap, receiptInfo);
-
+				if(receiptHeaderId == 0L){
+					break;
+				}
+				
+				receiptRepository.persistIntoReceiptInstrument(Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()), 
+						receiptHeaderId);
+				
 				Map<String, Object>[] parametersReceiptDetails = new Map[billdetails
 						.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;
@@ -524,12 +538,38 @@ public class ReceiptService {
 		return workflowDetails;
 	}
 
-    public List<User> getReceiptCreators() {
-        return receiptRepository.getReceiptCreators();
+    public List<User> getReceiptCreators(final RequestInfo requestInfo,final String tenantId) {
+        return receiptRepository.getReceiptCreators(requestInfo,tenantId);
     }
 
-    public List<String> getReceiptStatus() {
-        return receiptRepository.getReceiptStatus();
+    public List<String> getReceiptStatus(final String tenantId) {
+        return receiptRepository.getReceiptStatus(tenantId);
+    }
+    
+    public Long getInstrumentId(Receipt receipt){
+    	Long instrumentId = null;
+		StringBuilder builder = new StringBuilder();
+		String baseUri = applicationProperties.getCreateInstrument();
+		builder.append(baseUri);
+		Instrument instrument = receipt.getInstrument();
+		Object response = null;
+
+    	try{
+			response = restTemplate.postForObject(builder.toString(),
+					instrument, Object.class);    	
+	    }catch(Exception e){
+    		logger.error("Couldn't create instrument in the instrument service.", e.getCause());
+    		return instrumentId;
+    	}
+		logger.info("Response from instrument service: " + response.toString());
+
+    	try{
+    		
+    	}catch(Exception e){
+    		logger.error("Couldn't fetch instrument id from instrument service.", e.getCause());
+    		return instrumentId;
+    	}
+    	return instrumentId;
     }
 
 }

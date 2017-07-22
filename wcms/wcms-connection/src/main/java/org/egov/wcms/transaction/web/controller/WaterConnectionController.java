@@ -89,7 +89,7 @@ public class WaterConnectionController {
     private ErrorHandler errHandler;     
 
     @Autowired
-    private ConnectionValidator newWaterConnectionValidator;
+    private ConnectionValidator connectionValidator;
 
     @Autowired
     private WaterConnectionService waterConnectionService;
@@ -99,7 +99,7 @@ public class WaterConnectionController {
     public ResponseEntity<?> create(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
             final BindingResult errors) {
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
+            final ErrorResponse errRes = connectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
@@ -107,12 +107,18 @@ public class WaterConnectionController {
             waterConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
         else
             waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
-        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+        final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-           
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(newWaterConnectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
+         
+        if(waterConnectionRequest.getConnection().getIsLegacy()){
+            waterConnectionRequest.getConnection().setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
+            waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
+        }else
+        waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
+       
+        waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
         final Connection connection = waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
@@ -130,7 +136,7 @@ public class WaterConnectionController {
          Connection connection=null;
         waterConnectionRequest.getConnection().setAcknowledgementNumber(acknumer);
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = newWaterConnectionValidator.populateErrors(errors);
+            final ErrorResponse errRes = connectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
@@ -146,11 +152,11 @@ public class WaterConnectionController {
          waterConnectionRequest.getConnection().setIsLegacy(waterConn!=null ?waterConn.getIsLegacy():Boolean.FALSE);
          waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
          waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
-        final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+       /* final List<ErrorResponse> errorResponses = newWaterConnectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);*/
         
         waterConnectionRequest.getConnection().setId(waterConn.getId());
         connection = waterConnectionService.updateWaterConnection(

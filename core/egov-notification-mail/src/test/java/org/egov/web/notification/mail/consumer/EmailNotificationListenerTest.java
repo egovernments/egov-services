@@ -13,16 +13,27 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class EmailNotificationListenerTest {
 
-    @Mock
-    EmailService emailService;
+	@Mock
+	private EmailService emailService;
 
-    @Test
-    public void test_should_send_sms() throws Exception {
-        EmailNotificationListener emailNotificationListener = new EmailNotificationListener(emailService);
-        EmailRequest emailRequest = new EmailRequest("email", "subject", "body", "sender");
+	@Test
+	public void test_should_send_email() throws Exception {
+		EmailNotificationListener emailNotificationListener = new EmailNotificationListener(emailService);
+		EmailRequest emailRequest = EmailRequest.builder()
+				.isHTML(true)
+				.email("email")
+				.subject("subject")
+				.body("body")
+				.build();
 
-        emailNotificationListener.listen(emailRequest);
+		emailNotificationListener.listen(emailRequest);
 
-        verify(emailService).sendEmail(new Email("email", "subject", "body"));
-    }
+		final Email expectedEmail = Email.builder()
+				.subject("subject")
+				.body("body")
+				.toAddress("email")
+				.html(true)
+				.build();
+		verify(emailService).sendEmail(expectedEmail);
+	}
 }

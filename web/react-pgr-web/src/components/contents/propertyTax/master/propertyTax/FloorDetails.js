@@ -118,13 +118,14 @@ class FloorDetails extends Component {
   constructor(props) {
     super(props);
     this.state= {
-		unitType:[{id:1, name:'Flat'}, {id:2, name:'Room'}],
+		unitType:[{id:"FLAT", name:'Flat'}, {id:"ROOM", name:'Room'}],
 		floorNumber:[{id:1, name:'Basement-3'},{id:2, name:'Basement-2'},{id:3, name:'Basement-1'},{id:4, name:'Ground Floor'}],
 		rooms: [],
 		structureclasses:[],
 		occupancies:[],
 		usages:[],
-		hasLengthWidth: false
+		hasLengthWidth: false,
+		roomInFlat:[{id:1, name:'Yes'}, {id:2, name:'No'}]
     }
   }
 
@@ -391,7 +392,9 @@ calcArea = (e, type) => {
 		  editObject,
 		  editIndex,
 		  isEditIndex,
-		  isAddRoom
+		  toggleDailogAndSetText,
+		  setLoadingStatus,
+		  toggleSnackbarAndSetText
 				} = this.props;
 
 		let cThis = this;
@@ -441,9 +444,7 @@ calcArea = (e, type) => {
 																  }
 																};
 																handleChangeNextOne(e,"floor" ,"unitType", true, "");
-																if(value == 2) {
-																  this.setState({addRoom:false});
-																}
+																
 															  }
 															}
 															floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -454,34 +455,20 @@ calcArea = (e, type) => {
 														  {renderOption(_this.state.unitType)}
 														</SelectField>
 													</Col>
-													{(floorDetails.floor ? (floorDetails.floor.unitType == '1' ? true: false ): false) &&
-														<div>
-															<Col xs={12} md={3} sm={6}>			
-																<TextField  className="fullWidth"
-																  hintText="201"
-																  floatingLabelText="Flat Number *"
-																  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
-																  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
-																  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", true, /^\d+$/g)}}
-																  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-																  underlineStyle={styles.underlineStyle}
-																  underlineFocusStyle={styles.underlineFocusStyle}
-																  maxLength={3}
-																  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-																/>
-															</Col>
-															<Col>
+													{(floorDetails.floor ? (floorDetails.floor.unitType == 'FLAT' ? true: false ): false) &&
+														<span>
+															<Col xs={12} md={3} sm={6}>
 																 <SelectField  className="fullWidth selectOption"
-																	floatingLabelText="Unit Type"
-																	errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
-																	value={floorDetails.floor ? floorDetails.floor.unitType : ""}
+																	floatingLabelText="Is Room in Flat?"
+																	errorText={fieldErrors.roomInFlat ? (fieldErrors.floor.roomInFlat ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.roomInFlat}</span>:"" ): ""}
+																	value={floorDetails.floor ? floorDetails.floor.roomInFlat : ""}
 																	onChange={(event, index, value) => {
 																		var e = {
 																		  target: {
 																			value: value
 																		  }
 																		};
-																		handleChangeNextOne(e,"floor" ,"unitType", true, "");
+																		handleChangeNextOne(e,"floor" ,"roomInFlat", true, "");
 																		if(value == 2) {
 																		  this.setState({addRoom:false});
 																		}
@@ -492,10 +479,26 @@ calcArea = (e, type) => {
 																	underlineFocusStyle={styles.underlineFocusStyle}
 																	floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 																  >
-																  {renderOption(_this.state.unitType)}																								
+																  {renderOption(_this.state.roomInFlat)}																								
 																</SelectField>
 															</Col>	
-														</div>	  
+															{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
+																<Col xs={12} md={3} sm={6}>			
+																	<TextField  className="fullWidth"
+																	  hintText="201"
+																	  floatingLabelText="Flat Number *"
+																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
+																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
+																	  onChange={(e) => {handleChangeNextOne(e,"floor" ,"flatNo", true, /^\d+$/g)}}
+																	  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+																	  underlineStyle={styles.underlineStyle}
+																	  underlineFocusStyle={styles.underlineFocusStyle}
+																	  maxLength={3}
+																	  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
+																</Col>
+															}
+															
+														</span>	  
 													}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
@@ -504,6 +507,20 @@ calcArea = (e, type) => {
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
 														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"unitNo", true, /^\d{3}$/g)}}
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  maxLength={3}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														/>
+													</Col>
+													<Col xs={12} md={3} sm={6}>
+														<TextField  className="fullWidth"
+														  floatingLabelText="Assessable Area *"
+														  hintText="102"
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.assessableArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.assessableArea}</span> :""): ""}
+														  value={floorDetails.floor ? floorDetails.floor.assessableArea : ""}
+														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"assessableArea", true, '')}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -623,7 +640,7 @@ calcArea = (e, type) => {
 														/>
 													</Col>
 													
-													{(floorDetails.floor? getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : false) 
+													{(floorDetails.floor? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : false) 
 													
 													&& <Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
@@ -731,7 +748,6 @@ calcArea = (e, type) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-													{(floorDetails.floor ? (floorDetails.floor.unitType == '1' ? true: false ): false) && <div className="clearfix"></div>}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  hintText="15.25"
@@ -749,7 +765,7 @@ calcArea = (e, type) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-													{(floorDetails.floor ? (floorDetails.floor.unitType == '1' ? false : true ): true) && <div className="clearfix"></div>}
+													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText="Plinth Area *"
@@ -912,6 +928,7 @@ calcArea = (e, type) => {
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
 															editObject("floor",i);
+															toggleSnackbarAndSetText(true, 'Edit room details and update.')
 															isEditIndex(index);
                                                          }}>mode_edit</i>
                                                          <i className="material-icons" style={styles.iconFont} onClick={ () => {
@@ -1056,13 +1073,16 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
-
-  isAddRoom: (room) => {
-    dispatch({
-      type: "ADD_ROOM",
-      room
-    })
-  },
+  
+	setLoadingStatus: (loadingStatus) => {
+	  dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+	},
+	toggleDailogAndSetText: (dailogState,msg) => {
+	  dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState, msg});
+	},
+	toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+	  dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+	},
 
 });
 

@@ -1,4 +1,4 @@
-# Example YAML to get you started quickly.
+cca# Example YAML to get you started quickly.
 # Be aware that YAML has indentation based scoping.
 # Code completion support is available so start typing for available options.
 swagger: '2.0'

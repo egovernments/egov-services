@@ -54,7 +54,7 @@ public class MarriageDocumentTypeController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 		// Entering service method
-		List<MarriageDocumentType> marriageDocTypesList = new ArrayList<>();
+		List<MarriageDocumentType> marriageDocTypesList = new ArrayList();
 		try {
 			marriageDocTypesList = marriageDocumentTypeService.search(marriageDocumentTypeSearchCriteria);
 		} catch (Exception e) {

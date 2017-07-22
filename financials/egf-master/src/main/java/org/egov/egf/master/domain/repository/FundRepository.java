@@ -20,6 +20,9 @@ public class FundRepository {
 	@Autowired
 	private MastersQueueRepository fundQueueRepository;
 
+	@Autowired
+	private FundESRepository fundESRepository;
+	
 	public Fund findById(Fund fund) {
 		FundEntity entity = fundJdbcRepository.findById(new FundEntity().toEntity(fund));
 		return entity.toDomain();
@@ -43,6 +46,15 @@ public class FundRepository {
 	}
 
 	public Pagination<Fund> search(FundSearch domain) {
+		
+//		if() {
+//			FundSearchContract fundSearchContract = new FundSearchContract();
+//			ModelMapper mapper = new ModelMapper();
+//			mapper.map(domain,fundSearchContract );
+//			Pagination<Fund> funds = fundESRepository.search(fundSearchContract);
+//			return funds;
+//		}
+		
 
 		return fundJdbcRepository.search(domain);
 

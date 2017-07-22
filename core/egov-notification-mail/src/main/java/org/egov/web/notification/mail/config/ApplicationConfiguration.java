@@ -51,7 +51,7 @@ import java.util.Properties;
 public class ApplicationConfiguration {
 
     @Autowired
-    EmailProperties emailProperties;
+    private EmailProperties emailProperties;
 
     @Bean
     public JavaMailSenderImpl mailSender() {

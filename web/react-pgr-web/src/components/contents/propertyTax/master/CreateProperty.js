@@ -268,12 +268,12 @@ createPropertyTax = () => {
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 	
 	var numberOfFloors='';
-	var plinthArea = 0;
+	var builtupArea = 0;
 	if(createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')){
 		numberOfFloors = createProperty.floorsArr.length;
 		for(let i=0;i<createProperty.floors.length;i++){
 			
-			plinthArea += createProperty.floors[i].plinthArea;
+			builtupArea += createProperty.floors[i].builtupArea;
 			
 		}
 	}
@@ -309,10 +309,13 @@ createPropertyTax = () => {
 				"creationReason": createProperty.reasonForCreation || '',
 				"address": {
 					"tenantId": "default",
+					 "latitude": '',
+					"longitude": '',
 					"addressNumber": createProperty.doorNo || '',
 					"addressLine1": createProperty.locality || '',
+					"addressLine2": '',
 					"landmark": null,
-					"city": "Bangalore",
+					"city": "secundrabad",
 					"pincode": createProperty.pin || '',
 					"detail": null,
 					"auditDetails": {
@@ -324,6 +327,14 @@ createPropertyTax = () => {
 				},
 				"owners": createProperty.owners || '',
 				"propertyDetail": {
+					"source": "MUNICIPAL_RECORDS",
+					"regdDocNo": "rdn2",
+					"regdDocDate": "15/02/2017",
+					"reason": "CREATE",
+					"status": "ACTIVE",
+					"isVerified": true,
+					"verificationDate": "25/05/2017",
+					"isExempted": false,
 					"propertyType": createProperty.propertyType || null,
 					"category": createProperty.propertySubType || '',
 					"usage": null,
@@ -332,7 +343,7 @@ createPropertyTax = () => {
 					"siteLength": 12,
 					"siteBreadth": 15,
 					"sitalArea": createProperty.extentOfSite || '',
-					"totalBuiltupArea": plinthArea, 
+					"totalBuiltupArea": builtupArea, 
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
@@ -345,9 +356,9 @@ createPropertyTax = () => {
 					"documents": [],
 					"stateId": null,
 					"workFlowDetails": {
-						"department": createProperty.workflowDepartment,
-						"designation":createProperty.workflowDesignation,
-						"assignee": createProperty.approver,
+						"department": createProperty.workflowDepartment || '',
+						"designation":createProperty.workflowDesignation || '',
+						"assignee": createProperty.approver || '',
 						"action": "no",
 						"status": null
 					},
@@ -358,8 +369,8 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"vacantLand": {
-					"surveyNumber": createProperty.survayNumber || '',
+				"vacantLand": null ,/*{
+					"surveyNumber": createProperty.survayNumber || ,
 					"pattaNumber": createProperty.pattaNumber || '',
 					"marketValue": createProperty.marketValue || '',
 					"capitalValue": createProperty.capitalValue || '',
@@ -374,7 +385,7 @@ createPropertyTax = () => {
 						"createdTime": date,
 						"lastModifiedTime": date
 					}
-				},
+				},*/
 
 				"gisRefNo": null,
 				"isAuthorised": null,

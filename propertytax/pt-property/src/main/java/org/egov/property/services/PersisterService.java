@@ -1,20 +1,11 @@
 package org.egov.property.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
 import org.egov.models.Floor;
-import org.egov.models.IdGenerationRequest;
-import org.egov.models.IdGenerationResponse;
-import org.egov.models.IdRequest;
 import org.egov.models.Property;
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
 import org.egov.models.User;
@@ -82,22 +73,24 @@ public class PersisterService {
 			propertyRepository.saveAddress(property, propertyId);
 
 			Integer propertyDetailsId = propertyRepository.savePropertyDetails(property, propertyId);
+			if (!property.getPropertyDetail().getPropertyType()
+					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+				for (Floor floor : property.getPropertyDetail().getFloors()) {
 
-			for (Floor floor : property.getPropertyDetail().getFloors()) {
+					Integer floorId = propertyRepository.saveFloor(floor, propertyDetailsId);
 
-				Integer floorId = propertyRepository.saveFloor(floor, propertyDetailsId);
+					for (Unit unit : floor.getUnits()) {
 
-				for (Unit unit : floor.getUnits()) {
+						Integer unitId = propertyRepository.saveUnit(unit, floorId);
 
-					Integer unitId = propertyRepository.saveUnit(unit, floorId);
-
-					if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
-							&& unit.getUnits() != null) {
-						for (Unit room : unit.getUnits()) {
-							propertyRepository.saveRoom(room, floorId, unitId);
+						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+								&& unit.getUnits() != null) {
+							for (Unit room : unit.getUnits()) {
+								propertyRepository.saveRoom(room, floorId, unitId);
+							}
 						}
-					}
 
+					}
 				}
 				for (Document document : property.getPropertyDetail().getDocuments()) {
 
@@ -110,7 +103,9 @@ public class PersisterService {
 
 			}
 
-			propertyRepository.saveVacantLandDetail(property, propertyId);
+			if (property.getVacantLand() != null) {
+				propertyRepository.saveVacantLandDetail(property, propertyId);
+			}
 
 			propertyRepository.saveBoundary(property, propertyId);
 

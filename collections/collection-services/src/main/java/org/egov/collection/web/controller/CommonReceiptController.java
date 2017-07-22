@@ -54,10 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -78,8 +75,8 @@ public class CommonReceiptController {
     @Autowired
     private ReceiptService receiptService;
 
-    @RequestMapping("/_creators")
-    public ResponseEntity<?> searchUsers(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+    @RequestMapping("/_getDistinctCollectedBy")
+    public ResponseEntity<?> searchDistinctCreators(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         if (bindingResult.hasErrors())
@@ -87,7 +84,7 @@ public class CommonReceiptController {
 
         List<User> receiptCreators = new ArrayList<User>();
         try {
-            receiptCreators = receiptService.getReceiptCreators();
+            receiptCreators = receiptService.getReceiptCreators(requestInfo,tenantId);
         } catch (final Exception exception) {
             LOGGER.error("Error while processing request " + receiptCreators, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -98,14 +95,14 @@ public class CommonReceiptController {
     }
 
     @RequestMapping("/_status")
-    public ResponseEntity<?> searchStatus(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+    public ResponseEntity<?> searchStatus(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         if (bindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
 
         List<String> statusList = new ArrayList<String>();
         try {
-            statusList = receiptService.getReceiptStatus();
+            statusList = receiptService.getReceiptStatus(tenantId);
         } catch (final Exception exception) {
             LOGGER.error("Error while processing request " + statusList, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

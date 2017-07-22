@@ -20,13 +20,13 @@ public class DisposalQueryBuilder {
 	public static final String INSERT_QUERY = "INSERT into egasset_disposal "
 			+ "(id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
 			+ "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
-			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference)"
+			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference)"
 			+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public String BASE_QUERY = "SELECT "
 			+ "id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,"
 			+ "aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,"
-			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM"
+			+ "createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference FROM"
 			+ " egasset_disposal as disposal";
 
 	@SuppressWarnings("rawtypes")

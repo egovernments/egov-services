@@ -22,20 +22,27 @@ import UiPanCard from './components/UiPanCard'
 export default class ShowFields extends Component {
   constructor(props) {
        super(props);
+       this.state = {};
   }
 
-  renderGroups=(groups, noCols, uiFramework="google")=>
-  {
+  changeExpanded = (name) => {
+    this.setState({
+      [name]: !this.state[name]
+    })
+  }
+
+  renderGroups=(groups, noCols, uiFramework="google") => {
     let {renderField}=this;
+    let self = this;
     switch (uiFramework) {
       case "google":
-        return groups.map((group,groupIndex)=>{
-          return (<Card key={groupIndex}>
-                    <CardHeader style={{paddingBottom:0}} title={group.label}/>
-                    <CardText style={{padding:0}}>
+        return groups.map((group, groupIndex)=>{
+          return (<Card key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+                    <CardHeader style={{paddingBottom:0}} title={group.label} showExpandableButton={true} actAsExpander={true}/>
+                    <CardText style={{padding:0}} expandable={true}>
                     <Grid>
                       <Row>
-                        {group.fields.map((field,fieldIndex)=>{
+                        {group.fields.map((field, fieldIndex)=>{
                             return (
                                 <Col key={fieldIndex} xs={12} md={noCols}>
                                     {renderField(field)}
@@ -44,6 +51,15 @@ export default class ShowFields extends Component {
                         })}
                       </Row>
                     </Grid>
+                    <div style={{"marginLeft": "15px"}}>
+                      {
+                        group.children && 
+                        group.children.length ? 
+                        group.children.map(function(child) {
+                          return self.renderGroups(child.groups, noCols, uiFramework);
+                        }) : ""
+                      }
+                    </div>
                     </CardText>
                 </Card>)
         })
@@ -99,7 +115,7 @@ export default class ShowFields extends Component {
   render() {
     let  {groups,noCols,uiFramework}=this.props;
   	return ( <div>
-  	 	{this.renderGroups(groups,noCols,uiFramework)}
+  	 	{this.renderGroups(groups, noCols, uiFramework)}
   	 </div>)
   }
 }

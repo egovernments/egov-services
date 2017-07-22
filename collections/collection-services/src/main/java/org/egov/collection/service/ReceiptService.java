@@ -572,4 +572,8 @@ public class ReceiptService {
     	return instrumentId;
     }
 
+    public List<BusinessDetailsRequestInfo> getBusinessDetails(final String tenantId, final RequestInfo requestInfo) {
+        return receiptRepository.getBusinessDetails(requestInfo,tenantId);
+    }
+
 }

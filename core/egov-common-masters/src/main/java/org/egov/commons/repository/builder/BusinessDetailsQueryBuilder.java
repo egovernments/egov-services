@@ -75,10 +75,9 @@ public class BusinessDetailsQueryBuilder {
 			preparedStatementValues.add(criteria.getActive());
 		}
 
-		if (criteria.getBusinessDetailsCode() != null) {
+		if (criteria.getBusinessDetailsCodes() != null && !criteria.getBusinessDetailsCodes().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" bd.code = ?");
-			preparedStatementValues.add(criteria.getBusinessDetailsCode());
+			selectQuery.append(" bd.code IN " + getCodeQuery(criteria.getBusinessDetailsCodes()));
 		}
 	}
 
@@ -104,5 +103,16 @@ public class BusinessDetailsQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
+
+    private static String getCodeQuery(List<String> codeList) {
+        StringBuilder query = new StringBuilder("(");
+        if (codeList.size() >= 1) {
+            query.append("'" + codeList.get(0).toString() + "'");
+            for (int i = 1; i < codeList.size(); i++) {
+                query.append("," + "'"  + codeList.get(i) + "'" );
+            }
+        }
+        return query.append(")").toString();
+    }
 
 }

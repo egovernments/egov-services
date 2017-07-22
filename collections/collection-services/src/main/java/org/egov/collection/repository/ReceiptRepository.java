@@ -50,10 +50,7 @@ import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.QueryBuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.web.contract.Bill;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
@@ -96,6 +93,9 @@ public class ReceiptRepository {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BusinessDetailsRepository businessDetailsRepository;
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -268,6 +268,12 @@ public class ReceiptRepository {
     	boolean isInsertionSuccessful = false;
     	
     	return isInsertionSuccessful;
+    }
+
+    public List<BusinessDetailsRequestInfo> getBusinessDetails(final RequestInfo requestInfo, final String tenantId) {
+        String queryString = receiptDetailQueryBuilder.searchBusinessDetailsQuery();
+        List<String> businessDetailsList = jdbcTemplate.queryForList(queryString, String.class,new Object[]{tenantId});
+        return businessDetailsRepository.getBusinessDetails(businessDetailsList,tenantId,requestInfo);
     }
 
 }

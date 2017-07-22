@@ -222,4 +222,8 @@ public class ReceiptDetailQueryBuilder {
     public String searchStatusQuery() {
         return "select distinct status from egcl_receiptheader where tenantId = ? order by status ASC";
     }
+
+    public String searchBusinessDetailsQuery() {
+        return "select distinct(trim(businessdetails,'&nbsp')) from egcl_receiptheader where tenantId = ?";
+    }
 }

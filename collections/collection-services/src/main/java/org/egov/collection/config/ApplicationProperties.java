@@ -61,28 +61,31 @@ public class ApplicationProperties {
     @Value("${kafka.topics.stateId.update.key}")
     private String kafkaUpdateStateIdTopicKey;
     
-    @Value("${BD_SEARCH_URI}")
+    @Value("${egov.services.hostname}")
+    private String egovServiceHost;
+    
+    @Value("${buisnessdetails.search.uri}")
     private String businessDetailsSearch;
     
-    @Value("${COA_SEARCH_URI}")
+    @Value("${coa.search.uri}")
     private String chartOfAccountsSearch;
     
-    @Value("${STATUS_SEARCH_URI}")
+    @Value("${statuscode.search.uri}")
     private String statusCodeSearch;
     
-    @Value("${ID_GEN_URI}")
+    @Value("${rcptno.gen.uri}")
     private String idGeneration;
     
-    @Value("${GET_POSITION_URI}")
+    @Value("${positionforuser.get.uri}")
     private String getPosition;
     
-    @Value("${GET_POSITION_URI_APPEND}")
+    @Value("${positionforuser.get.append.uri}")
     private String getPositionUriAppend;
     
-    @Value("${CREATE_INSTRUMENT}")
+    @Value("${create.instrument.uri}")
     private String createInstrument;
     
-    @Value("${SEARCH_INSTRUMENT}")
+    @Value("${search.instrument.uri}")
     private String searchInstrument;
     
     @Value("${egov.services.billing_service.hostname}")

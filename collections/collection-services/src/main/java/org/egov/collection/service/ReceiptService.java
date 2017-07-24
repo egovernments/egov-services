@@ -113,6 +113,7 @@ public class ReceiptService {
 			if (validateFundAndDept(businessDetailsRes)
 					&& validateGLCode(receiptReq.getRequestInfo(),
 							receiptReq.getTenantId(), billdetail)) {
+				businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
 				if (businessDetailsRes.getBusinessDetails().get(0)
 						.getCallBackForApportioning()) {
 					bill.getBillDetails().remove(billdetail);
@@ -420,9 +421,10 @@ public class ReceiptService {
 		logger.info("Validating if the glcode exists in the financials system.");
 
 		StringBuilder builder = new StringBuilder();
+		String hostname = applicationProperties.getEgovServiceHost();
 		String baseUri = applicationProperties.getChartOfAccountsSearch();
 		String searchCriteria = "?glcode=" + glcode + "&tenantId=" + tenantId;
-		builder.append(baseUri).append(searchCriteria);
+		builder.append(hostname).append(baseUri).append(searchCriteria);
 		List<Object> charOfAccounts = null;
 		logger.info("URI being hit: " + builder.toString());
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -472,8 +474,9 @@ public class ReceiptService {
 		logger.info("Generating receipt number for the receipt.");
 
 		StringBuilder builder = new StringBuilder();
+		String hostname = applicationProperties.getEgovServiceHost();
 		String baseUri = applicationProperties.getIdGeneration();
-		builder.append(baseUri);
+		builder.append(hostname).append(baseUri);
 
 		logger.info("URI being hit: " + builder.toString());
 
@@ -562,11 +565,11 @@ public class ReceiptService {
     public Long getInstrumentId(Receipt receipt){
     	Long instrumentId = null;
 		StringBuilder builder = new StringBuilder();
+		String hostname = applicationProperties.getEgovServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();
-		builder.append(baseUri);
+		builder.append(hostname).append(baseUri);
 		Instrument instrument = receipt.getInstrument();
 		Object response = null;
-
     	try{
 			response = restTemplate.postForObject(builder.toString(),
 					instrument, Object.class);    	

@@ -102,12 +102,14 @@ public class PersisterService {
 
 					}
 				}
+				
+				if(property.getPropertyDetail().getDocuments()!=null){
 				for (Document document : property.getPropertyDetail().getDocuments()) {
 
 					propertyRepository.saveDocument(document, propertyDetailsId);
 
 				}
-
+				}
 			}
 
 			if (property.getVacantLand() != null) {

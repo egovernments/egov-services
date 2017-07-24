@@ -141,7 +141,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 				} else {
 					UnitWrapper unitWrapper = new UnitWrapper();
 					unitWrapper.setUnit(unit);
-					unitWrapper.setFloorNo(floor.getId().toString());
+					unitWrapper.setFloorNo(floor.getFloorNo().toString());
 					roomsList.add(unitWrapper);
 				}
 			}

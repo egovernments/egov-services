@@ -102,7 +102,7 @@ public class ReceiptService {
 				.findAllReceiptsByCriteria(receiptSearchCriteria);
 	}
 
-	public Receipt pushToQueue(ReceiptReq receiptReq) {
+	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		logger.info("Pushing recieptdetail to kafka queue");
 		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
 		Bill apportionBill = receiptReq.getReceipt().get(0).getBill().get(0);
@@ -110,11 +110,9 @@ public class ReceiptService {
 		for (BillDetail billdetail : bill.getBillDetails()) {
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billdetail.getBusinessService(), receiptReq);
-
 			if (validateFundAndDept(businessDetailsRes)
 					&& validateGLCode(receiptReq.getRequestInfo(),
 							receiptReq.getTenantId(), billdetail)) {
-
 				if (businessDetailsRes.getBusinessDetails().get(0)
 						.getCallBackForApportioning()) {
 					bill.getBillDetails().remove(billdetail);
@@ -150,7 +148,7 @@ public class ReceiptService {
 			 return null;
 		 }else{
 			receipt = create(receiptReq); //sync call
-		 } */
+		 } */ //uncomment while enabling instrument integration
         
 		receipt = create(receiptReq); //sync call
 
@@ -242,7 +240,7 @@ public class ReceiptService {
 
 		Receipt receiptInfo = receiptReq.getReceipt().get(0);
 		String statusCode;
-		long receiptHeaderId;
+		long receiptHeaderId = 0L;
 
 		for (BillDetail billdetails : receiptInfo.getBill().get(0)
 				.getBillDetails()) {
@@ -254,6 +252,7 @@ public class ReceiptService {
 			}
 			logger.info("StatusCode: " + statusCode);
 			billdetails.setStatus(statusCode);
+			billdetails.setReceiptDate(new Date().getTime());
 			final Map<String, Object> parametersMap = new HashMap<>();
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billdetails.getBusinessService(), receiptReq);
@@ -319,15 +318,19 @@ public class ReceiptService {
 				parametersMap.put("location", null);
 				parametersMap.put("isreconciled", false);
 				parametersMap.put("status", statusCode);
-
-				receiptHeaderId = receiptRepository.persistToReceiptHeader(
+				
+				try{
+					receiptHeaderId = receiptRepository.persistToReceiptHeader(
 						parametersMap, receiptInfo);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 				if(receiptHeaderId == 0L){
 					break;
 				}
 				
-				receiptRepository.persistIntoReceiptInstrument(Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()), 
-						receiptHeaderId);
+			/*	receiptRepository.persistIntoReceiptInstrument(Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()), 
+						receiptHeaderId); */ //should be uncommented while enabling instrument integration
 				
 				Map<String, Object>[] parametersReceiptDetails = new Map[billdetails
 						.getBillAccountDetails().size()];

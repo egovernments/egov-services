@@ -154,7 +154,7 @@ public class ReceiptController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
+		Receipt receiptInfo = receiptService.apportionAndCreateReceipt(receiptRequest);
 
 		if (null == receiptInfo) {
 			LOGGER.info("Service returned null");

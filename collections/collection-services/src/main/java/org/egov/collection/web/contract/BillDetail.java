@@ -71,7 +71,7 @@ public class BillDetail {
 
 	private String bill;
 
-	private LocalDate billDate;
+	private Long billDate;
 
 	private String billDescription;
 

@@ -99,12 +99,16 @@ class Report extends Component {
   addNewCard = (group, jsonPath) => {
     let {setMockData} = this.props;
     //Increment the values of indexes
-    var updatedJsonPath = this.incrementIndexValue(group, jsonPath);
+    let {updatedJsonPath, updatedSpecs} = this.incrementIndexValue(group, jsonPath);
     //Push to the path
-    var updatedSpecs = this.getNewSpecs(group, updatedJsonPath);
+    var updatedSpecs = this.getNewSpecs(group, updatedSpecs, updatedJsonPath);
     //Create new mock data
     setMockData(updatedSpecs);
-    
+
+  }
+
+  removeCard = (jsonPath, index) => {
+
   }
 
   render() {

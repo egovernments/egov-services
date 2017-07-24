@@ -33,7 +33,7 @@ export default class ShowFields extends Component {
 
   renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
     let {renderField}=this;
-    let {addNewCard} = this.props;
+    let {addNewCard, removeCard} = this.props;
     let self = this;
     switch (uiFramework) {
       case "google":
@@ -51,9 +51,16 @@ export default class ShowFields extends Component {
                             )
                         })}
                       </Row>
-                      {group.multiple && <Row>
+                      {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>
                         <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
                           <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath)}}>
+                            <span className="glyphicon glyphicon-plus"></span>
+                          </FloatingActionButton>
+                        </Col>
+                      </Row>}
+                      {group.multiple && <Row style={{"visibility": (groupIndex < (groups.length-1)) ? "initial" : "hidden" }}>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
+                          <FloatingActionButton mini={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
                             <span className="glyphicon glyphicon-plus"></span>
                           </FloatingActionButton>
                         </Col>

@@ -77,10 +77,10 @@ public class BillingServiceRepository {
         demandRequest.setDemands(demands);
 
         logger.info("BillingServiceRepository createDemand(), demands --> "+demands);
-        logger.info("BillingServiceRepository createDemand(), demandRequest --> "+demandRequest);
 
         String url = environment.getProperty("egov.services.billing_service.hostname") +
                 environment.getProperty("egov.services.billing_service.createdemand");
+        logger.info("BillingServiceRepository createDemand(), URL - > "+url+" \n demandRequest --> "+demandRequest);
 
         return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
     }

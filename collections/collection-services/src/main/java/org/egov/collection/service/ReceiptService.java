@@ -387,21 +387,7 @@ public class ReceiptService {
 			String businessDetailsCode, ReceiptReq receiptReq) {
 		logger.info("Searching for fund aand other businessDetails based on code.");
 		BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
-	/*	StringBuilder builder = new StringBuilder();
-		String baseUri = applicationProperties.getBusinessDetailsSearch();
-		String searchCriteria = "?businessDetailsCode=" + businessDetailsCode
-				+ "&tenantId=" + receiptReq.getReceipt().get(0).getTenantId();
-		builder.append(baseUri).append(searchCriteria);*/
-
-	/*	logger.info("URI being hit to get Business Details: "
-				+ builder.toString());
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(receiptReq.getRequestInfo());*/
 		try {
-			/*businessDetailsResponse = restTemplate.postForObject(
-					builder.toString(), requestInfoWrapper,
-					BusinessDetailsResponse.class);*/
-
             businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Arrays.asList(businessDetailsCode),
                     receiptReq.getReceipt().get(0).getTenantId(),receiptReq.getRequestInfo());
 		} catch (Exception e) {

@@ -488,13 +488,13 @@ public class PropertyRepository {
 			int demandTo) {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
+		List<Object> preparedStatementValues = new ArrayList<Object>();
 
 		Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId, active,
 				upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone,
-				revenueWard, locality, ownerName, demandFrom, demandTo);
-
+				revenueWard, locality, ownerName, demandFrom, demandTo, preparedStatementValues);
 		List<Property> properties = jdbcTemplate.query(propertyMap.get("Sql").toString(),
-				new BeanPropertyRowMapper(Property.class));
+				preparedStatementValues.toArray(), new BeanPropertyRowMapper(Property.class));
 
 		searchPropertyMap.put("properties", properties);
 		searchPropertyMap.put("users", propertyMap.get("users"));
@@ -507,6 +507,8 @@ public class PropertyRepository {
 
 		Address address = (Address) jdbcTemplate.queryForObject(AddressBuilder.ADDRES_BY_PROPERTY_ID_QUERY,
 				new Object[] { propertyId }, new BeanPropertyRowMapper(Address.class));
+		if (address != null && address.getId() != null && address.getId() > 0)
+			address.setAuditDetails(getAuditDetailsForAddress(address.getId()));
 
 		return address;
 	}
@@ -515,7 +517,6 @@ public class PropertyRepository {
 
 		List<PropertyUser> propertyUsers = jdbcTemplate.query(UserBuilder.PROPERTY_OWNER_BY_PROPERTY_ID_QUERY,
 				new Object[] { propertyId }, new BeanPropertyRowMapper(PropertyUser.class));
-
 		return propertyUsers;
 
 	}
@@ -533,6 +534,8 @@ public class PropertyRepository {
 		PropertyDetail propertyDetail = (PropertyDetail) jdbcTemplate.queryForObject(
 				PropertyDetailBuilder.PROPERTY_DETAIL_BY_PROPERTY_QUERY, new Object[] { propertyId },
 				new BeanPropertyRowMapper(PropertyDetail.class));
+		if (propertyDetail != null && propertyDetail.getId() != null && propertyDetail.getId() > 0)
+			propertyDetail.setAuditDetails(getAuditDetailsForPropertyDetail(propertyDetail.getId()));
 
 		return propertyDetail;
 
@@ -542,6 +545,8 @@ public class PropertyRepository {
 		VacantLandDetail vacantLandDetail = (VacantLandDetail) jdbcTemplate.queryForObject(
 				VacantLandDetailBuilder.VACANT_LAND_BY_PROPERTY_QUERY, new Object[] { propertyId },
 				new BeanPropertyRowMapper(VacantLandDetail.class));
+		if (vacantLandDetail != null && vacantLandDetail.getId() != null && vacantLandDetail.getId() > 0)
+			vacantLandDetail.setAuditDetails(getAuditDetailsForvacantLandDetail(vacantLandDetail.getId()));
 
 		return vacantLandDetail;
 	}
@@ -550,6 +555,8 @@ public class PropertyRepository {
 		PropertyLocation propertyLocation = (PropertyLocation) jdbcTemplate.queryForObject(
 				BoundaryBuilder.PROPERTY_LOCATION_BY_PROPERTY_QUERY, new Object[] { propertyId },
 				new PropertyLocationRowMapper());
+		if (propertyLocation != null && propertyLocation.getId() != null && propertyLocation.getId() > 0)
+			propertyLocation.setAuditDetails(getAuditDetailsForBoundary(propertyLocation.getId()));
 
 		return propertyLocation;
 	}
@@ -558,6 +565,12 @@ public class PropertyRepository {
 
 		List<Floor> floors = jdbcTemplate.query(FloorBuilder.FLOORS_BY_PROPERTY_DETAILS_QUERY,
 				new Object[] { propertyDetailId }, new BeanPropertyRowMapper(Floor.class));
+		floors.forEach(floor -> {
+			if (floor.getId() != null && floor.getId() > 0) {
+				floor.setAuditDetails(getAuditDetailsForFloor(floor.getId()));
+			}
+		});
+
 		return floors;
 
 	}
@@ -566,6 +579,10 @@ public class PropertyRepository {
 
 		List<Unit> units = jdbcTemplate.query(UnitBuilder.UNITS_BY_FLOOR_QUERY, new Object[] { floorId },
 				new BeanPropertyRowMapper(Unit.class));
+		units.forEach(unit -> {
+			if (unit.getId() != null && unit.getId() > 0)
+				unit.setAuditDetails(getAuditDetailsForUnit(unit.getId()));
+		});
 
 		return units;
 
@@ -575,6 +592,10 @@ public class PropertyRepository {
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(DocumentBuilder.DOCUMENT_BY_PROPERTY_DETAILS_QUERY,
 				new Object[] { propertyDetailId });
 		List<Document> documents = getDocumentObject(rows);
+		documents.forEach(document -> {
+			if (document.getId() != null && document.getId() > 0)
+				document.setAuditDetails(getAuditDetailsForDocument(document.getId()));
+		});
 
 		return documents;
 	}
@@ -816,6 +837,141 @@ public class PropertyRepository {
 		Object[] arguments = { true, upicNo };
 		jdbcTemplate.update(query, arguments);
 
+	}
+
+	/**
+	 * This will give the audit details for the given addressId
+	 * 
+	 * @param addressId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForAddress(Long addressId) {
+		String query = AddressBuilder.AUDIT_DETAILS_FOR_ADDRESS;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { addressId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given property detail Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForPropertyDetail(Long propertyDetailId) {
+		String query = PropertyDetailBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { propertyDetailId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given vacant land detail Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForvacantLandDetail(Long vacantLandDetailId) {
+		String query = VacantLandDetailBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query,
+				new Object[] { vacantLandDetailId }, new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given Boundary Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForBoundary(Long boundaryId) {
+		String query = BoundaryBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { boundaryId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given floor Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForFloor(Long floorId) {
+		String query = FloorBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { floorId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given document Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForDocument(Long documentId) {
+		String query = DocumentBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { documentId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will return the document types for the given documentId
+	 * 
+	 * @param documentId
+	 * @return {@link DocumentType}
+	 */
+
+	public DocumentType getDocumentTypes(Long documentId) {
+		String query = DocumentTypeBuilder.DOCUMENT_TYPE_BY_DOCUMENT;
+		DocumentType documentType = (DocumentType) jdbcTemplate.queryForObject(query, new Object[] { documentId },
+				new BeanPropertyRowMapper(DocumentType.class));
+		if (documentType != null && documentType.getId() != null && documentType.getId() > 0)
+			documentType.setAuditDetails(getAuditDetailsForDocumentType(documentType.getId()));
+
+		return documentType;
+
+	}
+
+	/**
+	 * This will give the audit details for the given documentType Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForDocumentType(Long documentTypeId) {
+		String query = DocumentTypeBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { documentTypeId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given property Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForProperty(Long propertyId) {
+		String query = PropertyBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { propertyId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This will give the audit details for the given unit Id
+	 * 
+	 * @param propertyDetailId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getAuditDetailsForUnit(Long unitId) {
+		String query = UnitBuilder.AUDIT_DETAILS_QUERY;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { unitId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
 	}
 
 }

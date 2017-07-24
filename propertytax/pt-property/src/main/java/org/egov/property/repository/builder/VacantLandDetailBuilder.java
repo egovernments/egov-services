@@ -19,4 +19,7 @@ public class VacantLandDetailBuilder {
 
 		return vacantlandUpdateSQL.toString();
 	}
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_vacantland where id= ?";
 }

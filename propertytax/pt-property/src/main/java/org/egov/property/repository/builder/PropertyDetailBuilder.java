@@ -29,4 +29,6 @@ public class PropertyDetailBuilder {
 
 		return propertyDetailUpdateSQL.toString();
 	}
+
+	public static final String AUDIT_DETAILS_QUERY = " select createdBy,lastModifiedBy,createdTime,lastModifiedTime from egpt_propertydetails where id= ?";
 }

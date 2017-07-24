@@ -9,19 +9,20 @@ public class AddressBuilder {
 			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String ADDRES_BY_PROPERTY_ID_QUERY = "select * from egpt_address where property= ?";
-	
-	 public static String updatePropertyAddressQuery() {
-		  
-	        StringBuffer addressUpdateSQL=new StringBuffer();
 
-	        addressUpdateSQL.append("UPDATE egpt_Address")
-	        .append(" SET tenantId = ?, latitude = ?, longitude = ?, addressId = ?,")
-	        .append(" addressNumber = ?, addressLine1 = ?, addressLine2 = ?,")
-	        .append(" landmark = ?, city = ?, pincode = ?, detail = ?, lastModifiedBy = ?,")
-	        .append(" lastModifiedTime = ?, property= ?" )
-	        .append(" WHERE id = ?");
-	        
-	        return addressUpdateSQL.toString();
-	    }
+	public static String updatePropertyAddressQuery() {
 
+		StringBuffer addressUpdateSQL = new StringBuffer();
+
+		addressUpdateSQL.append("UPDATE egpt_Address")
+				.append(" SET tenantId = ?, latitude = ?, longitude = ?, addressId = ?,")
+				.append(" addressNumber = ?, addressLine1 = ?, addressLine2 = ?,")
+				.append(" landmark = ?, city = ?, pincode = ?, detail = ?, lastModifiedBy = ?,")
+				.append(" lastModifiedTime = ?, property= ?").append(" WHERE id = ?");
+
+		return addressUpdateSQL.toString();
+	}
+
+	public static final String AUDIT_DETAILS_FOR_ADDRESS = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_address where id= ?";
 }

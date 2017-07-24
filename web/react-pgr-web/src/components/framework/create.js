@@ -100,7 +100,7 @@ class Report extends Component {
   }
 
   updateUpperObjects = (groupsArray) => {
-    
+
   }
 
   addNewCard = (group, jsonPath) => {
@@ -115,7 +115,7 @@ class Report extends Component {
 
   removeCard = (jsonPath, index) => {
     //Remove at that index and update upper array values
-    let {mockData} = this.props;
+    let {mockData, setMockData} = this.props;
     let groupsArray = _.get(mockData, jsonPath);
     groupsArray.split(index, 1);
     this.updateUpperObjects(groupsArray);

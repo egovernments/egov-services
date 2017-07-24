@@ -20,6 +20,7 @@ import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,6 +45,9 @@ public class BudgetReAppropriationController {
 	@Autowired
 	private BudgetServiceQueueRepository budgetServiceQueueRepository;
 
+	@Value("${persist.through.kafka}")
+	private String persistThroughKafka;
+
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommonResponse<BudgetReAppropriationContract> create(
@@ -67,16 +71,30 @@ public class BudgetReAppropriationController {
 			budgetreappropriations.add(budgetReAppropriation);
 		}
 
-		budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
-				budgetReAppropriationRequest.getRequestInfo().getAction());
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (BudgetReAppropriation bra : budgetreappropriations) {
-			contract = mapper.toContract(bra);
-			budgetReAppropriationContracts.add(contract);
+			budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
+					budgetReAppropriationRequest.getRequestInfo().getAction());
+
+			for (BudgetReAppropriation bra : budgetreappropriations) {
+				contract = mapper.toContract(bra);
+				budgetReAppropriationContracts.add(contract);
+			}
+
+			budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
+			budgetServiceQueueRepository.addToQue(budgetReAppropriationRequest);
+
+		} else {
+
+			budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors);
+
+			for (BudgetReAppropriation bra : budgetreappropriations) {
+				contract = mapper.toContract(bra);
+				budgetReAppropriationContracts.add(contract);
+			}
+
 		}
-
-		budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
-		budgetServiceQueueRepository.addToQue(budgetReAppropriationRequest);
 		budgetReAppropriationResponse.setData(budgetReAppropriationContracts);
 
 		return budgetReAppropriationResponse;
@@ -103,16 +121,31 @@ public class BudgetReAppropriationController {
 			budgetreappropriations.add(budgetReAppropriation);
 		}
 
-		budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
-				budgetReAppropriationRequest.getRequestInfo().getAction());
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (BudgetReAppropriation bra : budgetreappropriations) {
-			contract = mapper.toContract(bra);
-			budgetReAppropriationContracts.add(contract);
+			budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
+					budgetReAppropriationRequest.getRequestInfo().getAction());
+
+			for (BudgetReAppropriation bra : budgetreappropriations) {
+				contract = mapper.toContract(bra);
+				budgetReAppropriationContracts.add(contract);
+			}
+
+			budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
+			budgetServiceQueueRepository.addToQue(budgetReAppropriationRequest);
+
+		} else {
+
+			budgetreappropriations = budgetReAppropriationService.update(budgetreappropriations, errors);
+
+			for (BudgetReAppropriation bra : budgetreappropriations) {
+				contract = mapper.toContract(bra);
+				budgetReAppropriationContracts.add(contract);
+			}
+
 		}
 
-		budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
-		budgetServiceQueueRepository.addToQue(budgetReAppropriationRequest);
 		budgetReAppropriationResponse.setData(budgetReAppropriationContracts);
 
 		return budgetReAppropriationResponse;

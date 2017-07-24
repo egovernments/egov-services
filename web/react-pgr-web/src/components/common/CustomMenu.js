@@ -340,14 +340,26 @@ class CustomMenu extends Component {
 
             }
             else {
+              let base="";
+              if (item.path.search("EIS")>-1) {
+                base=window.location.origin+"/hr-web";
+                // console.log(base);
+              }
+              else if (item.path.search("Leases And Agreements")>-1) {
+                base=window.location.origin+"/lams-web";
+
+              }
+              else if (item.path.search("Asset Management")>-1) {
+                  base=window.location.origin+"/asset-web";
+              }
               return (
-                        <MenuItem
-                             style={{whiteSpace: "initial"}}
-                             key={index}
-                             leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.name}
-                             onTouchTap={()=>{menuChangeTwo(item.name)}}
-                          />
+                       <a key={index} href={base+item.url} target="_blank">
+                         <MenuItem
+                              style={{whiteSpace: "initial"}}
+                              leftIcon={<i className="material-icons">view_module</i>}
+                              primaryText={item.name}
+                           />
+                        </a>
                       )
             }
             // if (item.level==level) {
@@ -395,16 +407,28 @@ class CustomMenu extends Component {
       else {
 
           return actionList.map((item,index)=>{
+            let base="";
+            if (item.path.search("EIS")>-1) {
+              base=window.location.origin+"/hr-web";
+              // console.log(base);
+            }
+            else if (item.path.search("Leases And Agreements")>-1) {
+              base=window.location.origin+"/lams-web";
+
+            }
+            else if (item.path.search("Asset Management")>-1) {
+                base=window.location.origin+"/asset-web";
+            }
                 if (item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
                   return(
-                    <Link   key={index} to={item.url} >
-                      <MenuItem
-                          style={{whiteSpace: "initial"}}
-                           onTouchTap={()=>{handleToggle(false)}}
-                           leftIcon={<i className="material-icons">view_module</i>}
-                           primaryText={item.displayName}
-                        />
-                    </Link>
+                     <a key={index} href={base+item.url} target="_blank">
+                        <MenuItem
+                            style={{whiteSpace: "initial"}}
+                             onTouchTap={()=>{handleToggle(false)}}
+                             leftIcon={<i className="material-icons">view_module</i>}
+                             primaryText={item.displayName}
+                          />
+                      </a>
                   )
                 }
 

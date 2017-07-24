@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model.enums;
 
 import org.apache.commons.lang3.StringUtils;
 

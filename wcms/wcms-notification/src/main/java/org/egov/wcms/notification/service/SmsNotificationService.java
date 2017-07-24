@@ -37,33 +37,43 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.service;
 
-import org.apache.commons.lang3.StringUtils;
+import java.text.MessageFormat;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.egov.wcms.notification.config.PropertiesManager;
+import org.egov.wcms.notification.model.City;
+import org.egov.wcms.notification.model.Connection;
+import org.egov.wcms.notification.model.EstimationCharge;
+import org.egov.wcms.notification.model.enums.NewConnectionStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
+@Service
+public class SmsNotificationService {
+
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    public String getSmsMessage(final Connection connection, final String applicantName, final City city) {
+        String message;
+        EstimationCharge estimationCharge = null;
+        if (connection.getWorkflowDetails().getStatus() != null
+                && connection.getWorkflowDetails().getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
+            message = MessageFormat.format(propertiesManager.getNotificationMessage(),
+                    applicantName, connection.getAcknowledgementNumber(),
+                    city.getName());
+
+        else if (connection.getStatus() != null
+                && connection.getStatus().equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name()))
+            estimationCharge = connection.getEstimationCharge().get(0);
+        message = MessageFormat.format(propertiesManager.getApprovalnotificationMessage(),
+                connection.getProperty().getNameOfApplicant(), connection.getAcknowledgementNumber(),
+                connection.getDonationCharge(), estimationCharge.getEstimationCharges(),
+                connection.getDonationCharge() + estimationCharge.getEstimationCharges(),
+                city.getName());
+        return message;
+
     }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    
 }

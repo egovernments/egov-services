@@ -37,33 +37,37 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class WorkflowDetails {
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    private long department;
 
-    public String getName() {
-        return name;
-    }
+    private long designation; 
 
-    
+    private long approver;
+
+    private String comments;
+
+    private Long initiatorPosition;
+    private Long assignee;
+    private String action;
+
+    private String status;
+
 }

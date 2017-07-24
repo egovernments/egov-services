@@ -37,33 +37,64 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.validation.constraints.NotNull;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class UsageType {
+
+    public static final String SEQ_USAGETYPE = "SEQ_EGWTR_USAGE_TYPE";
+
+    @NotNull
+    private Long id;
+
+    @NotNull
+    @Length(min = 3, max = 20)
+    private String code;
+
+    @NotNull
+    @Length(min = 3, max = 100)
     private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
 
-    public String getName() {
-        return name;
-    }
+    @Length(max = 250)
+    private String description;
 
-    
+    @NotNull
+    private Boolean active;
+
+    private Long createdBy;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
+
+    private Long lastModifiedBy;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
+
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
+
 }

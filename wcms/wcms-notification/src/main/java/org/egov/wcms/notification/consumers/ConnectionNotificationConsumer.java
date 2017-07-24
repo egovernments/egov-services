@@ -37,33 +37,44 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.consumers;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.egov.wcms.notification.adapter.ConnectionNotificationAdapter;
+import org.egov.wcms.notification.web.contract.ConnectionRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class ConnectionNotificationConsumer {
+
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private ConnectionNotificationAdapter connectionNotificationAdapter;
+
+    @KafkaListener(topics = { "${kafka.topics.notification.connection.create.name}",
+            "${kafka.topics.notification.connection.update.name}" })
+    public void processMessage(final Map<String, Object> consumerRecord,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
+        log.debug("key:" + topic + ":" + "value:" + consumerRecord);
+
+        try {
+            connectionNotificationAdapter
+                    .sendSmsNotification(objectMapper.convertValue(consumerRecord, ConnectionRequest.class));
+        } catch (final Exception exception) {
+            log.debug("processMessage:" + exception);
+            throw exception;
+        }
+
     }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    
 }

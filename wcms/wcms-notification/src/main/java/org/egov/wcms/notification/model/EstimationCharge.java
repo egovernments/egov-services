@@ -37,33 +37,63 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.validation.constraints.NotNull;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+
+public class EstimationCharge {
+
+    @NotNull
+    private long id;
+
+    @NotNull
+    private long connectionId;
+
+
+    @NotNull
+    private String existingDistributionPipeline;
+
+    @NotNull
+    private double pipelineToHomeDistance;
+
+    @NotNull
+    private double estimationCharges;
+
+    @NotNull
+    private double supervisionCharges;
+
+    @NotNull
+    private double materialCharges;
     
-    private String name;
+    private double roadCutCharges;
     
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
+    private List<Material> materials;
     
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    private double specialSecurityCharges;
 
-    public String getName() {
-        return name;
-    }
 
-    
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
+
 }

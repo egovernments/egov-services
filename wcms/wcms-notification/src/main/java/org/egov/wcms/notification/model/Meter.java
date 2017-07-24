@@ -37,33 +37,54 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.validation.constraints.NotNull;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+
+public class Meter {
+    @NotNull
+    private long id;
     
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
 
-    public String getName() {
-        return name;
-    }
-
+    @NotNull
+    private String meterMake;
     
+    @NotNull
+    private long connectionId;
+    @NotNull
+    private String meterCost;
+
+    @NotNull
+    private String meterSlNo;
+
+    @NotNull
+    private String initialMeterReading;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
+    @NotNull
+    private List<MeterReading> meterReadings;
+    
+
 }

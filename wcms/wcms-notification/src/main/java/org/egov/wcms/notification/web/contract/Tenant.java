@@ -37,33 +37,21 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.web.contract;
 
-import org.apache.commons.lang3.StringUtils;
+import org.egov.wcms.notification.model.City;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    
+@Getter
+@Setter
+public class Tenant {
+    private String code;
+    private String description;
+    private String logoId;
+    private String imageId;
+    private String domainUrl;
+    private String type;
+    private City city;
 }

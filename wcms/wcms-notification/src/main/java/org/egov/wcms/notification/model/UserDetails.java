@@ -37,33 +37,81 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class UserDetails {
 
-    public String getName() {
-        return name;
-    }
+    @NotNull
+    private long id;
 
-    
+    @NotNull
+    private String firstName;
+
+    @NotNull
+    private String middleName;
+
+    @NotNull
+    private String lastName;
+
+    @NotNull
+    private String dob;
+
+    @NotNull
+    private String altContactNumber;
+
+    @NotNull
+    private String fatherName;
+
+    @NotNull
+    private String husbandName;
+
+    @NotNull
+    private String bloodGroup;
+
+    @NotNull
+    private String pan;
+
+    @NotNull
+    private String permanentAddress;
+
+    @NotNull
+    private String permanentCity;
+
+    @NotNull
+    private String permanentPinCode;
+
+    @NotNull
+    private String correspondenceAddress;
+
+    @NotNull
+    private String correspondenceCity;
+
+    @NotNull
+    private String correspondencePinCode;
+
+    @NotNull
+    private String signature;
+
+    @NotNull
+    private String identificationMark;
+
+    @NotNull
+    private String photo;
 }

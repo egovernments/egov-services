@@ -37,33 +37,31 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.web.contract;
 
-import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.notification.model.Connection;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class ConnectionRequest {
     
-    private String name;
+    @JsonProperty("requestInfo")
+    private RequestInfo requestInfo;
     
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    @JsonProperty("connection")
+    private Connection connection;
 
-    public String getName() {
-        return name;
-    }
-
-    
 }

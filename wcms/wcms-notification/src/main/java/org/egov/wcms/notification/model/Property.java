@@ -37,33 +37,62 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.validation.constraints.NotNull;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class Property {
+
+    @NotNull
+    private String propertyidentifier;
     
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+    private long propertyidentifierId;
 
-    public String getName() {
-        return name;
-    }
+    @NotNull
+    private String usageType;
+    private String usageTypeId;
 
+    @NotNull
+    private String propertyType;
+    private String propertyTypeId;
+
+    private String address;
+    
+    private String nameOfApplicant;
+    
+    private String mobileNumber;
+    
+    private String email;
+    
+    private String adharNumber;
+    
+    private String locality;
+    private String  zone;
+    private String  block;
+    private String  ward;
+    
+    private BigDecimal propertyTaxDue;
+    
+    
+    
     
 }
+
+// This object needs modification based on the response received from property tax module.

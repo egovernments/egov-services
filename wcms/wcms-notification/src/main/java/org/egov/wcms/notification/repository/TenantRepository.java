@@ -37,33 +37,33 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.repository;
 
-import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.notification.config.PropertiesManager;
+import org.egov.wcms.notification.model.City;
+import org.egov.wcms.notification.web.contract.TenantResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+@Repository
+public class TenantRepository {
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    public City fetchTenantByCode(final String tenant) {
+        final String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenant;
+
+        final TenantResponse tenantResponse = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
+        if (!CollectionUtils.isEmpty(tenantResponse.getTenant()))
+            return tenantResponse.getTenant().get(0).getCity();
+        else
+            return null;
     }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    
 }

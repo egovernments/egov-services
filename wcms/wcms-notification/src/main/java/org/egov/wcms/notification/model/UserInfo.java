@@ -37,33 +37,78 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.model;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.validation.constraints.NotNull;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class UserInfo {
+
+    @NotNull
+    private long id;
+
+    @NotNull
+    private String userName;
+
+    @NotNull
+    private String authToken;
+
+    @NotNull
+    private String salutation;
+
+    @NotNull
     private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
 
-    public String getName() {
-        return name;
-    }
+    @NotNull
+    private String gender;
 
-    
+    @NotNull
+    private String mobileNumber;
+
+    @NotNull
+    private String emailId;
+
+    @NotNull
+    private String aadhaarNumber;
+
+    @NotNull
+    private boolean active;
+
+    @NotNull
+    private long pwdExpiryDate;
+
+    @NotNull
+    private String locale;
+
+    @NotNull
+    private String type;
+
+    @NotNull
+    private boolean accountLocked;
+
+    @NotNull
+    private List<RoleInfo> roles;
+
+    @NotNull
+    private UserDetails userDetails;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
 }

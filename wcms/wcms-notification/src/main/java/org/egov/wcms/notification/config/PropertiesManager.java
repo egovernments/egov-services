@@ -37,33 +37,37 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model.enums;
+package org.egov.wcms.notification.config;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+@Component
+@Setter
+@Getter
+public class PropertiesManager {
 
-    public String getName() {
-        return name;
-    }
+    @Autowired
+    private Environment environment;
 
-    
+    @Value("${kafka.topics.notification.sms.name}")
+    private String smsNotificationTopic;
+
+    @Value("${kafka.topics.notification.sms.key}")
+    private String smsNotificationTopicKey;
+
+    @Value("${wcms.notification.sms.msg}")
+    private String notificationMessage;
+
+    @Value("${wcms.approval.sms.msg}")
+    private String approvalnotificationMessage;
+
+    @Value("${egov.services.tenant.host}")
+    private String tenantServiceHostName;
+
 }

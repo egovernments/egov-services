@@ -33,6 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
@@ -57,7 +58,9 @@ public class BudgetControllerTest {
 
 	
 	@Test
-	public void test_create() throws IOException, Exception {
+	public void test_create_with_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetController.class, "persistThroughKafka", "yes");
 
 		when(budgetService.save(any(List.class), any(BindingResult.class), any(String.class))).thenReturn(getBudgets());
 
@@ -68,6 +71,29 @@ public class BudgetControllerTest {
 				.andExpect(content().json(resources.readResponse("budget/budget_create_valid_response.json")));
 
 		verify(budgetServiceQueueRepository).addToQue(captor.capture());
+
+		final CommonRequest<BudgetContract> actualRequest = captor.getValue();
+
+		assertEquals("test", actualRequest.getData().get(0).getName());
+		assertEquals("2017-18", actualRequest.getData().get(0).getFinancialYear().getFinYearRange());
+		assertEquals("BE", actualRequest.getData().get(0).getEstimationType().name());
+		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_create_without_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetController.class, "persistThroughKafka", "no");
+
+		when(budgetService.save(any(List.class), any(BindingResult.class))).thenReturn(getBudgets());
+
+		mockMvc.perform(
+				post("/budgets/_create").content(resources.readRequest("budget/budget_create_valid_request.json"))
+						.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("budget/budget_create_valid_response.json")));
+
+		verify(budgetServiceQueueRepository).addToSearchQue(captor.capture());
 
 		final CommonRequest<BudgetContract> actualRequest = captor.getValue();
 
@@ -89,7 +115,9 @@ public class BudgetControllerTest {
 	}
 	
 	@Test
-	public void test_update() throws IOException, Exception {
+	public void test_update_with_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetController.class, "persistThroughKafka", "yes");
 		
 		List<Budget> budgets = getBudgets();
 		budgets.get(0).setId("1");
@@ -103,6 +131,32 @@ public class BudgetControllerTest {
 				.andExpect(content().json(resources.readResponse("budget/budget_update_valid_response.json")));
 
 		verify(budgetServiceQueueRepository).addToQue(captor.capture());
+
+		final CommonRequest<BudgetContract> actualRequest = captor.getValue();
+
+		assertEquals("test", actualRequest.getData().get(0).getName());
+		assertEquals("2017-18", actualRequest.getData().get(0).getFinancialYear().getFinYearRange());
+		assertEquals("BE", actualRequest.getData().get(0).getEstimationType().name());
+		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_update_without_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetController.class, "persistThroughKafka", "no");
+		
+		List<Budget> budgets = getBudgets();
+		budgets.get(0).setId("1");
+
+		when(budgetService.update(any(List.class), any(BindingResult.class))).thenReturn(budgets);
+
+		mockMvc.perform(
+				post("/budgets/_update").content(resources.readRequest("budget/budget_update_valid_request.json"))
+						.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("budget/budget_update_valid_response.json")));
+
+		verify(budgetServiceQueueRepository).addToSearchQue(captor.capture());
 
 		final CommonRequest<BudgetContract> actualRequest = captor.getValue();
 

@@ -34,6 +34,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
@@ -57,7 +58,9 @@ public class BudgetDetailControllerTest {
 	private RequestJsonReader resources = new RequestJsonReader();
 
 	@Test
-	public void test_create() throws IOException, Exception {
+	public void test_create_with_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetDetailController.class, "persistThroughKafka", "yes");
 
 		when(budgetDetailService.save(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn(getBudgetDetails());
@@ -69,6 +72,33 @@ public class BudgetDetailControllerTest {
 						content().json(resources.readResponse("budgetdetail/budgetdetail_create_valid_response.json")));
 
 		verify(budgetServiceQueueRepository).addToQue(captor.capture());
+
+		final CommonRequest<BudgetDetailContract> actualRequest = captor.getValue();
+
+		assertEquals("1", actualRequest.getData().get(0).getBudget().getId());
+		assertEquals("1", actualRequest.getData().get(0).getBudgetGroup().getId());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getAnticipatoryAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getOriginalAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getApprovedAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getBudgetAvailable());
+		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_create_with_out_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetDetailController.class, "persistThroughKafka", "no");
+
+		when(budgetDetailService.save(any(List.class), any(BindingResult.class)))
+				.thenReturn(getBudgetDetails());
+
+		mockMvc.perform(post("/budgetdetails/_create")
+				.content(resources.readRequest("budgetdetail/budgetdetail_create_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+						content().json(resources.readResponse("budgetdetail/budgetdetail_create_valid_response.json")));
+
+		verify(budgetServiceQueueRepository).addToSearchQue(captor.capture());
 
 		final CommonRequest<BudgetDetailContract> actualRequest = captor.getValue();
 
@@ -94,7 +124,9 @@ public class BudgetDetailControllerTest {
 	}
 
 	@Test
-	public void test_update() throws IOException, Exception {
+	public void test_update_with_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetDetailController.class, "persistThroughKafka", "yes");
 
 		List<BudgetDetail> budgetDetails = getBudgetDetails();
 		budgetDetails.get(0).setId("1");
@@ -109,6 +141,36 @@ public class BudgetDetailControllerTest {
 						content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
 
 		verify(budgetServiceQueueRepository).addToQue(captor.capture());
+
+		final CommonRequest<BudgetDetailContract> actualRequest = captor.getValue();
+
+		assertEquals("1", actualRequest.getData().get(0).getBudget().getId());
+		assertEquals("1", actualRequest.getData().get(0).getBudgetGroup().getId());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getAnticipatoryAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getOriginalAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getApprovedAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getBudgetAvailable());
+		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_update_with_out_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetDetailController.class, "persistThroughKafka", "no");
+
+		List<BudgetDetail> budgetDetails = getBudgetDetails();
+		budgetDetails.get(0).setId("1");
+
+		when(budgetDetailService.update(any(List.class), any(BindingResult.class)))
+				.thenReturn(budgetDetails);
+
+		mockMvc.perform(post("/budgetdetails/_update")
+				.content(resources.readRequest("budgetdetail/budgetdetail_update_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+						content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
+
+		verify(budgetServiceQueueRepository).addToSearchQue(captor.capture());
 
 		final CommonRequest<BudgetDetailContract> actualRequest = captor.getValue();
 

@@ -13,6 +13,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * 
+ * @author Prasad
+ *
+ */
 @Service
 public class SearchPropertyBuilder {
 
@@ -25,10 +30,13 @@ public class SearchPropertyBuilder {
 	@Autowired
 	RestTemplate restTemplate;
 
+	String BASE_SEARCH_QUERY = "select * from egpt_property prop  JOIN egpt_address Addr"
+			+ " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where";
+
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo) {
+			String ownerName, int demandFrom, int demandTo, List<Object> preparedStatementValues) {
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
@@ -47,9 +55,14 @@ public class SearchPropertyBuilder {
 		userSearchRequestInfo.put("tenantId", tenantId);
 		userSearchRequestInfo.put("RequestInfo", requestInfo);
 
+		StringBuffer userSearchUrl = new StringBuffer();
+		userSearchUrl.append(environment.getProperty("egov.services.egov_user.hostname"));
+		userSearchUrl.append(environment.getProperty("egov.services.egov_user.basepath"));
+		userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
+
 		UserResponseInfo userResponse = null;
 		if (ownerName != null || mobileNumber != null || aadhaarNumber != null) {
-			userResponse = restTemplate.postForObject(environment.getProperty("user.searchUrl"), userSearchRequestInfo,
+			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
 		}
 		String Ids = "";
@@ -71,24 +84,30 @@ public class SearchPropertyBuilder {
 			}
 
 		}
+		searchPropertySql.append(BASE_SEARCH_QUERY);
 
-		searchPropertySql.append("select * from egpt_property prop  JOIN egpt_address Addr"
-				+ " on Addr.property =  prop.id JOIN egpt_property_owner puser on puser.property = prop.id where ");
+		if (tenantId != null && !tenantId.isEmpty()) {
+			searchPropertySql.append(" prop.tenantid=?");
+			preparedStatementValues.add(tenantId.trim());
+		}
 
-		if (tenantId != null && !tenantId.isEmpty())
-			searchPropertySql.append("prop.tenantid='" + tenantId.trim() + "'");
+		if (active != null) {
+			searchPropertySql.append(" AND prop.active=?");
+			preparedStatementValues.add(active);
+		}
 
-		if (active != null)
-			searchPropertySql.append(" AND prop.active='" + active + "'");
+		if (upicNo != null && !upicNo.isEmpty()) {
+			searchPropertySql.append(" AND prop.upicnumber=?");
+			preparedStatementValues.add(upicNo.trim());
+		}
 
-		if (upicNo != null && !upicNo.isEmpty())
-			searchPropertySql.append(" AND prop.upicnumber='" + upicNo.trim() + "'");
-
-		if (oldUpicNo != null && !oldUpicNo.isEmpty())
-			searchPropertySql.append(" AND prop.oldUpicNumber='" + oldUpicNo.trim() + "'");
+		if (oldUpicNo != null && !oldUpicNo.isEmpty()) {
+			searchPropertySql.append(" AND prop.oldUpicNumber=?");
+			preparedStatementValues.add(oldUpicNo.trim());
+		}
 
 		if (!Ids.isEmpty())
-			searchPropertySql.append(" AND puser.user_id IN (" + Ids + ")");
+			searchPropertySql.append(" AND puser.owner IN (" + Ids + ")");
 
 		// TODO as of now we don't have the revenue Zone ,revenue
 		// Ward,locality,houseNoBldgApt
@@ -96,11 +115,11 @@ public class SearchPropertyBuilder {
 		// Ward,locality,houseNoBldgApt ?
 		// So we are not putting in search
 
-		/**
-		 * if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty())
-		 * searchPropertySql.append(" AND Addr.housenobldgapt='" + houseNoBldgApt.trim() + "'");
-		 */
-			
+		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
+			searchPropertySql.append(" AND Addr.addressnumber=?");
+			preparedStatementValues.add(houseNoBldgApt.trim());
+
+		}
 
 		if (sort != null && sort.length > 0) {
 			searchPropertySql.append(" ORDER BY ");
@@ -144,7 +163,9 @@ public class SearchPropertyBuilder {
 		else
 			offset = (limit - pageSize) + 1;
 
-		searchPropertySql.append(" offset " + offset + " limit " + limit);
+		searchPropertySql.append(" offset ?  limit ?");
+		preparedStatementValues.add(offset);
+		preparedStatementValues.add(limit);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("Sql", searchPropertySql.toString());

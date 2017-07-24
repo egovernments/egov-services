@@ -11,14 +11,15 @@ public class FloorBuilder {
 
 	public static String updateFloorQuery() {
 
-        StringBuffer floorUpdateSQL = new StringBuffer();
+		StringBuffer floorUpdateSQL = new StringBuffer();
 
-        floorUpdateSQL.append("UPDATE egpt_floors")
-        .append(" SET floorNo = ?, lastModifiedBy = ?,")
-        .append(" lastModifiedTime = ?, propertydetails = ?")
-        .append(" WHERE id = ?" );
+		floorUpdateSQL.append("UPDATE egpt_floors").append(" SET floorNo = ?, lastModifiedBy = ?,")
+				.append(" lastModifiedTime = ?, propertydetails = ?").append(" WHERE id = ?");
 
-        return floorUpdateSQL.toString();
-    }
+		return floorUpdateSQL.toString();
+	}
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_floors where id= ?";
 
 }

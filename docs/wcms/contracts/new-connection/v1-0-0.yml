@@ -654,6 +654,56 @@ definitions:
         maximum: 500
         items:
          $ref: '#/definitions/Connection'
+  
+  ConnectionType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          description: unique code this should be assigned by system.
+          maxLength: 100
+          enum:
+            - PERMANENT
+            - TEMPORARY
+        name: 
+          type: string
+          description: human readable name should be assigned by system.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+      required:
+        - code
+        - name
+        
+  BillingType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          description: unique code this should be assigned by system.
+          maxLength: 100
+          enum:
+            - METERED
+            - NON-METERED
+        name: 
+          type: string
+          description: human readable name should be assigned by system.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+      required:
+        - code
+        - name
          
   CommonDataModel:
       type: object
@@ -663,6 +713,9 @@ definitions:
          description : This field holds the name of the enumerator
         object:
          description: This field holds any object of enumerator
+         enum: 
+           - $ref: '#/definitions/ConnectionType'
+           - $ref: '#/definitions/BillingType'
 
   CommonEnumRes:
       type: object

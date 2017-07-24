@@ -1,5 +1,6 @@
 package org.egov.egf.budget.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
@@ -41,6 +42,52 @@ public class BudgetService {
 		this.validator = validator;
 		this.budgetRepository = budgetRepository;
 		this.financialYearContractRepository = financialYearContractRepository;
+	}
+
+	@Transactional
+	public List<Budget> save(List<Budget> budgets, BindingResult errors) {
+
+		List<Budget> resultList = new ArrayList<Budget>();
+
+		try {
+
+			budgets = save(budgets, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (Budget b : budgets) {
+
+			resultList.add(save(b));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<Budget> update(List<Budget> budgets, BindingResult errors) {
+
+		List<Budget> resultList = new ArrayList<Budget>();
+
+		try {
+
+			budgets = save(budgets, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (Budget b : budgets) {
+
+			resultList.add(update(b)); 
+
+		}
+
+		return resultList;
 	}
 
 	public BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {

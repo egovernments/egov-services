@@ -33,6 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
@@ -56,7 +57,9 @@ public class BudgetReAppropriationControllerTest {
 	private RequestJsonReader resources = new RequestJsonReader();
 
 	@Test
-	public void test_create() throws IOException, Exception {
+	public void test_create_with_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetReAppropriationController.class, "persistThroughKafka", "yes");
 
 		when(budgetReAppropriationService.save(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn(getBudgetReAppropriations());
@@ -68,6 +71,33 @@ public class BudgetReAppropriationControllerTest {
 						content().json(resources.readResponse("budgetreappropriation/budgetreappropriation_create_valid_response.json")));
 
 		verify(budgetServiceQueueRepository).addToQue(captor.capture());
+
+		final CommonRequest<BudgetReAppropriationContract> actualRequest = captor.getValue();
+
+		assertEquals("1", actualRequest.getData().get(0).getBudgetDetail().getId());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getAdditionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getDeductionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getOriginalAdditionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getOriginalDeductionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getAnticipatoryAmount());
+		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_create_with_out_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetReAppropriationController.class, "persistThroughKafka", "no");
+
+		when(budgetReAppropriationService.save(any(List.class), any(BindingResult.class)))
+				.thenReturn(getBudgetReAppropriations());
+
+		mockMvc.perform(post("/budgetreappropriations/_create")
+				.content(resources.readRequest("budgetreappropriation/budgetreappropriation_create_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+						content().json(resources.readResponse("budgetreappropriation/budgetreappropriation_create_valid_response.json")));
+
+		verify(budgetServiceQueueRepository).addToSearchQue(captor.capture());
 
 		final CommonRequest<BudgetReAppropriationContract> actualRequest = captor.getValue();
 
@@ -93,7 +123,9 @@ public class BudgetReAppropriationControllerTest {
 	}
 
 	@Test
-	public void test_update() throws IOException, Exception {
+	public void test_update_with_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetReAppropriationController.class, "persistThroughKafka", "yes");
 
 		List<BudgetReAppropriation> budgetReAppropriations = getBudgetReAppropriations();
 		budgetReAppropriations.get(0).setId("1");
@@ -120,6 +152,37 @@ public class BudgetReAppropriationControllerTest {
 		assertEquals("default", actualRequest.getData().get(0).getTenantId());
 	}
 
+	@Test
+	public void test_update_with_out_kafka() throws IOException, Exception {
+		
+		ReflectionTestUtils.setField(BudgetReAppropriationController.class, "persistThroughKafka", "no");
+
+		List<BudgetReAppropriation> budgetReAppropriations = getBudgetReAppropriations();
+		budgetReAppropriations.get(0).setId("1");
+
+		when(budgetReAppropriationService.update(any(List.class), any(BindingResult.class)))
+				.thenReturn(budgetReAppropriations);
+
+		mockMvc.perform(post("/budgetreappropriations/_update")
+				.content(resources.readRequest("budgetreappropriation/budgetreappropriation_update_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+						content().json(resources.readResponse("budgetreappropriation/budgetreappropriation_update_valid_response.json")));
+
+		verify(budgetServiceQueueRepository).addToSearchQue(captor.capture());
+
+		final CommonRequest<BudgetReAppropriationContract> actualRequest = captor.getValue();
+
+		assertEquals("1", actualRequest.getData().get(0).getBudgetDetail().getId());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getAdditionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getDeductionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getOriginalAdditionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getOriginalDeductionAmount());
+		assertEquals(BigDecimal.TEN, actualRequest.getData().get(0).getAnticipatoryAmount());
+		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+	}
+
+	
 	@Test
 	public void test_update_error() throws IOException, Exception {
 

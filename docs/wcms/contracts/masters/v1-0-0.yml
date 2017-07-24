@@ -375,28 +375,6 @@
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
-  # Connection Type API
-    /connectiontype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - ConnectionType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/ConnectionTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
     # Application Type API
     /master/_getapplicationtypes:
@@ -1275,18 +1253,6 @@
         - active
         - tenantId
 
-  # Application Type definitions
-    ApplicationTypesRes:
-      type: object
-      properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        applicationTypes:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/ApplicationType'
-          
     ApplicationType:
       type: object
       properties:
@@ -1317,39 +1283,7 @@
         - code
         - name
         
-    CommonDataModel:
-      type: object
-      properties:
-        key:
-         type: string
-         description : This field holds the name of the enumerator
-        object:
-         description: This field holds any object of enumerator
-
-    CommonEnumRes:
-      type: object
-      properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DataModelList:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/CommonDataModel'
-
-  # WaterConnection Type definitions
-    ConnectionTypesRes:
-      type: object
-      properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        connectionTypes:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/ConnectionType'
-    
-    ConnectionType:
+    PlantType:
       type: object
       properties:
         id:
@@ -1360,8 +1294,7 @@
           description: unique code this should be assigned by system.
           maxLength: 100
           enum:
-            - TEMPORARY
-            - PERMANENT
+            - SANDGRAVEL
         name: 
           type: string
           description: human readable name should be assigned by system.
@@ -1373,6 +1306,56 @@
       required:
         - code
         - name
+        
+    ReservoirType:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : Unique identifier of the entered type, typically defined by system.
+        code:
+          description: unique code this should be assigned by system.
+          maxLength: 100
+          enum:
+            - GROUNDSTORAGERESERVOIR
+            - ELEVATEDSTORAGERESERVOIR
+        name: 
+          type: string
+          description: human readable name should be assigned by system.
+          maxLength: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maxLength: 100
+      required:
+        - code
+        - name
+        
+    CommonDataModel:
+      type: object
+      properties:
+        key:
+         type: string
+         description : This field holds the name of the enumerator
+        object:
+         description: This field holds any object of enumerator
+         enum: 
+           - $ref: '#/definitions/ApplicationType'
+           - $ref: '#/definitions/PlantType'
+           - $ref: '#/definitions/ReservoirType'
+           
+
+    CommonEnumRes:
+      type: object
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        DataModelList:
+          type: array
+          maximum: 10
+          items:
+            $ref: '#/definitions/CommonDataModel'
   
   # Water Source Type definitions
     SourceTypesRes:

@@ -3,15 +3,11 @@ package org.egov.pgrrest.read.domain.service;
 import delight.nashornsandbox.NashornSandbox;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
-import org.egov.pgrrest.common.domain.model.AttributeDefinition;
-import org.egov.pgrrest.common.domain.model.AttributeEntry;
-import org.egov.pgrrest.common.domain.model.ComputeRuleDefinition;
-import org.egov.pgrrest.common.domain.model.ServiceDefinition;
+import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException;
 import org.egov.pgrrest.read.domain.exception.RuleEvaluationException;
 import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
 import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
 import org.springframework.stereotype.Service;
@@ -41,7 +37,7 @@ public class ServiceRequestCustomFieldService {
         this.scriptEngineFactory = scriptEngineFactory;
     }
 
-    public void enrich(ServiceRequest serviceRequest, SevaRequest contractSevaRequest, SevaRequestAction action) {
+    public void enrich(ServiceRequest serviceRequest, SevaRequest contractSevaRequest, ServiceStatus action) {
         final List<org.egov.pgr.common.contract.AttributeEntry> attribValues =
             contractSevaRequest.getAttributeValues();
         final ServiceDefinition serviceDefinition = getServiceDefinition(serviceRequest);
@@ -50,20 +46,20 @@ public class ServiceRequestCustomFieldService {
             return;
         }
         validateAttributeValues(serviceRequest, serviceDefinition, action);
-        if (serviceDefinition.isComputedFieldsAbsent()) {
+        if (serviceDefinition.isComputedFieldsAbsent(action)) {
             return;
         }
-        computeFields(serviceRequest, attribValues, serviceDefinition);
+        computeFields(serviceRequest, attribValues, serviceDefinition, action);
     }
 
     private void computeFields(ServiceRequest serviceRequest,
                                List<org.egov.pgr.common.contract.AttributeEntry> attribValues,
-                               ServiceDefinition serviceDefinition) {
+                               ServiceDefinition serviceDefinition, ServiceStatus action) {
         final NashornSandbox scriptEngine = scriptEngineFactory.create();
         final Map<String, List<AttributeEntry>> codeToAttributeEntriesMap =
             getCodeToAttributeEntriesMap(serviceRequest);
         loadEngineWithDefinedVariables(serviceDefinition, scriptEngine, codeToAttributeEntriesMap);
-        serviceDefinition.getComputedFields()
+        serviceDefinition.getComputedFields(action)
             .forEach(computedAttributeDefinition ->
                 computeAttribute(scriptEngine, computedAttributeDefinition, attribValues));
     }
@@ -131,7 +127,7 @@ public class ServiceRequestCustomFieldService {
 
     private void validateAttributeValues(ServiceRequest serviceRequest,
                                          ServiceDefinition serviceDefinition,
-                                         SevaRequestAction action) {
+                                         ServiceStatus action) {
         attributeValueValidators.forEach(validator -> validator.validate(serviceRequest, serviceDefinition, action));
     }
 

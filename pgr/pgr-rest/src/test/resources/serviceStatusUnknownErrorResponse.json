@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Service status: 'unknownStatus' is unknown",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.SERVICE_STATUS_UNKNOWN",
+                "message": "Service status: 'unknownStatus' is unknown",
+                "field": "sevaRequest.serviceRequest.attribValues=systemStatus"
+            }
+        ]
+    }
+}

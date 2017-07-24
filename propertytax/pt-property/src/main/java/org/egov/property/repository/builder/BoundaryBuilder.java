@@ -9,17 +9,19 @@ public class BoundaryBuilder {
 
 	public static final String PROPERTY_LOCATION_BY_PROPERTY_QUERY = "select * from egpt_propertylocation "
 			+ "where property= ?";
-	
+
 	public static String updateBoundaryQuery() {
 
-        StringBuffer boundaryUpdateSQL = new StringBuffer();
+		StringBuffer boundaryUpdateSQL = new StringBuffer();
 
-        boundaryUpdateSQL.append("UPDATE egpt_propertylocation")
-        .append(" SET revenueBoundary = ?, locationBoundary = ?, adminBoundary = ?,")
-        .append(" northBoundedBy = ?, eastBoundedBy = ?, westBoundedBy = ?, southBoundedBy = ?,")
-        .append(" lastModifiedBy = ?, lastModifiedTime = ?, property= ?")
-        .append(" WHERE id = ?");
+		boundaryUpdateSQL.append("UPDATE egpt_propertylocation")
+				.append(" SET revenueBoundary = ?, locationBoundary = ?, adminBoundary = ?,")
+				.append(" northBoundedBy = ?, eastBoundedBy = ?, westBoundedBy = ?, southBoundedBy = ?,")
+				.append(" lastModifiedBy = ?, lastModifiedTime = ?, property= ?").append(" WHERE id = ?");
 
-        return boundaryUpdateSQL.toString();
-    }
+		return boundaryUpdateSQL.toString();
+	}
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_propertylocation where id= ?";
 }

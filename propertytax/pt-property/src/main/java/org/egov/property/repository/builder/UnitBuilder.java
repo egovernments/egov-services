@@ -50,4 +50,7 @@ public class UnitBuilder {
 		return unitSql.toString();
 	}
 
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_unit where id= ?";
+
 }

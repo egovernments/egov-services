@@ -20,6 +20,7 @@ import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,6 +45,9 @@ public class BudgetController {
 	@Autowired
 	private BudgetServiceQueueRepository budgetServiceQueueRepository;
 
+	@Value("${persist.through.kafka}")
+	private static String persistThroughKafka;
+
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommonResponse<BudgetContract> create(@RequestBody CommonRequest<BudgetContract> budgetRequest,
@@ -66,16 +70,34 @@ public class BudgetController {
 			budgets.add(budget);
 		}
 
-		budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (Budget b : budgets) {
-			contract = mapper.toContract(b);
-			budgetContracts.add(contract);
+			budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
+
+			for (Budget b : budgets) {
+				contract = mapper.toContract(b);
+				budgetContracts.add(contract);
+			}
+
+			budgetRequest.setData(budgetContracts);
+
+			budgetServiceQueueRepository.addToQue(budgetRequest);
+
+		} else {
+
+			budgets = budgetService.save(budgets, errors);
+
+			for (Budget b : budgets) {
+				contract = mapper.toContract(b);
+				budgetContracts.add(contract);
+			}
+
+			budgetRequest.setData(budgetContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetRequest);
+
 		}
-
-		budgetRequest.setData(budgetContracts);
-
-		budgetServiceQueueRepository.addToQue(budgetRequest);
 
 		budgetResponse.setData(budgetContracts);
 
@@ -103,16 +125,34 @@ public class BudgetController {
 			budgets.add(budget);
 		}
 
-		budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (Budget b : budgets) {
-			contract = mapper.toContract(b);
-			budgetContracts.add(contract);
+			budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
+
+			for (Budget b : budgets) {
+				contract = mapper.toContract(b);
+				budgetContracts.add(contract);
+			}
+
+			budgetRequest.setData(budgetContracts);
+
+			budgetServiceQueueRepository.addToQue(budgetRequest);
+
+		} else {
+
+			budgets = budgetService.update(budgets, errors);
+
+			for (Budget b : budgets) {
+				contract = mapper.toContract(b);
+				budgetContracts.add(contract);
+			}
+
+			budgetRequest.setData(budgetContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetRequest);
+
 		}
-
-		budgetRequest.setData(budgetContracts);
-
-		budgetServiceQueueRepository.addToQue(budgetRequest);
 
 		budgetResponse.setData(budgetContracts);
 

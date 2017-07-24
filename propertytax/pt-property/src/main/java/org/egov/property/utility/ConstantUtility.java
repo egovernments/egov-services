@@ -30,5 +30,16 @@ public class ConstantUtility {
 	public static final String STRUCTURE_CLASS_TABLE_NAME = "egpt_mstr_structureclass";
 
 	public static final String MUTATION_MASTER_TABLE_NAME = "egpt_mutation_master";
+	
+	public static final String SPECIAL_NOTICE_TABLE_NAME ="egpt_specialnotice";
+	
+	public static final String SPECIAL_NOTICE_ADDRESS_TABLE_NAME = "egpt_specialnotice_address";
+	
+	public static final String SPECIAL_NOTICE_OWNERS_TABLE_NAME="egpt_specialnotice_owners";
+	
+	public static final String SPECIAL_NOTICE_FLOOR_SPEC_TABLE_NAME="egpt_specialnotice_floorspec";
+	
+	
+	public static final String SPECIAL_NOTICE_TAXWISE_TABLE_NAME="egpt_specialnotice_taxwise_detail";
 
 }

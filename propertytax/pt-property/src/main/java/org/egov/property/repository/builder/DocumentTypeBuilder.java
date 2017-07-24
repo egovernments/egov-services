@@ -18,4 +18,7 @@ public class DocumentTypeBuilder {
 		return documentTypeUpdateSQL.toString();
 	}
 
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_documenttype where id= ?";
+
 }

@@ -9,8 +9,7 @@ public class UserBuilder {
 	public static final String PROPERTY_OWNER_BY_PROPERTY_ID_QUERY = "select * from egpt_property_owner where"
 			+ " property = ?";
 
-	public static final String PROPERTY_OWNER_BY_USER_ID_QUERY = "select * from egpt_property_owner "
-			+ "where user= ?";
+	public static final String PROPERTY_OWNER_BY_USER_ID_QUERY = "select * from egpt_property_owner " + "where user= ?";
 
 	public static String updateOwnerQuery() {
 
@@ -22,5 +21,8 @@ public class UserBuilder {
 
 		return userUpdateSQL.toString();
 	}
+
+	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
+			+ "lastModifiedTime from egpt_property_owner where id= ?";
 
 }

@@ -40,3 +40,4 @@ public class MandatoryAttributesAbsentExceptionAdapter implements ErrorAdapter<L
             .build();
     }
 }
+

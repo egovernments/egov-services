@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
@@ -157,30 +158,26 @@ public class ConnectionValidator {
             .field(WcmsConnectionConstants.CONNECTION_METERED_INVALID_FIELD_NAME).build();
         errorFields.add(errorField);
         }
-/*
-        if (!waterConnectionRequest.getConnection().getIsLegacy())
-            if (waterConnectionRequest.getConnection().getDocuments() == null
-                    || waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
-                final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.DOCUMENTS_INVALID_CODE)
-                        .message(WcmsTranasanctionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
-                        .field(WcmsTranasanctionConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
-                errorFields.add(errorField);
+        
+		if (!waterConnectionRequest.getConnection().getIsLegacy()) {
+			if (waterConnectionRequest.getConnection().getDocuments() == null
+					|| waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
+				final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.DOCUMENTS_INVALID_CODE)
+						.message(WcmsConnectionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+						.field(WcmsConnectionConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
+				errorFields.add(errorField);
 
-            } else
-                for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments())
-                    if (null == document.getDocument()) {
-                        final ErrorField errorField = ErrorField.builder().code(WcmsTranasanctionConstants.DOCUMENTS_INVALID_CODE)
-                                .message(WcmsTranasanctionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
-                                .field(WcmsTranasanctionConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
-                        errorFields.add(errorField);
-                    } else if (null == document.getDocument()) {
-                        // need to check validation prop
-                        final ErrorField errorField = ErrorField.builder()
-                                .code(WcmsTranasanctionConstants.DOCUMENTS_INVALID_CODE)
-                                .message(WcmsTranasanctionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
-                                .field(WcmsTranasanctionConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
-                        errorFields.add(errorField);
-                    }*/
+			} else {
+				for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments())
+					if (null == document.getDocument()) {
+						final ErrorField errorField = ErrorField.builder()
+								.code(WcmsConnectionConstants.DOCUMENTS_INVALID_CODE)
+								.message(WcmsConnectionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE)
+								.field(WcmsConnectionConstants.DOCUMENTS_INVALID_FIELD_NAME).build();
+						errorFields.add(errorField);
+					} 
+			}
+		}
 
         if (errorFields.size() > 0)
             return Error.builder().code(HttpStatus.BAD_REQUEST.value())

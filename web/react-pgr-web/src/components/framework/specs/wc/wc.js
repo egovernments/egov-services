@@ -1,17 +1,18 @@
 var room = {
 	"name": "RoomDetailsComponent",
 	"version": "v1",
-	"multiple": true,
-	"level": 1,
+	"level": 2,
+	"jsonPath": "connection.floors[0].rooms",
 	"groups": [
 		{
 			"label": "wc.create.groups.roomDetails.title",
 			"name": "RoomDetails",
+			"multiple": true,
 			"children": [],
 			"fields": [
 				{
 					"name": "RoomNo",
-					"jsonPath": "connection.floors[INDEX-0].rooms[INDEX-1].roomNo",
+					"jsonPath": "connection.floors[0].rooms[0].roomNo",
 					"label": "wc.create.groups.roomDetails.roomNo",
 					"pattern": "",
 					"type": "number",
@@ -22,7 +23,7 @@ var room = {
 				},
 				{
 					"name": "RoomName",
-					"jsonPath": "connection.floors[INDEX-0].rooms[INDEX-1].roomName",
+					"jsonPath": "connection.floors[0].rooms[0].roomName",
 					"label": "wc.create.groups.roomDetails.roomName",
 					"pattern": "",
 					"type": "text",
@@ -39,17 +40,18 @@ var room = {
 var floor = {
 	"name": "FloorDetailsComponent",
 	"version": "v1", //Maps to parent version
-	"multiple": true, //If true, its an array
-	"level": 0,
+	"level": 1,
+	"jsonPath": "connection.floors",
 	"groups": [
 		{
 			"label": "wc.create.groups.floorDetails.title",
 			"name": "FloorDetails",
+			"multiple": true, //If true, its an array
 			"children": [room],
 			"fields": [
 				{
 					"name": "FloorNo",
-					"jsonPath": "connection.floors[INDEX-0].floorNo",
+					"jsonPath": "connection.floors[0].floorNo",
 					"label": "wc.create.groups.floorDetails.floorNo",
 					"pattern": "",
 					"type": "number",
@@ -60,7 +62,7 @@ var floor = {
 				},
 				{
 					"name": "FloorName",
-					"jsonPath": "connection.floors[INDEX-0].floorName",
+					"jsonPath": "connection.floors[0].floorName",
 					"label": "wc.create.groups.floorDetails.floorName",
 					"pattern": "",
 					"type": "text",
@@ -82,11 +84,13 @@ var dat = {
 		"useTimestamp": true,
 		"tenantIdRequired": false, //Instead of boolean value give json path
 		"objectName": "connection",
+		"level": 0,
 		"groups": [
 			{
 				"label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
 				"name": "applicantDetails",//Follow Title case pattern
 				"children": [floor],
+				"multiple": false,
 				"fields": [
 						{
 							"name": "AssessmentNumber",
@@ -210,6 +214,7 @@ var dat = {
 			{
 				"label": "wc.create.groups.connectionDetails.title",
 				"name": "connectionDetails",
+				"multiple": false,
 				"fields": [
 						{
 							"name": "ConnectionType",
@@ -310,6 +315,7 @@ var dat = {
 			{
 				"label": "wc.create.groups.approvalDetails.title",
 				"name": "approvalDetails",
+				"multiple": false,
 				"fields": [
 						{
 							"name": "department",

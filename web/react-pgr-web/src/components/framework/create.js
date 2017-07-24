@@ -35,12 +35,13 @@ class Report extends Component {
   }
 
   initData() {
-    let { setMetaData, setModuleName, setActionName, initForm } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let hashLocation = window.location.hash;
     let obj = wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired, []);
     setMetaData(wcSpecs);
+    setMockData(JSON.parse(JSON.stringify(wcSpecs)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
   }
@@ -54,7 +55,7 @@ class Report extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = Object.assign(this.props.formData);
-    
+
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -81,26 +82,39 @@ class Report extends Component {
   //     // this.initData();
   // }
 
-  handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch")=>
-  {
+  handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {handleChange}=this.props;
       // console.log(e + " "+ property + " "+ isRequired +" "+pattern);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
   }
 
+  incrementIndexValue = (group) => {
 
+  }
 
+  getNewSpecs = (group) => {
 
+  }
+
+  addNewCard = (group, jsonPath) => {
+    let {setMockData} = this.props;
+    //Increment the values of indexes
+    this.incrementIndexValue(group, jsonPath);
+    //Push to the path
+    var updatedSpecs = this.getNewSpecs(group);
+    //Create new mock data
+    setMockData(updatedSpecs);
+  }
 
   render() {
-    let {metaData, moduleName, actionName, formData, fieldErrors}=this.props;
-    let {create, handleChange, getVal}=this;
+    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {create, handleChange, getVal, addNewCard} = this;
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(metaData) && <ShowFields groups={metaData[`${moduleName}.${actionName}`].groups} noCols={metaData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={metaData[`${moduleName}.${actionName}`].useTimestamp || false}/>}
+        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={addNewCard}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>
@@ -112,7 +126,14 @@ class Report extends Component {
   }
 }
 
-const mapStateToProps = state => ({metaData:state.framework.metaData,moduleName:state.framework.moduleName,actionName:state.framework.actionName,formData:state.frameworkForm.form, fieldErrors: state.frameworkForm.fieldErrors});
+const mapStateToProps = state => ({
+  metaData:state.framework.metaData, 
+  mockData: state.framework.mockData,
+  moduleName:state.framework.moduleName,
+  actionName:state.framework.actionName,
+  formData:state.frameworkForm.form, 
+  fieldErrors: state.frameworkForm.fieldErrors
+});
 
 const mapDispatchToProps = dispatch => ({
   initForm: (reqRequired, patRequired) => {
@@ -130,16 +151,19 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
-  setMetaData:(metaData)=>{
-    dispatch({type:"SET_META_DATA",metaData})
+  setMetaData: (metaData) => {
+    dispatch({type:"SET_META_DATA", metaData})
   },
-  setModuleName:(moduleName)=>{
-    dispatch({type:"SET_MODULE_NAME",moduleName})
+  setMockData: (mockData) => {
+    dispatch({type: "SET_MOCK_DATA", mockData});
   },
-  setActionName:(actionName)=>{
-    dispatch({type:"SET_ACTION_NAME",actionName})
+  setModuleName: (moduleName) => {
+    dispatch({type:"SET_MODULE_NAME", moduleName})
   },
-  handleChange:(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
+  setActionName: (actionName) => {
+    dispatch({type:"SET_ACTION_NAME", actionName})
+  },
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
     dispatch({type:"HANDLE_CHANGE_VERSION_TWO",property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {

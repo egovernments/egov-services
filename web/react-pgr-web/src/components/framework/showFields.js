@@ -17,7 +17,7 @@ import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
 import UiAadharCard from './components/UiAadharCard'
 import UiPanCard from './components/UiPanCard'
-
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 export default class ShowFields extends Component {
   constructor(props) {
@@ -31,8 +31,9 @@ export default class ShowFields extends Component {
     })
   }
 
-  renderGroups=(groups, noCols, uiFramework="google") => {
+  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
     let {renderField}=this;
+    let {addNewCard} = this.props;
     let self = this;
     switch (uiFramework) {
       case "google":
@@ -50,13 +51,20 @@ export default class ShowFields extends Component {
                             )
                         })}
                       </Row>
+                      {group.multiple && <Row>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
+                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath)}}>
+                            <span className="glyphicon glyphicon-plus"></span>
+                          </FloatingActionButton>
+                        </Col>
+                      </Row>}
                     </Grid>
                     <div style={{"marginLeft": "15px"}}>
                       {
                         group.children && 
                         group.children.length ? 
                         group.children.map(function(child) {
-                          return self.renderGroups(child.groups, noCols, uiFramework);
+                          return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
                         }) : ""
                       }
                     </div>

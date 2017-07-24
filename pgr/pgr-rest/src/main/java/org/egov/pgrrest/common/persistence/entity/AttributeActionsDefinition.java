@@ -1,6 +1,7 @@
 package org.egov.pgrrest.common.persistence.entity;
 
 import lombok.*;
+import org.egov.pgrrest.common.domain.model.ServiceStatus;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ public class AttributeActionsDefinition {
     }
 
     public org.egov.pgrrest.common.domain.model.AttributeActionsDefinition toDomain() {
-        return new org.egov.pgrrest.common.domain.model.AttributeActionsDefinition(id.getName());
+        final ServiceStatus serviceStatus = ServiceStatus.parse(id.getCode());
+        return new org.egov.pgrrest.common.domain.model.AttributeActionsDefinition(serviceStatus);
     }
 }

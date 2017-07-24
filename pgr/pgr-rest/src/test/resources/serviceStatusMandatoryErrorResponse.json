@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "Service status is mandatory",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.SERVICE_STATUS_MANDATORY",
+                "message": "Service status is mandatory",
+                "field": "sevaRequest.serviceRequest.attribValues=systemStatus"
+            }
+        ]
+    }
+}

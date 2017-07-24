@@ -1,10 +1,10 @@
 package org.egov.pgrrest.read.domain.service;
 
 import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.ServiceStatus;
 import org.egov.pgrrest.common.persistence.repository.UserRepository;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public class ServiceRequestService {
         enrichWithCRN(serviceRequest);
         contractSevaRequest.update(serviceRequest);
         setUserIdForAnonymousUser(contractSevaRequest);
-        enrichWithComputedFields(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        enrichWithComputedFields(serviceRequest, contractSevaRequest, serviceRequest.getServiceStatus());
         serviceRequestRepository.save(contractSevaRequest);
         deleteDraft(serviceRequest);
     }
@@ -66,13 +66,13 @@ public class ServiceRequestService {
     public void update(ServiceRequest serviceRequest, SevaRequest contractSevaRequest) {
         validate(serviceRequest);
         setUserIdForAnonymousUser(contractSevaRequest);
-        enrichWithComputedFields(serviceRequest, contractSevaRequest, SevaRequestAction.UPDATE);
+        enrichWithComputedFields(serviceRequest, contractSevaRequest, serviceRequest.getServiceStatus());
         serviceRequestRepository.update(contractSevaRequest);
         deleteDraft(serviceRequest);
     }
 
     private void enrichWithComputedFields(ServiceRequest serviceRequest, SevaRequest contractSevaRequest,
-                                          SevaRequestAction action) {
+                                          ServiceStatus action) {
         customFieldService.enrich(serviceRequest, contractSevaRequest, action);
     }
 

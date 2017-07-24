@@ -273,7 +273,7 @@ public class ReceiptRepository {
     public List<BusinessDetailsRequestInfo> getBusinessDetails(final RequestInfo requestInfo, final String tenantId) {
         String queryString = receiptDetailQueryBuilder.searchBusinessDetailsQuery();
         List<String> businessDetailsList = jdbcTemplate.queryForList(queryString, String.class,new Object[]{tenantId});
-        return businessDetailsRepository.getBusinessDetails(businessDetailsList,tenantId,requestInfo);
+        return businessDetailsRepository.getBusinessDetails(businessDetailsList,tenantId,requestInfo).getBusinessDetails();
     }
 
 }

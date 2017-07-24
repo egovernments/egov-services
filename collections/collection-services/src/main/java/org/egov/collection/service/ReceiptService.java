@@ -40,11 +40,7 @@
 
 package org.egov.collection.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
@@ -57,6 +53,7 @@ import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -93,6 +90,9 @@ public class ReceiptService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+    @Autowired
+    private BusinessDetailsRepository businessDetailsRepository;
+
 	@Autowired
 	private CollectionApportionerService collectionApportionerService;
 
@@ -106,7 +106,7 @@ public class ReceiptService {
 		logger.info("Pushing recieptdetail to kafka queue");
 		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
 		Bill apportionBill = receiptReq.getReceipt().get(0).getBill().get(0);
-		apportionBill.getBillDetails().clear();
+		//apportionBill.getBillDetails().clear();
 		for (BillDetail billdetail : bill.getBillDetails()) {
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billdetail.getBusinessService(), receiptReq);
@@ -129,9 +129,9 @@ public class ReceiptService {
 			}
 
 		}
-		apportionBill = getApportionListFromBillingService(
+		/*apportionBill = getApportionListFromBillingService(
 				receiptReq.getRequestInfo(), apportionBill).get(0);
-		bill.getBillDetails().addAll(apportionBill.getBillDetails());
+		bill.getBillDetails().addAll(apportionBill.getBillDetails());*/
 		receiptReq.getReceipt().get(0).getBill().clear();
 		receiptReq.getReceipt().get(0).getBill().add(bill);
 		setReceiptNumber(receiptReq);
@@ -141,17 +141,17 @@ public class ReceiptService {
 		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime())).getTime());
 		auditDetails.setLastModifiedDate((new Date(new java.util.Date().getTime())).getTime());
 		receiptReq.getReceipt().get(0).setAuditDetails(auditDetails);
-		
+        Receipt receipt = null;
 		
 	//	return receiptRepository.pushToQueue(receiptReq); //async call
 		
-		 Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
+		/* Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
 		 Receipt receipt = null;
 		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){
 			 return null;
-		 }else{
+		 }else{*/
 			receipt = create(receiptReq);
-		 }
+		 //}
 		 return receipt;
 	}
 
@@ -377,20 +377,23 @@ public class ReceiptService {
 			String businessDetailsCode, ReceiptReq receiptReq) {
 		logger.info("Searching for fund aand other businessDetails based on code.");
 		BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
-		StringBuilder builder = new StringBuilder();
+	/*	StringBuilder builder = new StringBuilder();
 		String baseUri = applicationProperties.getBusinessDetailsSearch();
 		String searchCriteria = "?businessDetailsCode=" + businessDetailsCode
 				+ "&tenantId=" + receiptReq.getReceipt().get(0).getTenantId();
-		builder.append(baseUri).append(searchCriteria);
+		builder.append(baseUri).append(searchCriteria);*/
 
-		logger.info("URI being hit to get Business Details: "
+	/*	logger.info("URI being hit to get Business Details: "
 				+ builder.toString());
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(receiptReq.getRequestInfo());
+		requestInfoWrapper.setRequestInfo(receiptReq.getRequestInfo());*/
 		try {
-			businessDetailsResponse = restTemplate.postForObject(
+			/*businessDetailsResponse = restTemplate.postForObject(
 					builder.toString(), requestInfoWrapper,
-					BusinessDetailsResponse.class);
+					BusinessDetailsResponse.class);*/
+
+            businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Arrays.asList(businessDetailsCode),
+                    receiptReq.getReceipt().get(0).getTenantId(),receiptReq.getRequestInfo());
 		} catch (Exception e) {
 			logger.error("Error while fetching buisnessDetails from coll-master service. "
 					+ e);

@@ -28,11 +28,11 @@ public class BusinessDetailsRepository {
         this.url = commonServiceHost + url;
     }
 
-    public List<BusinessDetailsRequestInfo> getBusinessDetails(List<String> businessCodes,String tenantId,RequestInfo requestInfo) {
+    public BusinessDetailsResponse getBusinessDetails(List<String> businessCodes,String tenantId,RequestInfo requestInfo) {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
         String businessDetailsCodes = String.join(",", businessCodes);
         return restTemplate.postForObject(url, requestInfoWrapper,
-                    BusinessDetailsResponse.class,tenantId,businessDetailsCodes).getBusinessDetails();
+                    BusinessDetailsResponse.class,tenantId,businessDetailsCodes);
     }
 }

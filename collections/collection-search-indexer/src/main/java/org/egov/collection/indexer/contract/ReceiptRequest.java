@@ -44,6 +44,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -54,5 +56,5 @@ public class ReceiptRequest {
     private RequestInfo requestInfo;
 
     @JsonProperty("Receipt")
-    private Receipt receipt;
+    private List<Receipt> receipt;
 }

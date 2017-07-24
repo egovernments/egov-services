@@ -110,7 +110,7 @@ public class SupplyTypeController {
                 applicationProperties.getCreateSupplyTypeTopicName(), "supplytype-create", supplyTypeRequest);
         final List<SupplyType> supplyTypes = new ArrayList<>();
         supplyTypes.add(supplytypeobj);
-        return getSuccessResponse(supplyTypes, "created", supplyTypeRequest.getRequestInfo());
+        return getSuccessResponse(supplyTypes, "Created", supplyTypeRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/{code}/_update")

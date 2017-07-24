@@ -110,7 +110,7 @@ public class SourceTypeController {
                 applicationProperties.getCreateSourceTypeTopicName(), "sourcetype-create", waterSourceRequest);
         final List<SourceType> waterSourceTypes = new ArrayList<>();
         waterSourceTypes.add(waterSource);
-        return getSuccessResponse(waterSourceTypes, "created", waterSourceRequest.getRequestInfo());
+        return getSuccessResponse(waterSourceTypes, "Created", waterSourceRequest.getRequestInfo());
 
     }
 

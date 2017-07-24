@@ -677,3 +677,13 @@ table td {
     background-color: #51bad9 !important;
     border-color: #51bad9 !important;
 }
+
+.success-toast {
+	background-color: #3ca23c;
+	color: #ffffff;
+}
+
+.error-toast {
+	background-color: #e83e36; 
+	color: #ffffff;
+}

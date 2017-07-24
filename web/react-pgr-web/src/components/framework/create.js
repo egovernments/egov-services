@@ -65,7 +65,7 @@ class Report extends Component {
 
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
-      self.props.toggleSnackbarAndSetText(true, "Success!");
+      self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
       self.initData();
     }, function(err) {
       self.props.setLoadingStatus('hide');
@@ -77,11 +77,6 @@ class Report extends Component {
     return _.get(this.props.formData, path) || "";
   }
 
-  // componentDidUpdate()
-  // {
-  //     // this.initData();
-  // }
-
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {handleChange}=this.props;
       // console.log(e + " "+ property + " "+ isRequired +" "+pattern);
@@ -92,23 +87,41 @@ class Report extends Component {
 
   }
 
-  getNewSpecs = (group, updatedSpecs, updatedJsonPath) => {
-    let groupsArray = _.get(updatedSpecs, updatedJsonPath + ".groups");
+  getNewSpecs = (group, updatedSpecs, path) => {
+    let groupsArray = _.get(updatedSpecs, path);
     groupsArray.push(group);
-    _.set(updatedSpecs, updatedJsonPath + ".groups", groupsArray);
+    _.set(updatedSpecs, path, groupsArray);
     return updatedSpecs;
   }
 
-  updateUpperObjects = (groupsArray) => {
+  updateUpperObjects = (groupsArray, index) => {
 
   }
 
+  getPath = (value) => {
+    let {mockData, moduleName, actionName} = this.props;
+    const getFromGroup = function(groups) {
+      for(var i=0; i<groups.length; i++) {
+        for(var j=0; j<groups[i].children.length; i++) {
+          if(groups[i].children[j].jsonPath == value) {
+            return "groups[" + i + "].children[" + j + "].groups";
+          } else {
+            return "groups[" + i + "].children[" + j + "].groups[" + getFromGroup(groups[i].children[j].groups) + "]"; 
+          }
+        }
+      }
+    }
+
+    return getFromGroup(mockData[moduleName + "." + actionName].groups);
+  }
+
   addNewCard = (group, jsonPath) => {
+    let self = this;
     let {setMockData} = this.props;
     //Increment the values of indexes
-    let {updatedJsonPath, updatedSpecs} = this.incrementIndexValue(group, jsonPath);
+    let updatedSpecs = this.incrementIndexValue(group, jsonPath);
     //Push to the path
-    updatedSpecs = this.getNewSpecs(group, updatedSpecs, updatedJsonPath);
+    updatedSpecs = this.getNewSpecs(group, updatedSpecs, self.getPath(jsonPath));
     //Create new mock data
     setMockData(updatedSpecs);
   }
@@ -116,9 +129,9 @@ class Report extends Component {
   removeCard = (jsonPath, index) => {
     //Remove at that index and update upper array values
     let {mockData, setMockData} = this.props;
-    let groupsArray = _.get(mockData, jsonPath);
+    let groupsArray = _.get(mockData, jsonPath + ".groups");
     groupsArray.split(index, 1);
-    this.updateUpperObjects(groupsArray);
+    this.updateUpperObjects(groupsArray, index, jsonPath);
     _.set(mockData, groupsArray);
     setMockData(mockData);
   }
@@ -186,8 +199,8 @@ const mapDispatchToProps = dispatch => ({
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   },
-  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
-    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState,toastMsg});
+  toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

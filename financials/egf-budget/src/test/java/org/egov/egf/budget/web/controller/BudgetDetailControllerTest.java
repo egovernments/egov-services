@@ -62,7 +62,7 @@ public class BudgetDetailControllerTest {
 		
 		ReflectionTestUtils.setField(BudgetDetailController.class, "persistThroughKafka", "yes");
 
-		when(budgetDetailService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetDetailService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn(getBudgetDetails());
 
 		mockMvc.perform(post("/budgetdetails/_create")
@@ -114,7 +114,7 @@ public class BudgetDetailControllerTest {
 	@Test
 	public void test_create_error() throws IOException, Exception {
 
-		when(budgetDetailService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetDetailService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn((getBudgetDetails()));
 
 		mockMvc.perform(post("/budgetdetails/_create")
@@ -131,7 +131,7 @@ public class BudgetDetailControllerTest {
 		List<BudgetDetail> budgetDetails = getBudgetDetails();
 		budgetDetails.get(0).setId("1");
 
-		when(budgetDetailService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetDetailService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn(budgetDetails);
 
 		mockMvc.perform(post("/budgetdetails/_update")
@@ -186,7 +186,7 @@ public class BudgetDetailControllerTest {
 	@Test
 	public void test_update_error() throws IOException, Exception {
 
-		when(budgetDetailService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetDetailService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn((getBudgetDetails()));
 
 		mockMvc.perform(post("/budgetdetails/_update")

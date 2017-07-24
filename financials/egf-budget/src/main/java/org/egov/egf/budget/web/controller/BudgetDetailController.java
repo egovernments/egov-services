@@ -73,7 +73,7 @@ public class BudgetDetailController {
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			budgetdetails = budgetDetailService.save(budgetdetails, errors,
+			budgetdetails = budgetDetailService.fetchAndValidate(budgetdetails, errors,
 					budgetDetailRequest.getRequestInfo().getAction());
 
 			for (BudgetDetail bd : budgetdetails) {
@@ -127,7 +127,7 @@ public class BudgetDetailController {
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			budgetdetails = budgetDetailService.save(budgetdetails, errors,
+			budgetdetails = budgetDetailService.fetchAndValidate(budgetdetails, errors,
 					budgetDetailRequest.getRequestInfo().getAction());
 
 			for (BudgetDetail bd : budgetdetails) {

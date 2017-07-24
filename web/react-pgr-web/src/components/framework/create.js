@@ -83,14 +83,20 @@ class Report extends Component {
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
   }
 
-  incrementIndexValue = (group) => {
-
+  incrementIndexValue = (group, jsonPath) => {
+    let {formData} = this.props;
+    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
+    var _group = JSON.stringify(group);
+    var regexp = new RegExp(jsonPath + "\\[\\d{1}\\]", "g");
+    _group = _group.replace(regexp, jsonPath + "[" + (length+1) + "]");
+    return JSON.parse(_group);
   }
 
   getNewSpecs = (group, updatedSpecs, path) => {
-    let groupsArray = _.get(updatedSpecs, path);
+    let {moduleName, actionName} = this.props;
+    let groupsArray = _.get(updatedSpecs[moduleName + "." + actionName], path);
     groupsArray.push(group);
-    _.set(updatedSpecs, path, groupsArray);
+    _.set(updatedSpecs[moduleName + "." + actionName], path, groupsArray);
     return updatedSpecs;
   }
 
@@ -102,7 +108,7 @@ class Report extends Component {
           if(groups[i].children[j].jsonPath == value) {
             return "groups[" + i + "].children[" + j + "].groups";
           } else {
-            return "groups[" + i + "].children[" + j + "].groups[" + getFromGroup(groups[i].children[j].groups) + "]"; 
+            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]"; 
           }
         }
       }
@@ -113,12 +119,13 @@ class Report extends Component {
 
   addNewCard = (group, jsonPath) => {
     let self = this;
-    group = Object.assign({}, group);
-    let {setMockData} = this.props;
+    group = JSON.parse(JSON.stringify(group));
+    let {setMockData, mockData, metaData, moduleName, actionName} = this.props;
     //Increment the values of indexes
-    let updatedSpecs = this.incrementIndexValue(group, jsonPath);
+    var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
+    group = this.incrementIndexValue(grp, jsonPath);
     //Push to the path
-    updatedSpecs = this.getNewSpecs(group, updatedSpecs, self.getPath(jsonPath));
+    var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
     //Create new mock data
     setMockData(updatedSpecs);
   }

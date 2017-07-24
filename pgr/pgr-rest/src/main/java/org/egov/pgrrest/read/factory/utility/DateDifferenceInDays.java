@@ -7,8 +7,12 @@ import java.util.function.BiFunction;
 
 public class DateDifferenceInDays implements BiFunction<LocalDate, LocalDate, Integer> {
     public static final String NAME = "dateDifferenceInDays";
+
     @Override
-    public Integer apply(LocalDate date1, LocalDate date2) {
-        return Days.daysBetween(date1, date2).getDays() ;
+    public Integer apply(LocalDate earlierDate, LocalDate laterDate) {
+        if (earlierDate == null || laterDate == null) {
+            return null;
+        }
+        return Days.daysBetween(earlierDate, laterDate).getDays();
     }
 }

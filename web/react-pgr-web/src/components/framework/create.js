@@ -92,8 +92,15 @@ class Report extends Component {
 
   }
 
-  getNewSpecs = (group) => {
+  getNewSpecs = (group, updatedSpecs, updatedJsonPath) => {
+    let groupsArray = _.get(updatedSpecs, updatedJsonPath + ".groups");
+    groupsArray.push(group);
+    _.set(updatedSpecs, updatedJsonPath + ".groups", groupsArray);
+    return updatedSpecs;
+  }
 
+  updateUpperObjects = (groupsArray) => {
+    
   }
 
   addNewCard = (group, jsonPath) => {
@@ -104,11 +111,16 @@ class Report extends Component {
     updatedSpecs = this.getNewSpecs(group, updatedSpecs, updatedJsonPath);
     //Create new mock data
     setMockData(updatedSpecs);
-
   }
 
   removeCard = (jsonPath, index) => {
-    console.log("HERE");
+    //Remove at that index and update upper array values
+    let {mockData} = this.props;
+    let groupsArray = _.get(mockData, jsonPath);
+    groupsArray.split(index, 1);
+    this.updateUpperObjects(groupsArray);
+    _.set(mockData, groupsArray);
+    setMockData(mockData);
   }
 
   render() {

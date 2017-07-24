@@ -60,8 +60,8 @@ export default class ShowFields extends Component {
                       </Row>}
                       {group.multiple && <Row style={{"visibility": (groupIndex < (groups.length-1)) ? "initial" : "hidden" }}>
                         <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
-                          <FloatingActionButton mini={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
-                            <span className="glyphicon glyphicon-plus"></span>
+                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
+                            <span className="glyphicon glyphicon-minus"></span>
                           </FloatingActionButton>
                         </Col>
                       </Row>}

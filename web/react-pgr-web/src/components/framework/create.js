@@ -94,10 +94,6 @@ class Report extends Component {
     return updatedSpecs;
   }
 
-  updateUpperObjects = (groupsArray, index) => {
-
-  }
-
   getPath = (value) => {
     let {mockData, moduleName, actionName} = this.props;
     const getFromGroup = function(groups) {
@@ -117,6 +113,7 @@ class Report extends Component {
 
   addNewCard = (group, jsonPath) => {
     let self = this;
+    group = Object.assign({}, group);
     let {setMockData} = this.props;
     //Increment the values of indexes
     let updatedSpecs = this.incrementIndexValue(group, jsonPath);
@@ -128,12 +125,8 @@ class Report extends Component {
 
   removeCard = (jsonPath, index) => {
     //Remove at that index and update upper array values
-    let {mockData, setMockData} = this.props;
-    let groupsArray = _.get(mockData, jsonPath + ".groups");
-    groupsArray.split(index, 1);
-    this.updateUpperObjects(groupsArray, index, jsonPath);
-    _.set(mockData, groupsArray);
-    setMockData(mockData);
+    let {mockData, setMockData, formData} = this.props;
+
   }
 
   render() {

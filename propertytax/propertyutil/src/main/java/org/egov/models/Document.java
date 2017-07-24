@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +21,8 @@ public class Document {
 	private Long id = null;
 
 	@JsonProperty("documentType")
-	private DocumentType documentType = null;
+	@NotNull
+	private String documentType = null;
 
 	@JsonProperty("fileStore")
 	private String fileStore = null;

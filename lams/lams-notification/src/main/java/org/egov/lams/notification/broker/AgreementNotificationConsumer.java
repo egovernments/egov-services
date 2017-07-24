@@ -34,7 +34,7 @@ public class AgreementNotificationConsumer {
 
 			try {
 				agreementNotificationAdapter
-						.sendSmsNotification(objectMapper.convertValue(consumerRecord, AgreementRequest.class));
+						.sendNotification(objectMapper.convertValue(consumerRecord, AgreementRequest.class));
 			}catch (Exception exception) {
 				log.debug("processMessage:" + exception);
 				throw exception;

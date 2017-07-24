@@ -318,10 +318,7 @@ public class PropertyServiceImpl implements PropertyService {
 			}
 
 			List<Document> documents = propertyRepository.getDocumentByPropertyDetails(propertyDetailId);
-			documents.forEach(document -> {
-				document.setDocumentType(propertyRepository.getDocumentTypes(document.getId()));
-			});
-
+			
 			property.getPropertyDetail().setDocuments(documents);
 
 			property.setAuditDetails(propertyRepository.getAuditDetailsForProperty(propertyId));

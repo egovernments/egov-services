@@ -1,5 +1,6 @@
 package org.egov.models;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.enums.ApplicationEnum;
@@ -27,6 +28,10 @@ public class DocumentType {
 
 	@JsonProperty("name")
 	private String name = null;
+	
+	@JsonProperty("code")
+	@NotNull
+	private String code = null;
 
 	@JsonProperty("application")
 	private ApplicationEnum application = null;

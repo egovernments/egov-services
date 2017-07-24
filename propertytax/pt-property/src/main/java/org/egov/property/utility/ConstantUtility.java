@@ -9,7 +9,7 @@ public class ConstantUtility {
 
 	// Master table names
 
-	public static final String DEPRECIATION_TABLE_NAME = "egpt_depreciation";
+	public static final String DEPRECIATION_TABLE_NAME = "egpt_mstr_depreciation";
 
 	public static final String FLOOR_TYPE_TABLE_NAME = "egpt_mstr_floortype";
 
@@ -29,7 +29,7 @@ public class ConstantUtility {
 
 	public static final String STRUCTURE_CLASS_TABLE_NAME = "egpt_mstr_structureclass";
 
-	public static final String MUTATION_MASTER_TABLE_NAME = "egpt_mutation_master";
+	public static final String MUTATION_MASTER_TABLE_NAME = "egpt_mstr_mutation";
 	
 	public static final String SPECIAL_NOTICE_TABLE_NAME ="egpt_specialnotice";
 	

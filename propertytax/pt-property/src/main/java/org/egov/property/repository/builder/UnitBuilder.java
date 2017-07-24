@@ -20,7 +20,7 @@ public class UnitBuilder {
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
 				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
-				.append(" parentid = ? WHERE id = ?");
+				.append(" parentid = ?,isAuthorised = ? WHERE id = ?");
 
 		return unitSql.toString();
 	}
@@ -45,12 +45,27 @@ public class UnitBuilder {
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
 				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
-				.append("  parentid = ? WHERE id = ?");
+				.append("  parentid = ?, isAuthorised = ? WHERE id = ?");
 
 		return unitSql.toString();
 	}
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_unit where id= ?";
+
+	public static final String INSERT_UNITHISTORY_QUERY = "INSERT INTO egpt_unit_history ("
+			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
+			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
+			+ "floor,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	public static final String INSERT_ROOMHISTORY_QUERY = "INSERT INTO egpt_unit_history ("
+			+ "unitNo, unitType, length,width,builtupArea,assessableArea,"
+			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancy,occupierName,firmName,rentCollected, structure, age,"
+			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
+			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
+			+ "floor,parentid,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
 
 }

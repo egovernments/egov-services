@@ -1,4 +1,4 @@
-package org.egov.propertyUser.userConsumer;
+package org.egov.property.consumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,10 +6,9 @@ import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.TitleTransfer;
+import org.egov.models.PropertyRequest;
 import org.egov.models.TitleTransferRequest;
-import org.egov.models.User;
-import org.egov.propertyUser.util.UserUtil;
+import org.egov.property.services.PersisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -25,10 +24,10 @@ public class TitleTransferConsumer {
 	Environment environment;
 
 	@Autowired
-	private Producer producer;
+	PersisterService persisterService;
 
 	@Autowired
-	private UserUtil userUtil;
+	Producer producer;
 
 	/*
 	 * This method for creating rest template
@@ -80,29 +79,26 @@ public class TitleTransferConsumer {
 	 * authentication Updating auth token in UserAuthResponseInfo Search user
 	 * Create user
 	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.titletransfer.create')}",
-			"#{environment.getProperty('egov.propertytax.property.titletransfer.update')}" })
+	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.created')}",
+			"#{environment.getProperty('egov.propertytax.property.titletransfer.approved')}",
+			"#{environment.getProperty('egov.propertytax.property.titletransfer.workflow.updated')}",
+			"#{environment.getProperty('egov.propertytax.property.titletransfer.db.saved')}" })
 	public void receive(ConsumerRecord<String, TitleTransferRequest> consumerRecord) throws Exception {
 		TitleTransferRequest titleTransferRequest = consumerRecord.value();
-		TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
-		for (User user : titleTransfer.getNewOwners()) {
-			user.setUserName(user.getMobileNumber());
 
-			user = userUtil.getUserId(user, titleTransferRequest.getRequestInfo());
+		if (consumerRecord.topic().equalsIgnoreCase(
+				environment.getProperty("egov.propertytax.property.titletransfer.workflow.created"))) {
+			persisterService.addTitleTransfer(titleTransferRequest);
+		} else if (consumerRecord.topic().equalsIgnoreCase(
+				environment.getProperty("egov.propertytax.property.titletransfer.workflow.updated"))) {
+			persisterService.updateTitleTransfer(titleTransferRequest);
+		} else {
+			PropertyRequest propertyRequest = persisterService
+					.savePropertyHistoryandUpdateProperty(titleTransferRequest);
+
+			producer.send(environment.getProperty("egov.propertytax.property.titletransfer.db.saved"), propertyRequest);
 
 		}
-
-		if (consumerRecord.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.titletransfer.create")))
-			producer.kafkaTemplate.send(
-					environment.getProperty("egov.propertytax.property.titletransfer.workflow.create"),
-					titleTransferRequest);
-
-		else if (consumerRecord.topic()
-				.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.titletransfer.update")))
-			producer.kafkaTemplate.send(
-					environment.getProperty("egov.propertytax.property.titletransfer.workflow.update"),
-					titleTransferRequest);
 	}
 
 }

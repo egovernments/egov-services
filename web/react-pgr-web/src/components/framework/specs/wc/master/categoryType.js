@@ -2,6 +2,8 @@ var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"url": "/wcms/masters/categorytype/_create",
+		"tenantIdRequired": true,
+		"objectName": "CategoryType",
 		"groups": [
 			{
 				"label": "wc.create.categorytype.title",

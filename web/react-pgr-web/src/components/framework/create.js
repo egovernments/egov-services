@@ -104,6 +104,7 @@ class Report extends Component {
     var updatedSpecs = this.getNewSpecs(group, updatedJsonPath);
     //Create new mock data
     setMockData(updatedSpecs);
+    
   }
 
   render() {

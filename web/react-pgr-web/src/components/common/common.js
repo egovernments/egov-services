@@ -33,7 +33,8 @@ var localationData={
   "wc.create.groups.floorDetails.floorNo": "Floor No",
   "wc.create.groups.floorDetails.floorName": "Floor Name",
   "wc.create.groups.roomDetails.roomNo": "Room No",
-  "wc.create.groups.roomDetails.roomName": "Room Name"
+  "wc.create.groups.roomDetails.roomName": "Room Name",
+  "wc.create.message.success": "Created Successfully . . . !"
 }
 
 export function translate(locale_text){

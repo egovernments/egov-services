@@ -46,7 +46,7 @@ public class BudgetDetailController {
 	private BudgetServiceQueueRepository budgetServiceQueueRepository;
 
 	@Value("${persist.through.kafka}")
-	private String persistThroughKafka;
+	private static String persistThroughKafka;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)

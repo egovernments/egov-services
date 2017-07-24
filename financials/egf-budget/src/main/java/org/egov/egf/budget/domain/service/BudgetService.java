@@ -83,7 +83,7 @@ public class BudgetService {
 
 		for (Budget b : budgets) {
 
-			resultList.add(update(b));
+			resultList.add(update(b)); 
 
 		}
 

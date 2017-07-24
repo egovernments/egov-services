@@ -297,13 +297,12 @@ public class AgreementRepository {
 		if(documents != null){
 			String sql = "INSERT INTO eglams_document (id,documenttype,agreement,filestore,tenantid) values "
 					+ "(nextval('seq_eglams_document'),(select id from eglams_documenttype where "
-					+ "name='Agreement Docs' and application='CREATE' and tenantid='"
-					+ agreement.getTenantId()+"'),?,?,?);";
+					+ "name='Agreement Docs' and application='CREATE' and tenantid= ?),?,?,?);";
 			logger.info("the insert query for agreement docs : "+sql);
 			List<Object[]> documentBatchArgs = new ArrayList<>();
 			
 			for (Document document : documents) {
-				Object[] documentRecord = { agreement.getId(),document.getFileStore(), agreement.getTenantId() };
+				Object[] documentRecord = { agreement.getTenantId(), agreement.getId(),document.getFileStore(), agreement.getTenantId() };
 				documentBatchArgs.add(documentRecord);
 			}
 		

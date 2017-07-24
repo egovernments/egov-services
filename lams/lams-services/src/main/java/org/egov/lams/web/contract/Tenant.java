@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class Tenant {
     private String code;
+    private String name;
     private String description;
     private String logoId;
     private String imageId;

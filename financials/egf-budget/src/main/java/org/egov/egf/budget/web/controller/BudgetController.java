@@ -93,6 +93,10 @@ public class BudgetController {
 				budgetContracts.add(contract);
 			}
 
+			budgetRequest.setData(budgetContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetRequest);
+
 		}
 
 		budgetResponse.setData(budgetContracts);
@@ -144,7 +148,12 @@ public class BudgetController {
 				budgetContracts.add(contract);
 			}
 
+			budgetRequest.setData(budgetContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetRequest);
+
 		}
+		
 		budgetResponse.setData(budgetContracts);
 
 		return budgetResponse;

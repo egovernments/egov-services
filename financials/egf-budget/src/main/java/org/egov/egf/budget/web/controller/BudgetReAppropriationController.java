@@ -94,6 +94,10 @@ public class BudgetReAppropriationController {
 				budgetReAppropriationContracts.add(contract);
 			}
 
+			budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetReAppropriationRequest);
+
 		}
 		budgetReAppropriationResponse.setData(budgetReAppropriationContracts);
 
@@ -143,6 +147,10 @@ public class BudgetReAppropriationController {
 				contract = mapper.toContract(bra);
 				budgetReAppropriationContracts.add(contract);
 			}
+
+			budgetReAppropriationRequest.setData(budgetReAppropriationContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetReAppropriationRequest);
 
 		}
 

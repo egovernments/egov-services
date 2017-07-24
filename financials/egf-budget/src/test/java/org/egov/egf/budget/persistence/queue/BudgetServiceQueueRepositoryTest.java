@@ -35,7 +35,8 @@ public class BudgetServiceQueueRepositoryTest {
 
 	@Before
 	public void setup() {
-		budgetServiceQueueRepository = new BudgetServiceQueueRepository(financialProducer, TOPIC_NAME, KEY_NAME);
+		budgetServiceQueueRepository = new BudgetServiceQueueRepository(financialProducer, TOPIC_NAME, KEY_NAME,
+				TOPIC_NAME, KEY_NAME);
 	}
 
 	@Test

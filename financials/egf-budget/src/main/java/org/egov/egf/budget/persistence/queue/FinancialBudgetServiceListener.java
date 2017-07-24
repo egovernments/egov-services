@@ -29,6 +29,9 @@ public class FinancialBudgetServiceListener {
 	@Value("${kafka.topics.egf.budget.service.completed.topic}")
 	private String completedTopic;
 	
+	@Value("${kafka.topics.egf.budget.service.completed.key}")
+	private String completedKey;
+	
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -68,7 +71,7 @@ public class FinancialBudgetServiceListener {
 
 			mastersMap.clear();
 			mastersMap.put("budgetcontract_completed", request);
-			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetcontract_update") != null) {
@@ -84,7 +87,7 @@ public class FinancialBudgetServiceListener {
 
 			mastersMap.clear();
 			mastersMap.put("budgetcontract_completed", request);
-			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetdetailcontract_create") != null) {
@@ -101,7 +104,7 @@ public class FinancialBudgetServiceListener {
 
 			mastersMap.clear();
 			mastersMap.put("budgetdetailcontract_completed", request);
-			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetdetailcontract_update") != null)
@@ -120,7 +123,7 @@ public class FinancialBudgetServiceListener {
 
 			mastersMap.clear();
 			mastersMap.put("budgetdetailcontract_completed", request);
-			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetreappropriationcontract_create") != null) {
@@ -137,7 +140,7 @@ public class FinancialBudgetServiceListener {
 
 			mastersMap.clear();
 			mastersMap.put("budgetreappropriationcontract_completed", request);
-			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
 		}
 		if (mastersMap.get("budgetreappropriationcontract_update") != null)
 
@@ -155,7 +158,7 @@ public class FinancialBudgetServiceListener {
 
 			mastersMap.clear();
 			mastersMap.put("budgetreappropriationcontract_completed", request);
-			financialProducer.sendMessage(completedTopic, completedTopic, mastersMap);
+			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
 		}
 
 	}

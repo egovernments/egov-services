@@ -93,6 +93,10 @@ public class BudgetDetailController {
 				budgetDetailContracts.add(contract);
 			}
 
+			budgetDetailRequest.setData(budgetDetailContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetDetailRequest);
+			
 		}
 		budgetDetailResponse.setData(budgetDetailContracts);
 
@@ -142,6 +146,11 @@ public class BudgetDetailController {
 				contract = mapper.toContract(bd);
 				budgetDetailContracts.add(contract);
 			}
+			
+
+			budgetDetailRequest.setData(budgetDetailContracts);
+
+			budgetServiceQueueRepository.addToSearchQue(budgetDetailRequest);
 
 		}
 

@@ -201,7 +201,7 @@ class CustomMenu extends Component {
 
   render() {
     // console.log(this.state.searchText);
-    let {handleToggle,actionList}=this.props;
+    let {handleToggle,actionList,menuConvention}=this.props;
     let {searchText,filterMenu,level,parentLevel,modules,items,changeModulesActions,path,menuItems}=this.state;
     let {menuChange,changeLevel,menuChangeTwo}=this;
     // console.log(actionList);
@@ -340,6 +340,63 @@ class CustomMenu extends Component {
 
             }
             else {
+              if (menuConvention.hasOwnProperty(item.path)) {
+                return(
+                      <Link  key={index} to={menuConvention[item.path]} >
+                        <MenuItem
+                            style={{whiteSpace: "initial"}}
+                             onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+                             leftIcon={<i className="material-icons">view_module</i>}
+                             primaryText={item.name}
+                          />
+                      </Link>
+                    )
+              } else {
+                let base="";
+                if (item.path.search("EIS")>-1) {
+                  base=window.location.origin+"/hr-web";
+                  // console.log(base);
+                }
+                else if (item.path.search("Leases And Agreements")>-1) {
+                  base=window.location.origin+"/lams-web";
+
+                }
+                else if (item.path.search("Asset Management")>-1) {
+                    base=window.location.origin+"/asset-web";
+                }
+                return (
+                         <a key={index} href={base+item.url} target="_blank">
+                           <MenuItem
+                                style={{whiteSpace: "initial"}}
+                                leftIcon={<i className="material-icons">view_module</i>}
+                                primaryText={item.name}
+                             />
+                          </a>
+                        )
+              }
+
+            }
+
+        })
+
+      }
+      else {
+
+          return actionList.map((item,index)=>{
+              if (item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+
+            if (menuConvention.hasOwnProperty(item.path)) {
+              return(
+                    <Link  key={index} to={menuConvention[item.path]} >
+                      <MenuItem
+                          style={{whiteSpace: "initial"}}
+                           onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
+                           leftIcon={<i className="material-icons">view_module</i>}
+                           primaryText={item.name}
+                        />
+                    </Link>
+                  )
+            } else {
               let base="";
               if (item.path.search("EIS")>-1) {
                 base=window.location.origin+"/hr-web";
@@ -362,77 +419,10 @@ class CustomMenu extends Component {
                         </a>
                       )
             }
-            // if (item.level==level) {
-            //   if (item.url) {
-            //     return(
-            //       <Link  key={index} to={item.url} >
-            //         <MenuItem
-            //             style={{whiteSpace: "initial"}}
-            //              onTouchTap={()=>{checkUrl(item); document.title=item.name; handleToggle(false)}}
-            //              leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-            //              primaryText={item.name}
-            //           />
-            //       </Link>
-            //
-            //
-            //     )
-            //
-            //   } else {
-            //     return (
-            //           <MenuItem
-            //
-            //                key={index}
-            //                leftIcon={<i className="material-icons">{item.leftIcon}</i>}
-            //                primaryText={item.name}
-            //                rightIcon={<i className="material-icons">{item.rightIcon}</i>}
-            //                onTouchTap={()=>{menuChange(item.nextLevel, item.level)}}
-            //             />
-            //         )
-            //   }
-            //
-            // }
-        })
-        // return(
-        //   <div>
-        //     <MenuItem
-        //
-        //          leftIcon={<i className="material-icons">view_module</i>}
-        //          primaryText={menuItems.length>0?menuItems[0].title:""}
-        //          rightIcon={<ArrowDropRight />}
-        //           />
-        //
-        //     </div>
-        // )
-      }
-      else {
 
-          return actionList.map((item,index)=>{
-            let base="";
-            if (item.path.search("EIS")>-1) {
-              base=window.location.origin+"/hr-web";
-              // console.log(base);
-            }
-            else if (item.path.search("Leases And Agreements")>-1) {
-              base=window.location.origin+"/lams-web";
+          }
 
-            }
-            else if (item.path.search("Asset Management")>-1) {
-                base=window.location.origin+"/asset-web";
-            }
-                if (item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
-                  return(
-                     <a key={index} href={base+item.url} target="_blank">
-                        <MenuItem
-                            style={{whiteSpace: "initial"}}
-                             onTouchTap={()=>{handleToggle(false)}}
-                             leftIcon={<i className="material-icons">view_module</i>}
-                             primaryText={item.displayName}
-                          />
-                      </a>
-                  )
-                }
-
-          })
+      })
 
 
       }
@@ -480,7 +470,7 @@ class CustomMenu extends Component {
 }
 
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({menuConvention:state.common.menuConvention});
 const mapDispatchToProps = dispatch => ({
   handleToggle: (showMenu) => dispatch({type: 'MENU_TOGGLE', showMenu}),
   setRoute:(route)=>dispatch({type:'SET_ROUTE',route})

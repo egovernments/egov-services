@@ -46,20 +46,20 @@ public class ServiceRequestCustomFieldService {
             return;
         }
         validateAttributeValues(serviceRequest, serviceDefinition, action);
-        if (serviceDefinition.isComputedFieldsAbsent()) {
+        if (serviceDefinition.isComputedFieldsAbsent(action)) {
             return;
         }
-        computeFields(serviceRequest, attribValues, serviceDefinition);
+        computeFields(serviceRequest, attribValues, serviceDefinition, action);
     }
 
     private void computeFields(ServiceRequest serviceRequest,
                                List<org.egov.pgr.common.contract.AttributeEntry> attribValues,
-                               ServiceDefinition serviceDefinition) {
+                               ServiceDefinition serviceDefinition, ServiceStatus action) {
         final NashornSandbox scriptEngine = scriptEngineFactory.create();
         final Map<String, List<AttributeEntry>> codeToAttributeEntriesMap =
             getCodeToAttributeEntriesMap(serviceRequest);
         loadEngineWithDefinedVariables(serviceDefinition, scriptEngine, codeToAttributeEntriesMap);
-        serviceDefinition.getComputedFields()
+        serviceDefinition.getComputedFields(action)
             .forEach(computedAttributeDefinition ->
                 computeAttribute(scriptEngine, computedAttributeDefinition, attribValues));
     }

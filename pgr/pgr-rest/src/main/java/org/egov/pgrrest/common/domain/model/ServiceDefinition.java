@@ -18,15 +18,21 @@ public class ServiceDefinition {
     private String tenantId;
     private List<AttributeDefinition> attributes;
 
-    public boolean isComputedFieldsAbsent() {
-        return isEmpty(getComputedFields());
+    public boolean isComputedFieldsAbsent(ServiceStatus action) {
+        return isEmpty(getComputedFields(action));
     }
 
     public boolean isAttributesAbsent() {
         return isEmpty(attributes);
     }
 
-    public List<AttributeDefinition> getComputedFields() {
+    public List<AttributeDefinition> getComputedFields(ServiceStatus action) {
+        return getComputedFields().stream()
+            .filter(attribute -> actionMatches(action, attribute))
+            .collect(Collectors.toList());
+    }
+
+    private List<AttributeDefinition> getComputedFields() {
         return attributes.stream()
             .filter(AttributeDefinition::isReadOnly)
             .collect(Collectors.toList());

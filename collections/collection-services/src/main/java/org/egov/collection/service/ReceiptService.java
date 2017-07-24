@@ -150,7 +150,7 @@ public class ReceiptService {
 		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){
 			 return null;
 		 }else{
-			receipt = create(receiptReq);
+			receipt = create(receiptReq); //sync call
 		 }
 		 return receipt;
 	}

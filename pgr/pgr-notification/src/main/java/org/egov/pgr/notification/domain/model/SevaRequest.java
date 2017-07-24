@@ -1,12 +1,17 @@
 package org.egov.pgr.notification.domain.model;
 
-import org.egov.pgr.common.date.DateFormatter;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.egov.pgr.common.date.DateFormatter;
 
 public class SevaRequest {
 
@@ -43,7 +48,7 @@ public class SevaRequest {
     private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
     private static final String LOCATION_ID = "locationId";
     private static final String CHILD_LOCATION_ID = "childLocationId";
-    private static final String SYSTEM_FILESTORE_ID="systemFilestoreId";
+    private static final String REJECTION_LETTER="rejectionLetter";
 
 
     private final HashMap<String, Object> serviceRequest;
@@ -128,9 +133,14 @@ public class SevaRequest {
     public boolean isResubmited() {
         return RESUBMIT_STATUS.equalsIgnoreCase(getStatusName());
     }
+    
     public String getFileStoreId()
     {
-    	return getDynamicSingleValue(SYSTEM_FILESTORE_ID);
+    	if(getDynamicMultiValue(REJECTION_LETTER) != null && !getDynamicMultiValue(REJECTION_LETTER).isEmpty())
+    			{
+        	return getDynamicMultiValue(REJECTION_LETTER).get(getDynamicMultiValue(REJECTION_LETTER).size() - 1);
+    			}
+    	return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -184,5 +194,12 @@ public class SevaRequest {
             .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
             .orElse(null);
     }
+    private List<String> getDynamicMultiValue(String key) {
+        return getAttributeValues().stream()
+            .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
+            .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD)).collect(Collectors.toList());
+
+    }
+   
 
 }

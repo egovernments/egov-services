@@ -16,13 +16,9 @@ public class RejectDeliverableCitizenEmailMessageStrategy implements EmailMessag
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_rejected_deliverable_service";
 
    
-    @Value("${filestore.host}")
+    @Value("${environment.host}")
     public String domain;
     
-     @Value("${get.filestore.url.path}")
-     private String filepath;
-    
-
     @Override
     public boolean matches(NotificationContext context) {
         return context.getServiceType().isDeliverableType()
@@ -48,7 +44,7 @@ public class RejectDeliverableCitizenEmailMessageStrategy implements EmailMessag
 
         String fileId=sevaRequest.getFileStoreId();
         String tenantId=sevaRequest.getTenantId();
-        String urlLink="<html><body><a href =" + domain + filepath + "tenantId=" + tenantId + " &fileStoreId= "+ fileId + ">Download Link</a></body></html>";
+        String urlLink="<html><body><a href =" + domain + "/filestore/v1/files/id?tenantId=" + tenantId + " &fileStoreId= "+ fileId + ">Download Link</a></body></html>";
         builder.put("citizenName", sevaRequest.getRequesterName());
         builder.put("crn", sevaRequest.getCrn());
         builder.put("serviceName", sevaRequest.getServiceTypeName());

@@ -2,6 +2,7 @@ Dear {{citizenName}}
 Your Request for {{serviceName}} has been rejected  with tracking number {{crn}}. Please use this number for all future references.
 This is a computer generated email and does not need any signature.
 
-please find the attached file for  {{urlLink}}
 Thanks,
 {{ULBName}}
+
+Please Click Here To Download Rejection Letter File {{filestoreurl}}

@@ -43,6 +43,7 @@ public class SevaRequest {
     private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
     private static final String LOCATION_ID = "locationId";
     private static final String CHILD_LOCATION_ID = "childLocationId";
+    private static final String SYSTEM_FILESTORE_ID="systemFilestoreId";
 
 
     private final HashMap<String, Object> serviceRequest;
@@ -126,6 +127,10 @@ public class SevaRequest {
     }
     public boolean isResubmited() {
         return RESUBMIT_STATUS.equalsIgnoreCase(getStatusName());
+    }
+    public String getFileStoreId()
+    {
+    	return getDynamicSingleValue(SYSTEM_FILESTORE_ID);
     }
 
     @SuppressWarnings("unchecked")

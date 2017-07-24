@@ -101,25 +101,25 @@ class Report extends Component {
     //Increment the values of indexes
     let {updatedJsonPath, updatedSpecs} = this.incrementIndexValue(group, jsonPath);
     //Push to the path
-    var updatedSpecs = this.getNewSpecs(group, updatedSpecs, updatedJsonPath);
+    updatedSpecs = this.getNewSpecs(group, updatedSpecs, updatedJsonPath);
     //Create new mock data
     setMockData(updatedSpecs);
 
   }
 
   removeCard = (jsonPath, index) => {
-
+    console.log("HERE");
   }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {create, handleChange, getVal, addNewCard} = this;
+    let {create, handleChange, getVal, addNewCard, removeCard} = this;
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={addNewCard}/>}
+        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={addNewCard} removeCard={removeCard}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>

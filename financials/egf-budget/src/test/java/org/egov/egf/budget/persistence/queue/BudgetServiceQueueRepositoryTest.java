@@ -81,6 +81,25 @@ public class BudgetServiceQueueRepositoryTest {
 
 	}
 
+	@Test
+	public void test_add_to_search_queue() {
+
+		CommonRequest<BudgetContract> request = new CommonRequest<BudgetContract>();
+
+		request.setData(getBudgetContracts());
+
+		budgetServiceQueueRepository.addToSearchQue(request);
+
+		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
+
+		verify(financialProducer).sendMessage(any(String.class), any(String.class), argumentCaptor.capture());
+
+		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
+
+		assertEquals(request, actualRequest.get("budgetcontract_completed"));
+
+	}
+
 	private List<BudgetContract> getBudgetContracts() {
 		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
 		BudgetContract budgetContract = BudgetContract.builder().name("test")

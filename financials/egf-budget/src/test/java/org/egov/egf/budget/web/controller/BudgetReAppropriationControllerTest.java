@@ -61,7 +61,7 @@ public class BudgetReAppropriationControllerTest {
 		
 		ReflectionTestUtils.setField(BudgetReAppropriationController.class, "persistThroughKafka", "yes");
 
-		when(budgetReAppropriationService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetReAppropriationService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn(getBudgetReAppropriations());
 
 		mockMvc.perform(post("/budgetreappropriations/_create")
@@ -113,7 +113,7 @@ public class BudgetReAppropriationControllerTest {
 	@Test
 	public void test_create_error() throws IOException, Exception {
 
-		when(budgetReAppropriationService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetReAppropriationService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn((getBudgetReAppropriations()));
 
 		mockMvc.perform(post("/budgetreappropriations/_create")
@@ -130,7 +130,7 @@ public class BudgetReAppropriationControllerTest {
 		List<BudgetReAppropriation> budgetReAppropriations = getBudgetReAppropriations();
 		budgetReAppropriations.get(0).setId("1");
 
-		when(budgetReAppropriationService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetReAppropriationService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn(budgetReAppropriations);
 
 		mockMvc.perform(post("/budgetreappropriations/_update")
@@ -186,7 +186,7 @@ public class BudgetReAppropriationControllerTest {
 	@Test
 	public void test_update_error() throws IOException, Exception {
 
-		when(budgetReAppropriationService.save(any(List.class), any(BindingResult.class), any(String.class)))
+		when(budgetReAppropriationService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class)))
 				.thenReturn((getBudgetReAppropriations()));
 
 		mockMvc.perform(post("/budgetreappropriations/_update")

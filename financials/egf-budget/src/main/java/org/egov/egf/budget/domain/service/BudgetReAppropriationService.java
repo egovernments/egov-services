@@ -52,7 +52,7 @@ public class BudgetReAppropriationService {
 
 		try {
 
-			budgetreappropriations = save(budgetreappropriations, errors, ACTION_CREATE);
+			budgetreappropriations = fetchAndValidate(budgetreappropriations, errors, ACTION_CREATE);
 
 		} catch (CustomBindException e) {
 
@@ -76,7 +76,7 @@ public class BudgetReAppropriationService {
 
 		try {
 
-			budgetreappropriations = save(budgetreappropriations, errors, ACTION_UPDATE);
+			budgetreappropriations = fetchAndValidate(budgetreappropriations, errors, ACTION_UPDATE);
 
 		} catch (CustomBindException e) {
 
@@ -144,7 +144,7 @@ public class BudgetReAppropriationService {
 	}
 
 	@Transactional
-	public List<BudgetReAppropriation> save(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors,
+	public List<BudgetReAppropriation> fetchAndValidate(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors,
 			String action) {
 
 		budgetreappropriations = fetchRelated(budgetreappropriations);

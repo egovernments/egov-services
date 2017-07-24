@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.TestConfiguration;
@@ -50,11 +51,71 @@ public class BudgetServiceTest {
 	}
 
 	@Test
+	public final void test_save_with_out_kafka() {
+
+		List<Budget> expextedResult = getBudgets();
+
+		Budget budget = expextedResult.get(0);
+
+		when(budgetRepository.save(any(Budget.class))).thenReturn(budget);
+
+		List<Budget> actualResult = budgetService.save(expextedResult, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_save_with_out_kafka_and_with_null_req() {
+
+		List<Budget> expextedResult = getBudgets();
+
+		Budget budget = expextedResult.get(0);
+
+		when(budgetRepository.save(any(Budget.class))).thenReturn(budget);
+
+		List<Budget> actualResult = budgetService.save(null, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test
+	public final void test_update_with_out_kafka() {
+
+		List<Budget> expextedResult = getBudgets();
+
+		Budget budget = expextedResult.get(0);
+
+		when(budgetRepository.update(any(Budget.class))).thenReturn(budget);
+
+		List<Budget> actualResult = budgetService.update(expextedResult, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test(expected = CustomBindException.class)
+	public final void test_update_with_out_kafka_and_with_null_req() {
+
+		List<Budget> expextedResult = getBudgets();
+
+		Budget budget = expextedResult.get(0);
+
+		when(budgetRepository.update(any(Budget.class))).thenReturn(budget);
+
+		List<Budget> actualResult = budgetService.update(null, errors);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test
 	public final void test_save_for_create() {
 
 		List<Budget> expextedResult = getBudgets();
 
-		List<Budget> actualResult = budgetService.save(expextedResult, errors, "create");
+		List<Budget> actualResult = budgetService.fetchAndValidate(expextedResult, errors, "create");
 
 		assertEquals(expextedResult, actualResult);
 
@@ -65,7 +126,7 @@ public class BudgetServiceTest {
 
 		List<Budget> expextedResult = getBudgets();
 
-		List<Budget> actualResult = budgetService.save(expextedResult, errors, "update");
+		List<Budget> actualResult = budgetService.fetchAndValidate(expextedResult, errors, "update");
 
 		assertEquals(expextedResult, actualResult);
 

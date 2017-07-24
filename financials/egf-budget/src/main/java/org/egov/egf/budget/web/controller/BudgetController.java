@@ -73,7 +73,7 @@ public class BudgetController {
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
+			budgets = budgetService.fetchAndValidate(budgets, errors, budgetRequest.getRequestInfo().getAction());
 
 			for (Budget b : budgets) {
 				contract = mapper.toContract(b);
@@ -128,7 +128,7 @@ public class BudgetController {
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			budgets = budgetService.save(budgets, errors, budgetRequest.getRequestInfo().getAction());
+			budgets = budgetService.fetchAndValidate(budgets, errors, budgetRequest.getRequestInfo().getAction());
 
 			for (Budget b : budgets) {
 				contract = mapper.toContract(b);

@@ -62,7 +62,7 @@ public class BudgetControllerTest {
 		
 		ReflectionTestUtils.setField(BudgetController.class, "persistThroughKafka", "yes");
 
-		when(budgetService.save(any(List.class), any(BindingResult.class), any(String.class))).thenReturn(getBudgets());
+		when(budgetService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class))).thenReturn(getBudgets());
 
 		mockMvc.perform(
 				post("/budgets/_create").content(resources.readRequest("budget/budget_create_valid_request.json"))
@@ -106,7 +106,7 @@ public class BudgetControllerTest {
 	@Test
 	public void test_create_error() throws IOException, Exception {
 
-		when(budgetService.save(any(List.class), any(BindingResult.class), any(String.class))).thenReturn((getBudgets()));
+		when(budgetService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class))).thenReturn((getBudgets()));
 
 		mockMvc.perform(post("/budgets/_create").content(resources.readRequest("budget/budget_create_invalid_field_value.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
@@ -122,7 +122,7 @@ public class BudgetControllerTest {
 		List<Budget> budgets = getBudgets();
 		budgets.get(0).setId("1");
 
-		when(budgetService.save(any(List.class), any(BindingResult.class), any(String.class))).thenReturn(budgets);
+		when(budgetService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class))).thenReturn(budgets);
 
 		mockMvc.perform(
 				post("/budgets/_update").content(resources.readRequest("budget/budget_update_valid_request.json"))
@@ -169,7 +169,7 @@ public class BudgetControllerTest {
 	@Test
 	public void test_update_error() throws IOException, Exception {
 
-		when(budgetService.save(any(List.class), any(BindingResult.class), any(String.class))).thenReturn((getBudgets()));
+		when(budgetService.fetchAndValidate(any(List.class), any(BindingResult.class), any(String.class))).thenReturn((getBudgets()));
 
 		mockMvc.perform(post("/budgets/_update").content(resources.readRequest("budget/budget_create_invalid_field_value.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());

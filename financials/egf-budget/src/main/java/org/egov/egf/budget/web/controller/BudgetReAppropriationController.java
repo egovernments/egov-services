@@ -74,7 +74,7 @@ public class BudgetReAppropriationController {
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
+			budgetreappropriations = budgetReAppropriationService.fetchAndValidate(budgetreappropriations, errors,
 					budgetReAppropriationRequest.getRequestInfo().getAction());
 
 			for (BudgetReAppropriation bra : budgetreappropriations) {
@@ -128,7 +128,7 @@ public class BudgetReAppropriationController {
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			budgetreappropriations = budgetReAppropriationService.save(budgetreappropriations, errors,
+			budgetreappropriations = budgetReAppropriationService.fetchAndValidate(budgetreappropriations, errors,
 					budgetReAppropriationRequest.getRequestInfo().getAction());
 
 			for (BudgetReAppropriation bra : budgetreappropriations) {

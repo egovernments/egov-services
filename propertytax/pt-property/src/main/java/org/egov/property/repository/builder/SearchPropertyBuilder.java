@@ -61,7 +61,9 @@ public class SearchPropertyBuilder {
 		userSearchUrl.append(environment.getProperty("egov.services.egov_user.searchpath"));
 
 		UserResponseInfo userResponse = null;
-		if (ownerName != null || mobileNumber != null || aadhaarNumber != null) {
+
+		if (ownerName != null || mobileNumber != null || aadhaarNumber != null || tenantId != null) {
+
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
 		}

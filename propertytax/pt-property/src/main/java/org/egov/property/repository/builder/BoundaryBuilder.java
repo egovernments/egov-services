@@ -24,4 +24,10 @@ public class BoundaryBuilder {
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_propertylocation where id= ?";
+
+	public static final String INSERT_BOUNDARYHISTORY_QUERY = "INSERT INTO egpt_propertylocation_history ("
+			+ "revenueBoundary, locationBoundary, adminBoundary, northBoundedBy,eastBoundedBy, westBoundedBy, "
+			+ "southBoundedBy,createdBy, lastModifiedBy, createdTime,lastModifiedTime,"
+			+ "property,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
 }

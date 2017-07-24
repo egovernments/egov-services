@@ -38,10 +38,7 @@ public class CollectionConsumer {
 		final ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		try {
-			if (topic.equals(applicationProperties.getCreateReceiptTopicName())) {
-				logger.info("Consuming create Receipt request");
-				recieptService.create(objectMapper.convertValue(record, ReceiptReq.class));
-			}else if(topic.equals(applicationProperties.getCancelReceiptTopicName())){
+             if(topic.equals(applicationProperties.getCancelReceiptTopicName())){
 				logger.info("Consuming cancel Receipt request");
 				recieptService.cancelReceiptBeforeRemittance(objectMapper.convertValue(record, ReceiptReq.class));
 			}else if(topic.equals(applicationProperties.getKafkaUpdateStateIdTopic())){

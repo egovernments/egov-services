@@ -151,8 +151,10 @@ public class ReceiptService {
 		 } */ //uncomment while enabling instrument integration
         
 		receipt = create(receiptReq); //sync call
-
-		 return receipt;
+		if(null != receipt)
+			receiptRepository.pushToQueue(receiptReq);
+		
+		return receipt;
 	}
 
 	private void setReceiptNumber(ReceiptReq receiptReq) {
@@ -323,7 +325,7 @@ public class ReceiptService {
 					receiptHeaderId = receiptRepository.persistToReceiptHeader(
 						parametersMap, receiptInfo);
 				}catch(Exception e){
-					e.printStackTrace();
+					logger.info("Persisting into receiptheader failed for rcpt: "+billdetails.getReceiptNumber());
 				}
 				if(receiptHeaderId == 0L){
 					break;
@@ -370,9 +372,12 @@ public class ReceiptService {
 						break;
 					}
 				}
-
-				receiptRepository.persistToReceiptDetails(
-						parametersReceiptDetails, receiptHeaderId);
+				try{
+					 receiptRepository.persistToReceiptDetails(
+								parametersReceiptDetails, receiptHeaderId);
+				}catch(Exception e){
+					logger.info("Persisting into receiptdetails failed for rcpt: "+billdetails.getReceiptNumber());
+				}
 			}
 		}
 		return receiptReq.getReceipt().get(0);

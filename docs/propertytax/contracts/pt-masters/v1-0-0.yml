@@ -973,6 +973,10 @@ paths:
             type: integer
             in: query
             description: to year to search Depreciation
+          - name: year
+            type: integer
+            in: query
+            description: year to search Depreciation where this year falls for the range of years defined in master.
           - name: code
             type: string
             in: query

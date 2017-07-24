@@ -23,6 +23,6 @@ public class AttributeActionsDefinition {
     }
 
     public org.egov.pgrrest.common.domain.model.AttributeActionsDefinition toDomain() {
-        return new org.egov.pgrrest.common.domain.model.AttributeActionsDefinition(id.getName());
+        return new org.egov.pgrrest.common.domain.model.AttributeActionsDefinition(id.getCode());
     }
 }

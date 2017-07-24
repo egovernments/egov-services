@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AttributeActionsDefinition {
-    private String name;
+    private String code;
 }

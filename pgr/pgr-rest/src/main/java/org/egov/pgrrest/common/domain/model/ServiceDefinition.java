@@ -53,7 +53,7 @@ public class ServiceDefinition {
 
     private boolean actionMatches(SevaRequestAction expectedAction, AttributeDefinition attributeDefinition) {
         return attributeDefinition.getActions().stream()
-            .anyMatch(a -> expectedAction.getActionName().equalsIgnoreCase(a.getName()));
+            .anyMatch(action -> expectedAction.getActionName().equalsIgnoreCase(action.getCode()));
     }
 
     public List<AttributeDefinition> getNonComputedDateAttributes() {

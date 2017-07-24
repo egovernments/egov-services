@@ -15,10 +15,10 @@ public class RejectDeliverableCitizenEmailMessageStrategy implements EmailMessag
     private static final String EMAIL_BODY_EN_TEMPLATE = "email_body_reject_deliverable_service";
     private static final String EMAIL_SUBJECT_EN_TEMPLATE = "email_subject_rejected_deliverable_service";
 
-   
+
     @Value("${environment.host}")
     public String domain;
-    
+
     @Override
     public boolean matches(NotificationContext context) {
         return context.getServiceType().isDeliverableType()
@@ -36,21 +36,24 @@ public class RejectDeliverableCitizenEmailMessageStrategy implements EmailMessag
             .email(context.getSevaRequest().getRequesterEmail())
             .build();
     }
-    
 
-    
     private Map<Object, Object> getBodyTemplate(SevaRequest sevaRequest, Tenant tenant) {
         ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
-
-        String fileId=sevaRequest.getFileStoreId();
-        String tenantId=sevaRequest.getTenantId();
-        String urlLink="<html><body><a href =" + domain + "/filestore/v1/files/id?tenantId=" + tenantId + " &fileStoreId= "+ fileId + ">Download Link</a></body></html>";
+        final String rejectionLetterUrl = getRejectionLetterUrl(sevaRequest);
+        String urlLink = "<html><body><a href =" + rejectionLetterUrl + ">Download Link</a></body></html>";
         builder.put("citizenName", sevaRequest.getRequesterName());
         builder.put("crn", sevaRequest.getCrn());
         builder.put("serviceName", sevaRequest.getServiceTypeName());
         builder.put("ULBName", tenant.getName());
-        builder.put("filestoreurl", urlLink);
+        builder.put("rejectionLetterUrl", urlLink);
         return builder.build();
+    }
+
+    private String getRejectionLetterUrl(SevaRequest sevaRequest) {
+        String rejectionLetterId = sevaRequest.getLatestRejectionLetter();
+        String tenantId = sevaRequest.getTenantId();
+        return String.format("%s/filestore/v1/files/id?tenantId=%s&fileStoreId=%s", domain,
+            tenantId, rejectionLetterId);
     }
 
     private Map<Object, Object> getSubjectTemplateValues(SevaRequest sevaRequest) {

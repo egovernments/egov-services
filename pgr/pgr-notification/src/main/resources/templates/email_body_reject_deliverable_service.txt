@@ -5,4 +5,4 @@ This is a computer generated email and does not need any signature.
 Thanks,
 {{ULBName}}
 
-Please Click Here To Download Rejection Letter File {{filestoreurl}}
+Please Click Here To Download Rejection Letter File {{rejectionLetterUrl}}

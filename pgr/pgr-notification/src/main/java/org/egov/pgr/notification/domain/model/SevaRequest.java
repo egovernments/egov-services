@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.pgr.common.date.DateFormatter;
+import org.springframework.util.CollectionUtils;
 
 public class SevaRequest {
 
@@ -48,7 +49,7 @@ public class SevaRequest {
     private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
     private static final String LOCATION_ID = "locationId";
     private static final String CHILD_LOCATION_ID = "childLocationId";
-    private static final String REJECTION_LETTER="rejectionLetter";
+    private static final String REJECTION_LETTER = "rejectionLetter";
 
 
     private final HashMap<String, Object> serviceRequest;
@@ -127,20 +128,21 @@ public class SevaRequest {
     public boolean isInProgress() {
         return IN_PROGRESS_STATUS.equalsIgnoreCase(getStatusName());
     }
+
     public boolean isRejected() {
         return REJECTED_STATUS.equalsIgnoreCase(getStatusName());
     }
+
     public boolean isResubmited() {
         return RESUBMIT_STATUS.equalsIgnoreCase(getStatusName());
     }
-    
-    public String getFileStoreId()
-    {
-    	if(getDynamicMultiValue(REJECTION_LETTER) != null && !getDynamicMultiValue(REJECTION_LETTER).isEmpty())
-    			{
-        	return getDynamicMultiValue(REJECTION_LETTER).get(getDynamicMultiValue(REJECTION_LETTER).size() - 1);
-    			}
-    	return null;
+
+    public String getLatestRejectionLetter() {
+        final List<String> rejectionLetters = getDynamicMultiValue(REJECTION_LETTER);
+        if (CollectionUtils.isEmpty(rejectionLetters)) {
+            return null;
+        }
+        return rejectionLetters.get(rejectionLetters.size() - 1);
     }
 
     @SuppressWarnings("unchecked")
@@ -165,7 +167,7 @@ public class SevaRequest {
         return previousAssignee != null ? Long.valueOf(previousAssignee) : null;
     }
 
-    public String  getLocationId() {
+    public String getLocationId() {
         final String childLocationId = getDynamicSingleValue(CHILD_LOCATION_ID);
         final String locationId = getDynamicSingleValue(LOCATION_ID);
         return isNotEmpty(childLocationId) ? childLocationId : locationId;
@@ -194,12 +196,13 @@ public class SevaRequest {
             .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
             .orElse(null);
     }
+
     private List<String> getDynamicMultiValue(String key) {
         return getAttributeValues().stream()
             .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
             .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD)).collect(Collectors.toList());
 
     }
-   
+
 
 }

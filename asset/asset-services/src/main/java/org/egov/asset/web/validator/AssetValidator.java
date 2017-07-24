@@ -1,6 +1,8 @@
 package org.egov.asset.web.validator;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +16,7 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
@@ -50,8 +53,39 @@ public class AssetValidator {
 
     public void validateAsset(final AssetRequest assetRequest) {
         findAssetCategory(assetRequest);
+        validateYearWiseDepreciationRate(assetRequest);
         // findAsset(assetRequest); FIXME not need as per elzan remove the full
         // code later
+    }
+
+    public void validateYearWiseDepreciationRate(final AssetRequest assetRequest) {
+        final Asset asset = assetRequest.getAsset();
+        if (asset.getEnableYearWiseDepreciation()) {
+            final List<String> finacialYears = new ArrayList<String>();
+            final List<Double> depreciationRates = new ArrayList<Double>();
+            for (final YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) {
+                finacialYears.add(ywd.getFinancialYear());
+                depreciationRates.add(ywd.getDepreciationRate());
+            }
+            checkDuplicateFinancialYear(finacialYears);
+            if (depreciationRates.contains(Double.valueOf("0")))
+                throw new RuntimeException("Depreciation rate of any financial year can not be zero");
+        }
+
+    }
+
+    private void checkDuplicateFinancialYear(final List<String> finacialYears) {
+        if (!finacialYears.isEmpty()) {
+            final Iterator<String> itr = finacialYears.iterator();
+            if (itr.hasNext()) {
+                final String finYear = itr.next();
+                while (itr.hasNext()) {
+                    final String current = itr.next();
+                    if (finYear.equalsIgnoreCase(current))
+                        throw new RuntimeException("Can not contain duplicate financial years");
+                }
+            }
+        }
     }
 
     public void findAssetCategory(final AssetRequest assetRequest) {

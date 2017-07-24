@@ -3,7 +3,6 @@ package org.egov.pgrrest.common.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ServiceDefinition {
             .collect(Collectors.toList());
     }
 
-    public List<AttributeDefinition> getMandatoryAttributes(SevaRequestAction action, List<String> roleCodes) {
+    public List<AttributeDefinition> getMandatoryAttributes(ServiceStatus action, List<String> roleCodes) {
         return attributes.stream()
             .filter(attribute -> attribute.isRequired()
                 && actionMatches(action, attribute)
@@ -51,9 +50,9 @@ public class ServiceDefinition {
         return !Collections.disjoint(attribute.getRoleNames(), roleCodes);
     }
 
-    private boolean actionMatches(SevaRequestAction expectedAction, AttributeDefinition attributeDefinition) {
+    private boolean actionMatches(ServiceStatus expectedAction, AttributeDefinition attributeDefinition) {
         return attributeDefinition.getActions().stream()
-            .anyMatch(action -> expectedAction.getActionName().equalsIgnoreCase(action.getCode()));
+            .anyMatch(action -> expectedAction == action.getAction());
     }
 
     public List<AttributeDefinition> getNonComputedDateAttributes() {

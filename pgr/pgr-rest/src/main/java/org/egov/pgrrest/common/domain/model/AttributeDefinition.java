@@ -40,7 +40,7 @@ public class AttributeDefinition {
 
     public List<String> getActionNames(){
         return actions.stream()
-            .map(AttributeActionsDefinition :: getCode)
+            .map(action -> action.getAction().getCode())
             .collect(Collectors.toList());
     }
 

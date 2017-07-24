@@ -3,7 +3,10 @@ package org.egov.pgrrest.read.domain.service;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceTypeCodeException;
-import org.egov.pgrrest.read.domain.model.*;
+import org.egov.pgrrest.read.domain.model.ServiceDefinitionSearchCriteria;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestLocation;
+import org.egov.pgrrest.read.domain.model.ServiceRequestType;
 import org.egov.pgrrest.read.domain.service.validator.AttributeValueValidator;
 import org.egov.pgrrest.read.factory.JSScriptEngineFactory;
 import org.junit.Before;
@@ -96,7 +99,7 @@ public class ServiceRequestCustomFieldServiceTest {
         when(serviceDefinitionService.find(searchCriteria))
             .thenReturn(serviceDefinition);
 
-        customFieldService.enrich(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_REGISTERED);
 
         assertEquals(3, contractAttributeEntries.size());
         assertEquals("60", contractAttributeEntries.get(2).getName());
@@ -156,7 +159,7 @@ public class ServiceRequestCustomFieldServiceTest {
         when(serviceDefinitionService.find(searchCriteria))
             .thenReturn(serviceDefinition);
 
-        customFieldService.enrich(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_REGISTERED);
 
         assertEquals(3, contractAttributeEntries.size());
         assertEquals("50", contractAttributeEntries.get(2).getName());
@@ -181,7 +184,7 @@ public class ServiceRequestCustomFieldServiceTest {
             new ServiceDefinitionSearchCriteria("serviceCode", "tenantId");
         when(serviceDefinitionService.find(searchCriteria)).thenReturn(null);
 
-        customFieldService.enrich(serviceRequest, contractSevaRequest, SevaRequestAction.CREATE);
+        customFieldService.enrich(serviceRequest, contractSevaRequest, ServiceStatus.COMPLAINT_REGISTERED);
     }
 
     private ServiceRequest createServiceRequest(List<AttributeEntry> attributeEntries) {

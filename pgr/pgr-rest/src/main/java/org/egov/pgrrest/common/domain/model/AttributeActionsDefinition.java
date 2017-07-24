@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AttributeActionsDefinition {
-    private String code;
+    private ServiceStatus action;
 }
+

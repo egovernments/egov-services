@@ -4,6 +4,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.common.model.Employee;
 import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
+import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.common.domain.model.Requester;
 import org.egov.pgrrest.common.domain.model.UserType;
@@ -251,8 +252,6 @@ public class ServiceRequestServiceTest {
         assertEquals(expectedComplaint, actualComplaints.get(0));
     }
 
-
-
     private ServiceRequest getComplaint() {
         final Coordinates coordinates = new Coordinates(0d, 0d);
         final ServiceRequestLocation serviceRequestLocation =
@@ -265,6 +264,8 @@ public class ServiceRequestServiceTest {
             .build();
         final ServiceRequestType serviceRequestType =
             new ServiceRequestType(null, "complaintCode", "tenantId", null);
+        final ArrayList<AttributeEntry> attributeEntries = new ArrayList<>();
+        attributeEntries.add(new AttributeEntry("systemStatus", "REGISTERED"));
         return ServiceRequest.builder()
             .requester(complainant)
             .authenticatedUser(getCitizen())
@@ -274,7 +275,7 @@ public class ServiceRequestServiceTest {
             .crn("crn")
             .department(2L)
             .serviceRequestType(serviceRequestType)
-            .attributeEntries(new ArrayList<>())
+            .attributeEntries(attributeEntries)
             .build();
     }
 

@@ -8,6 +8,7 @@ import org.egov.pgr.common.model.OtpValidationRequest;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.AuthenticatedUser;
 import org.egov.pgrrest.common.domain.model.Requester;
+import org.egov.pgrrest.common.domain.model.ServiceStatus;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -23,6 +24,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class ServiceRequest {
     private static final String PROCESSING_FEE = "PROCESSING_FEE";
     private static final String DRAFT_ID = "draftId";
+    private static final String SERVICE_STATUS = "systemStatus";
     @NonNull
     private AuthenticatedUser authenticatedUser;
     @NonNull
@@ -133,6 +135,11 @@ public class ServiceRequest {
             .findFirst()
             .map(Long::valueOf)
             .orElse(null);
+    }
+
+    public ServiceStatus getServiceStatus() {
+        final AttributeEntry attributeEntry = getAttributeWithKey(SERVICE_STATUS);
+        return ServiceStatus.parse(attributeEntry.getCode());
     }
 
     public boolean descriptionLength() {

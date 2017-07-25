@@ -31,7 +31,7 @@ public class CollectionConsumer {
 	private ReceiptService recieptService;	
 	
 	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}", "${kafka.topics.receipt.cancel.name}",
-			"${kafka.topics.stateId.update.name}"})
+			"${kafka.topics.stateId.update.name}","${kafka.topics.receipt.update.name}"})
 	
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 	logger.info("Record: "+record.toString());
@@ -44,6 +44,9 @@ public class CollectionConsumer {
 			}else if(topic.equals(applicationProperties.getKafkaUpdateStateIdTopic())){
 				logger.info("Consuming updateStateId request");
 				recieptService.updateStateId(objectMapper.convertValue(record, WorkflowDetails.class));
+			}else if(topic.equals(applicationProperties.getUpdateReceiptTopicName())){
+				logger.info("Consuming update Receipt request");
+				recieptService.updateReceipt(objectMapper.convertValue(record, ReceiptReq.class));
 			}
 			
 		} catch (final Exception e) {

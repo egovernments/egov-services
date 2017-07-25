@@ -224,7 +224,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": true,
 							"isDisabled": false,
-							"url": "/wcms-connection/connection/_getconnectiontypes",
+							"url": "/wcms-connection/connection/_getconnectiontypes?|$..id|$..propertyType",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},

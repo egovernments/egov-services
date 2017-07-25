@@ -1,16 +1,18 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype/_create",
+		"url":  "/wcms/masters/documenttype/_create",
+		"tenantIdRequired": true,
+		"objectName": "documentType",
 		"groups": [
 			{
-				"label": "wc.create.documenttype.title",
-				"name": "createCategoryType",
+				"label": "wc.create.documentType.title",
+				"name": "createDocumentType",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "documentTypes.name",
-							"label": "wc.create.documenttype*",
+							"jsonPath": "documentType.name",
+							"label": "Document Type*",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -20,7 +22,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "",
+							"jsonPath": "documentType.description",
 							"label": "Description",
 							"pattern": "",
 							"type": "text",
@@ -31,13 +33,12 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "",
+							"jsonPath": "documentType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"default": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}

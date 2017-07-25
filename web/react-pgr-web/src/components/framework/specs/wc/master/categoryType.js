@@ -2,6 +2,8 @@ var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"url": "/wcms/masters/categorytype/_create",
+		"tenantIdRequired": true,
+		"objectName": "CategoryType",
 		"groups": [
 			{
 				"label": "wc.create.categorytype.title",
@@ -10,7 +12,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "CategoryType.name",
-							"label": "Category",
+							"label": "Category Type",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -20,7 +22,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "",
+							"jsonPath": "CategoryType.description",
 							"label": "Description",
 							"pattern": "",
 							"type": "text",
@@ -31,7 +33,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "",
+							"jsonPath": "CategoryType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

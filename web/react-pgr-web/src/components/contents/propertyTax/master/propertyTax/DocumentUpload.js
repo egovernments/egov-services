@@ -110,7 +110,7 @@ class ConstructionTypes extends Component {
   }  
 
   handleUploadValidation = (e, formats, limit) => {
-   
+	     
     if(this.props.files.length >= limit){
       console.log('Maximum files allowed : '+limit);
       return;
@@ -118,6 +118,7 @@ class ConstructionTypes extends Component {
     let validFile = validate_fileupload(e.target.files, formats);
     if(validFile){
       this.props.handleUpload(e);
+	  console.log(e.target.files.length);
     }
     else {
       console.log(validFile);
@@ -171,7 +172,7 @@ class ConstructionTypes extends Component {
 											Photo of Assessment
 										</Col>
 										<Col xs={12} md={6}>
-										  <input type="file" accept="image/*" onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
+										  <input type="file" accept="image/*"  onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
 										</Col>
 									  </Row>
 									</Col>
@@ -309,7 +310,7 @@ const mapDispatchToProps = dispatch => ({
     })
   },
   handleUpload: (e) => {
-    dispatch({type: 'FILE_UPLOAD', files: e.target.files[0]})
+    dispatch({type: 'FILE_UPLOAD', files: e.target.files})
   }
 
 });

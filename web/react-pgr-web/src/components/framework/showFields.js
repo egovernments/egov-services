@@ -17,25 +17,34 @@ import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
 import UiAadharCard from './components/UiAadharCard'
 import UiPanCard from './components/UiPanCard'
-
+import UiLabel from './components/UiLabel'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 export default class ShowFields extends Component {
   constructor(props) {
        super(props);
+       this.state = {};
   }
 
-  renderGroups=(groups, noCols, uiFramework="google")=>
-  {
+  changeExpanded = (name) => {
+    this.setState({
+      [name]: !this.state[name]
+    })
+  }
+
+  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
     let {renderField}=this;
+    let {addNewCard, removeCard} = this.props;
+    let self = this;
     switch (uiFramework) {
       case "google":
-        return groups.map((group,groupIndex)=>{
-          return (<Card key={groupIndex}>
-                    <CardHeader style={{paddingBottom:0}} title={group.label}/>
-                    <CardText style={{padding:0}}>
+        return groups.map((group, groupIndex)=>{
+          return (<Card key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+                    <CardHeader style={{paddingBottom:0}} title={group.label} showExpandableButton={true} actAsExpander={true}/>
+                    <CardText style={{padding:0}} expandable={true}>
                     <Grid>
                       <Row>
-                        {group.fields.map((field,fieldIndex)=>{
+                        {group.fields.map((field, fieldIndex)=>{
                             return (
                                 <Col key={fieldIndex} xs={12} md={noCols}>
                                     {renderField(field)}
@@ -43,7 +52,30 @@ export default class ShowFields extends Component {
                             )
                         })}
                       </Row>
+                      {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
+                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath)}}>
+                            <span className="glyphicon glyphicon-plus"></span>
+                          </FloatingActionButton>
+                        </Col>
+                      </Row>}
+                      {group.multiple && <Row style={{"visibility": (groupIndex < (groups.length-1)) ? "initial" : "hidden" }}>
+                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
+                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
+                            <span className="glyphicon glyphicon-minus"></span>
+                          </FloatingActionButton>
+                        </Col>
+                      </Row>}
                     </Grid>
+                    <div style={{"marginLeft": "15px"}}>
+                      {
+                        group.children && 
+                        group.children.length ? 
+                        group.children.map(function(child) {
+                          return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
+                        }) : ""
+                      }
+                    </div>
                     </CardText>
                 </Card>)
         })
@@ -93,13 +125,15 @@ export default class ShowFields extends Component {
         return <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':
         return <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'label':
+        return <UiLabel getVal={this.props.getVal} item={item}/>
     }
   }
 
   render() {
     let  {groups,noCols,uiFramework}=this.props;
   	return ( <div>
-  	 	{this.renderGroups(groups,noCols,uiFramework)}
+  	 	{this.renderGroups(groups, noCols, uiFramework)}
   	 </div>)
   }
 }

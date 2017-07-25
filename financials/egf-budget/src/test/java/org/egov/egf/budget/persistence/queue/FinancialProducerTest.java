@@ -5,8 +5,7 @@ import static org.mockito.Mockito.verify;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.egf.budget.web.contract.BudgetContract;
+import org.egov.egf.budget.web.contract.BudgetRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +35,9 @@ public class FinancialProducerTest {
 	@Test
 	public void test_send_message() {
 
-		CommonRequest<BudgetContract> request = new CommonRequest<BudgetContract>();
+		BudgetRequest request = new BudgetRequest();
 
-		Map<String, CommonRequest<?>> message = new HashMap<>();
+		Map<String, Object> message = new HashMap<>();
 		message.put("budgetcontract_create", request);
 
 		financialProducer.sendMessage(TOPIC_NAME, KEY_NAME, message);

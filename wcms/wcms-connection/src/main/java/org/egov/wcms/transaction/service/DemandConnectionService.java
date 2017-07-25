@@ -138,6 +138,7 @@ public class DemandConnectionService {
         TaxPeriodCriteria taxperiodcriteria=new TaxPeriodCriteria();
         taxperiodcriteria.setTenantId(waterConnectionRequest.getConnection().getTenantId());
         taxperiodcriteria.setService(BUSINESSSERVICE);
+        taxperiodcriteria.setPeriodCycle("ANNUAL");
         taxPeriod=new RestTemplate().postForObject(url, request, TaxPeriodResponse.class,taxperiodcriteria.getService(),taxperiodcriteria.getTenantId());
         
         if(taxPeriod!=null && !taxPeriod.getTaxPeriods().isEmpty()){

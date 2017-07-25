@@ -107,7 +107,7 @@ public class TreatmentPlantController {
         final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.createTreatmentPlant(
                 applicationProperties.getCreateTreatmentPlantTopicName(), "treatmentplant-create", treatmentPlantRequest);
 
-        return getSuccessResponse(treatmentPlantList, "created", treatmentPlantRequest.getRequestInfo());
+        return getSuccessResponse(treatmentPlantList, "Created", treatmentPlantRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/_update")

@@ -71,7 +71,7 @@ public class BillDetail {
 
 	private String bill;
 
-	private LocalDate billDate;
+	private Long billDate;
 
 	private String billDescription;
 
@@ -99,7 +99,7 @@ public class BillDetail {
 
 	private Long receiptDate;
 
-	private ReceiptType receiptType;
+	private String receiptType;
 
 	private String channel;
 

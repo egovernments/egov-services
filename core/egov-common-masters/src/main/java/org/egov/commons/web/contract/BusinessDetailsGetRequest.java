@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,7 +26,8 @@ public class BusinessDetailsGetRequest {
 
 	private List<Long> ids;
 
-	private String businessDetailsCode;
+    @JsonProperty("businessDetailsCodes")
+	private List<String> businessDetailsCodes;
 
 	private String businessCategoryCode;
 

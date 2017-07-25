@@ -61,6 +61,7 @@ public class SevaRequestTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void test_should_set_complainant_user_id_when_logged_in_citizen_creates_complaint() {
         final HashMap<String, Object> sevaRequestMap = SevaRequestMapFactory.create();
         final HashMap<String, Object> requestInfo = (HashMap<String, Object>) sevaRequestMap.get("RequestInfo");

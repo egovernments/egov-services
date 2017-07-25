@@ -94,7 +94,6 @@ public class WorkflowRepository {
             processInstanceResponse = restTemplate.postForObject(uri.toString(), request,
                     ProcessInstanceResponse.class);
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Exception caused while hitting the workflow service: ", e.getCause());
 			processInstanceResponse = null;
 			return processInstanceResponse;
@@ -106,7 +105,7 @@ public class WorkflowRepository {
 	
 	public TaskResponse updateWorkflow(WorkflowDetails workflowDetails){
 		TaskResponse taskResponse = new TaskResponse();
-		long stateId = getStateId(workflowDetails.getReceiptNumber());
+	//	long stateId = getStateId(workflowDetails.getReceiptNumber());
 		StringBuilder uri = new StringBuilder();
 		String basePath = applicationProperties.getWorkflowServiceHostName();
 		String searchPath = applicationProperties.getWorkflowServiceUpdatePath().replaceAll("\\{id\\}", ""+workflowDetails.getStateId()+"");
@@ -120,7 +119,6 @@ public class WorkflowRepository {
 			taskResponse = restTemplate.postForObject(uri.toString(), request,
 					TaskResponse.class);
 		}catch(Exception e){
-			e.printStackTrace();
 			logger.error("Exception caused while hitting the workflow service: ", e.getCause());
 			taskResponse = null;
 			return taskResponse;

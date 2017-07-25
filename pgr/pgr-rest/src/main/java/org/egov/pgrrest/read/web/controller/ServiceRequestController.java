@@ -112,7 +112,7 @@ public class ServiceRequestController {
         final List<ServiceRequest> submissions = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(submissions);
     }
-
+    
     @PostMapping(value = "/v1/_count")
     public CountResponse getServiceRequestCount(@RequestParam(value = "tenantId") String tenantId,
                                                 @RequestParam(value = "serviceRequestId", required = false)

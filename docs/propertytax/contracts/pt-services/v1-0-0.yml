@@ -259,25 +259,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /properties/latepaymentpenalty/_calculate:
-    post: 
-      description: Calculation for the latepayment penalty of the property
-      parameters:
-       - name: penaltyCalculationRequest
-         in: body
-         description: Request header of the penalty
-         required: true
-         schema:
-          $ref: '#/definitions/LatePaymentPenaltyRequest'
-      responses:
-        '200':
-          description: Penalty Calculated
-          schema:
-            $ref: '#/definitions/LatePaymentPenaltyResponse'
-        '400':
-          description: Unable to calculate penalty
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
 
 definitions:
 ########################################################
@@ -368,7 +350,7 @@ definitions:
       channel:
         type: string
         description: Property can be created from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
-        maxLength: 16
+        maxLength: 64
         minLength: 4
         enum:
          - SYSTEM
@@ -459,7 +441,7 @@ definitions:
       reason:
         type: string
         description: reason of the PropertyDetail
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       status:
         type: string
@@ -491,27 +473,27 @@ definitions:
       propertyType:
         type: string
         description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       category:
         type: string
         description: category of the property like Residential, Non-Residential, etc.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       usage:
         type: string
         description: usage of the property
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       department:
         type: string
         description: department of the property which belongs to. This is applicable when property type is State Govternment or Central Government.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       apartment:
         type: string
         description: apartment of the PropertyDetail
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       siteLength:
         type: number
@@ -549,22 +531,22 @@ definitions:
       floorType:
         type: string
         description: type of floor
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       woodType:
         type: string
         description: type of wood used in the property
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       roofType:
         type: string
         description: type of roof the property having
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       wallType:
         type: string
         description: type of walls the property having
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       floors:
         description: Floors
@@ -740,12 +722,12 @@ definitions:
       usage:
         type: string
         description: usage of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       occupancyType:
         type: string
         description: occupancy of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       occupierName:
         type: string
@@ -764,12 +746,12 @@ definitions:
       structure:
         type: string
         description: structure of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       age:
         type: string
         description: age of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       exemptionReason:
         type: string
@@ -839,35 +821,7 @@ definitions:
         type: string
         description: current status.
 
-  DocumentType:
-    type: object
-    description: This object holds type of documents to be uploaded during the transaction for each application type.
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique id of the ApplicationType.
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4
-      name:
-        type: string
-        description: name of the document
-      application:
-        type: string
-        description: Application type.
-        enum:
-          - CREATE
-          - TITLE_TRANSFER
-          - BIFURCATION
-          - ALTER
-          - EDIT
-          - AMALGAMATION
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-          
+  
   Document:
     type: object
     description: This object holds list of documents attached during the transaciton for a agreement
@@ -877,7 +831,8 @@ definitions:
         format: int64
         description: unique id of the ApplicationType.
       documentType:
-        $ref: '#/definitions/DocumentType'
+        type: string
+        description: unique document type code, should be validated with document type master
       fileStore:
         type: string
         description: File store reference key.

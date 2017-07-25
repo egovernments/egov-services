@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.collection.model.EmployeeInfo;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -68,4 +69,7 @@ public class UserResponse {
 
 	@JsonProperty("Users")
 	private List<EmployeeInfo> users = new ArrayList<EmployeeInfo>();
+
+    @JsonProperty("user")
+    private List<User> receiptCreators = new ArrayList<User>();
 }

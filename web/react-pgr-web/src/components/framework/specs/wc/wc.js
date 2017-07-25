@@ -1,12 +1,96 @@
+var room = {
+	"name": "RoomDetailsComponent",
+	"version": "v1",
+	"level": 2,
+	"jsonPath": "connection.floors[0].rooms",
+	"groups": [
+		{
+			"label": "wc.create.groups.roomDetails.title",
+			"name": "RoomDetails",
+			"multiple": true,
+			"children": [],
+			"fields": [
+				{
+					"name": "RoomNo",
+					"jsonPath": "connection.floors[0].rooms[0].roomNo",
+					"label": "wc.create.groups.roomDetails.roomNo",
+					"pattern": "",
+					"type": "number",
+					"isRequired": false,
+					"isDisabled": false,
+					"requiredErrMsg": "",//Remove required messages
+					"patternErrMsg": ""
+				},
+				{
+					"name": "RoomName",
+					"jsonPath": "connection.floors[0].rooms[0].roomName",
+					"label": "wc.create.groups.roomDetails.roomName",
+					"pattern": "",
+					"type": "text",
+					"isRequired": false,
+					"isDisabled": false,
+					"requiredErrMsg": "",//Remove required messages
+					"patternErrMsg": ""
+				}
+			]
+		}
+	]
+};
+
+var floor = {
+	"name": "FloorDetailsComponent",
+	"version": "v1", //Maps to parent version
+	"level": 1,
+	"jsonPath": "connection.floors",
+	"groups": [
+		{
+			"label": "wc.create.groups.floorDetails.title",
+			"name": "FloorDetails",
+			"multiple": true, //If true, its an array
+			"children": [room],
+			"fields": [
+				{
+					"name": "FloorNo",
+					"jsonPath": "connection.floors[0].floorNo",
+					"label": "wc.create.groups.floorDetails.floorNo",
+					"pattern": "",
+					"type": "number",
+					"isRequired": true,
+					"isDisabled": false,
+					"requiredErrMsg": "",//Remove required messages
+					"patternErrMsg": ""
+				},
+				{
+					"name": "FloorName",
+					"jsonPath": "connection.floors[0].floorName",
+					"label": "wc.create.groups.floorDetails.floorName",
+					"pattern": "",
+					"type": "text",
+					"isRequired": false,
+					"isDisabled": false,
+					"requiredErrMsg": "",//Remove required messages
+					"patternErrMsg": ""
+				}
+			]
+		}
+	]
+};
+
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
+		"version": "v1",
 		"url": "/connections/v1/_create",
 		"useTimestamp": true,
+		"tenantIdRequired": false, //Instead of boolean value give json path
+		"objectName": "connection",
+		"level": 0,
 		"groups": [
 			{
-				"label": "wc.create.groups.applicantDetails.title",
-				"name": "applicantDetails",
+				"label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
+				"name": "applicantDetails",//Follow Title case pattern
+				"children": [],
+				"multiple": false,
 				"fields": [
 						{
 							"name": "AssessmentNumber",
@@ -23,7 +107,7 @@ var dat = {
 								"Email": "",
 								"AadharNumber": ""
 							},
-							"requiredErrMsg": "",
+							"requiredErrMsg": "",//Remove required messages
 							"patternErrMsg": ""
 						},
 						{
@@ -130,6 +214,7 @@ var dat = {
 			{
 				"label": "wc.create.groups.connectionDetails.title",
 				"name": "connectionDetails",
+				"multiple": false,
 				"fields": [
 						{
 							"name": "ConnectionType",
@@ -139,7 +224,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": true,
 							"isDisabled": false,
-							"url": "/wcms-connection/connection/_getconnectiontypes",
+							"url": "/wcms-connection/connection/_getconnectiontypes?|$..id|$..propertyType",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -228,8 +313,27 @@ var dat = {
 				]
 			},
 			{
+				"label": "wc.create.groups.fileDetails.title",
+				"name": "Documents",
+				"multiple": false,
+				"fields": [
+					{
+						"name": "panUpload",
+						"jsonPath": "connection.documents[0]",
+						"label": "wc.create.groups.fileDetails.fields.pan",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+				]
+			},
+			{
 				"label": "wc.create.groups.approvalDetails.title",
-				"name": "approvalDetails",
+				"name": "ApprovalDetails",
+				"multiple": false,
 				"fields": [
 						{
 							"name": "department",
@@ -249,6 +353,7 @@ var dat = {
 							"label": "wc.create.groups.approvalDetails.fields.designation",
 							"pattern": "",
 							"type": "singleValueList",
+							"url": "/egov-common-masters/departments/_search?tenantId={tenantId}&dept={department}|$..id|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

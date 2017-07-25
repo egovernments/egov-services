@@ -36,7 +36,7 @@ public class BusinessDetailsCommonModel {
 					.functionary(details.getFunctionary()).fund(details.getFund())
 					.isVoucherApproved(details.getIsVoucherApproved()).ordernumber(details.getOrdernumber())
 					.tenantId(details.getTenantId()).voucherCreation(details.getVoucherCreation())
-					.voucherCutoffDate(details.getVoucherCutoffDate()).build();
+					.voucherCutoffDate(details.getVoucherCutoffDate()).callBackForApportioning(details.getCallBackForApportioning()).build();
 			org.egov.commons.web.contract.BusinessDetails detail = org.egov.commons.web.contract.BusinessDetails
 					.builder().id(details.getId()).active(details.getIsEnabled()).name(details.getName())
 					.businessCategory(details.getBusinessCategory().getId()).businessType(details.getBusinessType())

@@ -3,9 +3,9 @@ package org.egov.pgrrest.read.domain.service.validator;
 import org.egov.pgrrest.common.domain.model.AttributeDefinition;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.domain.model.ServiceDefinition;
+import org.egov.pgrrest.common.domain.model.ServiceStatus;
 import org.egov.pgrrest.read.domain.exception.InvalidDateTimeAttributeEntryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.util.CollectionUtils;
@@ -18,7 +18,7 @@ import static org.egov.pgrrest.common.domain.model.AttributeDefinition.DATE_TIME
 public class DateTimeAttributeValidator implements AttributeValueValidator {
 
     @Override
-    public void validate(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition, SevaRequestAction action) {
+    public void validate(ServiceRequest serviceRequest, ServiceDefinition serviceDefinition, ServiceStatus action) {
         final List<AttributeDefinition> nonComputedDateTimeAttributes = serviceDefinition.
             getNonComputedDateTimeAttributes();
 

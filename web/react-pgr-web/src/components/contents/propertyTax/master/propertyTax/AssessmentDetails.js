@@ -92,18 +92,18 @@ chip: {
 };
 
 
-const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
+const getNameByCode = function(object, code, property = "") {
+  if (code == "" || code == null) {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
         if (property == "") {
-            if (object[i].id == id) {
+            if (object[i].code == code) {
                 return object[i].name;
             }
         } else {
             if (object[i].hasOwnProperty(property)) {
-                if (object[i].id == id) {
+                if (object[i].code == code) {
                     return object[i][property];
                 }
             } else {
@@ -145,6 +145,12 @@ class AssessmentDetails extends Component {
 handleDepartment = (e) => {
 	
 	var currentThis = this;
+	
+	 currentThis.setState({
+            departments:[]
+     })
+	 
+	 this.props.assessmentDetails.department = '';
 	
 	let query = {
 		category : e.target.value
@@ -220,8 +226,8 @@ handleDepartment = (e) => {
                                                   id="creationReason"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-                                                  <MenuItem value={1} primaryText="New Property"/>
-                                                  <MenuItem value={2} primaryText="Bifurcation"/>
+                                                  <MenuItem value="NEWPROPERTY" primaryText="New Property"/>
+                                                  <MenuItem value="SUBDIVISION" primaryText="Bifurcation"/>
                                               </SelectField>
                                           </Col>
 
@@ -242,8 +248,8 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Property Type *"
-                                                  errorText={fieldErrors.assessmentPropertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentPropertyType}</span> : ""}
-                                                  value={assessmentDetails.assessmentPropertyType ? assessmentDetails.assessmentPropertyType : ""}
+                                                  errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyType}</span> : ""}
+                                                  value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
                                                   onChange={(event, index, value) => {
                                                       var e = {
                                                         target: {
@@ -251,7 +257,7 @@ handleDepartment = (e) => {
                                                         }
                                                       };
 													  handleDepartment(e);
-                                                      handleChange(e, "assessmentPropertyType", true, "")}
+                                                      handleChange(e, "propertyType", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -264,15 +270,15 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Property Sub-type *"
-                                                  errorText={fieldErrors.assessmentPropertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentPropertySubType}</span> : ""}
-                                                  value={assessmentDetails.assessmentPropertySubType ? assessmentDetails.assessmentPropertySubType : ""}
+                                                  errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertySubType}</span> : ""}
+                                                  value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "assessmentPropertySubType", true, "")}
+                                                      handleChange(e, "propertySubType", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -282,20 +288,20 @@ handleDepartment = (e) => {
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
                                           </Col>
-										  {(getNameById(this.state.propertytypes ,assessmentDetails.assessmentPropertyType).match('Central Government') ||
-											getNameById(this.state.propertytypes ,assessmentDetails.assessmentPropertyType).match('State Government')) 
+										  {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
+											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government')) 
 											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Department"
-                                                  errorText={fieldErrors.assessmentDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.assessmentDepartment}</span> : ""}
-                                                  value={assessmentDetails.assessmentDepartment ? assessmentDetails.assessmentDepartment : ""}
+                                                  errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.department}</span> : ""}
+                                                  value={assessmentDetails.department ? assessmentDetails.department : ""}
                                                   onChange={(event, index, value) => {
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "assessmentDepartment", false, "")}
+                                                      handleChange(e, "department", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -309,6 +315,7 @@ handleDepartment = (e) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Extent of Site (Sq. Mtrs) *"
+												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
                                                   onChange={(e) => {handleChange(e, "extentOfSite", true, "")}}

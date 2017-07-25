@@ -1,3 +1,14 @@
+let menuConvention={
+  "Grievance Redressal.Grievance.Create Complaint":"/pgr/createGrievance",
+  "Grievance Redressal.Grievance.Search Complaint":"/pgr/searchGrievance",
+  "Grievance Redressal.Masters.Receiving Mode.Create receivingmode Master":"/pgr/receivingModeCreate",
+  "Grievance Redressal.Masters.Grievance type.Create a Service Type":"/pgr/serviceTypeCreate",
+  // "Grievance Redressal.Masters.Grievance type.Search a Service Type":"",
+  // "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"",
+  "Grievance Redressal.Masters.Receiving Center.Create receivingcenter Master":"/pgr/createReceivingCenter",
+  "Grievance Redressal.Masters.Router.CREATE COMPLAINT ROUTER":"/pgr/createRouter",
+  // "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":""
+}
 
 const defaultState = {
   appName: 'common',
@@ -8,7 +19,8 @@ const defaultState = {
   pleaseWait: false,
   showMenu: false,
   actionList:JSON.parse(localStorage.getItem("actions")) || [],
-  showHome: false
+  showHome: false,
+  menuConvention:menuConvention
 };
 
 export default (state = defaultState, action) => {

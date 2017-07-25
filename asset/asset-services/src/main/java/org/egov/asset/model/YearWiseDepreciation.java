@@ -23,4 +23,6 @@ public class YearWiseDepreciation {
 	private Long assetId;
 	
 	private Long usefulLifeInYears;
+	
+	private String tenantId;
 }

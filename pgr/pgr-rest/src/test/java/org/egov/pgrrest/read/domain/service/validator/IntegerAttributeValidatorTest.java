@@ -1,12 +1,8 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
-import org.egov.pgrrest.common.domain.model.AttributeDataType;
-import org.egov.pgrrest.common.domain.model.AttributeDefinition;
-import org.egov.pgrrest.common.domain.model.AttributeEntry;
-import org.egov.pgrrest.common.domain.model.ServiceDefinition;
+import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.read.domain.exception.InvalidIntegerAttributeEntryException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +28,7 @@ public class IntegerAttributeValidatorTest {
             .attributes(Collections.singletonList(attributeDefinition))
             .build();
         try {
-            validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+            validator.validate(serviceRequest, serviceDefinition, ServiceStatus.CITIZEN_SERVICE_APPROVED);
             Assert.fail("Expected exception to be thrown");
         } catch (InvalidIntegerAttributeEntryException ex) {
             assertEquals("integer1", ex.getAttributeCode());
@@ -53,7 +49,7 @@ public class IntegerAttributeValidatorTest {
             .attributes(Collections.singletonList(attributeDefinition))
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+        validator.validate(serviceRequest, serviceDefinition, ServiceStatus.CITIZEN_SERVICE_APPROVED);
     }
 
 

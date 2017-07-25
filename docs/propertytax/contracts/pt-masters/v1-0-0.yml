@@ -34,7 +34,7 @@ paths:
             type: string
             in: query
             description: category of the Department
-            maxLength: 16
+            maxLength: 64
           - name: name
             type: string
             in: query
@@ -44,7 +44,7 @@ paths:
             type: string
             in: query
             description: code of the Department
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -133,7 +133,7 @@ paths:
             type: string
             in: query
             description: code of the FloorType
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -222,7 +222,7 @@ paths:
             type: string
             in: query
             description: code of the OccuapancyMaster
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -320,7 +320,7 @@ paths:
             type: string
             in: query
             description: code of the PropertyType
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -418,7 +418,7 @@ paths:
             type: string
             in: query
             description: code of the RoofType
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -507,7 +507,7 @@ paths:
             type: string
             in: query
             description: code of the StructureClass
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -605,7 +605,7 @@ paths:
             type: string
             in: query
             description: code of the UsageMaster
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -707,7 +707,7 @@ paths:
             type: string
             in: query
             description: code of the WallType
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -796,7 +796,7 @@ paths:
             type: string
             in: query
             description: code of the WoodType
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -885,7 +885,7 @@ paths:
             type: string
             in: query
             description: code of the MutationMaster
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -973,11 +973,15 @@ paths:
             type: integer
             in: query
             description: to year to search Depreciation
+          - name: year
+            type: integer
+            in: query
+            description: year to search Depreciation where this year falls for the range of years defined in master.
           - name: code
             type: string
             in: query
             description: code of the Depreciation
-            maxLength: 16
+            maxLength: 64
           - name: nameLocal
             type: string
             in: query
@@ -1134,7 +1138,7 @@ definitions:
         category:
           type: string
           description: category of the Department
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         name:
           type: string
@@ -1144,7 +1148,7 @@ definitions:
         code:
           type: string
           description: code of the Department
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1206,7 +1210,7 @@ definitions:
         code:
           type: string
           description: code of the FloorType
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1267,7 +1271,7 @@ definitions:
         code:
           type: string
           description: code of the OccuapancyMaster
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1335,7 +1339,7 @@ definitions:
         code:
           type: string
           description: code of the PropertyType
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1401,7 +1405,7 @@ definitions:
         code:
           type: string
           description: code of the RoofType
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1460,7 +1464,7 @@ definitions:
         code:
           type: string
           description: code of the StructureClass
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1528,7 +1532,7 @@ definitions:
         code:
           type: string
           description: code of the UsageMaster
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1603,7 +1607,7 @@ definitions:
         code:
           type: string
           description: code of the WallType
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1664,7 +1668,7 @@ definitions:
         code:
           type: string
           description: code of the WoodType
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1725,7 +1729,7 @@ definitions:
         code:
           type: string
           description: code of the MutationMaster
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         nameLocal:
           type: string
@@ -1781,7 +1785,7 @@ definitions:
         code:
           type: string
           description: code of the Depreciation
-          maxLength: 16
+          maxLength: 64
           minLength: 4
         fromYear:
           type: integer
@@ -1830,23 +1834,58 @@ definitions:
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        Depreciations:
+        DocumentType:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/DocumentType'
+            $ref: '#/definitions/DocumentType'
     DocumentTypeResponse:
       description: Contract class to send response. Array of Depreciation items are used in case of search results or response for create, whereas single Depreciation item is used for update
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        Depreciations:
+        DocumentType:
           description: Used for search result and create only
           type:  array
           maximum: 500
           items:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/contracts/pt-services/v1-0-0.yml#/definitions/DocumentType'
-
+            $ref: '#/definitions/DocumentType'
+    DocumentType:
+      type: object
+      description: This object holds type of documents to be uploaded during the transaction for each application type.
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: unique id of the ApplicationType.
+        tenantId:
+          type: string
+          description: tenant id of the Property
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the document
+        code:
+          type: string
+          description: code of the document, should be unique to the combination of name, application and tenentid
+        application:
+          type: string
+          description: Application type.
+          enum:
+            - CREATE
+            - TITLE_TRANSFER
+            - BIFURCATION
+            - ALTER
+            - EDIT
+            - AMALGAMATION
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+       - tenantId
+       - name
+       - code
+       - application
 parameters:
     pageSize:
       name: pageSize

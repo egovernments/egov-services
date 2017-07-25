@@ -80,8 +80,8 @@
             } ],
             "Bank": null,
             "BankAccount": null,
-            "auditDetails": null,
-            "workflowDetails": null
+            "auditDetails": null
+        
         }
     ]
 }

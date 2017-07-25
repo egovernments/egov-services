@@ -88,7 +88,7 @@ public class DemandController {
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
-		log.debug("the demand request object : " + demandRequest);
+		log.info("the demand request object : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
@@ -98,7 +98,7 @@ public class DemandController {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		DemandResponse demandResponse =  demandService.create(demandRequest);
-		log.debug("the Response Object from service : "+demandResponse);
+		log.info("the Response Object from service : "+demandResponse);
 		return new ResponseEntity<>(demandResponse, HttpStatus.CREATED);
 	}
 

@@ -23,6 +23,8 @@ import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
 import org.egov.models.Document;
 import org.egov.models.DocumentType;
+import org.egov.models.DocumentTypeRequest;
+import org.egov.models.DocumentTypeResponse;
 import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
@@ -62,6 +64,7 @@ import org.egov.models.WorkFlowDetails;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.consumer.Producer;
 import org.egov.property.services.Masterservice;
+import org.egov.property.services.PersisterService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,6 +90,9 @@ public class PropertyServiceTest {
 
 	@Autowired
 	Producer producer;
+
+	@Autowired
+	PersisterService persisterService;
 
 	public Long floorId = 1l;
 	public Long roofId = 1l;
@@ -1079,7 +1085,7 @@ public class PropertyServiceTest {
 		requestInfo.setKey("abcdkey");
 		requestInfo.setMsgId("20170310130900");
 		requestInfo.setRequesterId("rajesh");
-		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
+		requestInfo.setAuthToken("a78edc28-1a5f-422e-91c6-19cae574c272");
 
 		return requestInfo;
 	}
@@ -1251,15 +1257,10 @@ public class PropertyServiceTest {
 
 			List<Document> documents = propertyDetail.getDocuments();
 			Document document = new Document();
-
-			DocumentType documentType = new DocumentType();
-			documentType.setName("Testoc");
-			documentType.setApplication(ApplicationEnum.CREATE.valueOf("CREATE"));
-			documentType.setAuditDetails(auditDetails);
+			document.setDocumentType("doctype");
 			document.setFileStore("filestoredoc");
 			document.setAuditDetails(auditDetails);
 			propertyDetail.getDocuments().add(document);
-			document.setDocumentType(documentType);
 			propertyDetail.setDocuments(documents);
 
 			propertyDetail.setStateId("stateId1");
@@ -1325,7 +1326,8 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
+					propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1501,17 +1503,11 @@ public class PropertyServiceTest {
 
 			List<Document> documents = propertyDetail.getDocuments();
 			Document document = new Document();
-
-			DocumentType documentType = new DocumentType();
-			documentType.setId((long) 1);
-			documentType.setName("Testocupdate");
-			documentType.setApplication(ApplicationEnum.CREATE.valueOf("CREATE"));
-			documentType.setAuditDetails(auditDetails);
 			document.setId((long) 1);
+			document.setDocumentType("documenttype");
 			document.setFileStore("filestoredoc1");
 			document.setAuditDetails(auditDetails);
 			propertyDetail.getDocuments().add(document);
-			document.setDocumentType(documentType);
 			propertyDetail.setDocuments(documents);
 
 			propertyDetail.setStateId("stateId1");
@@ -1578,7 +1574,8 @@ public class PropertyServiceTest {
 			propertyRequest.setProperties(properties);
 			propertyRequest.setRequestInfo(requestInfo);
 
-			producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"), propertyRequest);
+			producer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
+					propertyRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1804,4 +1801,104 @@ public class PropertyServiceTest {
 		} else
 			assertTrue(false);
 	}
+	
+	@Test
+	public void createDocumentTypeTest() {
+
+		DocumentTypeRequest documentTypeRequest = new DocumentTypeRequest();
+		DocumentType documentType = new DocumentType();
+		documentType.setTenantId("defaultt");
+		documentType.setName("veswanthh");
+		documentType.setCode("test code");
+		documentType.setApplication(ApplicationEnum.BIFURCATION);
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("veswanth");
+		auditDetails.setLastModifiedBy("sai");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+		documentType.setAuditDetails(auditDetails);
+
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+		documentTypes.add(documentType);
+		String tenantId = "default";
+
+		documentTypeRequest.setRequestInfo(getRequestInfoObject());
+		documentTypeRequest.setDocumentType(documentTypes);
+
+		DocumentTypeResponse documentTypeResponse = null;
+
+		try {
+			documentTypeResponse = masterService.createDocumentTypeMaster(tenantId, documentTypeRequest);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (documentTypeResponse != null && documentTypeResponse.getDocumentType().size() > 0)
+			assertTrue(true);
+		else
+			assertTrue(false);
+
+	}
+
+	@Test
+	public void modifyDocumentTypeTest() {
+
+		DocumentTypeRequest documentTypeRequest = new DocumentTypeRequest();
+		DocumentType documentType = new DocumentType();
+		documentType.setTenantId("default");
+		documentType.setName("veswanth");
+		documentType.setCode("codevalue");
+		documentType.setApplication(ApplicationEnum.BIFURCATION);
+		documentType.setId(1l);
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("veswanth");
+		auditDetails.setLastModifiedBy("sai");
+		auditDetails.setCreatedTime(new Long(23));
+		auditDetails.setLastModifiedTime(new Long(256));
+		documentType.setAuditDetails(auditDetails);
+
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+		documentTypes.add(documentType);
+
+		documentTypeRequest.setRequestInfo(getRequestInfoObject());
+		documentTypeRequest.setDocumentType(documentTypes);
+
+		DocumentTypeResponse documentTypeResponse = null;
+
+		try {
+			documentTypeResponse = masterService.updateDocumentTypeMaster(documentTypeRequest);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (documentTypeResponse != null && documentTypeResponse.getDocumentType().size() > 0)
+			assertTrue(true);
+		else
+			assertTrue(false);
+
+	}
+
+	@Test
+	public void searchDocumentTypeTest() {
+		String tenantId = "default";
+		String name = "veswanth";
+
+		DocumentTypeResponse documentTypeResponse = null;
+
+		try {
+			documentTypeResponse = masterService.searchDocumentTypeMaster(getRequestInfoObject(), tenantId, name, null,
+					null, null, null);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		if (documentTypeResponse != null && documentTypeResponse.getDocumentType().size() > 0)
+			assertTrue(true);
+		else
+			assertTrue(false);
+	}
+
 }

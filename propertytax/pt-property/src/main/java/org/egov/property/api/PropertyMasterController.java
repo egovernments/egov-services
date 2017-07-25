@@ -4,6 +4,8 @@ import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DocumentTypeRequest;
+import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
 import org.egov.models.MutationMasterRequest;
@@ -640,4 +642,51 @@ public class PropertyMasterController {
 
 	}
 
+	/**
+	 * This will create the documentType master
+	 * 
+	 * @param documentTypeRequest
+	 * @return DocumentTypeResponse
+	 */
+	@RequestMapping(path = "/documenttypes/_create", method = RequestMethod.POST)
+	public DocumentTypeResponse createDocumentTypeMaster(@RequestParam(required = true) String tenantId,
+			@RequestBody DocumentTypeRequest documentTypeRequest) throws Exception {
+		return masterService.createDocumentTypeMaster(tenantId, documentTypeRequest);
+	}
+
+	/**
+	 * This will update the Document type master
+	 * 
+	 * @param documentTypeRequest
+	 * @return DocumentTypeResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/documenttypes/_update", method = RequestMethod.POST)
+	public DocumentTypeResponse updateDocumentTypeMaster(@RequestBody DocumentTypeRequest documentTypeRequest)
+			throws Exception {
+		return masterService.updateDocumentTypeMaster(documentTypeRequest);
+	}
+
+	/**
+	 * This will search for the Document type master
+	 * 
+	 * @param requestInfoWrapper
+	 * @param tenantId
+	 * @param name
+	 * @param code
+	 * @param application
+	 * @param pageSize
+	 * @param offSet
+	 * @return DocumentTypeResponse
+	 */
+	@RequestMapping(path = "/documenttypes/_search", method = RequestMethod.POST)
+	public DocumentTypeResponse searchDocumentTypeMaster(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = false) String name,
+			@RequestParam(required = false) String code, @RequestParam(required = false) String application,
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet)
+			throws Exception {
+
+		return masterService.searchDocumentTypeMaster(requestInfoWrapper.getRequestInfo(), tenantId, name, code,
+				application, pageSize, offSet);
+	}
 }

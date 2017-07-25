@@ -9,7 +9,9 @@ public enum AttributeDataType {
     DATE("date"),
     DATE_TIME("datetime"),
     SINGLE_VALUE_LIST("singlevaluelist"),
-    MULTI_VALUE_LIST("multivaluelist");
+    MULTI_VALUE_LIST("multivaluelist"),
+    SINGLE_FILE("file"),
+    MULTI_FILE("multifile");
 
     @Getter
     private String name;

@@ -52,24 +52,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TaxPeriod {
 
-	private String id;
 
-	@NotNull
-	private String tenantId;
+        private String id;
 
-	@NotNull
-	private Long fromDate;
+        @NotNull
+        private String tenantId;
 
-	@NotNull
-	private Long toDate;
+        @NotNull
+        private Long fromDate;
 
-	@NotNull
-	private String service;
+        @NotNull
+        private Long toDate;
+        
+        @NotNull
+        private PeriodCycle periodCycle;
 
-	@NotNull
-	private String code;
+        @NotNull
+        private String service;
+        
+        @NotNull
+        private String code;
 
-	private String financialYear;
+        private String financialYear;
 
-	private AuditDetails auditDetail;
+        private AuditDetails auditDetail;
+
 }

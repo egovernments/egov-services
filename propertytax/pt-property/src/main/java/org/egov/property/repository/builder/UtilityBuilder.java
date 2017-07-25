@@ -1,9 +1,10 @@
 package org.egov.property.repository.builder;
 
+import java.util.List;
+
 /**
  * 
- * @author Prasad
- * 	 This class will have all the common queries which will be use
+ * @author Prasad This class will have all the common queries which will be use
  *         in the master & property as well
  *
  */
@@ -25,4 +26,30 @@ public class UtilityBuilder {
 
 	}
 
+	public static String getUniqueTenantIdNameQuery(String tenantId, String code, String application, String tableName,
+			Long id, List<Object> preparedStatementValues) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+		if (tenantId != null & !tenantId.isEmpty()) {
+			uniqueQuery.append(" where tenantId =?");
+			preparedStatementValues.add(tenantId);
+		}
+
+		if (code != null & !code.isEmpty()) {
+			uniqueQuery.append(" AND code =?");
+			preparedStatementValues.add(code);
+		}
+
+		if (application != null & !application.isEmpty()) {
+			uniqueQuery.append(" AND application =?");
+			preparedStatementValues.add(application);
+		}		
+
+		if (id != null) {
+			uniqueQuery.append(" AND id !=?");
+			preparedStatementValues.add(id);
+		}
+
+		return uniqueQuery.toString();
+	}
 }

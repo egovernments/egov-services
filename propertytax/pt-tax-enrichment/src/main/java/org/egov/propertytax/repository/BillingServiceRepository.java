@@ -1,6 +1,9 @@
 package org.egov.propertytax.repository;
 
 import org.egov.models.*;
+import org.egov.propertytax.service.DemandService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
@@ -16,6 +19,8 @@ import java.util.List;
 @Repository
 public class BillingServiceRepository {
 
+    private static final Logger logger = LoggerFactory.getLogger(BillingServiceRepository.class);
+
     @Autowired
     Environment environment;
     @Autowired
@@ -23,7 +28,7 @@ public class BillingServiceRepository {
 
     public List<Demand> prepareDemand(List<TaxCalculation> taxCalculationList, Property property) {
         List<Demand> demandList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         Date fromDate;
         Date toDate;
         CommonTaxDetails taxDetails;
@@ -71,8 +76,11 @@ public class BillingServiceRepository {
         demandRequest.setRequestInfo(requestInfo);
         demandRequest.setDemands(demands);
 
-        String url = environment.getProperty("egov.services.demand_service.hostname") +
-                environment.getProperty("egov.services.demand_service.createdemand");
+        logger.info("BillingServiceRepository createDemand(), demands --> "+demands);
+
+        String url = environment.getProperty("egov.services.billing_service.hostname") +
+                environment.getProperty("egov.services.billing_service.createdemand");
+        logger.info("BillingServiceRepository createDemand(), URL - > "+url+" \n demandRequest --> "+demandRequest);
 
         return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
     }

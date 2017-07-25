@@ -39,7 +39,7 @@ public class DisposalRowMapper implements RowMapper<Disposal> {
 		auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
 		disposal.setAuditDetails(auditDetails);
 
-		disposal.setVoucherReference(rs.getLong("voucherreference"));
+		disposal.setVoucherReference(rs.getLong("profitlossvoucherreference"));
 
 		return disposal;
 	}

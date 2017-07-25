@@ -13,7 +13,7 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 public class EmployeeDocumentEnricher implements ServiceRequestDocumentEnricher {
 
-    private static final String POSITION_ID = "positionId";
+    private static final String POSITION_ID = "systemPositionId";
     private DepartmentRepository departmentRepository;
     private EmployeeRepository employeeRepository;
 

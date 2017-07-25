@@ -1,0 +1,15 @@
+{
+    "responseInfo": {
+    },
+    "documentType": [
+        {
+            "tenantId": "tenantid1",
+            "name": "username1",
+            "application": "BIFURCATION",
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null
+            }
+        }
+    ]
+}

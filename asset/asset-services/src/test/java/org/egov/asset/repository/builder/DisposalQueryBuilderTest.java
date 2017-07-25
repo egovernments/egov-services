@@ -37,7 +37,7 @@ public class DisposalQueryBuilderTest {
 	public void getQueryWithTenantIdTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_disposal as disposal WHERE disposal.tenantId = ? AND disposal.assetid IN (10,20) LIMIT ? OFFSET ?";
+		String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference FROM egasset_disposal as disposal WHERE disposal.tenantId = ? AND disposal.assetid IN (10,20) LIMIT ? OFFSET ?";
 
 		List<Long> assetIds = new ArrayList<>();
 		assetIds.add(10L);
@@ -57,7 +57,7 @@ public class DisposalQueryBuilderTest {
 	public void getQueryWithIdTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_disposal as disposal WHERE disposal.tenantId = ? AND disposal.id IN (2,6) LIMIT ? OFFSET ?";
+		String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference FROM egasset_disposal as disposal WHERE disposal.tenantId = ? AND disposal.id IN (2,6) LIMIT ? OFFSET ?";
 		List<Long> ids = new ArrayList<>();
 		ids.add(2L);
 		ids.add(6L);
@@ -75,7 +75,7 @@ public class DisposalQueryBuilderTest {
 	public void getQueryWithSizeTest() {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-		String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_disposal as disposal WHERE disposal.tenantId = ? LIMIT ? OFFSET ?";
+		String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,buyername,buyeraddress,disposalreason,disposaldate,pancardnumber,aadharcardnumber,assetcurrentvalue,salevalue,transactiontype,assetsaleaccount,createdby,createddate,lastmodifiedby,lastmodifieddate,profitlossvoucherreference FROM egasset_disposal as disposal WHERE disposal.tenantId = ? LIMIT ? OFFSET ?";
 		DisposalCriteria disposalCriteria = DisposalCriteria.builder().tenantId("ap.kurnool").size(Long.valueOf(80))
 				.build();
 

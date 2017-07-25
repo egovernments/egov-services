@@ -110,7 +110,7 @@ public class DonationController {
                 "donation-create", donationRequest);
         final List<Donation> donationList = new ArrayList<>();
         donationList.add(donation);
-        return getSuccessResponse(donationList, null, donationRequest.getRequestInfo());
+        return getSuccessResponse(donationList, "Created", donationRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/{donationId}/_update")

@@ -14,7 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.WorkflowDetails;
+import org.egov.collection.model.Instrument;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -46,6 +46,8 @@ public class Receipt {
 
 	private AuditDetails auditDetails;
 
-	transient private WorkflowDetails workflowDetails;
-
+	@NotNull
+	private Instrument instrument;
+	
+	private Long stateId;
 }

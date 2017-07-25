@@ -148,6 +148,74 @@ paths:
             $ref: '#/definitions/ReceiptRes'
         '400':
           description: Invalid input. 
+          
+  /_getDistinctCollectedBy:  
+    post:
+      summary: API to get distinct collected by users.
+      description: This API returns List of distinct receipt collectors.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+      tags:
+        - Receipt  
+      responses:
+        '200':
+          description: Returned List of distinct collected users.
+          schema:
+            type: array
+            items:
+             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/UserInfo'
+        '400':
+          description: Invalid input.   
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      
+        
+          
+  /_status:  
+    post:
+      summary: API to get list of collection status.
+      description: This API is to get List of collection status.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+      tags:
+        - Receipt  
+      responses:
+        '200':
+          description: List of receipt status returned successfully.
+          schema:
+            type: array
+            items:
+             type: string
+            description: List of receipt status.
+        '400':
+          description: Invalid input. 
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+        
+          
+  /_getDistinctBusinessDetails:  
+    post:
+      summary: API to get list of Business details.
+      description: This API is to get List of distinct business details.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+      tags:
+        - Receipt  
+      responses:
+        '200':
+          description: List of business details returned successfully.
+          schema:
+            type: array
+            items:
+             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/BusinessDetails'
+        '400':
+          description: Invalid input.     
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+          
 
 definitions:
   ReceiptReq:

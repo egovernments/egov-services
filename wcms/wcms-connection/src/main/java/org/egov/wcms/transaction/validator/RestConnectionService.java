@@ -383,45 +383,6 @@ public class RestConnectionService {
         return donation;
     }
 
-    public String generateAcknowledgementNumber(final String tenantId) {
-        StringBuilder url = new StringBuilder();
-        String ackNumber = null;
-        url.append(configurationManager.getIdGenServiceBasePathTopic())
-                .append(configurationManager.getIdGenServiceCreatePathTopic());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
-        List<AckIdRequest> idRequests = new ArrayList<>();
-        AckIdRequest idrequest = new AckIdRequest();
-
-        idrequest.setIdName(configurationManager.getIdGenNameServiceTopic());
-        idrequest.setTenantId(tenantId);
-        idrequest.setFormat(configurationManager.getIdGenFormatServiceTopic());
-        AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
-        idRequests.add(idrequest);
-        idGeneration.setIdRequests(idRequests);
-        idGeneration.setRequestInfo(requestInfo);
-        String response = null;
-        try {
-            response = new RestTemplate().postForObject(url.toString(), idGeneration, String.class);
-        } catch (Exception ex) {
-            throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number",
-                    requestInfo);
-        }
-        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        IdGenErrorRes errorResponse = gson.fromJson(response, IdGenErrorRes.class);
-        AckNoGenerationResponse idResponse = gson.fromJson(response, AckNoGenerationResponse.class);
-        if (!errorResponse.getErrors().isEmpty()) {
-            throw new IdGenerationException("Error While generating ACK number", "Error While generating ACK number",
-                    requestInfo);
-        } else if (idResponse.getResponseInfo() != null) {
-            if (idResponse.getResponseInfo().getStatus().toString()
-                    .equalsIgnoreCase("SUCCESSFUL")) {
-                if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-                    ackNumber = idResponse.getIdResponses().get(0).getId();
-            }
-        }
-
-        return ackNumber;
-    }
     
     public String getFinancialYear(final String tenantId) { 
             StringBuilder url = new StringBuilder();
@@ -493,16 +454,16 @@ public class RestConnectionService {
                 }
         }
         
-        if(!nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
+        if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
         	//Enable the below method call to get financial year from the Finance Service
             //String finYear = getFinancialYear(tenantId);
             String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
-            	return tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
+            	return ackNumber=tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
             }	
         }
 
-        return tenantId.substring(0,4).concat(ackNumber);
+        return ackNumber;
     }
     
     public List<ErrorResponse> populateErrors() {

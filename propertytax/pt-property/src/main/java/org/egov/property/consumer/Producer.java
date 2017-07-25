@@ -36,7 +36,8 @@ public class Producer {
 	@Bean
 	public Map<String, Object> producerConfig() {
 		Map<String, Object> producerProperties = new HashMap<String, Object>();
-		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka.config.bootstrap_server_config"));
+		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+				environment.getProperty("kafka.config.bootstrap_server_config"));
 		producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		return producerProperties;

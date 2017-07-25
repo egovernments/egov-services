@@ -1,5 +1,6 @@
 package org.egov.egf.budget.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
@@ -42,6 +43,53 @@ public class BudgetReAppropriationService {
 		this.validator = validator;
 		this.budgetDetailRepository = budgetDetailRepository;
 
+	}
+
+	@Transactional
+	public List<BudgetReAppropriation> save(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors) {
+
+		List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
+
+		try {
+
+			budgetreappropriations = fetchAndValidate(budgetreappropriations, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (BudgetReAppropriation bra : budgetreappropriations) {
+
+			resultList.add(save(bra));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<BudgetReAppropriation> update(List<BudgetReAppropriation> budgetreappropriations,
+			BindingResult errors) {
+
+		List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
+
+		try {
+
+			budgetreappropriations = fetchAndValidate(budgetreappropriations, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (BudgetReAppropriation bra : budgetreappropriations) {
+
+			resultList.add(update(bra));
+
+		}
+
+		return resultList;
 	}
 
 	private BindingResult validate(List<BudgetReAppropriation> budgetreappropriations, String method,
@@ -96,7 +144,7 @@ public class BudgetReAppropriationService {
 	}
 
 	@Transactional
-	public List<BudgetReAppropriation> save(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors,
+	public List<BudgetReAppropriation> fetchAndValidate(List<BudgetReAppropriation> budgetreappropriations, BindingResult errors,
 			String action) {
 
 		budgetreappropriations = fetchRelated(budgetreappropriations);

@@ -132,12 +132,12 @@ public class ReceiptController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 
-		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		Receipt receipt = receiptService.cancelReceiptPushToQueue(receiptRequest);
-		return getSuccessResponse(Collections.singletonList(receipt), receiptRequest.getRequestInfo());
+		List<Receipt> receipt = receiptService.cancelReceiptPushToQueue(receiptRequest);
+		return getSuccessResponse(receipt, receiptRequest.getRequestInfo());
 	}
 
 
@@ -150,11 +150,11 @@ public class ReceiptController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("Request: "+ receiptRequest.toString());		
-		final List<ErrorResponse> errorResponses = receiptReqValidator.validateServiceGroupRequest(receiptRequest);
+		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
+		Receipt receiptInfo = receiptService.apportionAndCreateReceipt(receiptRequest);
 
 		if (null == receiptInfo) {
 			LOGGER.info("Service returned null");
@@ -180,17 +180,6 @@ public class ReceiptController {
 		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
 	}
 
-	@PostMapping("_update/{code}")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody ReceiptReq receiptRequest, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-
-		return null;
-	}
 
 	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts, RequestInfo requestInfo) {
 		LOGGER.info("Building success response.");

@@ -21,7 +21,7 @@ private Boolean active;
 	
 	private List<Long> ids;
 	
-	private String businessDetailsCode;
+	private List<String> businessDetailsCodes;
 	
 	private String businessCategoryCode;
 	

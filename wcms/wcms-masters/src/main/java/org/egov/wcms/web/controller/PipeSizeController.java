@@ -110,7 +110,7 @@ public class PipeSizeController {
                 "pipesize-create", pipeSizeRequest);
         final List<PipeSize> pipeSizes = new ArrayList<>();
         pipeSizes.add(pipeSize);
-        return getSuccessResponse(pipeSizes, "created", pipeSizeRequest.getRequestInfo());
+        return getSuccessResponse(pipeSizes, "Created", pipeSizeRequest.getRequestInfo());
 
     }
 

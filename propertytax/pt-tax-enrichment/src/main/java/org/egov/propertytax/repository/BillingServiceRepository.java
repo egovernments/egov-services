@@ -28,6 +28,7 @@ public class BillingServiceRepository {
     public List<Demand> prepareDemand(List<TaxCalculation> taxCalculationList, Property property) {
         List<Demand> demandList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
         Date fromDate;
         Date toDate;
         CommonTaxDetails taxDetails;
@@ -57,7 +58,8 @@ public class BillingServiceRepository {
                 logger.info("TaxCalculation fromDate = " + taxCalculation.getFromDate() + " \n toDate = " + taxCalculation.getToDate());
                 fromDate = sdf.parse(taxCalculation.getFromDate());
                 toDate = sdf.parse(taxCalculation.getToDate());
-                logger.info(" Epoch values, fromDate = " + fromDate.getTime() + " \n toDate = " + toDate.getTime());
+                logger.info(" Dates, fromDate = "+fromDate+", toDate = "+toDate+
+                        " \n Epoch values, fromDate = " + fromDate.getTime() + " \n toDate = " + toDate.getTime());
                 demand.setTaxPeriodFrom(fromDate.getTime());
                 demand.setTaxPeriodTo(toDate.getTime());
             } catch (ParseException e) {

@@ -1,18 +1,20 @@
-package org.egov.egf.budget.persistence.queue;
+package org.egov.egf.budget.persistence.queue.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.common.web.contract.RequestInfo;
-import org.egov.egf.budget.domain.model.EstimationType;
+import org.egov.egf.budget.persistence.queue.FinancialProducer;
 import org.egov.egf.budget.web.contract.BudgetContract;
-import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.budget.web.contract.BudgetDetailContract;
+import org.egov.egf.budget.web.contract.BudgetDetailRequest;
+import org.egov.egf.master.web.contract.BudgetGroupContract;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +23,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BudgetServiceQueueRepositoryTest {
+public class BudgetDetailQueueRepositoryTest {
 
 	@Mock
-	private BudgetServiceQueueRepository budgetServiceQueueRepository;
+	private BudgetDetailQueueRepository budgetDetailQueueRepository;
 
 	@Mock
 	private FinancialProducer financialProducer;
@@ -35,20 +37,20 @@ public class BudgetServiceQueueRepositoryTest {
 
 	@Before
 	public void setup() {
-		budgetServiceQueueRepository = new BudgetServiceQueueRepository(financialProducer, TOPIC_NAME, KEY_NAME,
+		budgetDetailQueueRepository = new BudgetDetailQueueRepository(financialProducer, TOPIC_NAME, KEY_NAME,
 				TOPIC_NAME, KEY_NAME);
 	}
 
 	@Test
 	public void test_add_to_queue_while_create() {
 
-		CommonRequest<BudgetContract> request = new CommonRequest<BudgetContract>();
+		BudgetDetailRequest request = new BudgetDetailRequest();
 
-		request.setData(getBudgetContracts());
+		request.setBudgetDetails(getBudgetDetails());
 		request.setRequestInfo(new RequestInfo());
 		request.getRequestInfo().setAction("create");
 
-		budgetServiceQueueRepository.addToQue(request);
+		budgetDetailQueueRepository.addToQue(request);
 
 		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
@@ -56,20 +58,20 @@ public class BudgetServiceQueueRepositoryTest {
 
 		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budgetcontract_create"));
+		assertEquals(request, actualRequest.get("budgetdetail_create"));
 
 	}
 
 	@Test
 	public void test_add_to_queue_while_update() {
 
-		CommonRequest<BudgetContract> request = new CommonRequest<BudgetContract>();
+		BudgetDetailRequest request = new BudgetDetailRequest();
 
-		request.setData(getBudgetContracts());
+		request.setBudgetDetails(getBudgetDetails());
 		request.setRequestInfo(new RequestInfo());
 		request.getRequestInfo().setAction("update");
 
-		budgetServiceQueueRepository.addToQue(request);
+		budgetDetailQueueRepository.addToQue(request);
 
 		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
@@ -77,18 +79,18 @@ public class BudgetServiceQueueRepositoryTest {
 
 		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budgetcontract_update"));
+		assertEquals(request, actualRequest.get("budgetdetail_update"));
 
 	}
 
 	@Test
 	public void test_add_to_search_queue() {
 
-		CommonRequest<BudgetContract> request = new CommonRequest<BudgetContract>();
+		BudgetDetailRequest request = new BudgetDetailRequest();
 
-		request.setData(getBudgetContracts());
+		request.setBudgetDetails(getBudgetDetails());
 
-		budgetServiceQueueRepository.addToSearchQue(request);
+		budgetDetailQueueRepository.addToSearchQue(request);
 
 		final ArgumentCaptor<HashMap> argumentCaptor = ArgumentCaptor.forClass(HashMap.class);
 
@@ -96,18 +98,24 @@ public class BudgetServiceQueueRepositoryTest {
 
 		final HashMap<String, Object> actualRequest = argumentCaptor.getValue();
 
-		assertEquals(request, actualRequest.get("budgetcontract_completed"));
+		assertEquals(request, actualRequest.get("budgetdetail_completed"));
 
 	}
 
-	private List<BudgetContract> getBudgetContracts() {
-		List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
-		BudgetContract budgetContract = BudgetContract.builder().name("test")
-				.financialYear(FinancialYearContract.builder().finYearRange("2017-18").build())
-				.estimationType(EstimationType.BE).primaryBudget(false).build();
-		budgetContract.setTenantId("default");
-		budgetContracts.add(budgetContract);
-		return budgetContracts;
+	private List<BudgetDetailContract> getBudgetDetails() {
+
+		List<BudgetDetailContract> budgetDetails = new ArrayList<BudgetDetailContract>();
+
+		BudgetDetailContract budgetDetail = BudgetDetailContract.builder()
+				.budget(BudgetContract.builder().id("1").build())
+				.budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
+				.originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
+				.planningPercent(BigDecimal.valueOf(1500)).build();
+
+		budgetDetail.setTenantId("default");
+		budgetDetails.add(budgetDetail);
+
+		return budgetDetails;
 	}
 
 }

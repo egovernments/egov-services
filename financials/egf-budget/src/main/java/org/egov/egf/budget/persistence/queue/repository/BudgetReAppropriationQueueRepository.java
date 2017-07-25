@@ -1,14 +1,15 @@
-package org.egov.egf.budget.persistence.queue;
+package org.egov.egf.budget.persistence.queue.repository;
 
 import java.util.HashMap;
 
-import org.egov.common.web.contract.CommonRequest;
+import org.egov.egf.budget.persistence.queue.FinancialProducer;
+import org.egov.egf.budget.web.contract.BudgetReAppropriationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BudgetServiceQueueRepository {
+public class BudgetReAppropriationQueueRepository {
 
 	private FinancialProducer financialProducer;
 
@@ -21,7 +22,7 @@ public class BudgetServiceQueueRepository {
 	private String completedKey;
 
 	@Autowired
-	public BudgetServiceQueueRepository(FinancialProducer financialProducer,
+	public BudgetReAppropriationQueueRepository(FinancialProducer financialProducer,
 			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
 			@Value("${kafka.topics.egf.budget.service.validated.key}") String validatedKey,
 			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
@@ -34,38 +35,31 @@ public class BudgetServiceQueueRepository {
 		this.completedKey = completedKey;
 	}
 
-	public void addToQue(CommonRequest<?> request) {
-		String masterName = "";
-		HashMap<String, CommonRequest<?>> topicMap = new HashMap<String, CommonRequest<?>>();
-		if (!request.getData().isEmpty())
-			masterName = request.getData().get(0).getClass().getSimpleName();
-
-		System.out.println("got insert for " + masterName);
+	public void addToQue(BudgetReAppropriationRequest request) {
+		HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
 		switch (request.getRequestInfo().getAction().toLowerCase()) {
 
 		case "create":
-			topicMap.put(masterName.toLowerCase() + "_create", request);
+			topicMap.put("budgetreappropriation_create", request);
 			System.out.println("push create topic" + request);
 			break;
 		case "update":
-			topicMap.put(masterName.toLowerCase() + "_update", request);
+			topicMap.put("budgetreappropriation_update", request);
 			break;
 
 		}
 		financialProducer.sendMessage(validatedTopic, validatedKey, topicMap);
 	}
 
-	public void addToSearchQue(CommonRequest<?> request) {
+	public void addToSearchQue(BudgetReAppropriationRequest request) {
 
-		String masterName = "";
-		HashMap<String, CommonRequest<?>> topicMap = new HashMap<String, CommonRequest<?>>();
+		HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		if (!request.getData().isEmpty()) {
+		if (!request.getBudgetReAppropriations().isEmpty()) {
 
-			masterName = request.getData().get(0).getClass().getSimpleName();
+			topicMap.put("budgetreappropriation_completed", request);
 
-			topicMap.put(masterName.toLowerCase() + "_completed", request);
 			System.out.println("push search topic" + request);
 
 		}

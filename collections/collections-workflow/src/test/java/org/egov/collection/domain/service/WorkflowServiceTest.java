@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.model.Task;
 import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.repository.WorkflowRepository;
@@ -13,6 +14,7 @@ import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -24,6 +26,9 @@ public class WorkflowServiceTest {
 	@Mock
 	private WorkflowRepository workflowRepository;
 	
+	@InjectMocks
+	private WorkflowService workflowService;
+	
 	@Mock
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -32,16 +37,13 @@ public class WorkflowServiceTest {
 	public void test_should_start_workflow(){
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		ProcessInstance processInstance = new ProcessInstance();
-		processInstance.setId("A");
+		processInstance.setId("100");
 		processInstanceResponse.setProcessInstance(processInstance);
 		WorkflowDetails workflowDetails = getWorkflowDetails();
-		WorkflowService workflowService = new WorkflowService();
 		Mockito.when(workflowRepository.startWorkflow(workflowDetails)).thenReturn(processInstanceResponse);
-
-		workflowService.startWorkflow(workflowDetails);
-				
-		verify(workflowRepository).startWorkflow(workflowDetails);
-		
+		processInstance = workflowService.startWorkflow(workflowDetails);
+		assertNotNull(processInstance);
+						
 	}
 	
 	@Test(expected = Exception.class)
@@ -59,18 +61,20 @@ public class WorkflowServiceTest {
 		assertNotNull(workflowService.startWorkflow(workflowDetails));
 	}
 	
-/*	@Test
+	@Test
 	public void test_should_update_workflow(){
 		TaskResponse taskResponse = new TaskResponse();
+		Task task = new Task();
+		task.setId("100");
+		taskResponse.setTask(task);
 		WorkflowDetails workflowDetails = new WorkflowDetails();
-		WorkflowService workflowService = new WorkflowService();
 		Mockito.when(workflowRepository.updateWorkflow(workflowDetails)).thenReturn(taskResponse);
 
 		workflowService.updateWorkflow(workflowDetails);
 				
 		verify(workflowRepository).updateWorkflow(workflowDetails);
 		
-	} */
+	}
 	
 	@Test(expected = Exception.class)
 	public void test_should_update_workflow_exception(){

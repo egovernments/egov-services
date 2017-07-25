@@ -113,7 +113,6 @@ public class ReceiptService {
 			if (validateFundAndDept(businessDetailsRes)
 					&& validateGLCode(receiptReq.getRequestInfo(),
 							receiptReq.getTenantId(), billdetail)) {
-				businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
 				if (businessDetailsRes.getBusinessDetails().get(0)
 						.getCallBackForApportioning()) {
 					bill.getBillDetails().remove(billdetail);
@@ -168,7 +167,7 @@ public class ReceiptService {
 		}
 	}
 
-	private boolean validateGLCode(RequestInfo requestInfo, String tenantId,
+	public boolean validateGLCode(RequestInfo requestInfo, String tenantId,
 			BillDetail billdetails) {
 		for (BillAccountDetail billAccountDetail : billdetails
 				.getBillAccountDetails()) {
@@ -208,7 +207,7 @@ public class ReceiptService {
 		return response.getBill();
 	}
 
-	private Boolean validateFundAndDept(
+	public Boolean validateFundAndDept(
 			BusinessDetailsResponse businessDetailsRes) {
 		if (null == businessDetailsRes) {
 			logger.error("All business details fields are not available");

@@ -39,8 +39,7 @@
  */
 package org.egov.collection.domain.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,6 +48,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -64,6 +64,8 @@ import org.egov.collection.service.ReceiptService;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
+import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
@@ -88,6 +90,28 @@ public class ReceiptServiceTest {
 	@InjectMocks
 	private ReceiptService receiptService;
 
+	@Test
+	public void test_should_apportion_and_create_receipt() throws ParseException {
+
+		ReceiptReq receiptReq = getReceiptRequest();
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+		
+/*		Mockito.when(receiptService.getBusinessDetails("TL", receiptReq))
+			   .thenReturn(businessDetailsRes);
+		Mockito.when(receiptService.validateFundAndDept(businessDetailsRes)).thenReturn(true);
+		Mockito.when(receiptService.validateGLCode(receiptReq.getRequestInfo(),
+				receiptReq.getTenantId(), 
+				receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0)));
+		Mockito.when(receiptService.create(receiptReq)).thenReturn(receiptReq.getReceipt().get(0)); */
+		
+		
+		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
+		
+		
+	}
+	
 	@Test
 	public void test_should_search_business_details() throws ParseException {
 		when(receiptRepository.findAllReceiptsByCriteria(getReceiptSearchCriteria()))
@@ -335,6 +359,19 @@ public class ReceiptServiceTest {
 				.tenantId("default").build();
 		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header))
 				.receiptDetails(Arrays.asList(detail1, detail2)).build();
+	}
+	
+	private BusinessDetailsResponse getBusinessDetails(){
+		BusinessDetailsResponse businessDetailsRes = new BusinessDetailsResponse();
+		BusinessDetailsRequestInfo businessDetailsRequestInfo = BusinessDetailsRequestInfo.builder()
+				.businessCategory(1L).businessType("CHALLAN").callBackForApportioning(true).code("code")
+				.fund("fund").department("department")
+				.build();
+		List<BusinessDetailsRequestInfo> businessDetails = new ArrayList<>();
+		businessDetails.add(businessDetailsRequestInfo);
+		businessDetailsRes.setBusinessDetails(businessDetails);
+		
+		return businessDetailsRes;
 	}
 
 }

@@ -19,6 +19,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -42,7 +43,7 @@ public class WorkflowRepositoryTest {
 	@Mock
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Mock
+	@InjectMocks
 	private WorkflowRepository workflowRepository;
 
 	@Before
@@ -79,7 +80,10 @@ public class WorkflowRepositoryTest {
 		String searchPath = applicationProperties.getWorkflowServiceStartPath();
 		uri.append(basePath).append(searchPath);
 		
-		Mockito.when(workflowRepository.getProcessInstanceRequest(workflowDetails)).thenReturn(processInstanceRequest);
+		Mockito.when(applicationProperties.getWorkflowServiceHostName()).thenReturn(basePath);
+		Mockito.when(applicationProperties.getWorkflowServiceStartPath()).thenReturn(searchPath);
+		
+	//	Mockito.when(workflowRepository.getProcessInstanceRequest(workflowDetails)).thenReturn(processInstanceRequest);
 		Mockito.when(restTemplate.postForObject(uri.toString(), processInstanceRequest, ProcessInstanceResponse.class))
 		.thenReturn(processInstanceResponse);
 		
@@ -92,7 +96,6 @@ public class WorkflowRepositoryTest {
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		WorkflowDetails workflowDetails = new WorkflowDetails();
 		
-		Mockito.when(workflowRepository.getProcessInstanceRequest(workflowDetails)).thenReturn(processInstanceRequest);
 		Mockito.when(restTemplate.postForObject("uri", processInstanceRequest, ProcessInstanceResponse.class))
 		.thenReturn(processInstanceResponse);
 		
@@ -139,7 +142,6 @@ public class WorkflowRepositoryTest {
 		TaskRequest taskRequest = new TaskRequest();
 		WorkflowDetails workflowDetails = new WorkflowDetails();
 		
-		Mockito.when(workflowRepository.getTaskRequest(workflowDetails)).thenReturn(taskRequest);
 		Mockito.when(restTemplate.postForObject("uri", taskRequest, TaskResponse.class))
 		.thenReturn(taskResponse);
 		

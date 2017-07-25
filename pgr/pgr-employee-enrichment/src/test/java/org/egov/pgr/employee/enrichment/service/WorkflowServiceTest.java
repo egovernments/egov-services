@@ -28,7 +28,7 @@ public class WorkflowServiceTest {
 
     public static final String ASSIGNEE = "1";
     public static final String STATE_ID = "2";
-    public static final String STATE_ID_KEY = "stateId";
+    public static final String STATE_ID_KEY = "systemStateId";
     @Mock
     private WorkflowRepository workflowRepository;
 

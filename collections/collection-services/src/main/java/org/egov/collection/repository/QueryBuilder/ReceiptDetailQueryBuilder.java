@@ -203,7 +203,23 @@ public class ReceiptDetailQueryBuilder {
 			selectQuery.append(" rh.businessDetails = ?");
 			preparedStatementValues.add(searchCriteria.getBusinessCode());
 		}
+		
+		if(searchCriteria.getIds() !=null){
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" rh.id IN " + getIdQuery(searchCriteria.getIds()));
+		}
 	}
+	
+	private static String getIdQuery(List<Long> idList) {
+		StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++) {
+				query.append(", " + idList.get(i));
+			}
+		}
+		return query.append(")").toString();
+}
 
 	private void addOrderByClause(StringBuilder selectQuery, ReceiptSearchCriteria criteria) {
 		String sortBy = (criteria.getSortBy() == null ? "rh.receiptDate" : "rh." + criteria.getSortBy());

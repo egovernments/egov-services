@@ -24,7 +24,7 @@ public class AttributeActionsDefinition {
     }
 
     public org.egov.pgrrest.common.domain.model.AttributeActionsDefinition toDomain() {
-        final ServiceStatus serviceStatus = ServiceStatus.parse(id.getCode());
+        final ServiceStatus serviceStatus = ServiceStatus.parse(id.getAttributeCode());
         return new org.egov.pgrrest.common.domain.model.AttributeActionsDefinition(serviceStatus);
     }
 }

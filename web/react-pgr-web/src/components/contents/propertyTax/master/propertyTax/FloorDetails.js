@@ -525,6 +525,7 @@ calcArea = (e, type) => {
 															}
 															
 														</span>	  
+														
 													}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"

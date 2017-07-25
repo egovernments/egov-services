@@ -84,7 +84,7 @@ public class PersisterService {
 			}
 
 			if (property.getIsAuthorised() == null) {
-				property.setIsUnderWorkflow(true);
+				property.setIsAuthorised(true);
 			}
 
 			if (property.getActive() == null) {
@@ -193,7 +193,7 @@ public class PersisterService {
 			}
 
 			if (property.getIsAuthorised() == null) {
-				property.setIsUnderWorkflow(true);
+				property.setIsAuthorised(true);
 			}
 
 			if (property.getActive() == null) {

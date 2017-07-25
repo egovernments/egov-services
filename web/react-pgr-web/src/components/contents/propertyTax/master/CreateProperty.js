@@ -475,7 +475,7 @@ createPropertyTax = () => {
 		currentThis.setState({
 			ack: res.properties.applicationNo
 		});
-		localStorage.setItem('ack', res.properties.propertyDetail.applicationNo);
+		localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
 		this.props.history.push('acknowledgement');
 setLoadingStatus('hide');
       }).catch((err)=> {

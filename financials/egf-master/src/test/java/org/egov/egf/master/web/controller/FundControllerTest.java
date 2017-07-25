@@ -14,12 +14,11 @@ import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.utils.RequestJsonReader;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.service.FundService;
-import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.requests.FundRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +48,7 @@ public class FundControllerTest {
 	private RequestJsonReader resources = new RequestJsonReader();
 
 	@Captor
-	private ArgumentCaptor<CommonRequest<FundContract>> captor;
+	private ArgumentCaptor<FundRequest> captor;
 
 	@Before
 	public void setUp() throws Exception {
@@ -71,11 +70,11 @@ public class FundControllerTest {
 
 		verify(fundService).addToQue(captor.capture());
 
-		final CommonRequest<FundContract> actualRequest = captor.getValue();
-		assertEquals("MunicipalFund", actualRequest.getData().get(0).getName());
-		assertEquals("001", actualRequest.getData().get(0).getCode());
-		assertEquals(Character.valueOf('M'), actualRequest.getData().get(0).getIdentifier());
-		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+		final FundRequest actualRequest = captor.getValue();
+		assertEquals("MunicipalFund", actualRequest.getFunds().get(0).getName());
+		assertEquals("001", actualRequest.getFunds().get(0).getCode());
+		assertEquals(Character.valueOf('M'), actualRequest.getFunds().get(0).getIdentifier());
+		assertEquals("default", actualRequest.getFunds().get(0).getTenantId());
 	}
 
 	@Test
@@ -90,30 +89,7 @@ public class FundControllerTest {
 
 	}
 
-	/*
-	 * @Test public void testCreate_400() throws IOException, Exception {
-	 * 
-	 * /*
-	 * 
-	 * @Test public void testCreate_400() throws IOException, Exception {
-	 * 
-	 * BindingResult errors = new BeanPropertyBindingResult(null, null);
-	 * errors.addError(new ObjectError("sample", "sample"));
-	 * 
-	 * CustomBindException customBindException = new
-	 * CustomBindException(errors); when(fundService.add(any(List.class),
-	 * any(BindingResult.class))).thenThrow(customBindException);
-	 * 
-	 * mockMvc.perform(post("/funds/_create").content(resources.readRequest(
-	 * "fund/fund_create_valid_request.json"))
-	 * .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().
-	 * is4xxClientError())
-	 * .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-	 * .andExpect(content().json(resources.readErrorResponse(
-	 * "common/error_response.json")));
-	 * 
-	 * }
-	 */
+	
 
 	@Test
 	public void test_update() throws IOException, Exception {
@@ -126,12 +102,12 @@ public class FundControllerTest {
 
 		verify(fundService).addToQue(captor.capture());
 
-		final CommonRequest<FundContract> actualRequest = captor.getValue();
-		assertEquals("1", actualRequest.getData().get(0).getId());
-		assertEquals("MunicipalFundUpdate", actualRequest.getData().get(0).getName());
-		assertEquals("001", actualRequest.getData().get(0).getCode());
-		assertEquals(Character.valueOf('U'), actualRequest.getData().get(0).getIdentifier());
-		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+		final FundRequest actualRequest = captor.getValue();
+//		assertEquals("1", actualRequest.getFunds().get(0).getId());
+		assertEquals("MunicipalFundUpdate", actualRequest.getFunds().get(0).getName());
+		assertEquals("001", actualRequest.getFunds().get(0).getCode());
+		assertEquals(Character.valueOf('U'), actualRequest.getFunds().get(0).getIdentifier());
+		assertEquals("default", actualRequest.getFunds().get(0).getTenantId());
 	}
 
 	@Test

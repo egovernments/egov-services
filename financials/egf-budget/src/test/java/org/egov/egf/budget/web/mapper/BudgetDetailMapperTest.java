@@ -4,18 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
-import org.egov.common.domain.model.User;
+import org.egov.common.contract.request.User;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.web.contract.Boundary;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.egov.egf.budget.web.contract.Department;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
@@ -67,7 +66,6 @@ public class BudgetDetailMapperTest {
 		assertEquals(expectedDomain.getLastModifiedBy().getId(), domain().getLastModifiedBy().getId());
 		assertEquals(expectedDomain.getTenantId(), domain().getTenantId());
 
-
 	}
 
 	@Test
@@ -113,8 +111,7 @@ public class BudgetDetailMapperTest {
 		assertEquals(expectedSearchDomain.getApprovedAmount(), searchContract().getApprovedAmount());
 		assertEquals(expectedSearchDomain.getBudgetAvailable(), searchContract().getBudgetAvailable());
 		assertEquals(expectedSearchDomain.getAnticipatoryAmount(), searchContract().getAnticipatoryAmount());
-		assertEquals(expectedSearchDomain.getUsingDepartment().getId(),
-				searchContract().getUsingDepartment().getId());
+		assertEquals(expectedSearchDomain.getUsingDepartment().getId(), searchContract().getUsingDepartment().getId());
 		assertEquals(expectedSearchDomain.getExecutingDepartment().getId(),
 				searchContract().getExecutingDepartment().getId());
 		assertEquals(expectedSearchDomain.getFunction().getId(), searchContract().getFunction().getId());
@@ -196,9 +193,9 @@ public class BudgetDetailMapperTest {
 		budgetDetail.setDocumentNumber("documentNumber");
 		budgetDetail.setUniqueNo("uniqueNo");
 		budgetDetail.setPlanningPercent(BigDecimal.ONE);
-		budgetDetail.setStatus(EgfStatus.builder().id("id").build());
-		budgetDetail.setCreatedBy(User.builder().id("id").build());
-		budgetDetail.setLastModifiedBy(User.builder().id("id").build());
+		budgetDetail.setStatus(FinancialStatusContract.builder().id("id").build());
+		budgetDetail.setCreatedBy(User.builder().id(1l).build());
+		budgetDetail.setLastModifiedBy(User.builder().id(1l).build());
 		budgetDetail.setTenantId("tenantId");
 
 		return budgetDetail;
@@ -229,9 +226,9 @@ public class BudgetDetailMapperTest {
 		contract.setDocumentNumber("documentNumber");
 		contract.setUniqueNo("uniqueNo");
 		contract.setPlanningPercent(BigDecimal.ONE);
-		contract.setStatus(EgfStatusContract.builder().id("id").build());
-		contract.setCreatedBy(User.builder().id("id").build());
-		contract.setLastModifiedBy(User.builder().id("id").build());
+		contract.setStatus(FinancialStatusContract.builder().id("id").build());
+		contract.setCreatedBy(User.builder().id(1l).build());
+		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
 
 		return contract;
@@ -261,9 +258,9 @@ public class BudgetDetailMapperTest {
 		budgetDetailSearch.setDocumentNumber("documentNumber");
 		budgetDetailSearch.setUniqueNo("uniqueNo");
 		budgetDetailSearch.setPlanningPercent(BigDecimal.ONE);
-		budgetDetailSearch.setStatus(EgfStatus.builder().id("id").build());
-		budgetDetailSearch.setCreatedBy(User.builder().id("id").build());
-		budgetDetailSearch.setLastModifiedBy(User.builder().id("id").build());
+		budgetDetailSearch.setStatus(FinancialStatusContract.builder().id("id").build());
+		budgetDetailSearch.setCreatedBy(User.builder().id(1l).build());
+		budgetDetailSearch.setLastModifiedBy(User.builder().id(1l).build());
 		budgetDetailSearch.setTenantId("tenantId");
 		budgetDetailSearch.setPageSize(1);
 		budgetDetailSearch.setOffset(1);
@@ -296,9 +293,9 @@ public class BudgetDetailMapperTest {
 		contract.setDocumentNumber("documentNumber");
 		contract.setUniqueNo("uniqueNo");
 		contract.setPlanningPercent(BigDecimal.ONE);
-		contract.setStatus(EgfStatusContract.builder().id("id").build());
-		contract.setCreatedBy(User.builder().id("id").build());
-		contract.setLastModifiedBy(User.builder().id("id").build());
+		contract.setStatus(FinancialStatusContract.builder().id("id").build());
+		contract.setCreatedBy(User.builder().id(1l).build());
+		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
 		contract.setPageSize(1);
 		contract.setOffset(1);

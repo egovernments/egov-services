@@ -24,18 +24,5 @@ public class ChartOfAccount   {
 
   private Boolean isActiveForPosting;
 
-  private Long parentId;
-
-  private String type;
-
-  private Long classification;
-
-  private Boolean functionRequired;
-
-  private Boolean budgetCheckRequired;
-
-  private String majorCode;
-
-  private Boolean isSubLedger;
 }
 

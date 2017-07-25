@@ -52,71 +52,82 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":tablename", FinancialYearEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
+
 		if (financialYearSearchEntity.getSortBy() != null && !financialYearSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(financialYearSearchEntity.getSortBy());
-                    validateEntityFieldName(financialYearSearchEntity.getSortBy(), FinancialYearEntity.class);
-                }
-                
-                String orderBy = "order by finYearRange asc";
-                if (financialYearSearchEntity.getSortBy() != null && !financialYearSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + financialYearSearchEntity.getSortBy();
+			validateSortByOrder(financialYearSearchEntity.getSortBy());
+			validateEntityFieldName(financialYearSearchEntity.getSortBy(), FinancialYearEntity.class);
+		}
+
+		String orderBy = "order by finYearRange asc";
+		if (financialYearSearchEntity.getSortBy() != null && !financialYearSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + financialYearSearchEntity.getSortBy();
+		}
 
 		// implement jdbc specfic search
 		if (financialYearSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", financialYearSearchEntity.getId());
 		}
 		if (financialYearSearchEntity.getFinYearRange() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("finYearRange =:finYearRange");
 			paramValues.put("finYearRange", financialYearSearchEntity.getFinYearRange());
 		}
 		if (financialYearSearchEntity.getStartingDate() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("startingDate =:startingDate");
 			paramValues.put("startingDate", financialYearSearchEntity.getStartingDate());
 		}
 		if (financialYearSearchEntity.getEndingDate() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("endingDate =:endingDate");
 			paramValues.put("endingDate", financialYearSearchEntity.getEndingDate());
 		}
 		if (financialYearSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", financialYearSearchEntity.getActive());
 		}
 		if (financialYearSearchEntity.getIsActiveForPosting() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("isActiveForPosting =:isActiveForPosting");
 			paramValues.put("isActiveForPosting", financialYearSearchEntity.getIsActiveForPosting());
 		}
 		if (financialYearSearchEntity.getIsClosed() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("isClosed =:isClosed");
 			paramValues.put("isClosed", financialYearSearchEntity.getIsClosed());
 		}
 		if (financialYearSearchEntity.getTransferClosingBalance() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("transferClosingBalance =:transferClosingBalance");
 			paramValues.put("transferClosingBalance", financialYearSearchEntity.getTransferClosingBalance());
 		}
 
 		Pagination<FinancialYear> page = new Pagination<>();
-		if (financialYearSearchEntity.getOffset() != null)
+		if (financialYearSearchEntity.getOffset() != null) {
 			page.setOffset(financialYearSearchEntity.getOffset());
-		if (financialYearSearchEntity.getPageSize() != null)
+		}
+		if (financialYearSearchEntity.getPageSize() != null) {
 			page.setPageSize(financialYearSearchEntity.getPageSize());
+		}
 
 		if (params.length() > 0) {
 
@@ -152,7 +163,7 @@ public class FinancialYearJdbcRepository extends JdbcRepository {
 	}
 
 	public FinancialYearEntity findById(FinancialYearEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

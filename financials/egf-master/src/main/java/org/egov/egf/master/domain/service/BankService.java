@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
-import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.requests.BankRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class BankService {
 	@Autowired
 	private FundRepository fundRepository;
 
-	public BindingResult validate(List<Bank> banks, String method, BindingResult errors) {
+	private BindingResult validate(List<Bank> banks, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -83,6 +82,7 @@ public class BankService {
 		return banks;
 	}
 
+	@Transactional
 	public List<Bank> add(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
 		validate(banks, ACTION_CREATE, errors);
@@ -93,6 +93,7 @@ public class BankService {
 
 	}
 
+	@Transactional
 	public List<Bank> update(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
 		validate(banks, ACTION_UPDATE, errors);
@@ -103,7 +104,7 @@ public class BankService {
 
 	}
 
-	public void addToQue(CommonRequest<BankContract> request) {
+	public void addToQue(BankRequest request) {
 		bankRepository.add(request);
 	}
 

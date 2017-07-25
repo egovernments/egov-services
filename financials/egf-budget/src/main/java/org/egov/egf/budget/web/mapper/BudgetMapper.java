@@ -2,10 +2,9 @@ package org.egov.egf.budget.web.mapper;
 
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
 public class BudgetMapper {
@@ -27,8 +26,8 @@ public class BudgetMapper {
 		budget.setReferenceBudget(Budget.builder()
 				.id(contract.getReferenceBudget() != null ? contract.getReferenceBudget().getId() : null).build());
 		budget.setDocumentNumber(contract.getDocumentNumber());
-		budget.setStatus(
-				EgfStatus.builder().id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
+		budget.setStatus(FinancialStatusContract.builder()
+				.id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
 		budget.setCreatedBy(contract.getCreatedBy());
 		budget.setCreatedDate(contract.getCreatedDate());
 		budget.setLastModifiedBy(contract.getLastModifiedBy());
@@ -58,7 +57,7 @@ public class BudgetMapper {
 		}
 		contract.setDocumentNumber(budget.getDocumentNumber());
 		if (budget.getStatus() != null)
-			contract.setStatus(EgfStatusContract.builder().id(budget.getStatus().getId())
+			contract.setStatus(FinancialStatusContract.builder().id(budget.getStatus().getId())
 					.code(budget.getStatus().getCode()).description(budget.getStatus().getDescription())
 					.moduleType(budget.getStatus().getModuleType()).build());
 		contract.setCreatedBy(budget.getCreatedBy());
@@ -87,8 +86,8 @@ public class BudgetMapper {
 		budgetSearch.setReferenceBudget(Budget.builder()
 				.id(contract.getReferenceBudget() != null ? contract.getReferenceBudget().getId() : null).build());
 		budgetSearch.setDocumentNumber(contract.getDocumentNumber());
-		budgetSearch.setStatus(
-				EgfStatus.builder().id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
+		budgetSearch.setStatus(FinancialStatusContract.builder()
+				.id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
 		budgetSearch.setCreatedBy(contract.getCreatedBy());
 		budgetSearch.setCreatedDate(contract.getCreatedDate());
 		budgetSearch.setLastModifiedBy(contract.getLastModifiedBy());
@@ -119,7 +118,7 @@ public class BudgetMapper {
 				.id(budgetSearch.getReferenceBudget() != null ? budgetSearch.getReferenceBudget().getId() : null)
 				.build());
 		contract.setDocumentNumber(budgetSearch.getDocumentNumber());
-		contract.setStatus(EgfStatusContract.builder()
+		contract.setStatus(FinancialStatusContract.builder()
 				.id(budgetSearch.getStatus() != null ? budgetSearch.getStatus().getId() : null).build());
 		contract.setCreatedBy(budgetSearch.getCreatedBy());
 		contract.setCreatedDate(budgetSearch.getCreatedDate());

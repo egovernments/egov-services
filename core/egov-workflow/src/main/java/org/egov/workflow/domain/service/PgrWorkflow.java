@@ -187,7 +187,7 @@ public class PgrWorkflow implements Workflow {
         if (Objects.nonNull(state)) {
             state.addStateHistory(new StateHistory(state));
             state.setValue(task.getStatus());
-            state.setComments(task.getValueForKey("approvalComments"));
+            state.setComments(task.getValueForKey("systemApprovalComments"));
             state.setSenderName(task.getSender());
             //Logic to handle escalation
             if (null == task.getAssignee()) {

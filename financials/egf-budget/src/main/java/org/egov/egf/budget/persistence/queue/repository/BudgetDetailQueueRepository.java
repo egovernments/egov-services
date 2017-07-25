@@ -15,24 +15,24 @@ public class BudgetDetailQueueRepository {
 
 	private String validatedTopic;
 
-	private String validatedKey;
+	private String budgetDetailValidatedKey;
 
 	private String completedTopic;
 
-	private String completedKey;
+	private String budgetDetailCompletedKey;
 
 	@Autowired
 	public BudgetDetailQueueRepository(FinancialProducer financialProducer,
 			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.budget.service.validated.key}") String validatedKey,
+			@Value("${kafka.topics.egf.masters.budgetdetail.validated.key}") String budgetDetailValidatedKey,
 			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.budget.service.completed.key}") String completedKey) {
+			@Value("${kafka.topics.egf.masters.budgetdetail.completed.key}") String budgetDetailCompletedKey) {
 
 		this.financialProducer = financialProducer;
 		this.validatedTopic = validatedTopic;
-		this.validatedKey = validatedKey;
+		this.budgetDetailValidatedKey = budgetDetailValidatedKey;
 		this.completedTopic = completedTopic;
-		this.completedKey = completedKey;
+		this.budgetDetailCompletedKey = budgetDetailCompletedKey;
 	}
 
 	public void addToQue(BudgetDetailRequest request) {
@@ -49,7 +49,7 @@ public class BudgetDetailQueueRepository {
 			break;
 
 		}
-		financialProducer.sendMessage(validatedTopic, validatedKey, topicMap);
+		financialProducer.sendMessage(validatedTopic, budgetDetailValidatedKey, topicMap);
 	}
 
 	public void addToSearchQue(BudgetDetailRequest request) {
@@ -58,13 +58,13 @@ public class BudgetDetailQueueRepository {
 
 		if (!request.getBudgetDetails().isEmpty()) {
 
-			topicMap.put("budgetdetail_completed", request);
+			topicMap.put("budgetdetail_persisted", request);
 
 			System.out.println("push search topic" + request);
 
 		}
 
-		financialProducer.sendMessage(completedTopic, completedKey, topicMap);
+		financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, topicMap);
 
 	}
 }

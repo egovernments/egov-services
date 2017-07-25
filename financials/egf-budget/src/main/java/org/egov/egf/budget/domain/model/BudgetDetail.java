@@ -49,6 +49,7 @@ import org.egov.common.domain.model.Auditable;
 import org.egov.egf.budget.web.contract.Boundary;
 import org.egov.egf.budget.web.contract.Department;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
@@ -187,7 +188,7 @@ public class BudgetDetail extends Auditable {
 	/**
 	 * status gives the current status of the budget line item. (detailed level)
 	 */
-	private EgfStatus status;
+	private FinancialStatusContract status;
 
 	/**
 	 * documentNumber is the reference number to identify the attachments made

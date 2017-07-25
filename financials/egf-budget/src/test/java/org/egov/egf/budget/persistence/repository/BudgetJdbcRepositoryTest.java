@@ -14,9 +14,9 @@ import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.budget.persistence.entity.BudgetEntity;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,7 +101,7 @@ public class BudgetJdbcRepositoryTest {
 		assertThat(page.getPagedData().get(0).getActive()).isEqualTo(true);
 
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/budget/clearBudget.sql", "/sql/budget/insertBudgetData.sql" })
 	public void test_invalid_search() {
@@ -193,7 +193,7 @@ public class BudgetJdbcRepositoryTest {
 		budgetSearch.setFinancialYear(FinancialYearContract.builder().id("1").build());
 		budgetSearch.setParent(Budget.builder().id("1").build());
 		budgetSearch.setReferenceBudget(Budget.builder().id("1").build());
-		budgetSearch.setStatus(EgfStatus.builder().id("1").build());
+		budgetSearch.setStatus(FinancialStatusContract.builder().id("1").build());
 		budgetSearch.setEstimationType(EstimationType.BE);
 		budgetSearch.setDescription("description");
 		budgetSearch.setActive(true);

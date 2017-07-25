@@ -17,9 +17,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Builder
 @AllArgsConstructor
 public class ServiceRequest {
-    private static final String SERVICE_STATUS = "status";
-    private static final String REGISTERED = "REGISTERED";
-    private static final String CITIZEN_USER_ID = "citizenUserId";
+    private static final String CITIZEN_USER_ID = "systemCitizenUserId";
 
     @JsonProperty("serviceRequestId")
     private String crn;

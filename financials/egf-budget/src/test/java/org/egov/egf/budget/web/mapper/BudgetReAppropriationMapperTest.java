@@ -4,15 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
-import org.egov.common.domain.model.User;
+import org.egov.common.contract.request.User;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -119,9 +118,9 @@ public class BudgetReAppropriationMapperTest {
 		budgetReAppropriation.setOriginalAdditionAmount(BigDecimal.ONE);
 		budgetReAppropriation.setOriginalDeductionAmount(BigDecimal.ONE);
 		budgetReAppropriation.setAnticipatoryAmount(BigDecimal.ONE);
-		budgetReAppropriation.setStatus(EgfStatus.builder().id("id").build());
-		budgetReAppropriation.setCreatedBy(User.builder().id("id").build());
-		budgetReAppropriation.setLastModifiedBy(User.builder().id("id").build());
+		budgetReAppropriation.setStatus(FinancialStatusContract.builder().id("id").build());
+		budgetReAppropriation.setCreatedBy(User.builder().id(1l).build());
+		budgetReAppropriation.setLastModifiedBy(User.builder().id(1l).build());
 		budgetReAppropriation.setTenantId("tenantId");
 
 		return budgetReAppropriation;
@@ -138,9 +137,9 @@ public class BudgetReAppropriationMapperTest {
 		contract.setOriginalAdditionAmount(BigDecimal.ONE);
 		contract.setOriginalDeductionAmount(BigDecimal.ONE);
 		contract.setAnticipatoryAmount(BigDecimal.ONE);
-		contract.setStatus(EgfStatusContract.builder().id("id").build());
-		contract.setCreatedBy(User.builder().id("id").build());
-		contract.setLastModifiedBy(User.builder().id("id").build());
+		contract.setStatus(FinancialStatusContract.builder().id("id").build());
+		contract.setCreatedBy(User.builder().id(1l).build());
+		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
 
 		return contract;
@@ -157,9 +156,9 @@ public class BudgetReAppropriationMapperTest {
 		budgetReAppropriationSearch.setOriginalAdditionAmount(BigDecimal.ONE);
 		budgetReAppropriationSearch.setOriginalDeductionAmount(BigDecimal.ONE);
 		budgetReAppropriationSearch.setAnticipatoryAmount(BigDecimal.ONE);
-		budgetReAppropriationSearch.setStatus(EgfStatus.builder().id("id").build());
-		budgetReAppropriationSearch.setCreatedBy(User.builder().id("id").build());
-		budgetReAppropriationSearch.setLastModifiedBy(User.builder().id("id").build());
+		budgetReAppropriationSearch.setStatus(FinancialStatusContract.builder().id("id").build());
+		budgetReAppropriationSearch.setCreatedBy(User.builder().id(1l).build());
+		budgetReAppropriationSearch.setLastModifiedBy(User.builder().id(1l).build());
 		budgetReAppropriationSearch.setTenantId("tenantId");
 		budgetReAppropriationSearch.setPageSize(1);
 		budgetReAppropriationSearch.setOffset(1);
@@ -178,9 +177,9 @@ public class BudgetReAppropriationMapperTest {
 		contract.setOriginalAdditionAmount(BigDecimal.ONE);
 		contract.setOriginalDeductionAmount(BigDecimal.ONE);
 		contract.setAnticipatoryAmount(BigDecimal.ONE);
-		contract.setStatus(EgfStatusContract.builder().id("id").build());
-		contract.setCreatedBy(User.builder().id("id").build());
-		contract.setLastModifiedBy(User.builder().id("id").build());
+		contract.setStatus(FinancialStatusContract.builder().id("id").build());
+		contract.setCreatedBy(User.builder().id(1l).build());
+		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
 		contract.setPageSize(1);
 		contract.setOffset(1);

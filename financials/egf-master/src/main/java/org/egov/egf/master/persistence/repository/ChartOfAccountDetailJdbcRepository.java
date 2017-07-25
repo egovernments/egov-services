@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.domain.model.ChartOfAccountDetailSearch;
 import org.egov.egf.master.persistence.entity.ChartOfAccountDetailEntity;
@@ -16,6 +15,7 @@ import org.egov.egf.master.persistence.entity.ChartOfAccountDetailSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +26,10 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 		LOG.debug("init chartOfAccountDetail");
 		init(ChartOfAccountDetailEntity.class);
 		LOG.debug("end init chartOfAccountDetail");
+	}
+
+	public ChartOfAccountDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public ChartOfAccountDetailEntity create(ChartOfAccountDetailEntity entity) {
@@ -50,52 +54,62 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
-		if (chartOfAccountDetailSearchEntity.getSortBy() != null && !chartOfAccountDetailSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(chartOfAccountDetailSearchEntity.getSortBy());
-                    validateEntityFieldName(chartOfAccountDetailSearchEntity.getSortBy(), ChartOfAccountDetailEntity.class);
-                }
-                
-                String orderBy = "order by id";
-                if (chartOfAccountDetailSearchEntity.getSortBy() != null && !chartOfAccountDetailSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + chartOfAccountDetailSearchEntity.getSortBy();
-                
+		if (chartOfAccountDetailSearchEntity.getSortBy() != null
+				&& !chartOfAccountDetailSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(chartOfAccountDetailSearchEntity.getSortBy());
+			validateEntityFieldName(chartOfAccountDetailSearchEntity.getSortBy(), ChartOfAccountDetailEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (chartOfAccountDetailSearchEntity.getSortBy() != null
+				&& !chartOfAccountDetailSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + chartOfAccountDetailSearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", ChartOfAccountDetailEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
 		if (chartOfAccountDetailSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", chartOfAccountDetailSearchEntity.getId());
 		}
 		if (chartOfAccountDetailSearchEntity.getChartOfAccountId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("chartOfAccount =:chartOfAccount");
 			paramValues.put("chartOfAccount", chartOfAccountDetailSearchEntity.getChartOfAccountId());
 		}
 		if (chartOfAccountDetailSearchEntity.getAccountDetailTypeId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("accountDetailType =:accountDetailType");
 			paramValues.put("accountDetailType", chartOfAccountDetailSearchEntity.getAccountDetailTypeId());
 		}
 
 		Pagination<ChartOfAccountDetail> page = new Pagination<>();
-		if (chartOfAccountDetailSearchEntity.getOffset() != null)
+		if (chartOfAccountDetailSearchEntity.getOffset() != null) {
 			page.setOffset(chartOfAccountDetailSearchEntity.getOffset());
-		if (chartOfAccountDetailSearchEntity.getPageSize() != null)
-			page.setPageSize(chartOfAccountDetailSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (chartOfAccountDetailSearchEntity.getPageSize() != null) {
+			page.setPageSize(chartOfAccountDetailSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -123,7 +137,7 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 	}
 
 	public ChartOfAccountDetailEntity findById(ChartOfAccountDetailEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

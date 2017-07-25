@@ -1,20 +1,19 @@
 package org.egov.egf.master.web.repository;
 
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.requests.BudgetGroupResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class BudgetGroupContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/budgetgroups/_search?";
+	public static final String SEARCH_URL = " /egf-master/budgetgroups/search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -35,13 +34,10 @@ public class BudgetGroupContractRepository {
 			content.append("&tenantId=" + budgetGroupContract.getTenantId());
 		}
 		url = url + content.toString();
-		CommonResponse<BudgetGroupContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, null, CommonResponse.class),
-				new TypeReference<CommonResponse<BudgetGroupContract>>() {
-				});
+		BudgetGroupResponse result = restTemplate.postForObject(url, null, BudgetGroupResponse.class);
 
-		if (result.getData() != null && result.getData().size() == 1) {
-			return result.getData().get(0);
+		if (result.getBudgetGroups() != null && result.getBudgetGroups().size() == 1) {
+			return result.getBudgetGroups().get(0);
 		} else {
 			return null;
 		}

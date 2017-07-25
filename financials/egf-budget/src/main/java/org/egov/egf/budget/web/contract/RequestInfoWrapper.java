@@ -40,7 +40,7 @@
 
 package org.egov.egf.budget.web.contract;
 
-import org.egov.common.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

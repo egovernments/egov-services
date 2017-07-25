@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.FundsourceSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 		LOG.debug("init fundsource");
 		init(FundsourceEntity.class);
 		LOG.debug("end init fundsource");
+	}
+
+	public FundsourceJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public FundsourceEntity create(FundsourceEntity entity) {
@@ -49,82 +54,95 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+		if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(fundsourceSearchEntity.getSortBy());
+			validateEntityFieldName(fundsourceSearchEntity.getSortBy(), FundsourceEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + fundsourceSearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", FundsourceEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(fundsourceSearchEntity.getSortBy());
-                    validateEntityFieldName(fundsourceSearchEntity.getSortBy(), FundsourceEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (fundsourceSearchEntity.getSortBy() != null && !fundsourceSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + fundsourceSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (fundsourceSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", fundsourceSearchEntity.getId());
 		}
 		if (fundsourceSearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =:code");
 			paramValues.put("code", fundsourceSearchEntity.getCode());
 		}
 		if (fundsourceSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", fundsourceSearchEntity.getName());
 		}
 		if (fundsourceSearchEntity.getType() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("type =:type");
 			paramValues.put("type", fundsourceSearchEntity.getType());
 		}
-		if (fundsourceSearchEntity.getParentId() != null) {
-			if (params.length() > 0)
+		if (fundsourceSearchEntity.getFundSourceId() != null) {
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("fundSource =:fundSource");
-			paramValues.put("fundSource", fundsourceSearchEntity.getParentId());
+			paramValues.put("fundSource", fundsourceSearchEntity.getFundSourceId());
 		}
 		if (fundsourceSearchEntity.getLlevel() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("llevel =:llevel");
 			paramValues.put("llevel", fundsourceSearchEntity.getLlevel());
 		}
 		if (fundsourceSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", fundsourceSearchEntity.getActive());
 		}
 		if (fundsourceSearchEntity.getIsParent() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("isParent =:isParent");
 			paramValues.put("isParent", fundsourceSearchEntity.getIsParent());
 		}
 
 		Pagination<Fundsource> page = new Pagination<>();
-		if (fundsourceSearchEntity.getOffset() != null)
+		if (fundsourceSearchEntity.getOffset() != null) {
 			page.setOffset(fundsourceSearchEntity.getOffset());
-		if (fundsourceSearchEntity.getPageSize() != null)
-			page.setPageSize(fundsourceSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (fundsourceSearchEntity.getPageSize() != null) {
+			page.setPageSize(fundsourceSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -141,7 +159,7 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 
 		page.setTotalResults(fundsourceEntities.size());
 
-		List<Fundsource> fundsources = new ArrayList<Fundsource>();
+		List<Fundsource> fundsources = new ArrayList<>();
 		for (FundsourceEntity fundsourceEntity : fundsourceEntities) {
 
 			fundsources.add(fundsourceEntity.toDomain());
@@ -152,7 +170,7 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 	}
 
 	public FundsourceEntity findById(FundsourceEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

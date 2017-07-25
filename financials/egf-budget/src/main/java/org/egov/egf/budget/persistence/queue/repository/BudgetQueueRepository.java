@@ -15,24 +15,24 @@ public class BudgetQueueRepository {
 
 	private String validatedTopic;
 
-	private String validatedKey;
+	private String budgetValidatedKey;
 
 	private String completedTopic;
 
-	private String completedKey;
+	private String budgetCompletedKey;
 
 	@Autowired
 	public BudgetQueueRepository(FinancialProducer financialProducer,
 			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.budget.service.validated.key}") String validatedKey,
+			@Value("${kafka.topics.egf.masters.budget.validated.key}") String budgetValidatedKey,
 			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.budget.service.completed.key}") String completedKey) {
+			@Value("${kafka.topics.egf.masters.budget.completed.key}") String budgetCompletedKey) {
 
 		this.financialProducer = financialProducer;
 		this.validatedTopic = validatedTopic;
-		this.validatedKey = validatedKey;
+		this.budgetValidatedKey = budgetValidatedKey;
 		this.completedTopic = completedTopic;
-		this.completedKey = completedKey;
+		this.budgetCompletedKey = budgetCompletedKey;
 	}
 
 	public void addToQue(BudgetRequest request) {
@@ -49,7 +49,7 @@ public class BudgetQueueRepository {
 			break;
 
 		}
-		financialProducer.sendMessage(validatedTopic, validatedKey, topicMap);
+		financialProducer.sendMessage(validatedTopic, budgetValidatedKey, topicMap);
 	}
 
 	public void addToSearchQue(BudgetRequest request) {
@@ -58,13 +58,13 @@ public class BudgetQueueRepository {
 
 		if (!request.getBudgets().isEmpty()) {
 
-			topicMap.put("budget_completed", request);
+			topicMap.put("budget_persisted", request);
 
 			System.out.println("push search topic" + request);
 
 		}
 
-		financialProducer.sendMessage(completedTopic, completedKey, topicMap);
+		financialProducer.sendMessage(completedTopic, budgetCompletedKey, topicMap);
 
 	}
 }

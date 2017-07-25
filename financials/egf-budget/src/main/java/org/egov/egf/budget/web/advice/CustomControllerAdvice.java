@@ -2,13 +2,13 @@ package org.egov.egf.budget.web.advice;
 
 import java.util.List;
 
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.exception.UnauthorizedAccessException;
-import org.egov.common.web.contract.Error;
-import org.egov.common.web.contract.ErrorResponse;
-import org.egov.common.web.contract.FieldError;
-import org.egov.common.web.contract.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -37,7 +37,7 @@ public class CustomControllerAdvice {
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 		if (errors.getGlobalError() != null) {
-			error.setCode(errors.getGlobalError().getCode());
+			error.setCode(Integer.valueOf(errors.getGlobalError().getCode()));
 			error.setMessage(errors.getGlobalError().getObjectName());
 			error.setDescription(errors.getGlobalError().getDefaultMessage());
 		} else {
@@ -48,8 +48,8 @@ public class CustomControllerAdvice {
 		if (errors.hasFieldErrors()) {
 			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
 			for (org.springframework.validation.FieldError errs : fieldErrors) {
-				FieldError f = new FieldError(errs.getField(), errs.getDefaultMessage());
-				error.getFilelds().add(f);
+				ErrorField f = new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getField());
+				error.getFields().add(f);
 
 			}
 		}
@@ -66,7 +66,7 @@ public class CustomControllerAdvice {
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
-		error.setCode(InvalidDataException.code);
+		error.setCode(Integer.valueOf(InvalidDataException.code));
 		error.setMessage(ex.getFieldName());
 		error.setDescription(ex.getDefaultMessage());
 		errRes.setError(error);
@@ -84,8 +84,8 @@ public class CustomControllerAdvice {
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 
-		error.setCode("Internal Server Error");
-		error.setMessage("Throwable");
+		error.setCode(500);
+		error.setMessage("Internal Server Error");
 		error.setDescription(ex.getMessage());
 		return errRes;
 	}
@@ -101,8 +101,8 @@ public class CustomControllerAdvice {
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 
-		error.setCode("Internal Server Error");
-		error.setMessage("500");
+		error.setCode(500);
+		error.setMessage("Internal Server Error");
 		error.setDescription(ex.getMessage());
 		errRes.setError(error);
 		return errRes;
@@ -119,8 +119,8 @@ public class CustomControllerAdvice {
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 
-		error.setCode("Un Authorized Access");
-		error.setMessage("404");
+		error.setCode(404);
+		error.setMessage("Un Authorized Access");
 		error.setDescription(ex.getMessage());
 		errRes.setError(error);
 		return errRes;

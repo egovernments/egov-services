@@ -5,11 +5,10 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Fundsource;
 import org.egov.egf.master.domain.model.FundsourceSearch;
 import org.egov.egf.master.domain.repository.FundsourceRepository;
-import org.egov.egf.master.web.contract.FundsourceContract;
+import org.egov.egf.master.web.requests.FundsourceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +28,13 @@ public class FundsourceService {
 	public static final String ACTION_SEARCH = "search";
 
 	@Autowired
-	private SmartValidator validator;
-	@Autowired
 	private FundsourceRepository fundsourceRepository;
 
-	public BindingResult validate(List<Fundsource> fundsources, String method, BindingResult errors) {
+	@Autowired
+	private SmartValidator validator;
+
+
+	private BindingResult validate(List<Fundsource> fundsources, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -79,6 +80,7 @@ public class FundsourceService {
 		return fundsources;
 	}
 
+	@Transactional
 	public List<Fundsource> add(List<Fundsource> fundsources, BindingResult errors) {
 		fundsources = fetchRelated(fundsources);
 		validate(fundsources, ACTION_CREATE, errors);
@@ -89,6 +91,7 @@ public class FundsourceService {
 
 	}
 
+	@Transactional
 	public List<Fundsource> update(List<Fundsource> fundsources, BindingResult errors) {
 		fundsources = fetchRelated(fundsources);
 		validate(fundsources, ACTION_UPDATE, errors);
@@ -99,7 +102,7 @@ public class FundsourceService {
 
 	}
 
-	public void addToQue(CommonRequest<FundsourceContract> request) {
+	public void addToQue(FundsourceRequest request) {
 		fundsourceRepository.add(request);
 	}
 

@@ -47,7 +47,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -123,7 +123,7 @@ public class BudgetReAppropriationContract extends AuditableContract {
 	/**
 	 * status gives the current status of the budget re appropriation line item.
 	 */
-	private EgfStatusContract status;
+	private FinancialStatusContract status;
 
 	/**
 	 * asOnDate is the date on witch date the current appropriation is done.

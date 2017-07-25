@@ -43,6 +43,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
 import lombok.AllArgsConstructor;
@@ -128,7 +129,7 @@ public class Budget extends Auditable {
 	 * status gives the current status of the budget Node. i.e collective status
 	 * of the details. However the status at budget detail also exist.
 	 */
-	private EgfStatus status;
+	private FinancialStatusContract status;
 
 	/**
 	 * documentNumber is the reference number to identify the attachments made

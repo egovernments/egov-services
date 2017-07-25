@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.service.BankService;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.BankSearchContract;
+import org.egov.egf.master.web.requests.BankRequest;
+import org.egov.egf.master.web.requests.BankResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,120 +37,117 @@ public class BankController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankContract> create(@RequestBody @Valid CommonRequest<BankContract> bankContractRequest,
-			BindingResult errors) {
-		ModelMapper model = new ModelMapper();
-		CommonResponse<BankContract> bankResponse = new CommonResponse<>();
-		bankContractRequest.getRequestInfo().setAction("create");
-		List<Bank> banks = new ArrayList<>();
-		Bank bank = null;
-
+	public BankResponse create(@RequestBody BankRequest bankRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
-		for (BankContract bankContract : bankContractRequest.getData()) {
+		ModelMapper model = new ModelMapper();
+		BankResponse bankResponse = new BankResponse();
+		bankResponse.setResponseInfo(getResponseInfo(bankRequest.getRequestInfo()));
+		List<Bank> banks = new ArrayList<>();
+		Bank bank;
+		List<BankContract> bankContracts = new ArrayList<>();
+		BankContract contract;
 
+		bankRequest.getRequestInfo().setAction("create");
+
+		for (BankContract bankContract : bankRequest.getBanks()) {
 			bank = new Bank();
 			model.map(bankContract, bank);
 			bank.setCreatedDate(new Date());
-			bank.setCreatedBy(bankContractRequest.getRequestInfo().getUserInfo());
-			bank.setLastModifiedBy(bankContractRequest.getRequestInfo().getUserInfo());
+			bank.setCreatedBy(bankRequest.getRequestInfo().getUserInfo());
+			bank.setLastModifiedBy(bankRequest.getRequestInfo().getUserInfo());
 			banks.add(bank);
-
 		}
 
 		banks = bankService.add(banks, errors);
-		BankContract contract = null;
 
-		List<BankContract> bankContracts = new ArrayList<BankContract>();
-		for (Bank bankDomain : banks) {
-
+		for (Bank f : banks) {
 			contract = new BankContract();
 			contract.setCreatedDate(new Date());
-			model.map(bankDomain, contract);
+			model.map(f, contract);
 			bankContracts.add(contract);
 		}
-		bankContractRequest.setData(bankContracts);
-		bankService.addToQue(bankContractRequest);
-		bankResponse.setData(bankContracts);
+
+		bankRequest.setBanks(bankContracts);
+		bankService.addToQue(bankRequest);
+		bankResponse.setBanks(bankContracts);
+
 		return bankResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankContract> update(@RequestBody @Valid CommonRequest<BankContract> bankContractRequest,
-			BindingResult errors) {
-		ModelMapper model = new ModelMapper();
-		CommonResponse<BankContract> bankResponse = new CommonResponse<>();
-		List<Bank> banks = new ArrayList<>();
-		Bank bank = null;
-		bankContractRequest.getRequestInfo().setAction("update");
+	public BankResponse update(@RequestBody BankRequest bankRequest, BindingResult errors) {
+
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
+		bankRequest.getRequestInfo().setAction("update");
+		ModelMapper model = new ModelMapper();
+		BankResponse bankResponse = new BankResponse();
+		List<Bank> banks = new ArrayList<>();
+		bankResponse.setResponseInfo(getResponseInfo(bankRequest.getRequestInfo()));
+		Bank bank;
+		BankContract contract;
+		List<BankContract> bankContracts = new ArrayList<>();
 
-		for (BankContract bankContract : bankContractRequest.getData()) {
-
+		for (BankContract bankContract : bankRequest.getBanks()) {
 			bank = new Bank();
 			model.map(bankContract, bank);
+			bank.setLastModifiedBy(bankRequest.getRequestInfo().getUserInfo());
 			bank.setLastModifiedDate(new Date());
-			bank.setLastModifiedBy(bankContractRequest.getRequestInfo().getUserInfo());
 			banks.add(bank);
-
 		}
+
 		banks = bankService.update(banks, errors);
-		BankContract contract = null;
 
-		List<BankContract> bankContracts = new ArrayList<BankContract>();
 		for (Bank bankObj : banks) {
-
 			contract = new BankContract();
 			model.map(bankObj, contract);
-			contract.setLastModifiedDate(new Date());
+			bankObj.setLastModifiedDate(new Date());
 			bankContracts.add(contract);
 		}
-		bankContractRequest.setData(bankContracts);
-		bankService.addToQue(bankContractRequest);
-		bankResponse.setData(bankContracts);
+
+		bankRequest.setBanks(bankContracts);
+		bankService.addToQue(bankRequest);
+		bankResponse.setBanks(bankContracts);
+
 		return bankResponse;
 	}
 
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BankContract> search(@ModelAttribute BankSearchContract bankSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+	public BankResponse search(@ModelAttribute BankSearchContract bankSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankSearch domain = new BankSearch();
 		mapper.map(bankSearchContract, domain);
-
-		Pagination<Bank> banks = bankService.search(domain);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-
 		BankContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BankContract> bankContracts = new ArrayList<>();
-		for (Bank bank : banks.getPagedData()) {
+		Pagination<Bank> banks = bankService.search(domain);
 
+		for (Bank bank : banks.getPagedData()) {
 			contract = new BankContract();
 			model.map(bank, contract);
 			bankContracts.add(contract);
 		}
 
-		CommonResponse<BankContract> response = new CommonResponse<>();
-		response.setData(bankContracts);
+		BankResponse response = new BankResponse();
+		response.setBanks(bankContracts);
 		response.setPage(new PaginationContract(banks));
 		response.setResponseInfo(getResponseInfo(requestInfo));
+
 		return response;
 
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

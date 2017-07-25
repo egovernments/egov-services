@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.service.BankAccountService;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankAccountSearchContract;
+import org.egov.egf.master.web.requests.BankAccountRequest;
+import org.egov.egf.master.web.requests.BankAccountResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class BankAccountController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankAccountContract> create(
-			@RequestBody @Valid CommonRequest<BankAccountContract> bankAccountContractRequest, BindingResult errors) {
+	public BankAccountResponse create(@RequestBody BankAccountRequest bankAccountRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<BankAccountContract> bankAccountResponse = new CommonResponse<>();
+		BankAccountResponse bankAccountResponse = new BankAccountResponse();
+		bankAccountResponse.setResponseInfo(getResponseInfo(bankAccountRequest.getRequestInfo()));
 		List<BankAccount> bankaccounts = new ArrayList<>();
 		BankAccount bankAccount;
-		List<BankAccountContract> bankAccountContracts = new ArrayList<BankAccountContract>();
+		List<BankAccountContract> bankAccountContracts = new ArrayList<>();
 		BankAccountContract contract;
 
-		bankAccountContractRequest.getRequestInfo().setAction("create");
+		bankAccountRequest.getRequestInfo().setAction("create");
 
-		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getData()) {
+		for (BankAccountContract bankAccountContract : bankAccountRequest.getBankAccounts()) {
 			bankAccount = new BankAccount();
 			model.map(bankAccountContract, bankAccount);
 			bankAccount.setCreatedDate(new Date());
-			bankAccount.setCreatedBy(bankAccountContractRequest.getRequestInfo().getUserInfo());
-			bankAccount.setLastModifiedBy(bankAccountContractRequest.getRequestInfo().getUserInfo());
+			bankAccount.setCreatedBy(bankAccountRequest.getRequestInfo().getUserInfo());
+			bankAccount.setLastModifiedBy(bankAccountRequest.getRequestInfo().getUserInfo());
 			bankaccounts.add(bankAccount);
 		}
 
@@ -72,35 +70,34 @@ public class BankAccountController {
 			bankAccountContracts.add(contract);
 		}
 
-		bankAccountContractRequest.setData(bankAccountContracts);
-		bankAccountService.addToQue(bankAccountContractRequest);
-		bankAccountResponse.setData(bankAccountContracts);
+		bankAccountRequest.setBankAccounts(bankAccountContracts);
+		bankAccountService.addToQue(bankAccountRequest);
+		bankAccountResponse.setBankAccounts(bankAccountContracts);
 
 		return bankAccountResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankAccountContract> update(
-			@RequestBody @Valid CommonRequest<BankAccountContract> bankAccountContractRequest, BindingResult errors) {
+	public BankAccountResponse update(@RequestBody BankAccountRequest bankAccountRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		bankAccountContractRequest.getRequestInfo().setAction("update");
+		bankAccountRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<BankAccountContract> bankAccountResponse = new CommonResponse<>();
+		BankAccountResponse bankAccountResponse = new BankAccountResponse();
 		List<BankAccount> bankaccounts = new ArrayList<>();
-		BankAccount bankAccount = null;
-		BankAccountContract contract = null;
-		List<BankAccountContract> bankAccountContracts = new ArrayList<BankAccountContract>();
+		bankAccountResponse.setResponseInfo(getResponseInfo(bankAccountRequest.getRequestInfo()));
+		BankAccount bankAccount;
+		BankAccountContract contract;
+		List<BankAccountContract> bankAccountContracts = new ArrayList<>();
 
-		for (BankAccountContract bankAccountContract : bankAccountContractRequest.getData()) {
+		for (BankAccountContract bankAccountContract : bankAccountRequest.getBankAccounts()) {
 			bankAccount = new BankAccount();
 			model.map(bankAccountContract, bankAccount);
+			bankAccount.setLastModifiedBy(bankAccountRequest.getRequestInfo().getUserInfo());
 			bankAccount.setLastModifiedDate(new Date());
-			bankAccount.setLastModifiedBy(bankAccountContractRequest.getRequestInfo().getUserInfo());
 			bankaccounts.add(bankAccount);
 		}
 
@@ -109,13 +106,13 @@ public class BankAccountController {
 		for (BankAccount bankAccountObj : bankaccounts) {
 			contract = new BankAccountContract();
 			model.map(bankAccountObj, contract);
-			contract.setLastModifiedDate(new Date());
+			bankAccountObj.setLastModifiedDate(new Date());
 			bankAccountContracts.add(contract);
 		}
 
-		bankAccountContractRequest.setData(bankAccountContracts);
-		bankAccountService.addToQue(bankAccountContractRequest);
-		bankAccountResponse.setData(bankAccountContracts);
+		bankAccountRequest.setBankAccounts(bankAccountContracts);
+		bankAccountService.addToQue(bankAccountRequest);
+		bankAccountResponse.setBankAccounts(bankAccountContracts);
 
 		return bankAccountResponse;
 	}
@@ -123,17 +120,15 @@ public class BankAccountController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BankAccountContract> search(
-			@ModelAttribute BankAccountSearchContract bankAccountSearchContract, RequestInfo requestInfo,
-			BindingResult errors) {
+	public BankAccountResponse search(@ModelAttribute BankAccountSearchContract bankAccountSearchContract,
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankAccountSearch domain = new BankAccountSearch();
 		mapper.map(bankAccountSearchContract, domain);
-		BankAccountContract contract = null;
+		BankAccountContract contract;
 		ModelMapper model = new ModelMapper();
-		List<BankAccountContract> bankAccountContracts = new ArrayList<BankAccountContract>();
-
+		List<BankAccountContract> bankAccountContracts = new ArrayList<>();
 		Pagination<BankAccount> bankaccounts = bankAccountService.search(domain);
 
 		for (BankAccount bankAccount : bankaccounts.getPagedData()) {
@@ -142,8 +137,8 @@ public class BankAccountController {
 			bankAccountContracts.add(contract);
 		}
 
-		CommonResponse<BankAccountContract> response = new CommonResponse<>();
-		response.setData(bankAccountContracts);
+		BankAccountResponse response = new BankAccountResponse();
+		response.setBankAccounts(bankAccountContracts);
 		response.setPage(new PaginationContract(bankaccounts));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -152,7 +147,7 @@ public class BankAccountController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

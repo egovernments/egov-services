@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnricher {
 
-    private static final String SERVICE_STATUS = "status";
+    private static final String SERVICE_STATUS = "systemStatus";
     private ESDateTimeFormatter esDateTimeFormatter;
 
     public CommonFieldsDocumentEnricher(ESDateTimeFormatter esDateTimeFormatter) {

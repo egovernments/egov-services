@@ -22,7 +22,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Builder
 @Getter
 public class ServiceRequest {
-    private static final String PROCESSING_FEE = "PROCESSING_FEE";
     private static final String DRAFT_ID = "draftId";
     private static final String SERVICE_STATUS = "systemStatus";
     @NonNull
@@ -122,10 +121,6 @@ public class ServiceRequest {
 
     public void setCrn(String crn) {
         this.crn = crn;
-    }
-
-    public boolean isProcessingFeePresent() {
-        return attributeEntries.stream().anyMatch(a -> PROCESSING_FEE.equals(a.getKey()));
     }
 
     public Long getDraftId() {

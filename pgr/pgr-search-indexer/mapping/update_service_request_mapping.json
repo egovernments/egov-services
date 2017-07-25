@@ -192,9 +192,6 @@
         },
         "keyword": {
             "type": "keyword"
-        },
-        "processingFee": {
-            "type": "double"
         }
     }
 }

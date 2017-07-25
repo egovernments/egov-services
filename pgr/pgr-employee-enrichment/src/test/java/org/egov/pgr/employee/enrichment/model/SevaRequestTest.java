@@ -59,8 +59,8 @@ public class SevaRequestTest {
         final SevaRequest sevaRequest = createSevaRequest();
         final String designationId = "2";
         final String departmentId = "3";
-        final String designationIdKey = "designationId";
-        final String departmentIdKey = "departmentId";
+        final String designationIdKey = "systemDesignationId";
+        final String departmentIdKey = "systemDepartmentId";
 
         sevaRequest.update(new Position(designationId, departmentId));
 

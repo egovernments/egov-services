@@ -19,7 +19,7 @@ public class ServiceRequestTest {
     public void test_should_return_location_id_from_attribute_values_field_when_flag_is_enabled() {
         org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
-            .attribValues(Collections.singletonList(new AttributeEntry("locationId", "location")))
+            .attribValues(Collections.singletonList(new AttributeEntry("systemLocationId", "location")))
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
@@ -29,7 +29,7 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_return_receiving_center_from_attribute_values_field_when_flag_is_enabled() {
-        final AttributeEntry attributeEntry = new AttributeEntry("receivingCenter", "receivingCenter");
+        final AttributeEntry attributeEntry = new AttributeEntry("systemReceivingCenter", "receivingCenter");
         org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(attributeEntry))
@@ -43,7 +43,7 @@ public class ServiceRequestTest {
 
     @Test
     public void test_should_return_receiving_mode_from_attribute_values_field_when_flag_is_enabled() {
-        final AttributeEntry attributeEntry = new AttributeEntry("receivingMode", "receivingMode");
+        final AttributeEntry attributeEntry = new AttributeEntry("systemReceivingMode", "receivingMode");
         org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
             .attribValues(Collections.singletonList(attributeEntry))
@@ -159,7 +159,7 @@ public class ServiceRequestTest {
         final HashMap<String, String> values = new HashMap<>();
         org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
-            .attribValues(Collections.singletonList(new AttributeEntry("userId", "userId")))
+            .attribValues(Collections.singletonList(new AttributeEntry("systemUserId", "userId")))
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());
@@ -210,7 +210,7 @@ public class ServiceRequestTest {
     public void test_should_copy_complainant_address_from_attribute_values_field_when_flag_is_enabled() {
         org.egov.pgrrest.common.contract.web.ServiceRequest serviceRequest = org.egov.pgrrest.common.contract.web
             .ServiceRequest.builder()
-            .attribValues(Collections.singletonList(new AttributeEntry("requesterAddress", "address")))
+            .attribValues(Collections.singletonList(new AttributeEntry("systemRequesterAddress", "address")))
             .build();
 
         ServiceRequest complaint = serviceRequest.toDomainForCreateRequest(getAuthenticatedUser());

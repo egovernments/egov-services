@@ -117,15 +117,6 @@
 
 	</dependencies>
 
-<!-- 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>repo.egovernments.org</id>
-			<name>eGov ERP Snapshots Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement> -->
-
 	<repositories>
 		<repository>
 			<id>repo.egovernments.org</id>

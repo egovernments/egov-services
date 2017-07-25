@@ -42,6 +42,11 @@ module.exports = {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
+
+        if(/_search/.test(context)) {
+            url += "&pageSize=500";
+        }
+
         requestInfo.authToken = localStorage.getItem("token");
         if(isTimeLong){
             requestInfo.ts = new Date().getTime();	

@@ -76,7 +76,7 @@ module.exports = {
                 localStorage.setItem('locale', locale);
                 window.location.hash = "#/";
             } else {
-                throw new Error("Something went wrong, please try again later.");g
+                throw new Error("Something went wrong, please try again later.");
             }
         });
     },
@@ -95,7 +95,6 @@ module.exports = {
         if(/_search/.test(context)) {
             url += "&pageSize=500";
         }
-        
         return instance.get(url).then(function(response) {
             return response.data;
         }).catch(function(response) {

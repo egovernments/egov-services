@@ -9,6 +9,7 @@
 
  function UnitTax calculateUnitTax(UnitWrapper unitWrapper,TaxPeriod taxPeriod,Property property){
  
+ 
  TaxCalculatorServiceImpl taxService=new TaxCalculatorServiceImpl();
    Map<String, Double> factorsList = unitWrapper.getFactors();
    System.out.println(factorsList+"factorsList");
@@ -26,7 +27,8 @@
                 rentForMonth = Math.round(rentForMonth * 100.0) / 100.0;
                 System.out.println(rentForMonth+"rent for month");
        UnitTax unitTax=taxService.calculateUnitTax(unitWrapper,taxPeriod,rentForMonth,factorsList.get(age),0.1);  
-      if(!property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
+       try{
+       if(!property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
       List<HeadWiseTax> headWiseTaxList=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
       filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).collect(java.util.stream.Collectors.toList());
       if(headWiseTaxList!=null){
@@ -34,17 +36,25 @@
      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
      }
       }
-      List<HeadWiseTax> uacPenality=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
-      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("UAC_PENALTY")).collect(java.util.stream.Collectors.toList());
-      if(uacPenality!=null){
-      if(unit.getIsAuthorised()){
-      int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(uacPenality.get(0));
-      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
-      }    
+      }catch(Exception ex){
+       System.out.println("error occured while checking category");
       }
-      
+      try{
+      Optional<HeadWiseTax> uacPenality=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
+      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("UAC_PENALTY")).findFirst();
+           
+      HeadWiseTax uacpenalityHeadWise= uacPenality.orElse(null);
+      if(uacpenalityHeadWise!=null){
+      if(unit.getIsAuthorised()){
+      int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(uacpenalityHeadWise);
+      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
+      }  
+      }
+      }catch(Exception ex){
+     System.out.println("error occured while checking uac penality tax");
+      }
       System.out.println("unit tax"+unitTax);
-       return  unitTax;    
+       return  unitTax;   
 }
 
 
@@ -73,7 +83,7 @@ System.out.println("in calculate tax"+taxwrapper.getTaxPeriods());
         calculationResponse.setTaxes(taxCalculationList);
         taxwrapper.setCalculationResponse(calculationResponse);
         }catch(Exception ex){
-        System.out.println(ex.getMessage());
+       System.out.println("Error occured in calculate tax function");
         }
        
     }

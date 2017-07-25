@@ -17,6 +17,7 @@ public class ServiceDefinition {
     private String code;
     private String tenantId;
     private List<AttributeDefinition> attributes;
+    private List<GroupDefinition> groups;
 
     public boolean isComputedFieldsAbsent(ServiceStatus action) {
         return isEmpty(getComputedFields(action));

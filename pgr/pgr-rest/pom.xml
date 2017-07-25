@@ -76,13 +76,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>5.2.6.Final</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>org.javadelight</groupId>
             <artifactId>delight-nashorn-sandbox</artifactId>
             <version>0.0.12</version>

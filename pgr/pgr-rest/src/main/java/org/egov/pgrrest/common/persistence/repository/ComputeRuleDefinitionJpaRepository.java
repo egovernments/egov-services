@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ConstraintDefinitionJpaRepository extends
+public interface ComputeRuleDefinitionJpaRepository extends
     JpaRepository<ComputeRuleDefinition, ComputeRuleDefinitionKey> {
 
     @Query("select c from ComputeRuleDefinition c where c.id.serviceCode = :serviceCode and " +

@@ -189,7 +189,7 @@ public class BoundaryService {
 	
 	public List<Boundary> getAllBoundariesByBoundaryIdsAndTenant(final String tenantId,
 			final List<Long> boundaryids) {
-		return boundaryJpaRepository.findAllBoundariesByBoundaryIdsAndTenant(tenantId,
+		return boundaryJpaRepository.findAllBoundariesByIdsAndTenant(tenantId,
 				boundaryids);
 	}
 

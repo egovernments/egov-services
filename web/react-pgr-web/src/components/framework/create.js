@@ -10,7 +10,11 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
-let specifications = require(`./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}`).default;
+try {
+  var specifications = require(`./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}`).default;
+} catch(e) {
+  var specifications = {};
+}
 let reqRequired = []; 
 class Report extends Component {
   constructor(props) {

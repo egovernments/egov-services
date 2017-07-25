@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.FunctionarySearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 		LOG.debug("init functionary");
 		init(FunctionaryEntity.class);
 		LOG.debug("end init functionary");
+	}
+
+	public FunctionaryJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public FunctionaryEntity create(FunctionaryEntity entity) {
@@ -50,57 +55,66 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 		StringBuffer params = new StringBuffer();
 
 		if (functionarySearchEntity.getSortBy() != null && !functionarySearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(functionarySearchEntity.getSortBy());
-                    validateEntityFieldName(functionarySearchEntity.getSortBy(), FunctionaryEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (functionarySearchEntity.getSortBy() != null && !functionarySearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + functionarySearchEntity.getSortBy();
-                
+			validateSortByOrder(functionarySearchEntity.getSortBy());
+			validateEntityFieldName(functionarySearchEntity.getSortBy(), FunctionaryEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (functionarySearchEntity.getSortBy() != null && !functionarySearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + functionarySearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", FunctionaryEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
 		if (functionarySearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", functionarySearchEntity.getId());
 		}
 		if (functionarySearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =:code");
 			paramValues.put("code", functionarySearchEntity.getCode());
 		}
 		if (functionarySearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", functionarySearchEntity.getName());
 		}
 		if (functionarySearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", functionarySearchEntity.getActive());
 		}
 
 		Pagination<Functionary> page = new Pagination<>();
-		if (functionarySearchEntity.getOffset() != null)
+		if (functionarySearchEntity.getOffset() != null) {
 			page.setOffset(functionarySearchEntity.getOffset());
-		if (functionarySearchEntity.getPageSize() != null)
-			page.setPageSize(functionarySearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (functionarySearchEntity.getPageSize() != null) {
+			page.setPageSize(functionarySearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -117,7 +131,7 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 
 		page.setTotalResults(functionaryEntities.size());
 
-		List<Functionary> functionaries = new ArrayList<Functionary>();
+		List<Functionary> functionaries = new ArrayList<>();
 		for (FunctionaryEntity functionaryEntity : functionaryEntities) {
 
 			functionaries.add(functionaryEntity.toDomain());
@@ -128,7 +142,8 @@ public class FunctionaryJdbcRepository extends JdbcRepository {
 	}
 
 	public FunctionaryEntity findById(FunctionaryEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

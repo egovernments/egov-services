@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FinancialYearSearch;
 import org.egov.egf.master.domain.repository.FinancialYearRepository;
-import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.master.web.requests.FinancialYearRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +91,7 @@ public class FinancialYearService {
 
 	}
 
-	public void addToQue(CommonRequest<FinancialYearContract> request) {
+	public void addToQue(FinancialYearRequest request) {
 		financialYearRepository.add(request);
 	}
 

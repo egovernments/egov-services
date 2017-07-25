@@ -126,6 +126,6 @@ public interface EntityType {
 	 *
 	 * @return status of Entity^M
 	 */
-	public EgfStatus getEgwStatus();
+	public FinancialStatus getFinancialStatus();
 
 }

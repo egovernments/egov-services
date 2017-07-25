@@ -129,4 +129,16 @@ public class CustomControllerAdvice {
     public ErrorResponse handleMandatoryAttributesAbsentException(MandatoryAttributesAbsentException ex) {
         return new MandatoryAttributesAbsentExceptionAdapter().adapt(ex.getMissingMandatoryAttributeCodes());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ServiceStatusNotPresentException.class)
+    public ErrorResponse handleServiceStatusNotPresentException() {
+        return new ServiceStatusNotPresentExceptionAdapter().adapt(null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UnknownServiceStatusException.class)
+    public ErrorResponse handleUnknownServiceStatusException(UnknownServiceStatusException ex) {
+        return new UnknownServiceStatusExceptionAdapter().adapt(ex.getUnknownStatus());
+    }
 }

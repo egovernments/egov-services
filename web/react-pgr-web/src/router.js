@@ -59,7 +59,6 @@ import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/d
 import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
-
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
 import Test from './components/contents/propertyTax/master/Test';
@@ -74,9 +73,12 @@ import MutationReason from './components/contents/propertyTax/master/MutationRea
 import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
+import View from './components/framework/view';
 
 
 const base = "";
@@ -90,6 +92,8 @@ const Main = () => {
       <Route exact path= {base + '/'} component={Login}/>
 
       <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
+	  
+	  <Route exact path= {base + '/view/:moduleName/:controller/:version/:id'} component={View}/>
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
 
@@ -183,6 +187,7 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
+		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
     </Switch>
   </main>
 )}

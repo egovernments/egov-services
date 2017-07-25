@@ -72,6 +72,7 @@ public class PtIdGenerationApplicationAspectj {
 		logger.error("An exception has been thrown in "
 				+ joinPoint.getSignature().getName() + " ()");
 		logger.error("Cause : " + exception.getCause());
+		logger.error("Stacktrace : " + exception.getStackTrace());
 	}
 
 	// Around -> Any method within resource annotated with @Controller

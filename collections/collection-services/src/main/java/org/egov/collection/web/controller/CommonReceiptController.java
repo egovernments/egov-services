@@ -111,6 +111,33 @@ public class CommonReceiptController {
         return  getStatusSuccessResponse(statusList, requestInfo);
     }
 
+    @RequestMapping("/_getDistinctBusinessDetails")
+    public ResponseEntity<?> getDistinctBusinessDetails(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
+
+        List<BusinessDetailsRequestInfo> businessDetails = new ArrayList<BusinessDetailsRequestInfo>();
+        try {
+            businessDetails = receiptService.getBusinessDetails(tenantId,requestInfo);
+        } catch (final Exception exception) {
+            LOGGER.error("Error while processing request " + businessDetails, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return  getBusinessDetailsSuccessResponse(businessDetails, requestInfo);
+    }
+
+    private ResponseEntity<?> getBusinessDetailsSuccessResponse(List<BusinessDetailsRequestInfo> businessDetailsList, RequestInfo requestInfo) {
+        LOGGER.info("Building success response.");
+        BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        businessDetailsResponse.setBusinessDetails(businessDetailsList);
+        businessDetailsResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(businessDetailsResponse, HttpStatus.OK);
+    }
+
     private ResponseEntity<?> getStatusSuccessResponse(List<String> statusList, RequestInfo requestInfo) {
         LOGGER.info("Building success response.");
         StatusResponse statusResponse = new StatusResponse();

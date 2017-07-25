@@ -1,13 +1,15 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FinancialYearSearch;
 import org.egov.egf.master.persistence.entity.FinancialYearEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.FinancialYearJdbcRepository;
-import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.master.web.requests.FinancialYearRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,16 @@ public class FinancialYearRepository {
 		return financialYearJdbcRepository.update(new FinancialYearEntity().toEntity(entity)).toDomain();
 	}
 
-	public void add(CommonRequest<FinancialYearContract> request) {
-		financialYearQueueRepository.add(request);
+	public void add(FinancialYearRequest request) {
+	
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("financialyear_create", request);
+		} else {
+			message.put("financialyear_update", request);
+		}
+		financialYearQueueRepository.add(message);
 	}
 
 	public Pagination<FinancialYear> search(FinancialYearSearch domain) {

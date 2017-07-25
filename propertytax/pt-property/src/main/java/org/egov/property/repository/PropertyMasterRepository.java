@@ -6,9 +6,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.enums.ApplicationEnum;
+import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.Depreciation;
+import org.egov.models.DocumentType;
 import org.egov.models.FloorType;
 import org.egov.models.MutationMaster;
 import org.egov.models.OccuapancyMaster;
@@ -22,6 +26,7 @@ import org.egov.models.WoodType;
 import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
 import org.egov.property.repository.builder.DepreciationBuilder;
+import org.egov.property.repository.builder.DocumentTypeBuilder;
 import org.egov.property.repository.builder.FloorTypeBuilder;
 import org.egov.property.repository.builder.MutationMasterBuilder;
 import org.egov.property.repository.builder.OccuapancyQueryBuilder;
@@ -42,6 +47,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -1107,12 +1113,7 @@ public class PropertyMasterRepository {
 		String query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
 
 		int count = 0;
-		try {
-
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 
 		if (count == 0)
 			isExists = Boolean.FALSE;
@@ -1379,5 +1380,182 @@ public class PropertyMasterRepository {
 			isExists = Boolean.FALSE;
 
 		return isExists;
+	}
+
+	/**
+	 * Checks whether Record with tenantId, name, Application name values exists
+	 * or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param applicationEnum
+	 * @param tableName
+	 * @param id
+	 * @return
+	 */
+	public Boolean checkWhetherRecordWithTenantIdAndNameExits(String tenantId, String code, String application,
+			String tableName, Long id) {
+
+		Boolean isExists = Boolean.FALSE;
+
+		List<Object> preparedStatementvalues = new ArrayList<>();
+
+		String query = UtilityBuilder.getUniqueTenantIdNameQuery(tenantId, code, application, tableName, id,
+				preparedStatementvalues);
+
+		int count = 0;
+
+		count = (Integer) jdbcTemplate.queryForObject(query, preparedStatementvalues.toArray(), Integer.class);
+
+		if (count > 0)
+			isExists = Boolean.TRUE;
+
+		return isExists;
+
+	}
+
+	/**
+	 * This will ceate the Document type master in the Database
+	 * 
+	 * @param documentType
+	 * @return {@link Long}
+	 */
+	public Long createDocumentTypeMaster(DocumentType documentType) {
+		String insertDocumentTypeQuery = DocumentTypeBuilder.INSERT_DOCUMENTTYPE_MASTER_QUERY;
+		Long createdTime = new Date().getTime();
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+
+				final PreparedStatement ps = connection.prepareStatement(insertDocumentTypeQuery,
+						new String[] { "id" });
+
+				ps.setString(1, documentType.getTenantId());
+				ps.setString(2, documentType.getName());
+				ps.setString(3, documentType.getCode());
+				ps.setString(4, documentType.getApplication().toString());
+				ps.setString(5, documentType.getAuditDetails().getCreatedBy());
+				ps.setString(6, documentType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, createdTime);
+				ps.setLong(8, createdTime);
+
+				return ps;
+			}
+		};
+
+		final KeyHolder holder = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	/**
+	 * This will update the document type based on the given object
+	 * 
+	 * @param documentType
+	 */
+	public void updateDocumentTypeMaster(DocumentType documentType) {
+		String updateDocumentTypeQuery = DocumentTypeBuilder.UPDATE_DOCUMENTTYPE_MASTER_QUERY;
+		Long updatedTime = new Date().getTime();
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(updateDocumentTypeQuery);
+
+				ps.setString(1, documentType.getTenantId());
+				ps.setString(2, documentType.getName());
+				ps.setString(3, documentType.getCode());
+				ps.setString(4, documentType.getApplication().toString());
+				ps.setString(5, documentType.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, updatedTime);
+				ps.setLong(7, documentType.getId());
+				return ps;
+			}
+		};
+
+		Long createdTime = jdbcTemplate.queryForObject(DocumentTypeBuilder.SELECT_DOCUMENTTYPE_MASTER_CREATETIME,
+				new Object[] { documentType.getId() }, Long.class);
+
+		jdbcTemplate.update(psc);
+		documentType.getAuditDetails().setLastModifiedTime(updatedTime);
+		documentType.getAuditDetails().setCreatedTime(createdTime);
+	}
+
+	/**
+	 * This will search the document types based on the given parameters
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param code
+	 * @param application
+	 * @return {@link DocumentType} List of document types
+	 */
+	public List<DocumentType> searchDocumentTypeMaster(String tenantId, String name, String code, String application,
+			Integer pageSize, Integer offSet) {
+
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String searchDocumentTypeQuery = DocumentTypeBuilder.searchDocumentType(tenantId, name, code, application, pageSize,
+				offSet, preparedStatementValues);
+
+		List<DocumentType> documentTypes = null;
+		documentTypes = getDocumentTypes(searchDocumentTypeQuery, preparedStatementValues);
+
+		return documentTypes;
+	}
+
+	/**
+	 * This will add all the details to the Document type model
+	 * 
+	 * @param query
+	 * @return List<DocumentType>
+	 */
+	private List<DocumentType> getDocumentTypes(String query, List<Object> preparedStatementvalues) {
+
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementvalues.toArray());
+		for (Map row : rows) {
+			DocumentType documentType = new DocumentType();
+			documentType.setTenantId(getString(row.get("tenantId")));
+			documentType.setId(getLong(row.get("id")));
+			documentType.setName(getString(row.get("name")));
+			documentType.setCode(getString(row.get("code")));
+			documentType.setApplication(ApplicationEnum.valueOf(getString(row.get("application"))));
+
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			documentType.setAuditDetails(auditDetails);
+
+			documentTypes.add(documentType);
+
+		}
+
+		return documentTypes;
+	}
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String} String value
+	 */
+	private String getString(Object object) {
+		return object == null ? "" : object.toString();
+	}
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long} Long value
+	 */
+	private Long getLong(Object object) {
+		return object == null ? 0 : Long.parseLong(object.toString());
 	}
 }

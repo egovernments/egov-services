@@ -27,7 +27,7 @@ public class TaxPeriod {
 	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm:ss")
 	private String	toDate;	
 	
-	@Size(min=4,max=128)
+	@Size(min=4,max=64)
 	@NotNull
 	private String	code;	
 	

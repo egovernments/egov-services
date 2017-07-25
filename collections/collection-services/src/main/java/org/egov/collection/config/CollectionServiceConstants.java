@@ -94,8 +94,7 @@ public class CollectionServiceConstants {
 	public static final String COLL_MODES_NOT_ALLWD_MISSING_MESSAGE = "Collection Modes Not Allowed is mising";
 
 	public static final String COLL_ID_NAME = "collection.receiptno";
-	//TODO: FIXME: Actual format - [MM/Fin-Yr/6-digit]
-	public static final String COLL_ID_FORMAT = "GN-CL-[yyyy/MM/dd]-[SEQ_COLL_RCPT_NUM]"; 
+	public static final String COLL_ID_FORMAT = "[cy:MM]/[fy:yyyy-yy]/[SEQ_COLL_RCPT_NUM]"; 
 
 	public static final String STATUS_MISSING_CODE = "egcl_011";
 	public static final String STATUS_MISSING_MESSAGE = "status";

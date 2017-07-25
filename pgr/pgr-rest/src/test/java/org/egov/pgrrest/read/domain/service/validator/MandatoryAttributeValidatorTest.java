@@ -3,7 +3,6 @@ package org.egov.pgrrest.read.domain.service.validator;
 import org.egov.pgrrest.common.domain.model.*;
 import org.egov.pgrrest.read.domain.exception.MandatoryAttributesAbsentException;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,13 +31,13 @@ public class MandatoryAttributeValidatorTest {
         final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
             .required(true)
             .code("code1")
-            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
+            .actions(Collections.singletonList(new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED)))
             .roles(Arrays.asList(new AttributeRolesDefinition("CITIZEN")))
             .build();
         final AttributeDefinition attributeDefinition2 = AttributeDefinition.builder()
             .required(true)
             .code("code2")
-            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
+            .actions(Collections.singletonList(new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED)))
             .roles(Arrays.asList(new AttributeRolesDefinition("CITIZEN")))
             .build();
         final List<AttributeDefinition> attributeDefinitions =
@@ -48,7 +47,7 @@ public class MandatoryAttributeValidatorTest {
             .build();
 
         try {
-            validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+            validator.validate(serviceRequest, serviceDefinition, ServiceStatus.COMPLAINT_REGISTERED);
             Assert.fail("Excepted validation to be thrown");
         } catch (MandatoryAttributesAbsentException ex) {
             final ArrayList<String> missingMandatoryAttributeCodes = ex.getMissingMandatoryAttributeCodes();
@@ -70,20 +69,20 @@ public class MandatoryAttributeValidatorTest {
                 new AttributeEntry("code3", "value4")
             ));
         final AuthenticatedUser user = AuthenticatedUser.builder()
-            .roleCodes(Arrays.asList("CITIZEN"))
+            .roleCodes(Collections.singletonList("CITIZEN"))
             .build();
         when(serviceRequest.getAuthenticatedUser()).thenReturn(user);
         final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
             .required(true)
             .code("code1")
-            .roles(Arrays.asList(new AttributeRolesDefinition("CITIZEN")))
-            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
+            .roles(Collections.singletonList(new AttributeRolesDefinition("CITIZEN")))
+            .actions(Collections.singletonList(new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED)))
             .build();
         final AttributeDefinition attributeDefinition2 = AttributeDefinition.builder()
             .required(true)
             .code("code2")
-            .roles(Arrays.asList(new AttributeRolesDefinition("CITIZEN")))
-            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
+            .roles(Collections.singletonList(new AttributeRolesDefinition("CITIZEN")))
+            .actions(Collections.singletonList(new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED)))
             .build();
         final List<AttributeDefinition> attributeDefinitions =
             Arrays.asList(attributeDefinition1, attributeDefinition2);
@@ -91,7 +90,7 @@ public class MandatoryAttributeValidatorTest {
             .attributes(attributeDefinitions)
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+        validator.validate(serviceRequest, serviceDefinition, ServiceStatus.COMPLAINT_REGISTERED);
     }
 
     @Test
@@ -104,21 +103,21 @@ public class MandatoryAttributeValidatorTest {
                 new AttributeEntry("code1", "value1")
             ));
         final AuthenticatedUser user = AuthenticatedUser.builder()
-            .roleCodes(Arrays.asList("CITIZEN"))
+            .roleCodes(Collections.singletonList("CITIZEN"))
             .build();
         when(serviceRequest.getAuthenticatedUser()).thenReturn(user);
         final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
             .required(true)
             .code("code2")
-            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
-            .roles(Arrays.asList(new AttributeRolesDefinition("CITIZEN")))
+            .actions(Collections.singletonList(new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED)))
+            .roles(Collections.singletonList(new AttributeRolesDefinition("CITIZEN")))
             .build();
         final List<AttributeDefinition> attributeDefinitions = Collections.singletonList(attributeDefinition1);
         final ServiceDefinition serviceDefinition = ServiceDefinition.builder()
             .attributes(attributeDefinitions)
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.UPDATE);
+        validator.validate(serviceRequest, serviceDefinition, ServiceStatus.COMPLAINT_PROCESSING);
     }
 
     @Test
@@ -130,21 +129,21 @@ public class MandatoryAttributeValidatorTest {
                 new AttributeEntry("code1", "value1")
             ));
         final AuthenticatedUser user = AuthenticatedUser.builder()
-            .roleCodes(Arrays.asList("EMPLOYEE"))
+            .roleCodes(Collections.singletonList("EMPLOYEE"))
             .build();
         when(serviceRequest.getAuthenticatedUser()).thenReturn(user);
         final AttributeDefinition attributeDefinition1 = AttributeDefinition.builder()
             .required(true)
             .code("code2")
-            .actions(Collections.singletonList(new AttributeActionsDefinition("CREATE")))
-            .roles(Arrays.asList(new AttributeRolesDefinition("CITIZEN")))
+            .actions(Collections.singletonList(new AttributeActionsDefinition(ServiceStatus.COMPLAINT_REGISTERED)))
+            .roles(Collections.singletonList(new AttributeRolesDefinition("CITIZEN")))
             .build();
         final List<AttributeDefinition> attributeDefinitions = Collections.singletonList(attributeDefinition1);
         final ServiceDefinition serviceDefinition = ServiceDefinition.builder()
             .attributes(attributeDefinitions)
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+        validator.validate(serviceRequest, serviceDefinition, ServiceStatus.COMPLAINT_REGISTERED);
     }
 
     @Test
@@ -159,7 +158,7 @@ public class MandatoryAttributeValidatorTest {
                 new AttributeEntry("code3", "value4")
             ));
         final AuthenticatedUser user = AuthenticatedUser.builder()
-            .roleCodes(Arrays.asList("CITIZEN"))
+            .roleCodes(Collections.singletonList("CITIZEN"))
             .build();
         when(serviceRequest.getAuthenticatedUser()).thenReturn(user);
         final List<AttributeDefinition> attributeDefinitions = Collections.emptyList();
@@ -167,7 +166,7 @@ public class MandatoryAttributeValidatorTest {
             .attributes(attributeDefinitions)
             .build();
 
-        validator.validate(serviceRequest, serviceDefinition, SevaRequestAction.CREATE);
+        validator.validate(serviceRequest, serviceDefinition, ServiceStatus.COMPLAINT_REGISTERED);
     }
 
 

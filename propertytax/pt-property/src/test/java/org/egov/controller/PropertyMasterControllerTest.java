@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.egov.enums.ApplicationEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
@@ -19,6 +21,9 @@ import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.Depreciation;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DocumentType;
+import org.egov.models.DocumentTypeRequest;
+import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
@@ -1282,6 +1287,105 @@ public class PropertyMasterControllerTest {
 					.content(getFileContents("searchMutationMasterRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("searchMutationMasterResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+
+		assertTrue(true);
+	}
+	
+	@Test
+	public void createDocumentTypeMasterTest() {
+
+		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+		DocumentType documentType = new DocumentType();
+		documentType.setTenantId("tenantid1");
+		documentType.setName("username1");
+		documentType.setApplication(ApplicationEnum.BIFURCATION);
+
+		AuditDetails auditDetails = new AuditDetails();
+		documentType.setAuditDetails(auditDetails);
+
+		documentTypeResponse.setResponseInfo(new ResponseInfo());
+		documentTypes.add(documentType);
+		documentTypeResponse.setDocumentType(documentTypes);
+
+		try {
+			when(masterService.createDocumentTypeMaster(anyString(), any(DocumentTypeRequest.class)))
+					.thenReturn(documentTypeResponse);
+			mockMvc.perform(post("/property/documenttypes/_create").param("tenantId", "tenantid")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createDocumentTypeRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createDocumentTypeResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void modifyDocumentTypeMasterTest() {
+
+		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+		DocumentType documentType = new DocumentType();
+		documentType.setTenantId("default2");
+		documentType.setCode("codevalue2");
+		documentType.setName("veswanth2");
+
+		AuditDetails auditDetails = new AuditDetails();
+		documentType.setAuditDetails(auditDetails);
+
+		documentTypeResponse.setResponseInfo(new ResponseInfo());
+		documentTypes.add(documentType);
+		documentTypeResponse.setDocumentType(documentTypes);
+
+		try {
+
+			when(masterService.updateDocumentTypeMaster(any(DocumentTypeRequest.class)))
+					.thenReturn(documentTypeResponse);
+			mockMvc.perform(post("/property/documenttypes/_update")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateDocumentTypeRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateDocumentTypeResponse.json")));
+		} catch (Exception e) {
+			assertTrue(false);
+			e.printStackTrace();
+		}
+
+		assertTrue(true);
+
+	}
+
+	@Test
+	public void searchDocumentTypeTest() {
+
+		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
+		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
+		DocumentType documentType = new DocumentType();
+		documentType.setTenantId("default");
+		documentType.setName("veswanth");
+
+		AuditDetails auditDetails = new AuditDetails();
+		documentType.setAuditDetails(auditDetails);
+
+		documentTypeResponse.setResponseInfo(new ResponseInfo());
+		documentTypes.add(documentType);
+		documentTypeResponse.setDocumentType(documentTypes);
+		try {
+			when(masterService.searchDocumentTypeMaster(any(RequestInfo.class), anyString(), anyString(), anyString(), anyString(), any(Integer.class), any(Integer.class)))
+							.thenReturn(documentTypeResponse);
+			mockMvc.perform(post("/property/documenttypes/_search").param("tenantId", "tenantid")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchDocumentTypeRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchDocumentTypeResponse.json")));
 		} catch (Exception e) {
 			assertTrue(false);
 		}

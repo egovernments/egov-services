@@ -18,7 +18,7 @@ import static org.egov.web.indexer.repository.contract.ServiceRequestDocument.YE
 @Service
 public class UpdateServiceRequestDocumentEnricher implements ServiceRequestDocumentEnricher {
 
-    private static final String SERVICE_STATUS = "status";
+    private static final String SERVICE_STATUS = "systemStatus";
     private static final String COMPLETED = "COMPLETED";
     private static final String WITHDRAWN = "WITHDRAWN";
     private static final String REJECTED = "REJECTED";

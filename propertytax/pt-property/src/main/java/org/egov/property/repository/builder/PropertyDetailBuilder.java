@@ -29,4 +29,19 @@ public class PropertyDetailBuilder {
 
 		return propertyDetailUpdateSQL.toString();
 	}
+
+	public static final String AUDIT_DETAILS_QUERY = " select createdBy,lastModifiedBy,createdTime,lastModifiedTime from egpt_propertydetails where id= ?";
+
+	public static final String UPDATE_TITLETRANSFERPROPERTYDETAIL_QUERY = "UPDATE egpt_propertydetails"
+			+ " SET stateId=?, lastModifiedBy = ?, lastmodifiedtime = ? WHERE id=?";
+
+	public static final String INSERT_PROPERTYDETAILSHISTORY_QUERY = "INSERT INTO egpt_propertydetails_history ("
+			+ "source, regdDocNo, regdDocDate,reason, status, isVerified,"
+			+ "verificationDate, isExempted, exemptionReason, propertyType, category, usage,"
+			+ "department, apartment, siteLength, siteBreadth, sitalArea,"
+			+ "totalBuiltupArea, undividedShare, noOfFloors, isSuperStructure, landOwner, floorType,"
+			+ "woodType, roofType, wallType, stateId, applicationNo, createdBy, lastModifiedBy, "
+			+ "createdTime, lastModifiedTime, property,taxCalculations,id)"
+			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
 }

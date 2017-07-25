@@ -10,6 +10,7 @@ import org.trimou.engine.MustacheEngineBuilder;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
 
 @SpringBootApplication
+//@Import({TracerConfiguration.class})
 public class PtNotificationApplication {
 
 	@Autowired

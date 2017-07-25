@@ -12,7 +12,9 @@ const defaultState = {
   validationData: {},
   showTable: false,
   buttonText: "Search",
-  editIndex: -1
+  editIndex: -1,
+  isSuccess: false,
+  isError: false
 };
 
 export default(state = defaultState, action) => {
@@ -314,8 +316,10 @@ export default(state = defaultState, action) => {
     case "TOGGLE_SNACKBAR_AND_SET_TEXT":
       return {
         ...state,
-        toastMsg:action.toastMsg,
-        snackbarOpen:action.snackbarState,
+        toastMsg: action.toastMsg,
+        snackbarOpen: action.snackbarState,
+        isSuccess: action.isSuccess || false,
+        isError: action.isError || false
       }
     case "SET_LOADING_STATUS":
       return {

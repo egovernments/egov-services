@@ -14,12 +14,12 @@ import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.utils.RequestJsonReader;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.service.FunctionService;
 import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.requests.FunctionRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -47,7 +47,7 @@ public class FunctionControllerTest {
 	private RequestJsonReader resources = new RequestJsonReader();
 
 	@Captor
-	private ArgumentCaptor<CommonRequest<FunctionContract>> captor;
+	private ArgumentCaptor<FunctionRequest> captor;
 
 	@Test
 	public void testCreate() throws IOException, Exception {
@@ -62,11 +62,11 @@ public class FunctionControllerTest {
 
 		verify(functionService).addToQue(captor.capture());
 
-		final CommonRequest<FunctionContract> actualRequest = captor.getValue();
-		assertEquals("function", actualRequest.getData().get(0).getName());
-		assertEquals("002", actualRequest.getData().get(0).getCode());
-		assertEquals(Integer.valueOf(1), actualRequest.getData().get(0).getLevel());
-		assertEquals("default", actualRequest.getData().get(0).getTenantId());
+		final FunctionRequest actualRequest = captor.getValue();
+		assertEquals("function", actualRequest.getFunctions().get(0).getName());
+		assertEquals("002", actualRequest.getFunctions().get(0).getCode());
+		assertEquals(Integer.valueOf(1), actualRequest.getFunctions().get(0).getLevel());
+		assertEquals("default", actualRequest.getFunctions().get(0).getTenantId());
 	}
 
 	@Test
@@ -92,12 +92,12 @@ public class FunctionControllerTest {
 
 		verify(functionService).addToQue(captor.capture());
 
-		final CommonRequest<FunctionContract> actualRequest = captor.getValue();
-		assertEquals("2", actualRequest.getData().get(0).getId());
-		assertEquals("functionU", actualRequest.getData().get(0).getName());
-		assertEquals("003", actualRequest.getData().get(0).getCode());
-		assertEquals("default", actualRequest.getData().get(0).getTenantId());
-		assertEquals("1", actualRequest.getData().get(0).getParentId().getId());
+		final FunctionRequest actualRequest = captor.getValue();
+		assertEquals("2", actualRequest.getFunctions().get(0).getId());
+		assertEquals("functionU", actualRequest.getFunctions().get(0).getName());
+		assertEquals("003", actualRequest.getFunctions().get(0).getCode());
+		assertEquals("default", actualRequest.getFunctions().get(0).getTenantId());
+		assertEquals("1", actualRequest.getFunctions().get(0).getParentId().getId());
 	}
 
 	@Test

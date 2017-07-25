@@ -28,7 +28,7 @@ public class WorkflowServiceTest {
 
     public static final String ASSIGNEE = "1";
     public static final String STATE_ID = "2";
-    public static final String STATE_ID_KEY = "stateId";
+    public static final String STATE_ID_KEY = "systemStateId";
     @Mock
     private WorkflowRepository workflowRepository;
 
@@ -44,12 +44,12 @@ public class WorkflowServiceTest {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("serviceCode", "serviceCode");
-        serviceRequestMap.put("status", "REGISTERED");
+        serviceRequestMap.put("systemStatus", "REGISTERED");
         serviceRequestMap.put("isAttribValuesPopulated", false);
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
         final HashMap<String, String> locationIdEntry = new HashMap<>();
         locationIdEntry.put("key", VALUES_LOCATION_ID);
-        locationIdEntry.put("name", "locationId");
+        locationIdEntry.put("name", "systemLocationId");
         attributeValues.add(locationIdEntry);
         final HashMap<String, String> statusEntry = new HashMap<>();
         statusEntry.put("key", STATUS);
@@ -65,16 +65,16 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
     public void test_should_update_seva_request_with_close_workflow_response_for_completed() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
         final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "locationId");
-        valuesMap.put("status", "COMPLETED");
+        valuesMap.put("systemLocationId", "locationId");
+        valuesMap.put("systemStatus", "COMPLETED");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
@@ -102,8 +102,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -134,8 +134,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -162,8 +162,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -207,10 +207,10 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "1"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemLocationId", "1"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemComplaintStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
             .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("Testing complaint update")
@@ -218,8 +218,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -263,10 +263,10 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "1"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("status", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemLocationId", "1"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemStatus", "PROCESSING"));
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
             .description("test")
@@ -277,8 +277,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -322,10 +322,10 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "1"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("status", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemLocationId", "1"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString())).thenReturn(ServiceRequest.builder()
                 .attribValues(responseValues)
@@ -335,8 +335,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -380,11 +380,11 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "1"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("complaintStatus", "PROCESSING"));
-        responseValues.add(new AttributeEntry("complaintTypeCode", "BOG"));
+        responseValues.add(new AttributeEntry("systemLocationId", "1"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemComplaintStatus", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemComplaintTypeCode", "BOG"));
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
             .description("test")
@@ -395,20 +395,20 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
     public void testShouldUpdateSevaRequestWithUpdateWorkflowResponseWithDifferentStatus() {
         final HashMap<String, Object> complaintRequestMap = new HashMap<>();
         final HashMap<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("locationId", "2");
-        valuesMap.put("status", "FORWARDED");
-        valuesMap.put("positionId", "6");
-        valuesMap.put("stateId", "6");
-        valuesMap.put("departmentId", "20");
-        valuesMap.put("approvalComments", "test");
+        valuesMap.put("systemLocationId", "2");
+        valuesMap.put("systemStatus", "FORWARDED");
+        valuesMap.put("systemPositionId", "6");
+        valuesMap.put("systemStateId", "6");
+        valuesMap.put("systemDepartmentId", "20");
+        valuesMap.put("systemApprovalComments", "test");
         final HashMap<String, Object> serviceRequestMap = new HashMap<>();
         serviceRequestMap.put("values", valuesMap);
         serviceRequestMap.put("serviceCode", "serviceCode");
@@ -450,10 +450,10 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "2"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("status", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemLocationId", "2"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemStatus", "PROCESSING"));
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
             .thenReturn(ServiceRequest.builder().attribValues(responseValues).description("test").complaintTypeCode
@@ -461,8 +461,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -505,10 +505,10 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "2"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("status", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemLocationId", "2"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemStatus", "PROCESSING"));
 
         final ServiceRequest complaint = ServiceRequest.builder()
             .attribValues(responseValues)
@@ -520,8 +520,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     @Test
@@ -564,10 +564,10 @@ public class WorkflowServiceTest {
         final WorkflowResponse workflowResponse = new WorkflowResponse(ASSIGNEE, getValuesWithStateId());
         when(workflowRepository.update(any(WorkflowRequest.class))).thenReturn(workflowResponse);
         List<AttributeEntry> responseValues = new ArrayList<>();
-        responseValues.add(new AttributeEntry("locationId", "2"));
-        responseValues.add(new AttributeEntry("departmentId", "20"));
-        responseValues.add(new AttributeEntry("positionId", "6"));
-        responseValues.add(new AttributeEntry("status", "PROCESSING"));
+        responseValues.add(new AttributeEntry("systemLocationId", "2"));
+        responseValues.add(new AttributeEntry("systemDepartmentId", "20"));
+        responseValues.add(new AttributeEntry("systemPositionId", "6"));
+        responseValues.add(new AttributeEntry("systemStatus", "PROCESSING"));
 
         when(complaintRestRepository.getComplaintByCrn("ap.public", serviceRequestMap.get("serviceRequestId")
             .toString()))
@@ -576,8 +576,8 @@ public class WorkflowServiceTest {
 
         final SevaRequest enrichedSevaRequest = workflowService.enrichWorkflow(sevaRequest);
 
-        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("positionId"));
-        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("stateId"));
+        assertEquals(ASSIGNEE, enrichedSevaRequest.getDynamicSingleValue("systemPositionId"));
+        assertEquals(STATE_ID, enrichedSevaRequest.getDynamicSingleValue("systemStateId"));
     }
 
     private Map<String, Attribute> getValuesWithStateId() {

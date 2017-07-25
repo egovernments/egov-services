@@ -14,11 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class FunctionSearchEntity extends FunctionEntity {
+	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
-	private String sortBy;
 
-	@Override
 	public Function toDomain() {
 		Function function = new Function();
 		super.toDomain(function);
@@ -30,6 +30,7 @@ public class FunctionSearchEntity extends FunctionEntity {
 		this.pageSize = functionSearch.getPageSize();
 		this.offset = functionSearch.getOffset();
 		this.sortBy = functionSearch.getSortBy();
+		this.ids = functionSearch.getIds();
 		return this;
 	}
 

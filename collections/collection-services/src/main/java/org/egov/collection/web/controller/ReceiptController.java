@@ -154,7 +154,7 @@ public class ReceiptController {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		Receipt receiptInfo = receiptService.pushToQueue(receiptRequest);
+		Receipt receiptInfo = receiptService.apportionAndCreateReceipt(receiptRequest);
 
 		if (null == receiptInfo) {
 			LOGGER.info("Service returned null");
@@ -180,17 +180,6 @@ public class ReceiptController {
 		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
 	}
 
-	@PostMapping("_update/{code}")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody ReceiptReq receiptRequest, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-
-		return null;
-	}
 
 	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts, RequestInfo requestInfo) {
 		LOGGER.info("Building success response.");
@@ -200,6 +189,25 @@ public class ReceiptController {
 		receiptResponse.setReceipts(receipts);
 		receiptResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping("/_update")
+	@ResponseBody
+	public void update(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			 new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
+		LOGGER.info("Request: "+ receiptRequest.toString());
+		receiptService.pushUpdateReceiptDetailsToQueque(new Long(receiptRequest.getReceipt().get(0).getBill().get(0)
+				.getBillDetails().get(0).getId()),
+				receiptRequest.getReceipt().get(0).getStateId(),
+				receiptRequest.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getStatus()
+				, receiptRequest.getReceipt().get(0).getTenantId(), 
+				receiptRequest.getRequestInfo());
+		
 	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {

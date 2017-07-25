@@ -72,7 +72,10 @@ import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
+import org.egov.demand.web.controller.DemandController;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -82,6 +85,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class DemandService {
+
+	private static final Logger logger = LoggerFactory.getLogger(DemandService.class);
 
 	@Autowired
 	private OwnerRepository ownerRepository;
@@ -106,7 +111,7 @@ public class DemandService {
 
 	public DemandResponse create(DemandRequest demandRequest) {
 
-		log.debug("the demand service : " + demandRequest);
+		logger.info("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
@@ -140,8 +145,8 @@ public class DemandService {
 				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setId(demandDetailIds.get(currentDetailId++));
 		}
-		log.debug("demand Request object : " + demandRequest);
-		log.debug("demand detail list : " + demandDetails);
+		logger.info("demand Request object : " + demandRequest);
+		logger.info("demand detail list : " + demandDetails);
 		kafkaTemplate.send(applicationProperties.getCreateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}

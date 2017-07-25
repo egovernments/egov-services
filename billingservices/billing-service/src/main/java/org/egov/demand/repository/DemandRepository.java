@@ -57,6 +57,9 @@ import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.controller.DemandController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,6 +71,8 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Slf4j
 public class DemandRepository {
+
+	private static final Logger logger = LoggerFactory.getLogger(DemandRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -91,13 +96,15 @@ public class DemandRepository {
 
 	public void save(DemandRequest demandRequest) {
 
-		log.debug("the request object : " + demandRequest);
+		logger.info("DemandRepository save, the request object : " + demandRequest);
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
 		for (Demand demand : demands) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
+		logger.info("DemandRepository save, demands ---->> "+demands+" \n demanddetails ---->> "+demandDetails);
 		insertBatch(demands, demandDetails);
+		logger.info("Demands saved >>>> ");
 	}
 	
 	public void update(DemandRequest demandRequest) {

@@ -188,6 +188,7 @@ class Login extends Component {
       params.append('tenantId', 'default');
 
       instance.post('/user/oauth/token', params).then(function(response) {
+        localStorage.setItem("auth-token", response.data.access_token);
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
         localStorage.setItem("auth", response.data.access_token);
@@ -202,11 +203,11 @@ class Login extends Component {
         }
 
 
-   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes}).then(function(response){
+   Api.commonApiPost("access/v1/actions/_get",{},{tenantId:"default",roleCodes,enabled:true}).then(function(response){
 
 				//console.log(response)
 		  localStorage.setItem("actions", JSON.stringify(response.actions));
-			setActionList(response.modules)
+			setActionList(response.actions)
         },function(err) {
             console.log(err);
         });

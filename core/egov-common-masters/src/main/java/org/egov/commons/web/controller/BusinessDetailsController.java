@@ -99,7 +99,7 @@ public class BusinessDetailsController {
 
 		BusinessDetailsCriteria detailsCriteria = BusinessDetailsCriteria.builder()
 				.active(detailsGetRequest.getActive()).businessCategoryCode(detailsGetRequest.getBusinessCategoryCode())
-				.businessDetailsCode(detailsGetRequest.getBusinessDetailsCode()).ids(detailsGetRequest.getIds())
+				.businessDetailsCodes(detailsGetRequest.getBusinessDetailsCodes()).ids(detailsGetRequest.getIds())
 				.sortBy(detailsGetRequest.getSortBy()).sortOrder(detailsGetRequest.getSortOrder())
 				.tenantId(detailsGetRequest.getTenantId()).build();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

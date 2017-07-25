@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.repository.AccountDetailKeyRepository;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
+import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class AccountDetailKeyService {
 	@Autowired
 	private AccountDetailTypeRepository accountDetailTypeRepository;
 
-	public BindingResult validate(List<AccountDetailKey> accountdetailkeys, String method, BindingResult errors) {
+	private BindingResult validate(List<AccountDetailKey> accountdetailkeys, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -86,6 +85,7 @@ public class AccountDetailKeyService {
 		return accountdetailkeys;
 	}
 
+	@Transactional
 	public List<AccountDetailKey> add(List<AccountDetailKey> accountdetailkeys, BindingResult errors) {
 		accountdetailkeys = fetchRelated(accountdetailkeys);
 		validate(accountdetailkeys, ACTION_CREATE, errors);
@@ -96,6 +96,7 @@ public class AccountDetailKeyService {
 
 	}
 
+	@Transactional
 	public List<AccountDetailKey> update(List<AccountDetailKey> accountdetailkeys, BindingResult errors) {
 		accountdetailkeys = fetchRelated(accountdetailkeys);
 		validate(accountdetailkeys, ACTION_UPDATE, errors);
@@ -106,7 +107,7 @@ public class AccountDetailKeyService {
 
 	}
 
-	public void addToQue(CommonRequest<AccountDetailKeyContract> request) {
+	public void addToQue(AccountDetailKeyRequest request) {
 		accountDetailKeyRepository.add(request);
 	}
 
@@ -123,4 +124,5 @@ public class AccountDetailKeyService {
 	public AccountDetailKey update(AccountDetailKey accountDetailKey) {
 		return accountDetailKeyRepository.update(accountDetailKey);
 	}
+
 }

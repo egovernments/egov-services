@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.service.FunctionService;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionSearchContract;
+import org.egov.egf.master.web.requests.FunctionRequest;
+import org.egov.egf.master.web.requests.FunctionResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,27 @@ public class FunctionController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FunctionContract> create(
-			@RequestBody @Valid CommonRequest<FunctionContract> functionContractRequest, BindingResult errors) {
+	public FunctionResponse create(@RequestBody FunctionRequest functionRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FunctionContract> functionResponse = new CommonResponse<>();
-		functionResponse.setResponseInfo(getResponseInfo(functionContractRequest.getRequestInfo()));
+		FunctionResponse functionResponse = new FunctionResponse();
+		functionResponse.setResponseInfo(getResponseInfo(functionRequest.getRequestInfo()));
 		List<Function> functions = new ArrayList<>();
 		Function function;
 		List<FunctionContract> functionContracts = new ArrayList<>();
 		FunctionContract contract;
 
-		functionContractRequest.getRequestInfo().setAction("create");
+		functionRequest.getRequestInfo().setAction("create");
 
-		for (FunctionContract functionContract : functionContractRequest.getData()) {
+		for (FunctionContract functionContract : functionRequest.getFunctions()) {
 			function = new Function();
 			model.map(functionContract, function);
 			function.setCreatedDate(new Date());
-			function.setCreatedBy(functionContractRequest.getRequestInfo().getUserInfo());
-			function.setLastModifiedBy(functionContractRequest.getRequestInfo().getUserInfo());
+			function.setCreatedBy(functionRequest.getRequestInfo().getUserInfo());
+			function.setLastModifiedBy(functionRequest.getRequestInfo().getUserInfo());
 			functions.add(function);
 		}
 
@@ -73,36 +70,34 @@ public class FunctionController {
 			functionContracts.add(contract);
 		}
 
-		functionContractRequest.setData(functionContracts);
-		functionService.addToQue(functionContractRequest);
-		functionResponse.setData(functionContracts);
+		functionRequest.setFunctions(functionContracts);
+		functionService.addToQue(functionRequest);
+		functionResponse.setFunctions(functionContracts);
 
 		return functionResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FunctionContract> update(
-			@RequestBody @Valid CommonRequest<FunctionContract> functionContractRequest, BindingResult errors) {
+	public FunctionResponse update(@RequestBody FunctionRequest functionRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		functionContractRequest.getRequestInfo().setAction("update");
+		functionRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FunctionContract> functionResponse = new CommonResponse<>();
-		functionResponse.setResponseInfo(getResponseInfo(functionContractRequest.getRequestInfo()));
+		FunctionResponse functionResponse = new FunctionResponse();
 		List<Function> functions = new ArrayList<>();
+		functionResponse.setResponseInfo(getResponseInfo(functionRequest.getRequestInfo()));
 		Function function;
 		FunctionContract contract;
 		List<FunctionContract> functionContracts = new ArrayList<>();
 
-		for (FunctionContract functionContract : functionContractRequest.getData()) {
+		for (FunctionContract functionContract : functionRequest.getFunctions()) {
 			function = new Function();
 			model.map(functionContract, function);
+			function.setLastModifiedBy(functionRequest.getRequestInfo().getUserInfo());
 			function.setLastModifiedDate(new Date());
-			function.setLastModifiedBy(functionContractRequest.getRequestInfo().getUserInfo());
 			functions.add(function);
 		}
 
@@ -111,13 +106,13 @@ public class FunctionController {
 		for (Function functionObj : functions) {
 			contract = new FunctionContract();
 			model.map(functionObj, contract);
-			contract.setLastModifiedDate(new Date());
+			functionObj.setLastModifiedDate(new Date());
 			functionContracts.add(contract);
 		}
 
-		functionContractRequest.setData(functionContracts);
-		functionService.addToQue(functionContractRequest);
-		functionResponse.setData(functionContracts);
+		functionRequest.setFunctions(functionContracts);
+		functionService.addToQue(functionRequest);
+		functionResponse.setFunctions(functionContracts);
 
 		return functionResponse;
 	}
@@ -125,7 +120,7 @@ public class FunctionController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<FunctionContract> search(@ModelAttribute FunctionSearchContract functionSearchContract,
+	public FunctionResponse search(@ModelAttribute FunctionSearchContract functionSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
@@ -134,7 +129,6 @@ public class FunctionController {
 		FunctionContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FunctionContract> functionContracts = new ArrayList<>();
-
 		Pagination<Function> functions = functionService.search(domain);
 
 		for (Function function : functions.getPagedData()) {
@@ -143,8 +137,8 @@ public class FunctionController {
 			functionContracts.add(contract);
 		}
 
-		CommonResponse<FunctionContract> response = new CommonResponse<>();
-		response.setData(functionContracts);
+		FunctionResponse response = new FunctionResponse();
+		response.setFunctions(functionContracts);
 		response.setPage(new PaginationContract(functions));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -153,7 +147,7 @@ public class FunctionController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

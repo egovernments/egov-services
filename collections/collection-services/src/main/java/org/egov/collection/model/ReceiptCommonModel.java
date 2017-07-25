@@ -91,6 +91,13 @@ public class ReceiptCommonModel {
 						.debitAmount(BigDecimal.valueOf(rctDetail.getDramount())).glcode(rctDetail.getChartOfAccount())
 						.purpose(Purpose.valueOf(rctDetail.getPurpose())).build());
 			}
+			CollectionType collectnType = null;
+			for(CollectionType coll: CollectionType.values()){
+				if(coll.getValue().equals(receiptHeader.getCollectionType())){
+					collectnType = coll;
+					break;
+				}
+			}
 			BillDetail billDetail = BillDetail.builder().id(receiptHeader.getId().toString()).billNumber(receiptHeader.getReferenceNumber())
 					.consumerCode(receiptHeader.getConsumerCode()).consumerType(receiptHeader.getConsumerType())
 					.minimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()))
@@ -98,9 +105,9 @@ public class ReceiptCommonModel {
 					.collectionModesNotAllowed(Arrays.asList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId()).displayMessage(receiptHeader.getDisplayMsg())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
-					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()).toString())
+					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
-					.collectionType(CollectionType.valueOf(receiptHeader.getCollectionType())).boundary(receiptHeader.getBoundary())
+					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
 					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
 					billAccountDetails(billAccountDetails).receiptDate((receiptHeader.getReceiptDate().getTime())).build();
@@ -108,7 +115,7 @@ public class ReceiptCommonModel {
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
-			Receipt receipt = Receipt.builder().tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
+			Receipt receipt = Receipt.builder().stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).build();
 			receipts.add(receipt);
 		}
 

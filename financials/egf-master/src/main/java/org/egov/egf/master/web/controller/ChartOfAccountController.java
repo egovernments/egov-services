@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.domain.service.ChartOfAccountService;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.contract.ChartOfAccountSearchContract;
+import org.egov.egf.master.web.requests.ChartOfAccountRequest;
+import org.egov.egf.master.web.requests.ChartOfAccountResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,28 @@ public class ChartOfAccountController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<ChartOfAccountContract> create(
-			@RequestBody @Valid CommonRequest<ChartOfAccountContract> chartOfAccountContractRequest,
+	public ChartOfAccountResponse create(@RequestBody ChartOfAccountRequest chartOfAccountRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<ChartOfAccountContract> chartOfAccountResponse = new CommonResponse<>();
+		ChartOfAccountResponse chartOfAccountResponse = new ChartOfAccountResponse();
+		chartOfAccountResponse.setResponseInfo(getResponseInfo(chartOfAccountRequest.getRequestInfo()));
 		List<ChartOfAccount> chartofaccounts = new ArrayList<>();
-		ChartOfAccount chartOfAccount = null;
-		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<ChartOfAccountContract>();
-		ChartOfAccountContract contract = null;
+		ChartOfAccount chartOfAccount;
+		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<>();
+		ChartOfAccountContract contract;
 
-		chartOfAccountContractRequest.getRequestInfo().setAction("create");
+		chartOfAccountRequest.getRequestInfo().setAction("create");
 
-		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getData()) {
+		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountRequest.getChartOfAccounts()) {
 			chartOfAccount = new ChartOfAccount();
 			model.map(chartOfAccountContract, chartOfAccount);
 			chartOfAccount.setCreatedDate(new Date());
-			chartOfAccount.setCreatedBy(chartOfAccountContractRequest.getRequestInfo().getUserInfo());
-			chartOfAccount.setLastModifiedBy(chartOfAccountContractRequest.getRequestInfo().getUserInfo());
+			chartOfAccount.setCreatedBy(chartOfAccountRequest.getRequestInfo().getUserInfo());
+			chartOfAccount.setLastModifiedBy(chartOfAccountRequest.getRequestInfo().getUserInfo());
 			chartofaccounts.add(chartOfAccount);
 		}
 
@@ -73,36 +71,35 @@ public class ChartOfAccountController {
 			chartOfAccountContracts.add(contract);
 		}
 
-		chartOfAccountContractRequest.setData(chartOfAccountContracts);
-		chartOfAccountService.addToQue(chartOfAccountContractRequest);
-		chartOfAccountResponse.setData(chartOfAccountContracts);
+		chartOfAccountRequest.setChartOfAccounts(chartOfAccountContracts);
+		chartOfAccountService.addToQue(chartOfAccountRequest);
+		chartOfAccountResponse.setChartOfAccounts(chartOfAccountContracts);
 
 		return chartOfAccountResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<ChartOfAccountContract> update(
-			@RequestBody @Valid CommonRequest<ChartOfAccountContract> chartOfAccountContractRequest,
+	public ChartOfAccountResponse update(@RequestBody ChartOfAccountRequest chartOfAccountRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		chartOfAccountContractRequest.getRequestInfo().setAction("update");
+		chartOfAccountRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<ChartOfAccountContract> chartOfAccountResponse = new CommonResponse<>();
+		ChartOfAccountResponse chartOfAccountResponse = new ChartOfAccountResponse();
 		List<ChartOfAccount> chartofaccounts = new ArrayList<>();
+		chartOfAccountResponse.setResponseInfo(getResponseInfo(chartOfAccountRequest.getRequestInfo()));
 		ChartOfAccount chartOfAccount;
 		ChartOfAccountContract contract;
 		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<>();
 
-		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountContractRequest.getData()) {
+		for (ChartOfAccountContract chartOfAccountContract : chartOfAccountRequest.getChartOfAccounts()) {
 			chartOfAccount = new ChartOfAccount();
 			model.map(chartOfAccountContract, chartOfAccount);
+			chartOfAccount.setLastModifiedBy(chartOfAccountRequest.getRequestInfo().getUserInfo());
 			chartOfAccount.setLastModifiedDate(new Date());
-			chartOfAccount.setLastModifiedBy(chartOfAccountContractRequest.getRequestInfo().getUserInfo());
 			chartofaccounts.add(chartOfAccount);
 		}
 
@@ -111,13 +108,13 @@ public class ChartOfAccountController {
 		for (ChartOfAccount chartOfAccountObj : chartofaccounts) {
 			contract = new ChartOfAccountContract();
 			model.map(chartOfAccountObj, contract);
-			contract.setLastModifiedDate(new Date());
+			chartOfAccountObj.setLastModifiedDate(new Date());
 			chartOfAccountContracts.add(contract);
 		}
 
-		chartOfAccountContractRequest.setData(chartOfAccountContracts);
-		chartOfAccountService.addToQue(chartOfAccountContractRequest);
-		chartOfAccountResponse.setData(chartOfAccountContracts);
+		chartOfAccountRequest.setChartOfAccounts(chartOfAccountContracts);
+		chartOfAccountService.addToQue(chartOfAccountRequest);
+		chartOfAccountResponse.setChartOfAccounts(chartOfAccountContracts);
 
 		return chartOfAccountResponse;
 	}
@@ -125,17 +122,15 @@ public class ChartOfAccountController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<ChartOfAccountContract> search(
-			@ModelAttribute ChartOfAccountSearchContract chartOfAccountSearchContract,
+	public ChartOfAccountResponse search(@ModelAttribute ChartOfAccountSearchContract chartOfAccountSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		ChartOfAccountSearch domain = new ChartOfAccountSearch();
 		mapper.map(chartOfAccountSearchContract, domain);
-		ChartOfAccountContract contract = null;
+		ChartOfAccountContract contract;
 		ModelMapper model = new ModelMapper();
-		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<ChartOfAccountContract>();
-
+		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<>();
 		Pagination<ChartOfAccount> chartofaccounts = chartOfAccountService.search(domain);
 
 		for (ChartOfAccount chartOfAccount : chartofaccounts.getPagedData()) {
@@ -144,8 +139,8 @@ public class ChartOfAccountController {
 			chartOfAccountContracts.add(contract);
 		}
 
-		CommonResponse<ChartOfAccountContract> response = new CommonResponse<>();
-		response.setData(chartOfAccountContracts);
+		ChartOfAccountResponse response = new ChartOfAccountResponse();
+		response.setChartOfAccounts(chartOfAccountContracts);
 		response.setPage(new PaginationContract(chartofaccounts));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -154,7 +149,7 @@ public class ChartOfAccountController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

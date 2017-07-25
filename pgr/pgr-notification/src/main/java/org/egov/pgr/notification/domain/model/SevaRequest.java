@@ -1,12 +1,18 @@
 package org.egov.pgr.notification.domain.model;
 
-import org.egov.pgr.common.date.DateFormatter;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.egov.pgr.common.date.DateFormatter;
+import org.springframework.util.CollectionUtils;
 
 public class SevaRequest {
 
@@ -15,11 +21,11 @@ public class SevaRequest {
     private static final String CRN = "serviceRequestId";
     private static final String SERVICE_NAME = "serviceName";
     private static final String SERVICE_CODE = "serviceCode";
-    private static final String VALUES_STATUS = "status";
+    private static final String VALUES_STATUS = "systemStatus";
     private static final String DESCRIPTION = "description";
     private static final String TENANT_ID = "tenantId";
     private static final String FIRST_NAME = "firstName";
-    private static final String LOCATION_NAME = "locationName";
+    private static final String LOCATION_NAME = "systemLocationName";
     private static final String REQUESTED_DATE = "requestedDatetime";
     private static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
     private static final String SERVICE_REQUEST = "serviceRequest";
@@ -37,12 +43,13 @@ public class SevaRequest {
     private static final String IN_PROGRESS_STATUS = "IN PROGRESS";
     private static final String REJECTED_STATUS = "REJECTED";
     private static final String RESUBMIT_STATUS = "RESUBMIT";
-    private static final String VALUES_POSITION_ID = "positionId";
-    private static final String VALUES_ESCALATED_FLAG = "isEscalated";
+    private static final String VALUES_POSITION_ID = "systemPositionId";
+    private static final String VALUES_ESCALATED_FLAG = "systemIsEscalated";
     private static final String TRUE = "true";
-    private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
-    private static final String LOCATION_ID = "locationId";
-    private static final String CHILD_LOCATION_ID = "childLocationId";
+    private static final String PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
+    private static final String LOCATION_ID = "systemLocationId";
+    private static final String CHILD_LOCATION_ID = "systemChildLocationId";
+    private static final String REJECTION_LETTER = "rejectionLetter";
 
 
     private final HashMap<String, Object> serviceRequest;
@@ -121,11 +128,21 @@ public class SevaRequest {
     public boolean isInProgress() {
         return IN_PROGRESS_STATUS.equalsIgnoreCase(getStatusName());
     }
+
     public boolean isRejected() {
         return REJECTED_STATUS.equalsIgnoreCase(getStatusName());
     }
+
     public boolean isResubmited() {
         return RESUBMIT_STATUS.equalsIgnoreCase(getStatusName());
+    }
+
+    public String getLatestRejectionLetter() {
+        final List<String> rejectionLetters = getDynamicMultiValue(REJECTION_LETTER);
+        if (CollectionUtils.isEmpty(rejectionLetters)) {
+            return null;
+        }
+        return rejectionLetters.get(rejectionLetters.size() - 1);
     }
 
     @SuppressWarnings("unchecked")
@@ -150,7 +167,7 @@ public class SevaRequest {
         return previousAssignee != null ? Long.valueOf(previousAssignee) : null;
     }
 
-    public String  getLocationId() {
+    public String getLocationId() {
         final String childLocationId = getDynamicSingleValue(CHILD_LOCATION_ID);
         final String locationId = getDynamicSingleValue(LOCATION_ID);
         return isNotEmpty(childLocationId) ? childLocationId : locationId;
@@ -179,5 +196,13 @@ public class SevaRequest {
             .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD))
             .orElse(null);
     }
+
+    private List<String> getDynamicMultiValue(String key) {
+        return getAttributeValues().stream()
+            .filter(attribute -> key.equals(attribute.get(ATTRIBUTE_VALUES_KEY_FIELD)))
+            .map(attribute -> attribute.get(ATTRIBUTE_VALUES_NAME_FIELD)).collect(Collectors.toList());
+
+    }
+
 
 }

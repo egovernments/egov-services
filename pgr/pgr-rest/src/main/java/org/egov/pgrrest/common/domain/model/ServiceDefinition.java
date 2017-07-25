@@ -3,7 +3,6 @@ package org.egov.pgrrest.common.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.egov.pgrrest.read.domain.model.SevaRequestAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,15 +18,21 @@ public class ServiceDefinition {
     private String tenantId;
     private List<AttributeDefinition> attributes;
 
-    public boolean isComputedFieldsAbsent() {
-        return isEmpty(getComputedFields());
+    public boolean isComputedFieldsAbsent(ServiceStatus action) {
+        return isEmpty(getComputedFields(action));
     }
 
     public boolean isAttributesAbsent() {
         return isEmpty(attributes);
     }
 
-    public List<AttributeDefinition> getComputedFields() {
+    public List<AttributeDefinition> getComputedFields(ServiceStatus action) {
+        return getComputedFields().stream()
+            .filter(attribute -> actionMatches(action, attribute))
+            .collect(Collectors.toList());
+    }
+
+    private List<AttributeDefinition> getComputedFields() {
         return attributes.stream()
             .filter(AttributeDefinition::isReadOnly)
             .collect(Collectors.toList());
@@ -39,7 +44,7 @@ public class ServiceDefinition {
             .collect(Collectors.toList());
     }
 
-    public List<AttributeDefinition> getMandatoryAttributes(SevaRequestAction action, List<String> roleCodes) {
+    public List<AttributeDefinition> getMandatoryAttributes(ServiceStatus action, List<String> roleCodes) {
         return attributes.stream()
             .filter(attribute -> attribute.isRequired()
                 && actionMatches(action, attribute)
@@ -51,9 +56,9 @@ public class ServiceDefinition {
         return !Collections.disjoint(attribute.getRoleNames(), roleCodes);
     }
 
-    private boolean actionMatches(SevaRequestAction expectedAction, AttributeDefinition attributeDefinition) {
+    private boolean actionMatches(ServiceStatus expectedAction, AttributeDefinition attributeDefinition) {
         return attributeDefinition.getActions().stream()
-            .anyMatch(a -> expectedAction.getActionName().equalsIgnoreCase(a.getName()));
+            .anyMatch(action -> expectedAction == action.getAction());
     }
 
     public List<AttributeDefinition> getNonComputedDateAttributes() {

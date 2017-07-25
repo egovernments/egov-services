@@ -4,7 +4,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.PropertyRequest;
+import org.egov.propertytax.repository.BillingServiceRepository;
 import org.egov.propertytax.service.DemandService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -21,6 +24,8 @@ import java.util.Map;
 
 @Service
 public class Consumer {
+
+    private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -43,7 +48,7 @@ public class Consumer {
         consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
                 environment.getProperty("auto.offset.reset.config"));
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                environment.getProperty("kafka.config.bootstrap_server_config"));
+                environment.getProperty("spring.kafka.bootstrap.servers"));
         consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "boundary");
@@ -83,6 +88,7 @@ public class Consumer {
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
 
         demandService.createDemand(consumerRecord.value());
+        logger.info("demand generated >>>> \n next topic ----->> "+environment.getProperty("egov.propertytax.create.demand")+" \n Property >>>>> "+consumerRecord.value());
         producer.send(environment.getProperty("egov.propertytax.create.demand"), consumerRecord.value());
 
     }

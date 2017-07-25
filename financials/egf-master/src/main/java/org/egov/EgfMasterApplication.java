@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-@Import({TracerConfiguration.class})
+@Import({ TracerConfiguration.class })
 @SpringBootApplication
 public class EgfMasterApplication {
 
@@ -51,10 +51,9 @@ public class EgfMasterApplication {
 	private String elasticSearchClusterName;
 
 	private TransportClient client;
-	
-	 @Autowired
-	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
 	@PostConstruct
 	public void init() throws UnknownHostException {

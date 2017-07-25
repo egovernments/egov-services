@@ -91,67 +91,75 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-<dependency>
-    <groupId>org.kie</groupId>
-    <artifactId>kie-api</artifactId>
-    <version>6.5.0.Final</version>
-</dependency>
- 
-        <dependency>
-            <groupId>org.kie</groupId>
-            <artifactId>kie-spring</artifactId>
-            <version>6.5.0.Final</version>
-            <!-- Sadly kie-spring depends upon spring 3.2, but we need 4x to run smoothly with spring boot
-            	and while http://books.sonatype.com/mvnref-book/reference/pom-relationships-sect-project-dependencies.html
-            	is not working for us, we need to exclude the 3.2-dependencies -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-tx</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-beans</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-context</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>drools-compiler</artifactId>
-            <version>6.5.0.Final</version>
-        </dependency>
-<!-- https://mvnrepository.com/artifact/org.drools/drools-core -->
-<dependency>
-    <groupId>org.drools</groupId>
-    <artifactId>drools-core</artifactId>
-    <version>6.5.0.Final</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.kie/kie-internal -->
-<dependency>
-    <groupId>org.kie</groupId>
-    <artifactId>kie-internal</artifactId>
-    <version>6.5.0.Final</version>
-</dependency>
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-api</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-spring</artifactId>
+			<version>6.5.0.Final</version>
+			<!-- Sadly kie-spring depends upon spring 3.2, but we need 4x to run smoothly 
+				with spring boot and while http://books.sonatype.com/mvnref-book/reference/pom-relationships-sect-project-dependencies.html 
+				is not working for us, we need to exclude the 3.2-dependencies -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-tx</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.drools/drools-core -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.kie/kie-internal -->
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-internal</artifactId>
+			<version>6.5.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>tracer</artifactId>
+			<version>1.1.0</version>
+		</dependency>
 
 	</dependencies>
-
 
 	<repositories>
 		<repository>
 			<id>repo.egovernments.org</id>
 			<name>eGov ERP Releases Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>repo.egovernments.org.snapshots</id>
+			<name>eGov ERP Snapshots Repository</name>
 			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
 		</repository>
-		
 	</repositories>
 
 	<build>

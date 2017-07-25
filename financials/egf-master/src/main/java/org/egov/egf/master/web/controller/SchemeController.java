@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SchemeSearch;
 import org.egov.egf.master.domain.service.SchemeService;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SchemeSearchContract;
+import org.egov.egf.master.web.requests.SchemeRequest;
+import org.egov.egf.master.web.requests.SchemeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class SchemeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SchemeContract> create(
-			@RequestBody @Valid CommonRequest<SchemeContract> schemeContractRequest, BindingResult errors) {
+	public SchemeResponse create(@RequestBody SchemeRequest schemeRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<SchemeContract> schemeResponse = new CommonResponse<>();
+		SchemeResponse schemeResponse = new SchemeResponse();
+		schemeResponse.setResponseInfo(getResponseInfo(schemeRequest.getRequestInfo()));
 		List<Scheme> schemes = new ArrayList<>();
-		Scheme scheme = null;
-		List<SchemeContract> schemeContracts = new ArrayList<SchemeContract>();
-		SchemeContract contract = null;
+		Scheme scheme;
+		List<SchemeContract> schemeContracts = new ArrayList<>();
+		SchemeContract contract;
 
-		schemeContractRequest.getRequestInfo().setAction("create");
+		schemeRequest.getRequestInfo().setAction("create");
 
-		for (SchemeContract schemeContract : schemeContractRequest.getData()) {
+		for (SchemeContract schemeContract : schemeRequest.getSchemes()) {
 			scheme = new Scheme();
 			model.map(schemeContract, scheme);
 			scheme.setCreatedDate(new Date());
-			scheme.setCreatedBy(schemeContractRequest.getRequestInfo().getUserInfo());
-			scheme.setLastModifiedBy(schemeContractRequest.getRequestInfo().getUserInfo());
+			scheme.setCreatedBy(schemeRequest.getRequestInfo().getUserInfo());
+			scheme.setLastModifiedBy(schemeRequest.getRequestInfo().getUserInfo());
 			schemes.add(scheme);
 		}
 
@@ -72,35 +70,34 @@ public class SchemeController {
 			schemeContracts.add(contract);
 		}
 
-		schemeContractRequest.setData(schemeContracts);
-		schemeService.addToQue(schemeContractRequest);
-		schemeResponse.setData(schemeContracts);
+		schemeRequest.setSchemes(schemeContracts);
+		schemeService.addToQue(schemeRequest);
+		schemeResponse.setSchemes(schemeContracts);
 
 		return schemeResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SchemeContract> update(
-			@RequestBody @Valid CommonRequest<SchemeContract> schemeContractRequest, BindingResult errors) {
+	public SchemeResponse update(@RequestBody SchemeRequest schemeRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		schemeContractRequest.getRequestInfo().setAction("update");
+		schemeRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<SchemeContract> schemeResponse = new CommonResponse<>();
+		SchemeResponse schemeResponse = new SchemeResponse();
 		List<Scheme> schemes = new ArrayList<>();
-		Scheme scheme = null;
-		SchemeContract contract = null;
-		List<SchemeContract> schemeContracts = new ArrayList<SchemeContract>();
+		schemeResponse.setResponseInfo(getResponseInfo(schemeRequest.getRequestInfo()));
+		Scheme scheme;
+		SchemeContract contract;
+		List<SchemeContract> schemeContracts = new ArrayList<>();
 
-		for (SchemeContract schemeContract : schemeContractRequest.getData()) {
+		for (SchemeContract schemeContract : schemeRequest.getSchemes()) {
 			scheme = new Scheme();
 			model.map(schemeContract, scheme);
+			scheme.setLastModifiedBy(schemeRequest.getRequestInfo().getUserInfo());
 			scheme.setLastModifiedDate(new Date());
-			scheme.setLastModifiedBy(schemeContractRequest.getRequestInfo().getUserInfo());
 			schemes.add(scheme);
 		}
 
@@ -109,13 +106,13 @@ public class SchemeController {
 		for (Scheme schemeObj : schemes) {
 			contract = new SchemeContract();
 			model.map(schemeObj, contract);
-			contract.setLastModifiedDate(new Date());
+			schemeObj.setLastModifiedDate(new Date());
 			schemeContracts.add(contract);
 		}
 
-		schemeContractRequest.setData(schemeContracts);
-		schemeService.addToQue(schemeContractRequest);
-		schemeResponse.setData(schemeContracts);
+		schemeRequest.setSchemes(schemeContracts);
+		schemeService.addToQue(schemeRequest);
+		schemeResponse.setSchemes(schemeContracts);
 
 		return schemeResponse;
 	}
@@ -123,16 +120,15 @@ public class SchemeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<SchemeContract> search(@ModelAttribute SchemeSearchContract schemeSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+	public SchemeResponse search(@ModelAttribute SchemeSearchContract schemeSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		SchemeSearch domain = new SchemeSearch();
 		mapper.map(schemeSearchContract, domain);
-		SchemeContract contract = null;
+		SchemeContract contract;
 		ModelMapper model = new ModelMapper();
-		List<SchemeContract> schemeContracts = new ArrayList<SchemeContract>();
-
+		List<SchemeContract> schemeContracts = new ArrayList<>();
 		Pagination<Scheme> schemes = schemeService.search(domain);
 
 		for (Scheme scheme : schemes.getPagedData()) {
@@ -141,8 +137,8 @@ public class SchemeController {
 			schemeContracts.add(contract);
 		}
 
-		CommonResponse<SchemeContract> response = new CommonResponse<>();
-		response.setData(schemeContracts);
+		SchemeResponse response = new SchemeResponse();
+		response.setSchemes(schemeContracts);
 		response.setPage(new PaginationContract(schemes));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -151,7 +147,7 @@ public class SchemeController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

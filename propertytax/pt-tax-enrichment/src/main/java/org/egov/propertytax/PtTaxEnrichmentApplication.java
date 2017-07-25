@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
+//@Import({TracerConfiguration.class})
 @EnableWebMvc
 public class PtTaxEnrichmentApplication {
 

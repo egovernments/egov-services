@@ -1095,11 +1095,23 @@ definitions:
         maxLength: 128
         minLength: 4
       penalty:
-       type: number
-       format: double
+       type: array
+       items:
+         $ref: '#/definitions/Penalty'
     required:
        - upicNo
        - tenantId
        - penalty
+       
+  Penalty:
+    type: object
+    description: This object would hold the infromation about the penalty imposed on a Property on a perticular period
+    properties:
+      period:
+        type: string
+        description: This would define a period for the penalty
+      amount:
+        type: number
+        format: double
 
 

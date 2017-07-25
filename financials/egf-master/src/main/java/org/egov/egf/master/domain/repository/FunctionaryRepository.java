@@ -1,15 +1,18 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
 import org.egov.egf.master.persistence.entity.FunctionaryEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.FunctionaryJdbcRepository;
-import org.egov.egf.master.web.contract.FunctionaryContract;
+import org.egov.egf.master.web.requests.FunctionaryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FunctionaryRepository {
@@ -20,20 +23,32 @@ public class FunctionaryRepository {
 	private MastersQueueRepository functionaryQueueRepository;
 
 	public Functionary findById(Functionary functionary) {
-		return functionaryJdbcRepository.findById(new FunctionaryEntity().toEntity(functionary)).toDomain();
+		FunctionaryEntity entity = functionaryJdbcRepository.findById(new FunctionaryEntity().toEntity(functionary));
+		return entity.toDomain();
 
 	}
 
+	@Transactional
 	public Functionary save(Functionary functionary) {
-		return functionaryJdbcRepository.create(new FunctionaryEntity().toEntity(functionary)).toDomain();
+		FunctionaryEntity entity = functionaryJdbcRepository.create(new FunctionaryEntity().toEntity(functionary));
+		return entity.toDomain();
 	}
 
-	public Functionary update(Functionary entity) {
-		return functionaryJdbcRepository.update(new FunctionaryEntity().toEntity(entity)).toDomain();
+	@Transactional
+	public Functionary update(Functionary functionary) {
+		FunctionaryEntity entity = functionaryJdbcRepository.update(new FunctionaryEntity().toEntity(functionary));
+		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<FunctionaryContract> request) {
-		functionaryQueueRepository.add(request);
+	public void add(FunctionaryRequest request) {
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("functionary_create", request);
+		} else {
+			message.put("functionary_update", request);
+		}
+		functionaryQueueRepository.add(message);
 	}
 
 	public Pagination<Functionary> search(FunctionarySearch domain) {

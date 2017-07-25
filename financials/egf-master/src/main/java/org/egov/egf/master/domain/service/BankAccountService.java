@@ -5,7 +5,6 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.model.BankBranch;
@@ -15,7 +14,7 @@ import org.egov.egf.master.domain.repository.BankAccountRepository;
 import org.egov.egf.master.domain.repository.BankBranchRepository;
 import org.egov.egf.master.domain.repository.ChartOfAccountRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
-import org.egov.egf.master.web.contract.BankAccountContract;
+import org.egov.egf.master.web.requests.BankAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,13 +40,12 @@ public class BankAccountService {
 	private SmartValidator validator;
 	@Autowired
 	private ChartOfAccountRepository chartOfAccountRepository;
-
 	@Autowired
 	private BankBranchRepository bankBranchRepository;
 	@Autowired
 	private FundRepository fundRepository;
 
-	public BindingResult validate(List<BankAccount> bankaccounts, String method, BindingResult errors) {
+	private BindingResult validate(List<BankAccount> bankaccounts, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -108,6 +106,7 @@ public class BankAccountService {
 		return bankaccounts;
 	}
 
+	@Transactional
 	public List<BankAccount> add(List<BankAccount> bankaccounts, BindingResult errors) {
 		bankaccounts = fetchRelated(bankaccounts);
 		validate(bankaccounts, ACTION_CREATE, errors);
@@ -118,6 +117,7 @@ public class BankAccountService {
 
 	}
 
+	@Transactional
 	public List<BankAccount> update(List<BankAccount> bankaccounts, BindingResult errors) {
 		bankaccounts = fetchRelated(bankaccounts);
 		validate(bankaccounts, ACTION_UPDATE, errors);
@@ -128,7 +128,7 @@ public class BankAccountService {
 
 	}
 
-	public void addToQue(CommonRequest<BankAccountContract> request) {
+	public void addToQue(BankAccountRequest request) {
 		bankAccountRepository.add(request);
 	}
 
@@ -145,4 +145,5 @@ public class BankAccountService {
 	public BankAccount update(BankAccount bankAccount) {
 		return bankAccountRepository.update(bankAccount);
 	}
+
 }

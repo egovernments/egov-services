@@ -53,74 +53,89 @@ public class FunctionJdbcRepository extends JdbcRepository {
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-		searchQuery = searchQuery.replace(":tablename", FunctionEntity.TABLE_NAME);
-
-		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty()) {
 			validateSortByOrder(functionSearchEntity.getSortBy());
 			validateEntityFieldName(functionSearchEntity.getSortBy(), FunctionEntity.class);
 		}
 
-		String orderBy = "order by name asc";
-		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty())
+		String orderBy = "order by id";
+		if (functionSearchEntity.getSortBy() != null && !functionSearchEntity.getSortBy().isEmpty()) {
 			orderBy = "order by " + functionSearchEntity.getSortBy();
+		}
+
+		searchQuery = searchQuery.replace(":tablename", FunctionEntity.TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
 		if (functionSearchEntity.getId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", functionSearchEntity.getId());
 		}
 		if (functionSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", functionSearchEntity.getName());
 		}
 		if (functionSearchEntity.getCode() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("code =:code");
 			paramValues.put("code", functionSearchEntity.getCode());
 		}
 		if (functionSearchEntity.getLevel() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("level =:level");
 			paramValues.put("level", functionSearchEntity.getLevel());
 		}
 		if (functionSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", functionSearchEntity.getActive());
 		}
 		if (functionSearchEntity.getIsParent() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("isParent =:isParent");
 			paramValues.put("isParent", functionSearchEntity.getIsParent());
 		}
 		if (functionSearchEntity.getParentId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("parentId =:parentId");
 			paramValues.put("parentId", functionSearchEntity.getParentId());
 		}
 
 		Pagination<Function> page = new Pagination<>();
-		if (functionSearchEntity.getOffset() != null)
+		if (functionSearchEntity.getOffset() != null) {
 			page.setOffset(functionSearchEntity.getOffset());
-		if (functionSearchEntity.getPageSize() != null)
-			page.setPageSize(functionSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (functionSearchEntity.getPageSize() != null) {
+			page.setPageSize(functionSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -137,7 +152,7 @@ public class FunctionJdbcRepository extends JdbcRepository {
 
 		page.setTotalResults(functionEntities.size());
 
-		List<Function> functions = new ArrayList<Function>();
+		List<Function> functions = new ArrayList<>();
 		for (FunctionEntity functionEntity : functionEntities) {
 
 			functions.add(functionEntity.toDomain());
@@ -148,7 +163,7 @@ public class FunctionJdbcRepository extends JdbcRepository {
 	}
 
 	public FunctionEntity findById(FunctionEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

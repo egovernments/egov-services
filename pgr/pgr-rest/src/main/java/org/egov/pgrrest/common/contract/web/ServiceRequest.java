@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 @Builder
 public class ServiceRequest {
 
-    private static final String LOCATION_ID = "locationId";
-    private static final String REQUESTER_ADDRESS = "requesterAddress";
-    private static final String RECEIVING_MODE = "receivingMode";
-    private static final String RECEIVING_CENTER = "receivingCenter";
-    private static final String OTP_REFERENCE = "otpReference";
-    private static final String USER_ID = "userId";
+    private static final String LOCATION_ID = "systemLocationId";
+    private static final String REQUESTER_ADDRESS = "systemRequesterAddress";
+    private static final String RECEIVING_MODE = "systemReceivingMode";
+    private static final String RECEIVING_CENTER = "systemReceivingCenter";
+    private static final String OTP_REFERENCE = "systemOtpReference";
+    private static final String USER_ID = "systemUserId";
 
     private String tenantId;
 

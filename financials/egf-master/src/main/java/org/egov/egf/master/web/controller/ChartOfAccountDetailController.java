@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.domain.model.ChartOfAccountDetailSearch;
 import org.egov.egf.master.domain.service.ChartOfAccountDetailService;
 import org.egov.egf.master.web.contract.ChartOfAccountDetailContract;
 import org.egov.egf.master.web.contract.ChartOfAccountDetailSearchContract;
+import org.egov.egf.master.web.requests.ChartOfAccountDetailRequest;
+import org.egov.egf.master.web.requests.ChartOfAccountDetailResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,29 +37,29 @@ public class ChartOfAccountDetailController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<ChartOfAccountDetailContract> create(
-			@RequestBody @Valid CommonRequest<ChartOfAccountDetailContract> chartOfAccountDetailContractRequest,
+	public ChartOfAccountDetailResponse create(@RequestBody ChartOfAccountDetailRequest chartOfAccountDetailRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<ChartOfAccountDetailContract> chartOfAccountDetailResponse = new CommonResponse<>();
+		ChartOfAccountDetailResponse chartOfAccountDetailResponse = new ChartOfAccountDetailResponse();
+		chartOfAccountDetailResponse.setResponseInfo(getResponseInfo(chartOfAccountDetailRequest.getRequestInfo()));
 		List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<>();
-		ChartOfAccountDetail chartOfAccountDetail = null;
-		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<ChartOfAccountDetailContract>();
-		ChartOfAccountDetailContract contract = null;
+		ChartOfAccountDetail chartOfAccountDetail;
+		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<>();
+		ChartOfAccountDetailContract contract;
 
-		chartOfAccountDetailContractRequest.getRequestInfo().setAction("create");
+		chartOfAccountDetailRequest.getRequestInfo().setAction("create");
 
-		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailContractRequest
-				.getData()) {
+		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailRequest
+				.getChartOfAccountDetails()) {
 			chartOfAccountDetail = new ChartOfAccountDetail();
 			model.map(chartOfAccountDetailContract, chartOfAccountDetail);
 			chartOfAccountDetail.setCreatedDate(new Date());
-			chartOfAccountDetail.setCreatedBy(chartOfAccountDetailContractRequest.getRequestInfo().getUserInfo());
-			chartOfAccountDetail.setLastModifiedBy(chartOfAccountDetailContractRequest.getRequestInfo().getUserInfo());
+			chartOfAccountDetail.setCreatedBy(chartOfAccountDetailRequest.getRequestInfo().getUserInfo());
+			chartOfAccountDetail.setLastModifiedBy(chartOfAccountDetailRequest.getRequestInfo().getUserInfo());
 			chartofaccountdetails.add(chartOfAccountDetail);
 		}
 
@@ -74,37 +72,36 @@ public class ChartOfAccountDetailController {
 			chartOfAccountDetailContracts.add(contract);
 		}
 
-		chartOfAccountDetailContractRequest.setData(chartOfAccountDetailContracts);
-		chartOfAccountDetailService.addToQue(chartOfAccountDetailContractRequest);
-		chartOfAccountDetailResponse.setData(chartOfAccountDetailContracts);
+		chartOfAccountDetailRequest.setChartOfAccountDetails(chartOfAccountDetailContracts);
+		chartOfAccountDetailService.addToQue(chartOfAccountDetailRequest);
+		chartOfAccountDetailResponse.setChartOfAccountDetails(chartOfAccountDetailContracts);
 
 		return chartOfAccountDetailResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<ChartOfAccountDetailContract> update(
-			@RequestBody @Valid CommonRequest<ChartOfAccountDetailContract> chartOfAccountDetailContractRequest,
+	public ChartOfAccountDetailResponse update(@RequestBody ChartOfAccountDetailRequest chartOfAccountDetailRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		chartOfAccountDetailContractRequest.getRequestInfo().setAction("update");
+		chartOfAccountDetailRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<ChartOfAccountDetailContract> chartOfAccountDetailResponse = new CommonResponse<>();
+		ChartOfAccountDetailResponse chartOfAccountDetailResponse = new ChartOfAccountDetailResponse();
 		List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<>();
+		chartOfAccountDetailResponse.setResponseInfo(getResponseInfo(chartOfAccountDetailRequest.getRequestInfo()));
 		ChartOfAccountDetail chartOfAccountDetail;
 		ChartOfAccountDetailContract contract;
 		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<>();
 
-		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailContractRequest
-				.getData()) {
+		for (ChartOfAccountDetailContract chartOfAccountDetailContract : chartOfAccountDetailRequest
+				.getChartOfAccountDetails()) {
 			chartOfAccountDetail = new ChartOfAccountDetail();
 			model.map(chartOfAccountDetailContract, chartOfAccountDetail);
+			chartOfAccountDetail.setLastModifiedBy(chartOfAccountDetailRequest.getRequestInfo().getUserInfo());
 			chartOfAccountDetail.setLastModifiedDate(new Date());
-			chartOfAccountDetail.setLastModifiedBy(chartOfAccountDetailContractRequest.getRequestInfo().getUserInfo());
 			chartofaccountdetails.add(chartOfAccountDetail);
 		}
 
@@ -113,13 +110,13 @@ public class ChartOfAccountDetailController {
 		for (ChartOfAccountDetail chartOfAccountDetailObj : chartofaccountdetails) {
 			contract = new ChartOfAccountDetailContract();
 			model.map(chartOfAccountDetailObj, contract);
-			contract.setLastModifiedDate(new Date());
+			chartOfAccountDetailObj.setLastModifiedDate(new Date());
 			chartOfAccountDetailContracts.add(contract);
 		}
 
-		chartOfAccountDetailContractRequest.setData(chartOfAccountDetailContracts);
-		chartOfAccountDetailService.addToQue(chartOfAccountDetailContractRequest);
-		chartOfAccountDetailResponse.setData(chartOfAccountDetailContracts);
+		chartOfAccountDetailRequest.setChartOfAccountDetails(chartOfAccountDetailContracts);
+		chartOfAccountDetailService.addToQue(chartOfAccountDetailRequest);
+		chartOfAccountDetailResponse.setChartOfAccountDetails(chartOfAccountDetailContracts);
 
 		return chartOfAccountDetailResponse;
 	}
@@ -127,17 +124,16 @@ public class ChartOfAccountDetailController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<ChartOfAccountDetailContract> search(
+	public ChartOfAccountDetailResponse search(
 			@ModelAttribute ChartOfAccountDetailSearchContract chartOfAccountDetailSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		ChartOfAccountDetailSearch domain = new ChartOfAccountDetailSearch();
 		mapper.map(chartOfAccountDetailSearchContract, domain);
-		ChartOfAccountDetailContract contract = null;
+		ChartOfAccountDetailContract contract;
 		ModelMapper model = new ModelMapper();
-		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<ChartOfAccountDetailContract>();
-
+		List<ChartOfAccountDetailContract> chartOfAccountDetailContracts = new ArrayList<>();
 		Pagination<ChartOfAccountDetail> chartofaccountdetails = chartOfAccountDetailService.search(domain);
 
 		for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails.getPagedData()) {
@@ -146,8 +142,8 @@ public class ChartOfAccountDetailController {
 			chartOfAccountDetailContracts.add(contract);
 		}
 
-		CommonResponse<ChartOfAccountDetailContract> response = new CommonResponse<>();
-		response.setData(chartOfAccountDetailContracts);
+		ChartOfAccountDetailResponse response = new ChartOfAccountDetailResponse();
+		response.setChartOfAccountDetails(chartOfAccountDetailContracts);
 		response.setPage(new PaginationContract(chartofaccountdetails));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -156,7 +152,7 @@ public class ChartOfAccountDetailController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

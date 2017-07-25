@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.AccountCodePurposeSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		LOG.debug("init accountCodePurpose");
 		init(AccountCodePurposeEntity.class);
 		LOG.debug("end init accountCodePurpose");
+	}
+
+	public AccountCodePurposeJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public AccountCodePurposeEntity create(AccountCodePurposeEntity entity) {
@@ -49,53 +54,59 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+		if (accountCodePurposeSearchEntity.getSortBy() != null
+				&& !accountCodePurposeSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(accountCodePurposeSearchEntity.getSortBy());
+			validateEntityFieldName(accountCodePurposeSearchEntity.getSortBy(), AccountCodePurposeEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (accountCodePurposeSearchEntity.getSortBy() != null
+				&& !accountCodePurposeSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + accountCodePurposeSearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", AccountCodePurposeEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (accountCodePurposeSearchEntity.getSortBy() != null && !accountCodePurposeSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(accountCodePurposeSearchEntity.getSortBy());
-                    validateEntityFieldName(accountCodePurposeSearchEntity.getSortBy(), AccountCodePurposeEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (accountCodePurposeSearchEntity.getSortBy() != null && !accountCodePurposeSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + accountCodePurposeSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (accountCodePurposeSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", accountCodePurposeSearchEntity.getId());
 		}
 		if (accountCodePurposeSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", accountCodePurposeSearchEntity.getName());
 		}
 
 		Pagination<AccountCodePurpose> page = new Pagination<>();
-
-		if (accountCodePurposeSearchEntity.getOffset() != null)
+		if (accountCodePurposeSearchEntity.getOffset() != null) {
 			page.setOffset(accountCodePurposeSearchEntity.getOffset());
-		if (accountCodePurposeSearchEntity.getPageSize() != null)
-			page.setPageSize(accountCodePurposeSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (accountCodePurposeSearchEntity.getPageSize() != null) {
+			page.setPageSize(accountCodePurposeSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-
-		page = (Pagination<AccountCodePurpose>) getPagination(searchQuery, page,paramValues);
-
+		page = (Pagination<AccountCodePurpose>) getPagination(searchQuery, page, paramValues);
 		searchQuery = searchQuery + " :pagination";
 
 		searchQuery = searchQuery.replace(":pagination",
@@ -119,7 +130,8 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 	}
 
 	public AccountCodePurposeEntity findById(AccountCodePurposeEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {
@@ -129,7 +141,6 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		List<AccountCodePurposeEntity> accountcodepurposes = namedParameterJdbcTemplate.query(
 				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
 				new BeanPropertyRowMapper(AccountCodePurposeEntity.class));
-
 		if (accountcodepurposes.isEmpty()) {
 			return null;
 		} else {

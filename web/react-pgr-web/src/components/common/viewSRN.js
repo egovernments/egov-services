@@ -167,7 +167,7 @@ class viewsrn extends Component{
                 </Col>
               </Row>
               {this.props.srn.externalCRN ?
-                <Row style={{padding:'10px'}}>
+                <Row style={styles.addBorderBottom}>
                   <Col xs={6} md={3}>
                     External CRN
                   </Col>
@@ -176,7 +176,7 @@ class viewsrn extends Component{
                   </Col>
                 </Row>
               : ''}
-              <Row style={{padding:'10px'}}>
+              <Row style={styles.addBorderBottom}>
                 <Col xs={6} md={3}>
                   Files
                 </Col>

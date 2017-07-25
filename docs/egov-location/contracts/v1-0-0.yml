@@ -411,6 +411,43 @@ paths:
           description: tenant_id provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
+            
+  /boundarys/_search:
+    post:
+      summary: 'It Will provide the List of boundaries based on search criteria Like "Srikakulam  Municipality","Zone-1","Zone-2" etc.'
+      description: |
+        Provides a list of boundaries based on TenantId And List of Boundary id's
+      parameters:
+      
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        
+        - name: boundaryIds
+          in: query
+          description: Unique List of boundary id's.
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+          
+      tags:
+        - boundary Search
+      responses:
+        '200':
+          description: Successful Response.
+          schema:
+            $ref: '#/definitions/BoundaryResponse'
+        '400':
+          description: Tenantid was not provided or General service error
+          schema:
+            $ref: 
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes          
+            
+            
+            
   /boundarys/isshapefileexist:
     post:
       summary: Check whether the GIS shape file exists or not.

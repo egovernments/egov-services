@@ -107,7 +107,7 @@ public class StorageReservoirController {
         final List<StorageReservoir> storageReservoir = storageReservoirService.createStorageReservoir(
                 applicationProperties.getCreateStorageReservoirTopicName(), "storagereservoir-create", storageReservoirRequest);
 
-        return getSuccessResponse(storageReservoir, "created", storageReservoirRequest.getRequestInfo());
+        return getSuccessResponse(storageReservoir, "Created", storageReservoirRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/_update")

@@ -71,6 +71,9 @@ public class WorkflowDetails {
 	@NotNull
 	private String receiptNumber;
 	
+	@NotNull
+	private String receiptHeaderId;
+	
     private long department;
 
     private long designation;

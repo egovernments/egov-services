@@ -165,7 +165,7 @@ public class AssetQueryBuilderTest {
 
     @Test
     public void getInsertQuery() {
-        final String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation,depriciationrate)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String queryWithTenantId = "INSERT into egasset_asset (id,assetcategory,name,code,department,assetdetails,description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepreciation,depreciationrate)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         assertEquals(queryWithTenantId, assetQueryBuilder.getInsertQuery());
     }
 

@@ -260,7 +260,7 @@ public class AssetQueryBuilder {
         return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
                 + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
                 + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
-                + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepriciation,depriciationrate)"
+                + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepreciation,depreciationrate)"
                 + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 
@@ -285,9 +285,9 @@ public class AssetQueryBuilder {
     public final static String GETYEARWISEDEPRECIATIONQUERY = "select assetid,depreciationrate,financialyear,usefullifeinyears,tenantid from "
             + "egasset_yearwisedepreciation where assetid = ? and tenantid = ?";
 
-    public final static String ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?,depriciationrate=?"
+    public final static String ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepreciation = ?,depreciationrate=?"
             + " WHERE code = ? and tenantid = ?";
-    public final static String ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepriciation = ?"
+    public final static String ASSETEXCLUDEDEPRECIATIONRATEUPDATEQUERY = "UPDATE egasset_asset SET enableyearwisedepreciation = ?"
             + " WHERE code = ? and tenantid = ?";
 
     public final static String YEARWISEDEPRECIATIONDELETEQUERY = "DELETE FROM egasset_yearwisedepreciation ywd where "

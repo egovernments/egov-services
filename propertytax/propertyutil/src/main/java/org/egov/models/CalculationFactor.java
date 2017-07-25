@@ -22,7 +22,7 @@ public class CalculationFactor {
 	private String	tenantId;	
 
 	@NotNull
-	@Size(min=4,max=16)
+	@Size(min=4,max=64)
 	private String	factorCode;
 		 
 	@NotNull

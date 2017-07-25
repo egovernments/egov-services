@@ -1,5 +1,6 @@
 package org.egov.egf.budget.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
@@ -43,6 +44,52 @@ public class BudgetService {
 		this.financialYearContractRepository = financialYearContractRepository;
 	}
 
+	@Transactional
+	public List<Budget> save(List<Budget> budgets, BindingResult errors) {
+
+		List<Budget> resultList = new ArrayList<Budget>();
+
+		try {
+
+			budgets = fetchAndValidate(budgets, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (Budget b : budgets) {
+
+			resultList.add(save(b));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<Budget> update(List<Budget> budgets, BindingResult errors) {
+
+		List<Budget> resultList = new ArrayList<Budget>();
+
+		try {
+
+			budgets = fetchAndValidate(budgets, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (Budget b : budgets) {
+
+			resultList.add(update(b));
+
+		}
+
+		return resultList;
+	}
+
 	public BindingResult validate(List<Budget> budgets, String method, BindingResult errors) {
 
 		try {
@@ -74,45 +121,47 @@ public class BudgetService {
 	}
 
 	public List<Budget> fetchRelated(List<Budget> budgets) {
-		for (Budget budget : budgets) {
-			// fetch related items
+		if (budgets != null)
+			for (Budget budget : budgets) {
+				// fetch related items
 
-			if (budget.getFinancialYear() != null && budget.getFinancialYear().getId() != null
-					&& budget.getFinancialYear().getTenantId() != null) {
-				FinancialYearSearchContract contract = new FinancialYearSearchContract();
-				contract.setId(budget.getFinancialYear().getId());
-				contract.setTenantId(budget.getFinancialYear().getTenantId());
-				FinancialYearContract financialYear = financialYearContractRepository.findById(contract);
-				if (financialYear == null) {
-					throw new InvalidDataException("financialYear", "financialYear.invalid", " Invalid financialYear");
+				if (budget.getFinancialYear() != null && budget.getFinancialYear().getId() != null
+						&& budget.getFinancialYear().getTenantId() != null) {
+					FinancialYearSearchContract contract = new FinancialYearSearchContract();
+					contract.setId(budget.getFinancialYear().getId());
+					contract.setTenantId(budget.getFinancialYear().getTenantId());
+					FinancialYearContract financialYear = financialYearContractRepository.findById(contract);
+					if (financialYear == null) {
+						throw new InvalidDataException("financialYear", "financialYear.invalid",
+								" Invalid financialYear");
+					}
+					budget.setFinancialYear(financialYear);
 				}
-				budget.setFinancialYear(financialYear);
-			}
 
-			if (budget.getParent() != null && budget.getParent().getId() != null
-					&& !budget.getParent().getId().isEmpty()) {
-				Budget parent = budgetRepository.findById(budget.getParent());
-				if (parent == null) {
-					throw new InvalidDataException("parent", "parent.invalid", " Invalid parent");
+				if (budget.getParent() != null && budget.getParent().getId() != null
+						&& !budget.getParent().getId().isEmpty()) {
+					Budget parent = budgetRepository.findById(budget.getParent());
+					if (parent == null) {
+						throw new InvalidDataException("parent", "parent.invalid", " Invalid parent");
+					}
+					budget.setParent(parent);
 				}
-				budget.setParent(parent);
-			}
-			if (budget.getReferenceBudget() != null && budget.getReferenceBudget().getId() != null
-					&& !budget.getReferenceBudget().getId().isEmpty()) {
-				Budget referenceBudget = budgetRepository.findById(budget.getReferenceBudget());
-				if (referenceBudget == null) {
-					throw new InvalidDataException("referenceBudget", "referenceBudget.invalid",
-							" Invalid referenceBudget");
+				if (budget.getReferenceBudget() != null && budget.getReferenceBudget().getId() != null
+						&& !budget.getReferenceBudget().getId().isEmpty()) {
+					Budget referenceBudget = budgetRepository.findById(budget.getReferenceBudget());
+					if (referenceBudget == null) {
+						throw new InvalidDataException("referenceBudget", "referenceBudget.invalid",
+								" Invalid referenceBudget");
+					}
+					budget.setReferenceBudget(referenceBudget);
 				}
-				budget.setReferenceBudget(referenceBudget);
 			}
-		}
 
 		return budgets;
 	}
 
 	@Transactional
-	public List<Budget> save(List<Budget> budgets, BindingResult errors, String action) {
+	public List<Budget> fetchAndValidate(List<Budget> budgets, BindingResult errors, String action) {
 
 		budgets = fetchRelated(budgets);
 

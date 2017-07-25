@@ -1,6 +1,6 @@
 package org.egov.calculator.service;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.servlet.ServletContext;
 
 import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.models.TaxCalculationWrapper;
@@ -40,6 +42,7 @@ import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -71,6 +74,9 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
 	@Autowired
 	Environment environment;
+	
+	@Autowired
+	ServletContext context;
 
 	/**
 	 * Description: this method will get all factors based on tenantId and valid
@@ -135,7 +141,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 				} else {
 					UnitWrapper unitWrapper = new UnitWrapper();
 					unitWrapper.setUnit(unit);
-					unitWrapper.setFloorNo(floor.getId().toString());
+					unitWrapper.setFloorNo(floor.getFloorNo().toString());
 					roomsList.add(unitWrapper);
 				}
 			}
@@ -199,23 +205,28 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 			throws IOException, InvalidTaxCalculationDataException {
 		KieServices kieServices = KieServices.Factory.get();
 		KieFileSystem kfs = kieServices.newKieFileSystem();
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(environment.getProperty("rules.path") + "/" + tenantId + ".drl");
-		} catch (Exception ex) {
+		
+		File file=null;
+	
+			
+			String filepath = context.getRealPath(tenantId + ".drl");
+			file = new File( filepath);
+			
+	if(!file.exists()){
 			while (tenantId.contains(".")) {
 
 				tenantId = tenantId.substring(0, tenantId.lastIndexOf("."));
 				try {
-					fis = new FileInputStream(environment.getProperty("rules.path") + "/" + tenantId + ".drl");
+					file = new File(  context.getRealPath(tenantId + ".drl"));
 					break;
 				} catch (Exception exception) {
 
 				}
-			}
+			
 		}
-		kfs.write(environment.getProperty("rules.path") + "/" + tenantId + ".drl",
-				kieServices.getResources().newInputStreamResource(fis));
+	}
+		
+		kfs.write(ResourceFactory.newClassPathResource(file.getName(), "UTF-8"));
 
 		KieBuilder kieBuilder = kieServices.newKieBuilder(kfs).buildAll();
 

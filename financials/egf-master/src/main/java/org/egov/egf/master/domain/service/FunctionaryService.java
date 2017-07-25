@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
 import org.egov.egf.master.domain.repository.FunctionaryRepository;
-import org.egov.egf.master.web.contract.FunctionaryContract;
+import org.egov.egf.master.web.requests.FunctionaryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class FunctionaryService {
 	@Autowired
 	private SmartValidator validator;
 
-	public BindingResult validate(List<Functionary> functionaries, String method, BindingResult errors) {
+	private BindingResult validate(List<Functionary> functionaries, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -72,6 +71,7 @@ public class FunctionaryService {
 		return functionaries;
 	}
 
+	@Transactional
 	public List<Functionary> add(List<Functionary> functionaries, BindingResult errors) {
 		functionaries = fetchRelated(functionaries);
 		validate(functionaries, ACTION_CREATE, errors);
@@ -82,6 +82,7 @@ public class FunctionaryService {
 
 	}
 
+	@Transactional
 	public List<Functionary> update(List<Functionary> functionaries, BindingResult errors) {
 		functionaries = fetchRelated(functionaries);
 		validate(functionaries, ACTION_UPDATE, errors);
@@ -92,7 +93,7 @@ public class FunctionaryService {
 
 	}
 
-	public void addToQue(CommonRequest<FunctionaryContract> request) {
+	public void addToQue(FunctionaryRequest request) {
 		functionaryRepository.add(request);
 	}
 

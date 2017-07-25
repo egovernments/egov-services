@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Supplier;
 import org.egov.egf.master.domain.model.SupplierSearch;
 import org.egov.egf.master.domain.service.SupplierService;
 import org.egov.egf.master.web.contract.SupplierContract;
 import org.egov.egf.master.web.contract.SupplierSearchContract;
+import org.egov.egf.master.web.requests.SupplierRequest;
+import org.egov.egf.master.web.requests.SupplierResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class SupplierController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SupplierContract> create(
-			@RequestBody @Valid CommonRequest<SupplierContract> supplierContractRequest, BindingResult errors) {
+	public SupplierResponse create(@RequestBody SupplierRequest supplierRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<SupplierContract> supplierResponse = new CommonResponse<>();
+		SupplierResponse supplierResponse = new SupplierResponse();
+		supplierResponse.setResponseInfo(getResponseInfo(supplierRequest.getRequestInfo()));
 		List<Supplier> suppliers = new ArrayList<>();
-		Supplier supplier = null;
-		List<SupplierContract> supplierContracts = new ArrayList<SupplierContract>();
-		SupplierContract contract = null;
+		Supplier supplier;
+		List<SupplierContract> supplierContracts = new ArrayList<>();
+		SupplierContract contract;
 
-		supplierContractRequest.getRequestInfo().setAction("create");
+		supplierRequest.getRequestInfo().setAction("create");
 
-		for (SupplierContract supplierContract : supplierContractRequest.getData()) {
+		for (SupplierContract supplierContract : supplierRequest.getSuppliers()) {
 			supplier = new Supplier();
 			model.map(supplierContract, supplier);
 			supplier.setCreatedDate(new Date());
-			supplier.setCreatedBy(supplierContractRequest.getRequestInfo().getUserInfo());
-			supplier.setLastModifiedBy(supplierContractRequest.getRequestInfo().getUserInfo());
+			supplier.setCreatedBy(supplierRequest.getRequestInfo().getUserInfo());
+			supplier.setLastModifiedBy(supplierRequest.getRequestInfo().getUserInfo());
 			suppliers.add(supplier);
 		}
 
@@ -72,35 +70,34 @@ public class SupplierController {
 			supplierContracts.add(contract);
 		}
 
-		supplierContractRequest.setData(supplierContracts);
-		supplierService.addToQue(supplierContractRequest);
-		supplierResponse.setData(supplierContracts);
+		supplierRequest.setSuppliers(supplierContracts);
+		supplierService.addToQue(supplierRequest);
+		supplierResponse.setSuppliers(supplierContracts);
 
 		return supplierResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SupplierContract> update(
-			@RequestBody @Valid CommonRequest<SupplierContract> supplierContractRequest, BindingResult errors) {
+	public SupplierResponse update(@RequestBody SupplierRequest supplierRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		supplierContractRequest.getRequestInfo().setAction("update");
-
+		supplierRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<SupplierContract> supplierResponse = new CommonResponse<>();
+		SupplierResponse supplierResponse = new SupplierResponse();
 		List<Supplier> suppliers = new ArrayList<>();
-		Supplier supplier = null;
-		SupplierContract contract = null;
-		List<SupplierContract> supplierContracts = new ArrayList<SupplierContract>();
+		supplierResponse.setResponseInfo(getResponseInfo(supplierRequest.getRequestInfo()));
+		Supplier supplier;
+		SupplierContract contract;
+		List<SupplierContract> supplierContracts = new ArrayList<>();
 
-		for (SupplierContract supplierContract : supplierContractRequest.getData()) {
+		for (SupplierContract supplierContract : supplierRequest.getSuppliers()) {
 			supplier = new Supplier();
 			model.map(supplierContract, supplier);
+			supplier.setLastModifiedBy(supplierRequest.getRequestInfo().getUserInfo());
 			supplier.setLastModifiedDate(new Date());
-			supplier.setLastModifiedBy(supplierContractRequest.getRequestInfo().getUserInfo());
 			suppliers.add(supplier);
 		}
 
@@ -109,13 +106,13 @@ public class SupplierController {
 		for (Supplier supplierObj : suppliers) {
 			contract = new SupplierContract();
 			model.map(supplierObj, contract);
-			contract.setLastModifiedDate(new Date());
+			supplierObj.setLastModifiedDate(new Date());
 			supplierContracts.add(contract);
 		}
 
-		supplierContractRequest.setData(supplierContracts);
-		supplierService.addToQue(supplierContractRequest);
-		supplierResponse.setData(supplierContracts);
+		supplierRequest.setSuppliers(supplierContracts);
+		supplierService.addToQue(supplierRequest);
+		supplierResponse.setSuppliers(supplierContracts);
 
 		return supplierResponse;
 	}
@@ -123,16 +120,15 @@ public class SupplierController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<SupplierContract> search(@ModelAttribute SupplierSearchContract supplierSearchContract,
+	public SupplierResponse search(@ModelAttribute SupplierSearchContract supplierSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		SupplierSearch domain = new SupplierSearch();
 		mapper.map(supplierSearchContract, domain);
-		SupplierContract contract = null;
+		SupplierContract contract;
 		ModelMapper model = new ModelMapper();
-		List<SupplierContract> supplierContracts = new ArrayList<SupplierContract>();
-
+		List<SupplierContract> supplierContracts = new ArrayList<>();
 		Pagination<Supplier> suppliers = supplierService.search(domain);
 
 		for (Supplier supplier : suppliers.getPagedData()) {
@@ -141,8 +137,8 @@ public class SupplierController {
 			supplierContracts.add(contract);
 		}
 
-		CommonResponse<SupplierContract> response = new CommonResponse<>();
-		response.setData(supplierContracts);
+		SupplierResponse response = new SupplierResponse();
+		response.setSuppliers(supplierContracts);
 		response.setPage(new PaginationContract(suppliers));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -151,7 +147,7 @@ public class SupplierController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

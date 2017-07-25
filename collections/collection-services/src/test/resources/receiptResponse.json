@@ -43,7 +43,7 @@
                         "receiptType": "ADHOC",
                         "channel": "567hfghr",
                         "voucherHeader": "VOUHEAD",
-                        "collectionType": "COUNTER",
+                        "collectionType": null,
                         "boundary": "67",
                         "reasonForCancellation": "Data entry mistake",
                         "amountPaid": null,
@@ -81,8 +81,8 @@
             } ],
             "Bank": null,
             "BankAccount": null,
-            "auditDetails": null,
-            "workflowDetails": null
+            "auditDetails": null
+         
         }
     ]
 }

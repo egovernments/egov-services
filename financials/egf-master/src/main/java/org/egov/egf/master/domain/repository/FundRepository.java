@@ -1,13 +1,15 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.persistence.entity.FundEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.FundJdbcRepository;
-import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.requests.FundRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +43,15 @@ public class FundRepository {
 		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<FundContract> request) {
-		fundQueueRepository.add(request);
+	public void add(FundRequest request) {
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("fund_create", request);
+		} else {
+			message.put("fund_update", request);
+		}
+		fundQueueRepository.add(message);
 	}
 
 	public Pagination<Fund> search(FundSearch domain) {

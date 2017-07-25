@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  */
 
 @SpringBootApplication
+//@Import({TracerConfiguration.class})
 @EnableWebMvc 
 public class PtPropertyApplication {
 

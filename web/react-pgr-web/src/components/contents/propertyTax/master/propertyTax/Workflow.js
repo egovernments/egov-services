@@ -121,7 +121,12 @@ class Workflow extends Component {
 
      Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
       console.log(res);
-      currentThis.setState({designation: res})
+			    Api.commonApiPost('hr-masters/designations/_search', {name:res.name}).then((response)=>{
+					currentThis.setState({designation: response.Designation})
+				}).catch((err)=> {
+					currentThis.setState({designation: []})
+					console.log(err)
+				})
     }).catch((err)=> {
       currentThis.setState({
         designation:[]
@@ -140,27 +145,28 @@ class Workflow extends Component {
 
     let hasData = false;
 
-    if(type == 'department' && e.target.value != '' && this.props.workflow.designation) {
-      query = {
-          departmentId: e.target.value,
-          designationId: this.props.workflow.workflowDesignation
-      }
-      hasData = true;
+    if(type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
+		  console.log(type);
+		  query = {
+			  departmentId: e.target.value,
+			  designationId: this.props.workflow.workflowDesignation
+		  }
+		  hasData = true;
 
-    } else if(type == 'designation' && e.target.value != '' && this.props.workflow.department) {
-      query = {
-          departmentId: this.props.workflow.workflowDepartment,
-          designationId: e.target.value
-      }
-      hasData = true;
+    } else if(type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
+		  console.log(type);
+		  query = {
+			  departmentId: this.props.workflow.workflowDepartment,
+			  designationId: e.target.value
+		  }
+          hasData = true;
     } else {
-      hasData = false;
+         hasData = false;
     }
 
     if(hasData){
         Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
-         console.log(res);
-          currentThis.setState({approver: res.approverName})
+          currentThis.setState({approver: res.Employee})
       }).catch((err)=> {
         currentThis.setState({
           approver:[]

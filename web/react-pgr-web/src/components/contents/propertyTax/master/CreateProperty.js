@@ -306,17 +306,17 @@ createPropertyTax = () => {
 				"tenantId": "default",
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
-				"creationReason": createProperty.reasonForCreation || '',
+				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
 					"tenantId": "default",
-					 "latitude": '',
-					"longitude": '',
-					"addressNumber": createProperty.doorNo || '',
-					"addressLine1": createProperty.locality || '',
-					"addressLine2": '',
+					 "latitude": null,
+					"longitude": null,
+					"addressNumber": createProperty.doorNo || null,
+					"addressLine1": createProperty.locality || null,
+					"addressLine2": null,
 					"landmark": null,
 					"city": "secundrabad",
-					"pincode": createProperty.pin || '',
+					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {
 						"createdBy": userRequest.userName,
@@ -325,7 +325,7 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"owners": createProperty.owners || '',
+				"owners": createProperty.owners || null,
 				"propertyDetail": {
 					"source": "MUNICIPAL_RECORDS",
 					"regdDocNo": "rdn2",
@@ -336,29 +336,29 @@ createPropertyTax = () => {
 					"verificationDate": "25/05/2017",
 					"isExempted": false,
 					"propertyType": createProperty.propertyType || null,
-					"category": createProperty.propertySubType || '',
+					"category": createProperty.propertySubType || null,
 					"usage": null,
-					"department": createProperty.department || '',
+					"department": createProperty.department || null,
 					"apartment":null,
 					"siteLength": 12,
 					"siteBreadth": 15,
-					"sitalArea": createProperty.extentOfSite || '',
+					"sitalArea": createProperty.extentOfSite || null,
 					"totalBuiltupArea": builtupArea, 
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
 					"landOwner": null,
-					"floorType":createProperty.floorType || '',
-					"woodType": createProperty.woodType || '',
-					"roofType": createProperty.roofType || '',
-					"wallType": createProperty.wallType || '',
+					"floorType":createProperty.floorType || null,
+					"woodType": createProperty.woodType || null,
+					"roofType": createProperty.roofType || null,
+					"wallType": createProperty.wallType || null,
 					"floors":createProperty.floorsArr || null,
 					"documents": [],
 					"stateId": null,
 					"workFlowDetails": {
-						"department": createProperty.workflowDepartment || '',
-						"designation":createProperty.workflowDesignation || '',
-						"assignee": createProperty.approver || '',
+						"department": createProperty.workflowDepartment || null,
+						"designation":createProperty.workflowDesignation || null,
+						"assignee": createProperty.approver || null,
 						"action": "no",
 						"status": null
 					},
@@ -371,12 +371,12 @@ createPropertyTax = () => {
 				},
 				"vacantLand": null ,/*{
 					"surveyNumber": createProperty.survayNumber || ,
-					"pattaNumber": createProperty.pattaNumber || '',
-					"marketValue": createProperty.marketValue || '',
-					"capitalValue": createProperty.capitalValue || '',
-					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || '',
-					"layoutPermissionNo": createProperty.layoutPermitNumber || '',
-					"layoutPermissionDate":createProperty.layoutPermitDate || '',
+					"pattaNumber": createProperty.pattaNumber || null,
+					"marketValue": createProperty.marketValue || null,
+					"capitalValue": createProperty.capitalValue || null,
+					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
+					"layoutPermissionNo": createProperty.layoutPermitNumber || null,
+					"layoutPermissionDate":createProperty.layoutPermitDate || null,
 					"resdPlotArea": null,
 					"nonResdPlotArea": null,
 					"auditDetails": {
@@ -391,21 +391,21 @@ createPropertyTax = () => {
 				"isAuthorised": null,
 				"boundary": {
 					"revenueBoundary": { 
-						"id": createProperty.zoneNo || '',
-						"name": getNameById(currentThis.state.zone, createProperty.zoneNo)  || ''
+						"id": createProperty.zoneNo || null,
+						"name": getNameById(currentThis.state.zone, createProperty.zoneNo)  || null
 					},
 					"locationBoundary": {
-						"id": createProperty.street || createProperty.locality || '' ,
-						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || ''
+						"id": createProperty.street || createProperty.locality || null ,
+						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
 					},
 					"adminBoundary": { 
-						"id": createProperty.electionWard || '',
-						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || ''
+						"id": createProperty.electionWard || null,
+						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || null
 					},
-					"northBoundedBy": createProperty.north || '',
-					"eastBoundedBy": createProperty.east || '',
-					"westBoundedBy": createProperty.west || '',
-					"southBoundedBy": createProperty.south || '',
+					"northBoundedBy": createProperty.north || null,
+					"eastBoundedBy": createProperty.east || null,
+					"westBoundedBy": createProperty.west || null,
+					"southBoundedBy": createProperty.south || null,
 					"auditDetails": {
 						"createdBy": userRequest.userName,
 						"lastModifiedBy":userRequest.userName,

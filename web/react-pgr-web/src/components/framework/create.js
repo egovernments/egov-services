@@ -81,10 +81,11 @@ class Report extends Component {
       let _docs = [];
       let counter = documents.length, breakOut = 0;
       for(let i=0; i<documents.length; i++) {
-        fileUpload(documents[i], function(err, res) {
+        fileUpload(documents[i], self.props.moduleName, function(err, res) {
           if(breakOut == 1) return;
           if(err) {
             breakOut = 1;
+            self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
           } else {
             _docs.push({

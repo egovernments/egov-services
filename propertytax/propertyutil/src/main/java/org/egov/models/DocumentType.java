@@ -31,6 +31,7 @@ public class DocumentType {
 	
 	@JsonProperty("code")
 	@NotNull
+	@Size(min=4,max=64)
 	private String code = null;
 
 	@JsonProperty("application")

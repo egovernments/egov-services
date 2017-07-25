@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountEntity;
 import org.egov.egf.master.domain.model.AccountEntitySearch;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.domain.repository.AccountEntityRepository;
-import org.egov.egf.master.web.contract.AccountEntityContract;
+import org.egov.egf.master.web.requests.AccountEntityRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class AccountEntityService {
 	@Autowired
 	private AccountDetailTypeRepository accountDetailTypeRepository;
 
-	public BindingResult validate(List<AccountEntity> accountentities, String method, BindingResult errors) {
+	private BindingResult validate(List<AccountEntity> accountentities, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -86,6 +85,7 @@ public class AccountEntityService {
 		return accountentities;
 	}
 
+	@Transactional
 	public List<AccountEntity> add(List<AccountEntity> accountentities, BindingResult errors) {
 		accountentities = fetchRelated(accountentities);
 		validate(accountentities, ACTION_CREATE, errors);
@@ -96,6 +96,7 @@ public class AccountEntityService {
 
 	}
 
+	@Transactional
 	public List<AccountEntity> update(List<AccountEntity> accountentities, BindingResult errors) {
 		accountentities = fetchRelated(accountentities);
 		validate(accountentities, ACTION_UPDATE, errors);
@@ -106,7 +107,7 @@ public class AccountEntityService {
 
 	}
 
-	public void addToQue(CommonRequest<AccountEntityContract> request) {
+	public void addToQue(AccountEntityRequest request) {
 		accountEntityRepository.add(request);
 	}
 
@@ -123,4 +124,5 @@ public class AccountEntityService {
 	public AccountEntity update(AccountEntity accountEntity) {
 		return accountEntityRepository.update(accountEntity);
 	}
+
 }

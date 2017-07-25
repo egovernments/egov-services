@@ -1,15 +1,18 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.persistence.entity.BudgetGroupEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.BudgetGroupJdbcRepository;
-import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.requests.BudgetGroupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BudgetGroupRepository {
@@ -20,20 +23,32 @@ public class BudgetGroupRepository {
 	private MastersQueueRepository budgetGroupQueueRepository;
 
 	public BudgetGroup findById(BudgetGroup budgetGroup) {
-		return budgetGroupJdbcRepository.findById(new BudgetGroupEntity().toEntity(budgetGroup)).toDomain();
+		BudgetGroupEntity entity = budgetGroupJdbcRepository.findById(new BudgetGroupEntity().toEntity(budgetGroup));
+		return entity.toDomain();
 
 	}
 
+	@Transactional
 	public BudgetGroup save(BudgetGroup budgetGroup) {
-		return budgetGroupJdbcRepository.create(new BudgetGroupEntity().toEntity(budgetGroup)).toDomain();
+		BudgetGroupEntity entity = budgetGroupJdbcRepository.create(new BudgetGroupEntity().toEntity(budgetGroup));
+		return entity.toDomain();
 	}
 
-	public BudgetGroup update(BudgetGroup entity) {
-		return budgetGroupJdbcRepository.update(new BudgetGroupEntity().toEntity(entity)).toDomain();
+	@Transactional
+	public BudgetGroup update(BudgetGroup budgetGroup) {
+		BudgetGroupEntity entity = budgetGroupJdbcRepository.update(new BudgetGroupEntity().toEntity(budgetGroup));
+		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<BudgetGroupContract> request) {
-		budgetGroupQueueRepository.add(request);
+	public void add(BudgetGroupRequest request) {
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("budgetGroup_create", request);
+		} else {
+			message.put("budgetGroup_update", request);
+		}
+		budgetGroupQueueRepository.add(message);
 	}
 
 	public Pagination<BudgetGroup> search(BudgetGroupSearch domain) {

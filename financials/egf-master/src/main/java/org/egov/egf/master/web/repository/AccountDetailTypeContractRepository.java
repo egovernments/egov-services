@@ -1,24 +1,23 @@
 package org.egov.egf.master.web.repository;
 
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.egf.master.web.requests.AccountDetailTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AccountDetailTypeContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/accountdetailtypes/_search?";
+	public static final String SEARCH_URL = " /egf-master/accountdetailtypes/search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public AccountDetailTypeContractRepository(@Value("${egf.master.host.url}") String hostUrl,
+	public AccountDetailTypeContractRepository(@Value("${egf.masterhost.url}") String hostUrl,
 			RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
@@ -36,13 +35,10 @@ public class AccountDetailTypeContractRepository {
 			content.append("&tenantId=" + accountDetailTypeContract.getTenantId());
 		}
 		url = url + content.toString();
-		CommonResponse<AccountDetailTypeContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, null, CommonResponse.class),
-				new TypeReference<CommonResponse<AccountDetailTypeContract>>() {
-				});
+		AccountDetailTypeResponse result = restTemplate.postForObject(url, null, AccountDetailTypeResponse.class);
 
-		if (result.getData() != null && result.getData().size() == 1) {
-			return result.getData().get(0);
+		if (result.getAccountDetailTypes() != null && result.getAccountDetailTypes().size() == 1) {
+			return result.getAccountDetailTypes().get(0);
 		} else {
 			return null;
 		}

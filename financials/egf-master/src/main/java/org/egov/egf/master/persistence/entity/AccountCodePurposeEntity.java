@@ -1,5 +1,6 @@
 package org.egov.egf.master.persistence.entity;
 
+import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 
@@ -29,7 +30,7 @@ public class AccountCodePurposeEntity extends AuditableEntity {
 	}
 
 	public AccountCodePurposeEntity toEntity(AccountCodePurpose accountCodePurpose) {
-		super.toEntity(accountCodePurpose);
+		super.toEntity((Auditable) accountCodePurpose);
 		this.id = accountCodePurpose.getId();
 		this.name = accountCodePurpose.getName();
 		return this;

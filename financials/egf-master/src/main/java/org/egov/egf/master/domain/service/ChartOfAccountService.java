@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
 import org.egov.egf.master.domain.repository.ChartOfAccountRepository;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
+import org.egov.egf.master.web.requests.ChartOfAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +30,15 @@ public class ChartOfAccountService {
 	public static final String ACTION_SEARCH = "search";
 
 	@Autowired
-	private SmartValidator validator;
-	@Autowired
 	private ChartOfAccountRepository chartOfAccountRepository;
+
+	@Autowired
+	private SmartValidator validator;
+
 	@Autowired
 	private AccountCodePurposeRepository accountCodePurposeRepository;
 
-	public BindingResult validate(List<ChartOfAccount> chartofaccounts, String method, BindingResult errors) {
+	private BindingResult validate(List<ChartOfAccount> chartofaccounts, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -86,13 +87,13 @@ public class ChartOfAccountService {
 				}
 				chartOfAccount.setParentId(parentId);
 			}
-			chartOfAccount.setMajorCode(chartOfAccount.getGlcode().substring(0, 3));
 
 		}
 
 		return chartofaccounts;
 	}
 
+	@Transactional
 	public List<ChartOfAccount> add(List<ChartOfAccount> chartofaccounts, BindingResult errors) {
 		chartofaccounts = fetchRelated(chartofaccounts);
 		validate(chartofaccounts, ACTION_CREATE, errors);
@@ -103,6 +104,7 @@ public class ChartOfAccountService {
 
 	}
 
+	@Transactional
 	public List<ChartOfAccount> update(List<ChartOfAccount> chartofaccounts, BindingResult errors) {
 		chartofaccounts = fetchRelated(chartofaccounts);
 		validate(chartofaccounts, ACTION_UPDATE, errors);
@@ -113,7 +115,7 @@ public class ChartOfAccountService {
 
 	}
 
-	public void addToQue(CommonRequest<ChartOfAccountContract> request) {
+	public void addToQue(ChartOfAccountRequest request) {
 		chartOfAccountRepository.add(request);
 	}
 

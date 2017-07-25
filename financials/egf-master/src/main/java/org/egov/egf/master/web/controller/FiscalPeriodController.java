@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
 import org.egov.egf.master.domain.service.FiscalPeriodService;
 import org.egov.egf.master.web.contract.FiscalPeriodContract;
 import org.egov.egf.master.web.contract.FiscalPeriodSearchContract;
+import org.egov.egf.master.web.requests.FiscalPeriodRequest;
+import org.egov.egf.master.web.requests.FiscalPeriodResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class FiscalPeriodController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FiscalPeriodContract> create(
-			@RequestBody @Valid CommonRequest<FiscalPeriodContract> fiscalPeriodContractRequest, BindingResult errors) {
+	public FiscalPeriodResponse create(@RequestBody FiscalPeriodRequest fiscalPeriodRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FiscalPeriodContract> fiscalPeriodResponse = new CommonResponse<>();
+		FiscalPeriodResponse fiscalPeriodResponse = new FiscalPeriodResponse();
+		fiscalPeriodResponse.setResponseInfo(getResponseInfo(fiscalPeriodRequest.getRequestInfo()));
 		List<FiscalPeriod> fiscalperiods = new ArrayList<>();
-		FiscalPeriod fiscalPeriod = null;
-		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<FiscalPeriodContract>();
-		FiscalPeriodContract contract = null;
+		FiscalPeriod fiscalPeriod;
+		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<>();
+		FiscalPeriodContract contract;
 
-		fiscalPeriodContractRequest.getRequestInfo().setAction("create");
+		fiscalPeriodRequest.getRequestInfo().setAction("create");
 
-		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractRequest.getData()) {
+		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodRequest.getFiscalPeriods()) {
 			fiscalPeriod = new FiscalPeriod();
 			model.map(fiscalPeriodContract, fiscalPeriod);
 			fiscalPeriod.setCreatedDate(new Date());
-			fiscalPeriod.setCreatedBy(fiscalPeriodContractRequest.getRequestInfo().getUserInfo());
-			fiscalPeriod.setLastModifiedBy(fiscalPeriodContractRequest.getRequestInfo().getUserInfo());
+			fiscalPeriod.setCreatedBy(fiscalPeriodRequest.getRequestInfo().getUserInfo());
+			fiscalPeriod.setLastModifiedBy(fiscalPeriodRequest.getRequestInfo().getUserInfo());
 			fiscalperiods.add(fiscalPeriod);
 		}
 
@@ -72,35 +70,34 @@ public class FiscalPeriodController {
 			fiscalPeriodContracts.add(contract);
 		}
 
-		fiscalPeriodContractRequest.setData(fiscalPeriodContracts);
-		fiscalPeriodService.addToQue(fiscalPeriodContractRequest);
-		fiscalPeriodResponse.setData(fiscalPeriodContracts);
+		fiscalPeriodRequest.setFiscalPeriods(fiscalPeriodContracts);
+		fiscalPeriodService.addToQue(fiscalPeriodRequest);
+		fiscalPeriodResponse.setFiscalPeriods(fiscalPeriodContracts);
 
 		return fiscalPeriodResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FiscalPeriodContract> update(
-			@RequestBody @Valid CommonRequest<FiscalPeriodContract> fiscalPeriodContractRequest, BindingResult errors) {
+	public FiscalPeriodResponse update(@RequestBody FiscalPeriodRequest fiscalPeriodRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		fiscalPeriodContractRequest.getRequestInfo().setAction("update");
+		fiscalPeriodRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FiscalPeriodContract> fiscalPeriodResponse = new CommonResponse<>();
+		FiscalPeriodResponse fiscalPeriodResponse = new FiscalPeriodResponse();
 		List<FiscalPeriod> fiscalperiods = new ArrayList<>();
-		FiscalPeriod fiscalPeriod = null;
-		FiscalPeriodContract contract = null;
-		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<FiscalPeriodContract>();
+		fiscalPeriodResponse.setResponseInfo(getResponseInfo(fiscalPeriodRequest.getRequestInfo()));
+		FiscalPeriod fiscalPeriod;
+		FiscalPeriodContract contract;
+		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<>();
 
-		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodContractRequest.getData()) {
+		for (FiscalPeriodContract fiscalPeriodContract : fiscalPeriodRequest.getFiscalPeriods()) {
 			fiscalPeriod = new FiscalPeriod();
 			model.map(fiscalPeriodContract, fiscalPeriod);
+			fiscalPeriod.setLastModifiedBy(fiscalPeriodRequest.getRequestInfo().getUserInfo());
 			fiscalPeriod.setLastModifiedDate(new Date());
-			fiscalPeriod.setLastModifiedBy(fiscalPeriodContractRequest.getRequestInfo().getUserInfo());
 			fiscalperiods.add(fiscalPeriod);
 		}
 
@@ -109,13 +106,13 @@ public class FiscalPeriodController {
 		for (FiscalPeriod fiscalPeriodObj : fiscalperiods) {
 			contract = new FiscalPeriodContract();
 			model.map(fiscalPeriodObj, contract);
-			contract.setLastModifiedDate(new Date());
+			fiscalPeriodObj.setLastModifiedDate(new Date());
 			fiscalPeriodContracts.add(contract);
 		}
 
-		fiscalPeriodContractRequest.setData(fiscalPeriodContracts);
-		fiscalPeriodService.addToQue(fiscalPeriodContractRequest);
-		fiscalPeriodResponse.setData(fiscalPeriodContracts);
+		fiscalPeriodRequest.setFiscalPeriods(fiscalPeriodContracts);
+		fiscalPeriodService.addToQue(fiscalPeriodRequest);
+		fiscalPeriodResponse.setFiscalPeriods(fiscalPeriodContracts);
 
 		return fiscalPeriodResponse;
 	}
@@ -123,17 +120,15 @@ public class FiscalPeriodController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<FiscalPeriodContract> search(
-			@ModelAttribute FiscalPeriodSearchContract fiscalPeriodSearchContract, RequestInfo requestInfo,
-			BindingResult errors) {
+	public FiscalPeriodResponse search(@ModelAttribute FiscalPeriodSearchContract fiscalPeriodSearchContract,
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FiscalPeriodSearch domain = new FiscalPeriodSearch();
 		mapper.map(fiscalPeriodSearchContract, domain);
-		FiscalPeriodContract contract = null;
+		FiscalPeriodContract contract;
 		ModelMapper model = new ModelMapper();
-		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<FiscalPeriodContract>();
-
+		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<>();
 		Pagination<FiscalPeriod> fiscalperiods = fiscalPeriodService.search(domain);
 
 		for (FiscalPeriod fiscalPeriod : fiscalperiods.getPagedData()) {
@@ -142,8 +137,8 @@ public class FiscalPeriodController {
 			fiscalPeriodContracts.add(contract);
 		}
 
-		CommonResponse<FiscalPeriodContract> response = new CommonResponse<>();
-		response.setData(fiscalPeriodContracts);
+		FiscalPeriodResponse response = new FiscalPeriodResponse();
+		response.setFiscalPeriods(fiscalPeriodContracts);
 		response.setPage(new PaginationContract(fiscalperiods));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -152,7 +147,7 @@ public class FiscalPeriodController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

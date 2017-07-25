@@ -1,24 +1,23 @@
 package org.egov.egf.master.web.repository;
 
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.ChartOfAccountDetailContract;
+import org.egov.egf.master.web.requests.ChartOfAccountDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ChartOfAccountDetailContractRepository {
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/chartofaccountdetails/_search?";
+	public static final String SEARCH_URL = " /egf-master/chartofaccountdetails/search?";
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public ChartOfAccountDetailContractRepository(@Value("${egf.master.host.url}") String hostUrl,
+	public ChartOfAccountDetailContractRepository(@Value("${egf.masterhost.url}") String hostUrl,
 			RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
@@ -36,13 +35,10 @@ public class ChartOfAccountDetailContractRepository {
 			content.append("&tenantId=" + chartOfAccountDetailContract.getTenantId());
 		}
 		url = url + content.toString();
-		CommonResponse<ChartOfAccountDetailContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, null, CommonResponse.class),
-				new TypeReference<CommonResponse<ChartOfAccountDetailContract>>() {
-				});
+		ChartOfAccountDetailResponse result = restTemplate.postForObject(url, null, ChartOfAccountDetailResponse.class);
 
-		if (result.getData() != null && result.getData().size() == 1) {
-			return result.getData().get(0);
+		if (result.getChartOfAccountDetails() != null && result.getChartOfAccountDetails().size() == 1) {
+			return result.getChartOfAccountDetails().get(0);
 		} else {
 			return null;
 		}

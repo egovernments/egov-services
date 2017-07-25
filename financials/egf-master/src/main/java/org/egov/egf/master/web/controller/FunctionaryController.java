@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
 import org.egov.egf.master.domain.service.FunctionaryService;
 import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FunctionarySearchContract;
+import org.egov.egf.master.web.requests.FunctionaryRequest;
+import org.egov.egf.master.web.requests.FunctionaryResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class FunctionaryController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FunctionaryContract> create(
-			@RequestBody @Valid CommonRequest<FunctionaryContract> functionaryContractRequest, BindingResult errors) {
+	public FunctionaryResponse create(@RequestBody FunctionaryRequest functionaryRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FunctionaryContract> functionaryResponse = new CommonResponse<>();
+		FunctionaryResponse functionaryResponse = new FunctionaryResponse();
+		functionaryResponse.setResponseInfo(getResponseInfo(functionaryRequest.getRequestInfo()));
 		List<Functionary> functionaries = new ArrayList<>();
-		Functionary functionary = null;
-		List<FunctionaryContract> functionaryContracts = new ArrayList<FunctionaryContract>();
-		FunctionaryContract contract = null;
+		Functionary functionary;
+		List<FunctionaryContract> functionaryContracts = new ArrayList<>();
+		FunctionaryContract contract;
 
-		functionaryContractRequest.getRequestInfo().setAction("create");
+		functionaryRequest.getRequestInfo().setAction("create");
 
-		for (FunctionaryContract functionaryContract : functionaryContractRequest.getData()) {
+		for (FunctionaryContract functionaryContract : functionaryRequest.getFunctionaries()) {
 			functionary = new Functionary();
 			model.map(functionaryContract, functionary);
 			functionary.setCreatedDate(new Date());
-			functionary.setCreatedBy(functionaryContractRequest.getRequestInfo().getUserInfo());
-			functionary.setLastModifiedBy(functionaryContractRequest.getRequestInfo().getUserInfo());
+			functionary.setCreatedBy(functionaryRequest.getRequestInfo().getUserInfo());
+			functionary.setLastModifiedBy(functionaryRequest.getRequestInfo().getUserInfo());
 			functionaries.add(functionary);
 		}
 
@@ -72,35 +70,34 @@ public class FunctionaryController {
 			functionaryContracts.add(contract);
 		}
 
-		functionaryContractRequest.setData(functionaryContracts);
-		functionaryService.addToQue(functionaryContractRequest);
-		functionaryResponse.setData(functionaryContracts);
+		functionaryRequest.setFunctionaries(functionaryContracts);
+		functionaryService.addToQue(functionaryRequest);
+		functionaryResponse.setFunctionaries(functionaryContracts);
 
 		return functionaryResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FunctionaryContract> update(
-			@RequestBody @Valid CommonRequest<FunctionaryContract> functionaryContractRequest, BindingResult errors) {
+	public FunctionaryResponse update(@RequestBody FunctionaryRequest functionaryRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		functionaryContractRequest.getRequestInfo().setAction("update");
+		functionaryRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FunctionaryContract> functionaryResponse = new CommonResponse<>();
+		FunctionaryResponse functionaryResponse = new FunctionaryResponse();
 		List<Functionary> functionaries = new ArrayList<>();
+		functionaryResponse.setResponseInfo(getResponseInfo(functionaryRequest.getRequestInfo()));
 		Functionary functionary;
 		FunctionaryContract contract;
 		List<FunctionaryContract> functionaryContracts = new ArrayList<>();
 
-		for (FunctionaryContract functionaryContract : functionaryContractRequest.getData()) {
+		for (FunctionaryContract functionaryContract : functionaryRequest.getFunctionaries()) {
 			functionary = new Functionary();
 			model.map(functionaryContract, functionary);
+			functionary.setLastModifiedBy(functionaryRequest.getRequestInfo().getUserInfo());
 			functionary.setLastModifiedDate(new Date());
-			functionary.setLastModifiedBy(functionaryContractRequest.getRequestInfo().getUserInfo());
 			functionaries.add(functionary);
 		}
 
@@ -109,13 +106,13 @@ public class FunctionaryController {
 		for (Functionary functionaryObj : functionaries) {
 			contract = new FunctionaryContract();
 			model.map(functionaryObj, contract);
-			contract.setLastModifiedDate(new Date());
+			functionaryObj.setLastModifiedDate(new Date());
 			functionaryContracts.add(contract);
 		}
 
-		functionaryContractRequest.setData(functionaryContracts);
-		functionaryService.addToQue(functionaryContractRequest);
-		functionaryResponse.setData(functionaryContracts);
+		functionaryRequest.setFunctionaries(functionaryContracts);
+		functionaryService.addToQue(functionaryRequest);
+		functionaryResponse.setFunctionaries(functionaryContracts);
 
 		return functionaryResponse;
 	}
@@ -123,17 +120,15 @@ public class FunctionaryController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<FunctionaryContract> search(
-			@ModelAttribute FunctionarySearchContract functionarySearchContract, RequestInfo requestInfo,
-			BindingResult errors) {
+	public FunctionaryResponse search(@ModelAttribute FunctionarySearchContract functionarySearchContract,
+			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FunctionarySearch domain = new FunctionarySearch();
 		mapper.map(functionarySearchContract, domain);
-		FunctionaryContract contract = null;
+		FunctionaryContract contract;
 		ModelMapper model = new ModelMapper();
-		List<FunctionaryContract> functionaryContracts = new ArrayList<FunctionaryContract>();
-
+		List<FunctionaryContract> functionaryContracts = new ArrayList<>();
 		Pagination<Functionary> functionaries = functionaryService.search(domain);
 
 		for (Functionary functionary : functionaries.getPagedData()) {
@@ -142,8 +137,8 @@ public class FunctionaryController {
 			functionaryContracts.add(contract);
 		}
 
-		CommonResponse<FunctionaryContract> response = new CommonResponse<>();
-		response.setData(functionaryContracts);
+		FunctionaryResponse response = new FunctionaryResponse();
+		response.setFunctionaries(functionaryContracts);
 		response.setPage(new PaginationContract(functionaries));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -152,7 +147,7 @@ public class FunctionaryController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FinancialYearSearch;
 import org.egov.egf.master.domain.service.FinancialYearService;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.egov.egf.master.web.contract.FinancialYearSearchContract;
+import org.egov.egf.master.web.requests.FinancialYearRequest;
+import org.egov.egf.master.web.requests.FinancialYearResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,15 +37,15 @@ public class FinancialYearController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FinancialYearContract> create(
-			@RequestBody @Valid CommonRequest<FinancialYearContract> financialYearContractRequest,
+	public FinancialYearResponse create(
+			@RequestBody FinancialYearRequest financialYearContractRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FinancialYearContract> financialYearResponse = new CommonResponse<>();
+		FinancialYearResponse financialYearResponse = new FinancialYearResponse();
 		List<FinancialYear> financialyears = new ArrayList<>();
 		FinancialYear financialYear;
 		List<FinancialYearContract> financialYearContracts = new ArrayList<>();
@@ -55,7 +53,7 @@ public class FinancialYearController {
 
 		financialYearContractRequest.getRequestInfo().setAction("create");
 
-		for (FinancialYearContract financialYearContract : financialYearContractRequest.getData()) {
+		for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
 			financialYear = new FinancialYear();
 			model.map(financialYearContract, financialYear);
 			financialYear.setCreatedDate(new Date());
@@ -73,17 +71,17 @@ public class FinancialYearController {
 			financialYearContracts.add(contract);
 		}
 
-		financialYearContractRequest.setData(financialYearContracts);
+		financialYearContractRequest.setFinancialYears(financialYearContracts);
 		financialYearService.addToQue(financialYearContractRequest);
-		financialYearResponse.setData(financialYearContracts);
+		financialYearResponse.setFinancialYears(financialYearContracts);
 
 		return financialYearResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FinancialYearContract> update(
-			@RequestBody @Valid CommonRequest<FinancialYearContract> financialYearContractRequest,
+	public FinancialYearResponse update(
+			@RequestBody  FinancialYearRequest financialYearContractRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
@@ -92,13 +90,13 @@ public class FinancialYearController {
 
 		financialYearContractRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FinancialYearContract> financialYearResponse = new CommonResponse<>();
+		FinancialYearResponse financialYearResponse = new FinancialYearResponse();
 		List<FinancialYear> financialyears = new ArrayList<>();
 		FinancialYear financialYear;
 		FinancialYearContract contract;
 		List<FinancialYearContract> financialYearContracts = new ArrayList<>();
 
-		for (FinancialYearContract financialYearContract : financialYearContractRequest.getData()) {
+		for (FinancialYearContract financialYearContract : financialYearContractRequest.getFinancialYears()) {
 			financialYear = new FinancialYear();
 			model.map(financialYearContract, financialYear);
 			financialYear.setLastModifiedDate(new Date());
@@ -115,9 +113,9 @@ public class FinancialYearController {
 			financialYearContracts.add(contract);
 		}
 
-		financialYearContractRequest.setData(financialYearContracts);
+		financialYearContractRequest.setFinancialYears(financialYearContracts);
 		financialYearService.addToQue(financialYearContractRequest);
-		financialYearResponse.setData(financialYearContracts);
+		financialYearResponse.setFinancialYears(financialYearContracts);
 
 		return financialYearResponse;
 	}
@@ -125,7 +123,7 @@ public class FinancialYearController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<FinancialYearContract> search(
+	public FinancialYearResponse search(
 			@ModelAttribute FinancialYearSearchContract financialYearSearchContract, RequestInfo requestInfo,
 			BindingResult errors) {
 
@@ -144,8 +142,8 @@ public class FinancialYearController {
 			financialYearContracts.add(contract);
 		}
 
-		CommonResponse<FinancialYearContract> response = new CommonResponse<>();
-		response.setData(financialYearContracts);
+		FinancialYearResponse response = new FinancialYearResponse();
+		response.setFinancialYears(financialYearContracts);
 		response.setPage(new PaginationContract(financialyears));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -154,7 +152,7 @@ public class FinancialYearController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

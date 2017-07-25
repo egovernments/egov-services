@@ -41,7 +41,6 @@ package org.egov.common.web.contract;
 
 import javax.validation.constraints.Max;
 
-
 import org.egov.common.domain.model.Pagination;
 
 import lombok.AllArgsConstructor;

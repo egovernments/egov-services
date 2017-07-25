@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
 import org.egov.egf.master.domain.service.SubSchemeService;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeSearchContract;
+import org.egov.egf.master.web.requests.SubSchemeRequest;
+import org.egov.egf.master.web.requests.SubSchemeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class SubSchemeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SubSchemeContract> create(
-			@RequestBody @Valid CommonRequest<SubSchemeContract> subSchemeContractRequest, BindingResult errors) {
+	public SubSchemeResponse create(@RequestBody SubSchemeRequest subSchemeRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<SubSchemeContract> subSchemeResponse = new CommonResponse<>();
+		SubSchemeResponse subSchemeResponse = new SubSchemeResponse();
+		subSchemeResponse.setResponseInfo(getResponseInfo(subSchemeRequest.getRequestInfo()));
 		List<SubScheme> subschemes = new ArrayList<>();
-		SubScheme subScheme = null;
-		List<SubSchemeContract> subSchemeContracts = new ArrayList<SubSchemeContract>();
-		SubSchemeContract contract = null;
+		SubScheme subScheme;
+		List<SubSchemeContract> subSchemeContracts = new ArrayList<>();
+		SubSchemeContract contract;
 
-		subSchemeContractRequest.getRequestInfo().setAction("create");
+		subSchemeRequest.getRequestInfo().setAction("create");
 
-		for (SubSchemeContract subSchemeContract : subSchemeContractRequest.getData()) {
+		for (SubSchemeContract subSchemeContract : subSchemeRequest.getSubSchemes()) {
 			subScheme = new SubScheme();
 			model.map(subSchemeContract, subScheme);
 			subScheme.setCreatedDate(new Date());
-			subScheme.setCreatedBy(subSchemeContractRequest.getRequestInfo().getUserInfo());
-			subScheme.setLastModifiedBy(subSchemeContractRequest.getRequestInfo().getUserInfo());
+			subScheme.setCreatedBy(subSchemeRequest.getRequestInfo().getUserInfo());
+			subScheme.setLastModifiedBy(subSchemeRequest.getRequestInfo().getUserInfo());
 			subschemes.add(subScheme);
 		}
 
@@ -72,35 +70,34 @@ public class SubSchemeController {
 			subSchemeContracts.add(contract);
 		}
 
-		subSchemeContractRequest.setData(subSchemeContracts);
-		subSchemeService.addToQue(subSchemeContractRequest);
-		subSchemeResponse.setData(subSchemeContracts);
+		subSchemeRequest.setSubSchemes(subSchemeContracts);
+		subSchemeService.addToQue(subSchemeRequest);
+		subSchemeResponse.setSubSchemes(subSchemeContracts);
 
 		return subSchemeResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<SubSchemeContract> update(
-			@RequestBody @Valid CommonRequest<SubSchemeContract> subSchemeContractRequest, BindingResult errors) {
+	public SubSchemeResponse update(@RequestBody SubSchemeRequest subSchemeRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		subSchemeContractRequest.getRequestInfo().setAction("update");
+		subSchemeRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<SubSchemeContract> subSchemeResponse = new CommonResponse<>();
+		SubSchemeResponse subSchemeResponse = new SubSchemeResponse();
 		List<SubScheme> subschemes = new ArrayList<>();
+		subSchemeResponse.setResponseInfo(getResponseInfo(subSchemeRequest.getRequestInfo()));
 		SubScheme subScheme;
 		SubSchemeContract contract;
 		List<SubSchemeContract> subSchemeContracts = new ArrayList<>();
 
-		for (SubSchemeContract subSchemeContract : subSchemeContractRequest.getData()) {
+		for (SubSchemeContract subSchemeContract : subSchemeRequest.getSubSchemes()) {
 			subScheme = new SubScheme();
 			model.map(subSchemeContract, subScheme);
+			subScheme.setLastModifiedBy(subSchemeRequest.getRequestInfo().getUserInfo());
 			subScheme.setLastModifiedDate(new Date());
-			subScheme.setLastModifiedBy(subSchemeContractRequest.getRequestInfo().getUserInfo());
 			subschemes.add(subScheme);
 		}
 
@@ -109,13 +106,13 @@ public class SubSchemeController {
 		for (SubScheme subSchemeObj : subschemes) {
 			contract = new SubSchemeContract();
 			model.map(subSchemeObj, contract);
-			contract.setLastModifiedDate(new Date());
+			subSchemeObj.setLastModifiedDate(new Date());
 			subSchemeContracts.add(contract);
 		}
 
-		subSchemeContractRequest.setData(subSchemeContracts);
-		subSchemeService.addToQue(subSchemeContractRequest);
-		subSchemeResponse.setData(subSchemeContracts);
+		subSchemeRequest.setSubSchemes(subSchemeContracts);
+		subSchemeService.addToQue(subSchemeRequest);
+		subSchemeResponse.setSubSchemes(subSchemeContracts);
 
 		return subSchemeResponse;
 	}
@@ -123,16 +120,15 @@ public class SubSchemeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<SubSchemeContract> search(@ModelAttribute SubSchemeSearchContract subSchemeSearchContract,
+	public SubSchemeResponse search(@ModelAttribute SubSchemeSearchContract subSchemeSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		SubSchemeSearch domain = new SubSchemeSearch();
 		mapper.map(subSchemeSearchContract, domain);
-		SubSchemeContract contract = null;
+		SubSchemeContract contract;
 		ModelMapper model = new ModelMapper();
-		List<SubSchemeContract> subSchemeContracts = new ArrayList<SubSchemeContract>();
-
+		List<SubSchemeContract> subSchemeContracts = new ArrayList<>();
 		Pagination<SubScheme> subschemes = subSchemeService.search(domain);
 
 		for (SubScheme subScheme : subschemes.getPagedData()) {
@@ -141,8 +137,8 @@ public class SubSchemeController {
 			subSchemeContracts.add(contract);
 		}
 
-		CommonResponse<SubSchemeContract> response = new CommonResponse<>();
-		response.setData(subSchemeContracts);
+		SubSchemeResponse response = new SubSchemeResponse();
+		response.setSubSchemes(subSchemeContracts);
 		response.setPage(new PaginationContract(subschemes));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -151,7 +147,7 @@ public class SubSchemeController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

@@ -2,7 +2,6 @@ package org.egov.egf.master.persistence.queue;
 
 import java.util.Map;
 
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ public class FinancialProducer {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 
-	public void sendMessage(String topic, String key, Map<String, CommonRequest<?>> message) {
+	public void sendMessage(String topic, String key, Map<String, Object> message) {
 		kafkaTemplate.send(topic, key, message);
 	}
 

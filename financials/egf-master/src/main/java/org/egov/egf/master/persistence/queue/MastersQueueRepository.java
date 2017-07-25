@@ -1,8 +1,7 @@
 package org.egov.egf.master.persistence.queue;
 
-import java.util.HashMap;
+import java.util.Map;
 
-import org.egov.common.web.contract.CommonRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,26 +18,7 @@ public class MastersQueueRepository {
 	@Value("${kafka.topics.egf.masters.validated.key}")
 	private String validatedKey;
 
-	public void add(CommonRequest<?> request) {
-		String masterName = "";
-		HashMap<String, CommonRequest<?>> topicMap = new HashMap<String, CommonRequest<?>>();
-		if (!request.getData().isEmpty()) {
-			masterName = request.getData().get(0).getClass().getSimpleName();
-		}
-
-		System.out.println("got insert for " + masterName);
-
-		switch (request.getRequestInfo().getAction().toLowerCase()) {
-
-		case "create":
-			topicMap.put(masterName.toLowerCase() + "_create", request);
-			System.out.println("push create topic" + request);
-			break;
-		case "update":
-			topicMap.put(masterName.toLowerCase() + "_update", request);
-			break;
-
-		}
+	public void add(Map<String, Object> topicMap) {
 		financialProducer.sendMessage(validatedTopic, validatedKey, topicMap);
 	}
 }

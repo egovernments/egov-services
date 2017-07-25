@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
 import org.egov.egf.master.domain.repository.SchemeRepository;
 import org.egov.egf.master.domain.repository.SubSchemeRepository;
-import org.egov.egf.master.web.contract.SubSchemeContract;
+import org.egov.egf.master.web.requests.SubSchemeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class SubSchemeService {
 	@Autowired
 	private SchemeRepository schemeRepository;
 
-	public BindingResult validate(List<SubScheme> subschemes, String method, BindingResult errors) {
+	private BindingResult validate(List<SubScheme> subschemes, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -84,6 +83,7 @@ public class SubSchemeService {
 		return subschemes;
 	}
 
+	@Transactional
 	public List<SubScheme> add(List<SubScheme> subschemes, BindingResult errors) {
 		subschemes = fetchRelated(subschemes);
 		validate(subschemes, ACTION_CREATE, errors);
@@ -94,6 +94,7 @@ public class SubSchemeService {
 
 	}
 
+	@Transactional
 	public List<SubScheme> update(List<SubScheme> subschemes, BindingResult errors) {
 		subschemes = fetchRelated(subschemes);
 		validate(subschemes, ACTION_UPDATE, errors);
@@ -104,7 +105,7 @@ public class SubSchemeService {
 
 	}
 
-	public void addToQue(CommonRequest<SubSchemeContract> request) {
+	public void addToQue(SubSchemeRequest request) {
 		subSchemeRepository.add(request);
 	}
 

@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.BankBranch;
 import org.egov.egf.master.domain.model.BankBranchSearch;
 import org.egov.egf.master.domain.service.BankBranchService;
 import org.egov.egf.master.web.contract.BankBranchContract;
 import org.egov.egf.master.web.contract.BankBranchSearchContract;
+import org.egov.egf.master.web.requests.BankBranchRequest;
+import org.egov.egf.master.web.requests.BankBranchResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,27 @@ public class BankBranchController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankBranchContract> create(
-			@RequestBody @Valid CommonRequest<BankBranchContract> bankBranchContractRequest, BindingResult errors) {
+	public BankBranchResponse create(@RequestBody BankBranchRequest bankBranchRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<BankBranchContract> bankBranchResponse = new CommonResponse<>();
+		BankBranchResponse bankBranchResponse = new BankBranchResponse();
+		bankBranchResponse.setResponseInfo(getResponseInfo(bankBranchRequest.getRequestInfo()));
 		List<BankBranch> bankbranches = new ArrayList<>();
-		BankBranch bankBranch = null;
-		List<BankBranchContract> bankBranchContracts = new ArrayList<BankBranchContract>();
-		BankBranchContract contract = null;
+		BankBranch bankBranch;
+		List<BankBranchContract> bankBranchContracts = new ArrayList<>();
+		BankBranchContract contract;
 
-		bankBranchContractRequest.getRequestInfo().setAction("create");
+		bankBranchRequest.getRequestInfo().setAction("create");
 
-		for (BankBranchContract bankBranchContract : bankBranchContractRequest.getData()) {
+		for (BankBranchContract bankBranchContract : bankBranchRequest.getBankBranches()) {
 			bankBranch = new BankBranch();
 			model.map(bankBranchContract, bankBranch);
-			bankBranch.setLastModifiedDate(new Date());
 			bankBranch.setCreatedDate(new Date());
-			bankBranch.setCreatedBy(bankBranchContractRequest.getRequestInfo().getUserInfo());
-			bankBranch.setLastModifiedBy(bankBranchContractRequest.getRequestInfo().getUserInfo());
+			bankBranch.setCreatedBy(bankBranchRequest.getRequestInfo().getUserInfo());
+			bankBranch.setLastModifiedBy(bankBranchRequest.getRequestInfo().getUserInfo());
 			bankbranches.add(bankBranch);
 		}
 
@@ -68,39 +65,39 @@ public class BankBranchController {
 
 		for (BankBranch f : bankbranches) {
 			contract = new BankBranchContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
-			contract.setLastModifiedDate(new Date());
 			bankBranchContracts.add(contract);
 		}
 
-		bankBranchContractRequest.setData(bankBranchContracts);
-		bankBranchService.addToQue(bankBranchContractRequest);
-		bankBranchResponse.setData(bankBranchContracts);
+		bankBranchRequest.setBankBranches(bankBranchContracts);
+		bankBranchService.addToQue(bankBranchRequest);
+		bankBranchResponse.setBankBranches(bankBranchContracts);
 
 		return bankBranchResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<BankBranchContract> update(
-			@RequestBody @Valid CommonRequest<BankBranchContract> bankBranchContractRequest, BindingResult errors) {
+	public BankBranchResponse update(@RequestBody BankBranchRequest bankBranchRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		bankBranchContractRequest.getRequestInfo().setAction("update");
+		bankBranchRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<BankBranchContract> bankBranchResponse = new CommonResponse<>();
+		BankBranchResponse bankBranchResponse = new BankBranchResponse();
 		List<BankBranch> bankbranches = new ArrayList<>();
-		BankBranch bankBranch = null;
-		BankBranchContract contract = null;
-		List<BankBranchContract> bankBranchContracts = new ArrayList<BankBranchContract>();
+		bankBranchResponse.setResponseInfo(getResponseInfo(bankBranchRequest.getRequestInfo()));
+		BankBranch bankBranch;
+		BankBranchContract contract;
+		List<BankBranchContract> bankBranchContracts = new ArrayList<>();
 
-		for (BankBranchContract bankBranchContract : bankBranchContractRequest.getData()) {
+		for (BankBranchContract bankBranchContract : bankBranchRequest.getBankBranches()) {
 			bankBranch = new BankBranch();
 			model.map(bankBranchContract, bankBranch);
-			bankBranch.setLastModifiedBy(bankBranchContractRequest.getRequestInfo().getUserInfo());
+			bankBranch.setLastModifiedBy(bankBranchRequest.getRequestInfo().getUserInfo());
+			bankBranch.setLastModifiedDate(new Date());
 			bankbranches.add(bankBranch);
 		}
 
@@ -109,12 +106,13 @@ public class BankBranchController {
 		for (BankBranch bankBranchObj : bankbranches) {
 			contract = new BankBranchContract();
 			model.map(bankBranchObj, contract);
+			bankBranchObj.setLastModifiedDate(new Date());
 			bankBranchContracts.add(contract);
 		}
 
-		bankBranchContractRequest.setData(bankBranchContracts);
-		bankBranchService.addToQue(bankBranchContractRequest);
-		bankBranchResponse.setData(bankBranchContracts);
+		bankBranchRequest.setBankBranches(bankBranchContracts);
+		bankBranchService.addToQue(bankBranchRequest);
+		bankBranchResponse.setBankBranches(bankBranchContracts);
 
 		return bankBranchResponse;
 	}
@@ -122,16 +120,15 @@ public class BankBranchController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<BankBranchContract> search(@ModelAttribute BankBranchSearchContract bankBranchSearchContract,
+	public BankBranchResponse search(@ModelAttribute BankBranchSearchContract bankBranchSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankBranchSearch domain = new BankBranchSearch();
 		mapper.map(bankBranchSearchContract, domain);
-		BankBranchContract contract = null;
+		BankBranchContract contract;
 		ModelMapper model = new ModelMapper();
-		List<BankBranchContract> bankBranchContracts = new ArrayList<BankBranchContract>();
-
+		List<BankBranchContract> bankBranchContracts = new ArrayList<>();
 		Pagination<BankBranch> bankbranches = bankBranchService.search(domain);
 
 		for (BankBranch bankBranch : bankbranches.getPagedData()) {
@@ -140,8 +137,8 @@ public class BankBranchController {
 			bankBranchContracts.add(contract);
 		}
 
-		CommonResponse<BankBranchContract> response = new CommonResponse<>();
-		response.setData(bankBranchContracts);
+		BankBranchResponse response = new BankBranchResponse();
+		response.setBankBranches(bankBranchContracts);
 		response.setPage(new PaginationContract(bankbranches));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -150,7 +147,7 @@ public class BankBranchController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

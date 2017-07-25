@@ -111,7 +111,7 @@ public class PropertyTypeUsageTypeController {
                 applicationProperties.getCreatePropertyUsageTopicName(), "propertyusage-create", propUsageTypeRequest);
         final List<PropertyTypeUsageType> propUsageTypes = new ArrayList<>();
         propUsageTypes.add(propUsageType);
-        return getSuccessResponse(propUsageTypes, "created", propUsageTypeRequest.getRequestInfo());
+        return getSuccessResponse(propUsageTypes, "Created", propUsageTypeRequest.getRequestInfo());
     }
 
     @PostMapping(value = "/{propertyUsageId}/_update")

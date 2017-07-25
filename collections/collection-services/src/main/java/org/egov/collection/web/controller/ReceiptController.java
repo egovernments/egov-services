@@ -180,17 +180,6 @@ public class ReceiptController {
 		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
 	}
 
-	@PostMapping("_update/{code}")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody ReceiptReq receiptRequest, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-
-		return null;
-	}
 
 	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts, RequestInfo requestInfo) {
 		LOGGER.info("Building success response.");

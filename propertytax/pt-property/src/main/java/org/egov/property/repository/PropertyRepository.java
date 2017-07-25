@@ -267,6 +267,9 @@ public class PropertyRepository {
 
 		Long createdTime = new Date().getTime();
 
+		if(unit.getIsAuthorised()==null){
+			unit.setIsAuthorised(true);
+		}
 		final PreparedStatementCreator pscUnit = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -325,6 +328,10 @@ public class PropertyRepository {
 	public void saveRoom(Unit unit, Long floorId, Long parent) {
 
 		Long createdTime = new Date().getTime();
+		
+		if(unit.getIsAuthorised()==null){
+			unit.setIsAuthorised(true);
+		}
 
 		Object[] roomArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
 				unit.getBuiltupArea(), unit.getAssessableArea(), unit.getBpaBuiltupArea(), unit.getBpaNo(),
@@ -1371,5 +1378,6 @@ public class PropertyRepository {
 
 		jdbcTemplate.update(UserBuilder.INSERT_USERHISTORY_QUERY, userPropertyArgs);
 	}
-
+	
+	
 }

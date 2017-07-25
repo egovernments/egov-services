@@ -573,6 +573,25 @@ public class ReceiptService {
     	}
     	return instrumentId;
     }
+    
+    public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId, String status, String tenantId,
+			RequestInfo requestInfo) {
+		ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().tenantId(tenantId)
+				.ids(Arrays.asList(id)).build();
+		List<Receipt> receipts = receiptRepository.findAllReceiptsByCriteria(receiptSearchCriteria).toDomainContract();
+		receipts.get(0).getBill().get(0).getBillDetails().get(0).setStatus(status);
+		receipts.get(0).setStateId(stateId);
+		ReceiptReq receiptRequest = new ReceiptReq();
+		receiptRequest.setRequestInfo(requestInfo);
+		receiptRequest.setReceipt(receipts);
+		receiptRepository.pushUpdateDetailsToQueque(receiptRequest);
+	}
+
+	public Boolean updateReceipt(ReceiptReq receiptRequest) {
+		logger.info("ReceiptRequest:" + receiptRequest);
+		return receiptRepository.updateReceipt(receiptRequest);
+
+	}
 
     public List<BusinessDetailsRequestInfo> getBusinessDetails(final String tenantId, final RequestInfo requestInfo) {
         return receiptRepository.getBusinessDetails(requestInfo,tenantId);

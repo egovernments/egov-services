@@ -111,7 +111,7 @@ public class CategoryTypeController {
                 "category-create", categoryRequest);
         final List<CategoryType> categories = new ArrayList<>();
         categories.add(category);
-        return getSuccessResponse(categories, "created", categoryRequest.getRequestInfo());
+        return getSuccessResponse(categories, "Created", categoryRequest.getRequestInfo());
 
     }
 

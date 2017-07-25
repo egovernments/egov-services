@@ -80,6 +80,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -141,6 +142,18 @@ public class ReceiptRepositoryTest {
 		assertTrue(getReceiptRequest().getReceipt()
 				.equals(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest())));
 	}
+	
+	@Test
+	public void test_should_update_status_and_stateId_toDB(){
+		User userInfo=User.builder().id(1L).build();
+		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", userInfo, 1L, "default"))
+		.thenReturn("");
+	    Boolean value=true;
+		when(jdbcTemplate.update(any(String.class),any(PreparedStatementSetter.class))).thenReturn(1);
+		assertTrue(value.equals(receiptRepository.updateReceipt(getReceiptRequest())));
+	}
+	
+	
 
 	private ReceiptReq getReceiptRequest() {
 		Calendar calender = Calendar.getInstance();
@@ -166,7 +179,7 @@ public class ReceiptRepositoryTest {
 				.businessService("TL").build();
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
+		Receipt receipt = Receipt.builder().tenantId("default").stateId(2L).bill(Arrays.asList(billInfo)).build();
 		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}
 

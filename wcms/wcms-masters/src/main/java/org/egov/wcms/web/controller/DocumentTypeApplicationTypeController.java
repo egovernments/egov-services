@@ -112,7 +112,7 @@ public class DocumentTypeApplicationTypeController {
                 "documenttypeapplicationtype-create", documentNameRequest);
         final List<DocumentTypeApplicationType> docTypesAppTypes = new ArrayList<>();
         docTypesAppTypes.add(docTypeAppType);
-        return getSuccessResponse(docTypesAppTypes, "created", documentNameRequest.getRequestInfo());
+        return getSuccessResponse(docTypesAppTypes, "Created", documentNameRequest.getRequestInfo());
 
     }
 

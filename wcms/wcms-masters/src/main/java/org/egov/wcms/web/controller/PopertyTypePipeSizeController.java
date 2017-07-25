@@ -112,7 +112,7 @@ public class PopertyTypePipeSizeController {
                 propertyPipeSizeRequest);
         final List<PropertyTypePipeSize> propertyPipeSizes = new ArrayList<>();
         propertyPipeSizes.add(propertyPipeSize);
-        return getSuccessResponse(propertyPipeSizes, "created", propertyPipeSizeRequest.getRequestInfo());
+        return getSuccessResponse(propertyPipeSizes, "Created", propertyPipeSizeRequest.getRequestInfo());
 
     }
 

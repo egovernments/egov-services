@@ -103,7 +103,7 @@ public class MeterCostController {
                 applicationProperties.getCreateMeterCostTopicName(), "metercost-create", meterCostRequest);
         final List<MeterCost> meterCosts = new ArrayList<>();
         meterCosts.add(meterCost);
-        return getSuccessResponse(meterCosts, "created", meterCostRequest.getRequestInfo());
+        return getSuccessResponse(meterCosts, "Created", meterCostRequest.getRequestInfo());
 
     }
 

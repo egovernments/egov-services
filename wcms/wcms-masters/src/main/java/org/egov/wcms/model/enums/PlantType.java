@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum PlantType {
 
-    SANDGRAVEL("SANDGRAVEL");
+    SANDGRAVEL("Sand gravel"),CONTAINERISED("Containerised"),CONSTRUCTEDWETLANDS("Constructed Wetlands");
     private final String value;
 
     PlantType(final String value) {

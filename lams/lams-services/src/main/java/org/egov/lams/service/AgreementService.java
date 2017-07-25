@@ -136,6 +136,12 @@ public class AgreementService {
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			kafkaTopic = propertiesManager.getSaveAgreementTopic();
 			agreement.setStatus(Status.ACTIVE);
+            List<Demand> demands = prepareDemands(agreementRequest);
+			
+			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+			List<String> demandList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+					.collect(Collectors.toList());
+			agreement.setDemands(demandList);
 			agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 			agreement.setAgreementDate(agreement.getCommencementDate());
 		} else {

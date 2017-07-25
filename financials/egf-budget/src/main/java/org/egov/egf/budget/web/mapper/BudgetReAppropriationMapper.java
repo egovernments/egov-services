@@ -3,11 +3,10 @@ package org.egov.egf.budget.web.mapper;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
 import org.egov.egf.budget.domain.model.BudgetReAppropriationSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.web.contract.BudgetDetailContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 
 public class BudgetReAppropriationMapper {
 
@@ -15,7 +14,7 @@ public class BudgetReAppropriationMapper {
 
 		BudgetReAppropriation budgetReAppropriation = new BudgetReAppropriation();
 		BudgetDetailMapper bdMapper = new BudgetDetailMapper();
-		
+
 		budgetReAppropriation.setId(contract.getId());
 		budgetReAppropriation.setBudgetDetail(bdMapper.toDomain(contract.getBudgetDetail()));
 		budgetReAppropriation.setAdditionAmount(contract.getAdditionAmount());
@@ -23,8 +22,8 @@ public class BudgetReAppropriationMapper {
 		budgetReAppropriation.setOriginalAdditionAmount(contract.getOriginalAdditionAmount());
 		budgetReAppropriation.setOriginalDeductionAmount(contract.getOriginalDeductionAmount());
 		budgetReAppropriation.setAnticipatoryAmount(contract.getAnticipatoryAmount());
-		budgetReAppropriation.setStatus(
-				EgfStatus.builder().id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
+		budgetReAppropriation.setStatus(FinancialStatusContract.builder()
+				.id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
 		budgetReAppropriation.setAsOnDate(contract.getAsOnDate());
 		budgetReAppropriation.setCreatedBy(contract.getCreatedBy());
 		budgetReAppropriation.setCreatedDate(contract.getCreatedDate());
@@ -50,7 +49,7 @@ public class BudgetReAppropriationMapper {
 		contract.setOriginalDeductionAmount(budgetReAppropriation.getOriginalDeductionAmount());
 		contract.setAnticipatoryAmount(budgetReAppropriation.getAnticipatoryAmount());
 		if (budgetReAppropriation.getStatus() != null)
-			contract.setStatus(EgfStatusContract.builder().id(budgetReAppropriation.getStatus().getId())
+			contract.setStatus(FinancialStatusContract.builder().id(budgetReAppropriation.getStatus().getId())
 					.code(budgetReAppropriation.getStatus().getCode())
 					.description(budgetReAppropriation.getStatus().getDescription())
 					.moduleType(budgetReAppropriation.getStatus().getModuleType()).build());
@@ -76,8 +75,8 @@ public class BudgetReAppropriationMapper {
 		budgetReAppropriationSearch.setOriginalAdditionAmount(contract.getOriginalAdditionAmount());
 		budgetReAppropriationSearch.setOriginalDeductionAmount(contract.getOriginalDeductionAmount());
 		budgetReAppropriationSearch.setAnticipatoryAmount(contract.getAnticipatoryAmount());
-		budgetReAppropriationSearch.setStatus(
-				EgfStatus.builder().id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
+		budgetReAppropriationSearch.setStatus(FinancialStatusContract.builder()
+				.id(contract.getStatus() != null ? contract.getStatus().getId() : null).build());
 		budgetReAppropriationSearch.setAsOnDate(contract.getAsOnDate());
 		budgetReAppropriationSearch.setCreatedBy(contract.getCreatedBy());
 		budgetReAppropriationSearch.setCreatedDate(contract.getCreatedDate());
@@ -103,7 +102,7 @@ public class BudgetReAppropriationMapper {
 		contract.setOriginalAdditionAmount(budgetReAppropriationSearch.getOriginalAdditionAmount());
 		contract.setOriginalDeductionAmount(budgetReAppropriationSearch.getOriginalDeductionAmount());
 		contract.setAnticipatoryAmount(budgetReAppropriationSearch.getAnticipatoryAmount());
-		contract.setStatus(EgfStatusContract.builder().id(budgetReAppropriationSearch.getStatus() != null
+		contract.setStatus(FinancialStatusContract.builder().id(budgetReAppropriationSearch.getStatus() != null
 				? budgetReAppropriationSearch.getStatus().getId() : null).build());
 		contract.setAsOnDate(budgetReAppropriationSearch.getAsOnDate());
 		contract.setCreatedBy(budgetReAppropriationSearch.getCreatedBy());

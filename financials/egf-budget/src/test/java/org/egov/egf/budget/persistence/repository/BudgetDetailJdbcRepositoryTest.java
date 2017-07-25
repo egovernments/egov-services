@@ -16,11 +16,11 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetDetail;
 import org.egov.egf.budget.domain.model.BudgetDetailSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.persistence.entity.BudgetDetailEntity;
 import org.egov.egf.budget.web.contract.Boundary;
 import org.egov.egf.budget.web.contract.Department;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
@@ -117,7 +117,7 @@ public class BudgetDetailJdbcRepositoryTest {
 		assertThat(page.getPagedData().get(0).getOriginalAmount().intValue()).isEqualTo(1);
 
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/budgetdetail/clearBudgetDetail.sql", "/sql/budgetdetail/insertBudgetDetailData.sql" })
 	public void test_invalid_search() {
@@ -216,7 +216,7 @@ public class BudgetDetailJdbcRepositoryTest {
 		budgetDetailSearch.setScheme(SchemeContract.builder().id("1").build());
 		budgetDetailSearch.setSubScheme(SubSchemeContract.builder().id("1").build());
 		budgetDetailSearch.setBoundary(Boundary.builder().id("1").build());
-		budgetDetailSearch.setStatus(EgfStatus.builder().id("1").build());
+		budgetDetailSearch.setStatus(FinancialStatusContract.builder().id("1").build());
 		budgetDetailSearch.setOriginalAmount(BigDecimal.ONE);
 		budgetDetailSearch.setApprovedAmount(BigDecimal.ONE);
 		budgetDetailSearch.setAnticipatoryAmount(BigDecimal.ONE);
@@ -230,7 +230,7 @@ public class BudgetDetailJdbcRepositoryTest {
 		budgetDetailSearch.setSortBy("id desc");
 		return budgetDetailSearch;
 	}
-	
+
 	private BudgetDetailSearch getBudgetDetailSearch1() {
 		BudgetDetailSearch budgetDetailSearch = new BudgetDetailSearch();
 		budgetDetailSearch.setPageSize(500);

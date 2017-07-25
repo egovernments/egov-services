@@ -2,14 +2,13 @@ package org.egov.egf.budget.web.mapper;
 
 import static org.junit.Assert.assertEquals;
 
-import org.egov.common.domain.model.User;
+import org.egov.common.contract.request.User;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
-import org.egov.egf.budget.domain.model.EgfStatus;
 import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,7 +78,8 @@ public class BudgetMapperTest {
 		assertEquals(expectedSearchContract.getFinancialYear().getId(), searchContract().getFinancialYear().getId());
 		assertEquals(expectedSearchContract.getEstimationType(), searchContract().getEstimationType());
 		assertEquals(expectedSearchContract.getParent().getId(), searchContract().getParent().getId());
-		assertEquals(expectedSearchContract.getReferenceBudget().getId(), searchContract().getReferenceBudget().getId());
+		assertEquals(expectedSearchContract.getReferenceBudget().getId(),
+				searchContract().getReferenceBudget().getId());
 		assertEquals(expectedSearchContract.getDescription(), searchContract().getDescription());
 		assertEquals(expectedSearchContract.getActive(), searchContract().getActive());
 		assertEquals(expectedSearchContract.getPrimaryBudget(), searchContract().getPrimaryBudget());
@@ -91,7 +91,6 @@ public class BudgetMapperTest {
 		assertEquals(expectedSearchContract.getTenantId(), searchContract().getTenantId());
 		assertEquals(expectedSearchContract.getPageSize(), searchContract().getPageSize());
 		assertEquals(expectedSearchContract.getOffset(), searchContract().getOffset());
-		
 
 	}
 
@@ -110,10 +109,10 @@ public class BudgetMapperTest {
 		budget.setMaterializedPath("materializedPath");
 		budget.setReferenceBudget(Budget.builder().id("referenceBudget").build());
 		budget.setDocumentNumber("documentNumber");
-		budget.setStatus(EgfStatus.builder().id("status").code("code").description("description")
+		budget.setStatus(FinancialStatusContract.builder().id("status").code("code").description("description")
 				.moduleType("moduleType").build());
-		budget.setCreatedBy(User.builder().id("user").build());
-		budget.setLastModifiedBy(User.builder().id("user").build());
+		budget.setCreatedBy(User.builder().id(1l).build());
+		budget.setLastModifiedBy(User.builder().id(1l).build());
 		budget.setTenantId("tenantId");
 
 		return budget;
@@ -134,10 +133,10 @@ public class BudgetMapperTest {
 		contract.setMaterializedPath("materializedPath");
 		contract.setReferenceBudget(BudgetContract.builder().id("referenceBudget").build());
 		contract.setDocumentNumber("documentNumber");
-		contract.setStatus(EgfStatusContract.builder().id("status").code("code").description("description")
+		contract.setStatus(FinancialStatusContract.builder().id("status").code("code").description("description")
 				.moduleType("moduleType").build());
-		contract.setCreatedBy(User.builder().id("user").build());
-		contract.setLastModifiedBy(User.builder().id("user").build());
+		contract.setCreatedBy(User.builder().id(1l).build());
+		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
 
 		return contract;
@@ -158,9 +157,9 @@ public class BudgetMapperTest {
 		budgetSearch.setMaterializedPath("materializedPath");
 		budgetSearch.setReferenceBudget(Budget.builder().id("referenceBudget").build());
 		budgetSearch.setDocumentNumber("documentNumber");
-		budgetSearch.setStatus(EgfStatus.builder().id("status").build());
-		budgetSearch.setCreatedBy(User.builder().id("user").build());
-		budgetSearch.setLastModifiedBy(User.builder().id("user").build());
+		budgetSearch.setStatus(FinancialStatusContract.builder().id("status").build());
+		budgetSearch.setCreatedBy(User.builder().id(1l).build());
+		budgetSearch.setLastModifiedBy(User.builder().id(1l).build());
 		budgetSearch.setTenantId("tenantId");
 		budgetSearch.setPageSize(1);
 		budgetSearch.setOffset(1);
@@ -183,9 +182,9 @@ public class BudgetMapperTest {
 		contract.setMaterializedPath("materializedPath");
 		contract.setReferenceBudget(BudgetContract.builder().id("referenceBudget").build());
 		contract.setDocumentNumber("documentNumber");
-		contract.setStatus(EgfStatusContract.builder().id("status").build());
-		contract.setCreatedBy(User.builder().id("user").build());
-		contract.setLastModifiedBy(User.builder().id("user").build());
+		contract.setStatus(FinancialStatusContract.builder().id("status").build());
+		contract.setCreatedBy(User.builder().id(1l).build());
+		contract.setLastModifiedBy(User.builder().id(1l).build());
 		contract.setTenantId("tenantId");
 		contract.setPageSize(1);
 		contract.setOffset(1);

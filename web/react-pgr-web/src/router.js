@@ -73,6 +73,8 @@ import MutationReason from './components/contents/propertyTax/master/MutationRea
 import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
@@ -185,6 +187,7 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
+		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
     </Switch>
   </main>
 )}

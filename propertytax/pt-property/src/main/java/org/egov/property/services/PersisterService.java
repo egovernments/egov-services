@@ -7,6 +7,7 @@ import java.util.List;
 import org.egov.models.Document;
 import org.egov.models.Floor;
 import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfo;
@@ -78,20 +79,38 @@ public class PersisterService {
 
 		for (Property property : properties) {
 
-			if(property.getIsUnderWorkflow()==null){
+			if (property.getIsUnderWorkflow() == null) {
 				property.setIsUnderWorkflow(false);
 			}
-			
-			if(property.getIsAuthorised()==null){
+
+			if (property.getIsAuthorised() == null) {
 				property.setIsUnderWorkflow(true);
 			}
-			
-			
-			
+
+			if (property.getActive() == null) {
+				property.setActive(true);
+			}
+
+			PropertyDetail propertyDetail = property.getPropertyDetail();
+
+			if (propertyDetail.getIsVerified() == null) {
+				propertyDetail.setIsVerified(false);
+			}
+
+			if (propertyDetail.getIsExempted() == null) {
+				propertyDetail.setIsExempted(false);
+			}
+
+			if (propertyDetail.getIsSuperStructure() == null) {
+				propertyDetail.setIsSuperStructure(false);
+			}
+
 			Long propertyId = propertyRepository.saveProperty(property);
 
 			propertyRepository.saveAddress(property, propertyId);
+
 			Long propertyDetailsId = propertyRepository.savePropertyDetails(property, propertyId);
+
 			if (!property.getPropertyDetail().getPropertyType()
 					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
@@ -100,10 +119,18 @@ public class PersisterService {
 
 					for (Unit unit : floor.getUnits()) {
 
+						if (unit.getIsAuthorised() == null) {
+							unit.setIsAuthorised(true);
+						}
+						if (unit.getIsStructured() == null) {
+							unit.setIsStructured(true);
+						}
+
 						Long unitId = propertyRepository.saveUnit(unit, floorId);
 
 						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
 								&& unit.getUnits() != null) {
+
 							for (Unit room : unit.getUnits()) {
 								propertyRepository.saveRoom(room, floorId, unitId);
 							}
@@ -129,6 +156,16 @@ public class PersisterService {
 
 			for (User owner : property.getOwners()) {
 
+				if (owner.getIsPrimaryOwner() == null) {
+					owner.setIsPrimaryOwner(false);
+				}
+				if (owner.getIsSecondaryOwner() == null) {
+					owner.setIsSecondaryOwner(false);
+				}
+				if (owner.getAccountLocked() == null) {
+					owner.setAccountLocked(false);
+				}
+
 				propertyRepository.saveUser(owner, propertyId);
 
 			}
@@ -151,33 +188,86 @@ public class PersisterService {
 
 		for (Property property : properties) {
 
+			if (property.getIsUnderWorkflow() == null) {
+				property.setIsUnderWorkflow(false);
+			}
+
+			if (property.getIsAuthorised() == null) {
+				property.setIsUnderWorkflow(true);
+			}
+
+			if (property.getActive() == null) {
+				property.setActive(true);
+			}
+
+			PropertyDetail propertyDetail = property.getPropertyDetail();
+
+			if (propertyDetail.getIsVerified() == null) {
+				propertyDetail.setIsVerified(false);
+			}
+
+			if (propertyDetail.getIsExempted() == null) {
+				propertyDetail.setIsExempted(false);
+			}
+
+			if (propertyDetail.getIsSuperStructure() == null) {
+				propertyDetail.setIsSuperStructure(false);
+			}
+
 			propertyRepository.updateProperty(property);
 			propertyRepository.updateAddress(property.getAddress(), property.getAddress().getId(), property.getId());
-
 			propertyRepository.updatePropertyDetail(property.getPropertyDetail(), property.getId());
-			propertyRepository.updateVacantLandDetail(property.getVacantLand(), property.getVacantLand().getId(),
-					property.getId());
-			for (Floor floor : property.getPropertyDetail().getFloors()) {
-				propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
 
-				for (Unit unit : floor.getUnits()) {
+			if (property.getVacantLand() != null) {
+				propertyRepository.updateVacantLandDetail(property.getVacantLand(), property.getVacantLand().getId(),
+						property.getId());
+			}
 
-					propertyRepository.updateUnit(unit);
-					if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
-							&& unit.getUnits() != null) {
-						for (Unit room : unit.getUnits()) {
-							propertyRepository.updateRoom(room);
+			if (!property.getPropertyDetail().getPropertyType()
+					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+
+				for (Floor floor : property.getPropertyDetail().getFloors()) {
+					propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
+
+					for (Unit unit : floor.getUnits()) {
+
+						if (unit.getIsAuthorised() == null) {
+							unit.setIsAuthorised(true);
 						}
+						if (unit.getIsStructured() == null) {
+							unit.setIsStructured(true);
+						}
+
+						propertyRepository.updateUnit(unit);
+
+						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+								&& unit.getUnits() != null) {
+							for (Unit room : unit.getUnits()) {
+								propertyRepository.updateRoom(room);
+							}
+						}
+					}
+				}
+				if (property.getPropertyDetail().getDocuments() != null) {
+					for (Document document : property.getPropertyDetail().getDocuments()) {
+
+						propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
 					}
 				}
 			}
 
-			for (Document document : property.getPropertyDetail().getDocuments()) {
-
-				propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
-			}
-
 			for (User owner : property.getOwners()) {
+
+				if (owner.getIsPrimaryOwner() == null) {
+					owner.setIsPrimaryOwner(false);
+				}
+				if (owner.getIsSecondaryOwner() == null) {
+					owner.setIsSecondaryOwner(false);
+				}
+				if (owner.getAccountLocked() == null) {
+					owner.setAccountLocked(false);
+				}
+
 				propertyRepository.updateUser(owner, property.getId());
 			}
 

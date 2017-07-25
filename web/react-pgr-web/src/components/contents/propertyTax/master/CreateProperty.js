@@ -175,6 +175,7 @@ class CreateProperty extends Component {
       revanue:[],
       election:[],
       usages:[],
+	  ack:''
     }
  }
   
@@ -263,7 +264,9 @@ class CreateProperty extends Component {
   
 createPropertyTax = () => {
 	
-	let {createProperty} = this.props;
+	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+	
+	setLoadingStatus('loading');
 	
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 	
@@ -292,12 +295,7 @@ createPropertyTax = () => {
 		}
 	}
 	
-	
-	
-	
-	
 	var date = new Date().getTime();
-	
 	
 	var currentThis = this;
       var body = {
@@ -474,9 +472,16 @@ createPropertyTax = () => {
 		  }
 		  
      Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
-        console.log(res);
+		currentThis.setState({
+			ack: res.properties.applicationNo
+		});
+		localStorage.setItem('ack', res.properties.propertyDetail.applicationNo);
+		this.props.history.push('acknowledgement');
+setLoadingStatus('hide');
       }).catch((err)=> {
         console.log(err)
+		setLoadingStatus('hide');
+ toggleSnackbarAndSetText(true, err.message);
       })
     }
   
@@ -681,6 +686,13 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
+  
+    setLoadingStatus: (loadingStatus) => {
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
 
 });
 

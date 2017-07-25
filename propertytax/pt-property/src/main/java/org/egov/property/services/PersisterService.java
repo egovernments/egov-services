@@ -78,10 +78,19 @@ public class PersisterService {
 
 		for (Property property : properties) {
 
+			if(property.getIsUnderWorkflow()==null){
+				property.setIsUnderWorkflow(false);
+			}
+			
+			if(property.getIsAuthorised()==null){
+				property.setIsUnderWorkflow(true);
+			}
+			
+			
+			
 			Long propertyId = propertyRepository.saveProperty(property);
 
 			propertyRepository.saveAddress(property, propertyId);
-
 			Long propertyDetailsId = propertyRepository.savePropertyDetails(property, propertyId);
 			if (!property.getPropertyDetail().getPropertyType()
 					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
@@ -102,13 +111,13 @@ public class PersisterService {
 
 					}
 				}
-				
-				if(property.getPropertyDetail().getDocuments()!=null){
-				for (Document document : property.getPropertyDetail().getDocuments()) {
 
-					propertyRepository.saveDocument(document, propertyDetailsId);
+				if (property.getPropertyDetail().getDocuments() != null) {
+					for (Document document : property.getPropertyDetail().getDocuments()) {
 
-				}
+						propertyRepository.saveDocument(document, propertyDetailsId);
+
+					}
 				}
 			}
 

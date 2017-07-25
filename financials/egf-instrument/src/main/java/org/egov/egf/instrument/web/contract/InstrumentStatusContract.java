@@ -39,6 +39,7 @@
  */
 
 package org.egov.egf.instrument.web.contract;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -51,13 +52,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","moduleType","name","description"})
+@JsonPropertyOrder({ "id", "moduleType", "name", "description" })
 public class InstrumentStatusContract extends AuditableContract {
 
 	/**
@@ -71,7 +73,7 @@ public class InstrumentStatusContract extends AuditableContract {
 	private String moduleType;
 
 	/**
-	 * name is the status name 
+	 * name is the status name
 	 */
 	@NotNull
 	@Size(min = 3, max = 20)

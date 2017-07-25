@@ -41,6 +41,7 @@ package org.egov.egf.instrument.domain.model;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -71,15 +72,15 @@ public class InstrumentType extends Auditable {
 	 */
 	@NotNull
 	@NotBlank
-	@Size(max=50,min=2)
+	@Size(max = 50, min = 2)
 	private String name;
-	
+
 	/*
-	 * description specifies details of the instrument type . For example 
-	 * type DD description may be Demand Draft
+	 * description specifies details of the instrument type . For example type
+	 * DD description may be Demand Draft
 	 */
-	
-	@Size(max=100)
+
+	@Size(max = 100)
 	private String description;
 
 	/*
@@ -87,13 +88,11 @@ public class InstrumentType extends Auditable {
 	 */
 	@NotNull
 	private Boolean active;
-	
-	
-	@NotNull
-	@Size(max=2,min=2)
-	//@DrillDownTable
-	private List<InstrumentTypeProperty> instrumentTypeProperties;
 
-	
+	@Valid
+	@NotNull
+	@Size(max = 2, min = 2, message = "")
+	// @DrillDownTable
+	private List<InstrumentTypeProperty> instrumentTypeProperties;
 
 }

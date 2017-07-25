@@ -1,14 +1,11 @@
 package org.egov.egf.instrument.persistence.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.egf.instrument.domain.model.InstrumentVoucher;
 import org.egov.egf.instrument.persistence.entity.InstrumentVoucherEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,81 +40,87 @@ public class InstrumentVoucherJdbcRepository extends JdbcRepository {
 
 	}
 
-	/*public Pagination<InstrumentVoucher> search(InstrumentVoucherSearch domain) {
-		InstrumentVoucherSearchEntity instrumentVoucherSearchEntity = new InstrumentVoucherSearchEntity();
-		instrumentVoucherSearchEntity.toEntity(domain);
-
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
-
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
-
-		if (instrumentVoucherSearchEntity.getSortBy() != null && !instrumentVoucherSearchEntity.getSortBy().isEmpty()) {
-			validateSortByOrder(instrumentVoucherSearchEntity.getSortBy());
-			validateEntityFieldName(instrumentVoucherSearchEntity.getSortBy(), InstrumentVoucherEntity.class);
-		}
-
-		String orderBy = "order by id";
-		if (instrumentVoucherSearchEntity.getSortBy() != null && !instrumentVoucherSearchEntity.getSortBy().isEmpty())
-			orderBy = "order by " + instrumentVoucherSearchEntity.getSortBy();
-
-		searchQuery = searchQuery.replace(":tablename", InstrumentVoucherEntity.TABLE_NAME);
-
-		searchQuery = searchQuery.replace(":selectfields", " * ");
-
-		// implement jdbc specfic search
-if( instrumentVoucherSearchEntity.getInstrumentId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "instrument =:instrument");
-paramValues.put("instrument" ,instrumentVoucherSearchEntity.getInstrumentId());} 
-if( instrumentVoucherSearchEntity.getVoucherHeaderId()!=null) {
-if (params.length() > 0) 
-params.append(" and "); 
-params.append( "voucherHeaderId =:voucherHeaderId");
-paramValues.put("voucherHeaderId" ,instrumentVoucherSearchEntity.getVoucherHeaderId());} 
-
-
-		Pagination<InstrumentVoucher> page = new Pagination<>();
-		if (instrumentVoucherSearchEntity.getOffset() != null)
-			page.setOffset(instrumentVoucherSearchEntity.getOffset());
-		if (instrumentVoucherSearchEntity.getPageSize() != null)
-			page.setPageSize(instrumentVoucherSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
-		}
-
-		searchQuery = searchQuery.replace(":orderby", orderBy);
-
-		page = (Pagination<InstrumentVoucher>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
-
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
-
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(InstrumentVoucherEntity.class);
-
-		List<InstrumentVoucherEntity> instrumentVoucherEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-
-		page.setTotalResults(instrumentVoucherEntities.size());
-
-		List<InstrumentVoucher> instrumentvouchers = new ArrayList<>();
-		for (InstrumentVoucherEntity instrumentVoucherEntity : instrumentVoucherEntities) {
-
-			instrumentvouchers.add(instrumentVoucherEntity.toDomain());
-		}
-		page.setPagedData(instrumentvouchers);
-
-		return page;
-	}*/
+	/*
+	 * public Pagination<InstrumentVoucher> search(InstrumentVoucherSearch
+	 * domain) { InstrumentVoucherSearchEntity instrumentVoucherSearchEntity =
+	 * new InstrumentVoucherSearchEntity();
+	 * instrumentVoucherSearchEntity.toEntity(domain);
+	 * 
+	 * String searchQuery =
+	 * "select :selectfields from :tablename :condition  :orderby   ";
+	 * 
+	 * Map<String, Object> paramValues = new HashMap<>(); StringBuffer params =
+	 * new StringBuffer();
+	 * 
+	 * if (instrumentVoucherSearchEntity.getSortBy() != null &&
+	 * !instrumentVoucherSearchEntity.getSortBy().isEmpty()) {
+	 * validateSortByOrder(instrumentVoucherSearchEntity.getSortBy());
+	 * validateEntityFieldName(instrumentVoucherSearchEntity.getSortBy(),
+	 * InstrumentVoucherEntity.class); }
+	 * 
+	 * String orderBy = "order by id"; if
+	 * (instrumentVoucherSearchEntity.getSortBy() != null &&
+	 * !instrumentVoucherSearchEntity.getSortBy().isEmpty()) orderBy =
+	 * "order by " + instrumentVoucherSearchEntity.getSortBy();
+	 * 
+	 * searchQuery = searchQuery.replace(":tablename",
+	 * InstrumentVoucherEntity.TABLE_NAME);
+	 * 
+	 * searchQuery = searchQuery.replace(":selectfields", " * ");
+	 * 
+	 * // implement jdbc specfic search if(
+	 * instrumentVoucherSearchEntity.getInstrumentId()!=null) { if
+	 * (params.length() > 0) params.append(" and "); params.append(
+	 * "instrument =:instrument"); paramValues.put("instrument"
+	 * ,instrumentVoucherSearchEntity.getInstrumentId());} if(
+	 * instrumentVoucherSearchEntity.getVoucherHeaderId()!=null) { if
+	 * (params.length() > 0) params.append(" and "); params.append(
+	 * "voucherHeaderId =:voucherHeaderId"); paramValues.put("voucherHeaderId"
+	 * ,instrumentVoucherSearchEntity.getVoucherHeaderId());}
+	 * 
+	 * 
+	 * Pagination<InstrumentVoucher> page = new Pagination<>(); if
+	 * (instrumentVoucherSearchEntity.getOffset() != null)
+	 * page.setOffset(instrumentVoucherSearchEntity.getOffset()); if
+	 * (instrumentVoucherSearchEntity.getPageSize() != null)
+	 * page.setPageSize(instrumentVoucherSearchEntity.getPageSize());
+	 * 
+	 * if (params.length() > 0) {
+	 * 
+	 * searchQuery = searchQuery.replace(":condition", " where " +
+	 * params.toString());
+	 * 
+	 * } else { searchQuery = searchQuery.replace(":condition", ""); }
+	 * 
+	 * searchQuery = searchQuery.replace(":orderby", orderBy);
+	 * 
+	 * page = (Pagination<InstrumentVoucher>) getPagination(searchQuery, page,
+	 * paramValues); searchQuery = searchQuery + " :pagination";
+	 * 
+	 * searchQuery = searchQuery.replace(":pagination", "limit " +
+	 * page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+	 * 
+	 * BeanPropertyRowMapper row = new
+	 * BeanPropertyRowMapper(InstrumentVoucherEntity.class);
+	 * 
+	 * List<InstrumentVoucherEntity> instrumentVoucherEntities =
+	 * namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+	 * row);
+	 * 
+	 * page.setTotalResults(instrumentVoucherEntities.size());
+	 * 
+	 * List<InstrumentVoucher> instrumentvouchers = new ArrayList<>(); for
+	 * (InstrumentVoucherEntity instrumentVoucherEntity :
+	 * instrumentVoucherEntities) {
+	 * 
+	 * instrumentvouchers.add(instrumentVoucherEntity.toDomain()); }
+	 * page.setPagedData(instrumentvouchers);
+	 * 
+	 * return page; }
+	 */
 
 	public InstrumentVoucherEntity findById(InstrumentVoucherEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
 
 		Map<String, Object> paramValues = new HashMap<>();
 

@@ -2,7 +2,6 @@ package org.egov.egf.instrument.persistence.queue;
 
 import java.util.HashMap;
 
-import org.egov.common.web.contract.CommonRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class FinancialInstrumentListener {
 
-	@Value("${kafka.topics.egf.masters.completed.topic}")
+	@Value("${kafka.topics.egf.instrument.completed.topic}")
 	private String completedTopic;
 
 	@Autowired
@@ -24,10 +23,10 @@ public class FinancialInstrumentListener {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private FinancialProducer financialProducer;
+	private FinancialInstrumentProducer financialProducer;
 
-	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
-	public void process(HashMap<String, CommonRequest<?>> mastersMap) {
+	@KafkaListener(id = "${kafka.topics.egf.instrument.validated.id}", topics = "${kafka.topics.egf.instrument.validated.topic}", group = "${kafka.topics.egf.instrument.validated.group}")
+	public void process(HashMap<String, Object> mastersMap) {
 
 	}
 

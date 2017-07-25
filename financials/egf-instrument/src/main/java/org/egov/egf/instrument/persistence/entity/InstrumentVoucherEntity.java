@@ -1,8 +1,7 @@
 package org.egov.egf.instrument.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
-import org.egov.egf.instrument.domain.model.Instrument; 
+import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentVoucher;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ public class InstrumentVoucherEntity extends AuditableEntity {
 	}
 
 	public InstrumentVoucherEntity toEntity(InstrumentVoucher instrumentVoucher) {
-		super.toEntity((Auditable) instrumentVoucher);
+		super.toEntity(instrumentVoucher);
 		this.instrumentId = instrumentVoucher.getInstrument() != null ? instrumentVoucher.getInstrument().getId()
 				: null;
 		this.voucherHeaderId = instrumentVoucher.getVoucherHeaderId();

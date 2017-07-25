@@ -1,12 +1,10 @@
 package org.egov.egf.instrument.domain.repository;
 
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.InstrumentTypeProperty;
 import org.egov.egf.instrument.persistence.entity.InstrumentTypePropertyEntity;
-import org.egov.egf.instrument.persistence.queue.MastersQueueRepository;
+import org.egov.egf.instrument.persistence.queue.InstrumentQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentTypePropertyJdbcRepository;
-import org.egov.egf.instrument.web.contract.InstrumentTypePropertyContract;
+import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +15,7 @@ public class InstrumentTypePropertyRepository {
 	@Autowired
 	private InstrumentTypePropertyJdbcRepository instrumentTypePropertyJdbcRepository;
 	@Autowired
-	private MastersQueueRepository instrumentTypePropertyQueueRepository;
+	private InstrumentQueueRepository instrumentTypePropertyQueueRepository;
 
 	public InstrumentTypeProperty findById(InstrumentTypeProperty instrumentTypeProperty) {
 		InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
@@ -40,14 +38,17 @@ public class InstrumentTypePropertyRepository {
 		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<InstrumentTypePropertyContract> request) {
+	/*public void add(InstrumentTypePropertyRequest request) {
 		instrumentTypePropertyQueueRepository.add(request);
-	}
-
-	/*public Pagination<InstrumentTypeProperty> search(InstrumentTypePropertySearch domain) {
-
-		return instrumentTypePropertyJdbcRepository.search(domain);
-
 	}*/
+
+	/*
+	 * public Pagination<InstrumentTypeProperty>
+	 * search(InstrumentTypePropertySearch domain) {
+	 * 
+	 * return instrumentTypePropertyJdbcRepository.search(domain);
+	 * 
+	 * }
+	 */
 
 }

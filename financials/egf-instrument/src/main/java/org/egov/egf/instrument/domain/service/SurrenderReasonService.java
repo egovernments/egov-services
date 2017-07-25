@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.model.SurrenderReasonSearch;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
-import org.egov.egf.instrument.web.contract.SurrenderReasonContract;
+import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +32,13 @@ public class SurrenderReasonService {
 	@Autowired
 	private SmartValidator validator;
 
-
 	private BindingResult validate(List<SurrenderReason> surrenderreasons, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
 			case ACTION_VIEW:
-				// validator.validate(surrenderReasonContractRequest.getSurrenderReason(), errors);
+				// validator.validate(surrenderReasonContractRequest.getSurrenderReason(),
+				// errors);
 				break;
 			case ACTION_CREATE:
 				Assert.notNull(surrenderreasons, "SurrenderReasons to create must not be null");
@@ -94,7 +93,7 @@ public class SurrenderReasonService {
 
 	}
 
-	public void addToQue(CommonRequest<SurrenderReasonContract> request) {
+	public void addToQue(SurrenderReasonRequest request) {
 		surrenderReasonRepository.add(request);
 	}
 

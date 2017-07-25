@@ -63,7 +63,7 @@ public class ProcessInstance {
 
     @JsonIgnore
     public String getComments(){
-        return getValueForKey("approvalComments");
+        return getValueForKey("systemApprovalComments");
     }
 
     @JsonIgnore

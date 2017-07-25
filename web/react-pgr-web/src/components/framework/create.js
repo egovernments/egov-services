@@ -10,6 +10,7 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
+var specifications={};
 try {
   var hash = window.location.hash.split("/");
   if(hash.length == 3) {

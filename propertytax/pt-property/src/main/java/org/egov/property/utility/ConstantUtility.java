@@ -39,7 +39,8 @@ public class ConstantUtility {
 	
 	public static final String SPECIAL_NOTICE_FLOOR_SPEC_TABLE_NAME="egpt_specialnotice_floorspec";
 	
-	
 	public static final String SPECIAL_NOTICE_TAXWISE_TABLE_NAME="egpt_specialnotice_taxwise_detail";
+	
+    public static final String DOCUMENT_TYPE_TABLE_NAME = "egpt_mstr_documenttype";
 
 }

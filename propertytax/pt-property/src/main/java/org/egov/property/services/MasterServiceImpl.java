@@ -9,6 +9,9 @@ import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.Depreciation;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DocumentType;
+import org.egov.models.DocumentTypeRequest;
+import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
@@ -335,8 +338,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 
-			String data = gson.toJson(department);
-
+			String data = gson.toJson(department);		
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(department.getTenantId(),
 					department.getCode(), ConstantUtility.DEPARTMENT_TABLE_NAME, null);
 			if (isExists)
@@ -1060,5 +1062,80 @@ public class MasterServiceImpl implements Masterservice {
 		mutationMasterResponse.setMutationMasters(mutationMasters);
 
 		return mutationMasterResponse;
+	}
+
+	@Override
+	@Transactional
+	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest) throws Exception {
+		for (DocumentType documentType : documentTypeRequest.getDocumentType()) {
+			
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndNameExits(documentType.getTenantId(),
+					documentType.getCode(), documentType.getApplication().toString(),
+					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);
+
+			if (isExists)
+				throw new DuplicateIdException(documentTypeRequest.getRequestInfo());
+
+			try {
+				Long id = propertyMasterRepository.createDocumentTypeMaster(documentType);
+				documentType.setId(id);
+			} catch (Exception e) {
+				throw new InvalidInputException(documentTypeRequest.getRequestInfo());
+			}
+		}	
+
+		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(documentTypeRequest.getRequestInfo(), true);
+		documentTypeResponse.setResponseInfo(responseInfo);
+		documentTypeResponse.setDocumentType(documentTypeRequest.getDocumentType());
+
+		return documentTypeResponse;
+	}
+
+	@Override
+	@Transactional
+	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) throws Exception {
+		for (DocumentType documentType : documentTypeRequest.getDocumentType()) {
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndNameExits(documentType.getTenantId(),
+					documentType.getCode(), documentType.getApplication().toString(),
+					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getId());
+
+			if (isExists)
+				throw new DuplicateIdException(documentTypeRequest.getRequestInfo());
+
+			try {
+				propertyMasterRepository.updateDocumentTypeMaster(documentType);
+			} catch (Exception e) {
+				throw new InvalidInputException(documentTypeRequest.getRequestInfo());
+			}
+		}
+
+		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(documentTypeRequest.getRequestInfo(), true);
+		documentTypeResponse.setResponseInfo(responseInfo);
+		documentTypeResponse.setDocumentType(documentTypeRequest.getDocumentType());
+
+		return documentTypeResponse;
+	}
+
+	@Override
+	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name, String code,
+			String application, Integer pageSize, Integer OffSet) throws Exception {
+		List<DocumentType> documentTypes = null;
+		try {
+			documentTypes = propertyMasterRepository.searchDocumentTypeMaster(tenantId, name, code, application, pageSize, OffSet);
+		} catch (Exception e) {
+			throw new InvalidInputException(requestInfo);
+		}
+
+		DocumentTypeResponse documentTypeResponse = new DocumentTypeResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		documentTypeResponse.setResponseInfo(responseInfo);
+		documentTypeResponse.setDocumentType(documentTypes);
+
+		return documentTypeResponse;
 	}
 }

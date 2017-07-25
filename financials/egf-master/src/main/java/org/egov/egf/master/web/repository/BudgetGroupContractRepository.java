@@ -17,7 +17,7 @@ public class BudgetGroupContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public BudgetGroupContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public BudgetGroupContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

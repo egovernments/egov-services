@@ -17,7 +17,7 @@ public class FunctionaryContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public FunctionaryContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public FunctionaryContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

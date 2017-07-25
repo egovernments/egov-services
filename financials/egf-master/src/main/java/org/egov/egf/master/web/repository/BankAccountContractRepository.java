@@ -17,7 +17,7 @@ public class BankAccountContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public BankAccountContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public BankAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

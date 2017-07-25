@@ -34,6 +34,15 @@
      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
      }
       }
+      List<HeadWiseTax> uacPenality=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
+      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("UAC_PENALTY")).collect(java.util.stream.Collectors.toList());
+      if(uacPenality!=null){
+      if(unit.getIsAuthorised()){
+      int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(uacPenality.get(0));
+      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
+      }    
+      }
+      
       System.out.println("unit tax"+unitTax);
        return  unitTax;    
 }

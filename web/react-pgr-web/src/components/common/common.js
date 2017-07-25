@@ -1,5 +1,3 @@
-import Api from '../../api/api';
-
 var localationData = {
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
@@ -105,22 +103,4 @@ export function toLocalTime(regDate) {
   dat = dat.split("-")[1] + "-" + dat.split("-")[0] + "-" + dat.split("-")[2] + " " + regDate.split(" ")[1];
   dat = new Date(dat + " UTC").toString();
   return dat.substr(0, dat.indexOf("GMT"));
-}
-
-export function fileUpload(file, module, cb) {
-  if(file.constructor == File) {
-    let formData = new FormData();
-    formData.append("tenantId", localStorage.getItem('tenantId'));
-    formData.append("module", module);
-    formData.append("file", file);
-    Api.commonApiPost("/filestore/v1/files",{}, formData).then(function(response) {
-      cb(null, response);
-    }, function(err) {
-      cb(err.message);
-    })
-  } else {
-    cb(null, {files: [{
-      fileStoreId: file
-    }]});
-  }
 }

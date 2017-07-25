@@ -22,21 +22,21 @@ public class GuidanceValue {
 	private String	name;	
 
 	@NotNull
-	@Size(min=1,max=16)
+	@Size(min=1,max=64)
 	private String	boundary;	
 	
 
-	@Size(min=1,max=16)
+	@Size(min=1,max=64)
 	private String	structure;	
 	
 
-	@Size(min=1,max=16)
+	@Size(min=1,max=64)
 	private String	usage;
 	
-	@Size(min=1,max=16)
+	@Size(min=1,max=64)
 	private String	subUsage;
 	
-	@Size(min=1,max=16)
+	@Size(min=1,max=64)
 	private String	occupancy;	
 
 	private Double	value;	

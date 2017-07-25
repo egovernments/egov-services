@@ -139,5 +139,5 @@ public interface BoundaryJpaRepository extends JpaRepository<Boundary, Long> {
 	List<Boundary> findAllByTenantId(String tenantId);
 	
 	@Query("from Boundary b where b.tenantId=:tenantId and b.id in :boundaryIds ")
-	List<Boundary> findAllBoundariesByBoundaryIdsAndTenant(@Param("tenantId") String tenantId,@Param("boundaryIds") final List<Long> boundaryIds);
+	List<Boundary> findAllBoundariesByIdsAndTenant(@Param("tenantId") String tenantId,@Param("boundaryIds") final List<Long> boundaryIds);
 }

@@ -16,7 +16,7 @@ export default class UiSingleFileUpload extends Component {
 					  value={this.props.getVal(item.jsonPath)}
 					  disabled={item.isDisabled}
 					  label={item.label}>
-					    <input type="file" style={{ display: 'none' }} onChange={(e) => this.props.handler({target:{value: e.target.files}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}/>
+					    <input type="file" style={{ display: 'none' }} onChange={(e) => this.props.handler({target:{value: e.target.files[0]}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}/>
 					</RaisedButton>
 				);
 		}

@@ -38,7 +38,12 @@ var localationData = {
   "wc.create.groups.roomDetails.roomName": "Room Name",
   "wc.create.message.success": "Created Successfully . . . !",
   "wc.create.groups.fileDetails.title": "Document Upload",
-  "wc.create.groups.fileDetails.fields.pan": "Pan Card"
+  "wc.create.groups.fileDetails.fields.pan": "Pan Card",
+  "wc.create.documenttype.title": "Create Position",
+  "wc.create.applicationtype" : "Department",
+  "wc.create.documenttype" : "Designation",
+  "wc.create.positiontype" : "Position",
+  "wc.create.groups.radio" : "Outsourced Post"
 }
 
 export function translate(locale_text){

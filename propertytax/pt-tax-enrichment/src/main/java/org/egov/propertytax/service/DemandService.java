@@ -36,8 +36,9 @@ public class DemandService {
         }
         logger.info("pt-tax-enrichment DemandService calculationList --> "+calculationList);
         List<Demand> demands = billingServiceRepository.prepareDemand(calculationList, property);
+        logger.info("pt-tax-enrichment DemandService demand list --> "+demands);
         DemandResponse demandResponse = billingServiceRepository.createDemand(demands, propertyRequest.getRequestInfo());
-
+        logger.info("pt-tax-enrichment DemandService demandResponse --> "+demandResponse);
         property.setDemands(demandResponse.getDemands());
         return demandResponse;
     }

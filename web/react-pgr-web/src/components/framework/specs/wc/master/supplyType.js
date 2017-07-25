@@ -1,18 +1,18 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_create",
+		"url": "/wcms/masters/supplytype/_create",
 		"tenantIdRequired": true,
-		"objectName": "CategoryType",
+		"objectName": "SupplyType",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.create.supplyType.title",
+				"name": "createSupplyType",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
-							"label": "Category Type",
+							"jsonPath": "SupplyType.name",
+							"label": "Supply Type",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -22,7 +22,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType.description",
+							"jsonPath": "SupplyType.description",
 							"label": "Description",
 							"pattern": "",
 							"type": "text",
@@ -33,7 +33,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "SupplyType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

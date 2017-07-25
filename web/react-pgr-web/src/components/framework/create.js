@@ -4,13 +4,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import _ from "lodash";
 import ShowFields from "./showFields";
-import wcSpecs from './specs/wc/wc';
 
-import {translate, fileUpload} from '../common/common';
+import {translate} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
-
+import {fileUpload} from './utility/utility';
+let specifications = require(`./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}`).default;
 let reqRequired = []; 
 class Report extends Component {
   constructor(props) {
@@ -37,11 +37,11 @@ class Report extends Component {
   initData() {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let hashLocation = window.location.hash;
-    let obj = wcSpecs[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired, []);
-    setMetaData(wcSpecs);
-    setMockData(JSON.parse(JSON.stringify(wcSpecs)));
+    setMetaData(specifications);
+    setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
   }
@@ -81,10 +81,11 @@ class Report extends Component {
       let _docs = [];
       let counter = documents.length, breakOut = 0;
       for(let i=0; i<documents.length; i++) {
-        fileUpload(documents[i], function(err, res) {
+        fileUpload(documents[i], self.props.moduleName, function(err, res) {
           if(breakOut == 1) return;
           if(err) {
             breakOut = 1;
+            self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
           } else {
             _docs.push({
@@ -92,7 +93,7 @@ class Report extends Component {
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
-              formData.documents = _docs;
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
               self.makeAjaxCall(formData);        
             }
           }

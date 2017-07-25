@@ -152,11 +152,11 @@ public class WaterConnectionController {
          waterConnectionRequest.getConnection().setIsLegacy(waterConn!=null ?waterConn.getIsLegacy():Boolean.FALSE);
          waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
          waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
-       /* final List<ErrorResponse> errorResponses = newWaterConnectionValidator
+        final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);*/
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         
         waterConnectionRequest.getConnection().setId(waterConn.getId());
         connection = waterConnectionService.updateWaterConnection(

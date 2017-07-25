@@ -88,11 +88,6 @@
 			<name>eGov ERP Releases Repository</name>
 			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
 		</repository>
-		<repository>
-            <id>repo.egovernments.org</id>
-            <name>eGov ERP Releases Repository</name>
-            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
-        </repository>
 	</repositories>
 
 	<build>

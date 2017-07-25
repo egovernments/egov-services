@@ -1,18 +1,18 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_create",
+		"url": "/wcms/masters/sourcetype/_create",
 		"tenantIdRequired": true,
-		"objectName": "CategoryType",
+		"objectName": "SourceType",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.create.sourceType.title",
+				"name": "createSourceType",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType.name",
-							"label": "Category Type",
+							"jsonPath": "SourceType.name",
+							"label": "Source Type",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -22,7 +22,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType.description",
+							"jsonPath": "SourceType.description",
 							"label": "Description",
 							"pattern": "",
 							"type": "text",
@@ -33,7 +33,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "SourceType.active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

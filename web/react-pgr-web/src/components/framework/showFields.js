@@ -17,6 +17,7 @@ import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
 import UiAadharCard from './components/UiAadharCard'
 import UiPanCard from './components/UiPanCard'
+import UiLabel from './components/UiLabel'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 export default class ShowFields extends Component {
@@ -124,6 +125,8 @@ export default class ShowFields extends Component {
         return <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':
         return <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'label':
+        return <UiLabel getVal={this.props.getVal} item={item}/>
     }
   }
 

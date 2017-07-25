@@ -6,7 +6,7 @@ import _ from "lodash";
 import ShowFields from "./showFields";
 import wcSpecs from './specs/wc/wc';
 
-import {translate} from '../common/common';
+import {translate, fileUpload} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
@@ -50,6 +50,18 @@ class Report extends Component {
       this.initData();
   }
 
+  makeAjaxCall = (formData) => {
+    let self = this;
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
+      self.initData();
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
+  }
+
   create=(e) => {
     let self = this;
     e.preventDefault();
@@ -63,14 +75,32 @@ class Report extends Component {
       formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
 
-    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
-      self.props.setLoadingStatus('hide');
-      self.props.toggleSnackbarAndSetText(true, translate("wc.create.message.success"), true);
-      self.initData();
-    }, function(err) {
-      self.props.setLoadingStatus('hide');
-      self.props.toggleSnackbarAndSetText(true, err.message);
-    })
+    //Check if documents, upload and get fileStoreId
+    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      let _docs = [];
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i], function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              fileStoreId: res.files[0].fileStoreId
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+              formData.documents = _docs;
+              self.makeAjaxCall(formData);        
+            }
+          }
+        })
+      }
+    } else {
+      self.makeAjaxCall(formData);
+    }
   }
 
   getVal = (path) => {

@@ -1,4 +1,6 @@
-var localationData={
+import Api from '../../api/api';
+
+var localationData = {
   "reports.pgr.complaintcategorytype":"Complaint Category Type",
   "reports.pgr.positiontype":"Position Type",
   "reports.pgr.wardtype":"Ward Type",
@@ -34,7 +36,9 @@ var localationData={
   "wc.create.groups.floorDetails.floorName": "Floor Name",
   "wc.create.groups.roomDetails.roomNo": "Room No",
   "wc.create.groups.roomDetails.roomName": "Room Name",
-  "wc.create.message.success": "Created Successfully . . . !"
+  "wc.create.message.success": "Created Successfully . . . !",
+  "wc.create.groups.fileDetails.title": "Document Upload",
+  "wc.create.groups.fileDetails.fields.pan": "Pan Card"
 }
 
 export function translate(locale_text){
@@ -96,4 +100,22 @@ export function toLocalTime(regDate) {
   dat = dat.split("-")[1] + "-" + dat.split("-")[0] + "-" + dat.split("-")[2] + " " + regDate.split(" ")[1];
   dat = new Date(dat + " UTC").toString();
   return dat.substr(0, dat.indexOf("GMT"));
+}
+
+export function fileUpload(file, module, cb) {
+  if(file.constructor == File) {
+    let formData = new FormData();
+    formData.append("tenantId", localStorage.getItem('tenantId'));
+    formData.append("module", module);
+    formData.append("file", file);
+    Api.commonApiPost("/filestore/v1/files",{}, formData).then(function(response) {
+      cb(null, response);
+    }, function(err) {
+      cb(err.message);
+    })
+  } else {
+    cb(null, {files: [{
+      fileStoreId: file
+    }]});
+  }
 }

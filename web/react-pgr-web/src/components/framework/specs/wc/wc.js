@@ -89,7 +89,7 @@ var dat = {
 			{
 				"label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
 				"name": "applicantDetails",//Follow Title case pattern
-				"children": [floor],
+				"children": [],
 				"multiple": false,
 				"fields": [
 						{
@@ -313,8 +313,26 @@ var dat = {
 				]
 			},
 			{
+				"label": "wc.create.groups.fileDetails.title",
+				"name": "Documents",
+				"multiple": false,
+				"fields": [
+					{
+						"name": "panUpload",
+						"jsonPath": "connection.documents[0]",
+						"label": "wc.create.groups.fileDetails.fields.pan",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+				]
+			},
+			{
 				"label": "wc.create.groups.approvalDetails.title",
-				"name": "approvalDetails",
+				"name": "ApprovalDetails",
 				"multiple": false,
 				"fields": [
 						{

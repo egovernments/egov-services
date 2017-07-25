@@ -22,8 +22,5 @@ public class AttributeActionsDefinitionKey implements Serializable {
 
     @Column(name = "servicecode")
     private String serviceCode;
-
-    @Column(name = "code")
-    private String code;
 }
 

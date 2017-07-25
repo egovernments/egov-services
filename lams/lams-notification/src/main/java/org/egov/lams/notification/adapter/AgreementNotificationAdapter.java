@@ -88,6 +88,15 @@ public class AgreementNotificationAdapter {
 			emailRequest.setSubject(notificationService.getEvictSubject(agreement));
 			emailRequest.setEmail(allottee.getEmailId());
 			log.info("agreementevictInitSMS------------" + smsRequest);
+		} else if (agreement.getAction().equals(Action.CANCELLATION)) {
+
+			smsRequest.setMessage(notificationService.getCancelInitiateMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getCancelInitiateMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getCancelSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("agreementCancelInitSMS------------" + smsRequest);
 		}
 
 		try {
@@ -121,6 +130,15 @@ public class AgreementNotificationAdapter {
 			emailRequest.setSubject(notificationService.getEvictSubject(agreement));
 			emailRequest.setEmail(allottee.getEmailId());
 			log.info("evictApprovalSMS------------" + smsRequest);
+		} else if (agreement.getAction().equals(Action.CANCELLATION)) {
+
+			smsRequest.setMessage(notificationService.getCancelApprovalMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getCancelApprovalMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getCancelSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("cancelApprovalSMS------------" + smsRequest);
 		}
 		try {
 			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(),
@@ -155,6 +173,15 @@ public class AgreementNotificationAdapter {
 			emailRequest.setSubject(notificationService.getEvictSubject(agreement));
 			emailRequest.setEmail(allottee.getEmailId());
 			log.info("evictRejectedSMS------------" + smsRequest);
+		} else if (agreement.getAction().equals(Action.CANCELLATION)) {
+
+			smsRequest.setMessage(notificationService.getCancelRejectedMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getCancelRejectedMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getCancelSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("cancelRejectedSMS------------" + smsRequest);
 		}
 		try {
 			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(),

@@ -2,10 +2,18 @@ package org.egov.boundary.domain.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.egov.boundary.persistence.entity.Boundary;
+import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.repository.BoundaryJpaRepository;
 import org.egov.boundary.persistence.repository.BoundaryRepository;
 import org.junit.Before;
@@ -66,8 +74,6 @@ public class BoundaryServiceTest {
 		assertFalse(boundaryService.checkTenantShapeFileExistOrNot("maharashtra.addanki"));
 
 	}
-	
-	
 
 	@Test
 	@Transactional
@@ -85,6 +91,67 @@ public class BoundaryServiceTest {
 		boundaryService.getBoundariesByIdAndTenantId(1l, "tenantId");
 
 		verify(boundaryRepository).getBoundariesByIdAndTenantId(1l, "tenantId");
+	}
+
+	@Test
+	public void testShouldFetchAllBoundariesByBoundaryTypeIdAndTenantId() {
+
+		when(boundaryJpaRepository.findAllBoundariesByIdsAndTenant(any(String.class), anyListOf(Long.class)))
+				.thenReturn(getBoundaries());
+
+		List<Long> list = new ArrayList<Long>();
+		list.add(1l);
+		list.add(2l);
+
+		List<Boundary> boundaryList = boundaryService.getAllBoundariesByBoundaryIdsAndTenant("default", list);
+
+		assertTrue(boundaryList.size() == getBoundaries().size());
+		assertFalse(boundaryList.isEmpty());
+		assertTrue(boundaryList != null);
+	}
+
+	private List<Boundary> getBoundaries() {
+
+		List<Boundary> boundaries = new ArrayList<Boundary>();
+
+		Boundary boundary1 = new Boundary();
+
+		boundary1.setId(1l);
+		boundary1.setName("Srikakulam  Municipality");
+		boundary1.setBoundaryNum(1l);
+		boundary1.setTenantId("default");
+
+		BoundaryType bt1 = new BoundaryType();
+
+		bt1.setId(1l);
+		bt1.setName("City");
+		bt1.setHierarchy(1l);
+		bt1.setTenantId("default");
+		bt1.setVersion(0l);
+		boundary1.setBoundaryType(bt1);
+
+		Boundary boundary2 = new Boundary();
+
+		boundary2.setId(2l);
+		boundary2.setName("Zone-1");
+		boundary2.setBoundaryNum(1l);
+		boundary2.setTenantId("default");
+
+		boundary2.setParent(boundary1);
+
+		BoundaryType bt2 = new BoundaryType();
+
+		bt2.setId(3l);
+		bt2.setName("Zone");
+		bt2.setHierarchy(3l);
+		bt2.setTenantId("default");
+		bt2.setVersion(0l);
+		boundary2.setBoundaryType(bt2);
+
+		boundaries.add(boundary1);
+		boundaries.add(boundary2);
+
+		return boundaries;
 	}
 
 }

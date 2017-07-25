@@ -22,11 +22,14 @@ export default class UiAadharCard extends Component {
    		switch (this.props.ui) {
 			case 'google': 
 				return (
-					<RadioButtonGroup name="shipSpeed" valueSelected={this.props.getVal(item.jsonPath)} defaultSelected={item.defaultSelected} onChange={(e, val) => {
-						this.props.handler({target:{value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-					}}>
-						{this.renderRadioButtons(item.values)}
-					</RadioButtonGroup>
+					<div>
+						<label>{item.label}</label>
+						<RadioButtonGroup name="shipSpeed" valueSelected={this.props.getVal(item.jsonPath)} defaultSelected={item.defaultSelected} onChange={(e, val) => {
+							this.props.handler({target:{value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+						}}>
+							{this.renderRadioButtons(item.values)}
+						</RadioButtonGroup>
+					</div>
 				)
 		}
    	}

@@ -21,19 +21,19 @@ import static org.egov.pgr.common.contract.AttributeValues.createOrUpdateAttribu
 @Builder
 public class ServiceRequest {
 
-	public static final String VALUES_POSITION_ID = "positionId";
-	public static final String VALUES_ESCALATED_FLAG = "isEscalated";
-	public static final String VALUES_STATE_ID = "stateId";
-	public static final String STATE_DETAILS = "stateDetails";
+	public static final String VALUES_POSITION_ID = "systemPositionId";
+	public static final String VALUES_ESCALATED_FLAG = "systemIsEscalated";
+	public static final String VALUES_STATE_ID = "systemStateId";
+	public static final String STATE_DETAILS = "systemStateDetails";
 	private static final String WORKFLOW_TYPE = "Complaint";
-	public static final String STATUS = "status";
-	public static final String VALUES_APPROVAL_COMMENT_KEY = "approvalComments";
-	public static final String PREVIOUS_ASSIGNEE = "previousAssignee";
+	public static final String STATUS = "systemStatus";
+	public static final String VALUES_APPROVAL_COMMENT_KEY = "systemApprovalComments";
+	public static final String PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
 	private static final String ESCALATION_STATUS = "status";
 	private static final String VALUES_APPROVAL_COMMENT_VALUE = "Complaint is escalated";
-	private static final String VALUES_DESIGNATION_ID = "designationId";
-	private static final String VALUES_DEPARTMENT_ID = "departmentId";
-	private static final String ESCALATION_HOURS = "escalationHours";
+	private static final String VALUES_DESIGNATION_ID = "systemDesignationId";
+	private static final String VALUES_DEPARTMENT_ID = "systemDepartmentId";
+	private static final String ESCALATION_HOURS = "systemEscalationHours";
 	private static final String TRUE = "true";
 
 	private String tenantId;

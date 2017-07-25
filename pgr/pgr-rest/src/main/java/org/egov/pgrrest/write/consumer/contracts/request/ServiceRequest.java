@@ -8,14 +8,14 @@ public class ServiceRequest {
 
     static final String LOCATION_ID = "locationId";
     static final String CHILD_LOCATION_ID = "childLocationId";
-    static final String VALUES_POSITION_ID = "positionId";
-    static final String VALUES_CITIZEN_USER_ID = "citizenUserId";
-    static final String VALUES_STATE_ID = "stateId";
-    static final String VALUES_STATUS = "status";
-    static final String VALUES_DEPARTMENT = "departmentId";
-    static final String VALUES_RECEIVING_MODE = "receivingMode";
-    static final String VALUES_RECEIVING_CENTER = "receivingCenter";
-    static final String VALUES_COMPLAINANT_ADDRESS = "requesterAddress";
+    static final String VALUES_POSITION_ID = "systemPositionId";
+    static final String VALUES_CITIZEN_USER_ID = "systemCitizenUserId";
+    static final String VALUES_STATE_ID = "systemStateId";
+    static final String VALUES_STATUS = "systemStatus";
+    static final String VALUES_DEPARTMENT = "systemDepartmentId";
+    static final String VALUES_RECEIVING_MODE = "systemReceivingMode";
+    static final String VALUES_RECEIVING_CENTER = "systemReceivingCenter";
+    static final String VALUES_COMPLAINANT_ADDRESS = "systemRequesterAddress";
     private static final String CRN = "serviceRequestId";
     private static final String TENANT_ID = "tenantId";
     private static final String DESCRIPTION = "description";

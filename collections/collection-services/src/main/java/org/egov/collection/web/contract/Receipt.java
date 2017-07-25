@@ -48,4 +48,6 @@ public class Receipt {
 
 	@NotNull
 	private Instrument instrument;
+	
+	private Long stateId;
 }

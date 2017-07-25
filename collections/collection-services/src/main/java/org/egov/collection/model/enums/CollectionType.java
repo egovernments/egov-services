@@ -10,10 +10,10 @@ public enum CollectionType {
     ONLINE("Online");
 
     
-    private String name;
+    private String value;
     
-    CollectionType(final String name) {
-        this.name = name;
+    CollectionType(final String value) {
+        this.value = value;
     }
     
     @Override
@@ -22,8 +22,8 @@ public enum CollectionType {
         return StringUtils.capitalize(name());
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
 }

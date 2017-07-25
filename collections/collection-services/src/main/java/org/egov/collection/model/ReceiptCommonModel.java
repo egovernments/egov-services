@@ -91,6 +91,13 @@ public class ReceiptCommonModel {
 						.debitAmount(BigDecimal.valueOf(rctDetail.getDramount())).glcode(rctDetail.getChartOfAccount())
 						.purpose(Purpose.valueOf(rctDetail.getPurpose())).build());
 			}
+			CollectionType collectnType = null;
+			for(CollectionType coll: CollectionType.values()){
+				if(coll.getValue().equals(receiptHeader.getCollectionType())){
+					collectnType = coll;
+					break;
+				}
+			}
 			BillDetail billDetail = BillDetail.builder().id(receiptHeader.getId().toString()).billNumber(receiptHeader.getReferenceNumber())
 					.consumerCode(receiptHeader.getConsumerCode()).consumerType(receiptHeader.getConsumerType())
 					.minimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()))
@@ -100,7 +107,7 @@ public class ReceiptCommonModel {
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
 					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()).toString())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
-					.collectionType(CollectionType.valueOf(receiptHeader.getCollectionType())).boundary(receiptHeader.getBoundary())
+					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
 					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
 					billAccountDetails(billAccountDetails).receiptDate((receiptHeader.getReceiptDate().getTime())).build();

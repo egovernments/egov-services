@@ -82,6 +82,59 @@ public class ReceiptDetailQueryBuilder {
 			+ "rd.tenantId as rd_tenantId" + " from egcl_receiptheader rh FULL JOIN egcl_receiptdetails rd ON"
 			+ " rh.id=rd.receiptHeader";
 
+	private static final String UPDATE_QUERY = "Update egcl_receiptheader set";
+
+	@SuppressWarnings("rawtypes")
+	public String getQueryForUpdate(Long stateId, String status, Long id, String tenantId) {
+		StringBuilder updateQuery = new StringBuilder(UPDATE_QUERY);
+		addSetUpValues(stateId, status, updateQuery);
+		addWhereClause(updateQuery, id, tenantId);
+		return updateQuery.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addWhereClause(StringBuilder updateQuery, Long id, String tenantId) {
+		updateQuery.append(" WHERE");
+		Boolean isAppendAndClause = false;
+		if (id != null) {
+			isAppendAndClause = true;
+			updateQuery.append(" id = ?");
+
+		}
+		if (tenantId != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, updateQuery);
+			updateQuery.append(" tenantId = ?");
+
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	private void addSetUpValues(Long stateId, String status, StringBuilder updateQuery) {
+		Boolean isAppendCommmaSeparator = false;
+		if (stateId != null) {
+			isAppendCommmaSeparator = true;
+			updateQuery.append(" stateId = ?");
+
+		}
+		if (status != null) {
+			isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+			updateQuery.append(" status = ?");
+
+		}
+		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+		updateQuery.append(" lastModifiedBy = ?");
+
+		isAppendCommmaSeparator = addCommmaSeparatorIfRequired(isAppendCommmaSeparator, updateQuery);
+		updateQuery.append(" lastModifiedDate = ?");
+
+	}
+
+	private Boolean addCommmaSeparatorIfRequired(Boolean isAppendCommmaSeparator, StringBuilder updateQuery) {
+		if (isAppendCommmaSeparator)
+			updateQuery.append(" ,");
+		return true;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
@@ -215,15 +268,15 @@ public class ReceiptDetailQueryBuilder {
 				+ " lastmodifiedby=? , lastmodifieddate=?" + " where id =? and tenantId=?";
 	}
 
-    public String searchQuery() {
-        return "select distinct createdby from egcl_receiptheader where tenantId = ?";
-    }
+	public String searchQuery() {
+		return "select distinct createdby from egcl_receiptheader where tenantId = ?";
+	}
 
-    public String searchStatusQuery() {
-        return "select distinct status from egcl_receiptheader where tenantId = ? order by status ASC";
-    }
+	public String searchStatusQuery() {
+		return "select distinct status from egcl_receiptheader where tenantId = ? order by status ASC";
+	}
 
-    public String searchBusinessDetailsQuery() {
-        return "select distinct(trim(businessdetails,'&nbsp')) from egcl_receiptheader where tenantId = ?";
-    }
+	public String searchBusinessDetailsQuery() {
+		return "select distinct(trim(businessdetails,'&nbsp')) from egcl_receiptheader where tenantId = ?";
+	}
 }

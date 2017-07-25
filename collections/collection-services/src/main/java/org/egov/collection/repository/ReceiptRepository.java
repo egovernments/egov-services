@@ -57,10 +57,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -269,6 +272,57 @@ public class ReceiptRepository {
     	
     	return isInsertionSuccessful;
     }
+    
+    public Boolean updateReceipt(ReceiptReq receiptRequest) {
+		Receipt receipt = receiptRequest.getReceipt().get(0);
+		BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
+
+		String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(receipt.getStateId(), billDetail.getStatus(),
+				 new Long(billDetail.getId()), billDetail.getTenantId());
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+
+				int i = 1;
+				if (receipt.getStateId() != null)
+					ps.setLong(i++, receipt.getStateId());
+
+				if (billDetail.getStatus() != null)
+					ps.setString(i++, billDetail.getStatus());
+
+				if (receiptRequest.getRequestInfo().getUserInfo().getId() != null)
+					ps.setLong(i++, receiptRequest.getRequestInfo().getUserInfo().getId());
+
+				ps.setDate(i++, new Date(new java.util.Date().getTime()));
+
+				if (billDetail.getId() != null)
+					ps.setLong(i++, new Long(billDetail.getId()));
+				if (billDetail.getTenantId() != null)
+					ps.setString(i++, billDetail.getTenantId());
+
+			}
+		};
+		try {
+			jdbcTemplate.update(updateQuery, pss);
+		} catch (Exception e) {
+			logger.error("could not update status and stateId in db for ReceiptRequest:", receiptRequest);
+			return false;
+		}
+		return true;
+	}
+
+
+	public void pushUpdateDetailsToQueque(ReceiptReq receiptRequest) {
+		logger.info("Pushing updateReceiptDetails to queue");
+		try {
+			collectionProducer.producer(applicationProperties.getUpdateReceiptTopicName(),
+					applicationProperties.getUpdateReceiptTopicKey(), receiptRequest);
+		} catch (Exception e) {
+			logger.error("Pushing To Queue Failed! ", e.getMessage());
+		}
+	}
+
 
     public List<BusinessDetailsRequestInfo> getBusinessDetails(final RequestInfo requestInfo, final String tenantId) {
         String queryString = receiptDetailQueryBuilder.searchBusinessDetailsQuery();

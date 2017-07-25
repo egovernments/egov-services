@@ -278,7 +278,7 @@ public class ReceiptRepository {
 		BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
 
 		String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(receipt.getStateId(), billDetail.getStatus(),
-				receiptRequest.getRequestInfo().getUserInfo(), new Long(billDetail.getId()), billDetail.getTenantId());
+				 new Long(billDetail.getId()), billDetail.getTenantId());
 		PreparedStatementSetter pss = new PreparedStatementSetter() {
 
 			@Override

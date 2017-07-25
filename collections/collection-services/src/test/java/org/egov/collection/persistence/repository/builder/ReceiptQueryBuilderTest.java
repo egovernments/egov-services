@@ -50,7 +50,7 @@ import org.junit.Test;
 
 public class ReceiptQueryBuilderTest {
 	@Test
-	public void no_input_test() {
+	public void no_input_test_for_select() {
 		ReceiptSearchCriteria receiptCriteria = new ReceiptSearchCriteria();
 		ReceiptDetailQueryBuilder receiptQueryBuilder = new ReceiptDetailQueryBuilder();
 
@@ -84,7 +84,7 @@ public class ReceiptQueryBuilderTest {
 	}
 
 	@Test
-	public void all_input_test() {
+	public void all_input_test_for_selelct() {
 		ReceiptSearchCriteria receiptCriteria = new ReceiptSearchCriteria();
 		ReceiptDetailQueryBuilder receiptQueryBuilder = new ReceiptDetailQueryBuilder();
 		receiptCriteria.setBusinessCode("TL");
@@ -128,5 +128,21 @@ public class ReceiptQueryBuilderTest {
 				+ "rh.businessDetails = ? ORDER BY rh.payeename DESC",
 				receiptQueryBuilder.getQuery(receiptCriteria, new ArrayList<>()));
 
+	}
+	
+	@Test
+	public void no_input_test_for_update(){
+		ReceiptDetailQueryBuilder recceiptDetailQueryBuilder=new ReceiptDetailQueryBuilder();
+		assertEquals("Update egcl_receiptheader set lastModifiedBy = ? , lastModifiedDate = ? WHERE",recceiptDetailQueryBuilder.getQueryForUpdate(
+				null, null, null, null));
+	}
+	
+	
+	@Test
+	public void all_input_test_for_update(){
+		ReceiptDetailQueryBuilder receiptDetailQueryBuilder=new ReceiptDetailQueryBuilder();
+		assertEquals("Update egcl_receiptheader set stateId = ? ,"
+				+ " status = ? , lastModifiedBy = ? , lastModifiedDate = ? WHERE id = ? AND tenantId = ?"
+				,receiptDetailQueryBuilder.getQueryForUpdate(2L, "SUBMITTED", 1L, "default"));
 	}
 }

@@ -145,15 +145,19 @@ public class ReceiptRepositoryTest {
 	
 	@Test
 	public void test_should_update_status_and_stateId_toDB(){
-		User userInfo=User.builder().id(1L).build();
-		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", userInfo, 1L, "default"))
+	
+		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", 1L, "default"))
 		.thenReturn("");
 	    Boolean value=true;
 		when(jdbcTemplate.update(any(String.class),any(PreparedStatementSetter.class))).thenReturn(1);
 		assertTrue(value.equals(receiptRepository.updateReceipt(getReceiptRequest())));
 	}
 	
-	
+	@Test
+	public void test_should_be_able_to_push_update_status_request_to_kafka(){
+		receiptRepository.pushUpdateDetailsToQueque(getReceiptRequest());
+		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
+	}
 
 	private ReceiptReq getReceiptRequest() {
 		Calendar calender = Calendar.getInstance();

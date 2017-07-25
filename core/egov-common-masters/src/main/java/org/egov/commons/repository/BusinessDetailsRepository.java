@@ -385,6 +385,7 @@ public class BusinessDetailsRepository {
 		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
 
+	//TODO: these extra API's are not required to check if the data exists or not in the service class find by search API and validate
 	public boolean checkDetailsByNameAndTenantIdExists(String name, String tenantId, Long id, Boolean isUpdate) {
 		final List<Object> preparedStatementValue = new ArrayList<Object>();
 		preparedStatementValue.add(name);

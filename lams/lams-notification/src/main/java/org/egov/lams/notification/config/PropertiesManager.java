@@ -43,6 +43,15 @@ public class PropertiesManager {
 	@Value("${lams.evict.rejected.msg}")
 	public String evictRejectMessage;
 	
+	@Value("${lams.cancel.notification.msg}")
+	private String cancelNotificationMessage;
+
+	@Value("${lams.cancel.approval.msg}")
+	public String cancelApproveMessage;
+
+	@Value("${lams.cancel.rejected.msg}")
+	public String cancelRejectMessage;
+	
 	@Value("${lams.create.subject}")
 	public String createSubject;
 	

@@ -70,17 +70,24 @@
 			<groupId>io.searchbox</groupId>
 			<artifactId>jest</artifactId>
 		</dependency>
-
+	
 		<!-- https://mvnrepository.com/artifact/org.apache.metamodel/MetaModel-elasticsearch-common -->
+	
+		<dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        
 	</dependencies>
 
 
 	<repositories>
 		<repository>
-			<id>repo.egovernments.org</id>
-			<name>eGov ERP Releases Repository</name>
-			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
 	</repositories>
 
 

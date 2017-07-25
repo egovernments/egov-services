@@ -12,7 +12,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "CategoryType.name",
-							"label": "Category",
+							"label": "Category Type",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,

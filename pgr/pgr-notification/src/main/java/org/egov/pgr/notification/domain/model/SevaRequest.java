@@ -21,11 +21,11 @@ public class SevaRequest {
     private static final String CRN = "serviceRequestId";
     private static final String SERVICE_NAME = "serviceName";
     private static final String SERVICE_CODE = "serviceCode";
-    private static final String VALUES_STATUS = "status";
+    private static final String VALUES_STATUS = "systemStatus";
     private static final String DESCRIPTION = "description";
     private static final String TENANT_ID = "tenantId";
     private static final String FIRST_NAME = "firstName";
-    private static final String LOCATION_NAME = "locationName";
+    private static final String LOCATION_NAME = "systemLocationName";
     private static final String REQUESTED_DATE = "requestedDatetime";
     private static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
     private static final String SERVICE_REQUEST = "serviceRequest";
@@ -41,14 +41,14 @@ public class SevaRequest {
     private static final String USER_TYPE_KEY = "type";
     private static final String USER_INFO_KEY = "userInfo";
     private static final String IN_PROGRESS_STATUS = "IN PROGRESS";
-    private static final String REJECTED_STATUS = "DSREJECTED";
-    private static final String RESUBMIT_STATUS = "DS-RESUBMIT";
-    private static final String VALUES_POSITION_ID = "positionId";
-    private static final String VALUES_ESCALATED_FLAG = "isEscalated";
+    private static final String REJECTED_STATUS = "REJECTED";
+    private static final String RESUBMIT_STATUS = "RESUBMIT";
+    private static final String VALUES_POSITION_ID = "systemPositionId";
+    private static final String VALUES_ESCALATED_FLAG = "systemIsEscalated";
     private static final String TRUE = "true";
-    private static final String PREVIOUS_ASSIGNEE = "previousAssignee";
-    private static final String LOCATION_ID = "locationId";
-    private static final String CHILD_LOCATION_ID = "childLocationId";
+    private static final String PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
+    private static final String LOCATION_ID = "systemLocationId";
+    private static final String CHILD_LOCATION_ID = "systemChildLocationId";
     private static final String REJECTION_LETTER = "rejectionLetter";
 
 

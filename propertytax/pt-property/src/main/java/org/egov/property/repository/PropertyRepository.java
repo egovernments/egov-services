@@ -267,7 +267,7 @@ public class PropertyRepository {
 
 		Long createdTime = new Date().getTime();
 
-		if(unit.getIsAuthorised()==null){
+		if (unit.getIsAuthorised() == null) {
 			unit.setIsAuthorised(true);
 		}
 		final PreparedStatementCreator pscUnit = new PreparedStatementCreator() {
@@ -304,6 +304,7 @@ public class PropertyRepository {
 				ps.setLong(27, getLong(createdTime));
 				ps.setLong(28, getLong(createdTime));
 				ps.setLong(29, getLong(floorId));
+				ps.setBoolean(30, unit.getIsAuthorised());
 				return ps;
 			}
 		};
@@ -328,8 +329,8 @@ public class PropertyRepository {
 	public void saveRoom(Unit unit, Long floorId, Long parent) {
 
 		Long createdTime = new Date().getTime();
-		
-		if(unit.getIsAuthorised()==null){
+
+		if (unit.getIsAuthorised() == null) {
 			unit.setIsAuthorised(true);
 		}
 
@@ -340,7 +341,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
-				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent };
+				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent,
+				unit.getIsAuthorised() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -1232,7 +1234,8 @@ public class PropertyRepository {
 				ps.setLong(27, getLong(createdTime));
 				ps.setLong(28, getLong(createdTime));
 				ps.setLong(29, getLong(floorId));
-				ps.setLong(30, getLong(unit.getId()));
+				ps.setBoolean(30, unit.getIsAuthorised());
+				ps.setLong(31, getLong(unit.getId()));
 				return ps;
 			}
 		};
@@ -1258,7 +1261,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
-				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent, unit.getId() };
+				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent,
+				unit.getIsAuthorised(), unit.getId() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOMHISTORY_QUERY, roomArgs);
 
@@ -1378,6 +1382,5 @@ public class PropertyRepository {
 
 		jdbcTemplate.update(UserBuilder.INSERT_USERHISTORY_QUERY, userPropertyArgs);
 	}
-	
-	
+
 }

@@ -88,8 +88,8 @@ public class SevaRequestTest {
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
         final HashMap<String, String> locationEntry = new HashMap<>();
-        locationEntry.put("key", "status");
-        locationEntry.put("name", "statusName");
+        locationEntry.put("key", "systemStatus");
+        locationEntry.put("name", "systemStatusName");
         attributeValues.add(locationEntry);
         serviceRequest.put("attribValues", attributeValues);
         serviceRequest.put("attribValues", attributeValues);
@@ -97,7 +97,7 @@ public class SevaRequestTest {
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        assertEquals("statusName", sevaRequest.getStatusName());
+        assertEquals("systemStatusName", sevaRequest.getStatusName());
     }
 
     @Test
@@ -168,15 +168,15 @@ public class SevaRequestTest {
         final HashMap<String, Object> serviceRequest = new HashMap<>();
         final ArrayList<HashMap<String, String>> attributeValues = new ArrayList<>();
         final HashMap<String, String> locationEntry = new HashMap<>();
-        locationEntry.put("key", "locationName");
-        locationEntry.put("name", "locationName");
+        locationEntry.put("key", "systemLocationName");
+        locationEntry.put("name", "systemLocationName");
         attributeValues.add(locationEntry);
         serviceRequest.put("attribValues", attributeValues);
         sevaRequestMap.put("serviceRequest", serviceRequest);
 
         final SevaRequest sevaRequest = new SevaRequest(sevaRequestMap);
 
-        assertEquals("locationName", sevaRequest.getLocationName());
+        assertEquals("systemLocationName", sevaRequest.getLocationName());
     }
 
     @Test

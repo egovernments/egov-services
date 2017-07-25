@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Boundary;
+import org.egov.models.Document;
 import org.egov.models.Floor;
 import org.egov.models.Property;
 import org.egov.models.PropertyLocation;
@@ -35,16 +36,14 @@ public class PropertyValidator {
 	@Autowired
 	private Environment env;
 
-
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
-	
+
 	@Autowired
 	BoundaryRepository boundaryRepository;
-	
-	@Autowired
-        private PropertyMasterRepository propertyMasterRepository;
 
+	@Autowired
+	private PropertyMasterRepository propertyMasterRepository;
 
 	/**
 	 * Description : This validates the property boundary
@@ -56,7 +55,8 @@ public class PropertyValidator {
 			throws InvalidPropertyBoundaryException {
 
 		List<String> fields = getAllBoundaries();
-		//TODO location service gives provision to search by multiple ids, no need to do multiple calls for each boundary id
+		// TODO location service gives provision to search by multiple ids, no
+		// need to do multiple calls for each boundary id
 		for (String field : fields) {
 			validateBoundaryFields(property, field, requestInfo);
 		}
@@ -75,15 +75,15 @@ public class PropertyValidator {
 
 		PropertyLocation propertyLocation = property.getBoundary();
 		Long id;
-        if (field.equalsIgnoreCase(env.getProperty("revenue.boundary"))) {
+		if (field.equalsIgnoreCase(env.getProperty("revenue.boundary"))) {
 			id = propertyLocation.getRevenueBoundary().getId();
 		} else if (field.equalsIgnoreCase(env.getProperty("location.boundary"))) {
 			id = propertyLocation.getLocationBoundary().getId();
 		} else {
 			id = propertyLocation.getAdminBoundary().getId();
 		}
-      return  boundaryRepository.isBoundaryExists(property, requestInfo, id);
-		
+		return boundaryRepository.isBoundaryExists(property, requestInfo, id);
+
 	}
 
 	/**
@@ -151,7 +151,13 @@ public class PropertyValidator {
 	public List<String> getAllBoundaries() {
 		return getFieldsOfType(PropertyLocation.class, Boundary.class);
 	}
-	
+
+	/**
+	 * Description : Checks whether Property Type already exists or not
+	 * 
+	 * @param property
+	 * @param requestInfo
+	 */
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
 
 		if (property.getPropertyDetail().getPropertyType() != null) {
@@ -174,6 +180,21 @@ public class PropertyValidator {
 						for (Unit units : unit.getUnits()) {
 							validateUnitData(property.getTenantId(), units, requestInfo);
 						}
+					}
+				}
+			}
+		}
+
+		if (property.getPropertyDetail().getDocuments() != null) {
+			for (Document document : property.getPropertyDetail().getDocuments()) {
+
+				if (document.getDocumentType() != null) {
+					Boolean isDocumentTypeRecordExists = propertyMasterRepository.checkWhetherRecordExits(
+							property.getTenantId(), document.getDocumentType(),
+							ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);
+
+					if (!isDocumentTypeRecordExists) {
+						throw new InvalidCodeException(env.getProperty("invalid.input.documenttype"), requestInfo);
 					}
 				}
 			}
@@ -264,5 +285,4 @@ public class PropertyValidator {
 			}
 		}
 	}
-
 }

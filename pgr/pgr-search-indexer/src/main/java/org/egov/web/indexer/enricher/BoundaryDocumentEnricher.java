@@ -15,8 +15,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Service
 public class BoundaryDocumentEnricher implements ServiceRequestDocumentEnricher {
 
-    private static final String LOCATION_ID = "locationId";
-    private static final String CHILD_LOCATION_ID = "childLocationId";
+    private static final String LOCATION_ID = "systemLocationId";
+    private static final String CHILD_LOCATION_ID = "systemChildLocationId";
     private BoundaryRepository boundaryRepository;
 
     public BoundaryDocumentEnricher(BoundaryRepository boundaryRepository) {

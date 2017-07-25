@@ -29,7 +29,7 @@ public class Depreciation {
 	@NotNull
 	private String tenantId;
 
-	@Size(min = 4, max = 16)
+	@Size(min = 4, max = 64)
 	@JsonProperty("code")
 	@NotNull
 	private String code;

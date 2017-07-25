@@ -39,7 +39,7 @@ public class PropertyDetail {
 	private String regdDocDate = null;
 
 	@JsonProperty("reason")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String reason = null;
 
 	@JsonProperty("status")
@@ -60,23 +60,23 @@ public class PropertyDetail {
 
 	@JsonProperty("propertyType")
 	@NotNull
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String propertyType = null;
 
 	@JsonProperty("category")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String category = null;
 
 	@JsonProperty("usage")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String usage = null;
 
 	@JsonProperty("department")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String department = null;
 
 	@JsonProperty("apartment")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String apartment = null;
 
 	@JsonProperty("siteLength")
@@ -106,19 +106,19 @@ public class PropertyDetail {
 	private String landOwner = null;
 
 	@JsonProperty("floorType")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String floorType = null;
 
 	@JsonProperty("woodType")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String woodType = null;
 
 	@JsonProperty("roofType")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String roofType = null;
 
 	@JsonProperty("wallType")
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 64)
 	private String wallType = null;
 
 	@JsonProperty("floors")

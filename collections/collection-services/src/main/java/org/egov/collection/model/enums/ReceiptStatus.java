@@ -45,7 +45,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ReceiptStatus {
     CREATED("Created"),APPROVED("Approved"),
-    REJECTED("Rejected"),CANCELLED("Cancelled");
+    REJECTED("Rejected"),CANCELLED("Cancelled"),TOBESUBMITTED("TO BE SUBMITTED");
 
     
     private String name;

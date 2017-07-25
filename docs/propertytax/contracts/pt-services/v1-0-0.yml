@@ -350,7 +350,7 @@ definitions:
       channel:
         type: string
         description: Property can be created from different channels Eg. System (properties created by ULB officials), CFC Counter (From citizen faciliation counters) etc. Here we are defining some known channels, there can be more client to client.
-        maxLength: 16
+        maxLength: 64
         minLength: 4
         enum:
          - SYSTEM
@@ -441,7 +441,7 @@ definitions:
       reason:
         type: string
         description: reason of the PropertyDetail
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       status:
         type: string
@@ -473,27 +473,27 @@ definitions:
       propertyType:
         type: string
         description: Type of a property like Private, Vacant Land, State Government, Central Government etc.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       category:
         type: string
         description: category of the property like Residential, Non-Residential, etc.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       usage:
         type: string
         description: usage of the property
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       department:
         type: string
         description: department of the property which belongs to. This is applicable when property type is State Govternment or Central Government.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       apartment:
         type: string
         description: apartment of the PropertyDetail
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       siteLength:
         type: number
@@ -531,22 +531,22 @@ definitions:
       floorType:
         type: string
         description: type of floor
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       woodType:
         type: string
         description: type of wood used in the property
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       roofType:
         type: string
         description: type of roof the property having
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       wallType:
         type: string
         description: type of walls the property having
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       floors:
         description: Floors
@@ -722,12 +722,12 @@ definitions:
       usage:
         type: string
         description: usage of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       occupancyType:
         type: string
         description: occupancy of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       occupierName:
         type: string
@@ -746,12 +746,12 @@ definitions:
       structure:
         type: string
         description: structure of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       age:
         type: string
         description: age of the Unit
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       exemptionReason:
         type: string

@@ -30,7 +30,7 @@ public class PgrWorkflowTest {
 	private static final String TENANT_ID = "tenantId";
 	private static final String COMPLAINT_TYPE_CODE = "complaintTypeCode";
 	private static final String BOUNDARY_ID = "boundaryId";
-	public static final String STATE_ID = "stateId";
+	public static final String STATE_ID = "systemStateId";
 	public static final String STATE_DETAILS = "stateDetails";
 
 	@MockBean

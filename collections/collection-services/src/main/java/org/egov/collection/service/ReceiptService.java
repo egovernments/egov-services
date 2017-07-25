@@ -53,6 +53,7 @@ import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.Bill;
@@ -90,8 +91,8 @@ public class ReceiptService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-    @Autowired
-    private BusinessDetailsRepository businessDetailsRepository;
+	@Autowired
+	private BusinessDetailsRepository businessDetailsRepository;
 
 	@Autowired
 	private CollectionApportionerService collectionApportionerService;
@@ -105,8 +106,8 @@ public class ReceiptService {
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		logger.info("Pushing recieptdetail to kafka queue");
 		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
-		Bill apportionBill = receiptReq.getReceipt().get(0).getBill().get(0);
-		//apportionBill.getBillDetails().clear();
+		Bill apportionBill = bill;
+		Boolean callBackForApportion = false;
 		for (BillDetail billdetail : bill.getBillDetails()) {
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 					billdetail.getBusinessService(), receiptReq);
@@ -117,43 +118,48 @@ public class ReceiptService {
 						.getCallBackForApportioning()) {
 					bill.getBillDetails().remove(billdetail);
 					apportionBill.getBillDetails().add(billdetail);
-				} else
-
+					callBackForApportion = true;
+				} else {
 					billdetail
 							.setBillAccountDetails(collectionApportionerService
 									.apportionPaidAmount(
 											billdetail.getAmountPaid(),
 											billdetail.getBillAccountDetails()));
+				}
+			}else{
+				return null;
 			}
 
 		}
-		/*apportionBill = getApportionListFromBillingService(
-				receiptReq.getRequestInfo(), apportionBill).get(0);
-		bill.getBillDetails().addAll(apportionBill.getBillDetails());*/
+		if (callBackForApportion)
+			apportionBill = getApportionListFromBillingService(
+					receiptReq.getRequestInfo(), apportionBill).get(0);
+		bill.getBillDetails().addAll(apportionBill.getBillDetails());
 		receiptReq.getReceipt().get(0).getBill().clear();
 		receiptReq.getReceipt().get(0).getBill().add(bill);
 		setReceiptNumber(receiptReq);
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo().getUserInfo().getId());
-		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime())).getTime());
-		auditDetails.setLastModifiedDate((new Date(new java.util.Date().getTime())).getTime());
+		auditDetails.setCreatedBy(receiptReq.getRequestInfo().getUserInfo()
+				.getId());
+		auditDetails.setLastModifiedBy(receiptReq.getRequestInfo()
+				.getUserInfo().getId());
+		auditDetails.setCreatedDate((new Date(new java.util.Date().getTime()))
+				.getTime());
+		auditDetails.setLastModifiedDate((new Date(new java.util.Date()
+				.getTime())).getTime());
 		receiptReq.getReceipt().get(0).setAuditDetails(auditDetails);
-        Receipt receipt = null;
-		
-	//	return receiptRepository.pushToQueue(receiptReq); //async call
-		
-/*	     Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
-		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){
-			 return null;
-		 }else{
-			receipt = create(receiptReq); //sync call
-		 } */ //uncomment while enabling instrument integration
-        
-		receipt = create(receiptReq); //sync call
-		if(null != receipt)
+		// return receiptRepository.pushToQueue(receiptReq); //async call
+
+		/*
+		 * Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
+		 * if(null == instrumentid || 0L == Long.valueOf(instrumentid)){ return
+		 * null; }else{ receipt = create(receiptReq); //sync call }
+		 */// uncomment while enabling instrument integration
+
+		Receipt receipt = create(receiptReq); // sync call
+		if (null != receipt)
 			receiptRepository.pushToQueue(receiptReq);
-		
+
 		return receipt;
 	}
 
@@ -187,9 +193,10 @@ public class ReceiptService {
 			RequestInfo requestInfo, Bill apportionBill) {
 		logger.info("Apportion Paid Amount in Billing Service");
 		StringBuilder uriForApportion = new StringBuilder();
-		uriForApportion.append(
-				applicationProperties.getBillingServiceHostName()).append(
-				applicationProperties.getBillingServiceApportion());
+		uriForApportion
+				.append(applicationProperties.getBillingServiceHostName())
+				.append(applicationProperties.getBillingServiceApportion())
+				.append("&tenantId=").append(apportionBill.getTenantId());
 		logger.info("URI For Apportioning Paid Amount in Billing Service: "
 				+ uriForApportion.toString());
 		BillRequest billRequest = new BillRequest();
@@ -209,6 +216,7 @@ public class ReceiptService {
 
 	public Boolean validateFundAndDept(
 			BusinessDetailsResponse businessDetailsRes) {
+		//TODO: Vishal: After validation prepare the Response with Error Codes and Error Fields 
 		if (null == businessDetailsRes) {
 			logger.error("All business details fields are not available");
 			return false;
@@ -241,19 +249,12 @@ public class ReceiptService {
 		logger.info("Persisting recieptdetail");
 
 		Receipt receiptInfo = receiptReq.getReceipt().get(0);
-		String statusCode;
 		long receiptHeaderId = 0L;
 
 		for (BillDetail billdetails : receiptInfo.getBill().get(0)
 				.getBillDetails()) {
-			billdetails.setCollectionType(CollectionType.valueOf("COUNTER"));
-			if (billdetails.getCollectionType().equals("ONLINE")) {
-				statusCode = "PENDING";
-			} else {
-				statusCode = "TO BE SUBMITTED";
-			}
-			logger.info("StatusCode: " + statusCode);
-			billdetails.setStatus(statusCode);
+			billdetails.setCollectionType(CollectionType.COUNTER);
+			billdetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 			billdetails.setReceiptDate(new Date().getTime());
 			final Map<String, Object> parametersMap = new HashMap<>();
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
@@ -272,14 +273,15 @@ public class ReceiptService {
 						.getPaidBy());
 				parametersMap.put("referencenumber",
 						billdetails.getBillNumber());
-				parametersMap.put("receipttype", businessDetails.getBusinessType());
+				parametersMap.put("receipttype",
+						businessDetails.getBusinessType());
 				parametersMap.put("receiptdate", billdetails.getReceiptDate());
 				parametersMap.put("receiptnumber",
 						billdetails.getReceiptNumber());
 				parametersMap.put("businessdetails",
 						billdetails.getBusinessService());
-				parametersMap.put("collectiontype",
-						billdetails.getCollectionType().toString());
+				parametersMap.put("collectiontype", billdetails
+						.getCollectionType().toString());
 				parametersMap.put("reasonforcancellation",
 						billdetails.getReasonForCancellation());
 				parametersMap.put("minimumamount",
@@ -319,21 +321,26 @@ public class ReceiptService {
 				parametersMap.put("stateid", null);
 				parametersMap.put("location", null);
 				parametersMap.put("isreconciled", false);
-				parametersMap.put("status", statusCode);
-				
-				try{
+				parametersMap.put("status", billdetails.getStatus());
+
+				try {
 					receiptHeaderId = receiptRepository.persistToReceiptHeader(
-						parametersMap, receiptInfo);
-				}catch(Exception e){
-					logger.info("Persisting into receiptheader failed for rcpt: "+billdetails.getReceiptNumber());
+							parametersMap, receiptInfo);
+				} catch (Exception e) {
+					logger.info("Persisting into receiptheader failed for rcpt: "
+							+ billdetails.getReceiptNumber());
 				}
-				if(receiptHeaderId == 0L){
+				if (receiptHeaderId == 0L) {
 					break;
 				}
-				
-			/*	receiptRepository.persistIntoReceiptInstrument(Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()), 
-						receiptHeaderId); */ //should be uncommented while enabling instrument integration
-				
+
+				/*
+				 * receiptRepository.persistIntoReceiptInstrument(Long.valueOf(
+				 * receiptReq.getReceipt().get(0).getInstrument().getId()),
+				 * receiptHeaderId);
+				 */// should be uncommented while enabling instrument
+					// integration
+
 				Map<String, Object>[] parametersReceiptDetails = new Map[billdetails
 						.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;
@@ -372,11 +379,12 @@ public class ReceiptService {
 						break;
 					}
 				}
-				try{
-					 receiptRepository.persistToReceiptDetails(
-								parametersReceiptDetails, receiptHeaderId);
-				}catch(Exception e){
-					logger.info("Persisting into receiptdetails failed for rcpt: "+billdetails.getReceiptNumber());
+				try {
+					receiptRepository.persistToReceiptDetails(
+							parametersReceiptDetails, receiptHeaderId);
+				} catch (Exception e) {
+					logger.info("Persisting into receiptdetails failed for rcpt: "
+							+ billdetails.getReceiptNumber());
 				}
 			}
 		}
@@ -388,8 +396,10 @@ public class ReceiptService {
 		logger.info("Searching for fund aand other businessDetails based on code.");
 		BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();
 		try {
-            businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Arrays.asList(businessDetailsCode),
-                    receiptReq.getReceipt().get(0).getTenantId(),receiptReq.getRequestInfo());
+			businessDetailsResponse = businessDetailsRepository
+					.getBusinessDetails(Arrays.asList(businessDetailsCode),
+							receiptReq.getReceipt().get(0).getTenantId(),
+							receiptReq.getRequestInfo());
 		} catch (Exception e) {
 			logger.error("Error while fetching buisnessDetails from coll-master service. "
 					+ e);
@@ -532,53 +542,60 @@ public class ReceiptService {
 		return receiptRepository
 				.pushReceiptCancelDetailsToQueue(receiptRequest);
 	}
-	
-	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails){
-		logger.info("WorkflowDetails: "+workflowDetails.toString());
-		//update repo call
+
+	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails) {
+		logger.info("WorkflowDetails: " + workflowDetails.toString());
+		// update repo call
 		return workflowDetails;
 	}
 
-    public List<User> getReceiptCreators(final RequestInfo requestInfo,final String tenantId) {
-        return receiptRepository.getReceiptCreators(requestInfo,tenantId);
-    }
+	public List<User> getReceiptCreators(final RequestInfo requestInfo,
+			final String tenantId) {
+		return receiptRepository.getReceiptCreators(requestInfo, tenantId);
+	}
 
-    public List<String> getReceiptStatus(final String tenantId) {
-        return receiptRepository.getReceiptStatus(tenantId);
-    }
-    
-    public Long getInstrumentId(Receipt receipt){
-    	Long instrumentId = null;
+	public List<String> getReceiptStatus(final String tenantId) {
+		return receiptRepository.getReceiptStatus(tenantId);
+	}
+
+	public Long getInstrumentId(Receipt receipt) {
+		Long instrumentId = null;
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getEgovServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();
 		builder.append(hostname).append(baseUri);
 		Instrument instrument = receipt.getInstrument();
 		Object response = null;
-    	try{
+		try {
 			response = restTemplate.postForObject(builder.toString(),
-					instrument, Object.class);    	
-	    }catch(Exception e){
-    		logger.error("Couldn't create instrument in the instrument service.", e.getCause());
-    		return instrumentId;
-    	}
+					instrument, Object.class);
+		} catch (Exception e) {
+			logger.error(
+					"Couldn't create instrument in the instrument service.",
+					e.getCause());
+			return instrumentId;
+		}
 		logger.info("Response from instrument service: " + response.toString());
 
-    	try{
-    		
-    	}catch(Exception e){
-    		logger.error("Couldn't fetch instrument id from instrument service.", e.getCause());
-    		return instrumentId;
-    	}
-    	return instrumentId;
-    }
-    
-    public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId, String status, String tenantId,
-			RequestInfo requestInfo) {
-		ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria.builder().tenantId(tenantId)
-				.ids(Arrays.asList(id)).build();
-		List<Receipt> receipts = receiptRepository.findAllReceiptsByCriteria(receiptSearchCriteria).toDomainContract();
-		receipts.get(0).getBill().get(0).getBillDetails().get(0).setStatus(status);
+		try {
+
+		} catch (Exception e) {
+			logger.error(
+					"Couldn't fetch instrument id from instrument service.",
+					e.getCause());
+			return instrumentId;
+		}
+		return instrumentId;
+	}
+
+	public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId,
+			String status, String tenantId, RequestInfo requestInfo) {
+		ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria
+				.builder().tenantId(tenantId).ids(Arrays.asList(id)).build();
+		List<Receipt> receipts = receiptRepository.findAllReceiptsByCriteria(
+				receiptSearchCriteria).toDomainContract();
+		receipts.get(0).getBill().get(0).getBillDetails().get(0)
+				.setStatus(status);
 		receipts.get(0).setStateId(stateId);
 		ReceiptReq receiptRequest = new ReceiptReq();
 		receiptRequest.setRequestInfo(requestInfo);
@@ -592,8 +609,9 @@ public class ReceiptService {
 
 	}
 
-    public List<BusinessDetailsRequestInfo> getBusinessDetails(final String tenantId, final RequestInfo requestInfo) {
-        return receiptRepository.getBusinessDetails(requestInfo,tenantId);
-    }
+	public List<BusinessDetailsRequestInfo> getBusinessDetails(
+			final String tenantId, final RequestInfo requestInfo) {
+		return receiptRepository.getBusinessDetails(requestInfo, tenantId);
+	}
 
 }

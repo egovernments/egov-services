@@ -11,7 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class WorkflowResponse {
 
-    public static final String STATE_ID = "stateId";
+    public static final String STATE_ID = "systemStateId";
 
     @JsonProperty("assignee")
     private String positionId;

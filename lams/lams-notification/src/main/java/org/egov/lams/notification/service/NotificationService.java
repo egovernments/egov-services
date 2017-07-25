@@ -6,7 +6,6 @@ import org.egov.lams.notification.config.PropertiesManager;
 import org.egov.lams.notification.model.Agreement;
 import org.egov.lams.notification.model.Allottee;
 import org.egov.lams.notification.model.Asset;
-import org.egov.lams.notification.model.City;
 import org.egov.lams.notification.web.contract.Tenant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +56,25 @@ public class NotificationService {
 				asset.getCategory().getName(), asset.getName(), agreement.getAcknowledgementNumber(), tenant.getName());
 		return message;
 	}
+	
+	public String getCancelInitiateMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+
+		String message = MessageFormat.format(propertiesManager.getCancelNotificationMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), tenant.getName());
+		return message;
+	}
+
+	public String getCancelApprovalMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getCancelApproveMessage(), allottee.getName(),
+				agreement.getAgreementNumber(), asset.getCategory().getName(), asset.getName(), tenant.getName());
+		return message;
+	}
+
+	public String getCancelRejectedMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getCancelRejectMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), tenant.getName());
+		return message;
+	}
 
 	public String getCreateSubject(Agreement agreement) {
 		String message = MessageFormat.format(propertiesManager.getCreateSubject(), agreement.getAcknowledgementNumber());
@@ -65,6 +83,11 @@ public class NotificationService {
 	
 	public String getEvictSubject(Agreement agreement) {
 		String message = MessageFormat.format(propertiesManager.getEvictSubject(), agreement.getAgreementNumber());
+		return message;
+	}
+	
+	public String getCancelSubject(Agreement agreement) {
+		String message = MessageFormat.format(propertiesManager.getCancelSubject(), agreement.getAgreementNumber());
 		return message;
 	}
 

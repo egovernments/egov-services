@@ -59,7 +59,7 @@ class Dashboard extends Component {
     };
 }
   componentWillMount() {
- 
+
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
@@ -68,10 +68,10 @@ class Dashboard extends Component {
              "emptyTable": "No Records"
           }
     });
-	
+
 	  let { setLoadingStatus} = this.props;
      setLoadingStatus("loading");
-	  
+
     let current = this;
     let {currentUser}=this.props;
 
@@ -112,7 +112,7 @@ class Dashboard extends Component {
       })
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {
-            
+
         if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
           Api.commonApiPost("/pgr/seva/v1/_search",{positionId:res.Employee[0].assignments[0].position, status: "REGISTERED,FORWARDED,PROCESSING,NOTCOMPLETED,REOPENED"},{}).then(function(response){
                 for(var i=0; i<response.serviceRequests.length; i++) {
@@ -149,20 +149,20 @@ class Dashboard extends Component {
             })
         } else {
 			current.props.setLoadingStatus('hide');
-            currentUser.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
+            current.props.toggleSnackbarAndSetText(true, "Something went wrong. Please try again later.");
         }
       })
     }
   };
 
 
-  
+
  componentWillUnmount(){
      $('#searchTable')
      .DataTable()
      .destroy(true);
  };
-  
+
 
    componentDidUpdate() {
     let self = this;
@@ -178,9 +178,9 @@ class Dashboard extends Component {
              "emptyTable": "No Records"
           }
      });
-    }  
+    }
   }
-  
+
   localHandleChange = (string) => {
 	 var b = this.state.serviceRequests.filter(function(item, index, array){
 		  if(JSON.stringify(item).toLowerCase().match(string.toLowerCase())){
@@ -195,14 +195,14 @@ class Dashboard extends Component {
       slideIndex: value,
     });
   };
-  
+
    handleNavigation = (type, id) => {
       this.props.history.push(type+id);
     }
 
 
   render() {
-	  
+
 	  const renderBody=()=> {
 		 return this.state.localArray.map((e,i)=> {
 				var triColor = "#fff";
@@ -221,8 +221,8 @@ class Dashboard extends Component {
             }
 				  }
 				})
-				
-			 
+
+
 		  return(
 								<tr key={i} style={{ cursor:'pointer'}} onClick={()=>{
 									 this.handleNavigation("/pgr/viewGrievance/", e.serviceRequestId);
@@ -236,7 +236,7 @@ class Dashboard extends Component {
                       if(item['key'] == 'keyword')
                         return (item['name'] && item['name'].toLowerCase() == 'complaint' ? 'Grievance' : 'Service');
                       })
-                    }            
+                    }
                   </td>
 									<td>{e.attribValues && e.attribValues.map((item,index)=>{
                                       if(item.key =="status"){
@@ -248,7 +248,7 @@ class Dashboard extends Component {
                                           return(item.name)
                                         }
                                     })} </td>
-									
+
 								</tr>
 		  )	}
 							)
@@ -285,7 +285,7 @@ class Dashboard extends Component {
 							/>
 						</Col>
                       {this.state.localArray && this.state.localArray.map((e,i)=>{
-						  
+
 							var priority;
 							var triColor = "#fff";
 							e.attribValues.map((item,index)=>{
@@ -293,7 +293,7 @@ class Dashboard extends Component {
 								triColor = item.name
 							  }
 							})
-						  						  
+
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
                              <Card style={{minHeight:320}}>
@@ -315,7 +315,7 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} 
+                                    })}
                                  </CardText>
                              </Card>
                           </Col>
@@ -339,7 +339,7 @@ class Dashboard extends Component {
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
                     <Row>
-					
+
 				<div  className="tableLayout">
             <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
 						 <thead>
@@ -352,17 +352,17 @@ class Dashboard extends Component {
 							  <th>Status</th>
 							  <th>Comments</th>
 							</tr>
-							
-						  </thead> 
+
+						  </thead>
 						  <tbody>
 						  {renderBody()}
 						  </tbody>
-					</Table> 
+					</Table>
           </div>
           <div className="cardLayout">
-		
+
          {(this.state.localArray.length>0) && this.state.localArray.map((e,i)=>{
-			 
+
 			 	var priority;
 							var triColor = "#fff";
 							e.attribValues.map((item,index)=>{
@@ -370,7 +370,7 @@ class Dashboard extends Component {
 								triColor = item.name
 							  }
 							})
-                            
+
                         return(
                           <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
                              <Card style={{minHeight:320}}>
@@ -392,15 +392,15 @@ class Dashboard extends Component {
                                         if(item.key =="status"){
                                           return(item.name)
                                         }
-                                    })} 
+                                    })}
                                  </CardText>
                              </Card>
                           </Col>
                         )
                       }) }
 					</div>
-					
-                      
+
+
                     </Row>
                   </Grid>
 				</CardText>

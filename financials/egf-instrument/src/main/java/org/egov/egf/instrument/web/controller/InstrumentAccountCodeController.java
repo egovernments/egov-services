@@ -38,8 +38,7 @@ public class InstrumentAccountCodeController {
 	public static final String ACTION_UPDATE = "update";
 	public static final String PLACEHOLDER = "placeholder";
 
-	@Value("${persist.through.kafka}")
-	private String persistThroughKafka;
+	private static String persistThroughKafka;
 
 	@Autowired
 	private InstrumentAccountCodeService instrumentAccountCodeService;
@@ -165,7 +164,7 @@ public class InstrumentAccountCodeController {
 			instrumentAccountCodeQueueRepository.addToSearchQue(instrumentAccountCodeRequest);
 
 		}
-		
+
 		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
 		return instrumentAccountCodeResponse;
@@ -207,6 +206,11 @@ public class InstrumentAccountCodeController {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
 				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

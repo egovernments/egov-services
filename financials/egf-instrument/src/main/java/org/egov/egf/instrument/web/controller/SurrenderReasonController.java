@@ -38,8 +38,7 @@ public class SurrenderReasonController {
 	public static final String ACTION_UPDATE = "update";
 	public static final String PLACEHOLDER = "placeholder";
 
-	@Value("${persist.through.kafka}")
-	private String persistThroughKafka;
+	private static String persistThroughKafka;
 
 	@Autowired
 	private SurrenderReasonQueueRepository surrenderReasonQueueRepository;
@@ -205,6 +204,11 @@ public class SurrenderReasonController {
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

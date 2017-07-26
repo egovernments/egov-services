@@ -82,9 +82,9 @@ class UiDynamicTable extends Component {
 			          <Table className="dynamicTable" bordered responsive>
 				          <thead>
 				            <tr>
-				              {item.header && item.header.length && item.header.map((item, i) => {
+				              {item.header && item.header.length && item.header.map((item2, i) => {
 				                return (
-				                  <th key={i}>{translate(item.label)}</th>
+				                  <th key={i}>{translate(item2.label)}</th>
 				                )
 				              })}
 				            </tr>

@@ -62,12 +62,14 @@ class UiDynamicTable extends Component {
 			        return (
 			        	<UiPanCard ui="google" getVal={self.props.getVal} item={field} fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
 			    	)
-			    case 'aadhar':
+			      case 'aadhar':
 			        return (
 			        	<UiAadharCard ui="google" getVal={self.props.getVal} item={field} fieldErrors={self.props.fieldErrors} handler={self.props.handler}/>
    					)
    				case 'table':
    					renderTable(field);
+               case 'label':
+                  return <UiLabel getVal={this.props.getVal} item={field}/>
    			}
    		}
 

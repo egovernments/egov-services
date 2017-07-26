@@ -18,7 +18,7 @@ import UiAadharCard from './UiAadharCard'
 import UiPanCard from './UiPanCard'
 import UiLabel from './UiLabel'
 
-class default UiDynamicTable extends Component {
+export default class UiDynamicTable extends Component {
 	constructor(props) {
        super(props);
    	}

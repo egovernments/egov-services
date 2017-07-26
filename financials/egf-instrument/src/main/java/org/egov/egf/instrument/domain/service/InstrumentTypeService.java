@@ -114,7 +114,7 @@ public class InstrumentTypeService {
 
 	public List<InstrumentType> fetchRelated(List<InstrumentType> instrumenttypes) {
 		for (InstrumentType instrumentType : instrumenttypes) {
-			// fetch related items
+			
 
 		}
 

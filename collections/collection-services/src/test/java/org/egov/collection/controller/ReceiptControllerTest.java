@@ -112,7 +112,7 @@ public class ReceiptControllerTest {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
 		when(receiptService.getReceipts(getReceiptSearchCriteria())).thenReturn(getReceiptCommonModel());
-		mockMvc.perform(post("/receipts/v1/_search?fromDate=2016-02-02 00:00:00&toDate=2017-07-11 13:25:45.794050"
+		mockMvc.perform(post("/receipts/_search?fromDate=2016-02-02 00:00:00&toDate=2017-07-11 13:25:45.794050"
 				+ "&tenantId=default&collectedBy=1&status=CREATED&sortBy=payeename&sortOrder=desc")
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(getFileContents("receiptRequest.json")))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -127,7 +127,7 @@ public class ReceiptControllerTest {
 		when(receiptService.cancelReceiptPushToQueue(any())).thenReturn(Arrays.asList(getReceipt()));
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
 				.thenReturn(getResponseInfo());
-		mockMvc.perform(post("/receipts/v1/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)
+		mockMvc.perform(post("/receipts/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(getFileContents("receiptRequestForCancellation.json"))).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("receiptResponseForCancellation.json")));
@@ -144,7 +144,7 @@ public class ReceiptControllerTest {
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
 				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-				.receiptType(ReceiptType.valueOf("ADHOC").toString()).channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
+				.receiptType("ADHOC").channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
 				.reasonForCancellation("Data entry mistake")
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))

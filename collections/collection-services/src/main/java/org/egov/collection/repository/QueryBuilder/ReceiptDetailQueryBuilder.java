@@ -39,7 +39,8 @@
  */
 package org.egov.collection.repository.QueryBuilder;
 
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.egov.collection.model.ReceiptSearchCriteria;
@@ -136,7 +137,7 @@ public class ReceiptDetailQueryBuilder {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) {
+	public String getQuery(ReceiptSearchCriteria searchCriteria, List preparedStatementValues) throws ParseException {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
@@ -148,7 +149,7 @@ public class ReceiptDetailQueryBuilder {
 
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			ReceiptSearchCriteria searchCriteria) {
+			ReceiptSearchCriteria searchCriteria) throws ParseException {
 
 		if (searchCriteria.getTenantId() == null)
 			return;
@@ -183,19 +184,21 @@ public class ReceiptDetailQueryBuilder {
 		if (searchCriteria.getCollectedBy() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.createdBy = ?");
-			preparedStatementValues.add(Long.parseLong(searchCriteria.getCollectedBy()));
+			preparedStatementValues.add(new Long(searchCriteria.getCollectedBy()));
 		}
 
 		if (searchCriteria.getFromDate() != null) {
+			java.util.Date fromDate = new SimpleDateFormat("dd-MM-yyyy").parse(searchCriteria.getFromDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.receiptDate >= ?");
-			preparedStatementValues.add(Timestamp.valueOf(searchCriteria.getFromDate()));
+			preparedStatementValues.add(fromDate.getTime());
 		}
 
 		if (searchCriteria.getToDate() != null) {
+			java.util.Date toDate=new SimpleDateFormat("dd-MM-yyyy").parse(searchCriteria.getToDate());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" rh.receiptDate <= ?");
-			preparedStatementValues.add(Timestamp.valueOf(searchCriteria.getToDate()));
+			preparedStatementValues.add(toDate.getTime());
 		}
 
 		if (searchCriteria.getBusinessCode() != null) {

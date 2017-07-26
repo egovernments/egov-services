@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.ParseException;
 import java.util.*;
 
 
@@ -86,7 +87,7 @@ public class ReceiptService {
 	private CollectionApportionerService collectionApportionerService;
 
 	public ReceiptCommonModel getReceipts(
-			ReceiptSearchCriteria receiptSearchCriteria) {
+			ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
 		return receiptRepository
 				.findAllReceiptsByCriteria(receiptSearchCriteria);
 	}
@@ -521,7 +522,7 @@ public class ReceiptService {
 	}
 
 	public void pushUpdateReceiptDetailsToQueque(Long id, Long stateId,
-			String status, String tenantId, RequestInfo requestInfo) {
+			String status, String tenantId, RequestInfo requestInfo) throws ParseException {
 		ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria
 				.builder().tenantId(tenantId).ids(Arrays.asList(id)).build();
 		List<Receipt> receipts = receiptRepository.findAllReceiptsByCriteria(

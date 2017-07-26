@@ -1,29 +1,43 @@
 package org.egov.collection.model.enums;
 
-import org.apache.commons.lang3.StringUtils;
 
+
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum CollectionType {
-    COUNTER("Counter"),
-    FIELD("Field"),
-    ONLINE("Online");
+    COUNTER("COUNTER"),
+    FIELD("FIELD"),
+    ONLINE("ONLINE");
 
     
     private String value;
     
-    CollectionType(final String value) {
+    CollectionType(String value) {
         this.value = value;
     }
     
     @Override
     @JsonValue
     public String toString() {
-        return StringUtils.capitalize(name());
+    	return String.valueOf(value);
     }
 
     public String getValue() {
         return value;
     }
-
+   
+    @JsonCreator
+	public static CollectionType fromValue(String text) {
+		for (CollectionType b : CollectionType.values()) {
+			if (0 ==b.value.toString().compareTo(text)) {
+				return b;
+			}
+			System.out.println("Mismatch: "+String.valueOf(b.value).compareTo(text.trim()));
+		}
+		System.out.println(CollectionType.FIELD.toString().equals("FIELD"));
+		System.out.println("textLength:"+text.length());
+		return null;
+	}
 }

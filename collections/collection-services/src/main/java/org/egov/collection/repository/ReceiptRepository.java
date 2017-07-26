@@ -63,6 +63,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -168,7 +169,7 @@ public class ReceiptRepository {
 		return isInsertionSuccessful;
 	}
 
-	public ReceiptCommonModel findAllReceiptsByCriteria(ReceiptSearchCriteria receiptSearchCriteria) {
+	public ReceiptCommonModel findAllReceiptsByCriteria(ReceiptSearchCriteria receiptSearchCriteria) throws ParseException {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String queryString = receiptDetailQueryBuilder.getQuery(receiptSearchCriteria, preparedStatementValues);
 		List<ReceiptHeader> listOfHeadersFromDB = jdbcTemplate.query(queryString, preparedStatementValues.toArray(),

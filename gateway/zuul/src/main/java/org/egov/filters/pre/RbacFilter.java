@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 
 import static org.egov.constants.RequestContextConstants.*;
 
+/**
+ *  5th pre filter to get executed.
+ *  Filter gets executed if the RBAC flag is enabled. Returns an error if the URI is not present in the authorized action list.
+ */
 public class RbacFilter extends ZuulFilter{
 
     @Override

@@ -18,6 +18,12 @@ import java.util.HashSet;
 
 import static org.egov.constants.RequestContextConstants.*;
 
+/**
+ *  2nd pre filter to get executed.
+ *  Identifies if the URI is part of open or mixed endpoint list.
+ *  If its not present in the open list then the auth token is retrieved from the request body.
+ *  For a restricted endpoint if auth token is not present then an error response is returned.
+ */
 public class AuthPreCheckFilter extends ZuulFilter {
     private static final String AUTH_TOKEN_RETRIEVE_FAILURE_MESSAGE = "Retrieving of auth token failed";
     private static final String OPEN_ENDPOINT_MESSAGE = "Routing to an open endpoint: {}";

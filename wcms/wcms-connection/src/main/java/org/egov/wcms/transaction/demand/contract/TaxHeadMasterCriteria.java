@@ -37,30 +37,41 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.web.contract;
+package org.egov.wcms.transaction.demand.contract;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.egov.common.contract.response.ResponseInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-@Data
+
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PropertyCategoryResponseInfo {
+@Builder
+public class TaxHeadMasterCriteria {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-    @JsonProperty("PropertyTypeCategoryTypes")
-    private List<PropertyTypeResponseInfo> propCategory;
-    
-    
-    
-    
+	@NotNull
+	private String tenantId;
+	@NotNull
+	private String service;
+	private String category;
+	private String name;
+	private Set<String> code=new HashSet<>();
+	private Boolean isDebit;
+	private Boolean isActualDemand;
+	
+	private Set<String> id=new HashSet<>();
+	private Long validFrom;
+	private Long validTill;
+	private Long size;
+	private Long offset;
 }

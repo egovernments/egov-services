@@ -37,30 +37,45 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.web.contract;
+package org.egov.wcms.transaction.model;
 
-import java.util.List;
+import java.math.BigDecimal;
 
-import org.egov.common.contract.response.ResponseInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class PropertyCategoryResponseInfo {
+public class DemandDetailBean {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-    @JsonProperty("PropertyTypeCategoryTypes")
-    private List<PropertyTypeResponseInfo> propCategory;
+    private String id;
     
+    private String taxPeriod;
     
+    private String taxPeriodCode;
     
+    private String demandId;        
+
+    @NotNull
+    private String taxHeadMasterCode;
+
+    @NotNull
+    private double taxAmount;
     
+    @NotNull
+    private double collectionAmount ;
+
+    private AuditDetails auditDetail;
+
+    private String tenantId;
+    
+    private BigDecimal revisedAmount;
+    
+    private BigDecimal revisedCollection;
+
+   
 }

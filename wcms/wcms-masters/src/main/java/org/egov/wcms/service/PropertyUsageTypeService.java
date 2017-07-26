@@ -88,18 +88,18 @@ public class PropertyUsageTypeService {
 
     public List<PropertyTypeUsageType> getPropertyUsageTypes(
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
-        if (propUsageTypeGetRequest.getPropertyType() != null) {
+       /* if (propUsageTypeGetRequest.getPropertyType() != null) {
             final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     propUsageTypeGetRequest.getPropertyType(), propUsageTypeGetRequest.getTenantId());
             if (propertyType.getPropertyTypesSize())
-                propUsageTypeGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
+               */ propUsageTypeGetRequest.setPropertyTypeId("1");
 
-        }
+        //}
         if (propUsageTypeGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
+           /* final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                     propUsageTypeGetRequest.getUsageType(), propUsageTypeGetRequest.getTenantId());
-            if (usageType.getUsageTypesSize())
-                propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
+            if (usageType.getUsageTypesSize())*/
+                propUsageTypeGetRequest.setUsageTypeId("1");
 
         }
         return propUsageTypeRepository.getPropertyUsageType(propUsageTypeGetRequest);
@@ -134,16 +134,15 @@ public class PropertyUsageTypeService {
 
     public Boolean getUsageTypeByName(final PropertyTypeUsageTypeReq propUsageTypeRequest) {
         Boolean isValidUsage = Boolean.FALSE;
-        final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
+        /*final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
                 propUsageTypeRequest.getPropertyTypeUsageType().getUsageType(),
                 propUsageTypeRequest.getPropertyTypeUsageType().getTenantId());
-        if (usageType.getUsageTypesSize()) {
+        if (usageType.getUsageTypesSize()) {*/
             isValidUsage = Boolean.TRUE;
             propUsageTypeRequest.getPropertyTypeUsageType()
-                    .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
-                            ? usageType.getUsageMasters().get(0).getId() : "");
+                    .setUsageTypeId("1");
 
-        }
+       // }
         return isValidUsage;
 
     }

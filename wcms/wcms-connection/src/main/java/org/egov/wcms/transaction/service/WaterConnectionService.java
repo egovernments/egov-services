@@ -140,7 +140,7 @@ public class WaterConnectionService {
             if (waterConnectionRequest.getConnection().getIsLegacy() != null &&
                     waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)) {
                 initiateWorkFow(waterConnectionRequest);
-                waterConnectionRepository.updateConnectionWorkflow(waterConnectionRequest);
+                waterConnectionRepository.updateConnectionWorkflow(waterConnectionRequest,null);
             }
         } catch (final Exception e) {
             logger.error("workflow intiate and updating connection failed due to db exception", e);
@@ -178,6 +178,14 @@ public class WaterConnectionService {
 
     public Connection findByApplicationNmber(final String applicationNmber) {
         return waterConnectionRepository.findByApplicationNmber(applicationNmber);
+    }
+    public Connection getWaterConnectionByConsumerNumber(final String consumerCode) {
+        return waterConnectionRepository.getWaterConnectionByConsumerNumber(consumerCode);
+    }
+    
+    public void updateConnectionOnChangeOfDemand(final String demandId ,String consumerNumber)
+    {
+        waterConnectionRepository.updateConnectionOnChangeOfDemand(demandId,consumerNumber);
     }
 
     private ProcessInstance initiateWorkFow(final WaterConnectionReq waterConnectionReq) {

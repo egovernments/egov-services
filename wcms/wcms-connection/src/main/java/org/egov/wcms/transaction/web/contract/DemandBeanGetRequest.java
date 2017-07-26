@@ -39,28 +39,31 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
-import java.util.List;
-
-import org.egov.common.contract.response.ResponseInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PropertyCategoryResponseInfo {
+@EqualsAndHashCode
+public class DemandBeanGetRequest {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-    @JsonProperty("PropertyTypeCategoryTypes")
-    private List<PropertyTypeResponseInfo> propCategory;
+   
+    @NotNull
+    private String tenantId;
+
+    private long executionDate;
     
+    private String consumerNuber;
+
     
-    
-    
+
 }

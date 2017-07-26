@@ -42,25 +42,29 @@ package org.egov.wcms.transaction.web.contract;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.model.DemandDetailBean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-@Data
-@NoArgsConstructor
+
 @AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
 @ToString
-public class PropertyCategoryResponseInfo {
+public class DemandDetailBeanRes {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("PropertyTypeCategoryTypes")
-    private List<PropertyTypeResponseInfo> propCategory;
-    
-    
-    
-    
+
+    @JsonProperty("DemandDetailBeans")
+    private List<DemandDetailBean> demandDetailBeans;
+
 }

@@ -37,8 +37,9 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.web.contract;
+package org.egov.wcms.transaction.demand.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
@@ -46,21 +47,19 @@ import org.egov.common.contract.response.ResponseInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class PropertyCategoryResponseInfo {
+@Builder
+public class TaxHeadMasterResponse {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-    @JsonProperty("PropertyTypeCategoryTypes")
-    private List<PropertyTypeResponseInfo> propCategory;
-    
-    
-    
-    
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+
+	@JsonProperty("TaxHeadMasters")
+	private List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
 }

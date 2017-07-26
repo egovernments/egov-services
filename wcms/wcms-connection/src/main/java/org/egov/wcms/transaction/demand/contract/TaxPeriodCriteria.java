@@ -64,7 +64,7 @@ public class TaxPeriodCriteria {
     @NotNull
     private String service;
     
-    private String periodCycle;
+    private PeriodCycle periodCycle;
 
     private Set<String> id;
 

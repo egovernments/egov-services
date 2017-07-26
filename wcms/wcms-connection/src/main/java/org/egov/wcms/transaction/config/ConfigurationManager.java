@@ -170,5 +170,8 @@ public class ConfigurationManager {
     
     @Value("${egov.services.pt_property_propertytype.searchpath}")
     private String propertyServiceSearchPathTopic;
+    
+    @Value("${egov.services.demandbill_service.taxheadperiod}")
+    private String taxHeadMasterNameTopic;
 
 }

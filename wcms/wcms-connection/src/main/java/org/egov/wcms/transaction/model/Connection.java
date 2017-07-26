@@ -83,6 +83,8 @@ public class Connection {
     private String hscPipeSizeType;
 
     private String pipesizeId;
+    
+    private long executionDate;
 
     @NotNull
     private String supplyType;
@@ -127,6 +129,9 @@ public class Connection {
 
     @NotNull
     private String legacyConsumerNumber;
+    
+    @NotNull
+    private String estimationNumber;
 
     @NotNull
     private Boolean isLegacy;

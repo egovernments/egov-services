@@ -56,6 +56,7 @@ public class WcmsConnectionConstants {
     public static final String ROADCUTCHARGEDEMANDREASON="ROADCUTCHARGE";
     public static final String ESIMATIONCHARGEDEMANDREASON="ESTIMATIONCHARGES";
     public static final String SUPERVISIONCHARGEREASON="SUPERVISIONCHARGE";
+    public static final String WATERDEMANDREASONNAME="Water Charge";
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";

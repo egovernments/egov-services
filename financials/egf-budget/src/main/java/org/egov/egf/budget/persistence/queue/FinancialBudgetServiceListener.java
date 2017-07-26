@@ -30,13 +30,13 @@ public class FinancialBudgetServiceListener {
 	@Value("${kafka.topics.egf.budget.service.completed.topic}")
 	private String completedTopic;
 
-	@Value("${kafka.topics.egf.masters.budget.completed.key}")
+	@Value("${kafka.topics.egf.budget.budget.completed.key}")
 	private String budgetCompletedKey;
 	
-	@Value("${kafka.topics.egf.masters.budgetdetail.completed.key}")
+	@Value("${kafka.topics.egf.budget.budgetdetail.completed.key}")
 	private String budgetDetailCompletedKey;
 	
-	@Value("${kafka.topics.egf.masters.budgetreapp.completed.key}")
+	@Value("${kafka.topics.egf.budget.budgetreapp.completed.key}")
 	private String budgetReAppropriationCompletedKey;
 
 	@Autowired

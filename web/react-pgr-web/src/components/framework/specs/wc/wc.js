@@ -1,86 +1,8 @@
-var room = {
-	"name": "RoomDetailsComponent",
-	"version": "v1",
-	"level": 2,
-	"jsonPath": "connection.floors[0].rooms",
-	"groups": [
-		{
-			"label": "wc.create.groups.roomDetails.title",
-			"name": "RoomDetails",
-			"multiple": true,
-			"children": [],
-			"fields": [
-				{
-					"name": "RoomNo",
-					"jsonPath": "connection.floors[0].rooms[0].roomNo",
-					"label": "wc.create.groups.roomDetails.roomNo",
-					"pattern": "",
-					"type": "number",
-					"isRequired": false,
-					"isDisabled": false,
-					"requiredErrMsg": "",//Remove required messages
-					"patternErrMsg": ""
-				},
-				{
-					"name": "RoomName",
-					"jsonPath": "connection.floors[0].rooms[0].roomName",
-					"label": "wc.create.groups.roomDetails.roomName",
-					"pattern": "",
-					"type": "text",
-					"isRequired": false,
-					"isDisabled": false,
-					"requiredErrMsg": "",//Remove required messages
-					"patternErrMsg": ""
-				}
-			]
-		}
-	]
-};
-
-var floor = {
-	"name": "FloorDetailsComponent",
-	"version": "v1", //Maps to parent version
-	"level": 1,
-	"jsonPath": "connection.floors",
-	"groups": [
-		{
-			"label": "wc.create.groups.floorDetails.title",
-			"name": "FloorDetails",
-			"multiple": true, //If true, its an array
-			"children": [room],
-			"fields": [
-				{
-					"name": "FloorNo",
-					"jsonPath": "connection.floors[0].floorNo",
-					"label": "wc.create.groups.floorDetails.floorNo",
-					"pattern": "",
-					"type": "number",
-					"isRequired": true,
-					"isDisabled": false,
-					"requiredErrMsg": "",//Remove required messages
-					"patternErrMsg": ""
-				},
-				{
-					"name": "FloorName",
-					"jsonPath": "connection.floors[0].floorName",
-					"label": "wc.create.groups.floorDetails.floorName",
-					"pattern": "",
-					"type": "text",
-					"isRequired": false,
-					"isDisabled": false,
-					"requiredErrMsg": "",//Remove required messages
-					"patternErrMsg": ""
-				}
-			]
-		}
-	]
-};
-
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"version": "v1",
-		"url": "/connections/v1/_create",
+		"url": "/wcms-connection/connection/_create",
 		"useTimestamp": true,
 		"tenantIdRequired": false, //Instead of boolean value give json path
 		"objectName": "connection",
@@ -216,6 +138,18 @@ var dat = {
 				"name": "connectionDetails",
 				"multiple": false,
 				"fields": [
+					{
+						"name": "billingType",
+						"jsonPath": "connection.billingType",
+						"label": "wc.create.groups.connectionDetails.billingType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 						{
 							"name": "ConnectionType",
 							"jsonPath": "connection.connectionType",
@@ -224,7 +158,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": true,
 							"isDisabled": false,
-							"url": "/wcms-connection/connection/_getconnectiontypes?|$..id|$..propertyType",
+							"url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -236,7 +170,19 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/sourcetype/_search",
+							"url": "/wcms/masters/sourcetype/_search?|$..id|$..name",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "supplyType",
+							"jsonPath": "connection.supplyType",
+							"label": "wc.create.groups.connectionDetails.supplyType",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "/wcms/masters/supplytype/_search?|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -248,7 +194,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/pt-property/property/propertytypes/_search?|$..id|$..propertyType",
+							"url": "/pt-property/property/propertytypes/_search?|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -260,7 +206,19 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-categorytype/_search",
+							"url": "/wcms/masters/propertytype-categorytype/_search?|$..id|$..categoryTypeName",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "waterTreatment",
+							"jsonPath": "connection.waterTreatment",
+							"label": "wc.create.groups.connectionDetails.waterTreatment",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"url": "/wcms/masters/treatmentplant/_search?|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -272,7 +230,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-usagetype/_search?|$..id|$..name",
+							"url": "/wcms/masters/propertytype-usagetype/_search?|$..id|$..propertyType",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -284,7 +242,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-pipesize/_search",
+							"url": "/wcms/masters/propertytype-pipesize/_search?|$..id|$..pipeSize",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -310,6 +268,57 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
+				]
+			},
+			{
+				"label": "wc.create.groups.fileDetails.title",
+				"name": "Documents",
+				"multiple": false,
+				"fields": [
+					{
+						"name": " ",
+						"jsonPath": "connection.documents[0]",
+						"label": "wc.create.groups.fileDetails.fields.PTaxReciept",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": " ",
+						"jsonPath": "connection.documents[1]",
+						"label": "wc.create.groups.fileDetails.fields.DistributionLineLocationMap",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": " ",
+						"jsonPath": "connection.documents[2]",
+						"label": "wc.create.groups.fileDetails.fields.WhiteRationCard",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": " ",
+						"jsonPath": "connection.documents[3]",
+						"label": "wc.create.groups.fileDetails.fields.CourtFeeStamp",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			},
 			{

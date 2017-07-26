@@ -65,10 +65,10 @@ import lombok.ToString;
 public class TreatmentPlantRequest {
 
     @NotNull
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
 
-    @JsonProperty("treatmentPlants")
+    @JsonProperty("TreatmentPlants")
     private List<TreatmentPlant> treatmentPlants = new ArrayList<>();
 
 }

@@ -62,9 +62,9 @@ import lombok.ToString;
 @ToString
 public class CategoryTypeResponse {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("categoryTypes")
+    @JsonProperty("CategoryTypes")
     private List<CategoryType> categoryTypes = new ArrayList<>();
 }

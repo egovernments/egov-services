@@ -63,10 +63,10 @@ import lombok.ToString;
 @Setter
 public class DocumentTypeApplicationTypeRes {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("documentTypeApplicationTypes")
+    @JsonProperty("DocumentTypeApplicationTypes")
     private List<DocumentTypeApplicationType> documentTypeApplicationTypes = new ArrayList<>();
 
 }

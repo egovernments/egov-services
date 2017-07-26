@@ -62,10 +62,10 @@ import lombok.ToString;
 public class SupplyTypeRequest {
     
     @NotNull
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
     
-    @JsonProperty("supplyType")
+    @JsonProperty("SupplyType")
     private SupplyType supplyType;
 
 }

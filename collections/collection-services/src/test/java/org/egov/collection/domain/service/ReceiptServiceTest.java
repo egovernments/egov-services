@@ -115,7 +115,7 @@ public class ReceiptServiceTest {
 		String hostname = applicationProperty.getEgovServiceHost();
 		String baseUri = applicationProperty.getChartOfAccountsSearch();
 		List<String> businessDetailCodes = new ArrayList<>();
-		List<Object> chartOfAccounts = new ArrayList<>();
+	//	List<Object> chartOfAccounts = new ArrayList<>();
 		businessDetailCodes.add("TL");
 		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
 		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
@@ -124,7 +124,7 @@ public class ReceiptServiceTest {
 				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
 		Mockito.when(applicationProperties.getEgovServiceHost()).thenReturn(hostname);
 		Mockito.when(applicationProperties.getChartOfAccountsSearch()).thenReturn(baseUri);
-		Mockito.when(receiptService.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
+	//	Mockito.when(receiptService.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
 		
 		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
 				

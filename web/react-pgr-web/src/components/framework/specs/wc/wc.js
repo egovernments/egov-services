@@ -336,7 +336,12 @@ var dat = {
 						"isDisabled": false,
 						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"depedants":[{
+								"name":"connection.workflowDetails.approver",
+								"type":"dropDown",
+								"pattern":"/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+							}]
 						},
 						{
 						"name": "designation",
@@ -348,7 +353,12 @@ var dat = {
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"depedants":[{
+								"name":"connection.workflowDetails.approver",
+								"type":"dropDown",
+								"pattern":"/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+							}]
 						},
 						{
 						"name": "approver",
@@ -356,7 +366,7 @@ var dat = {
 						"label": "wc.create.groups.approvalDetails.fields.approver",
 						"pattern": "",
 						"type": "singleValueList",
-						"url":"/hr-employee/employees/_search?tenantId={default}&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}",
+						"url":"/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -373,7 +383,7 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 						}
-						
+
 
 				]
 			}

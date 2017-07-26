@@ -19,7 +19,15 @@ let menuConvention={
   "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":"/pgr/searchRouter/view",
 
   "Grievance Redressal.Masters.Grievance Category.Update Service Group":"/pgr/serviceGroup/edit",
-  "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view"
+  "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view",
+
+  "Grievance Redressal.Reports.Ageing Report":"/report/AgeingByBoundary",
+  "Grievance Redressal.Reports.Drill Down Report":"/report/DrillDownByBoundary",
+  "Grievance Redressal.Reports.Grievance Type Wise Report":"/report/GrievanceByType",
+  "Grievance Redressal.Reports.Functionary Wise Report":"/report/GrievanceByFunctionary",
+  "Grievance Redressal.Reports.Router Escalation Report":"/report/RouterEscalation",
+
+
 }
 
 const defaultState = {

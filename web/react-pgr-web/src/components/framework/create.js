@@ -26,7 +26,7 @@ class Report extends Component {
   }
 
   setLabelAndReturnRequired(configObject) {
-    for(var i=0; i<configObject.groups.length; i++) {
+    for(var i=0;configObject && i<configObject.groups.length; i++) {
       configObject.groups[i].label = translate(configObject.groups[i].label);
       for (var j = 0; j < configObject.groups[i].fields.length; j++) {
             configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
@@ -242,4 +242,5 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
   }
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

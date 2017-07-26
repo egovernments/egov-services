@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +41,6 @@ public class FactorRepository {
 	 */
 	public Long saveFactor(String tenantId, CalculationFactor calculationFactor) {
 
-		Long createdTime = new Date().getTime();
 		String factorInsertSql = FactorQueryBuilder.FACTOR_CREATE_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -59,8 +57,8 @@ public class FactorRepository {
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(calculationFactor.getToDate()));
 				ps.setString(7, calculationFactor.getAuditDetails().getCreatedBy());
 				ps.setString(8, calculationFactor.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, createdTime);
-				ps.setLong(10, createdTime);
+				ps.setLong(9, calculationFactor.getAuditDetails().getCreatedTime());
+				ps.setLong(10, calculationFactor.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -68,8 +66,6 @@ public class FactorRepository {
 		// The newly generated key will be saved in this object
 		final KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(psc, holder);
-		calculationFactor.getAuditDetails().setCreatedTime(createdTime);
-		calculationFactor.getAuditDetails().setLastModifiedTime(createdTime);
 		return Long.valueOf(holder.getKey().intValue());
 
 	}
@@ -98,8 +94,9 @@ public class FactorRepository {
 				ps.setDouble(4, calculationFactor.getFactorValue());
 				ps.setTimestamp(5, TimeStampUtil.getTimeStamp(calculationFactor.getFromDate()));
 				ps.setTimestamp(6, TimeStampUtil.getTimeStamp(calculationFactor.getToDate()));
-				ps.setLong(7, calculationFactor.getAuditDetails().getLastModifiedTime());
-				ps.setLong(8, calculationFactor.getId());
+				ps.setString(7, calculationFactor.getAuditDetails().getLastModifiedBy());
+				ps.setLong(8, calculationFactor.getAuditDetails().getLastModifiedTime());
+				ps.setLong(9, calculationFactor.getId());
 				return ps;
 			}
 		};

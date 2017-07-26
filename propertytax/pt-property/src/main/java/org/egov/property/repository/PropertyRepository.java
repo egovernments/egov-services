@@ -82,7 +82,6 @@ public class PropertyRepository {
 	 */
 
 	public Long saveProperty(Property property) throws Exception {
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
@@ -103,8 +102,8 @@ public class PropertyRepository {
 				ps.setString(11, property.getChannel().toString());
 				ps.setString(12, property.getAuditDetails().getCreatedBy());
 				ps.setString(13, property.getAuditDetails().getLastModifiedBy());
-				ps.setLong(14, getLong(createdTime));
-				ps.setLong(15, getLong(createdTime));
+				ps.setLong(14, getLong(property.getAuditDetails().getCreatedTime()));
+				ps.setLong(15, getLong(property.getAuditDetails().getLastModifiedTime()));
 				List<DemandId> demandIdList = new ArrayList<DemandId>();
 
 				for (Demand demand : property.getDemands()) {
@@ -140,14 +139,14 @@ public class PropertyRepository {
 	 * @param propertyId
 	 */
 	public void saveAddress(Property property, Long propertyId) {
-		Long createdTime = new Date().getTime();
 
 		Address address = property.getAddress();
 
 		Object[] addressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
-				address.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, propertyId };
+				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getCreatedTime(),
+				address.getAuditDetails().getLastModifiedTime(), propertyId };
 
 		jdbcTemplate.update(AddressBuilder.INSERT_ADDRESS_QUERY, addressArgs);
 
@@ -161,7 +160,6 @@ public class PropertyRepository {
 	 * @return key holder id
 	 */
 	public Long savePropertyDetails(Property property, Long propertyId) {
-		Long createdTime = new Date().getTime();
 		PropertyDetail propertyDetails = property.getPropertyDetail();
 		final PreparedStatementCreator pscPropertyDetails = new PreparedStatementCreator() {
 			@Override
@@ -198,8 +196,8 @@ public class PropertyRepository {
 				ps.setString(28, propertyDetails.getApplicationNo());
 				ps.setString(29, propertyDetails.getAuditDetails().getCreatedBy());
 				ps.setString(30, propertyDetails.getAuditDetails().getLastModifiedBy());
-				ps.setLong(31, getLong(createdTime));
-				ps.setLong(32, getLong(createdTime));
+				ps.setLong(31, getLong(propertyDetails.getAuditDetails().getCreatedTime()));
+				ps.setLong(32, getLong(propertyDetails.getAuditDetails().getLastModifiedTime()));
 				ps.setLong(33, getLong(propertyId));
 				PGobject jsonObject = new PGobject();
 				jsonObject.setType("jsonb");
@@ -229,8 +227,6 @@ public class PropertyRepository {
 	 */
 	public Long saveFloor(Floor floor, Long propertyDetailsId) {
 
-		Long createdTime = new Date().getTime();
-
 		final PreparedStatementCreator pscFloor = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -239,8 +235,8 @@ public class PropertyRepository {
 				ps.setString(1, floor.getFloorNo());
 				ps.setString(2, floor.getAuditDetails().getCreatedBy());
 				ps.setString(3, floor.getAuditDetails().getLastModifiedBy());
-				ps.setLong(4, getLong(createdTime));
-				ps.setLong(5, getLong(createdTime));
+				ps.setLong(4, getLong(floor.getAuditDetails().getCreatedTime()));
+				ps.setLong(5, getLong(floor.getAuditDetails().getLastModifiedTime()));
 				ps.setLong(6, getLong(propertyDetailsId));
 				return ps;
 			}
@@ -264,8 +260,6 @@ public class PropertyRepository {
 	 * @param floorId
 	 */
 	public Long saveUnit(Unit unit, Long floorId) {
-
-		Long createdTime = new Date().getTime();
 
 		if (unit.getIsAuthorised() == null) {
 			unit.setIsAuthorised(true);
@@ -301,8 +295,8 @@ public class PropertyRepository {
 				ps.setString(24, unit.getWaterMeterNo());
 				ps.setString(25, unit.getAuditDetails().getCreatedBy());
 				ps.setString(26, unit.getAuditDetails().getLastModifiedBy());
-				ps.setLong(27, getLong(createdTime));
-				ps.setLong(28, getLong(createdTime));
+				ps.setLong(27, getLong(unit.getAuditDetails().getCreatedTime()));
+				ps.setLong(28, getLong(unit.getAuditDetails().getLastModifiedTime()));
 				ps.setLong(29, getLong(floorId));
 				ps.setBoolean(30, unit.getIsAuthorised());
 				return ps;
@@ -328,8 +322,6 @@ public class PropertyRepository {
 	 */
 	public void saveRoom(Unit unit, Long floorId, Long parent) {
 
-		Long createdTime = new Date().getTime();
-
 		if (unit.getIsAuthorised() == null) {
 			unit.setIsAuthorised(true);
 		}
@@ -341,8 +333,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
-				unit.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, floorId, parent,
-				unit.getIsAuthorised() };
+				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
+				unit.getAuditDetails().getLastModifiedTime(), floorId, parent, unit.getIsAuthorised() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -356,7 +348,6 @@ public class PropertyRepository {
 	 * @return key holder id
 	 */
 	public Long saveDocument(Document document, Long propertyDetailsId) {
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator pscDocument = new PreparedStatementCreator() {
 			@Override
@@ -366,8 +357,8 @@ public class PropertyRepository {
 				ps.setString(1, document.getFileStore());
 				ps.setString(2, document.getAuditDetails().getCreatedBy());
 				ps.setString(3, document.getAuditDetails().getLastModifiedBy());
-				ps.setLong(4, getLong(createdTime));
-				ps.setLong(5, getLong(createdTime));
+				ps.setLong(4, getLong(document.getAuditDetails().getCreatedTime()));
+				ps.setLong(5, getLong(document.getAuditDetails().getLastModifiedTime()));
 				ps.setLong(6, getLong(propertyDetailsId));
 				ps.setString(7, document.getDocumentType());
 				return ps;
@@ -414,7 +405,7 @@ public class PropertyRepository {
 	 * @param propertyId
 	 */
 	public void saveVacantLandDetail(Property property, Long propertyId) {
-		Long createdTime = new Date().getTime();
+
 		VacantLandDetail vacantLand = property.getVacantLand();
 
 		Object[] vaccantLandArgs = { vacantLand.getSurveyNumber(), vacantLand.getPattaNumber(),
@@ -422,7 +413,8 @@ public class PropertyRepository {
 				vacantLand.getLayoutPermissionNo(), TimeStampUtil.getTimeStamp(vacantLand.getLayoutPermissionDate()),
 				vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
 				vacantLand.getAuditDetails().getCreatedBy(), vacantLand.getAuditDetails().getLastModifiedBy(),
-				createdTime, createdTime, propertyId };
+				vacantLand.getAuditDetails().getCreatedTime(), vacantLand.getAuditDetails().getLastModifiedTime(),
+				propertyId };
 
 		jdbcTemplate.update(VacantLandDetailBuilder.INSERT_VACANTLANDDETAIL_QUERY, vaccantLandArgs);
 
@@ -435,13 +427,14 @@ public class PropertyRepository {
 	 * @param propertyId
 	 */
 	public void saveBoundary(Property property, Long propertyId) {
-		Long createdTime = new Date().getTime();
+
 		PropertyLocation boundary = property.getBoundary();
 
 		Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(), boundary.getLocationBoundary().getId(),
 				boundary.getAdminBoundary().getId(), boundary.getNorthBoundedBy(), boundary.getEastBoundedBy(),
 				boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(), boundary.getAuditDetails().getCreatedBy(),
-				boundary.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, propertyId };
+				boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getCreatedTime(),
+				boundary.getAuditDetails().getLastModifiedTime(), propertyId };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARY_QUERY, boundaryArgs);
 
@@ -454,11 +447,11 @@ public class PropertyRepository {
 	 * @param propertyId
 	 */
 	public void saveUser(User owner, Long propertyId) {
-		Long createdTime = new Date().getTime();
 
 		Object[] userPropertyArgs = { propertyId, owner.getId(), owner.getIsPrimaryOwner(), owner.getIsSecondaryOwner(),
 				owner.getOwnerShipPercentage(), owner.getOwnerType(), owner.getAuditDetails().getCreatedBy(),
-				owner.getAuditDetails().getLastModifiedBy(), createdTime, createdTime };
+				owner.getAuditDetails().getLastModifiedBy(), owner.getAuditDetails().getCreatedTime(),
+				owner.getAuditDetails().getLastModifiedTime() };
 
 		jdbcTemplate.update(UserBuilder.INSERT_USER_QUERY, userPropertyArgs);
 	}
@@ -607,8 +600,6 @@ public class PropertyRepository {
 
 	public void updateProperty(Property property) throws Exception {
 
-		Long updatedTime = new Date().getTime();
-
 		String propertyUpdate = PropertyBuilder.updatePropertyQuery();
 
 		ObjectMapper obj = new ObjectMapper();
@@ -623,7 +614,8 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(property.getAssessmentDate()),
 				TimeStampUtil.getTimeStamp(property.getOccupancyDate()), property.getGisRefNo(),
 				property.getIsAuthorised(), property.getIsUnderWorkflow(), property.getChannel().name(),
-				property.getAuditDetails().getLastModifiedBy(), updatedTime, jsonObject, property.getId() };
+				property.getAuditDetails().getLastModifiedBy(), property.getAuditDetails().getLastModifiedTime(),
+				jsonObject, property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -631,22 +623,19 @@ public class PropertyRepository {
 
 	public void updateAddress(Address address, Long address_id, Long proertyId) {
 
-		Long updatedTime = new Date().getTime();
-
 		String addressUpdate = AddressBuilder.updatePropertyAddressQuery();
 
 		Object[] addressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(),
-				address.getAuditDetails().getLastModifiedBy(), updatedTime, proertyId, address_id };
+				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getLastModifiedTime(),
+				proertyId, address_id };
 
 		jdbcTemplate.update(addressUpdate, addressArgs);
 
 	}
 
 	public void updatePropertyDetail(PropertyDetail propertyDetails, Long proertyId) throws Exception {
-
-		Long updatedTime = new Date().getTime();
 
 		String propertyDetailsUpdate = PropertyDetailBuilder.updatePropertyDetailQuery();
 
@@ -665,7 +654,8 @@ public class PropertyRepository {
 				propertyDetails.getNoOfFloors(), propertyDetails.getIsSuperStructure(), propertyDetails.getLandOwner(),
 				propertyDetails.getFloorType(), propertyDetails.getWoodType(), propertyDetails.getRoofType(),
 				propertyDetails.getWallType(), propertyDetails.getStateId(), propertyDetails.getApplicationNo(),
-				propertyDetails.getAuditDetails().getLastModifiedBy(), updatedTime, proertyId, jsonObject,
+				propertyDetails.getAuditDetails().getLastModifiedBy(),
+				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject,
 				propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
@@ -673,27 +663,24 @@ public class PropertyRepository {
 
 	public void updateVacantLandDetail(VacantLandDetail vacantLand, Long vacantland_id, Long proertyId) {
 
-		Long updatedTime = new Date().getTime();
-
 		String vacantlandUpdate = VacantLandDetailBuilder.updateVacantLandQuery();
 
 		Object[] vaccantLandArgs = { vacantLand.getSurveyNumber(), vacantLand.getPattaNumber(),
 				vacantLand.getMarketValue(), vacantLand.getCapitalValue(), vacantLand.getLayoutApprovedAuth(),
 				vacantLand.getLayoutPermissionNo(), TimeStampUtil.getTimeStamp(vacantLand.getLayoutPermissionDate()),
 				vacantLand.getResdPlotArea(), vacantLand.getNonResdPlotArea(),
-				vacantLand.getAuditDetails().getLastModifiedBy(), updatedTime, proertyId, vacantland_id };
+				vacantLand.getAuditDetails().getLastModifiedBy(), vacantLand.getAuditDetails().getLastModifiedTime(),
+				proertyId, vacantland_id };
 
 		jdbcTemplate.update(vacantlandUpdate, vaccantLandArgs);
 	}
 
 	public void updateFloor(Floor floor, Long propertyDetail_id) {
 
-		Long updatedTime = new Date().getTime();
-
 		String floorUpdate = FloorBuilder.updateFloorQuery();
 
-		Object[] floorArgs = { floor.getFloorNo(), floor.getAuditDetails().getLastModifiedBy(), updatedTime,
-				propertyDetail_id, floor.getId() };
+		Object[] floorArgs = { floor.getFloorNo(), floor.getAuditDetails().getLastModifiedBy(),
+				floor.getAuditDetails().getLastModifiedTime(), propertyDetail_id, floor.getId() };
 
 		jdbcTemplate.update(floorUpdate, floorArgs);
 
@@ -706,8 +693,6 @@ public class PropertyRepository {
 	 */
 	public void updateUnit(Unit unit) {
 
-		Long updatedTime = new Date().getTime();
-
 		String unitUpdate = UnitBuilder.updateUnitQuery();
 
 		Object[] unitArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
@@ -717,7 +702,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
-				updatedTime, unit.getParentId(), unit.getId(), unit.getIsAuthorised() };
+				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getId(),
+				unit.getIsAuthorised() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -730,8 +716,6 @@ public class PropertyRepository {
 	 */
 	public void updateRoom(Unit unit) {
 
-		Long updatedTime = new Date().getTime();
-
 		String roomUpdate = UnitBuilder.updateRoomQuery();
 
 		Object[] roomArgs = { unit.getUnitNo(), unit.getUnitType().toString(), unit.getLength(), unit.getWidth(),
@@ -741,7 +725,8 @@ public class PropertyRepository {
 				unit.getExemptionReason(), unit.getIsStructured(), TimeStampUtil.getTimeStamp(unit.getOccupancyDate()),
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
-				updatedTime, unit.getParentId(), unit.getId(), unit.getIsAuthorised() };
+				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getId(),
+				unit.getIsAuthorised() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 
@@ -749,25 +734,23 @@ public class PropertyRepository {
 
 	public void updateDocument(Document document, Long propertyDetailsId) {
 
-		Long updatedTime = new Date().getTime();
-
 		String documentUpdate = DocumentBuilder.updateDocumentQuery();
 
-		Object[] documentArgs = { document.getFileStore(), document.getAuditDetails().getLastModifiedBy(), updatedTime,
-				propertyDetailsId, document.getDocumentType(), document.getId() };
+		Object[] documentArgs = { document.getFileStore(), document.getAuditDetails().getLastModifiedBy(),
+				document.getAuditDetails().getLastModifiedTime(), propertyDetailsId, document.getDocumentType(),
+				document.getId() };
 
 		jdbcTemplate.update(documentUpdate, documentArgs);
 	}
 
 	public void updateUser(User owner, Long propertyId) {
 
-		Long updatedTime = new Date().getTime();
-
 		String userUpdate = UserBuilder.updateOwnerQuery();
 
 		Object[] userPropertyArgs = { propertyId, owner.getId(), owner.getIsPrimaryOwner().booleanValue(),
 				owner.getIsSecondaryOwner().booleanValue(), owner.getOwnerShipPercentage(), owner.getOwnerType(),
-				owner.getAuditDetails().getLastModifiedBy(), updatedTime, owner.getId() };
+				owner.getAuditDetails().getLastModifiedBy(), owner.getAuditDetails().getLastModifiedTime(),
+				owner.getId() };
 
 		jdbcTemplate.update(userUpdate, userPropertyArgs);
 
@@ -775,15 +758,13 @@ public class PropertyRepository {
 
 	public void updateBoundary(PropertyLocation boundary, Long propertId) {
 
-		Long updatedTime = new Date().getTime();
-
 		String boundaryUpdate = BoundaryBuilder.updateBoundaryQuery();
 
 		Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(), boundary.getLocationBoundary().getId(),
 				boundary.getAdminBoundary().getId(), boundary.getNorthBoundedBy().toString(),
 				boundary.getEastBoundedBy().toString(), boundary.getWestBoundedBy().toString(),
-				boundary.getSouthBoundedBy().toString(), boundary.getAuditDetails().getLastModifiedBy(), updatedTime,
-				propertId, boundary.getId() };
+				boundary.getSouthBoundedBy().toString(), boundary.getAuditDetails().getLastModifiedBy(),
+				boundary.getAuditDetails().getLastModifiedTime(), propertId, boundary.getId() };
 
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 
@@ -882,7 +863,6 @@ public class PropertyRepository {
 	}
 
 	public Long saveTitleTransfer(TitleTransfer titleTransfer) {
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator pscTitleTransfer = new PreparedStatementCreator() {
 
@@ -907,8 +887,8 @@ public class PropertyRepository {
 				ps.setTimestamp(13, TimeStampUtil.getTimeStamp(titleTransfer.getReceiptdate()));
 				ps.setString(14, titleTransfer.getAuditDetails().getCreatedBy());
 				ps.setString(15, titleTransfer.getAuditDetails().getLastModifiedBy());
-				ps.setLong(16, getLong(createdTime));
-				ps.setLong(17, getLong(createdTime));
+				ps.setLong(16, getLong(titleTransfer.getAuditDetails().getCreatedTime()));
+				ps.setLong(17, getLong(titleTransfer.getAuditDetails().getLastModifiedTime()));
 				ps.setString(18, titleTransfer.getApplicationNo());
 
 				return ps;
@@ -927,18 +907,16 @@ public class PropertyRepository {
 	}
 
 	public void saveTitleTransferUser(User owner, Long titleTransferId) {
-		Long createdTime = new Date().getTime();
 
 		Object[] titleTransferUserArgs = { titleTransferId, owner.getId(), owner.getIsPrimaryOwner(),
 				owner.getIsSecondaryOwner(), owner.getOwnerShipPercentage(), owner.getOwnerType(),
-				owner.getAuditDetails().getCreatedBy(), owner.getAuditDetails().getLastModifiedBy(), createdTime,
-				createdTime };
+				owner.getAuditDetails().getCreatedBy(), owner.getAuditDetails().getLastModifiedBy(),
+				owner.getAuditDetails().getCreatedTime(), owner.getAuditDetails().getLastModifiedTime() };
 
 		jdbcTemplate.update(TitleTransferUserBuilder.INSERT_TITLETRANSFERUSER_QUERY, titleTransferUserArgs);
 	}
 
 	public Long saveTitleTransferDocument(Document document, Long titleTransferId) {
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator pscDocument = new PreparedStatementCreator() {
 			@Override
@@ -948,8 +926,8 @@ public class PropertyRepository {
 				ps.setString(1, document.getFileStore());
 				ps.setString(2, document.getAuditDetails().getCreatedBy());
 				ps.setString(3, document.getAuditDetails().getLastModifiedBy());
-				ps.setLong(4, getLong(createdTime));
-				ps.setLong(5, getLong(createdTime));
+				ps.setLong(4, getLong(document.getAuditDetails().getCreatedTime()));
+				ps.setLong(5, getLong(document.getAuditDetails().getLastModifiedTime()));
 				ps.setLong(6, getLong(titleTransferId));
 				ps.setString(7, document.getDocumentType());
 				return ps;
@@ -967,14 +945,14 @@ public class PropertyRepository {
 	}
 
 	public void saveTitleTransferAddress(TitleTransfer titleTransfer, Long titleTransferId) {
-		Long createdTime = new Date().getTime();
 
 		Address address = titleTransfer.getCorrespondenceAddress();
 
 		Object[] titleTransferAddressArgs = { address.getTenantId(), address.getLatitude(), address.getLongitude(),
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
-				address.getAuditDetails().getLastModifiedBy(), createdTime, createdTime, titleTransferId };
+				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getCreatedTime(),
+				address.getAuditDetails().getLastModifiedTime(), titleTransferId };
 
 		jdbcTemplate.update(TitleTransferAddressBuilder.INSERT_TITLETRANSERADDRESS_QUERY, titleTransferAddressArgs);
 
@@ -982,12 +960,10 @@ public class PropertyRepository {
 
 	public void updateTitleTransfer(TitleTransfer titleTransfer) {
 
-		Long updatedTime = new Date().getTime();
-
 		String titleTransferUpdate = TitleTransferBuilder.UPDATE_TITLETRANSFER_QUERY;
 
 		Object[] titleTransferArgs = { titleTransfer.getStateId(), titleTransfer.getAuditDetails().getLastModifiedBy(),
-				updatedTime, titleTransfer.getApplicationNo() };
+				titleTransfer.getAuditDetails().getLastModifiedTime(), titleTransfer.getApplicationNo() };
 
 		jdbcTemplate.update(titleTransferUpdate, titleTransferArgs);
 
@@ -1001,12 +977,10 @@ public class PropertyRepository {
 	 */
 	public void updateTitleTransferProperty(Property property) throws Exception {
 
-		Long updatedTime = new Date().getTime();
-
 		String propertyUpdate = PropertyBuilder.UPDATE_TITLETRANSFERPROPERTY_QUERY;
 
-		Object[] propertyArgs = { false, property.getAuditDetails().getLastModifiedBy(), updatedTime,
-				property.getId() };
+		Object[] propertyArgs = { false, property.getAuditDetails().getLastModifiedBy(),
+				property.getAuditDetails().getLastModifiedTime(), property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -1021,12 +995,11 @@ public class PropertyRepository {
 	@Transactional
 	public void updateTitleTransferPropertyDetail(PropertyDetail propertyDetails) throws Exception {
 
-		Long updatedTime = new Date().getTime();
-
 		String propertyDetailsUpdate = PropertyDetailBuilder.UPDATE_TITLETRANSFERPROPERTYDETAIL_QUERY;
 
 		Object[] propertyDetailsArgs = { propertyDetails.getStateId(),
-				propertyDetails.getAuditDetails().getLastModifiedBy(), updatedTime, propertyDetails.getId() };
+				propertyDetails.getAuditDetails().getLastModifiedBy(),
+				propertyDetails.getAuditDetails().getLastModifiedTime(), propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}

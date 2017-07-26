@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -68,8 +67,6 @@ public class PropertyMasterRepository {
 	 */
 	public Long saveDepartment(String tenantId, Department department, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -83,8 +80,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, department.getAuditDetails().getCreatedBy());
 				ps.setString(5, department.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, department.getAuditDetails().getCreatedTime());
+				ps.setLong(7, department.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -104,7 +101,6 @@ public class PropertyMasterRepository {
 	 * @param id
 	 */
 	public Department updateDepartment(Department department, String data, Long id) {
-		Long modifiedTime = new Date().getTime();
 
 		String updateDepartmentSql = DepartmentQueryBuilder.UPDATE_DEPARTMENT_QUERY;
 		String selectDepartmentSql = DepartmentQueryBuilder.SELECT_DEPARTMENT_CREATETIME;
@@ -120,7 +116,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, department.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, modifiedTime);
+				ps.setLong(5, department.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, id);
 				return ps;
 			}
@@ -179,7 +175,6 @@ public class PropertyMasterRepository {
 	 */
 
 	public Long saveOccuapancy(String tenantId, OccuapancyMaster occuapancy, String data) {
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -194,8 +189,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, occuapancy.getAuditDetails().getCreatedBy());
 				ps.setString(5, occuapancy.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, occuapancy.getAuditDetails().getCreatedTime());
+				ps.setLong(7, occuapancy.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -217,8 +212,6 @@ public class PropertyMasterRepository {
 	 */
 	public OccuapancyMaster updateOccuapancy(OccuapancyMaster occuapancyMaster, String data) {
 
-		Long modifiedTime = new Date().getTime();
-
 		String updateOccupancySql = OccuapancyQueryBuilder.UPDATE_OCCUAPANCY_QUERY;
 		String selectOccupancySql = OccuapancyQueryBuilder.SELECT_OCCUAPANCY_CREATETIME;
 
@@ -233,7 +226,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, occuapancyMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, modifiedTime);
+				ps.setLong(5, occuapancyMaster.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, occuapancyMaster.getId());
 				return ps;
 			}
@@ -298,8 +291,6 @@ public class PropertyMasterRepository {
 
 	public Long savePropertyType(String tenantId, PropertyType propertyType, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -313,8 +304,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, propertyType.getAuditDetails().getCreatedBy());
 				ps.setString(5, propertyType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, propertyType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, propertyType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -337,8 +328,6 @@ public class PropertyMasterRepository {
 
 	public PropertyType updatePropertyType(PropertyType propertyType, String data) {
 
-		Long modifiedTime = new Date().getTime();
-
 		String updatePropertyTypeSql = PropertyTypesBuilder.UPDATE_PROPERTYTYPES_QUERY;
 		String selectPropertyTypeSql = PropertyTypesBuilder.SELECT_PROPERTYTYPES_CREATETIME;
 
@@ -353,7 +342,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, propertyType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, modifiedTime);
+				ps.setLong(5, propertyType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, propertyType.getId());
 				return ps;
 			}
@@ -416,7 +405,6 @@ public class PropertyMasterRepository {
 
 	public Long saveFloorType(FloorType floorType, String data) {
 
-		Long createdTime = new Date().getTime();
 		String saveFloorTypeSql = FloorTypeBuilder.INSERT_FLOOR_QUERY;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -430,8 +418,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, floorType.getAuditDetails().getCreatedBy());
 				ps.setString(5, floorType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, floorType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, floorType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -453,7 +441,6 @@ public class PropertyMasterRepository {
 
 	public FloorType updateFloorType(FloorType floorType, String data) {
 
-		Long updatedTime = new Date().getTime();
 		String updateFloorTypeSql = FloorTypeBuilder.UPDATE_FLOOR_QUERY;
 		String selectFloorCreateTime = FloorTypeBuilder.SELECT_FLOOR_CREATETIME;
 
@@ -468,7 +455,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, floorType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, floorType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, floorType.getId());
 
 				return ps;
@@ -531,7 +518,6 @@ public class PropertyMasterRepository {
 
 	public Long saveRoofType(RoofType roofType, String data) {
 
-		Long createdTime = new Date().getTime();
 		String SaveRoofTypeSql = RoofTypeBuilder.INSERT_ROOF_TYPE;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -545,8 +531,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, roofType.getAuditDetails().getCreatedBy());
 				ps.setString(5, roofType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, roofType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, roofType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -568,7 +554,6 @@ public class PropertyMasterRepository {
 
 	public RoofType updateRoofType(RoofType roofType, String data) {
 
-		long updatedTime = new Date().getTime();
 		String updateRoofTypeSql = RoofTypeBuilder.UPDATE_ROOF_QUERY;
 		String selectRoofTypeSql = RoofTypeBuilder.SELECT_ROOF_CREATETIME;
 
@@ -583,7 +568,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, roofType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, roofType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, roofType.getId());
 				return ps;
 			}
@@ -640,7 +625,6 @@ public class PropertyMasterRepository {
 
 	public Long saveWoodType(WoodType woodType, String data) {
 
-		Long createdTime = new Date().getTime();
 		String saveWoodTypeSql = WoodTypeBuilder.INSERT_WOOD_QUERY;
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -654,8 +638,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, woodType.getAuditDetails().getCreatedBy());
 				ps.setString(5, woodType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, woodType.getAuditDetails().getCreatedTime());
+				ps.setLong(7, woodType.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -677,7 +661,6 @@ public class PropertyMasterRepository {
 
 	public WoodType updateWoodType(WoodType woodType, String data) {
 
-		long updatedTime = new Date().getTime();
 		String updateWoodTypeSql = WoodTypeBuilder.UPDATE_WOOD_QUERY;
 		String selectWoodCreateTime = WoodTypeBuilder.SELECT_WOOD_CREATETIME;
 
@@ -692,7 +675,7 @@ public class PropertyMasterRepository {
 				jsonObject.setValue(data);
 				ps.setObject(3, jsonObject);
 				ps.setString(4, woodType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, woodType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, woodType.getId());
 
 				return ps;
@@ -824,8 +807,6 @@ public class PropertyMasterRepository {
 
 	public Long saveStructureClsses(String tenantId, StructureClass structureClass, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		String structureClassInsert = StructureClassesBuilder.INSERT_STRUCTURECLASSES_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -842,8 +823,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, structureClass.getAuditDetails().getCreatedBy());
 				ps.setString(5, structureClass.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, structureClass.getAuditDetails().getCreatedTime());
+				ps.setLong(7, structureClass.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -857,8 +838,6 @@ public class PropertyMasterRepository {
 	}
 
 	public StructureClass updateStructureClsses(StructureClass structureClass, String data) {
-
-		Long updatedTime = new Date().getTime();
 
 		String structureClassesUpdate = StructureClassesBuilder.UPDATE_STRUCTURECLASSES_QUERY;
 		String selectStructureClassessSql = StructureClassesBuilder.SELECT_STRUCTURECLASSES_CREATETIME;
@@ -876,7 +855,7 @@ public class PropertyMasterRepository {
 				ps.setString(2, structureClass.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, structureClass.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, structureClass.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, structureClass.getId());
 
 				return ps;
@@ -899,8 +878,6 @@ public class PropertyMasterRepository {
 
 	public Long saveUsageMaster(UsageMaster usageMaster, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		String usageInsert = UsageMasterBuilder.INSERT_USAGEMASTER_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -919,8 +896,8 @@ public class PropertyMasterRepository {
 				ps.setObject(4, jsonObject);
 				ps.setString(5, usageMaster.getAuditDetails().getCreatedBy());
 				ps.setString(6, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
-				ps.setLong(8, createdTime);
+				ps.setLong(7, usageMaster.getAuditDetails().getCreatedTime());
+				ps.setLong(8, usageMaster.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -942,8 +919,6 @@ public class PropertyMasterRepository {
 	 */
 	public UsageMaster updateUsageMaster(UsageMaster usageMaster, String data) {
 
-		Long updatedTime = new Date().getTime();
-
 		String usageUpdate = UsageMasterBuilder.UPDATE_USAGEMASTER_QUERY;
 		String selectUsageMasterSql = UsageMasterBuilder.SELECT_USAGEMASTER_CREATETIME;
 
@@ -960,7 +935,7 @@ public class PropertyMasterRepository {
 				ps.setLong(3, usageMaster.getParent());
 				ps.setObject(4, jsonObject);
 				ps.setString(5, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, updatedTime);
+				ps.setLong(6, usageMaster.getAuditDetails().getLastModifiedTime());
 				ps.setLong(7, usageMaster.getId());
 				return ps;
 			}
@@ -982,8 +957,6 @@ public class PropertyMasterRepository {
 
 	public Long saveWallTypes(WallType wallType, String data) {
 
-		Long createdTime = new Date().getTime();
-
 		String wallTypeInsert = WallTypesBuilder.INSERT_WALLTYPES_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -1000,9 +973,9 @@ public class PropertyMasterRepository {
 				ps.setString(2, wallType.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, wallType.getAuditDetails().getCreatedBy());
-				ps.setLong(5, createdTime);
+				ps.setLong(5, wallType.getAuditDetails().getCreatedTime());
 				ps.setString(6, wallType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
+				ps.setLong(7, wallType.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1025,8 +998,6 @@ public class PropertyMasterRepository {
 
 	public WallType updateWallTypes(WallType wallType, String data) {
 
-		Long updatedTime = new Date().getTime();
-
 		String wallTypesUpdate = WallTypesBuilder.UPDATE_WALLTYPES_QUERY;
 		String selectWallTypeSql = WallTypesBuilder.SELECT_WALLTYPES_CREATETIME;
 
@@ -1043,7 +1014,7 @@ public class PropertyMasterRepository {
 				ps.setString(2, wallType.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, wallType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, wallType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, wallType.getId());
 				return ps;
 			}
@@ -1133,7 +1104,6 @@ public class PropertyMasterRepository {
 	public Long createDepreciation(Depreciation depreciation, String data) {
 
 		String insertDepreciationQuery = DepreciationBuilder.INSERT_DEPRECIATION_QUERY;
-		Long createdTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -1151,8 +1121,8 @@ public class PropertyMasterRepository {
 				ps.setObject(3, jsonObject);
 				ps.setString(4, depreciation.getAuditDetails().getCreatedBy());
 				ps.setString(5, depreciation.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, createdTime);
-				ps.setLong(7, createdTime);
+				ps.setLong(6, depreciation.getAuditDetails().getCreatedTime());
+				ps.setLong(7, depreciation.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1176,7 +1146,6 @@ public class PropertyMasterRepository {
 	public void updateDepreciation(Depreciation depreciation, String data) {
 
 		String updateDepreciation = DepreciationBuilder.UPDATE_DEPRECIATION_QUERY;
-		Long updatedTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -1190,7 +1159,7 @@ public class PropertyMasterRepository {
 				ps.setString(2, depreciation.getCode());
 				ps.setObject(3, jsonObject);
 				ps.setString(4, depreciation.getAuditDetails().getLastModifiedBy());
-				ps.setLong(5, updatedTime);
+				ps.setLong(5, depreciation.getAuditDetails().getLastModifiedTime());
 				ps.setLong(6, depreciation.getId());
 				return ps;
 			}
@@ -1253,7 +1222,6 @@ public class PropertyMasterRepository {
 
 	public Long createMutationMaster(MutationMaster mutationMaster, String data) {
 		String insertMuationQuery = MutationMasterBuilder.INSERT_MUTATTION_QUERY;
-		Long createdTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 
 			@Override
@@ -1271,8 +1239,8 @@ public class PropertyMasterRepository {
 				ps.setObject(4, jsonObject);
 				ps.setString(5, mutationMaster.getAuditDetails().getCreatedBy());
 				ps.setString(6, mutationMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
-				ps.setLong(8, createdTime);
+				ps.setLong(7, mutationMaster.getAuditDetails().getCreatedTime());
+				ps.setLong(8, mutationMaster.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1294,7 +1262,6 @@ public class PropertyMasterRepository {
 	public void updateMutationMaster(MutationMaster mutationMaster, String data) {
 
 		String updateMutation = MutationMasterBuilder.UPDATE_MUTATION_QUERY;
-		Long updatedTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -1309,7 +1276,7 @@ public class PropertyMasterRepository {
 				ps.setString(3, mutationMaster.getName());
 				ps.setObject(4, jsonObject);
 				ps.setString(5, mutationMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, updatedTime);
+				ps.setLong(6, mutationMaster.getAuditDetails().getLastModifiedTime());
 				ps.setLong(7, mutationMaster.getId());
 				return ps;
 			}
@@ -1422,7 +1389,6 @@ public class PropertyMasterRepository {
 	 */
 	public Long createDocumentTypeMaster(DocumentType documentType) {
 		String insertDocumentTypeQuery = DocumentTypeBuilder.INSERT_DOCUMENTTYPE_MASTER_QUERY;
-		Long createdTime = new Date().getTime();
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -1437,8 +1403,8 @@ public class PropertyMasterRepository {
 				ps.setString(4, documentType.getApplication().toString());
 				ps.setString(5, documentType.getAuditDetails().getCreatedBy());
 				ps.setString(6, documentType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, createdTime);
-				ps.setLong(8, createdTime);
+				ps.setLong(7, documentType.getAuditDetails().getCreatedTime());
+				ps.setLong(8, documentType.getAuditDetails().getLastModifiedTime());
 
 				return ps;
 			}
@@ -1457,7 +1423,6 @@ public class PropertyMasterRepository {
 	 */
 	public void updateDocumentTypeMaster(DocumentType documentType) {
 		String updateDocumentTypeQuery = DocumentTypeBuilder.UPDATE_DOCUMENTTYPE_MASTER_QUERY;
-		Long updatedTime = new Date().getTime();
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -1468,7 +1433,7 @@ public class PropertyMasterRepository {
 				ps.setString(3, documentType.getCode());
 				ps.setString(4, documentType.getApplication().toString());
 				ps.setString(5, documentType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, updatedTime);
+				ps.setLong(6, documentType.getAuditDetails().getLastModifiedTime());
 				ps.setLong(7, documentType.getId());
 				return ps;
 			}
@@ -1478,7 +1443,6 @@ public class PropertyMasterRepository {
 				new Object[] { documentType.getId() }, Long.class);
 
 		jdbcTemplate.update(psc);
-		documentType.getAuditDetails().setLastModifiedTime(updatedTime);
 		documentType.getAuditDetails().setCreatedTime(createdTime);
 	}
 
@@ -1495,8 +1459,8 @@ public class PropertyMasterRepository {
 			Integer pageSize, Integer offSet) {
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String searchDocumentTypeQuery = DocumentTypeBuilder.searchDocumentType(tenantId, name, code, application, pageSize,
-				offSet, preparedStatementValues);
+		String searchDocumentTypeQuery = DocumentTypeBuilder.searchDocumentType(tenantId, name, code, application,
+				pageSize, offSet, preparedStatementValues);
 
 		List<DocumentType> documentTypes = null;
 		documentTypes = getDocumentTypes(searchDocumentTypeQuery, preparedStatementValues);

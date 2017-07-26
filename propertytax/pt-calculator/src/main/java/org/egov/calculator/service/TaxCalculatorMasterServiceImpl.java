@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.calculator.exception.InvalidInputException;
-import org.egov.calculator.repository.GuidanceValueRepostory;
 import org.egov.calculator.repository.FactorRepository;
+import org.egov.calculator.repository.GuidanceValueRepostory;
 import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
+import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
@@ -70,9 +71,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 		for (CalculationFactor calculationFactor : calculationFactorRequest.getCalculationFactors()) {
 
 			validateFactorCode(calculationFactor, calculationFactorRequest);
-
+			AuditDetails auditDetails = getAuditDetail(calculationFactorRequest.getRequestInfo());
 			try {
-
+				calculationFactor.setAuditDetails(auditDetails);
 				Long id = factorRepository.saveFactor(tenantId, calculationFactor);
 				calculationFactor.setId(id);
 
@@ -167,12 +168,11 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public CalculationFactorResponse updateFactor(String tenantId, CalculationFactorRequest calculationFactorRequest) {
 
 		for (CalculationFactor calculationFactor : calculationFactorRequest.getCalculationFactors()) {
-
+			AuditDetails auditDetails = getAuditDetail(calculationFactorRequest.getRequestInfo());
 			try {
-
-				long updatedTime = new Date().getTime();
 				long id = calculationFactor.getId();
-				calculationFactor.getAuditDetails().setLastModifiedTime(updatedTime);
+				calculationFactor.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
+				calculationFactor.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 				factorRepository.updateFactor(tenantId, id, calculationFactor);
 
 			} catch (Exception e) {
@@ -220,12 +220,10 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 
 		for (GuidanceValue guidanceValue : guidanceValueRequest.getGuidanceValues()) {
 
-			Long createdTime = new Date().getTime();
+			AuditDetails auditDetails = getAuditDetail(guidanceValueRequest.getRequestInfo());
+			guidanceValue.setAuditDetails(auditDetails);
 			Long id = guidanceValueRepostory.saveGuidanceValue(tenantId, guidanceValue);
-
 			guidanceValue.setId(id);
-			guidanceValue.getAuditDetails().setCreatedTime(createdTime);
-			guidanceValue.getAuditDetails().setLastModifiedTime(createdTime);
 		}
 
 		ResponseInfo responseInfo = responseInfoFactory
@@ -242,10 +240,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			throws Exception {
 		// TODO Auto-generated method stub
 		for (GuidanceValue guidanceValue : guidanceValueRequest.getGuidanceValues()) {
-
-			Long modifiedTime = new Date().getTime();
+			AuditDetails auditDetails = getAuditDetail(guidanceValueRequest.getRequestInfo());
+			guidanceValue.setAuditDetails(auditDetails);
 			guidanceValueRepostory.udpateGuidanceValue(tenantId, guidanceValue);
-			guidanceValue.getAuditDetails().setLastModifiedTime(modifiedTime);
 		}
 
 		ResponseInfo requestInfo = responseInfoFactory
@@ -280,9 +277,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TaxRatesResponse createTaxRate(String tenantId, TaxRatesRequest taxRatesRequest) throws Exception {
 
 		for (TaxRates taxRates : taxRatesRequest.getTaxRates()) {
-
+			AuditDetails auditDetails = getAuditDetail(taxRatesRequest.getRequestInfo());
 			try {
-
+				taxRates.setAuditDetails(auditDetails);
 				Long id = taxRatesRepository.createTaxRates(tenantId, taxRates);
 				taxRates.setId(id);
 
@@ -305,10 +302,10 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TaxRatesResponse updateTaxRate(String tenantId, TaxRatesRequest taxRatesRequest) throws Exception {
 
 		for (TaxRates taxRates : taxRatesRequest.getTaxRates()) {
-
+			AuditDetails auditDetails = getAuditDetail(taxRatesRequest.getRequestInfo());
 			try {
-				long updatedTime = new Date().getTime();
-				taxRates.getAuditDetails().setLastModifiedTime(updatedTime);
+				taxRates.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
+				taxRates.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 				taxRatesRepository.updateTaxRates(tenantId, taxRates);
 
 			} catch (Exception e) {
@@ -354,9 +351,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TaxPeriodResponse createTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
-
+			AuditDetails auditDetails = getAuditDetail(taxPeriodRequest.getRequestInfo());
 			try {
-
+				taxPeriod.setAuditDetails(auditDetails);
 				Long id = taxPeriodRespository.saveTaxPeriod(taxPeriod, tenantId);
 				taxPeriod.setId(id);
 			} catch (Exception e) {
@@ -379,8 +376,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TaxPeriodResponse updateTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
-
+			AuditDetails auditDetails = getAuditDetail(taxPeriodRequest.getRequestInfo());
 			try {
+				taxPeriod.setAuditDetails(auditDetails);
 				taxPeriodRespository.updateTaxPeriod(taxPeriod, tenantId);
 			} catch (Exception e) {
 				throw new InvalidInputException(taxPeriodRequest.getRequestInfo());
@@ -415,6 +413,18 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 
 		return taxPeriodResponse;
 	}
-	
-	
+
+	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
+
+		String userId = requestInfo.getUserInfo().getId().toString();
+		Long currEpochDate = new Date().getTime();
+
+		AuditDetails auditDetail = new AuditDetails();
+		auditDetail.setCreatedBy(userId);
+		auditDetail.setCreatedTime(currEpochDate);
+		auditDetail.setLastModifiedBy(userId);
+		auditDetail.setLastModifiedTime(currEpochDate);
+		return auditDetail;
+	}
+
 }

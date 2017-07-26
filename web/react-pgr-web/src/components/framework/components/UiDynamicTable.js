@@ -94,7 +94,9 @@ export default class UiDynamicTable extends Component {
 				                	item.values.map((item2, i2) => {
 					                  return (
 					                    <tr key={i2}>
-					                      <td>{renderFields(item2)}</td>
+                                    { item2.cols.map(function(item3, i3) {
+                                       return (<td>{renderFields(item3)}</td>);
+                                    })}
 					                    </tr>
 					                   )
 				                	})

@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
 import org.egov.egf.master.domain.service.AccountDetailTypeService;
 import org.egov.egf.master.web.contract.AccountDetailTypeContract;
 import org.egov.egf.master.web.contract.AccountDetailTypeSearchContract;
+import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
+import org.egov.egf.master.web.requests.AccountDetailTypeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,28 @@ public class AccountDetailTypeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountDetailTypeContract> create(
-			@RequestBody @Valid CommonRequest<AccountDetailTypeContract> accountDetailTypeContractRequest,
+	public AccountDetailTypeResponse create(@RequestBody AccountDetailTypeRequest accountDetailTypeRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountDetailTypeContract> accountDetailTypeResponse = new CommonResponse<>();
+		AccountDetailTypeResponse accountDetailTypeResponse = new AccountDetailTypeResponse();
+		accountDetailTypeResponse.setResponseInfo(getResponseInfo(accountDetailTypeRequest.getRequestInfo()));
 		List<AccountDetailType> accountdetailtypes = new ArrayList<>();
-		AccountDetailType accountDetailType = null;
-		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<AccountDetailTypeContract>();
-		AccountDetailTypeContract contract = null;
+		AccountDetailType accountDetailType;
+		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
+		AccountDetailTypeContract contract;
 
-		accountDetailTypeContractRequest.getRequestInfo().setAction("create");
+		accountDetailTypeRequest.getRequestInfo().setAction("create");
 
-		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest.getData()) {
+		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeRequest.getAccountDetailTypes()) {
 			accountDetailType = new AccountDetailType();
 			model.map(accountDetailTypeContract, accountDetailType);
 			accountDetailType.setCreatedDate(new Date());
-			accountDetailType.setCreatedBy(accountDetailTypeContractRequest.getRequestInfo().getUserInfo());
-			accountDetailType.setLastModifiedBy(accountDetailTypeContractRequest.getRequestInfo().getUserInfo());
+			accountDetailType.setCreatedBy(accountDetailTypeRequest.getRequestInfo().getUserInfo());
+			accountDetailType.setLastModifiedBy(accountDetailTypeRequest.getRequestInfo().getUserInfo());
 			accountdetailtypes.add(accountDetailType);
 		}
 
@@ -73,36 +71,35 @@ public class AccountDetailTypeController {
 			accountDetailTypeContracts.add(contract);
 		}
 
-		accountDetailTypeContractRequest.setData(accountDetailTypeContracts);
-		accountDetailTypeService.addToQue(accountDetailTypeContractRequest);
-		accountDetailTypeResponse.setData(accountDetailTypeContracts);
+		accountDetailTypeRequest.setAccountDetailTypes(accountDetailTypeContracts);
+		accountDetailTypeService.addToQue(accountDetailTypeRequest);
+		accountDetailTypeResponse.setAccountDetailTypes(accountDetailTypeContracts);
 
 		return accountDetailTypeResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountDetailTypeContract> update(
-			@RequestBody @Valid CommonRequest<AccountDetailTypeContract> accountDetailTypeContractRequest,
+	public AccountDetailTypeResponse update(@RequestBody AccountDetailTypeRequest accountDetailTypeRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		accountDetailTypeContractRequest.getRequestInfo().setAction("update");
+		accountDetailTypeRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountDetailTypeContract> accountDetailTypeResponse = new CommonResponse<>();
+		AccountDetailTypeResponse accountDetailTypeResponse = new AccountDetailTypeResponse();
 		List<AccountDetailType> accountdetailtypes = new ArrayList<>();
-		AccountDetailType accountDetailType = null;
-		AccountDetailTypeContract contract = null;
-		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<AccountDetailTypeContract>();
+		accountDetailTypeResponse.setResponseInfo(getResponseInfo(accountDetailTypeRequest.getRequestInfo()));
+		AccountDetailType accountDetailType;
+		AccountDetailTypeContract contract;
+		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
 
-		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeContractRequest.getData()) {
+		for (AccountDetailTypeContract accountDetailTypeContract : accountDetailTypeRequest.getAccountDetailTypes()) {
 			accountDetailType = new AccountDetailType();
 			model.map(accountDetailTypeContract, accountDetailType);
+			accountDetailType.setLastModifiedBy(accountDetailTypeRequest.getRequestInfo().getUserInfo());
 			accountDetailType.setLastModifiedDate(new Date());
-			accountDetailType.setLastModifiedBy(accountDetailTypeContractRequest.getRequestInfo().getUserInfo());
 			accountdetailtypes.add(accountDetailType);
 		}
 
@@ -111,13 +108,13 @@ public class AccountDetailTypeController {
 		for (AccountDetailType accountDetailTypeObj : accountdetailtypes) {
 			contract = new AccountDetailTypeContract();
 			model.map(accountDetailTypeObj, contract);
-			contract.setLastModifiedDate(new Date());
+			accountDetailTypeObj.setLastModifiedDate(new Date());
 			accountDetailTypeContracts.add(contract);
 		}
 
-		accountDetailTypeContractRequest.setData(accountDetailTypeContracts);
-		accountDetailTypeService.addToQue(accountDetailTypeContractRequest);
-		accountDetailTypeResponse.setData(accountDetailTypeContracts);
+		accountDetailTypeRequest.setAccountDetailTypes(accountDetailTypeContracts);
+		accountDetailTypeService.addToQue(accountDetailTypeRequest);
+		accountDetailTypeResponse.setAccountDetailTypes(accountDetailTypeContracts);
 
 		return accountDetailTypeResponse;
 	}
@@ -125,17 +122,16 @@ public class AccountDetailTypeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<AccountDetailTypeContract> search(
-			@ModelAttribute AccountDetailTypeSearchContract accountDetailTypeSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+	public AccountDetailTypeResponse search(
+			@ModelAttribute AccountDetailTypeSearchContract accountDetailTypeSearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountDetailTypeSearch domain = new AccountDetailTypeSearch();
 		mapper.map(accountDetailTypeSearchContract, domain);
-		AccountDetailTypeContract contract ;
+		AccountDetailTypeContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
-
 		Pagination<AccountDetailType> accountdetailtypes = accountDetailTypeService.search(domain);
 
 		for (AccountDetailType accountDetailType : accountdetailtypes.getPagedData()) {
@@ -144,8 +140,8 @@ public class AccountDetailTypeController {
 			accountDetailTypeContracts.add(contract);
 		}
 
-		CommonResponse<AccountDetailTypeContract> response = new CommonResponse<>();
-		response.setData(accountDetailTypeContracts);
+		AccountDetailTypeResponse response = new AccountDetailTypeResponse();
+		response.setAccountDetailTypes(accountDetailTypeContracts);
 		response.setPage(new PaginationContract(accountdetailtypes));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -154,7 +150,7 @@ public class AccountDetailTypeController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

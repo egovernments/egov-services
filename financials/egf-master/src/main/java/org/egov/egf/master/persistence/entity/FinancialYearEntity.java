@@ -2,7 +2,6 @@ package org.egov.egf.master.persistence.entity;
 
 import java.util.Date;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.master.domain.model.FinancialYear;
 
@@ -44,7 +43,7 @@ public class FinancialYearEntity extends AuditableEntity {
 	}
 
 	public FinancialYearEntity toEntity(FinancialYear financialYear) {
-		super.toEntity((Auditable) financialYear);
+		super.toEntity(financialYear);
 		this.id = financialYear.getId();
 		this.finYearRange = financialYear.getFinYearRange();
 		this.startingDate = financialYear.getStartingDate();

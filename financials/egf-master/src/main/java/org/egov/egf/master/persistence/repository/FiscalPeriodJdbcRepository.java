@@ -10,12 +10,12 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
-import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.persistence.entity.FiscalPeriodEntity;
 import org.egov.egf.master.persistence.entity.FiscalPeriodSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +26,10 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		LOG.debug("init fiscalPeriod");
 		init(FiscalPeriodEntity.class);
 		LOG.debug("end init fiscalPeriod");
+	}
+
+	public FiscalPeriodJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public FiscalPeriodEntity create(FiscalPeriodEntity entity) {
@@ -50,82 +54,95 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+		if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(fiscalPeriodSearchEntity.getSortBy());
+			validateEntityFieldName(fiscalPeriodSearchEntity.getSortBy(), FiscalPeriodEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + fiscalPeriodSearchEntity.getSortBy();
+		}
+
 		searchQuery = searchQuery.replace(":tablename", FiscalPeriodEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(fiscalPeriodSearchEntity.getSortBy());
-                    validateEntityFieldName(fiscalPeriodSearchEntity.getSortBy(), FiscalPeriodEntity.class);
-                }
-                
-                String orderBy = "order by name asc";
-                if (fiscalPeriodSearchEntity.getSortBy() != null && !fiscalPeriodSearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + fiscalPeriodSearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (fiscalPeriodSearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", fiscalPeriodSearchEntity.getId());
 		}
 		if (fiscalPeriodSearchEntity.getName() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("name =:name");
 			paramValues.put("name", fiscalPeriodSearchEntity.getName());
 		}
 		if (fiscalPeriodSearchEntity.getFinancialYearId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("financialYear =:financialYear");
 			paramValues.put("financialYear", fiscalPeriodSearchEntity.getFinancialYearId());
 		}
 		if (fiscalPeriodSearchEntity.getStartingDate() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("startingDate =:startingDate");
 			paramValues.put("startingDate", fiscalPeriodSearchEntity.getStartingDate());
 		}
 		if (fiscalPeriodSearchEntity.getEndingDate() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("endingDate =:endingDate");
 			paramValues.put("endingDate", fiscalPeriodSearchEntity.getEndingDate());
 		}
 		if (fiscalPeriodSearchEntity.getActive() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("active =:active");
 			paramValues.put("active", fiscalPeriodSearchEntity.getActive());
 		}
 		if (fiscalPeriodSearchEntity.getIsActiveForPosting() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("isActiveForPosting =:isActiveForPosting");
 			paramValues.put("isActiveForPosting", fiscalPeriodSearchEntity.getIsActiveForPosting());
 		}
 		if (fiscalPeriodSearchEntity.getIsClosed() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("isClosed =:isClosed");
 			paramValues.put("isClosed", fiscalPeriodSearchEntity.getIsClosed());
 		}
 
 		Pagination<FiscalPeriod> page = new Pagination<>();
-		if (fiscalPeriodSearchEntity.getOffset() != null)
+		if (fiscalPeriodSearchEntity.getOffset() != null) {
 			page.setOffset(fiscalPeriodSearchEntity.getOffset());
-		if (fiscalPeriodSearchEntity.getPageSize() != null)
-			page.setPageSize(fiscalPeriodSearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (fiscalPeriodSearchEntity.getPageSize() != null) {
+			page.setPageSize(fiscalPeriodSearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -153,7 +170,8 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 	}
 
 	public FiscalPeriodEntity findById(FiscalPeriodEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

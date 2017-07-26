@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
-import org.egov.egf.master.web.contract.AccountCodePurposeContract;
+import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class AccountCodePurposeService {
 	@Autowired
 	private SmartValidator validator;
 
-	public BindingResult validate(List<AccountCodePurpose> accountcodepurposes, String method, BindingResult errors) {
+	private BindingResult validate(List<AccountCodePurpose> accountcodepurposes, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -72,6 +71,7 @@ public class AccountCodePurposeService {
 		return accountcodepurposes;
 	}
 
+	@Transactional
 	public List<AccountCodePurpose> add(List<AccountCodePurpose> accountcodepurposes, BindingResult errors) {
 		accountcodepurposes = fetchRelated(accountcodepurposes);
 		validate(accountcodepurposes, ACTION_CREATE, errors);
@@ -82,6 +82,7 @@ public class AccountCodePurposeService {
 
 	}
 
+	@Transactional
 	public List<AccountCodePurpose> update(List<AccountCodePurpose> accountcodepurposes, BindingResult errors) {
 		accountcodepurposes = fetchRelated(accountcodepurposes);
 		validate(accountcodepurposes, ACTION_UPDATE, errors);
@@ -92,7 +93,7 @@ public class AccountCodePurposeService {
 
 	}
 
-	public void addToQue(CommonRequest<AccountCodePurposeContract> request) {
+	public void addToQue(AccountCodePurposeRequest request) {
 		accountCodePurposeRepository.add(request);
 	}
 
@@ -109,4 +110,5 @@ public class AccountCodePurposeService {
 	public AccountCodePurpose update(AccountCodePurpose accountCodePurpose) {
 		return accountCodePurposeRepository.update(accountCodePurpose);
 	}
+
 }

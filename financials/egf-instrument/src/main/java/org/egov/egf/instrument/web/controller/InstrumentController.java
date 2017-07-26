@@ -4,25 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.service.InstrumentService;
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
+import org.egov.egf.instrument.web.requests.InstrumentRequest;
+import org.egov.egf.instrument.web.requests.InstrumentResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,32 +34,16 @@ public class InstrumentController {
 
 	@Autowired
 	private InstrumentService instrumentService;
-	
-	@GetMapping("/")
-	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentContract> get() {
-		
-		 InstrumentContract build = InstrumentContract.builder().build();
-		 build.setCreatedDate(new Date());
-		 CommonResponse<InstrumentContract> response=new CommonResponse<>();
-		 List<InstrumentContract> instruments=new ArrayList();
-		 instruments.add(build);
-		 response.setData(instruments);
-		 return response;
-		
-	}
-	
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentContract> create(@RequestBody CommonRequest<InstrumentContract> instrumentRequest,
-			BindingResult errors) {
+	public InstrumentResponse create(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<InstrumentContract> instrumentResponse = new CommonResponse<>();
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
 		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
 		List<Instrument> instruments = new ArrayList<>();
 		Instrument instrument;
@@ -71,9 +52,10 @@ public class InstrumentController {
 
 		instrumentRequest.getRequestInfo().setAction("create");
 
-		for (InstrumentContract instrumentContract : instrumentRequest.getData()) {
+		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
 			instrument = new Instrument();
 			model.map(instrumentContract, instrument);
+			instrument.setCreatedDate(new Date());
 			instrument.setCreatedBy(instrumentRequest.getRequestInfo().getUserInfo());
 			instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
 			instruments.add(instrument);
@@ -83,38 +65,39 @@ public class InstrumentController {
 
 		for (Instrument f : instruments) {
 			contract = new InstrumentContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			instrumentContracts.add(contract);
 		}
 
-		instrumentRequest.setData(instrumentContracts);
+		instrumentRequest.setInstruments(instrumentContracts);
 		instrumentService.addToQue(instrumentRequest);
-		instrumentResponse.setData(instrumentContracts);
+		instrumentResponse.setInstruments(instrumentContracts);
 
 		return instrumentResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentContract> update(@RequestBody @Valid CommonRequest<InstrumentContract> instrumentContractRequest,
-			BindingResult errors) {
+	public InstrumentResponse update(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		instrumentContractRequest.getRequestInfo().setAction("update");
+		instrumentRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<InstrumentContract> instrumentResponse = new CommonResponse<>();
+		InstrumentResponse instrumentResponse = new InstrumentResponse();
 		List<Instrument> instruments = new ArrayList<>();
-		instrumentResponse.setResponseInfo(getResponseInfo(instrumentContractRequest.getRequestInfo()));
+		instrumentResponse.setResponseInfo(getResponseInfo(instrumentRequest.getRequestInfo()));
 		Instrument instrument;
 		InstrumentContract contract;
 		List<InstrumentContract> instrumentContracts = new ArrayList<>();
 
-		for (InstrumentContract instrumentContract : instrumentContractRequest.getData()) {
+		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
 			instrument = new Instrument();
 			model.map(instrumentContract, instrument);
-			instrument.setLastModifiedBy(instrumentContractRequest.getRequestInfo().getUserInfo());
+			instrument.setLastModifiedBy(instrumentRequest.getRequestInfo().getUserInfo());
+			instrument.setLastModifiedDate(new Date());
 			instruments.add(instrument);
 		}
 
@@ -123,12 +106,13 @@ public class InstrumentController {
 		for (Instrument instrumentObj : instruments) {
 			contract = new InstrumentContract();
 			model.map(instrumentObj, contract);
+			instrumentObj.setLastModifiedDate(new Date());
 			instrumentContracts.add(contract);
 		}
 
-		instrumentContractRequest.setData(instrumentContracts);
-		instrumentService.addToQue(instrumentContractRequest);
-		instrumentResponse.setData(instrumentContracts);
+		instrumentRequest.setInstruments(instrumentContracts);
+		instrumentService.addToQue(instrumentRequest);
+		instrumentResponse.setInstruments(instrumentContracts);
 
 		return instrumentResponse;
 	}
@@ -136,7 +120,7 @@ public class InstrumentController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<InstrumentContract> search(@ModelAttribute InstrumentSearchContract instrumentSearchContract,
+	public InstrumentResponse search(@ModelAttribute InstrumentSearchContract instrumentSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
@@ -147,14 +131,16 @@ public class InstrumentController {
 		List<InstrumentContract> instrumentContracts = new ArrayList<>();
 		Pagination<Instrument> instruments = instrumentService.search(domain);
 
-		for (Instrument instrument : instruments.getPagedData()) {
-			contract = new InstrumentContract();
-			model.map(instrument, contract);
-			instrumentContracts.add(contract);
+		if (instruments.getPagedData() != null) {
+			for (Instrument instrument : instruments.getPagedData()) {
+				contract = new InstrumentContract();
+				model.map(instrument, contract);
+				instrumentContracts.add(contract);
+			}
 		}
 
-		CommonResponse<InstrumentContract> response = new CommonResponse<>();
-		response.setData(instrumentContracts);
+		InstrumentResponse response = new InstrumentResponse();
+		response.setInstruments(instrumentContracts);
 		response.setPage(new PaginationContract(instruments));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -163,7 +149,7 @@ public class InstrumentController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

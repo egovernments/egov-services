@@ -1,12 +1,11 @@
 package org.egov.collection.consumer;
 
 
-import java.util.HashMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.ReceiptService;
-import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import java.util.HashMap;
 
 @Service
 public class CollectionConsumer {

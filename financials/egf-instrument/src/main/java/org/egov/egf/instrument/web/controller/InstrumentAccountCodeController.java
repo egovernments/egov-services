@@ -4,25 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.service.InstrumentAccountCodeService;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
+import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
+import org.egov.egf.instrument.web.requests.InstrumentAccountCodeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,32 +34,17 @@ public class InstrumentAccountCodeController {
 
 	@Autowired
 	private InstrumentAccountCodeService instrumentAccountCodeService;
-	
-	@GetMapping("/")
-	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentAccountCodeContract> get() {
-		
-		 InstrumentAccountCodeContract build = InstrumentAccountCodeContract.builder().build();
-		 build.setCreatedDate(new Date());
-		 CommonResponse<InstrumentAccountCodeContract> response=new CommonResponse<>();
-		 List<InstrumentAccountCodeContract> instrumentaccountcodes=new ArrayList();
-		 instrumentaccountcodes.add(build);
-		 response.setData(instrumentaccountcodes);
-		 return response;
-		
-	}
-	
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentAccountCodeContract> create(@RequestBody CommonRequest<InstrumentAccountCodeContract> instrumentAccountCodeRequest,
+	public InstrumentAccountCodeResponse create(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<InstrumentAccountCodeContract> instrumentAccountCodeResponse = new CommonResponse<>();
+		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
 		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
 		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
 		InstrumentAccountCode instrumentAccountCode;
@@ -71,9 +53,11 @@ public class InstrumentAccountCodeController {
 
 		instrumentAccountCodeRequest.getRequestInfo().setAction("create");
 
-		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest.getData()) {
+		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
+				.getInstrumentAccountCodes()) {
 			instrumentAccountCode = new InstrumentAccountCode();
 			model.map(instrumentAccountCodeContract, instrumentAccountCode);
+			instrumentAccountCode.setCreatedDate(new Date());
 			instrumentAccountCode.setCreatedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
 			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
 			instrumentaccountcodes.add(instrumentAccountCode);
@@ -83,38 +67,41 @@ public class InstrumentAccountCodeController {
 
 		for (InstrumentAccountCode f : instrumentaccountcodes) {
 			contract = new InstrumentAccountCodeContract();
+			contract.setCreatedDate(new Date());
 			model.map(f, contract);
 			instrumentAccountCodeContracts.add(contract);
 		}
 
-		instrumentAccountCodeRequest.setData(instrumentAccountCodeContracts);
+		instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 		instrumentAccountCodeService.addToQue(instrumentAccountCodeRequest);
-		instrumentAccountCodeResponse.setData(instrumentAccountCodeContracts);
+		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
 		return instrumentAccountCodeResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<InstrumentAccountCodeContract> update(@RequestBody @Valid CommonRequest<InstrumentAccountCodeContract> instrumentAccountCodeContractRequest,
+	public InstrumentAccountCodeResponse update(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		instrumentAccountCodeContractRequest.getRequestInfo().setAction("update");
+		instrumentAccountCodeRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<InstrumentAccountCodeContract> instrumentAccountCodeResponse = new CommonResponse<>();
+		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
 		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
-		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeContractRequest.getRequestInfo()));
+		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
 		InstrumentAccountCode instrumentAccountCode;
 		InstrumentAccountCodeContract contract;
 		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
 
-		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeContractRequest.getData()) {
+		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
+				.getInstrumentAccountCodes()) {
 			instrumentAccountCode = new InstrumentAccountCode();
 			model.map(instrumentAccountCodeContract, instrumentAccountCode);
-			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeContractRequest.getRequestInfo().getUserInfo());
+			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
+			instrumentAccountCode.setLastModifiedDate(new Date());
 			instrumentaccountcodes.add(instrumentAccountCode);
 		}
 
@@ -123,12 +110,13 @@ public class InstrumentAccountCodeController {
 		for (InstrumentAccountCode instrumentAccountCodeObj : instrumentaccountcodes) {
 			contract = new InstrumentAccountCodeContract();
 			model.map(instrumentAccountCodeObj, contract);
+			instrumentAccountCodeObj.setLastModifiedDate(new Date());
 			instrumentAccountCodeContracts.add(contract);
 		}
 
-		instrumentAccountCodeContractRequest.setData(instrumentAccountCodeContracts);
-		instrumentAccountCodeService.addToQue(instrumentAccountCodeContractRequest);
-		instrumentAccountCodeResponse.setData(instrumentAccountCodeContracts);
+		instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+		instrumentAccountCodeService.addToQue(instrumentAccountCodeRequest);
+		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
 		return instrumentAccountCodeResponse;
 	}
@@ -136,7 +124,8 @@ public class InstrumentAccountCodeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<InstrumentAccountCodeContract> search(@ModelAttribute InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract,
+	public InstrumentAccountCodeResponse search(
+			@ModelAttribute InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
@@ -147,14 +136,16 @@ public class InstrumentAccountCodeController {
 		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
 		Pagination<InstrumentAccountCode> instrumentaccountcodes = instrumentAccountCodeService.search(domain);
 
-		for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes.getPagedData()) {
-			contract = new InstrumentAccountCodeContract();
-			model.map(instrumentAccountCode, contract);
-			instrumentAccountCodeContracts.add(contract);
+		if (instrumentaccountcodes.getPagedData() != null) {
+			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes.getPagedData()) {
+				contract = new InstrumentAccountCodeContract();
+				model.map(instrumentAccountCode, contract);
+				instrumentAccountCodeContracts.add(contract);
+			}
 		}
 
-		CommonResponse<InstrumentAccountCodeContract> response = new CommonResponse<>();
-		response.setData(instrumentAccountCodeContracts);
+		InstrumentAccountCodeResponse response = new InstrumentAccountCodeResponse();
+		response.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 		response.setPage(new PaginationContract(instrumentaccountcodes));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -163,7 +154,7 @@ public class InstrumentAccountCodeController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

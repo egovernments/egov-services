@@ -10,12 +10,16 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
+var specifications={};
 try {
-  var specifications = require(`./specs/${window.location.hash.split("/")[2]}/${window.location.hash.split("/")[2]}`).default;
-} catch(e) {
-  var specifications = {};
-}
-let reqRequired = []; 
+  var hash = window.location.hash.split("/");
+  if(hash.length == 3) {
+    specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+  } else {
+    specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+  }
+} catch(e) {}
+let reqRequired = [];
 class Report extends Component {
   constructor(props) {
     super(props);
@@ -98,7 +102,7 @@ class Report extends Component {
             counter--;
             if(counter == 0 && breakOut == 0) {
               formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.makeAjaxCall(formData);        
+              self.makeAjaxCall(formData);
             }
           }
         })
@@ -143,7 +147,7 @@ class Report extends Component {
           if(groups[i].children[j].jsonPath == value) {
             return "groups[" + i + "].children[" + j + "].groups";
           } else {
-            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]"; 
+            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
           }
         }
       }
@@ -192,11 +196,11 @@ class Report extends Component {
 }
 
 const mapStateToProps = state => ({
-  metaData:state.framework.metaData, 
+  metaData:state.framework.metaData,
   mockData: state.framework.mockData,
   moduleName:state.framework.moduleName,
   actionName:state.framework.actionName,
-  formData:state.frameworkForm.form, 
+  formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors
 });
 

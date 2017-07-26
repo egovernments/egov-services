@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankBranch;
 import org.egov.egf.master.domain.model.BankBranchSearch;
 import org.egov.egf.master.domain.repository.BankBranchRepository;
 import org.egov.egf.master.domain.repository.BankRepository;
-import org.egov.egf.master.web.contract.BankBranchContract;
+import org.egov.egf.master.web.requests.BankBranchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class BankBranchService {
 	@Autowired
 	private BankRepository bankRepository;
 
-	public BindingResult validate(List<BankBranch> bankbranches, String method, BindingResult errors) {
+	private BindingResult validate(List<BankBranch> bankbranches, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -84,6 +83,7 @@ public class BankBranchService {
 		return bankbranches;
 	}
 
+	@Transactional
 	public List<BankBranch> add(List<BankBranch> bankbranches, BindingResult errors) {
 		bankbranches = fetchRelated(bankbranches);
 		validate(bankbranches, ACTION_CREATE, errors);
@@ -94,6 +94,7 @@ public class BankBranchService {
 
 	}
 
+	@Transactional
 	public List<BankBranch> update(List<BankBranch> bankbranches, BindingResult errors) {
 		bankbranches = fetchRelated(bankbranches);
 		validate(bankbranches, ACTION_UPDATE, errors);
@@ -104,7 +105,7 @@ public class BankBranchService {
 
 	}
 
-	public void addToQue(CommonRequest<BankBranchContract> request) {
+	public void addToQue(BankBranchRequest request) {
 		bankBranchRepository.add(request);
 	}
 
@@ -121,4 +122,5 @@ public class BankBranchService {
 	public BankBranch update(BankBranch bankBranch) {
 		return bankBranchRepository.update(bankBranch);
 	}
+
 }

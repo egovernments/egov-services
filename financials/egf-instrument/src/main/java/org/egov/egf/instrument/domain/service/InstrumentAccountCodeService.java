@@ -5,16 +5,14 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.repository.InstrumentAccountCodeRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
-import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
+import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
-import org.egov.egf.master.web.repository.FundContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +36,8 @@ public class InstrumentAccountCodeService {
 
 	@Autowired
 	private SmartValidator validator;
-
 	@Autowired
 	private ChartOfAccountContractRepository chartOfAccountContractRepository;
-	
 	@Autowired
 	private InstrumentTypeRepository instrumentTypeRepository;
 
@@ -125,7 +121,7 @@ public class InstrumentAccountCodeService {
 
 	}
 
-	public void addToQue(CommonRequest<InstrumentAccountCodeContract> request) {
+	public void addToQue(InstrumentAccountCodeRequest request) {
 		instrumentAccountCodeRepository.add(request);
 	}
 

@@ -28,7 +28,7 @@ public abstract class JdbcRepository {
 
 	public static final Map<String, List<String>> allInsertFields = new HashMap<String, List<String>>();
 	public static final Map<String, List<String>> allUpdateFields = new HashMap<String, List<String>>();
-	public static final Map<String, List<String>> allUniqueFields = new HashMap<String, List<String>>();
+	public static final Map<String, List<String>> allIdentitiferFields = new HashMap<String, List<String>>();
 
 	public static final Map<String, String> allInsertQuery = new HashMap<>();
 	public static final Map<String, String> allUpdateQuery = new HashMap<>();
@@ -63,7 +63,7 @@ public abstract class JdbcRepository {
 		System.out.println(T.getSimpleName() + "--------" + insertFields);
 		allInsertFields.put(T.getSimpleName(), insertFields);
 		allUpdateFields.put(T.getSimpleName(), updateFields);
-		allUniqueFields.put(T.getSimpleName(), uniqueFields);
+		allIdentitiferFields.put(T.getSimpleName(), uniqueFields);
 		// allInsertQuery.put(T.getSimpleName(), insertQuery);
 		allUpdateQuery.put(T.getSimpleName(), updateQuery);
 		getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
@@ -284,20 +284,21 @@ public abstract class JdbcRepository {
 
 	@Transactional
 	public Object create(Object ob) {
-		//System.out.println(allInsertQuery);
+		// System.out.println(allInsertQuery);
 		((AuditableEntity) ob).setCreatedDate(new Date());
 		((AuditableEntity) ob).setLastModifiedDate(new Date());
 
 		String obName = ob.getClass().getSimpleName();
 		List<Map<String, Object>> batchValues = new ArrayList<>();
 		batchValues.add(paramValues(ob, allInsertFields.get(obName)));
-		batchValues.get(0).putAll(paramValues(ob, allUniqueFields.get(obName)));
-		 System.out.println(obName+"----" +allInsertQuery.get(obName));
+		batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+		System.out.println(obName + "----" + allInsertQuery.get(obName));
 		System.out.println(namedParameterJdbcTemplate);
 		namedParameterJdbcTemplate.batchUpdate(allInsertQuery.get(obName),
 				batchValues.toArray(new Map[batchValues.size()]));
 		return ob;
 	}
+
 	@Transactional
 	public Object update(Object ob) {
 		System.out.println(allUpdateQuery);
@@ -307,7 +308,7 @@ public abstract class JdbcRepository {
 		String obName = ob.getClass().getSimpleName();
 		List<Map<String, Object>> batchValues = new ArrayList<>();
 		batchValues.add(paramValues(ob, allUpdateFields.get(obName)));
-		batchValues.get(0).putAll(paramValues(ob, allUniqueFields.get(obName)));
+		batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
 		System.out.println(obName + "----" + allUpdateQuery.get(obName));
 		namedParameterJdbcTemplate.batchUpdate(allUpdateQuery.get(obName),
 				batchValues.toArray(new Map[batchValues.size()]));
@@ -322,49 +323,52 @@ public abstract class JdbcRepository {
 		page.setCurrentPage(page.getOffset());
 		return page;
 	}
-	
-    public void validateSortByOrder(final String sortBy) {
-        List<String> sortByList = new ArrayList<String>();
-        InvalidDataException invalidDataException = new InvalidDataException();
-        if (sortBy.contains(","))
-            sortByList = Arrays.asList(sortBy.split(","));
-        else
-            sortByList = Arrays.asList(sortBy);
-        for (String s : sortByList) {
-            if (s.contains(" ") && (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
-                invalidDataException.setFieldName(s.split(" ")[0]);
-                invalidDataException.setDefaultMessage("Please send the proper sortBy order for the field " + s.split(" ")[0]);
-                throw invalidDataException;
-            }
-        }
 
-    }
-    
-    public void validateEntityFieldName(String sortBy,final Class<?> object) {
-        InvalidDataException invalidDataException = new InvalidDataException();
-        List<String> sortByList = new ArrayList<String>();
-        if (sortBy.contains(","))
-            sortByList = Arrays.asList(sortBy.split(","));
-        else
-            sortByList = Arrays.asList(sortBy);
-        Boolean isFieldExist = Boolean.FALSE;
-        for (String s : sortByList) {
-                for(int i=0; i<object.getDeclaredFields().length;i++) {
-                    if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
-                        isFieldExist= Boolean.TRUE;
-                        break;
-                    } else {
-                        isFieldExist= Boolean.FALSE;
-                    }
-                }
-                if(!isFieldExist) {
-                    invalidDataException.setFieldName(s.contains(" ") ? s.split(" ")[0] : s);
-                    invalidDataException.setDefaultMessage("Please send the proper Field Names ");
-                    throw invalidDataException;
-                }
-        }
-        
-    }
+	public void validateSortByOrder(final String sortBy) {
+		List<String> sortByList = new ArrayList<String>();
+		InvalidDataException invalidDataException = new InvalidDataException();
+		if (sortBy.contains(",")) {
+			sortByList = Arrays.asList(sortBy.split(","));
+		} else {
+			sortByList = Arrays.asList(sortBy);
+		}
+		for (String s : sortByList) {
+			if (s.contains(" ")
+					&& (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
+				invalidDataException.setFieldName(s.split(" ")[0]);
+				invalidDataException
+						.setDefaultMessage("Please send the proper sortBy order for the field " + s.split(" ")[0]);
+				throw invalidDataException;
+			}
+		}
 
+	}
+
+	public void validateEntityFieldName(String sortBy, final Class<?> object) {
+		InvalidDataException invalidDataException = new InvalidDataException();
+		List<String> sortByList = new ArrayList<String>();
+		if (sortBy.contains(",")) {
+			sortByList = Arrays.asList(sortBy.split(","));
+		} else {
+			sortByList = Arrays.asList(sortBy);
+		}
+		Boolean isFieldExist = Boolean.FALSE;
+		for (String s : sortByList) {
+			for (int i = 0; i < object.getDeclaredFields().length; i++) {
+				if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
+					isFieldExist = Boolean.TRUE;
+					break;
+				} else {
+					isFieldExist = Boolean.FALSE;
+				}
+			}
+			if (!isFieldExist) {
+				invalidDataException.setFieldName(s.contains(" ") ? s.split(" ")[0] : s);
+				invalidDataException.setDefaultMessage("Please send the proper Field Names ");
+				throw invalidDataException;
+			}
+		}
+
+	}
 
 }

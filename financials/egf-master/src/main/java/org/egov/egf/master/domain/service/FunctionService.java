@@ -5,11 +5,10 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.repository.FunctionRepository;
-import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.requests.FunctionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +28,13 @@ public class FunctionService {
 	public static final String ACTION_SEARCH = "search";
 
 	@Autowired
-	private SmartValidator validator;
-	@Autowired
 	private FunctionRepository functionRepository;
 
-	public BindingResult validate(List<Function> functions, String method, BindingResult errors) {
+	@Autowired
+	private SmartValidator validator;
+
+
+	private BindingResult validate(List<Function> functions, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -64,22 +65,22 @@ public class FunctionService {
 	}
 
 	public List<Function> fetchRelated(List<Function> functions) {
-		if (!functions.isEmpty())
-			for (Function function : functions) {
-				// fetch related items
-				if (function.getParentId() != null) {
-					Function parentId = functionRepository.findById(function.getParentId());
-					if (parentId == null) {
-						throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
-					}
-					function.setParentId(parentId);
+		for (Function function : functions) {
+			// fetch related items
+			if (function.getParentId() != null) {
+				Function parentId = functionRepository.findById(function.getParentId());
+				if (parentId == null) {
+					throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
 				}
-
+				function.setParentId(parentId);
 			}
+
+		}
 
 		return functions;
 	}
 
+	@Transactional
 	public List<Function> add(List<Function> functions, BindingResult errors) {
 		functions = fetchRelated(functions);
 		validate(functions, ACTION_CREATE, errors);
@@ -90,6 +91,7 @@ public class FunctionService {
 
 	}
 
+	@Transactional
 	public List<Function> update(List<Function> functions, BindingResult errors) {
 		functions = fetchRelated(functions);
 		validate(functions, ACTION_UPDATE, errors);
@@ -100,7 +102,7 @@ public class FunctionService {
 
 	}
 
-	public void addToQue(CommonRequest<FunctionContract> request) {
+	public void addToQue(FunctionRequest request) {
 		functionRepository.add(request);
 	}
 

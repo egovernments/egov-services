@@ -5,7 +5,6 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
@@ -13,7 +12,7 @@ import org.egov.egf.master.domain.model.ChartOfAccountDetailSearch;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.domain.repository.ChartOfAccountDetailRepository;
 import org.egov.egf.master.domain.repository.ChartOfAccountRepository;
-import org.egov.egf.master.web.contract.ChartOfAccountDetailContract;
+import org.egov.egf.master.web.requests.ChartOfAccountDetailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +41,7 @@ public class ChartOfAccountDetailService {
 	@Autowired
 	private AccountDetailTypeRepository accountDetailTypeRepository;
 
-	public BindingResult validate(List<ChartOfAccountDetail> chartofaccountdetails, String method,
+	private BindingResult validate(List<ChartOfAccountDetail> chartofaccountdetails, String method,
 			BindingResult errors) {
 
 		try {
@@ -100,6 +99,7 @@ public class ChartOfAccountDetailService {
 		return chartofaccountdetails;
 	}
 
+	@Transactional
 	public List<ChartOfAccountDetail> add(List<ChartOfAccountDetail> chartofaccountdetails, BindingResult errors) {
 		chartofaccountdetails = fetchRelated(chartofaccountdetails);
 		validate(chartofaccountdetails, ACTION_CREATE, errors);
@@ -110,6 +110,7 @@ public class ChartOfAccountDetailService {
 
 	}
 
+	@Transactional
 	public List<ChartOfAccountDetail> update(List<ChartOfAccountDetail> chartofaccountdetails, BindingResult errors) {
 		chartofaccountdetails = fetchRelated(chartofaccountdetails);
 		validate(chartofaccountdetails, ACTION_UPDATE, errors);
@@ -120,7 +121,7 @@ public class ChartOfAccountDetailService {
 
 	}
 
-	public void addToQue(CommonRequest<ChartOfAccountDetailContract> request) {
+	public void addToQue(ChartOfAccountDetailRequest request) {
 		chartOfAccountDetailRepository.add(request);
 	}
 

@@ -1,6 +1,7 @@
 package org.egov.egf.master.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class AccountEntitySearch extends AccountEntity {
+	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
-	private String sortBy;
 }

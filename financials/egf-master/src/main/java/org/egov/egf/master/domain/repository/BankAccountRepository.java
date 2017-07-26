@@ -1,15 +1,18 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.persistence.entity.BankAccountEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.BankAccountJdbcRepository;
-import org.egov.egf.master.web.contract.BankAccountContract;
+import org.egov.egf.master.web.requests.BankAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BankAccountRepository {
@@ -20,20 +23,32 @@ public class BankAccountRepository {
 	private MastersQueueRepository bankAccountQueueRepository;
 
 	public BankAccount findById(BankAccount bankAccount) {
-		return bankAccountJdbcRepository.findById(new BankAccountEntity().toEntity(bankAccount)).toDomain();
+		BankAccountEntity entity = bankAccountJdbcRepository.findById(new BankAccountEntity().toEntity(bankAccount));
+		return entity.toDomain();
 
 	}
 
+	@Transactional
 	public BankAccount save(BankAccount bankAccount) {
-		return bankAccountJdbcRepository.create(new BankAccountEntity().toEntity(bankAccount)).toDomain();
+		BankAccountEntity entity = bankAccountJdbcRepository.create(new BankAccountEntity().toEntity(bankAccount));
+		return entity.toDomain();
 	}
 
-	public BankAccount update(BankAccount entity) {
-		return bankAccountJdbcRepository.update(new BankAccountEntity().toEntity(entity)).toDomain();
+	@Transactional
+	public BankAccount update(BankAccount bankAccount) {
+		BankAccountEntity entity = bankAccountJdbcRepository.update(new BankAccountEntity().toEntity(bankAccount));
+		return entity.toDomain();
 	}
 
-	public void add(CommonRequest<BankAccountContract> request) {
-		bankAccountQueueRepository.add(request);
+	public void add(BankAccountRequest request) {
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
+			message.put("bankAccount_create", request);
+		} else {
+			message.put("bankAccount_update", request);
+		}
+		bankAccountQueueRepository.add(message);
 	}
 
 	public Pagination<BankAccount> search(BankAccountSearch domain) {

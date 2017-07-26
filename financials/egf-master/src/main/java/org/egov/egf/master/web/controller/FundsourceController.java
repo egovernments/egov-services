@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.Fundsource;
 import org.egov.egf.master.domain.model.FundsourceSearch;
 import org.egov.egf.master.domain.service.FundsourceService;
 import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.FundsourceSearchContract;
+import org.egov.egf.master.web.requests.FundsourceRequest;
+import org.egov.egf.master.web.requests.FundsourceResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,27 +37,27 @@ public class FundsourceController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundsourceContract> create(
-			@RequestBody @Valid CommonRequest<FundsourceContract> fundsourceContractRequest, BindingResult errors) {
+	public FundsourceResponse create(@RequestBody FundsourceRequest fundsourceRequest, BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FundsourceContract> fundsourceResponse = new CommonResponse<>();
+		FundsourceResponse fundsourceResponse = new FundsourceResponse();
+		fundsourceResponse.setResponseInfo(getResponseInfo(fundsourceRequest.getRequestInfo()));
 		List<Fundsource> fundsources = new ArrayList<>();
-		Fundsource fundsource = null;
-		List<FundsourceContract> fundsourceContracts = new ArrayList<FundsourceContract>();
-		FundsourceContract contract = null;
+		Fundsource fundsource;
+		List<FundsourceContract> fundsourceContracts = new ArrayList<>();
+		FundsourceContract contract;
 
-		fundsourceContractRequest.getRequestInfo().setAction("create");
+		fundsourceRequest.getRequestInfo().setAction("create");
 
-		for (FundsourceContract fundsourceContract : fundsourceContractRequest.getData()) {
+		for (FundsourceContract fundsourceContract : fundsourceRequest.getFundsources()) {
 			fundsource = new Fundsource();
 			model.map(fundsourceContract, fundsource);
 			fundsource.setCreatedDate(new Date());
-			fundsource.setCreatedBy(fundsourceContractRequest.getRequestInfo().getUserInfo());
-			fundsource.setLastModifiedBy(fundsourceContractRequest.getRequestInfo().getUserInfo());
+			fundsource.setCreatedBy(fundsourceRequest.getRequestInfo().getUserInfo());
+			fundsource.setLastModifiedBy(fundsourceRequest.getRequestInfo().getUserInfo());
 			fundsources.add(fundsource);
 		}
 
@@ -72,35 +70,34 @@ public class FundsourceController {
 			fundsourceContracts.add(contract);
 		}
 
-		fundsourceContractRequest.setData(fundsourceContracts);
-		fundsourceService.addToQue(fundsourceContractRequest);
-		fundsourceResponse.setData(fundsourceContracts);
+		fundsourceRequest.setFundsources(fundsourceContracts);
+		fundsourceService.addToQue(fundsourceRequest);
+		fundsourceResponse.setFundsources(fundsourceContracts);
 
 		return fundsourceResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<FundsourceContract> update(
-			@RequestBody @Valid CommonRequest<FundsourceContract> fundsourceContractRequest, BindingResult errors) {
+	public FundsourceResponse update(@RequestBody FundsourceRequest fundsourceRequest, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-
-		fundsourceContractRequest.getRequestInfo().setAction("update");
+		fundsourceRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<FundsourceContract> fundsourceResponse = new CommonResponse<>();
+		FundsourceResponse fundsourceResponse = new FundsourceResponse();
 		List<Fundsource> fundsources = new ArrayList<>();
+		fundsourceResponse.setResponseInfo(getResponseInfo(fundsourceRequest.getRequestInfo()));
 		Fundsource fundsource;
 		FundsourceContract contract;
 		List<FundsourceContract> fundsourceContracts = new ArrayList<>();
 
-		for (FundsourceContract fundsourceContract : fundsourceContractRequest.getData()) {
+		for (FundsourceContract fundsourceContract : fundsourceRequest.getFundsources()) {
 			fundsource = new Fundsource();
 			model.map(fundsourceContract, fundsource);
+			fundsource.setLastModifiedBy(fundsourceRequest.getRequestInfo().getUserInfo());
 			fundsource.setLastModifiedDate(new Date());
-			fundsource.setLastModifiedBy(fundsourceContractRequest.getRequestInfo().getUserInfo());
 			fundsources.add(fundsource);
 		}
 
@@ -109,13 +106,13 @@ public class FundsourceController {
 		for (Fundsource fundsourceObj : fundsources) {
 			contract = new FundsourceContract();
 			model.map(fundsourceObj, contract);
-			contract.setLastModifiedDate(new Date());
+			fundsourceObj.setLastModifiedDate(new Date());
 			fundsourceContracts.add(contract);
 		}
 
-		fundsourceContractRequest.setData(fundsourceContracts);
-		fundsourceService.addToQue(fundsourceContractRequest);
-		fundsourceResponse.setData(fundsourceContracts);
+		fundsourceRequest.setFundsources(fundsourceContracts);
+		fundsourceService.addToQue(fundsourceRequest);
+		fundsourceResponse.setFundsources(fundsourceContracts);
 
 		return fundsourceResponse;
 	}
@@ -123,16 +120,15 @@ public class FundsourceController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<FundsourceContract> search(@ModelAttribute FundsourceSearchContract fundsourceSearchContract,
+	public FundsourceResponse search(@ModelAttribute FundsourceSearchContract fundsourceSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		FundsourceSearch domain = new FundsourceSearch();
 		mapper.map(fundsourceSearchContract, domain);
-		FundsourceContract contract = null;
+		FundsourceContract contract;
 		ModelMapper model = new ModelMapper();
-		List<FundsourceContract> fundsourceContracts = new ArrayList<FundsourceContract>();
-
+		List<FundsourceContract> fundsourceContracts = new ArrayList<>();
 		Pagination<Fundsource> fundsources = fundsourceService.search(domain);
 
 		for (Fundsource fundsource : fundsources.getPagedData()) {
@@ -141,8 +137,8 @@ public class FundsourceController {
 			fundsourceContracts.add(contract);
 		}
 
-		CommonResponse<FundsourceContract> response = new CommonResponse<>();
-		response.setData(fundsourceContracts);
+		FundsourceResponse response = new FundsourceResponse();
+		response.setFundsources(fundsourceContracts);
 		response.setPage(new PaginationContract(fundsources));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -151,7 +147,7 @@ public class FundsourceController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

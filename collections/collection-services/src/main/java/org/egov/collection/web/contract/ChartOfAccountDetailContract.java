@@ -62,7 +62,7 @@ public class ChartOfAccountDetailContract extends AuditableContract {
 	private Long id;
 
 	@NotNull
-	private ChartOfAccountContract chartOfAccount;
+	private ChartOfAccount chartOfAccount;
 
 	@NotNull
 	private AccountDetailTypeContract accountDetailType;

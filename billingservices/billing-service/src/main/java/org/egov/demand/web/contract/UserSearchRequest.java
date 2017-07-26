@@ -48,13 +48,13 @@ public class UserSearchRequest {
 	private boolean fuzzyLogic;
 
 	@JsonProperty("active")
-	private boolean active = true;
+	private boolean active = true;*/
 
 
 	@JsonProperty("pageSize")
-	private int pageSize = 20;
+	private int pageSize = 500;
 
-	@JsonProperty("pageNumber")
+/*	@JsonProperty("pageNumber")
 	private int pageNumber = 0;
 
 	@JsonProperty("sort")

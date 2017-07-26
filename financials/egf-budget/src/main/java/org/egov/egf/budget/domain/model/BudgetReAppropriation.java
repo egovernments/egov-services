@@ -47,6 +47,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -117,7 +118,7 @@ public class BudgetReAppropriation extends Auditable {
 	/**
 	 * status gives the current status of the budget re appropriation line item.
 	 */
-	private EgfStatus status;
+	private FinancialStatusContract status;
 
 	/**
 	 * asOnDate is the date on witch date the current appropriation is done.

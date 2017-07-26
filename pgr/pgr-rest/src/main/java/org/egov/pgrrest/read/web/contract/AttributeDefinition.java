@@ -32,7 +32,7 @@ public class AttributeDefinition {
         this.dataType = attributeDefinition.getDataType().getName();
         this.required = attributeDefinition.isRequired();
         this.dataTypeDescription = attributeDefinition.getDataTypeDescription();
-        this.description=attributeDefinition.getDescription();
+        this.description = attributeDefinition.getDescription();
         this.url = attributeDefinition.getUrl();
         this.groupCode = attributeDefinition.getGroupCode();
         this.roles = attributeDefinition.getRoleNames();

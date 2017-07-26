@@ -537,7 +537,7 @@ paths:
         - name: businessService
           in: query
           description: Billing system details e.g., PropertyTax,Water Charges etc.
-          required: false
+          required: true
           type: string
         - name: demandFrom
           in: query

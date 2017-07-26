@@ -3,6 +3,8 @@ package org.egov.egf.instrument.domain.model;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,16 +16,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class InstrumentTypeProperty extends Auditable{
-	
+public class InstrumentTypeProperty extends Auditable {
+	private String id;
 	@NotNull
 	private TransactionType transactionType;
 	@NotNull
 	private Boolean reconciledOncreate;
 	@NotNull
-	private InstrumentStatus statusOnCreate;
+	private FinancialStatusContract statusOnCreate;
 	@NotNull
-	private InstrumentStatus statusOnUpdate;
+	private FinancialStatusContract statusOnUpdate;
 	@NotNull
-	private InstrumentStatus statusOnReconcile;
+	private FinancialStatusContract statusOnReconcile;
 }

@@ -1,0 +1,1 @@
+delete from attribute_action_definition where attributecode = 'PRIORITY' and name = 'UPDATE' and tenantid = 'default';

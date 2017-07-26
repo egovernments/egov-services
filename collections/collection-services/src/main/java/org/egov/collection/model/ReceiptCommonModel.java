@@ -39,25 +39,15 @@
  */
 package org.egov.collection.model;
 
+import lombok.*;
+import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.web.contract.*;
+
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.egov.collection.model.enums.CollectionType;
-import org.egov.collection.model.enums.ReceiptType;
-import org.egov.collection.web.contract.Bill;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.Purpose;
-import org.egov.collection.web.contract.Receipt;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -72,7 +62,6 @@ public class ReceiptCommonModel {
 
 	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		for (ReceiptHeader receiptHeader : receiptHeaders) {
 
@@ -110,7 +99,7 @@ public class ReceiptCommonModel {
 					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation()).
 					cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus()).
-					billAccountDetails(billAccountDetails).receiptDate((receiptHeader.getReceiptDate().getTime())).build();
+					billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime()).build();
 			Bill billInfo = Bill.builder().payeeName(receiptHeader.getPayeename())
 					.payeeAddress(receiptHeader.getPayeeAddress()).payeeEmail(receiptHeader.getPayeeEmail())
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())

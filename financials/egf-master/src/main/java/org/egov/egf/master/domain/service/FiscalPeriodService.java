@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
 import org.egov.egf.master.domain.repository.FinancialYearRepository;
 import org.egov.egf.master.domain.repository.FiscalPeriodRepository;
-import org.egov.egf.master.web.contract.FiscalPeriodContract;
+import org.egov.egf.master.web.requests.FiscalPeriodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class FiscalPeriodService {
 	@Autowired
 	private FinancialYearRepository financialYearRepository;
 
-	public BindingResult validate(List<FiscalPeriod> fiscalperiods, String method, BindingResult errors) {
+	private BindingResult validate(List<FiscalPeriod> fiscalperiods, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -84,6 +83,7 @@ public class FiscalPeriodService {
 		return fiscalperiods;
 	}
 
+	@Transactional
 	public List<FiscalPeriod> add(List<FiscalPeriod> fiscalperiods, BindingResult errors) {
 		fiscalperiods = fetchRelated(fiscalperiods);
 		validate(fiscalperiods, ACTION_CREATE, errors);
@@ -94,6 +94,7 @@ public class FiscalPeriodService {
 
 	}
 
+	@Transactional
 	public List<FiscalPeriod> update(List<FiscalPeriod> fiscalperiods, BindingResult errors) {
 		fiscalperiods = fetchRelated(fiscalperiods);
 		validate(fiscalperiods, ACTION_UPDATE, errors);
@@ -104,7 +105,7 @@ public class FiscalPeriodService {
 
 	}
 
-	public void addToQue(CommonRequest<FiscalPeriodContract> request) {
+	public void addToQue(FiscalPeriodRequest request) {
 		fiscalPeriodRepository.add(request);
 	}
 
@@ -121,4 +122,5 @@ public class FiscalPeriodService {
 	public FiscalPeriod update(FiscalPeriod fiscalPeriod) {
 		return fiscalPeriodRepository.update(fiscalPeriod);
 	}
+
 }

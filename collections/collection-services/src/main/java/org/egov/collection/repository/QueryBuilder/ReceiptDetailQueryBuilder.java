@@ -295,4 +295,8 @@ public class ReceiptDetailQueryBuilder {
 	public String searchBusinessDetailsQuery() {
 		return "select distinct(trim(businessdetails,'&nbsp')) from egcl_receiptheader where tenantId = ?";
 	}
+
+    public String searchChartOfAccountsQuery() {
+        return "select distinct chartofaccount from egcl_receiptdetails where tenantId = ? and purpose != 'OTHERS' and description != '' ";
+    }
 }

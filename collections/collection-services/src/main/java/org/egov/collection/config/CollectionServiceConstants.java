@@ -100,4 +100,8 @@ public class CollectionServiceConstants {
 	public static final String STATUS_MISSING_MESSAGE = "status";
 	public static final String STATUS_MISSING_FIELD = "Status is missing";
 
+    public static final String COLL_DETAILS_DESCRIPTION_CODE = "egcl_012";
+    public static final String COLL_DETAILS_DESCRIPTION_FIELD = "billDescription";
+    public static final String COLL_DETAILS_DESCRIPTION_MESSAGE = "Bill details description is required";
+
 }

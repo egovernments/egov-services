@@ -15,6 +15,7 @@ import org.egov.egf.master.persistence.entity.AccountDetailKeySearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,10 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 		LOG.debug("init accountDetailKey");
 		init(AccountDetailKeyEntity.class);
 		LOG.debug("end init accountDetailKey");
+	}
+
+	public AccountDetailKeyJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	public AccountDetailKeyEntity create(AccountDetailKeyEntity entity) {
@@ -47,54 +52,62 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+		 StringBuffer params = new StringBuffer();
+
+		if (accountDetailKeySearchEntity.getSortBy() != null && !accountDetailKeySearchEntity.getSortBy().isEmpty()) {
+			validateSortByOrder(accountDetailKeySearchEntity.getSortBy());
+			validateEntityFieldName(accountDetailKeySearchEntity.getSortBy(), AccountDetailKeyEntity.class);
+		}
+
+		String orderBy = "order by id";
+		if (accountDetailKeySearchEntity.getSortBy() != null && !accountDetailKeySearchEntity.getSortBy().isEmpty()) {
+			orderBy = "order by " + accountDetailKeySearchEntity.getSortBy();
+		}
 
 		searchQuery = searchQuery.replace(":tablename", AccountDetailKeyEntity.TABLE_NAME);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
-		
-		if (accountDetailKeySearchEntity.getSortBy() != null && !accountDetailKeySearchEntity.getSortBy().isEmpty()) {
-                    validateSortByOrder(accountDetailKeySearchEntity.getSortBy());
-                    validateEntityFieldName(accountDetailKeySearchEntity.getSortBy(), AccountDetailKeyEntity.class);
-                }
-                
-                String orderBy = "order by key asc";
-                if (accountDetailKeySearchEntity.getSortBy() != null && !accountDetailKeySearchEntity.getSortBy().isEmpty())
-                        orderBy = "order by " + accountDetailKeySearchEntity.getSortBy();
 
 		// implement jdbc specfic search
 		if (accountDetailKeySearchEntity.getId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("id =:id");
 			paramValues.put("id", accountDetailKeySearchEntity.getId());
 		}
 		if (accountDetailKeySearchEntity.getKey() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("key =:key");
 			paramValues.put("key", accountDetailKeySearchEntity.getKey());
 		}
 		if (accountDetailKeySearchEntity.getAccountDetailTypeId() != null) {
-			if (params.length() > 0)
+			if (params.length() > 0) {
 				params.append(" and ");
+			}
 			params.append("accountDetailType =:accountDetailType");
 			paramValues.put("accountDetailType", accountDetailKeySearchEntity.getAccountDetailTypeId());
 		}
 
 		Pagination<AccountDetailKey> page = new Pagination<>();
-		if (accountDetailKeySearchEntity.getOffset() != null)
+		if (accountDetailKeySearchEntity.getOffset() != null) {
 			page.setOffset(accountDetailKeySearchEntity.getOffset());
-		if (accountDetailKeySearchEntity.getPageSize() != null)
-			page.setPageSize(accountDetailKeySearchEntity.getPageSize());
-
-		if (params.length() > 0) {
-
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
-
-		} else {
-			searchQuery = searchQuery.replace(":condition", "");
 		}
+		if (accountDetailKeySearchEntity.getPageSize() != null) {
+			page.setPageSize(accountDetailKeySearchEntity.getPageSize());
+		}
+
+		/*
+		 * if (params.length() > 0) {
+		 *
+		 * searchQuery = searchQuery.replace(":condition", " where " +
+		 * params.toString());
+		 *
+		 * } else {
+		 */
+		searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 
@@ -122,7 +135,8 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 	}
 
 	public AccountDetailKeyEntity findById(AccountDetailKeyEntity entity) {
-		List<String> list = allUniqueFields.get(entity.getClass().getSimpleName());
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		for (String s : list) {

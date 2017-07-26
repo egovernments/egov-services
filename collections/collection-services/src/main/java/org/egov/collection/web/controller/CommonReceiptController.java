@@ -128,6 +128,32 @@ public class CommonReceiptController {
         return  getBusinessDetailsSuccessResponse(businessDetails, requestInfo);
     }
 
+    @RequestMapping("/_getChartOfAccounts")
+    public ResponseEntity<?> getChartOfAccounts(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
+
+        List<ChartOfAccount> chartOfAccounts = new ArrayList<ChartOfAccount>();
+        try {
+            chartOfAccounts = receiptService.getChartOfAccountsForByGlCodes(tenantId,requestInfo);
+        } catch(final Exception e) {
+            LOGGER.error("Error while processing request " + chartOfAccounts, e);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getChartOfAccountsResponse(chartOfAccounts,requestInfo);
+    }
+
+    private ResponseEntity<?> getChartOfAccountsResponse(List<ChartOfAccount> chartOfAccounts, RequestInfo requestInfo) {
+        LOGGER.info("Building success response.");
+        ChartOfAccountsResponse chartOfAccountsResponse = new ChartOfAccountsResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        chartOfAccountsResponse.setChartOfAccounts(chartOfAccounts);
+        chartOfAccountsResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(chartOfAccountsResponse, HttpStatus.OK);
+    }
+
     private ResponseEntity<?> getBusinessDetailsSuccessResponse(List<BusinessDetailsRequestInfo> businessDetailsList, RequestInfo requestInfo) {
         LOGGER.info("Building success response.");
         BusinessDetailsResponse businessDetailsResponse = new BusinessDetailsResponse();

@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.web.contract.RequestInfo;
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
 import org.egov.egf.master.domain.service.AccountDetailKeyService;
 import org.egov.egf.master.web.contract.AccountDetailKeyContract;
 import org.egov.egf.master.web.contract.AccountDetailKeySearchContract;
+import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
+import org.egov.egf.master.web.requests.AccountDetailKeyResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,28 +37,28 @@ public class AccountDetailKeyController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountDetailKeyContract> create(
-			@RequestBody @Valid CommonRequest<AccountDetailKeyContract> accountDetailKeyContractRequest,
+	public AccountDetailKeyResponse create(@RequestBody AccountDetailKeyRequest accountDetailKeyRequest,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountDetailKeyContract> accountDetailKeyResponse = new CommonResponse<>();
+		AccountDetailKeyResponse accountDetailKeyResponse = new AccountDetailKeyResponse();
+		accountDetailKeyResponse.setResponseInfo(getResponseInfo(accountDetailKeyRequest.getRequestInfo()));
 		List<AccountDetailKey> accountdetailkeys = new ArrayList<>();
-		AccountDetailKey accountDetailKey = null;
-		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<AccountDetailKeyContract>();
-		AccountDetailKeyContract contract = null;
+		AccountDetailKey accountDetailKey;
+		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<>();
+		AccountDetailKeyContract contract;
 
-		accountDetailKeyContractRequest.getRequestInfo().setAction("create");
+		accountDetailKeyRequest.getRequestInfo().setAction("create");
 
-		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyContractRequest.getData()) {
+		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyRequest.getAccountDetailKeys()) {
 			accountDetailKey = new AccountDetailKey();
 			model.map(accountDetailKeyContract, accountDetailKey);
 			accountDetailKey.setCreatedDate(new Date());
-			accountDetailKey.setCreatedBy(accountDetailKeyContractRequest.getRequestInfo().getUserInfo());
-			accountDetailKey.setLastModifiedBy(accountDetailKeyContractRequest.getRequestInfo().getUserInfo());
+			accountDetailKey.setCreatedBy(accountDetailKeyRequest.getRequestInfo().getUserInfo());
+			accountDetailKey.setLastModifiedBy(accountDetailKeyRequest.getRequestInfo().getUserInfo());
 			accountdetailkeys.add(accountDetailKey);
 		}
 
@@ -73,36 +71,35 @@ public class AccountDetailKeyController {
 			accountDetailKeyContracts.add(contract);
 		}
 
-		accountDetailKeyContractRequest.setData(accountDetailKeyContracts);
-		accountDetailKeyService.addToQue(accountDetailKeyContractRequest);
-		accountDetailKeyResponse.setData(accountDetailKeyContracts);
+		accountDetailKeyRequest.setAccountDetailKeys(accountDetailKeyContracts);
+		accountDetailKeyService.addToQue(accountDetailKeyRequest);
+		accountDetailKeyResponse.setAccountDetailKeys(accountDetailKeyContracts);
 
 		return accountDetailKeyResponse;
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommonResponse<AccountDetailKeyContract> update(
-			@RequestBody @Valid CommonRequest<AccountDetailKeyContract> accountDetailKeyContractRequest,
+	public AccountDetailKeyResponse update(@RequestBody AccountDetailKeyRequest accountDetailKeyRequest,
 			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		accountDetailKeyContractRequest.getRequestInfo().setAction("update");
-
+		accountDetailKeyRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
-		CommonResponse<AccountDetailKeyContract> accountDetailKeyResponse = new CommonResponse<>();
+		AccountDetailKeyResponse accountDetailKeyResponse = new AccountDetailKeyResponse();
 		List<AccountDetailKey> accountdetailkeys = new ArrayList<>();
+		accountDetailKeyResponse.setResponseInfo(getResponseInfo(accountDetailKeyRequest.getRequestInfo()));
 		AccountDetailKey accountDetailKey;
 		AccountDetailKeyContract contract;
 		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<>();
 
-		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyContractRequest.getData()) {
+		for (AccountDetailKeyContract accountDetailKeyContract : accountDetailKeyRequest.getAccountDetailKeys()) {
 			accountDetailKey = new AccountDetailKey();
 			model.map(accountDetailKeyContract, accountDetailKey);
+			accountDetailKey.setLastModifiedBy(accountDetailKeyRequest.getRequestInfo().getUserInfo());
 			accountDetailKey.setLastModifiedDate(new Date());
-			accountDetailKey.setLastModifiedBy(accountDetailKeyContractRequest.getRequestInfo().getUserInfo());
 			accountdetailkeys.add(accountDetailKey);
 		}
 
@@ -111,13 +108,13 @@ public class AccountDetailKeyController {
 		for (AccountDetailKey accountDetailKeyObj : accountdetailkeys) {
 			contract = new AccountDetailKeyContract();
 			model.map(accountDetailKeyObj, contract);
-			contract.setLastModifiedDate(new Date());
+			accountDetailKeyObj.setLastModifiedDate(new Date());
 			accountDetailKeyContracts.add(contract);
 		}
 
-		accountDetailKeyContractRequest.setData(accountDetailKeyContracts);
-		accountDetailKeyService.addToQue(accountDetailKeyContractRequest);
-		accountDetailKeyResponse.setData(accountDetailKeyContracts);
+		accountDetailKeyRequest.setAccountDetailKeys(accountDetailKeyContracts);
+		accountDetailKeyService.addToQue(accountDetailKeyRequest);
+		accountDetailKeyResponse.setAccountDetailKeys(accountDetailKeyContracts);
 
 		return accountDetailKeyResponse;
 	}
@@ -125,17 +122,16 @@ public class AccountDetailKeyController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public CommonResponse<AccountDetailKeyContract> search(
-			@ModelAttribute AccountDetailKeySearchContract accountDetailKeySearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+	public AccountDetailKeyResponse search(
+			@ModelAttribute AccountDetailKeySearchContract accountDetailKeySearchContract, RequestInfo requestInfo,
+			BindingResult errors) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountDetailKeySearch domain = new AccountDetailKeySearch();
 		mapper.map(accountDetailKeySearchContract, domain);
-		AccountDetailKeyContract contract ;
+		AccountDetailKeyContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<>();
-
 		Pagination<AccountDetailKey> accountdetailkeys = accountDetailKeyService.search(domain);
 
 		for (AccountDetailKey accountDetailKey : accountdetailkeys.getPagedData()) {
@@ -144,8 +140,8 @@ public class AccountDetailKeyController {
 			accountDetailKeyContracts.add(contract);
 		}
 
-		CommonResponse<AccountDetailKeyContract> response = new CommonResponse<>();
-		response.setData(accountDetailKeyContracts);
+		AccountDetailKeyResponse response = new AccountDetailKeyResponse();
+		response.setAccountDetailKeys(accountDetailKeyContracts);
 		response.setPage(new PaginationContract(accountdetailkeys));
 		response.setResponseInfo(getResponseInfo(requestInfo));
 
@@ -154,7 +150,7 @@ public class AccountDetailKeyController {
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer()).ts(new Date())
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 

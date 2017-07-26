@@ -52,6 +52,7 @@ import javax.validation.constraints.Size;
 import org.egov.common.domain.model.Auditable;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -75,10 +76,10 @@ public class Instrument extends Auditable {
 	/*
 	 * transactionNumber unique number of the instrument. For cheque type this
 	 * is cheque date. For DD type it is DD number
-	 * 
+	 *
 	 */
 	@NotBlank
-	@Size(max=50,min=6)
+	@Size(max = 50, min = 6)
 	private String transactionNumber;
 
 	/*
@@ -92,14 +93,14 @@ public class Instrument extends Auditable {
 	 * amount is the instrument amount. For cheque type it is cheque amount.
 	 */
 	@NotNull
-	@Min(value=1)
-	@Max(value=999999999)
+	@Min(value = 1)
+	@Max(value = 999999999)
 	private BigDecimal amount;
 
 	/*
 	 * instrumentType specifies the type of the instrument - The folowing are
 	 * the different types Cash,Cheque,DD,POC
-	 * 
+	 *
 	 */
 	private InstrumentType instrumentType;
 
@@ -112,11 +113,11 @@ public class Instrument extends Auditable {
 	 * branchName is the branch name entered in the collection Receipt.
 	 */
 
-	@Size(max=50)
+	@Size(max = 50)
 	private String branchName;
 
-	/* bankAccount
-	 *  is the reference of the Bank account from which the payment
+	/*
+	 * bankAccount is the reference of the Bank account from which the payment
 	 * instrument is assigned
 	 */
 	private BankAccountContract bankAccount;
@@ -124,7 +125,7 @@ public class Instrument extends Auditable {
 	/*
 	 * instrumentStatus gives the current status of the instrument.
 	 */
-	private InstrumentStatus instrumentStatus;
+	private FinancialStatusContract financialStatus;
 
 	/*
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
@@ -135,13 +136,13 @@ public class Instrument extends Auditable {
 	/*
 	 * payee is the entity who is making the payment via instrument
 	 */
-	@Size(max=50)
+	@Size(max = 50)
 	private String payee;
 
 	/*
 	 * drawer is the entity to which the payment is made.
 	 */
-	@Size(max=100)
+	@Size(max = 100)
 	private String drawer;
 
 	/*
@@ -152,19 +153,19 @@ public class Instrument extends Auditable {
 	private SurrenderReason surrendarReason;
 
 	/*
-	 * serialNo is the series of the cheque numbers from which the
-	 * instrument is assigned from. The cheque numbers in an account is defined
-	 * based on Year, Bank account and tagged to a department.
+	 * serialNo is the series of the cheque numbers from which the instrument is
+	 * assigned from. The cheque numbers in an account is defined based on Year,
+	 * Bank account and tagged to a department.
 	 */
 	@NotBlank
-	@Size(max=50,min=2)
+	@Size(max = 50, min = 2)
 	private String serialNo;
 
 	/*
 	 * instrumentVouchers is the reference to the payment vouchers for which the
 	 * instrument is attached.
 	 */
-//	@DrillDownTable
+	// @DrillDownTable
 	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
 
 }

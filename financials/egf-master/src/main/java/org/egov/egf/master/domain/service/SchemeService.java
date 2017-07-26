@@ -5,13 +5,12 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SchemeSearch;
 import org.egov.egf.master.domain.repository.FundRepository;
 import org.egov.egf.master.domain.repository.SchemeRepository;
-import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.requests.SchemeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class SchemeService {
 	@Autowired
 	private FundRepository fundRepository;
 
-	public BindingResult validate(List<Scheme> schemes, String method, BindingResult errors) {
+	private BindingResult validate(List<Scheme> schemes, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
@@ -84,6 +83,7 @@ public class SchemeService {
 		return schemes;
 	}
 
+	@Transactional
 	public List<Scheme> add(List<Scheme> schemes, BindingResult errors) {
 		schemes = fetchRelated(schemes);
 		validate(schemes, ACTION_CREATE, errors);
@@ -94,6 +94,7 @@ public class SchemeService {
 
 	}
 
+	@Transactional
 	public List<Scheme> update(List<Scheme> schemes, BindingResult errors) {
 		schemes = fetchRelated(schemes);
 		validate(schemes, ACTION_UPDATE, errors);
@@ -104,7 +105,7 @@ public class SchemeService {
 
 	}
 
-	public void addToQue(CommonRequest<SchemeContract> request) {
+	public void addToQue(SchemeRequest request) {
 		schemeRepository.add(request);
 	}
 
@@ -121,4 +122,5 @@ public class SchemeService {
 	public Scheme update(Scheme scheme) {
 		return schemeRepository.update(scheme);
 	}
+
 }

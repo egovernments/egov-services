@@ -1,4 +1,4 @@
-
+var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
 function getValueByName(name, id) {
     for (var i = 0; i < assetCategories.length; i++) {
         if (assetCategories[i].id == id) {
@@ -11,7 +11,7 @@ function setRentPrefix(name) {
     $(`label[for=rent]`).text(name + " Rent (Rs)");
 }
 
-var rejectedSenderName;
+var rejectedSenderName, showFiles = 0;
 try {
     var department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
 } catch (e) {
@@ -87,6 +87,9 @@ $(document).ready(function() {
     }
     $('.datepicker').datepicker({
         format: 'DD/MM/YYYY'
+    });
+    $('.datepicker').on("change", function(e) {
+        fillValueToObject(e.target);
     });
     $("#viewDcb").on("click", function() {
         //clear cookies and logout
@@ -188,8 +191,7 @@ $(document).ready(function() {
         
         
         
-
-        doc.save('Notice.pdf');
+        doc.save('Notice-' + noticeData.agreementNumber + '.pdf');
         setTimeout(function () {
           open(location, '_self').close();
         }, 5000);
@@ -231,6 +233,21 @@ $(document).ready(function() {
             tenantId
         }).responseJSON["Assets"][0] || {};
 
+        //Attach photos
+        if(agreementDetail && agreementDetail.documents) {
+            showFiles = 1;
+            for(var i=0; i<agreementDetail.documents.length; i++) {
+                $("#fileTableTbody").append(`<tr>
+                    <td>${i+1}</td>
+                    <td>Document</td>
+                    <td>
+                        <a href=${window.location.origin + CONST_API_GET_FILE + agreementDetail.documents[i].fileStore} target="_blank">
+                          Download
+                        </a>
+                    </td>
+                </tr>`);
+            }
+        }
 
         printValue("", agreementDetail);
         printValue("", assetDetails, true);
@@ -270,12 +287,15 @@ $(document).ready(function() {
                                         break;
                                 }
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(getNameById(_obj, values[key][ckey]) || "NA");
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").val(getNameById(_obj, ckey) || "");
                             } else
                                 $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").text(values[key][ckey] ? values[key][ckey] : "NA");
+                                $("[name='" + (isAsset ? "asset." : "") + key + "." + ckey + "']").val(values[key][ckey] || "");
                         }
                     }
                 } else if (typeof values[key] != "undefined") {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text(values[key]);
+                    $("[name='" + (isAsset ? "asset." : "") + key + "']").val(values[key]);
                 } else {
                     $("[name='" + (isAsset ? "asset." : "") + key + "']").text("NA");
                 }
@@ -304,11 +324,30 @@ $(document).ready(function() {
     // };
 
     //agreementDetail = {};
+    function fillValueToObject(currentState) {
+        if (currentState.id.includes(".")) {
+            if(currentState.id == "rentIncrementMethod.percentage") {
+                agreementDetail["rentIncrementMethod"] = {
+                    id: currentState.value
+                };
+            } else {
+                var splitResult = currentState.id.split(".");
+                if (agreement.hasOwnProperty(splitResult[0])) {
+                    agreementDetail[splitResult[0]][splitResult[1]] = currentState.value;
+                } else {
+                    agreementDetail[splitResult[0]] = {};
+                    agreementDetail[splitResult[0]][splitResult[1]] = currentState.value;
+                }
+            }
+        } else {
+            agreementDetail[currentState.id] = currentState.value;
+        }
+    }
 
 
     var renewAgreement = {};
     //Getting data for user input
-    /*$("input").on("keyup", function() {
+    $("input").on("keyup", function() {
         // console.log(this.value);
       //  renewAgreement[this.id] = this.value;
         fillValueToObject(this);
@@ -316,13 +355,14 @@ $(document).ready(function() {
 
     $("textarea").on("keyup", function() {
         fillValueToObject(this);
-    });*/
+    });
 
     //Getting data for user input
     $("select").on("change", function() {
         // console.log(this.value);
         renewAgreement[this.id] = this.value;
-
+        if(this.id == "rentIncrementMethod")
+            fillValueToObject(this);
         if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
             employees = commonApiPost("hr-employee", "employees", "_search", {
                 tenantId,
@@ -410,9 +450,11 @@ $(document).ready(function() {
     if (getUrlVars()["view"] == "new") {
         //removing renew section and renew button
         $("#renew,#workFlowDetails,#renewBtn,#cancel,#evict").remove();
+        if(showFiles) $("#fileTable").show();
     } else if (getUrlVars()["view"] == "inbox") {
         $("#historyTable").show();
         $("#cancel,#evict,#renew,#renewBtn").remove();
+        if(showFiles) $("#fileTable").show();
         //Fetch workFlow
         var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,
@@ -437,6 +479,16 @@ $(document).ready(function() {
                     </tr>
                 `);
             }
+        }
+
+        if(process && process.status && process.status.toUpperCase() == "REJECTED") {
+          $('.details-label').remove();
+          $('.details-input').show();
+          if (rentInc && rentInc.constructor == Array) 
+              for(var i=0; i<rentInc.length; i++)
+                $(`#rentIncrementMethod\\.percentage`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`);
+        } else {
+          $('.details-input').remove();
         }
 
         if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
@@ -615,6 +667,10 @@ $(document).ready(function() {
         if (data.action && data.action != "Print Notice") {
             if(data.action.toLowerCase() == "reject" && !$("#wFremarks").val()) {
                 return showError("Comments is mandatory in case of 'Reject'");
+            }
+
+            if(data.action.toLowerCase() == "forward" && !$("#approverPositionId").val()) {
+                return showError("Approver name is required.");
             }
 
             var response = $.ajax({

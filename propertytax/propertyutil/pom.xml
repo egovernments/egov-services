@@ -54,6 +54,7 @@
 			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
+
 	<build>
 		<plugins>
 

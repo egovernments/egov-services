@@ -1,13 +1,12 @@
 package org.egov.egf.master.web.repository;
 
-import org.egov.common.web.contract.CommonResponse;
 import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.requests.FundResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -35,13 +34,10 @@ public class FundContractRepository {
 			content.append("&tenantId=" + fundContract.getTenantId());
 		}
 		url = url + content.toString();
-		CommonResponse<FundContract> result = objectMapper.convertValue(
-				restTemplate.postForObject(url, null, CommonResponse.class),
-				new TypeReference<CommonResponse<FundContract>>() {
-				});
+		FundResponse result = restTemplate.postForObject(url, null, FundResponse.class);
 
-		if (result.getData() != null && result.getData().size() == 1) {
-			return result.getData().get(0);
+		if (result.getFunds() != null && result.getFunds().size() == 1) {
+			return result.getFunds().get(0);
 		} else {
 			return null;
 		}

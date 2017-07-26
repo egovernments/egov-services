@@ -239,12 +239,12 @@ class Dashboard extends Component {
                     }
                   </td>
 									<td>{e.attribValues && e.attribValues.map((item,index)=>{
-                                      if(item.key =="status"){
+                                      if(item.key =="systemStatus"){
                                         return(item.name)
                                       }
 									})}</td>
 									<td  style={{maxWidth:300}}> Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
-                                        if(item.key =="status"){
+                                        if(item.key =="systemStatus"){
                                           return(item.name)
                                         }
                                     })} </td>
@@ -300,7 +300,7 @@ class Dashboard extends Component {
                                  <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{
-                                      if(item.key =="status"){
+                                      if(item.key =="systemStatus"){
                                         return(item.name)
                                       }
                                   })}
@@ -312,7 +312,7 @@ class Dashboard extends Component {
                                  />
                                  <CardText>
                                     Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
-                                        if(item.key =="status"){
+                                        if(item.key =="systemStatus"){
                                           return(item.name)
                                         }
                                     })}
@@ -377,7 +377,7 @@ class Dashboard extends Component {
                                  <CardHeader titleStyle={{fontSize:18, fontWeight:700}} subtitleStyle={styles.status}
                                   title={e.serviceName}
                                   subtitle={e.attribValues && e.attribValues.map((item,index)=>{
-                                      if(item.key =="status"){
+                                      if(item.key =="systemStatus"){
                                         return(item.name)
                                       }
                                   })}
@@ -389,7 +389,7 @@ class Dashboard extends Component {
                                  />
                                  <CardText>
                                     Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
-                                        if(item.key =="status"){
+                                        if(item.key =="systemStatus"){
                                           return(item.name)
                                         }
                                     })}

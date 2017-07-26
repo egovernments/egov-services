@@ -22,7 +22,6 @@ import lombok.ToString;
 @ToString
 public class ProcessInstanceRequest {
 
-        @JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
 	private ProcessInstance processInstance;

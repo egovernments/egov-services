@@ -27,6 +27,15 @@ let menuConvention={
   "Grievance Redressal.Reports.Functionary Wise Report":"/report/GrievanceByFunctionary",
   "Grievance Redressal.Reports.Router Escalation Report":"/report/RouterEscalation",
 
+  "Grievance Redressal.Masters.Escalation Time.Create Escalation Time Type":"/pgr/defineEscalationTime",
+  "Grievance Redressal.Masters.Escalation Time.Search Escalation Time":"/pgr/searchEscalationTime",
+
+  "Grievance Redressal.Masters.Escalation.Create Escalation":"/pgr/defineEscalation",
+  // "Grievance Redressal.Masters.Escalation.Update Escalation":"",
+  "Grievance Redressal.Masters.Escalation.Search Escalation":"/pgr/bulkEscalationGeneration",
+  
+
+
 
 }
 

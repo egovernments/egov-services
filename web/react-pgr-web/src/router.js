@@ -93,7 +93,7 @@ const Main = () => {
 
       <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
 	  
-	  <Route exact path= {base + '/view/:moduleName/:controller/:version/:id'} component={View}/>
+	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
 
       <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
 

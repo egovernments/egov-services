@@ -25,3 +25,4 @@ public class SingleValueAttributeValidator implements AttributeValueValidator {
         }
     }
 }
+

@@ -1,0 +1,15 @@
+{
+    "responseInfo": null,
+    "error": {
+        "code": 400,
+        "message": "One of the constraints for group: 'groupCode' has been violated",
+        "description": null,
+        "fields": [
+            {
+                "code": "PGR.GROUP_CONSTRAINT_VIOLATED",
+                "message": "One of the constraints for group: 'groupCode' has been violated",
+                "field": "sevaRequest.serviceRequest.attribValues"
+            }
+        ]
+    }
+}

@@ -483,9 +483,7 @@ class CreateAsset extends React.Component {
         return this.setState({
           assetSet: {
               ...this.state.assetSet,
-              [name]: e.target.checked,
-              depreciationRate: e.target.checked ? "" : this.state.assetSet.depreciationRate,
-              yearWiseDepreciation: !e.target.checked ? [Object.assign({}, defaultyearWiseDepRateTemp)] : this.state.assetSet.yearWiseDepreciation
+              [name]: e.target.checked
           }
          })
       }
@@ -535,6 +533,16 @@ class CreateAsset extends React.Component {
 
       if(!tempInfo.enableYearWiseDepreciation) {
         delete tempInfo.yearWiseDepreciation;
+      } else {
+        delete tempInfo.depreciationRate;
+        var seen = {};
+        var hasDuplicates = tempInfo.yearWiseDepreciation.some(function (currentObject) {
+            return seen.hasOwnProperty(currentObject.financialYear)
+                || (seen[currentObject.financialYear] = false);
+        });
+
+        if(hasDuplicates) 
+          return showError("Duplicate financial years not allowed.");
       }
       //return console.log(JSON.stringify(tempInfo));
       var body = {
@@ -1182,8 +1190,8 @@ class CreateAsset extends React.Component {
             if (list.length) {
               if(statusBool) {
                 return list.map((item, ind) => {
-                  return (<option key={ind} value={item.statusValues[0].code}>
-                          {item.statusValues[0].code}
+                  return (<option key={ind} value={item.code}>
+                          {item.code}
                     </option>)
                 })
               };
@@ -1871,7 +1879,7 @@ class CreateAsset extends React.Component {
               </select>
             </td>
             <td>
-              <input required type="number" value={yr.depreciationRate} onChange={(e) => {handleYearChange(e, "depreciationRate", ind)}}  disabled={readonly}/>
+              <input required type="number" min="1" value={yr.depreciationRate} onChange={(e) => {handleYearChange(e, "depreciationRate", ind)}}  disabled={readonly}/>
             </td>
             <td>
               {ind == yearWiseDepreciation.length-1 && !readonly && <button className="btn btn-close" type="button" onClick={(e) =>{handleAddNewYearRow()}}>

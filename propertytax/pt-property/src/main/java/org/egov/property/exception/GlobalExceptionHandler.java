@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
             responseInfo.setStatus(environment.getProperty("failed"));
             return new ErrorRes(responseInfo, errorList);
         } else if (ex instanceof ValidationUrlNotFoundException) {
-            Error error = new Error(HttpStatus.NOT_FOUND.toString(),
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
                     ((ValidationUrlNotFoundException) ex).getCustomMsg(),
                     ((ValidationUrlNotFoundException) ex).getMsgDetails(), new HashMap<String, String>());
             ResponseInfo responseInfo = new ResponseInfo();
@@ -160,7 +160,7 @@ public class GlobalExceptionHandler {
             return new ErrorRes(responseInfo, errorList);
 
         } else if (ex instanceof DuplicateIdException) {
-            Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
                     environment.getProperty("duplicate.code"), null, null);
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
@@ -172,7 +172,7 @@ public class GlobalExceptionHandler {
             errorList.add(error);
             return new ErrorRes(responseInfo, errorList);
         } else if (ex instanceof PropertyUnderWorkflowException) {
-            Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
                     ((PropertyUnderWorkflowException) ex).getCustomMsg(), ex.getMessage(), null);
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setApiId(((PropertyUnderWorkflowException) ex).getRequestInfo().getApiId());
@@ -198,7 +198,7 @@ public class GlobalExceptionHandler {
         }
 
         else {
-            Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
                     new HashMap<String, String>());
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setStatus(environment.getProperty("failed"));

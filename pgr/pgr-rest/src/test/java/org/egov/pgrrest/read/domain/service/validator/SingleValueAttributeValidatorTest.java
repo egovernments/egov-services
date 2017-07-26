@@ -17,8 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class SingleValueAttributeValidatorTest {
 
     @Test
-    public void test_should_thrown_exception_when_multiple_attribute_value_entries_present_for_attribute_of_date_type
-        () {
+    public void test_should_thrown_exception_when_multiple_attribute_value_entries_present_for_attribute_of_date_type() {
         final SingleValueAttributeValidator validator = new SingleValueAttributeValidator();
         final List<AttributeEntry> attributeEntries = Arrays.asList(
             new AttributeEntry("key1", "value1"),

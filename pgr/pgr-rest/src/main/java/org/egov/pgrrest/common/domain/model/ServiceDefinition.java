@@ -89,5 +89,21 @@ public class ServiceDefinition {
             .filter(attribute -> attributeType == attribute.getDataType())
             .collect(Collectors.toList());
     }
+
+    public List<GroupDefinition> getGroupsWithConstraints(ServiceStatus action, List<String> roleCodes) {
+        return groups.stream()
+            .filter(group -> groupHasMatchingConstraints(action, roleCodes, group))
+            .collect(Collectors.toList());
+    }
+
+    private boolean groupHasMatchingConstraints(ServiceStatus action, List<String> roleCodes, GroupDefinition group) {
+        return !isEmpty(group.getMatchingConstraints(action, roleCodes));
+    }
+
+    public List<AttributeDefinition> getAttributesWithGroupCode(String groupCode) {
+        return attributes.stream()
+            .filter(attributeDefinition -> groupCode.equals(attributeDefinition.getGroupCode()))
+            .collect(Collectors.toList());
+    }
 }
 

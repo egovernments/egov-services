@@ -144,6 +144,7 @@ public class PgrRestSpringBootApplication {
     public List<AttributeValueValidator> getAttributeValueValidators() {
         return Arrays.asList(
             new MandatoryAttributeValidator(),
+            new GroupConstraintAttributeValidator(),
             new SingleValueAttributeValidator(),
             new DateAttributeValidator(),
             new IntegerAttributeValidator(),

@@ -57,8 +57,8 @@ public class AttributeDefinitionRepository {
     private org.egov.pgrrest.common.domain.model.AttributeDefinition mapToDomainAttribute(
         AttributeDefinition attributeDefinition, Map<String, List<ValueDefinition>> attributeCodeToValueMap,
         Map<String, List<AttributeRolesDefinition>> attributeCodeToAttributeRolesMap,
-        Map<String, List<AttributeActionsDefinition>> attributeCodeToAttributeActionsMap, Map<String,
-        List<ComputeRuleDefinition>> attributeCodeToConstraintsMap) {
+        Map<String, List<AttributeActionsDefinition>> attributeCodeToAttributeActionsMap,
+        Map<String, List<ComputeRuleDefinition>> attributeCodeToConstraintsMap) {
         final List<org.egov.pgrrest.common.domain.model.ValueDefinition> domainValues =
             getDomainValueDefinitions(attributeCodeToValueMap, attributeDefinition.getCode());
         final List<org.egov.pgrrest.common.domain.model.AttributeRolesDefinition> domainAttributeRoles =

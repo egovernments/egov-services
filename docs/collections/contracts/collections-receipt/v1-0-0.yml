@@ -215,6 +215,27 @@ paths:
           description: Invalid input.     
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /_getChartOfAccounts:  
+    post:
+      summary: API to get list of Chart of Accounts.
+      description: This API is to get List of Chart of Accounts.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+      tags:
+        - Receipt  
+      responses:
+        '200':
+          description: List of chart of accounts returned successfully.
+          schema:
+            type: array
+            items:
+             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/v1-0-0.yml#/definitions/ChartOfAccount'
+        '400':
+          description: Invalid input.     
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
           
 
 definitions:

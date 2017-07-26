@@ -16,6 +16,7 @@ import UiMultiFileUpload from './components/UiMultiFileUpload'
 import UiSingleFileUpload from './components/UiSingleFileUpload'
 import UiAadharCard from './components/UiAadharCard'
 import UiPanCard from './components/UiPanCard'
+import UiLabel from './components/UiLabel'
 
 class UiDynamicTable extends Component {
 	constructor(props) {

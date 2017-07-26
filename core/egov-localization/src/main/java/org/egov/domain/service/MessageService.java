@@ -10,6 +10,30 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Responsible for creating, updating and computing localization message list.
+ * For the search request: locale: mr_IN, tenant: mh.panvel the computed message list is based on the below logic -
+ * 1) Retrieve messages for locale: en_IN and tenant: default
+ * 2) Retrieve messages for locale: mr_IN and tenant mh
+ * 3) Override messages of step 1 with messages from step 2.
+ * 4) Retrieve messages from locale: mr_IN and tenant mh.panvel
+ * 5) Override messages from step 3 with messages from step 4.
+ *
+ * The items cached in Redis are -
+ * 1) The final computed message list.
+ * 2) The raw messages ready from PostGres for every locale and tenant combination.
+ *
+ * For a create/update request to locale: mr_IN and tenant: mh.panvel the cache bust logic is -
+ * 1) In validate cache entry for raw messages with key mr_IN:mh.panvel
+ * 2) In validate cache entry for computed messages with key mr_IN:mh.panvel
+ *
+ * For a create/update request to locale: mr_IN and tenant: mh the cache bust logic is -
+ * 1) In validate cache entry for raw messages with key mr_IN:mh
+ * 2) In validate cache entry for computed messages with key mr_IN:mh.panvel and mr_IN:mh
+ *
+ * For a create/update request to locale: <ANY> and tenant: default the cache bust logic is -
+ * 1) In validate all raw and computed messages entries.
+ */
 @Service
 public class MessageService {
     private static final String ENGLISH_INDIA = "en_IN";

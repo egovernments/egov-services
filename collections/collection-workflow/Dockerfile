@@ -1,9 +1,12 @@
 FROM egovio/apline-jre:8u121
 
+MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
+
+
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/collection-services-0.0.1-SNAPSHOT.jar /opt/egov/collection-services.jar
+COPY /target/collection-workflow-0.0.1-SNAPSHOT.jar /opt/egov/collection-workflow.jar
 
 COPY start.sh /usr/bin/start.sh
 

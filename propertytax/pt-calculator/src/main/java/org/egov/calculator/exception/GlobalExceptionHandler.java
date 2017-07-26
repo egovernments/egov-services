@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
                 
                 
                 else {
-                        Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
+                        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
                                         new HashMap<String, String>());
                         ResponseInfo responseInfo = new ResponseInfo();
                         responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());

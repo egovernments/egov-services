@@ -50,9 +50,6 @@ public class SurrenderReasonController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public SurrenderReasonResponse create(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
 		ModelMapper model = new ModelMapper();
 		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
@@ -114,9 +111,6 @@ public class SurrenderReasonController {
 	public SurrenderReasonResponse update(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		surrenderReasonRequest.getRequestInfo().setAction("update");
 		ModelMapper model = new ModelMapper();
 		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();

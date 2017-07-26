@@ -49,9 +49,6 @@ public class InstrumentController {
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public InstrumentResponse create(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
 		ModelMapper model = new ModelMapper();
 		InstrumentResponse instrumentResponse = new InstrumentResponse();
@@ -112,9 +109,6 @@ public class InstrumentController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public InstrumentResponse update(@RequestBody InstrumentRequest instrumentRequest, BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		instrumentRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		InstrumentResponse instrumentResponse = new InstrumentResponse();

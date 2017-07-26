@@ -50,9 +50,6 @@ public class InstrumentTypeController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public InstrumentTypeResponse create(@RequestBody InstrumentTypeRequest instrumentTypeRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
 		ModelMapper model = new ModelMapper();
 		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();
@@ -114,9 +111,6 @@ public class InstrumentTypeController {
 	public InstrumentTypeResponse update(@RequestBody InstrumentTypeRequest instrumentTypeRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		instrumentTypeRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();

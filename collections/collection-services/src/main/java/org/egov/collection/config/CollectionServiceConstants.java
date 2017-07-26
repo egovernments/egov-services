@@ -53,8 +53,8 @@ public class CollectionServiceConstants {
 	public static final String INVALID_BD = "Fund, FundSource, Function, Department or glcode may be invalid.";
 
 	public static final String TENANT_ID_MISSING_CODE = "egcl_001";
-	public static final String TENANT_ID_MISSING_FIELD = "tenantId";
-	public static final String TENANT_ID_MISSING_MESSAGE = "Tenant id is mising";
+	public static final String TENANT_ID_MISSING_FIELD = "tenantId or receiptHeaderId";
+	public static final String TENANT_ID_MISSING_MESSAGE = "Tenant id or ReceiptHeader id is mising";
 
 	public static final String PAYEE_NAME_MISSING_CODE = "egcl_002";
 	public static final String PAYEE_NAME_MISSING_FIELD = "payeeName";

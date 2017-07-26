@@ -65,7 +65,7 @@ public class WorkFlowUtil {
 		ProcessInstanceResponse processInstanceResponse = null;
 
 		try {
-			logger.info("URL ------->> "+url);
+			logger.info("URL ------->> "+url+" \n processInstanceRequest -->> "+processInstanceRequest);
 			processInstanceResponse = restTemplate.postForObject(url, processInstanceRequest,
 					ProcessInstanceResponse.class);
 

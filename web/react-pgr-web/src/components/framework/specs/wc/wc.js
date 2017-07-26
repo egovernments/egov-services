@@ -170,7 +170,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/sourcetype/_search?|$..id|$..name",
+							"url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -182,7 +182,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/supplytype/_search?|$..id|$..name",
+							"url": "/wcms/masters/supplytype/_search?|$..name|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -194,7 +194,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/pt-property/property/propertytypes/_search?|$..id|$..name",
+							"url": "/pt-property/property/propertytypes/name?|$..id|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -206,7 +206,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-categorytype/_search?|$..id|$..categoryTypeName",
+							"url": "/wcms/masters/propertytype-categorytype/_search?|$..categoryTypeName|$..categoryTypeName",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -218,7 +218,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/treatmentplant/_search?|$..id|$..name",
+							"url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -230,7 +230,7 @@ var dat = {
 							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
-							"url": "/wcms/masters/propertytype-usagetype/_search?|$..id|$..propertyType",
+							"url": "/wcms/masters/propertytype-usagetype/_search?|$..propertyType|$..propertyType",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
@@ -326,52 +326,55 @@ var dat = {
 				"name": "ApprovalDetails",
 				"multiple": false,
 				"fields": [
-						{
-							"name": "department",
-							"jsonPath": "connection.workflowDetails.department",
-							"label": "wc.create.groups.approvalDetails.fields.department",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+					{
+						"name": "department",
+						"jsonPath": "connection.workflowDetails.department",
+						"label": "wc.create.groups.approvalDetails.fields.department",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": false,
+						"isDisabled": false,
+						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 						},
 						{
-							"name": "designation",
-							"jsonPath": "connection.workflowDetails.designation",
-							"label": "wc.create.groups.approvalDetails.fields.designation",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-common-masters/departments/_search?tenantId={tenantId}&dept={department}|$..id|$..name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+						"name": "designation",
+						"jsonPath": "connection.workflowDetails.designation",
+						"label": "wc.create.groups.approvalDetails.fields.designation",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-common-workflows/designations/_search?businessKey=WaterConnection&approvalDepartmentName&departmentRule&currentStatus&additionalRule&pendingAction&designation&amountRule|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 						},
 						{
-							"name": "approver",
-							"jsonPath": "connection.workflowDetails.approver",
-							"label": "wc.create.groups.approvalDetails.fields.approver",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+						"name": "approver",
+						"jsonPath": "connection.workflowDetails.approver",
+						"label": "wc.create.groups.approvalDetails.fields.approver",
+						"pattern": "",
+						"type": "singleValueList",
+						"url":"/hr-employee/employees/_search?tenantId={default}&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 						},
 						{
-							"name": "comments",
-							"jsonPath": "connection.workflowDetails.comments",
-							"label": "wc.create.groups.approvalDetails.fields.comments",
-							"pattern": "",
-							"type": "textarea",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+						"name": "comments",
+						"jsonPath": "connection.workflowDetails.comments",
+						"label": "wc.create.groups.approvalDetails.fields.comments",
+						"pattern": "",
+						"type": "textarea",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 						}
+						
+
 				]
 			}
 		]

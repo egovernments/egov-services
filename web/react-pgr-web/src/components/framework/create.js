@@ -117,9 +117,68 @@ class Report extends Component {
   }
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {handleChange}=this.props;
-      // console.log(e + " "+ property + " "+ isRequired +" "+pattern);
+      let {getVal}=this;
+      let {handleChange,mockData,setDropDownData}=this.props;
+      let hashLocation = window.location.hash;
+      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+      // console.log(obj);
+      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+
+      _.forEach(depedants, function(value,key) {
+            if (value.type=="dropDown") {
+                let splitArray=value.pattern.split("?");
+                let context="";
+          			let id={};
+          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+          				context+=splitArray[0].split("/")[j]+"/";
+          			}
+
+          			let queryStringObject=splitArray[1].split("|")[0].split("&");
+          			for (var i = 0; i < queryStringObject.length; i++) {
+          				if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+          				}
+          			}
+
+                Api.commonApiPost(context,id).then(function(response)
+                {
+                  let keys=jp.query(response,splitArray[1].split("|")[1]);
+                  let values=jp.query(response,splitArray[1].split("|")[2]);
+                  let dropDownData=[];
+                  for (var k = 0; k < keys.length; k++) {
+                      let obj={};
+                      obj["key"]=keys[k];
+                      obj["value"]=values[k];
+                      dropDownData.push(obj);
+                  }
+                  setDropDownData(value.jsonPath,dropDownData);
+                },function(err) {
+                    console.log(err);
+                });
+                // console.log(id);
+                // console.log(context);
+            }
+
+            else if (value.type=="textField") {
+              let object={
+                target:{
+                  value:eval(eval(value.pattern))
+                }
+              }
+              handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+            }
+      });
+
   }
 
   incrementIndexValue = (group, jsonPath) => {
@@ -240,6 +299,9 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
+  },
+  setDropDownData:(fieldName,dropDownData)=>{
+    dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   }
 });
 

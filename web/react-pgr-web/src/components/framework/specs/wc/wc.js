@@ -349,13 +349,13 @@ var dat = {
 						"label": "wc.create.groups.approvalDetails.fields.designation",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/egov-common-workflows/designations/_search?businessKey=WaterConnection&approvalDepartmentName&departmentRule&currentStatus&additionalRule&pendingAction&designation&amountRule|$..id|$..name",
+						"url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants":[{
-								"name":"connection.workflowDetails.approver",
+								"jsonPath":"connection.workflowDetails.approver",
 								"type":"dropDown",
 								"pattern":"/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
 							}]

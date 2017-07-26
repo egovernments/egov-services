@@ -19,9 +19,15 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"dependency": {
-								"pipeSize.sizeInInch" :  "{pipeSize.sizeInMilimeter} * 0.039370"
-							}
+							"depedants":[{
+									"jsonPath":"pipeSize.sizeInInch",
+									"type":"textField",
+									"pattern":"`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
+									"rg":"",
+									"isRequired": false,
+									"requiredErrMsg": "",
+									"patternErrMsg": ""
+								}]
 						},
 						{
 							"name": "description",

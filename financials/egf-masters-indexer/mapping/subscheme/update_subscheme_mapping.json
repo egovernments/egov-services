@@ -1,0 +1,50 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "scheme": {
+            "type": "object"
+        },
+        "validfrom": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "validto": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "departmentid": {
+            "type": "keyword"
+        },
+        "active": {
+            "type": "boolean"
+        },
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

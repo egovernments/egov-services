@@ -1,0 +1,69 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "bank": {
+            "type": "object"
+        },
+        "address": {
+            "type": "keyword"
+        },
+        "address2": {
+            "type": "keyword"
+        },
+        "city": {
+            "type": "keyword"
+        },
+        "state": {
+            "type": "keyword"
+        },
+	"pincode": {
+            "type": "keyword"
+        },
+        "phone": {
+            "type": "keyword"
+        },
+        "fax": {
+            "type": "keyword"
+        },
+        "contactperson": {
+            "type": "keyword"
+        },
+        "active": {
+            "type": "boolean"
+        },
+        "description": {
+            "type": "keyword"
+        },
+	"micr": {
+            "type": "keyword"
+        },
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

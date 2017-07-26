@@ -1,0 +1,53 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "fund": {
+            "type": "object"
+        },
+        "validfrom": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "validto": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "active": {
+            "type": "boolean"
+        },
+        "description": {
+            "type": "keyword"
+        },
+	"boundary": {
+            "type": "keyword"
+        },
+        "createdby": {
+            "type": "object"
+        },
+        "lastmodifiedby": {
+            "type": "object"
+        },
+        "createddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastmodifieddate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantid": {
+            "type": "keyword"
+        }
+    }
+}

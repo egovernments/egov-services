@@ -106,8 +106,9 @@ public class AssetRepositoryTest {
         asset.setName("asset name");
         asset.setStatus(Status.CREATED.toString());
         asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-        asset.setEnableYearWiseDepreciation(true);
-
+        asset.setEnableYearWiseDepreciation(Boolean.FALSE);
+        asset.setDepreciationRate(Double.valueOf("6.33"));
+        
         final Location location = new Location();
         location.setLocality(4l);
         location.setDoorNo("door no");

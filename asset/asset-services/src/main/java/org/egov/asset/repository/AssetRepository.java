@@ -150,6 +150,12 @@ public class AssetRepository {
         return findForCriteria(assetCriteria);
     }
 
+    private Double getDepreciationRate(final Double depreciationRate) {
+        final Double deprRate = Math.round(depreciationRate * 100.0) / 100.0;
+        logger.debug("Depreciation Rate ::" + deprRate);
+        return deprRate;
+    }
+
     @Transactional
     public Asset create(final AssetRequest assetRequest) {
 
@@ -191,7 +197,8 @@ public class AssetRepository {
                 location.getPinCode(), location.getLocality(), location.getBlock(), property,
                 requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
                 asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
-                asset.getVersion(), asset.getEnableYearWiseDepreciation(), asset.getDepreciationRate() };
+                asset.getVersion(), asset.getEnableYearWiseDepreciation(),
+                getDepreciationRate(asset.getDepreciationRate()) };
         try {
             jdbcTemplate.update(query, obj);
         } catch (final Exception ex) {
@@ -376,7 +383,7 @@ public class AssetRepository {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(asset.getEnableYearWiseDepreciation());
         if (changeDepRateInAsset)
-            preparedStatementValues.add(asset.getDepreciationRate());
+            preparedStatementValues.add(getDepreciationRate(asset.getDepreciationRate()));
         preparedStatementValues.add(asset.getCode());
         preparedStatementValues.add(asset.getTenantId());
         logger.debug("Asset Depreciation Rate Update Parameters : " + preparedStatementValues);
@@ -395,7 +402,7 @@ public class AssetRepository {
             @Override
             public void setValues(final PreparedStatement ps, final int index) throws SQLException {
                 final YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
-                ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
+                ps.setDouble(1, getDepreciationRate(yearWiseDepreciation.getDepreciationRate()));
                 ps.setString(2, yearWiseDepreciation.getFinancialYear());
                 ps.setLong(3, asset.getId());
                 ps.setObject(4, yearWiseDepreciation.getUsefulLifeInYears());
@@ -425,7 +432,7 @@ public class AssetRepository {
             @Override
             public void setValues(final PreparedStatement ps, final int index) throws SQLException {
                 final YearWiseDepreciation yearWiseDepreciation = yearWiseDepreciations.get(index);
-                ps.setDouble(1, yearWiseDepreciation.getDepreciationRate());
+                ps.setDouble(1, getDepreciationRate(yearWiseDepreciation.getDepreciationRate()));
                 ps.setObject(2, yearWiseDepreciation.getUsefulLifeInYears());
                 ps.setString(3, requestInfo.getUserInfo().getId().toString());
                 ps.setLong(4, new Date().getTime());

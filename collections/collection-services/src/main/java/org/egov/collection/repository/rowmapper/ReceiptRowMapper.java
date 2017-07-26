@@ -105,18 +105,18 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 		receiptHeader.setCancellationRemarks(rs.getString("rh_cancellationRemarks"));
 
 		try {
-			Date date = isEmpty(rs.getDate("rh_referenceDate")) ? null
-					: sdf.parse(sdf.format(rs.getDate("rh_referenceDate")));
+			Date date = isEmpty((Long)rs.getObject("rh_referenceDate")) ? null
+					: sdf.parse(sdf.format((Long)rs.getObject("rh_referenceDate")));
 			receiptHeader.setReferenceDate(date);
-			date = isEmpty(rs.getDate("rh_receiptDate")) ? null : sdf.parse(sdf.format(rs.getDate("rh_receiptDate")));
+			date = isEmpty((Long)rs.getObject("rh_receiptDate")) ? null : sdf.parse(sdf.format((Long)rs.getObject("rh_receiptDate")));
 			receiptHeader.setReceiptDate(date);
 			date = isEmpty(rs.getDate("rh_manualReceiptDate")) ? null
 					: sdf.parse(sdf.format(rs.getDate("rh_manualReceiptDate")));
 			receiptHeader.setManualReceiptDate(date);
-			date = isEmpty(rs.getDate("rh_createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("rh_createdDate")));
+			date = isEmpty((Long)rs.getObject("rh_createdDate")) ? null : sdf.parse(sdf.format((Long)rs.getObject("rh_createdDate")));
 			receiptHeader.setCreatedDate(date);
-			date = isEmpty(rs.getDate("rh_lastModifiedDate")) ? null
-					: sdf.parse(sdf.format(rs.getDate("rh_lastModifiedDate")));
+			date = isEmpty((Long)rs.getObject("rh_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format((Long)rs.getObject("rh_lastModifiedDate")));
 			receiptHeader.setLastModifiedDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();

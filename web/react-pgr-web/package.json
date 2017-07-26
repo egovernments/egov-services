@@ -10,6 +10,7 @@
     "jquery": "^3.2.1",
     "jsonpath": "^0.2.11",
     "lodash": "^4.17.4",
+    "material-datetime-picker": "^2.4.0",
     "material-ui": "^0.18.1",
     "material-ui-upload": "^1.1.2",
     "prop-types": "^15.5.10",

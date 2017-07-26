@@ -48,7 +48,7 @@ export default class ShowFields extends Component {
                         {group.fields.map((field, fieldIndex)=>{
                             return (
                                 <Col key={fieldIndex} xs={12} md={noCols}>
-                                    {renderField(field)}
+                                    {renderField(field, self.props.screen)}
                                 </Col>
                             )
                         })}
@@ -85,7 +85,10 @@ export default class ShowFields extends Component {
   }
 
 
-  renderField=(item)=> {
+  renderField=(item, screen)=> {
+    if(screen == "view") {
+      item.type = "label";
+    }
   	switch(item.type) {
   		case 'text':
   			 return <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>

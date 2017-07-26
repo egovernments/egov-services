@@ -91,7 +91,7 @@ class viewsrn extends Component{
                   {translate('core.lbl.address')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.props.srn.requesterAddress ? this.props.srn.requesterAddress : 'N/A'}
+                  {this.props.srn.systemRequesterAddress ? this.props.srn.systemRequesterAddress : 'N/A'}
                 </Col>
               </Row>
               <Row style={styles.addBorderBottom}>
@@ -141,7 +141,7 @@ class viewsrn extends Component{
                   {translate('pgr.lbl.filedvia')}
                 </Col>
                 <Col xs={6} md={3}>
-                  {this.props.srn.receivingMode}
+                  {this.props.srn.systemReceivingMode}
                 </Col>
                 <Col xs={6} md={3}>
                   {translate('pgr.lbl.receivingcenter')}
@@ -166,13 +166,13 @@ class viewsrn extends Component{
                   {this.props.srn.address ? this.props.srn.address : 'N/A'}
                 </Col>
               </Row>
-              {this.props.srn.externalCRN ?
+              {this.props.srn.systemExternalCRN ?
                 <Row style={styles.addBorderBottom}>
                   <Col xs={6} md={3}>
                     External CRN
                   </Col>
                   <Col xs={6} md={3}>
-                    {this.props.srn.externalCRN}
+                    {this.props.srn.systemExternalCRN}
                   </Col>
                 </Row>
               : ''}

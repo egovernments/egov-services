@@ -79,7 +79,7 @@ import Acknowledgement from './components/contents/propertyTax/master/Acknowledg
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
 import View from './components/framework/view';
-
+import Search from './components/framework/search';
 
 const base = "";
 
@@ -89,19 +89,12 @@ const Main = () => {
     return (
     <main style={{"marginBottom": "50px"}}>
     <Switch>
-      <Route exact path= {base + '/'} component={Login}/>
-
-      <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
-	  
-	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
-
-      <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
-
-      <Route exact path={base+'/dashboard'} component={Dashboard}/>
-
-        {/*
-        pgr
-        */}
+        <Route exact path= {base + '/'} component={Login}/>
+        <Route exact path= {base + '/create/:moduleName/:master?'} component={Create}/>
+	      <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+        <Route exact path= {base + '/search/:moduleName/:master?'} component={Search}/>
+        <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
+        <Route exact path={base+'/dashboard'} component={Dashboard}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>

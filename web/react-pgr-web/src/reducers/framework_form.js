@@ -100,6 +100,11 @@ export default(state = defaultState, action) => {
         }
       }
 
+    case "SET_FORM_DATA":
+      return {
+        ...state,
+        form: action.data
+      }
 
     case "SET_FORM":
       return {

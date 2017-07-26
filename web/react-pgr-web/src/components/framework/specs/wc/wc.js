@@ -327,6 +327,17 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
+					},
+					{
+						"name": "panUpload",
+						"jsonPath": "connection.documents[1]",
+						"label": "wc.create.groups.fileDetails.fields.pan",
+						"pattern": "",
+						"type": "singleFileUpload",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 					}
 				]
 			},

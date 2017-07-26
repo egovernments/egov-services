@@ -17,6 +17,7 @@ import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
+import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
@@ -52,26 +53,33 @@ public class AssetValidator {
     private AssetConfigurationService assetConfigurationService;
 
     public void validateAsset(final AssetRequest assetRequest) {
-        findAssetCategory(assetRequest);
-        validateYearWiseDepreciationRate(assetRequest);
+        final AssetCategory assetCategory = findAssetCategory(assetRequest);
+        if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
+                && AssetCategoryType.LAND.compareTo(assetCategory.getAssetCategoryType()) == 0)
+            throw new RuntimeException("Depreciation Rate Can not be defined for Asset Category Type Land.");
+        else
+            validateYearWiseDepreciationRate(assetRequest);
         // findAsset(assetRequest); FIXME not need as per elzan remove the full
         // code later
     }
 
     public void validateYearWiseDepreciationRate(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
-        if (asset.getEnableYearWiseDepreciation()) {
+        if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation()) {
             final List<String> finacialYears = new ArrayList<String>();
-            final List<Double> depreciationRates = new ArrayList<Double>();
             for (final YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) {
                 finacialYears.add(ywd.getFinancialYear());
-                depreciationRates.add(ywd.getDepreciationRate());
+                validateDepreciationRateValue(ywd.getDepreciationRate());
             }
             checkDuplicateFinancialYear(finacialYears);
-            if (depreciationRates.contains(Double.valueOf("0")))
-                throw new RuntimeException("Depreciation rate of any financial year can not be zero");
-        }
+        } else if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
+                && !asset.getEnableYearWiseDepreciation())
+            validateDepreciationRateValue(asset.getDepreciationRate());
+    }
 
+    private void validateDepreciationRateValue(final Double depreciationRate) {
+        if (!(Double.compare(depreciationRate, Double.valueOf("0.0")) > 0))
+            throw new RuntimeException("Depreciation rate can not be zero or negative.");
     }
 
     private void checkDuplicateFinancialYear(final List<String> finacialYears) {
@@ -88,15 +96,15 @@ public class AssetValidator {
         }
     }
 
-    public void findAssetCategory(final AssetRequest assetRequest) {
-
-        final List<AssetCategory> assetCategories = assetCategoryValidator.findByIdAndCode(
-                assetRequest.getAsset().getAssetCategory().getId(),
-                assetRequest.getAsset().getAssetCategory().getCode(), assetRequest.getAsset().getTenantId());
+    public AssetCategory findAssetCategory(final AssetRequest assetRequest) {
+        final AssetCategory assetCategory = assetRequest.getAsset().getAssetCategory();
+        final List<AssetCategory> assetCategories = assetCategoryValidator.findByIdAndCode(assetCategory.getId(),
+                assetCategory.getCode(), assetRequest.getAsset().getTenantId());
 
         if (assetCategories.isEmpty())
             throw new RuntimeException("Invalid asset category");
-
+        else
+            return assetCategories.get(0);
     }
 
     public void findAsset(final AssetRequest assetRequest) {

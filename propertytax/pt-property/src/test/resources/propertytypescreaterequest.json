@@ -14,7 +14,7 @@
     "propertyTypes": [{
         "tenantId": "default",
         "name": "anil",
-        "code": "007",
+        "code": "0007",
        "auditDetails": {
 			"createdBy": null,
 			"lastModifiedBy": null,

@@ -446,39 +446,36 @@ public interface Masterservice {
 	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo, String tenatId, Integer[] ids,
 			String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
-	/**
-	 * This will create the Document type master
-	 * 
-	 * @param documentTypeRequest
-	 * @return DocumentTypeResponse
-	 * @throws Exception
-	 */
-	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)
-			throws Exception;
-
-	/**
-	 * This will update the Document type master
-	 * 
-	 * @param documentTypeRequest
-	 * @return DocumentTypeResponse
-	 * @throws Exception
-	 */
-	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) throws Exception;
-
-	/**
-	 * This will search the Document Type masters
-	 * 
-	 * @param requestInfo
-	 * @param tenantId
-	 * @param name
-	 * @param code
-	 * @param application
-	 * @param pageSize
-	 * @param OffSet
-	 * @return DocumentTypeResponse
-	 * @throws Exception
-	 */
-	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,
+	/**			public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest);
+	 * This will create the Document type master		
+	 * 		
+	 * @param documentTypeRequest		
+	 * @return DocumentTypeResponse		
+	 * @throws Exception		
+	 */		
+	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)		
+			throws Exception;		
+	/**		
+	 * This will update the Document type master		
+	 * 		
+	 * @param documentTypeRequest		
+	 * @return DocumentTypeResponse		
+	 * @throws Exception		
+	 */		
+	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) throws Exception;		
+	/**		
+	 * This will search the Document Type masters		
+	 * 		
+	 * @param requestInfo		
+	 * @param tenantId		
+	 * @param name		
+	 * @param code		
+	 * @param application		
+	 * @param pageSize		
+	 * @param OffSet		
+	 * @return DocumentTypeResponse		
+	 * @throws Exception		
+	 */		
+	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,		
 			String code, String application, Integer pageSize, Integer offSet) throws Exception;
-
 }

@@ -7,7 +7,7 @@
             "tenantId": "default",
             "category": "testing",
             "name": "kumar",
-            "code": "009",
+            "code": "0009",
             "auditDetails": {
                 "createdBy": null,
                 "lastModifiedBy": null,

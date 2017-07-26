@@ -16,6 +16,10 @@ import java.io.IOException;
 
 import static org.egov.constants.RequestContextConstants.*;
 
+/**
+ *  4th pre filter to get executed.
+ *  If the auth flag is enabled then the user is retrieved for the given auth token.
+ */
 public class AuthFilter extends ZuulFilter {
 
     private static final String INPUT_STREAM_CONVERSION_FAILED_MESSAGE = "Failed to convert to input stream";

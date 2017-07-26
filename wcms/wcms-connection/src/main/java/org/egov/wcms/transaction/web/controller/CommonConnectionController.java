@@ -121,12 +121,12 @@ public class CommonConnectionController {
         EnumData model5 = new EnumData();
         EnumData model6 = new EnumData();
         
-        model6.setKey("## Ack Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default",configurationManager.getIdGenNameServiceTopic(), configurationManager.getIdGenFormatServiceTopic()));
+     /*   model6.setKey("## Ack Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default",configurationManager.getIdGenNameServiceTopic(), configurationManager.getIdGenFormatServiceTopic()),waterConnectionRequest.getRequestInfo());
         model2.setKey("## HSC Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getHscGenNameServiceTopic(), configurationManager.getHscGenFormatServiceTopic()));
         model3.setKey("## Demand Bill Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getDemandBillGenNameServiceTopic(), configurationManager.getDemandBillGenFormatServiceTopic()));
         model4.setKey("## Work Order Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getWorkOrderGenNameServiceTopic(), configurationManager.getWorkOrderGenFormatServiceTopic()));
         model5.setKey("## Estimation Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getEstimateGenNameServiceTopic(), configurationManager.getEstimateGenFormatServiceTopic()));
-        List<EnumData> modelList = new ArrayList<>(); 
+     */   List<EnumData> modelList = new ArrayList<>(); 
         modelList.add(model1);
         modelList.add(model6);
         modelList.add(model2);

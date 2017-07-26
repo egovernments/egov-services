@@ -56,7 +56,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class AckNoGenerationResponse {
 
-    private ResponseInfo responseInfo;
+    private ResponseInfo ResponseInfo;
 
     private List<AckIdResponse> idResponses;
 

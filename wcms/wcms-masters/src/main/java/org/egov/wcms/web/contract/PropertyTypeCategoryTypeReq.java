@@ -63,9 +63,9 @@ import lombok.ToString;
 public class PropertyTypeCategoryTypeReq {
 
     @NotNull
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
 
-    @JsonProperty("propertyTypeCategoryType")
+    @JsonProperty("PropertyTypeCategoryType")
      public PropertyTypeCategoryType propertyTypeCategoryType;
 }

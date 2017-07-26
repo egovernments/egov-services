@@ -356,9 +356,8 @@ public class RestConnectionService {
     }
 
     public DonationResponseInfo validateDonationAmount(WaterConnectionReq waterConnectionRequest) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(111111111L).build();
         StringBuilder url = new StringBuilder();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic()).append("?propertyType=")
                 .append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
@@ -419,12 +418,12 @@ public class RestConnectionService {
             return finYear;
     }
     
-    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic) {
+    public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic, final String formatServiceTopic,RequestInfo requestInfo) {
         StringBuilder url = new StringBuilder();
         String ackNumber = null;
         url.append(configurationManager.getIdGenServiceBasePathTopic())
                 .append(configurationManager.getIdGenServiceCreatePathTopic());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+//        final RequestInfo RequestInfo = RequestInfo.builder().ts(11111111l).build();
         List<AckIdRequest> idRequests = new ArrayList<>();
         AckIdRequest idrequest = new AckIdRequest();
         

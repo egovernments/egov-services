@@ -17,10 +17,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CommonEnumResponse {
-	
-	    @JsonProperty("responseInfo")
-	    private ResponseInfo responseInfo;
-	    @JsonProperty("DataModelList")
-	    private List<CommonDataModel> dataModelList;
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    @JsonProperty("DataModelList")
+    private List<CommonDataModel> dataModelList;
 
 }

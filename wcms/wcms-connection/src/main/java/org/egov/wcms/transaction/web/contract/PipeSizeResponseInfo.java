@@ -55,9 +55,9 @@ import lombok.ToString;
 @ToString
 public class PipeSizeResponseInfo {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("pipeSizes")
+    @JsonProperty("PipeSizes")
     private List<CommonResponseInfo> pipeSize;
     
     

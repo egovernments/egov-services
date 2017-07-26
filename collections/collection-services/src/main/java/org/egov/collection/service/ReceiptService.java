@@ -477,7 +477,13 @@ public class ReceiptService {
 
 	public WorkflowDetails updateStateId(WorkflowDetails workflowDetails) {
 		logger.info("WorkflowDetails: " + workflowDetails.toString());
-		// update repo call
+		try{
+			pushUpdateReceiptDetailsToQueque(workflowDetails.getReceiptHeaderId(), workflowDetails.getStateId(),
+					workflowDetails.getStatus(), workflowDetails.getTenantId(), workflowDetails.getRequestInfo());
+		}catch(Exception e){
+			logger.error("Couldn't update stateId and status");
+			return null;
+		}
 		return workflowDetails;
 	}
 

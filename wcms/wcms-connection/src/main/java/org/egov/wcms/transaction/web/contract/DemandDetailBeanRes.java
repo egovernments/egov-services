@@ -37,13 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.transaction.web.contract;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.CategoryType;
+import org.egov.wcms.transaction.model.DemandDetailBean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -60,11 +59,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class CategoryTypeResponse {
+public class DemandDetailBeanRes {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("CategoryTypes")
-    private List<CategoryType> categoryTypes = new ArrayList<>();
+    @JsonProperty("DemandDetailBeans")
+    private List<DemandDetailBean> demandDetailBeans;
+
 }

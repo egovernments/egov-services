@@ -37,34 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.transaction.demand.contract;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.CategoryType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.wcms.transaction.model.AuditDetails;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
+@Data
 @NoArgsConstructor
-@Setter
-@ToString
-public class CategoryTypeResponse {
+@AllArgsConstructor
+public class GlCodeMaster {
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
+	private String id;
 
-    @JsonProperty("CategoryTypes")
-    private List<CategoryType> categoryTypes = new ArrayList<>();
+	@NotNull
+	private String tenantId;
+	@NotNull
+	private String taxHead;
+	@NotNull
+	private String service;
+	@NotNull
+	private String glCode;
+	@NotNull
+	private Long fromDate;
+	@NotNull
+	private Long toDate;
+	
+	private AuditDetails auditDetails;
 }

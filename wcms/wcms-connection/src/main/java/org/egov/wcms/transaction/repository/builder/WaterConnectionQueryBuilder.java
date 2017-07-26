@@ -150,11 +150,19 @@ public class WaterConnectionQueryBuilder {
                 + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,status=?,stateid=?,demandid=? "
                 + " where acknowledgmentnumber = ?";
     }
+    public static String updateConnectionByConsumerNumberQuery() {
+
+        return "UPDATE egwtr_waterconnection SET demandid=? "
+                + " where consumernumber = ?";
+    }
 
 
   public static String getWaterConnectionByacknowledgenumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber = ?";
+        return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber = ? ";
     }
+  public static String getWaterConnectionByConsumerNumber() {
+      return " select * from egwtr_waterconnection connection " + " WHERE  connection.consumernumber = ?";
+  }
     
     public static String getConnectionDetails() { 
     	return SOURCE_QUERY;  

@@ -214,23 +214,39 @@ public class WaterConnectionRepository {
 
     }
 
-    public WaterConnectionReq updateConnectionWorkflow(final WaterConnectionReq waterConnectionReq)
+    public WaterConnectionReq updateConnectionWorkflow(final WaterConnectionReq waterConnectionReq,Connection connectiondemand)
     {
         String insertQuery = "";
+         Object[] obj =null;
+        if(waterConnectionReq!=null){
+            Connection connection=waterConnectionReq.getConnection();
         insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
-        final Connection connection = waterConnectionReq.getConnection();
-        final Object[] obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
+       obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
                 connection.getBillingType(), connection.getCategoryId(),
                 connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), connection.getStatus(), connection.getStateId(),
                 connection.getDemandid(), connection.getAcknowledgementNumber() };
+        }
+        else{
+         
+            insertQuery = WaterConnectionQueryBuilder.updateConnectionByConsumerNumberQuery();
+           obj= new Object[] {connectiondemand.getDemandid(),connectiondemand.getConsumerNumber() };
+        }
+       
         jdbcTemplate.update(insertQuery, obj);
         
         return waterConnectionReq;
     }
-    
+    public void updateConnectionOnChangeOfDemand(final String demandId ,String consumerNumber)
+    {
+        String insertQuery = "";
+        Object[] obj =null;
+        insertQuery = WaterConnectionQueryBuilder.updateConnectionByConsumerNumberQuery();
+        obj= new Object[] {demandId, consumerNumber};
+        jdbcTemplate.update(insertQuery, obj);
+    }
     public WaterConnectionReq updateWaterConnection(final WaterConnectionReq waterConnectionReq) {
         String insertQuery = "";
         final Connection connection = waterConnectionReq.getConnection();
@@ -309,6 +325,14 @@ public class WaterConnectionRepository {
                 acknowledgeNumber);
         return connection;
     }
+    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber) {
+
+        final Connection connection = jdbcTemplate.queryForObject(
+                WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(), new UpdateWaterConnectionRowMapper(),
+                acknowledgeNumber);
+        return connection;
+    }
+
 
     public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
         final List<Object> preparedStatementValues = new ArrayList<>();

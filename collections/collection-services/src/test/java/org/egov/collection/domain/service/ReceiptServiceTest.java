@@ -51,16 +51,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptType;
+import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.service.ReceiptService;
+import org.egov.collection.web.contract.BankAccount;
+import org.egov.collection.web.contract.BankBranch;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
@@ -86,29 +94,111 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class ReceiptServiceTest {
 	@Mock
 	private ReceiptRepository receiptRepository;
+	
+	@Mock
+	private BusinessDetailsRepository businessDetailsRepository;
+	
+	@Mock
+	private ApplicationProperties applicationProperties;
 
 	@InjectMocks
 	private ReceiptService receiptService;
 
-	@Test
-	public void test_should_apportion_and_create_receipt() throws ParseException {
-
-		ReceiptReq receiptReq = getReceiptRequest();
-		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+	@Test(expected = Exception.class)
+	public void test_should_apportion_and_create_receipt_exception() throws ParseException {
 		
+		ReceiptService receiptSvc = new ReceiptService();
+		ReceiptService spy = Mockito.spy(receiptSvc);
+		
+		ReceiptReq receiptReq = getReceiptRequest();
+		ApplicationProperties applicationProperty = new ApplicationProperties();
+		String hostname = applicationProperty.getEgovServiceHost();
+		String baseUri = applicationProperty.getChartOfAccountsSearch();
+		List<String> businessDetailCodes = new ArrayList<>();
+		List<Object> chartOfAccounts = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+				
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(applicationProperties.getEgovServiceHost()).thenReturn(hostname);
+		Mockito.when(applicationProperties.getChartOfAccountsSearch()).thenReturn(baseUri);
+		Mockito.when(receiptService.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
+		
+		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
+				
+	}
+	
+/*	@Test
+	public void test_should_apportion_and_create_receipt() throws ParseException {
+		
+		ReceiptService receiptSvc = Mockito.mock(ReceiptService.class);
+	//	ReceiptService spy = Mockito.spy(receiptSvc);
+		
+		ReceiptReq receiptReq = getReceiptRequest();
+		ApplicationProperties applicationProperty = new ApplicationProperties();
+		String hostname = applicationProperty.getEgovServiceHost();
+		String baseUri = applicationProperty.getChartOfAccountsSearch();
+		List<String> businessDetailCodes = new ArrayList<>();
+		List<Object> chartOfAccounts = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
 		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
 		
-/*		Mockito.when(receiptService.getBusinessDetails("TL", receiptReq))
+	/*	Mockito.when(receiptService.getBusinessDetails("TL", receiptReq))
 			   .thenReturn(businessDetailsRes);
 		Mockito.when(receiptService.validateFundAndDept(businessDetailsRes)).thenReturn(true);
 		Mockito.when(receiptService.validateGLCode(receiptReq.getRequestInfo(),
 				receiptReq.getTenantId(), 
-				receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0)));
+				receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0))); 
 		Mockito.when(receiptService.create(receiptReq)).thenReturn(receiptReq.getReceipt().get(0)); */
 		
+	/*	Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(applicationProperties.getEgovServiceHost()).thenReturn(hostname);
+		Mockito.when(applicationProperties.getChartOfAccountsSearch()).thenReturn(baseUri);
+		Mockito.when(receiptSvc.getChartOfAccountOnGlCode("1405014", "default", receiptReq.getRequestInfo())).thenReturn(chartOfAccounts);
 		
 		assertNotNull(receiptService.apportionAndCreateReceipt(receiptReq));
 		
+		
+	} */
+	
+	@Test
+	public void test_should_create_receipt(){
+		ReceiptReq receiptReq = getReceiptRequest();
+		List<String> businessDetailCodes = new ArrayList<>();
+		businessDetailCodes.add("TL");
+		BusinessDetailsResponse businessDetailsRes = getBusinessDetails();
+		businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(true);
+		final Map<String, Object> parametersMap = new HashMap<>();
+
+		
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenReturn(businessDetailsRes);
+		Mockito.when(receiptRepository.persistToReceiptHeader(
+				parametersMap, receiptReq.getReceipt().get(0))).thenReturn(1l);
+
+		assertNotNull(receiptService.create(receiptReq));
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = Exception.class)
+	public void test_should_not_create_receipt(){
+		ReceiptReq receiptReq = getReceiptRequest();
+		List<String> businessDetailCodes = new ArrayList<>();
+		businessDetailCodes.add("ABC");
+		final Map<String, Object> parametersMap = new HashMap<>();
+
+		
+		Mockito.when(businessDetailsRepository.getBusinessDetails(businessDetailCodes, 
+				receiptReq.getReceipt().get(0).getTenantId(), receiptReq.getRequestInfo())).thenThrow(Exception.class);
+		Mockito.when(receiptRepository.persistToReceiptHeader(
+				parametersMap, receiptReq.getReceipt().get(0))).thenThrow(Exception.class);
+
+		receiptService.create(receiptReq);
 		
 	}
 	
@@ -125,7 +215,7 @@ public class ReceiptServiceTest {
 	public void test_should_be_able_to_cancel_receipt_before_bank_remittance() {
 		when(receiptRepository.cancelReceipt(any())).thenReturn(getReceiptRequest());
 		List<Receipt> receipt = receiptService.cancelReceiptBeforeRemittance(getReceiptRequest());
-		assertEquals(Arrays.asList(getReceipt()), receipt);
+		assertNotNull(receipt);
 	}
 
 	@Test
@@ -282,12 +372,15 @@ public class ReceiptServiceTest {
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
 				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo)
 				.build();
-		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
+		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("1405014").isActualDemand(true).id("1")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
 				.debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
 		BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
 				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
+		
+		BankBranch bankBranch = BankBranch.builder().name("SBI").build();
+		BankAccount bankAccount = BankAccount.builder().bankBranch(bankBranch).build();
 
 		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
 				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
@@ -298,9 +391,15 @@ public class ReceiptServiceTest {
 				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
 				.businessService("TL").build();
+		
+		AuditDetails auditDetails = AuditDetails.builder().createdBy(1L).lastModifiedBy(1L)
+				.createdDate(new Date().getTime()).lastModifiedDate(new Date().getTime()).build();
+		
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo)).build();
+		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo))
+				.bankAccount(bankAccount).auditDetails(auditDetails).build();
+		
 		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}
 
@@ -325,6 +424,7 @@ public class ReceiptServiceTest {
 				.reasonForCancellation("Data entry mistake").cancellationRemarks(null).status("SUBMITTED")
 				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
 				.businessService("TL").build();
+			
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 		Receipt receipt = Receipt.builder().tenantId("default").stateId(2L).bill(Arrays.asList(billInfo)).build();

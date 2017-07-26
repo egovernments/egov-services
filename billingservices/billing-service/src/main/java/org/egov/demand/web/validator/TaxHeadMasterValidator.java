@@ -47,7 +47,7 @@ public class TaxHeadMasterValidator implements Validator {
 		else
 			throw new RuntimeException("Invalid Object type for GlCodeMaster validator");
 		validateTaxHeads(taxHeadMasterRequest, errors);
-		validateTaxPeriod(taxHeadMasterRequest,errors);
+//		validateTaxPeriod(taxHeadMasterRequest,errors);
 	}
 
 	public void validateTaxHeads(final TaxHeadMasterRequest taxHeadsRequest, Errors error) {
@@ -67,7 +67,7 @@ public class TaxHeadMasterValidator implements Validator {
 		}
 	}
 	
-	private void validateTaxPeriod(TaxHeadMasterRequest taxHeadMatserRequest, Errors errors) {
+	/*private void validateTaxPeriod(TaxHeadMasterRequest taxHeadMatserRequest, Errors errors) {
 
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMatserRequest.getTaxHeadMasters();
 		Long startDate = taxHeadMasters.get(0).getValidFrom();
@@ -108,5 +108,5 @@ public class TaxHeadMasterValidator implements Validator {
 								+ "'in TaxHeadMaster is invalid, please give a valid taxPeriod");
 			}
 		}
-	}
+	}*/
 }

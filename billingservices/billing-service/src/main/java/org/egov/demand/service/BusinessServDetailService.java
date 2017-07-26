@@ -115,11 +115,11 @@ public class BusinessServDetailService {
         String userId = businessServiceDetailRequest.getRequestInfo().getUserInfo().getId().toString();
         Long currEpochDate = new Date().getTime();
         AuditDetail auditDetail;
-        for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
-            auditDetail = businessServiceDetail.getAuditDetail();
+        /*for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
+            auditDetail = businessServiceDetail.getAuditDetails();
             auditDetail.setLastModifiedBy(userId);
             auditDetail.setLastModifiedTime(currEpochDate);
-        }
+        }*/
         kafkaTemplate.send(applicationProperties.getUpdateBusinessServiceDetailTopicName(), businessServiceDetailRequest);
         return getBusinessServiceDetailResponse(businessServiceDetailList, businessServiceDetailRequest.getRequestInfo());
     }

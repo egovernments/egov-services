@@ -151,9 +151,12 @@ public class AssetRepository {
     }
 
     private Double getDepreciationRate(final Double depreciationRate) {
-        final Double deprRate = Math.round(depreciationRate * 100.0) / 100.0;
-        logger.debug("Depreciation Rate ::" + deprRate);
-        return deprRate;
+        if (depreciationRate != null) {
+            final Double deprRate = Math.round(depreciationRate * 100.0) / 100.0;
+            logger.debug("Depreciation Rate ::" + deprRate);
+            return deprRate;
+        } else
+            return null;
     }
 
     @Transactional

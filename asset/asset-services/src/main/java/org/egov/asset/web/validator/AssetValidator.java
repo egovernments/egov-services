@@ -75,10 +75,13 @@ public class AssetValidator {
         } else if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
                 && !asset.getEnableYearWiseDepreciation())
             validateDepreciationRateValue(asset.getDepreciationRate());
+
     }
 
     private void validateDepreciationRateValue(final Double depreciationRate) {
-        if (Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
+        if (depreciationRate == null)
+            throw new RuntimeException("Asset Depreciation Rate is mandatory.");
+        else if (Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
             throw new RuntimeException("Depreciation rate can not be negative.");
     }
 

@@ -51,6 +51,7 @@
                    "displayMessage": "Water Charge Consumer Code: consumercode2",
                    "minimumAmount": 10,
                    "totalAmount": 900,
+                   "amountPaid" : 200,
                    "collectionModesNotAllowed": [
                        null
                    ],

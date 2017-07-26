@@ -8,25 +8,20 @@ export default class UiLabel extends Component {
 
    	renderLabel = (item) => {
    		return (
-   			<Grid>
-                <Row>
-                	<Col xs={6} md={6}>
-                       <label>
-			   				{item.label}
-			   		   </label>
-                    </Col>
-                    <Col xs={6} md={6}>
-                   		<label>
-			   				{this.props.getVal(item.jsonPath)}
-			   			</label>    
-                    </Col>
-                </Row>
-            </Grid>
+        <div>
+   			<Row>
+            <Col xs={12}>
+              <label>{item.label}</label>
+            </Col>
+            <Col xs={12}>{this.props.getVal(item.jsonPath) || "-"}</Col>
+        </Row>
+        <br/>
+        </div>
    		);
    	}
 
    	render () {
-		return (
+		  return (
 	      <div>
 	        {this.renderLabel(this.props.item)}
 	      </div>

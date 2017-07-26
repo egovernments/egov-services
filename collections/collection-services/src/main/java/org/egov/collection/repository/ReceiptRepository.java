@@ -227,7 +227,7 @@ public class ReceiptRepository {
 		}
 
 		for (BillDetail detail : details) {
-			detail.setStatus((ReceiptStatus.CANCELLED).toString());
+			detail.setStatus(ReceiptStatus.CANCELLED.toString());
 		}
 		try {
 			collectionProducer.producer(applicationProperties.getCancelReceiptTopicName(),

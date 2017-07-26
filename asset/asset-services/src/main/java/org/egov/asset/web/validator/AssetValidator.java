@@ -56,7 +56,7 @@ public class AssetValidator {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
                 && AssetCategoryType.LAND.compareTo(assetCategory.getAssetCategoryType()) == 0)
-            throw new RuntimeException("Depreciation Rate Can not be defined for Asset Category Type Land.");
+            assetRequest.getAsset().setDepreciationRate(Double.valueOf("0.0"));
         else
             validateYearWiseDepreciationRate(assetRequest);
         // findAsset(assetRequest); FIXME not need as per elzan remove the full
@@ -78,8 +78,8 @@ public class AssetValidator {
     }
 
     private void validateDepreciationRateValue(final Double depreciationRate) {
-        if (!(Double.compare(depreciationRate, Double.valueOf("0.0")) > 0))
-            throw new RuntimeException("Depreciation rate can not be zero or negative.");
+        if (Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
+            throw new RuntimeException("Depreciation rate can not be negative.");
     }
 
     private void checkDuplicateFinancialYear(final List<String> finacialYears) {

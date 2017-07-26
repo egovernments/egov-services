@@ -102,6 +102,7 @@ public class ReceiptService {
 			if (validateFundAndDept(businessDetailsRes)
 					&& validateGLCode(receiptReq.getRequestInfo(),
 							receiptReq.getTenantId(), billdetail)) {
+				businessDetailsRes.getBusinessDetails().get(0).setCallBackForApportioning(false); //temporary
 				if (businessDetailsRes.getBusinessDetails().get(0)
 						.getCallBackForApportioning()) {
 					bill.getBillDetails().remove(billdetail);

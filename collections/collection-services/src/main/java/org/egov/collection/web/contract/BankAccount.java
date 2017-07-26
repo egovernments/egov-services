@@ -2,6 +2,7 @@ package org.egov.collection.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
+@Builder
 public class BankAccount   {
   private Long id;
 

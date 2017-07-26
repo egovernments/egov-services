@@ -17,7 +17,7 @@ public class SchemeContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public SchemeContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public SchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

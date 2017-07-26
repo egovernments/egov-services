@@ -18,7 +18,6 @@ import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.service.FunctionService;
-import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.requests.FunctionRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;

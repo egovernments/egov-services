@@ -1,7 +1,6 @@
 package org.egov.egf.instrument.web.contract;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import lombok.Setter;
 
 public class SurrenderReasonSearchContract extends SurrenderReasonContract {
 	private String ids;
+	private String sortBy;
 	private Integer pageSize;
 	private Integer offset;
-	private String sortBy;
 }

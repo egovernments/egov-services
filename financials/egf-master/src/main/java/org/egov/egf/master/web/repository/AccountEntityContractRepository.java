@@ -17,7 +17,7 @@ public class AccountEntityContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public AccountEntityContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public AccountEntityContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

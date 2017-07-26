@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
-import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
+import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +32,13 @@ public class InstrumentTypeService {
 	@Autowired
 	private SmartValidator validator;
 
-
 	private BindingResult validate(List<InstrumentType> instrumenttypes, String method, BindingResult errors) {
 
 		try {
 			switch (method) {
 			case ACTION_VIEW:
-				// validator.validate(instrumentTypeContractRequest.getInstrumentType(), errors);
+				// validator.validate(instrumentTypeContractRequest.getInstrumentType(),
+				// errors);
 				break;
 			case ACTION_CREATE:
 				Assert.notNull(instrumenttypes, "InstrumentTypes to create must not be null");
@@ -94,7 +93,7 @@ public class InstrumentTypeService {
 
 	}
 
-	public void addToQue(CommonRequest<InstrumentTypeContract> request) {
+	public void addToQue(InstrumentTypeRequest request) {
 		instrumentTypeRepository.add(request);
 	}
 

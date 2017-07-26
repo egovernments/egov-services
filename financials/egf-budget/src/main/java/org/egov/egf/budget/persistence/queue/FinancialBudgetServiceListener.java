@@ -30,8 +30,14 @@ public class FinancialBudgetServiceListener {
 	@Value("${kafka.topics.egf.budget.service.completed.topic}")
 	private String completedTopic;
 
-	@Value("${kafka.topics.egf.budget.service.completed.key}")
-	private String completedKey;
+	@Value("${kafka.topics.egf.masters.budget.completed.key}")
+	private String budgetCompletedKey;
+	
+	@Value("${kafka.topics.egf.masters.budgetdetail.completed.key}")
+	private String budgetDetailCompletedKey;
+	
+	@Value("${kafka.topics.egf.masters.budgetreapp.completed.key}")
+	private String budgetReAppropriationCompletedKey;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -70,8 +76,8 @@ public class FinancialBudgetServiceListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("budget_completed", request);
-			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
+			mastersMap.put("budget_persisted", request);
+			financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budget_update") != null) {
@@ -85,8 +91,8 @@ public class FinancialBudgetServiceListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("budget_completed", request);
-			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
+			mastersMap.put("budget_persisted", request);
+			financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetdetail_create") != null) {
@@ -100,8 +106,8 @@ public class FinancialBudgetServiceListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("budgetdetail_completed", request);
-			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
+			mastersMap.put("budgetdetail_persisted", request);
+			financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetdetail_update") != null)
@@ -117,8 +123,8 @@ public class FinancialBudgetServiceListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("budgetdetail_completed", request);
-			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
+			mastersMap.put("budgetdetail_persisted", request);
+			financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetreappropriation_create") != null) {
@@ -132,8 +138,8 @@ public class FinancialBudgetServiceListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("budgetreappropriation_completed", request);
-			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
+			mastersMap.put("budgetreappropriation_persisted", request);
+			financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("budgetreappropriation_update") != null)
 
@@ -147,8 +153,8 @@ public class FinancialBudgetServiceListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("budgetreappropriation_completed", request);
-			financialProducer.sendMessage(completedTopic, completedKey, mastersMap);
+			mastersMap.put("budgetreappropriation_persisted", request);
+			financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
 		}
 
 	}

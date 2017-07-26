@@ -1,13 +1,25 @@
 let menuConvention={
   "Grievance Redressal.Grievance.Create Complaint":"/pgr/createGrievance",
   "Grievance Redressal.Grievance.Search Complaint":"/pgr/searchGrievance",
+
   "Grievance Redressal.Masters.Receiving Mode.Create receivingmode Master":"/pgr/receivingModeCreate",
+  "Grievance Redressal.Masters.Receiving Mode.Update receivingmode Master":"/pgr/viewOrUpdateReceivingMode/update",
+  "Grievance Redressal.Masters.Receiving Mode.Get all receivingmodes":"/pgr/viewOrUpdateReceivingMode/view",
+
   "Grievance Redressal.Masters.Grievance type.Create a Service Type":"/pgr/serviceTypeCreate",
-  // "Grievance Redressal.Masters.Grievance type.Search a Service Type":"",
-  // "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"",
+  "Grievance Redressal.Masters.Grievance type.Update a Service Type":"/pgr/viewOrUpdateServiceType/edit",
+  "Grievance Redressal.Masters.Grievance type.Search a Service Type":"/pgr/viewOrUpdateServiceType/view",
+
   "Grievance Redressal.Masters.Receiving Center.Create receivingcenter Master":"/pgr/createReceivingCenter",
+  "Grievance Redressal.Masters.Receiving Center.Update receivingcenter Master":"/pgr/receivingCenter/edit",
+  "Grievance Redressal.Masters.Receiving Center.Get all receivingcenters":"/pgr/receivingCenter/view",
+
   "Grievance Redressal.Masters.Router.CREATE COMPLAINT ROUTER":"/pgr/createRouter",
-  // "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":""
+  "Grievance Redressal.Masters.Router.UPDATE COMPLAINT ROUTER":"/pgr/searchRouter/edit",
+  "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":"/pgr/searchRouter/view",
+
+  "Grievance Redressal.Masters.Grievance Category.Update Service Group":"/pgr/serviceGroup/edit",
+  "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view"
 }
 
 const defaultState = {

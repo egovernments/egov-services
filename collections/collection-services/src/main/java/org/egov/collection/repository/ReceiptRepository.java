@@ -61,7 +61,6 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -99,6 +98,9 @@ public class ReceiptRepository {
 
     @Autowired
     private BusinessDetailsRepository businessDetailsRepository;
+
+    @Autowired
+    private ChartOfAccountsRepository chartOfAccountsRepository;
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -205,7 +207,7 @@ public class ReceiptRepository {
 		List<Object[]> batchArgs = new ArrayList<>();
 		for (BillDetail detail : details) {
 			Object[] obj = { detail.getStatus(), detail.getReasonForCancellation(), detail.getCancellationRemarks(),
-					receiptReq.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+					receiptReq.getRequestInfo().getUserInfo().getId(), new java.sql.Date(new Date().getTime()),
 					Long.valueOf(detail.getId()), detail.getTenantId() };
 			batchArgs.add(obj);
 		}
@@ -294,7 +296,7 @@ public class ReceiptRepository {
 				if (receiptRequest.getRequestInfo().getUserInfo().getId() != null)
 					ps.setLong(i++, receiptRequest.getRequestInfo().getUserInfo().getId());
 
-				ps.setDate(i++, new Date(new java.util.Date().getTime()));
+				ps.setDate(i++, new java.sql.Date(new Date().getTime()));
 
 				if (billDetail.getId() != null)
 					ps.setLong(i++, new Long(billDetail.getId()));
@@ -328,6 +330,12 @@ public class ReceiptRepository {
         String queryString = receiptDetailQueryBuilder.searchBusinessDetailsQuery();
         List<String> businessDetailsList = jdbcTemplate.queryForList(queryString, String.class,new Object[]{tenantId});
         return businessDetailsRepository.getBusinessDetails(businessDetailsList,tenantId,requestInfo).getBusinessDetails();
+    }
+
+    public List<ChartOfAccount> getChartOfAccounts(final String tenantId,final RequestInfo requestInfo) {
+        String queryString = receiptDetailQueryBuilder.searchChartOfAccountsQuery();
+        List<String> chartOfAccountsList = jdbcTemplate.queryForList(queryString,String.class,new Object[]{tenantId});
+        return chartOfAccountsRepository.getChartOfAccounts(chartOfAccountsList,tenantId,requestInfo);
     }
 
 }

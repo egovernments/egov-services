@@ -22,16 +22,17 @@ public class SurrenderReason extends Auditable {
 	 */
 	private String id;
 	/**
-	 * name is the reason of instrument surrender. Example "Damaged cheque","Cheque to be scrapped" etc
+	 * name is the reason of instrument surrender. Example "Damaged cheque",
+	 * "Cheque to be scrapped" etc
 	 */
 	@NotBlank
-	@Size(max=50,min=5)
+	@Size(max = 50, min = 5)
 	private String name;
 	/**
 	 * description is detailed description of the surrender of a instrument
 	 */
 	@NotBlank
-	@Size(max=250)
+	@Size(max = 250)
 	private String description;
 
 }

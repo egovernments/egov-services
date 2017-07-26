@@ -17,6 +17,7 @@ public class ServiceDefinition {
     private String code;
     private String tenantId;
     private List<AttributeDefinition> attributes;
+    private List<GroupDefinition> groups;
 
     public boolean isComputedFieldsAbsent(ServiceStatus action) {
         return isEmpty(getComputedFields(action));
@@ -86,6 +87,22 @@ public class ServiceDefinition {
     private List<AttributeDefinition> getAttributesOfType(AttributeDataType attributeType) {
         return getNonComputedAttributes().stream()
             .filter(attribute -> attributeType == attribute.getDataType())
+            .collect(Collectors.toList());
+    }
+
+    public List<GroupDefinition> getGroupsWithConstraints(ServiceStatus action, List<String> roleCodes) {
+        return groups.stream()
+            .filter(group -> groupHasMatchingConstraints(action, roleCodes, group))
+            .collect(Collectors.toList());
+    }
+
+    private boolean groupHasMatchingConstraints(ServiceStatus action, List<String> roleCodes, GroupDefinition group) {
+        return !isEmpty(group.getMatchingConstraints(action, roleCodes));
+    }
+
+    public List<AttributeDefinition> getAttributesWithGroupCode(String groupCode) {
+        return attributes.stream()
+            .filter(attributeDefinition -> groupCode.equals(attributeDefinition.getGroupCode()))
             .collect(Collectors.toList());
     }
 }

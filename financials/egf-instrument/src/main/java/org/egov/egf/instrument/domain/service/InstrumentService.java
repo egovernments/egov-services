@@ -5,21 +5,20 @@ import java.util.List;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.CommonRequest;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
-import org.egov.egf.instrument.domain.model.InstrumentStatus;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
-import org.egov.egf.instrument.domain.repository.InstrumentStatusRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
-import org.egov.egf.instrument.web.contract.InstrumentContract;
+import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
+import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,11 +43,11 @@ public class InstrumentService {
 	@Autowired
 	private SmartValidator validator;
 	@Autowired
-	private InstrumentStatusRepository instrumentStatusRepository;
-	@Autowired
 	private SurrenderReasonRepository surrenderReasonRepository;
 	@Autowired
 	private BankContractRepository bankContractRepository;
+	@Autowired
+	private FinancialStatusContractRepository financialStatusContractRepository;
 	@Autowired
 	private BankAccountContractRepository bankAccountContractRepository;
 	@Autowired
@@ -109,14 +108,14 @@ public class InstrumentService {
 				}
 				instrument.setBankAccount(bankAccount);
 			}
-			if (instrument.getInstrumentStatus() != null) {
-				InstrumentStatus instrumentStatus = instrumentStatusRepository
-						.findById(instrument.getInstrumentStatus());
-				if (instrumentStatus == null) {
-					throw new InvalidDataException("instrumentStatus", "instrumentStatus.invalid",
-							" Invalid instrumentStatus");
+			if (instrument.getFinancialStatus() != null) {
+				FinancialStatusContract financialStatus = financialStatusContractRepository
+						.findById(instrument.getFinancialStatus());
+				if (financialStatus == null) {
+					throw new InvalidDataException("financialStatus", "financialStatus.invalid",
+							" Invalid financialStatus");
 				}
-				instrument.setInstrumentStatus(instrumentStatus);
+				instrument.setFinancialStatus(financialStatus);
 			}
 			if (instrument.getSurrendarReason() != null) {
 				SurrenderReason surrendarReason = surrenderReasonRepository.findById(instrument.getSurrendarReason());
@@ -154,7 +153,7 @@ public class InstrumentService {
 
 	}
 
-	public void addToQue(CommonRequest<InstrumentContract> request) {
+	public void addToQue(InstrumentRequest request) {
 		instrumentRepository.add(request);
 	}
 

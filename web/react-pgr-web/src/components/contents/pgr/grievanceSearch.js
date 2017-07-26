@@ -319,9 +319,9 @@ class grievanceSearch extends Component {
   						<td style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{val.serviceRequestId}</td>
   						<td>{val.serviceName}</td>
   						<td>{val.firstName}</td>
-  						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "locationId"))) + "-" + (getNameById(boundaryList, getNameByProperty(val.attribValues, "childLocationId")))}</td>
-  						<td>{getNameByProperty(val.attribValues, "status")}</td>
-  						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "departmentId"))}</td>
+  						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "systemLocationId"))) + " - " + (getNameById(boundaryList, getNameByProperty(val.attribValues, "systemChildLocationId")))}</td>
+  						<td>{getNameByProperty(val.attribValues, "systemStatus")}</td>
+  						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "systemDepartmentId"))}</td>
   						<td>{val.requestedDatetime ? /*toLocalTime(*/val.requestedDatetime/*)*/ : val.requestedDatetime}</td>
   					</tr>
   				)

@@ -55,7 +55,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @EqualsAndHashCode(exclude = { "instrumentType" }, callSuper = false)
-public class InstrumentAccountCode extends Auditable{
+public class InstrumentAccountCode extends Auditable {
 
 	/*
 	 * id is the unique reference to Instrument AccountCodes entered in the

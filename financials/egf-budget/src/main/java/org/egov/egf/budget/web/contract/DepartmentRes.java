@@ -2,7 +2,7 @@ package org.egov.egf.budget.web.contract;
 
 import java.util.List;
 
-import org.egov.common.web.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

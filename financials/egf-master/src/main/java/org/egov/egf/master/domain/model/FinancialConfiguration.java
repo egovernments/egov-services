@@ -47,7 +47,6 @@ import javax.validation.constraints.Size;
 
 import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.NotBlank;
-import org.ja.annotation.DrillDownTable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,7 +75,6 @@ public class FinancialConfiguration extends Auditable {
 	private String description;
 
 	@NotNull
-	@DrillDownTable
 	private List<FinancialConfigurationValue> values;
 
 }

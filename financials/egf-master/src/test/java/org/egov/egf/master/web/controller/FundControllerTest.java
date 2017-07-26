@@ -18,7 +18,6 @@ import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.service.FundService;
-import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.requests.FundRequest;
 import org.junit.After;
 import org.junit.Before;

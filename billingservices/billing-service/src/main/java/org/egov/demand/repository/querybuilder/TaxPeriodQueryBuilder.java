@@ -90,7 +90,7 @@ public class TaxPeriodQueryBuilder {
         
         if(taxPeriodCriteria.getPeriodCycle() != null){
         	 selectQuery.append(" and taxperiod.periodcycle = ? ");
-             preparedStatementValues.add(taxPeriodCriteria.getPeriodCycle());
+             preparedStatementValues.add(taxPeriodCriteria.getPeriodCycle().toString());
         }
         
         if(taxPeriodCriteria.getFromDate() != null){

@@ -17,7 +17,7 @@ public class SubSchemeContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public SubSchemeContractRepository(@Value("${egf.masterhost.url}") String hostUrl, RestTemplate restTemplate) {
+	public SubSchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;
 	}

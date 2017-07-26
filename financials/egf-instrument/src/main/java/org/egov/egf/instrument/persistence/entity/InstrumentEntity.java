@@ -3,15 +3,14 @@ package org.egov.egf.instrument.persistence.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.instrument.domain.model.Instrument;
-import org.egov.egf.instrument.domain.model.InstrumentStatus;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.model.TransactionType;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +34,8 @@ public class InstrumentEntity extends AuditableEntity {
 	private String bankId;
 	private String branchName;
 	private String bankAccountId;
-	private String instrumentStatusId;
-	private String transactionTypeId;
+	private String financialStatusId;
+	private String transactionType;
 	private String payee;
 	private String drawer;
 	private String surrendarReasonId;
@@ -53,8 +52,8 @@ public class InstrumentEntity extends AuditableEntity {
 		instrument.setBank(BankContract.builder().id(bankId).build());
 		instrument.setBranchName(this.branchName);
 		instrument.setBankAccount(BankAccountContract.builder().id(bankAccountId).build());
-		instrument.setInstrumentStatus(InstrumentStatus.builder().id(instrumentStatusId).build());
-	//	instrument.setTransactionType(transactionTypeId.toString());
+		instrument.setFinancialStatus(FinancialStatusContract.builder().id(financialStatusId).build());
+		instrument.setTransactionType(TransactionType.valueOf(this.transactionType));
 		instrument.setPayee(this.payee);
 		instrument.setDrawer(this.drawer);
 		instrument.setSurrendarReason(SurrenderReason.builder().id(surrendarReasonId).build());
@@ -63,7 +62,7 @@ public class InstrumentEntity extends AuditableEntity {
 	}
 
 	public InstrumentEntity toEntity(Instrument instrument) {
-		super.toEntity((Auditable) instrument);
+		super.toEntity(instrument);
 		this.id = instrument.getId();
 		this.transactionNumber = instrument.getTransactionNumber();
 		this.transactionDate = instrument.getTransactionDate();
@@ -72,10 +71,10 @@ public class InstrumentEntity extends AuditableEntity {
 		this.bankId = instrument.getBank() != null ? instrument.getBank().getId() : null;
 		this.branchName = instrument.getBranchName();
 		this.bankAccountId = instrument.getBankAccount() != null ? instrument.getBankAccount().getId() : null;
-		this.instrumentStatusId = instrument.getInstrumentStatus() != null ? instrument.getInstrumentStatus().getId()
+		this.financialStatusId = instrument.getFinancialStatus() != null ? instrument.getFinancialStatus().getId()
 				: null;
-		/*this.transactionTypeId = instrument.getTransactionType() != null ? instrument.getTransactionType().getId()
-				: null;*/
+		this.transactionType = instrument.getTransactionType() != null ? instrument.getTransactionType().toString()
+				: null;
 		this.payee = instrument.getPayee();
 		this.drawer = instrument.getDrawer();
 		this.surrendarReasonId = instrument.getSurrendarReason() != null ? instrument.getSurrendarReason().getId()

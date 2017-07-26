@@ -95,7 +95,7 @@ class Acknowledgement extends Component {
   constructor(props) {
     super(props);
     this.state= {
-          ack:[],
+          ack:'',
     }
   } 
 
@@ -103,7 +103,9 @@ class Acknowledgement extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-
+	this.setState({
+		ack : localStorage['ack']
+	});
   }  
 
 
@@ -127,7 +129,7 @@ class Acknowledgement extends Component {
 									<Col xs={12} md={12}>
 									  <Row>
 										<Col xs={12} md={12} >
-											Your application is submitted with application no : 
+											Your application is submitted with application no : {this.state.ack}
 										</Col>
 									  </Row>
 									</Col>

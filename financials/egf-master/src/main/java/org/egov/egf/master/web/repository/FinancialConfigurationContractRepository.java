@@ -17,7 +17,7 @@ public class FinancialConfigurationContractRepository {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public FinancialConfigurationContractRepository(@Value("${egf.masterhost.url}") String hostUrl,
+	public FinancialConfigurationContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 		this.hostUrl = hostUrl;

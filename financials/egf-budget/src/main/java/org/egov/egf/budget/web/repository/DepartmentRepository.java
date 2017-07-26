@@ -2,7 +2,7 @@ package org.egov.egf.budget.web.repository;
 
 import java.util.Date;
 
-import org.egov.common.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.budget.web.contract.DepartmentRes;
 import org.egov.egf.budget.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;

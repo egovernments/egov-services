@@ -44,17 +44,21 @@ public class UserSearchRequest {
 	@JsonProperty("tenantId")
 	private String tenantId;
 
+	private Integer pageNumber=500;
+	
+	
+	
 /*	@JsonProperty("fuzzyLogic")
 	private boolean fuzzyLogic;
 
 	@JsonProperty("active")
-	private boolean active = true;
+	private boolean active = true;*/
 
 
-	@JsonProperty("pageSize")
-	private int pageSize = 20;
+	/*@JsonProperty("pageSize")
+	private int pageSize = 500;*/
 
-	@JsonProperty("pageNumber")
+/*	@JsonProperty("pageNumber")
 	private int pageNumber = 0;
 
 	@JsonProperty("sort")

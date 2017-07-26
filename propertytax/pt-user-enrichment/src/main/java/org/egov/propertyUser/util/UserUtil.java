@@ -9,6 +9,8 @@ import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
 import org.egov.propertyUser.model.UserRequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(UserUtil.class);
 
 	@Autowired
 	Environment environment;
@@ -52,14 +56,18 @@ public class UserUtil {
 
 		// search user
 		UserResponseInfo userResponse = null;
+		logger.info("UserUtil searchUrl ---->> "+searchUrl.toString()+" \n userSearchRequestInfo ---->> "+userSearchRequestInfo);
 		userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
+		logger.info("UserUtil userResponse ---->> "+userResponse);
 		if (userResponse.getUser().size() == 0) {
 			UserRequestInfo userRequestInfo = new UserRequestInfo();
 			userRequestInfo.setRequestInfo(requestInfo);
 			user.setPassword(environment.getProperty("default.password"));
 			userRequestInfo.setUser(user);
+			logger.info("UserUtil createUrl ---->> "+createUrl.toString()+" \n userRequestInfo ---->> "+userRequestInfo);
 			UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(), userRequestInfo,
 					UserResponseInfo.class);
+			logger.info("UserUtil userCreateResponse ---->> "+userCreateResponse);
 			user.setId(userCreateResponse.getUser().get(0).getId());
 		} else {
 			if (userResponse.getUser().size() > 1) {

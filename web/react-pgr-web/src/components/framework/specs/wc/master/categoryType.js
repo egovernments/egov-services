@@ -53,7 +53,7 @@ var dat = {
 		"objectName": "CategoryType",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
+				"label": "wc.search.categorytype.title",
 				"name": "createCategoryType",
 				"fields": [
 						{

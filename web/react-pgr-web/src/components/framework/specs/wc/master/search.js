@@ -1,7 +1,7 @@
 var dat = {
 	"wc.search": {
 		"numCols": 12/2,
-		"url":  "/wcms/masters/documenttype/_create",
+		"url":  "/billing-service/bill/_generate?tenantId=default&consumerCode=consumerCode&businessService=businessService",
 		"tenantIdRequired": true,
 		"objectName": "search",
 		"groups": [
@@ -48,24 +48,7 @@ var dat = {
 							"jsonPath": "search.consumerCode",
 							"label": "Consumer Code",
 							"pattern": "",
-							"type": "dynamictable",
-							"header": [{
-									"label": "wc.table.view"
-							}],
-							"values":[{
-
-		  						"name": "billerService",
-		  						"jsonPath": "search.billerService",
-		  						"label": "Billing service name",
-		  						"pattern": "",
-		  						"type": "singleValueList",
-		  						"isRequired": false,
-		  						"isDisabled": false,
-		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-		  						"requiredErrMsg": "",
-		  						"patternErrMsg": ""
-
-							}],
+							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

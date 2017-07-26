@@ -64,6 +64,7 @@ class Report extends Component {
 
   search = (e) => {
 
+
   }
 
   getVal = (path) => {
@@ -99,16 +100,18 @@ class Report extends Component {
 							}],
 							"values":[{
 
-		  						"name": "billerService",
-		  						"jsonPath": "search.billerService",
-		  						"label": "Billing service name",
-		  						"pattern": "",
-		  						"type": "singleValueList",
-		  						"isRequired": false,
-		  						"isDisabled": false,
-		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-		  						"requiredErrMsg": "",
-		  						"patternErrMsg": ""
+		  						cols:[{
+                    "name": "billerService",
+  		  						"jsonPath": "search.billerService",
+  		  						"label": "Billing service name",
+  		  						"pattern": "",
+  		  						"type": "singleValueList",
+  		  						"isRequired": false,
+  		  						"isDisabled": false,
+  		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+  		  						"requiredErrMsg": "",
+  		  						"patternErrMsg": ""
+                  }]
 
 							}],
 							"isRequired": false,

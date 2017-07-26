@@ -39,7 +39,7 @@ public class InstrumentTypeController {
 	public static final String PLACEHOLDER = "placeholder";
 
 	@Value("${persist.through.kafka}")
-	private static String persistThroughKafka;
+	private String persistThroughKafka;
 
 	@Autowired
 	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;

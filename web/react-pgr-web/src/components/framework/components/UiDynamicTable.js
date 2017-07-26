@@ -1,24 +1,24 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
+import {translate} from '../../common/common';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import UiTextField from './components/UiTextField'
-import UiSelectField from './components/UiSelectField'
-import UiButton from './components/UiButton'
-import UiEmailField from './components/UiEmailField'
-import UiMobileNumber from './components/UiMobileNumber'
-import UiTextArea from './components/UiTextArea'
-import UiMultiSelectField from './components/UiMultiSelectField'
-import UiNumberField from './components/UiNumberField'
-import UiDatePicker from './components/UiDatePicker'
-import UiMultiFileUpload from './components/UiMultiFileUpload'
-import UiSingleFileUpload from './components/UiSingleFileUpload'
-import UiAadharCard from './components/UiAadharCard'
-import UiPanCard from './components/UiPanCard'
-import UiLabel from './components/UiLabel'
+import UiTextField from './UiTextField'
+import UiSelectField from './UiSelectField'
+import UiButton from './UiButton'
+import UiEmailField from './UiEmailField'
+import UiMobileNumber from './UiMobileNumber'
+import UiTextArea from './UiTextArea'
+import UiMultiSelectField from './UiMultiSelectField'
+import UiNumberField from './UiNumberField'
+import UiDatePicker from './UiDatePicker'
+import UiMultiFileUpload from './UiMultiFileUpload'
+import UiSingleFileUpload from './UiSingleFileUpload'
+import UiAadharCard from './UiAadharCard'
+import UiPanCard from './UiPanCard'
+import UiLabel from './UiLabel'
 
-class UiDynamicTable extends Component {
+class default UiDynamicTable extends Component {
 	constructor(props) {
        super(props);
    	}
@@ -107,7 +107,7 @@ class UiDynamicTable extends Component {
    		}
 
    		return (
-   			{renderTable(self.props.item)}
+   			<div>{renderTable(self.props.item)}</div>
    		)
    	}
 }

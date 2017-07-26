@@ -1,23 +1,25 @@
 package org.egov.egf.instrument.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.service.InstrumentAccountCodeService;
+import org.egov.egf.instrument.persistence.queue.repository.InstrumentAccountCodeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,16 +34,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instrumentaccountcodes")
 public class InstrumentAccountCodeController {
 
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
+	@Value("${persist.through.kafka}")
+	private static String persistThroughKafka;
+
 	@Autowired
 	private InstrumentAccountCodeService instrumentAccountCodeService;
+
+	@Autowired
+	private InstrumentAccountCodeQueueRepository instrumentAccountCodeQueueRepository;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public InstrumentAccountCodeResponse create(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
 			BindingResult errors) {
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 
 		ModelMapper model = new ModelMapper();
 		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
@@ -51,7 +60,7 @@ public class InstrumentAccountCodeController {
 		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
 		InstrumentAccountCodeContract contract;
 
-		instrumentAccountCodeRequest.getRequestInfo().setAction("create");
+		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_CREATE);
 
 		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
 				.getInstrumentAccountCodes()) {
@@ -63,17 +72,39 @@ public class InstrumentAccountCodeController {
 			instrumentaccountcodes.add(instrumentAccountCode);
 		}
 
-		instrumentaccountcodes = instrumentAccountCodeService.add(instrumentaccountcodes, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (InstrumentAccountCode f : instrumentaccountcodes) {
-			contract = new InstrumentAccountCodeContract();
-			contract.setCreatedDate(new Date());
-			model.map(f, contract);
-			instrumentAccountCodeContracts.add(contract);
+			instrumentaccountcodes = instrumentAccountCodeService.fetchAndValidate(instrumentaccountcodes, errors,
+					ACTION_CREATE);
+
+			for (InstrumentAccountCode iac : instrumentaccountcodes) {
+				contract = new InstrumentAccountCodeContract();
+				contract.setCreatedDate(new Date());
+				model.map(iac, contract);
+				instrumentAccountCodeContracts.add(contract);
+			}
+
+			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+
+			instrumentAccountCodeQueueRepository.addToQue(instrumentAccountCodeRequest);
+
+		} else {
+
+			instrumentaccountcodes = instrumentAccountCodeService.save(instrumentaccountcodes, errors);
+
+			for (InstrumentAccountCode iac : instrumentaccountcodes) {
+				contract = new InstrumentAccountCodeContract();
+				model.map(iac, contract);
+				instrumentAccountCodeContracts.add(contract);
+			}
+
+			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+
+			instrumentAccountCodeQueueRepository.addToSearchQue(instrumentAccountCodeRequest);
+
 		}
 
-		instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-		instrumentAccountCodeService.addToQue(instrumentAccountCodeRequest);
 		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
 		return instrumentAccountCodeResponse;
@@ -84,10 +115,7 @@ public class InstrumentAccountCodeController {
 	public InstrumentAccountCodeResponse update(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		instrumentAccountCodeRequest.getRequestInfo().setAction("update");
+		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
 		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
@@ -105,17 +133,39 @@ public class InstrumentAccountCodeController {
 			instrumentaccountcodes.add(instrumentAccountCode);
 		}
 
-		instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (InstrumentAccountCode instrumentAccountCodeObj : instrumentaccountcodes) {
-			contract = new InstrumentAccountCodeContract();
-			model.map(instrumentAccountCodeObj, contract);
-			instrumentAccountCodeObj.setLastModifiedDate(new Date());
-			instrumentAccountCodeContracts.add(contract);
+			instrumentaccountcodes = instrumentAccountCodeService.fetchAndValidate(instrumentaccountcodes, errors,
+					ACTION_UPDATE);
+
+			for (InstrumentAccountCode iac : instrumentaccountcodes) {
+				contract = new InstrumentAccountCodeContract();
+				contract.setCreatedDate(new Date());
+				model.map(iac, contract);
+				instrumentAccountCodeContracts.add(contract);
+			}
+
+			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+
+			instrumentAccountCodeQueueRepository.addToQue(instrumentAccountCodeRequest);
+
+		} else {
+
+			instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors);
+
+			for (InstrumentAccountCode iac : instrumentaccountcodes) {
+				contract = new InstrumentAccountCodeContract();
+				model.map(iac, contract);
+				instrumentAccountCodeContracts.add(contract);
+			}
+
+			instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
+
+			instrumentAccountCodeQueueRepository.addToSearchQue(instrumentAccountCodeRequest);
+
 		}
-
-		instrumentAccountCodeRequest.setInstrumentAccountCodes(instrumentAccountCodeContracts);
-		instrumentAccountCodeService.addToQue(instrumentAccountCodeRequest);
+		
 		instrumentAccountCodeResponse.setInstrumentAccountCodes(instrumentAccountCodeContracts);
 
 		return instrumentAccountCodeResponse;
@@ -155,7 +205,8 @@ public class InstrumentAccountCodeController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
+				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
 	}
 
 }

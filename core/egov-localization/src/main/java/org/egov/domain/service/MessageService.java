@@ -33,8 +33,9 @@ import java.util.stream.Stream;
  * 1) In validate cache entry for raw messages with key mr_IN:mh
  * 2) In validate cache entry for computed messages with key mr_IN:mh.panvel and mr_IN:mh
  *
- * c) For a create/update request to locale: <ANY> and tenant: default-
- * 1) In validate all raw and computed messages entries.
+ * c) For a create/update request to locale: <locale> and tenant: default-
+ * 1) In validate all computed messages entries.
+ * 2) In validate cache entry for raw messages with key <locale>:default
  */
 @Service
 public class MessageService {

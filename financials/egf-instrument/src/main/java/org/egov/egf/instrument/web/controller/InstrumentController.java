@@ -12,12 +12,14 @@ import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.service.InstrumentService;
+import org.egov.egf.instrument.persistence.queue.repository.InstrumentQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.instrument.web.requests.InstrumentResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,8 +34,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instruments")
 public class InstrumentController {
 
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
+	@Value("${persist.through.kafka}")
+	private static String persistThroughKafka;
+
 	@Autowired
 	private InstrumentService instrumentService;
+
+	@Autowired
+	private InstrumentQueueRepository instrumentQueueRepository;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -50,7 +62,7 @@ public class InstrumentController {
 		List<InstrumentContract> instrumentContracts = new ArrayList<>();
 		InstrumentContract contract;
 
-		instrumentRequest.getRequestInfo().setAction("create");
+		instrumentRequest.getRequestInfo().setAction(ACTION_CREATE);
 
 		for (InstrumentContract instrumentContract : instrumentRequest.getInstruments()) {
 			instrument = new Instrument();
@@ -61,17 +73,37 @@ public class InstrumentController {
 			instruments.add(instrument);
 		}
 
-		instruments = instrumentService.add(instruments, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (Instrument f : instruments) {
-			contract = new InstrumentContract();
-			contract.setCreatedDate(new Date());
-			model.map(f, contract);
-			instrumentContracts.add(contract);
+			instruments = instrumentService.fetchAndValidate(instruments, errors, ACTION_CREATE);
+
+			for (Instrument i : instruments) {
+				contract = new InstrumentContract();
+				contract.setCreatedDate(new Date());
+				model.map(i, contract);
+				instrumentContracts.add(contract);
+			}
+
+			instrumentRequest.setInstruments(instrumentContracts);
+			instrumentQueueRepository.addToQue(instrumentRequest);
+
+		} else {
+
+			instruments = instrumentService.save(instruments, errors);
+
+			for (Instrument i : instruments) {
+				contract = new InstrumentContract();
+				model.map(i, contract);
+				instrumentContracts.add(contract);
+			}
+
+			instrumentRequest.setInstruments(instrumentContracts);
+
+			instrumentQueueRepository.addToSearchQue(instrumentRequest);
+
 		}
 
-		instrumentRequest.setInstruments(instrumentContracts);
-		instrumentService.addToQue(instrumentRequest);
 		instrumentResponse.setInstruments(instrumentContracts);
 
 		return instrumentResponse;
@@ -84,7 +116,7 @@ public class InstrumentController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		instrumentRequest.getRequestInfo().setAction("update");
+		instrumentRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		InstrumentResponse instrumentResponse = new InstrumentResponse();
 		List<Instrument> instruments = new ArrayList<>();
@@ -101,17 +133,35 @@ public class InstrumentController {
 			instruments.add(instrument);
 		}
 
-		instruments = instrumentService.update(instruments, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (Instrument instrumentObj : instruments) {
-			contract = new InstrumentContract();
-			model.map(instrumentObj, contract);
-			instrumentObj.setLastModifiedDate(new Date());
-			instrumentContracts.add(contract);
+			instruments = instrumentService.fetchAndValidate(instruments, errors, ACTION_UPDATE);
+
+			for (Instrument i : instruments) {
+				contract = new InstrumentContract();
+				model.map(i, contract);
+				instrumentContracts.add(contract);
+			}
+
+			instrumentRequest.setInstruments(instrumentContracts);
+			instrumentQueueRepository.addToQue(instrumentRequest);
+
+		} else {
+
+			instruments = instrumentService.update(instruments, errors);
+
+			for (Instrument i : instruments) {
+				contract = new InstrumentContract();
+				model.map(i, contract);
+				instrumentContracts.add(contract);
+			}
+
+			instrumentRequest.setInstruments(instrumentContracts);
+
+			instrumentQueueRepository.addToSearchQue(instrumentRequest);
+
 		}
-
-		instrumentRequest.setInstruments(instrumentContracts);
-		instrumentService.addToQue(instrumentRequest);
 		instrumentResponse.setInstruments(instrumentContracts);
 
 		return instrumentResponse;
@@ -150,7 +200,7 @@ public class InstrumentController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
 	}
 
 }

@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.service.InstrumentTypeService;
+import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentTypeResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +33,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/instrumenttypes")
 public class InstrumentTypeController {
+
+	public static final String ACTION_CREATE = "create";
+	public static final String ACTION_UPDATE = "update";
+	public static final String PLACEHOLDER = "placeholder";
+
+	@Value("${persist.through.kafka}")
+	private static String persistThroughKafka;
+
+	@Autowired
+	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
 
 	@Autowired
 	private InstrumentTypeService instrumentTypeService;
@@ -51,7 +63,7 @@ public class InstrumentTypeController {
 		List<InstrumentTypeContract> instrumentTypeContracts = new ArrayList<>();
 		InstrumentTypeContract contract;
 
-		instrumentTypeRequest.getRequestInfo().setAction("create");
+		instrumentTypeRequest.getRequestInfo().setAction(ACTION_CREATE);
 
 		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeRequest.getInstrumentTypes()) {
 			instrumentType = new InstrumentType();
@@ -62,17 +74,37 @@ public class InstrumentTypeController {
 			instrumenttypes.add(instrumentType);
 		}
 
-		instrumenttypes = instrumentTypeService.add(instrumenttypes, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (InstrumentType f : instrumenttypes) {
-			contract = new InstrumentTypeContract();
-			contract.setCreatedDate(new Date());
-			model.map(f, contract);
-			instrumentTypeContracts.add(contract);
+			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_CREATE);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = new InstrumentTypeContract();
+				contract.setCreatedDate(new Date());
+				model.map(it, contract);
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToQue(instrumentTypeRequest);
+
+		} else {
+
+			instrumenttypes = instrumentTypeService.save(instrumenttypes, errors);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = new InstrumentTypeContract();
+				contract.setCreatedDate(new Date());
+				model.map(it, contract);
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToSearchQue(instrumentTypeRequest);
+
 		}
 
-		instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
-		instrumentTypeService.addToQue(instrumentTypeRequest);
 		instrumentTypeResponse.setInstrumentTypes(instrumentTypeContracts);
 
 		return instrumentTypeResponse;
@@ -86,7 +118,7 @@ public class InstrumentTypeController {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		instrumentTypeRequest.getRequestInfo().setAction("update");
+		instrumentTypeRequest.getRequestInfo().setAction(ACTION_UPDATE);
 		ModelMapper model = new ModelMapper();
 		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();
 		List<InstrumentType> instrumenttypes = new ArrayList<>();
@@ -103,17 +135,35 @@ public class InstrumentTypeController {
 			instrumenttypes.add(instrumentType);
 		}
 
-		instrumenttypes = instrumentTypeService.update(instrumenttypes, errors);
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		for (InstrumentType instrumentTypeObj : instrumenttypes) {
-			contract = new InstrumentTypeContract();
-			model.map(instrumentTypeObj, contract);
-			instrumentTypeObj.setLastModifiedDate(new Date());
-			instrumentTypeContracts.add(contract);
+			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_UPDATE);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = new InstrumentTypeContract();
+				model.map(it, contract);
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToQue(instrumentTypeRequest);
+
+		} else {
+
+			instrumenttypes = instrumentTypeService.update(instrumenttypes, errors);
+
+			for (InstrumentType it : instrumenttypes) {
+				contract = new InstrumentTypeContract();
+				model.map(it, contract);
+				instrumentTypeContracts.add(contract);
+			}
+
+			instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
+			instrumentTypeQueueRepository.addToSearchQue(instrumentTypeRequest);
+
 		}
 
-		instrumentTypeRequest.setInstrumentTypes(instrumentTypeContracts);
-		instrumentTypeService.addToQue(instrumentTypeRequest);
 		instrumentTypeResponse.setInstrumentTypes(instrumentTypeContracts);
 
 		return instrumentTypeResponse;
@@ -152,7 +202,7 @@ public class InstrumentTypeController {
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+				.resMsgId(requestInfo.getMsgId()).resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
 	}
 
 }

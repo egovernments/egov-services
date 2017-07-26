@@ -241,7 +241,7 @@ public class ReceiptService {
 		for (BillDetail billdetails : receiptInfo.getBill().get(0)
 				.getBillDetails()) {
 			billdetails.setCollectionType(CollectionType.COUNTER);
-			billdetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
+			billdetails.setStatus((ReceiptStatus.TOBESUBMITTED).toString());
 			billdetails.setReceiptDate(new Date().getTime());
 			final Map<String, Object> parametersMap = new HashMap<>();
 			BusinessDetailsResponse businessDetailsRes = getBusinessDetails(

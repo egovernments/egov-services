@@ -181,6 +181,8 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
           <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
+          <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
+
     </Switch>
   </main>
 )}

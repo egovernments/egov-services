@@ -87,6 +87,6 @@ public class Owner {
 		ids.add(this.id);
 		return UserSearchRequest.builder().aadhaarNumber(this.aadhaarNumber).emailId(this.emailId)
 				.mobileNumber(this.mobileNumber).name(this.name).tenantId(this.tenantId).id(ids)
-				.userName(this.userName).build();
+				.userName(this.userName).pageSize(500).build();
 	}
 }

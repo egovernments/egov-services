@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum BillingType {
-    METERED("METERED"), NONMETERED("NON-METERED");
+    METERED("METERED"), NONMETERED("NONMETERED");
 
     private final String value;
 

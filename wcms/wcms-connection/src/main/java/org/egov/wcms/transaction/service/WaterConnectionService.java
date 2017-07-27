@@ -40,16 +40,22 @@
 package org.egov.wcms.transaction.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.producers.WaterTransactionProducer;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
+import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.ProcessInstance;
+import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
+import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.Task;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -245,5 +251,59 @@ public class WaterConnectionService {
             Long propId = Long.parseLong(waterConnectionGetReq.getPropertyIdentifier());
             propertyIdentifierList.add(propId);
         }
+    }
+    
+    @SuppressWarnings("static-access")
+	public EstimationNotice getEstimationNotice(WaterConnectionGetReq waterConnectionGetReq) { 
+    	List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
+    	EstimationNotice estimationNotice = null; 
+    	Connection connection = null; 
+    	for(int i=0;i<connectionList.size();i++) {
+    		connection= connectionList.get(i);
+    		estimationNotice = new EstimationNotice().builder()
+    				.applicantName(connection.getProperty().getNameOfApplicant())
+    				.applicationDate(connection.getCreatedDate())
+    				.applicationNumber(connection.getAcknowledgementNumber())
+    				.dateOfLetter(new Date().toString())
+    				.letterIntimationSubject("LetterIntimationSubject")
+    				.letterNumber("LetterNumber")
+    				.letterTo(connection.getProperty().getNameOfApplicant())
+    				.chargeDescription1("100.0")
+    				.chargeDescription2(Double.toString(connection.getDonationCharge()))
+    				.serviceName("Water Department")
+    				.slaDays(30L)
+    				.ulbName(connection.getTenantId()).build();
+    	}
+    	Demand demand = restConnectionService.getDemandEstimation(connection); 
+		if (null != demand) {
+			logger.info("Demand Details as received from Billing Service : " + demand.toString());
+			if (null != demand.getDemandDetails()) {
+				estimationNotice
+						.setChargeDescription1(demand.getDemandDetails().get(0).getCollectionAmount().toString());
+			}
+		}
+		PropertyResponse propertyResponse = restConnectionService.getPropertyDetailsByUpicNo(getWaterConnectionRequest(connection));
+		if(null != propertyResponse){
+			logger.info("Property Response as received from Property Service : " + propertyResponse.toString()); 
+			if(null != propertyResponse.getProperties() && propertyResponse.getProperties().size() > 0) {
+				List<PropertyOwnerInfo> ownersList = propertyResponse.getProperties().get(0).getOwners();
+				if(null != ownersList && ownersList.size() > 0) { 
+					estimationNotice.setApplicantName(ownersList.get(0).getName());
+					estimationNotice.setLetterTo(ownersList.get(0).getName());
+				}
+			}
+		}
+		estimationNotice.setChargeDescription1(WcmsConnectionConstants.getChargeReasonToDisplay().get(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON).concat(" : " + estimationNotice.getChargeDescription1()));
+		estimationNotice.setChargeDescription2(WcmsConnectionConstants.getChargeReasonToDisplay().get(WcmsConnectionConstants.DONATIONCHARGEANDREASON).concat(" : " + estimationNotice.getChargeDescription2()));
+    	boolean insertStatus = waterConnectionRepository.persistEstimationNoticeLog(estimationNotice, connection.getId(), connection.getTenantId());
+    	if(insertStatus) { 
+    		return estimationNotice;
+    	}
+    	return new EstimationNotice(); 
+    }
+    
+    private WaterConnectionReq getWaterConnectionRequest(Connection connection) { 
+    	RequestInfo rInfo = new RequestInfo();
+    	return new WaterConnectionReq(rInfo, connection);
     }
 }

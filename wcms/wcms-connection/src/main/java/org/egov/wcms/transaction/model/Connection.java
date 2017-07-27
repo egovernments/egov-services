@@ -179,5 +179,7 @@ public class Connection {
     private String tenantId;
 
     private WorkflowDetails workflowDetails;
+    
+    private String createdDate; 
 
 }

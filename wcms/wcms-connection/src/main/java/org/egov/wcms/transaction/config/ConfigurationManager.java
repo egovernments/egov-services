@@ -158,6 +158,9 @@ public class ConfigurationManager {
     @Value("${egov.services.demandbill_service.createdemand}")
     private String createbillingDemandServiceTopic;
     
+    @Value("${egov.services.demandbill_servivc.searchdemand}")
+    private String searchbillingDemandServiceTopic;
+    
     @Value("${egov.services.demandbill_service.taxperiod}")
     private String taxperidforfinancialYearTopic;
     
@@ -174,4 +177,6 @@ public class ConfigurationManager {
     @Value("${egov.services.demandbill_service.taxheadperiod}")
     private String taxHeadMasterNameTopic;
 
+    @Value("${estimation.notice.placeholders}")
+    private String estimationNoticePlaceHolders;
 }

@@ -41,18 +41,30 @@
 
 package org.egov.pgr.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
-	
+    @Value("${egov.services.seva.masters.search.pagesize.default}")
+	public  String SEVA_MASTERS_SEARCH_PAGESIZE_DEFAULT ;
     
-    @Value("${kafka.topics.servicegroup.create.name}")
+    @Value("{egov.services.seva.masters.search.pageno.max=50}")
+	public String SEVA_MASTERS_SEARCH_PAGENO_MAX ;
+    
+    @Value("{egov.services.seva.masters.search.pagesize.max}")
+    public  String SEVA_MASTERS_SEARCH_PAGESIZE_MAX;
+	
+	@Autowired
+	private Environment environment;
+    
+	@Value("${kafka.topics.servicegroup.create.name}")
     private String createServiceGroupTopicName;
     
     @Value("${kafka.topics.servicegroup.create.key}")
@@ -258,6 +270,18 @@ public class ApplicationProperties {
 
 	public String getUpdateEscalationHierarchyTopicKey() {
 		return updateEscalationHierarchyKey;
+	}
+	
+	public String sevaSearchPageSizeDefault() {
+		return SEVA_MASTERS_SEARCH_PAGESIZE_DEFAULT;
+	}
+
+	public String sevaSearchPageNumberMax() {
+		return SEVA_MASTERS_SEARCH_PAGENO_MAX;
+	}
+
+	public String sevaSearchPageSizeMax() {
+		return SEVA_MASTERS_SEARCH_PAGESIZE_MAX;
 	}
 	
 }

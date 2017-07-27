@@ -1,0 +1,941 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: eGov TL Masters 
+  description: eGov TL Masters manages all the masters belongs to Trade License.
+  contact:
+    name:  Phani Kiran Gutha ( Phani )
+    email: phani.kiran@walkingtree.tech
+
+schemes:
+  - https
+basePath: '/v1'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.tl-masters'
+
+paths:
+    /category/_search:
+      post:
+        summary: Get the list of catogery(s) or subcatogey(s) 
+        description: |
+          Search and get catogery(s) or subcatogey(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed catogery(s) or subcatogey(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of Category as defined in CategoryResponse model.
+          
+          By default results will be sorted by Category/SubCategory Name
+        tags: 
+          - Category
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids of Category/SubCategory to get the Category/SubCategory, If array contains Ids of Category and SubCategoryId data will not be returned, As API will consider either one of them based on the Type parameter
+          - name: name
+            type: string
+            in: query
+            description: name of the Category/SubCategory
+            maxLength: 256
+          - name: code
+            type: string
+            in: query
+            description: code of the Category/SubCategory
+            maxLength: 50
+          - name: type
+            type: string
+            in: query
+            description: set value "CATEGORY" in cases when Only Category(s) are needed, "SUBCATEGORY" will be set in cases when Only SubCategory(s) are needed.
+            enum:
+            - CATEGORY
+            - SUBCATEGORY
+            required: true
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: Category/SubCategory (s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/CategoryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /category/_create:
+      post:
+        summary: Create new Category/SubCategory(s)
+        description: |
+          To create new Category/SubCategory(s) in the system. API supports bulk creation with max limit as defined in the CategoryRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Category/SubCategory, please pass array with one Category object. 
+        
+          Category can be created when parentId in the request is "null".
+          
+          SubCategory can be created when parentId is not null and equal to one of the existing Category. Where parentId refers to the existing category Id. 
+          
+          Only for SubCategory request i.e request with parentId as not null and equal to one of the existing Category, Will consider CategoryDetails from the request to create CategoryDetails.
+          
+          CategoryDetails with combination of categoryId, feeType, rateType cannot be duplicated.
+          
+          Category/SubCategory with combination of tenantId,Code duplication will not be allowed
+        tags: 
+          - Category
+        parameters:
+          - name: catogeries
+            in: body
+            required: true
+            description: Category Request with Category(s) to be created and RequestInfo
+            schema:
+              $ref: '#/definitions/CategoryRequest'
+        responses:
+          201:
+            description: UOMResponse with ResonseInfo and Array of Category/SubCategory(s) created Successfully
+            schema:
+              $ref: '#/definitions/CategoryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /category/_update:
+      post:
+        summary: Update Category/SubCategory(s)
+        description: |
+          This API will update all Category/SubCategory related details based on their type.  API supports bulk update with max limit as defined in the CategoryRequest. Following rules apply -
+            1. CategoryDetails will be considered to update only if parentId exists and valid.
+            2. Category/SubCategory with combination of tenantId,Code duplication will not be allowed
+            3. CategoryDetails with combination of categoryId, feeType, rateType cannot be duplicated.
+        tags: 
+          - Category
+        parameters:
+          - name: categories
+            in: body
+            required: true
+            description: CategoryCategory Request with Category(s) to be updated and RequestInfo
+            schema:
+              $ref: '#/definitions/CategoryRequest'
+        responses:
+          200:
+            description: Category/SubCatogery(s) updated Successfully
+            schema:
+              $ref: '#/definitions/CategoryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /uom/_search:
+      post:
+        summary: Get the list of UOM(s)
+        description: |
+          Search and get Unit of Measures  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Unit of Measures will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of UOM as defined in UOMResponse model.
+          
+          By default results will be sorted by UOM Name
+        tags: 
+          - UOM
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids of Unit of Measures to get the Unit of Measures
+          - name: name
+            type: string
+            in: query
+            description: name of the Unit of Measure
+            maxLength: 256
+          - name: code
+            type: string
+            in: query
+            description: unique code of the Unit of Measure
+            maxLength: 50
+          - name: active
+            type: boolean
+            in: query
+            description: True will be set in cases where only active UOM are needed and False will be set when inactive UOM are needed and no value will be set when all UOM are needed.
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: UOM(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/UOMResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /uom/_create:
+      post:
+        summary: Create new Unit of Measure(s)
+        description: |
+          To create new Unit Of Measure(s) in the system. API supports bulk creation with max limit as defined in the UOMRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Unit of Measure, please pass array with one UOM object. 
+          
+          UOM with combination of tenantId,Code duplication will not be allowed
+        tags: 
+          - UOM
+        parameters:
+          - name: uoms
+            in: body
+            description: UOMRequest with RequestInfo and UOM(s) to be created
+            schema:
+              $ref: '#/definitions/UOMRequest'
+        responses:
+          201:
+            description: UOMResponse with ResonseInfo and Array of UOM(s) created Successfully
+            schema:
+              $ref: '#/definitions/UOMResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /uom/_update:
+      post:
+        summary: Update any of the UOM
+        description: |
+          This API will update all UOM related details based on their Id.  API supports bulk update with max limit as defined in the UOMRequest. Following rules apply -
+            1. UOM with combination of tenantId,Code duplication will not be allowed.
+        tags: 
+          - UOM
+        parameters:
+          - name: uoms
+            in: body
+            description: UOMRequest with RequestInfo and UOM(s) to be updated
+            schema:
+              $ref: '#/definitions/UOMRequest'
+        responses:
+          200:
+            description: Unit of Measure(s) updated Successfully
+            schema:
+              $ref: '#/definitions/UOMResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /documenttype/_search:
+      post:
+        summary: Get the list of document types
+        description: |
+          Search and get DocumentType(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed DcoumentType(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of DocumentType(s) as defined in DocumentTypeResponse model.
+          
+          By default results will be sorted by DocumentType Name
+        tags: 
+          - DocumentType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: name
+            type: string
+            in: query
+            description: name of the DocumentType
+            maxLength: 128
+          - name: enabled
+            type: boolean
+            in: query
+            description: True will be set in cases where only active DocumentTypes are needed and False will be set when inactive DocumentTypes are needed and no value will be set when all DocumentTypes are needed.
+          - name: applicationType
+            type: string
+            in: query
+            description: set "NEW"  in cases where only NEW applicationType DocumentTypes are needed and "RENEW" will be set when RENEW applicationType DocumentTypes  are needed and no value will be set when all DocumentTypes are needed.
+            enum:
+            - NEW
+            - RENEWAL
+            maxLength: 7
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: DocumentType(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /documenttype/_create:
+      post:
+        summary: Create new DocumentType(s)
+        description: |
+          To create new DocumentTypes(s) in the system. API supports bulk creation with max limit as defined in the DocumentTypeRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Document Type, please pass array with one DocumentType object. 
+          
+          DocumentType with combination of tenantId,ApplicationType and Name duplication will not be allowed
+        tags: 
+          - DocumentType
+        parameters:
+          - name: documentTypeRequest
+            in: body
+            description: Document Type Request with DocumentType(s) to be created with RequestInfo
+            schema:
+              $ref: '#/definitions/DocumentTypeRequest'
+        responses:
+          201:
+            description: DocumentTypeResponse with ResponseInfo and Array of DocumentType(s) created Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /documenttype/_update:
+      post:
+        summary: Update any of the documentTypes
+        description: |
+          This API will update all DocumentType related details based on their Id.  API supports bulk update with max limit as defined in the DocumentTypeRequest. Following rules apply -
+            1. Documenttype with combination of tenantId,ApplicationType and Name duplication will not be allowed.
+        tags: 
+          - DocumentType
+        parameters:
+          - name: DocumentTypeRequest
+            in: body
+            description: DocumentType Request with RequestInfo and DocumentType(s) to be updated.
+            schema:
+              $ref: '#/definitions/DocumentTypeRequest'
+        responses:
+          200:
+            description: DocumentType(s) updated Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /penalityrate/_search:
+      post:
+        summary: Get the list of PenalityRate(s)
+        description: |
+          Search and get PenalityRate(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed PenalityRate(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of PenalityRate(s) as defined in penalityResponse model.
+          
+          By default results will be sorted fromrange
+        tags: 
+          - PenalityRate
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: applicationType
+            type: integer
+            in: query
+            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when all PenalityRates are needed.
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: PenalityRate(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/PenalityRateResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /penalityrate/_create:
+      post:
+        summary: Create new PenalityRate(s)
+        description: |
+          To create new PenalityRate(s) in the system. API supports bulk creation with max limit as defined in the PenalityRateRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Penaliry Rate, please pass array with one PenalityRate object. 
+          
+          All PenalityRates for a given tenantId and ApplicationType should be in proper range sequence including existing data in the system and new ones that will getting created. If the combination of existing penality rates and new one trying create does not follow the sequence of ranges then creation of penality rates will be failed.
+        tags: 
+          - PenalityRate
+        parameters:
+          - name: penalityRateRequest
+            in: body
+            description: PenalityRateRequest with PenalityRate(s) to be created with RequestInfo
+            schema:
+              $ref: '#/definitions/PenalityRateRequest'
+        responses:
+          201:
+            description: PenalityRateResponse with ResponseInfo and Array of  PenalityRate(s) created Successfully
+            schema:
+              $ref: '#/definitions/PenalityRateResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /penalityrate/_update:
+      post:
+        summary: Update any of the PenalityRate
+        description: |
+          This API will update all PenalityRate related details based on their Id.  API supports bulk update with max limit as defined in the PenalityRequest. Following rules apply -
+            1. All PenalityRates for a given tenantId and ApplicationType should be in proper range sequence including existing data. If sequence is not valid then updation of penality rates will be failed.
+        tags: 
+          - PenalityRate
+        parameters:
+          - name: penalityRateRequest
+            in: body
+            description: PenalityRateRequest with RequestInfo and PenalityRate(s) to be updated.
+            schema:
+              $ref: '#/definitions/PenalityRateRequest'
+        responses:
+          200:
+            description: PenalityRate(s) updated Successfully
+            schema:
+              $ref: '#/definitions/PenalityRateResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
+    /feematrix/_search:
+      post:
+        summary: Get the list of feematrix(s)
+        description: |
+          Search and get FeeMatrix(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed FeeMatrix(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of FeeMatrix(s) as defined in FeeMatrixResponse model.
+          
+          By default results will be sorted effectivefrom
+        tags: 
+          - FeeMatrix
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: categoryId
+            type: integer
+            in: query
+            description: Unique Id of the category
+            maxLength: 128
+            minLength: 4
+          - name: subcategoryId
+            type: integer
+            in: query
+            description: Unique Id of the subcategory
+            maxLength: 128
+            minLength: 4 
+          - name: financialYear
+            type: integer
+            in: query
+            description: UniqueId of the financial Year
+          - name: applicationType
+            type: string
+            in: query
+            description: set "NEW"  in cases where only NEW applicationType FeMatrix are needed and "RENEW" will be set when RENEW applicationType FeeMatrix  are needed and no value will be set when all FeeMatrix are needed.
+            enum:
+            - NEW
+            - RENEWAL
+            maxLength: 7
+          - name: businessNature
+            type: string
+            in: query
+            description: set "PERMENANT"  in cases where only PERMENANT BusinessNature FeeMatrix are needed and "TEMPORARY" will be set when TEMPORARY businessNature FeeMatrix  are needed and no value will be set when all FeeMatrix are needed.
+            enum:
+            - PERMENANT
+            - TEMPORARY
+            maxLength: 9
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: FeeMatrix(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/FeeMatrixResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /feematrix/_create:
+      post:
+        summary: Create new FeeMatrix(s)
+        description: |
+          To create new FeeMatrix(s) in the system. API supports bulk creation with max limit as defined in the FeeMatrixRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one FeeMatrix, please pass array with one FeeMatrix object. 
+          
+           FeeMatrix for a given tenantId, ApplicationType,categoryId, subCategoryId,financialyear there will be only one FeeMatrix in the System. Trying to create new FeeMatrix with the same combination creation of FeeMatrix Fails.
+           
+           All FeeMatrixDetails for a given FeeMatrix should be in proper range sequence including existing data in the system and new ones that will getting created. If the combination of existing FeeMatrixDetails  and new one trying create does not follow the sequence of ranges then creation of FeeMatrix  will be failed.
+           
+        tags: 
+          - FeeMatrix
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: feeMatrixRequest
+            in: body
+            description: FeeMatrix Request with FeeMatix(s) to be created with RequestInfo
+            schema:
+              $ref: '#/definitions/FeeMatrixRequest'
+        responses:
+          201:
+            description: FeeMatrix Response with ReponseInfo and Array of FeeMatrix(s) created Successfully
+            schema:
+              $ref: '#/definitions/FeeMatrixResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /feematrix/_update:
+      post:
+        summary: Update any of the FeeMatrix
+        description: |
+          This API will update all FeeMtrix related details based on their Id.  API supports bulk update with max limit as defined in the FeeMatrixRequest. Following rules apply -
+            1.  FeeMatrix for a given tenantId, ApplicationType, categoryId, subCategoryId and Financialyear there should be only one entry in the system, If update of FeeMatrix causing duplication of above combination API fails to Update the FeeMatrix
+            2. All FeeMatrixDetails for a given FeeMatrix should be in proper range sequence including existing data in the system and updates  received from request. If the combination of existing FeeMatrixDetails  and updates received from the request does not follow the sequence of ranges then updation of FeeMatrix  will be failed.
+        tags: 
+          - FeeMatrix
+        parameters:
+          - name: feeMatrixRequest
+            in: body
+            description: FeeMatrix Request with RequestInfo and Array FeeMatrix(s) to be updated
+            schema:
+              $ref: '#/definitions/FeeMatrixRequest'
+        responses:
+          200:
+            description: FeeMatrix(s) updated Successfully
+            schema:
+              $ref: '#/definitions/FeeMatrixResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    
+definitions:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Category/SubCategory
+        tenantId:
+          type: string
+          description: tenant id of the Category/SubCategory
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the Category/SubCategory
+          maxLength: 256
+          minLength: 4
+        code:
+          type: string
+          description: Unique code of the Category/SubCategory
+          maxLength: 50
+          minLength: 4
+        parentId:
+         type: integer
+         format: int64
+         description: Unique Id of the parent Category for subCategory, null for Category.
+        businessNature:
+          $ref: '#/definitions/BusinessNature' 
+        details:
+          description: Details of SubCategory, will be considered by the API only when parentId is not null and valid.
+          type: array
+          items: 
+            $ref: '#/definitions/CategoryDetail'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - name
+      - code
+      - businessNature
+    FeeType:
+      type: string
+      enum:
+        - LICENSE
+        - MOTOR
+        - WORKFORCE
+    RateType:
+      type: string
+      enum:
+        - FLAT_BY_RANGE
+        - FLAT_BY_PERCENTAGE
+        - UNIT_BY_RANGE
+    ApplicationType : 
+      type: string
+      enum:
+        - NEW
+        - RENEW
+    BusinessNature: 
+      type: string
+      enum:
+        - PERMENANT
+        - TEMPORARY
+    CategoryDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the SubCategoryDetail
+        categoryId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the SubCategory
+        feeType:
+          $ref: '#/definitions/FeeType'
+        rateType:
+          $ref: '#/definitions/RateType'
+        uomId:
+          type: integer
+          format: int64
+          description: Unique Identfier of the UOM
+      required:
+      - categoryId
+      - feeType
+      - rateType
+      - uomId
+    CategoryRequest:
+      description: Contract class to receive request. Array of Category items are used in case of create and update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        categories:
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/Category'
+      required:
+        - requestInfo
+        - categories
+    CategoryResponse:
+      description: Contract class to send response. Array of Catogery items are used in case of search results , response for create and response for udpate
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        categories:
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Category'
+      required:
+        - responseInfo
+        - categories
+    UOM:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the UOM
+        tenantId:
+          type: string
+          description: tenant id of the UOM
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the UOM
+          maxLength: 256
+          minLength: 4
+        code:
+          type: string
+          description: code of the UOM
+          maxLength: 50
+          minLength: 4
+        active:
+          type: boolean
+          description: True if UOM is active and False if UOM is inactive
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - name
+      - code
+    UOMRequest:
+      description: Contract class to receive request. Array of UOM items are used in case of create, whereas single UOM item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        uoms:
+          description: Used for search result and create only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/UOM'
+      required: 
+      - requestInfo
+      - uoms
+    UOMResponse:
+      description: Contract class to send response. Array of UOM items are used in case of search results or response for create, whereas single UOM item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        uoms:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/UOM' 
+      required: 
+      - responseInfo
+      - uoms
+    DocumentType: 
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the DocumentType
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
+        name:
+          type: string
+          description: name of the DocumentType
+          maxLength: 256
+          minLength: 4
+        mandatory:
+          type: boolean
+          description: true for required document type
+          default: true
+        enabled:
+          type: boolean
+          description: true for enabled document type
+          default: true
+        applicationType:
+          $ref: '#/definitions/ApplicationType' 
+        auditDetails: 
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - name
+      - applicationType
+    DocumentTypeRequest:
+      description: Contract class to receive request. Array of DocumentType items are used in case of create, whereas single DocumentType item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        documentTypes:
+          description: Used for search result and create only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/DocumentType'
+    DocumentTypeResponse:
+      description: Contract class to send response. Array of DocumentType items are used in case of search results or response for create, whereas single DocumentType item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        documentTypes:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/DocumentType'
+    PenalityRate:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the PenalityRate
+        tenantId:
+          type: string
+          description: tenant id of the PenalityRate
+          maxLength: 128
+          minLength: 4
+        applicationType:
+          type: string
+          description: application_type of the DocumentType
+          maxLength: 7
+          minLength: 3
+          enum:
+          - NEW
+          - RENEWAL
+        fromRange:
+          type: integer
+          format: int64
+          description: from in the range of the days for penality calculation
+        toRange:
+          type: integer
+          format: int64
+          description: to in the range of the days for penality calculation
+        rate:
+          type: integer
+          format: int64
+          description: rate to be applied when delay falls in the given range of days
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - applicationType
+      - fromRange
+      - toRange
+      - rate
+    PenalityRateRequest:
+      description: Contract class to receive request. Array of PenalityRate items are used in case of create, whereas single PenalityRate item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        penalityrates:
+          description: Used for search result and create only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/PenalityRate'
+    PenalityRateResponse:
+      description: Contract class to send response. Array of PenalityRate items are used in case of search results or response for create, whereas single PenalityRate item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        penalityrates:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/PenalityRate'
+    FeeMatrix:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64 
+          description: Unique Identifier of the FeeMatrix
+        tenantId:
+          type: string
+          description: tenant id of the FeeMatrix
+          maxLength: 128
+          minLength: 4
+        applicationType:
+          $ref: '#/definitions/ApplicationType'
+        categoryId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Category
+        businessNature:
+          $ref: '#/definitions/BusinessNature'
+        subCategoryId:
+          type: integer
+          format: int64
+          description: Unique Identifier of SubCategory
+        financialYear:
+          type: string
+          description: Financial year in YY-YY format
+        effectiveFrom:
+          type: string
+          format: date
+        effectiveTo:
+          type: string
+          format: date
+        feeMatixDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/FeeMatrixDetail'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - categoryId
+      - businessNature
+      - subCategoryId
+      - financialYear
+      - applicationType
+    FeeMatrixRequest:
+      description: Contract class to receive request. Array of FeeMatrix items are used in case of create, whereas single FeeMatrix item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        feeMatrixs:
+          description: Used for search result and create only
+          type: array
+          minimum: 1
+          maximum: 100
+          items:
+            $ref: '#/definitions/FeeMatrix'
+    FeeMatrixResponse:
+      description: Contract class to send response. Array of FeeMatrix items are used in case of search results or response for create, whereas single FeeMatrix item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        feeMatrixs:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/FeeMatrix'
+    FeeMatrixDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the FeeMatrix Detail
+        feeMatrixId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the FeeMatrix
+        uomFrom:
+          type: integer
+          format: int64
+          description: UOM start value
+        uomTo:
+          type: integer
+          format: int64
+          description: UOM end value
+        amount:
+          type: integer
+          format: int64
+          description: amount applied for UOM range uomfrom to uomto
+      required:
+      - feeMatrixId
+      - uomFrom
+      - uomTo
+      - amount
+     
+    
+parameters:
+    pageSize:
+      name: pageSize
+      type: integer
+      format: int32
+      in: query
+      description: Number of records in a per page in  the Search Results, Default value is 20
+    
+    offSet:
+      name: offSet
+      type: integer
+      format: int32
+      in: query
+      description: page number of the Search Results, Default value is 0

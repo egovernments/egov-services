@@ -2,7 +2,7 @@ insert into service (id, code, name, enabled, displayname, ordernumber, parentmo
 
 insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'NEW_PROPERTY', 'New Property', true, 'New Property', 2, (select id from service where name ='Property Tax' and code='PTIS' and tenantId='default'), 'default');
 
-insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'PTIS_MASTERS', 'Masters', true, 'Masters', 3, (select id from service where name ='Property Tax' and code='PTIS' and tenantId='default'), 'default');
+insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'PTIS_MASTERS', 'PTIS Masters', true, 'Masters', 3, (select id from service where name ='Property Tax' and code='PTIS' and tenantId='default'), 'default');
 
 insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'CALC_MASTERS', 'Calculation Masters', true, 'Tax Masters', 4, (select id from service where name ='Property Tax' and code='PTIS' and tenantId='default'), 'default');
 

@@ -139,16 +139,6 @@ class ConstructionTypes extends Component {
 
   render() {
 
-    const renderOption = function(list,listName="") {
-        if(list)
-        {
-            return list.map((item)=>
-            {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
-            })
-        }
-    }
-
     let {
       owners,
       constructionTypes,
@@ -178,14 +168,17 @@ class ConstructionTypes extends Component {
 							<Grid fluid>
 								<Row style={{paddingTop:8, paddingBottom:4}}>
 									<Col xs={12} md={6}>
-									  <Row>
-										<Col xs={12} md={6}>
-											Photo of Assessment
-										</Col>
-										<Col xs={12} md={6}>
-										  <input type="file" accept="image/*"  onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
-										</Col>
-									  </Row>
+									  
+									  {this.state.documentType.length !=0 && this.state.documentType.map((item, index)=>(
+										  <Row>
+											<Col xs={12} md={6}>
+												{item.code}
+											</Col>
+											<Col xs={12} md={6}>
+											  <input type="file" accept="image/*"  onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)} />
+											</Col>
+										  </Row>
+									  ))}
 									</Col>
 									<Col xs={12} md={9} style={{display: 'flex',flexWrap: 'wrap'}}>
 									{this.state.files.map((e,i)=> (<Chip key={i} style={styles.chip}>

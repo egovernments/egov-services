@@ -120,19 +120,19 @@ class PropertyTaxSearch extends Component {
 	  
 	var query = {
 		  upicNumber : propertyTaxSearch.assessmentNo || '',
-		  oldUpicNo:propertyTaxSearch.oldAssessmentNo || '',
+		  oldUpicNo: propertyTaxSearch.oldAssessmentNo || '',
 		  mobileNumber: propertyTaxSearch.mobileNo || '',
-		  aadhaarNumber:propertyTaxSearch.aadharNo || '',
+		  aadhaarNumber: propertyTaxSearch.aadharNo || '',
 		  houseNoBldgApt: propertyTaxSearch.doorNo || '',
-		  revenueZone:propertyTaxSearch.zone || '',
-		  revenueWard:propertyTaxSearch.ward || '',
-		  locality:propertyTaxSearch.location || '',
+		  revenueZone: propertyTaxSearch.zone || '',
+		  revenueWard: propertyTaxSearch.ward || '',
+		  locality: propertyTaxSearch.location || '',
 		  ownerName: propertyTaxSearch.ownerName || '',
-		  demandFrom:propertyTaxSearch.demandFrom || '',
-		  demandTo:propertyTaxSearch.demandTo || ''
+		  demandFrom: propertyTaxSearch.demandFrom || '',
+		  demandTo: propertyTaxSearch.demandTo || ''
 	  }
 	  
-      Api.commonApiPost('pt-property/properties/_search', query,{}).then((res)=>{   
+      Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
 		console.log(res);
 		flag=1;
 		changeButtonText("Search Again");
@@ -201,7 +201,7 @@ class PropertyTaxSearch extends Component {
           <CardHeader title={< strong style = {{color:"#5a3e1b"}} > Result < /strong>}/>
           <CardText>
         <Table id="propertyTaxTable" style={{color:"black",fontWeight: "normal"}} bordered responsive>
-          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+          <thead>
             <tr>
               <th>#</th>
               <th>Assessment Number</th>

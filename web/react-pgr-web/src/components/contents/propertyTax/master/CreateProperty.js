@@ -295,6 +295,36 @@ createPropertyTax = () => {
 		}
 	}
 	
+	var vacantLand = null;
+	
+	if(createProperty.propertyType =='VACANT_LAND') {
+			vacantLand =  {		
+							"surveyNumber": createProperty.survayNumber || null,
+							"pattaNumber": createProperty.pattaNumber || null,
+							"marketValue": createProperty.marketValue || null,
+							"capitalValue": createProperty.capitalValue || null,
+							"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
+							"layoutPermissionNo": createProperty.layoutPermitNumber || null,
+							"layoutPermissionDate":createProperty.layoutPermitDate || null,
+							"resdPlotArea": null,
+							"nonResdPlotArea": null,
+							"auditDetails": {
+								"createdBy": userRequest.userName,
+								"lastModifiedBy":userRequest.userName,
+								"createdTime": date,
+								"lastModifiedTime": date
+							}																					
+						}
+						
+			createProperty.floorsArr = null;
+			createProperty.floors = null;	
+			createProperty.floor = null;	
+	} else {
+		vacantLand = null;
+	}
+	
+
+	
 	var date = new Date().getTime();
 	
 	var currentThis = this;
@@ -367,23 +397,7 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"vacantLand": null ,/*{
-					"surveyNumber": createProperty.survayNumber || ,
-					"pattaNumber": createProperty.pattaNumber || null,
-					"marketValue": createProperty.marketValue || null,
-					"capitalValue": createProperty.capitalValue || null,
-					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
-					"layoutPermissionNo": createProperty.layoutPermitNumber || null,
-					"layoutPermissionDate":createProperty.layoutPermitDate || null,
-					"resdPlotArea": null,
-					"nonResdPlotArea": null,
-					"auditDetails": {
-						"createdBy": userRequest.userName,
-						"lastModifiedBy":userRequest.userName,
-						"createdTime": date,
-						"lastModifiedTime": date
-					}
-				},*/
+				"vacantLand": vacantLand,
 
 				"gisRefNo": null,
 				"isAuthorised": null,

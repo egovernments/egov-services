@@ -271,6 +271,7 @@ handleDepartment = (e) => {
 															addDepandencyFields('vacantLandPlotArea');
 															addDepandencyFields('layoutApprovalAuthority');
 															addDepandencyFields('layoutPermitNumber');
+															addDepandencyFields('layoutPermitDate');
 														} else {
 															removeDepandencyFields('survayNumber');
 															removeDepandencyFields('pattaNumber');
@@ -281,6 +282,8 @@ handleDepartment = (e) => {
 															removeDepandencyFields('vacantLandPlotArea');
 															removeDepandencyFields('layoutApprovalAuthority');
 															removeDepandencyFields('layoutPermitNumber');
+															removeDepandencyFields('layoutPermitDate');
+															
 														}
                                                       var e = {
                                                         target: {

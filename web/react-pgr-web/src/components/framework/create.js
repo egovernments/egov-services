@@ -19,7 +19,7 @@ try {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
   }
 } catch(e) {
-  
+
 }
 let reqRequired = [];
 class Report extends Component {
@@ -158,36 +158,32 @@ class Report extends Component {
     }
 
     //Check if documents, upload and get fileStoreId
-    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
-      let _docs = [];
-      let counter = documents.length, breakOut = 0;
-      for(let i=0; i<documents.length; i++) {
-        fileUpload(documents[i], self.props.moduleName, function(err, res) {
-          if(breakOut == 1) return;
-          if(err) {
-            breakOut = 1;
-            self.props.setLoadingStatus('hide');
-            self.props.toggleSnackbarAndSetText(true, err, false, true);
-          } else {
-            _docs.push({
-              fileStoreId: res.files[0].fileStoreId
-            })
-            counter--;
-            if(counter == 0 && breakOut == 0) {
-              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.checkCustomFields(formData, function(fd) {
-                self.makeAjaxCall(fd);
-              })
-            }
-          }
-        })
-      }
-    } else {
-      self.checkCustomFields(formData, function(fd) {
-        self.makeAjaxCall(fd);
-      })
-    }
+    // if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
+    //   let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+    //   let _docs = [];
+    //   let counter = documents.length, breakOut = 0;
+    //   for(let i=0; i<documents.length; i++) {
+    //     fileUpload(documents[i], self.props.moduleName, function(err, res) {
+    //       if(breakOut == 1) return;
+    //       if(err) {
+    //         breakOut = 1;
+    //         self.props.setLoadingStatus('hide');
+    //         self.props.toggleSnackbarAndSetText(true, err, false, true);
+    //       } else {
+    //         _docs.push({
+    //           fileStoreId: res.files[0].fileStoreId
+    //         })
+    //         counter--;
+    //         if(counter == 0 && breakOut == 0) {
+    //           formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+    //           self.makeAjaxCall(formData);
+    //         }
+    //       }
+    //     })
+    //   }
+    // } else {
+      self.makeAjaxCall(formData);
+
   }
 
   getVal = (path) => {
@@ -320,15 +316,15 @@ class Report extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields 
-                                    groups={mockData[`${moduleName}.${actionName}`].groups} 
-                                    noCols={mockData[`${moduleName}.${actionName}`].numCols} 
-                                    ui="google" 
-                                    handler={handleChange} 
-                                    getVal={getVal} 
-                                    fieldErrors={fieldErrors} 
-                                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} 
-                                    addNewCard={addNewCard} 
+        {!_.isEmpty(mockData) && <ShowFields
+                                    groups={mockData[`${moduleName}.${actionName}`].groups}
+                                    noCols={mockData[`${moduleName}.${actionName}`].numCols}
+                                    ui="google"
+                                    handler={handleChange}
+                                    getVal={getVal}
+                                    fieldErrors={fieldErrors}
+                                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
+                                    addNewCard={addNewCard}
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>

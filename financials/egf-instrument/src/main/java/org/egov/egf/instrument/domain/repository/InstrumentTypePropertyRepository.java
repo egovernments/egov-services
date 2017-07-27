@@ -16,7 +16,11 @@ public class InstrumentTypePropertyRepository {
 	public InstrumentTypeProperty findById(InstrumentTypeProperty instrumentTypeProperty) {
 		InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
 				.findById(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
-		return entity.toDomain();
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
+
 
 	}
 

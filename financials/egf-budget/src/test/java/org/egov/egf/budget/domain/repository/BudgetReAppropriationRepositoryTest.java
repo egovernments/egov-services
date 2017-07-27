@@ -117,13 +117,12 @@ public class BudgetReAppropriationRepositoryTest {
 
 	private BudgetReAppropriationEntity getBudgetReAppropriationEntity() {
 		BudgetReAppropriationEntity entity = new BudgetReAppropriationEntity();
-		BudgetReAppropriation budgetReAppropriation = getBudgetReAppropriationDomin();
 		entity.setAnticipatoryAmount(BigDecimal.ONE);
 		entity.setAdditionAmount(BigDecimal.ONE);
 		entity.setDeductionAmount(BigDecimal.ONE);
 		entity.setOriginalAdditionAmount(BigDecimal.ONE);
 		entity.setOriginalDeductionAmount(BigDecimal.valueOf(1500));
-		entity.setTenantId(budgetReAppropriation.getTenantId());
+		entity.setTenantId("default");
 		return entity;
 	}
 

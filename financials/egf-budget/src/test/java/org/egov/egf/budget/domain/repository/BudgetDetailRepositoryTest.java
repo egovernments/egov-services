@@ -117,13 +117,12 @@ public class BudgetDetailRepositoryTest {
 
 	private BudgetDetailEntity getBudgetDetailEntity() {
 		BudgetDetailEntity entity = new BudgetDetailEntity();
-		BudgetDetail budgetDetail = getBudgetDetailDomin();
 		entity.setApprovedAmount(BigDecimal.ONE);
 		entity.setAnticipatoryAmount(BigDecimal.ONE);
 		entity.setBudgetAvailable(BigDecimal.ONE);
 		entity.setOriginalAmount(BigDecimal.ONE);
 		entity.setPlanningPercent(BigDecimal.valueOf(1500));
-		entity.setTenantId(budgetDetail.getTenantId());
+		entity.setTenantId("default");
 		return entity;
 	}
 

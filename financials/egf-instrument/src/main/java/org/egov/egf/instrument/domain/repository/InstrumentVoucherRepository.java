@@ -16,7 +16,11 @@ public class InstrumentVoucherRepository {
 	public InstrumentVoucher findById(InstrumentVoucher instrumentVoucher) {
 		InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
 				.findById(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
-		return entity.toDomain();
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
+
 
 	}
 

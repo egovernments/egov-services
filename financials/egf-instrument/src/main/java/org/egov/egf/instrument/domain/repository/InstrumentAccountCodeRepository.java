@@ -18,7 +18,10 @@ public class InstrumentAccountCodeRepository {
 	public InstrumentAccountCode findById(InstrumentAccountCode instrumentAccountCode) {
 		InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
 				.findById(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
-		return entity.toDomain();
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
 
 	}
 

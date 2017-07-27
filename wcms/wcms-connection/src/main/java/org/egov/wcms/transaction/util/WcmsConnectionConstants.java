@@ -39,6 +39,9 @@
  */
 package org.egov.wcms.transaction.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -57,6 +60,10 @@ public class WcmsConnectionConstants {
     public static final String ESIMATIONCHARGEDEMANDREASON="ESTIMATIONCHARGES";
     public static final String SUPERVISIONCHARGEREASON="SUPERVISIONCHARGE";
     public static final String WATERDEMANDREASONNAME="Water Charge";
+    public static final String DONATIONCHARGEANDREASON = "DONATIONCHARGES"; 
+    
+    static Map<String, String> reasonMap = new HashMap<>();
+    
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
@@ -256,7 +263,7 @@ public class WcmsConnectionConstants {
     public static final String SUPPLYTYPE_NAME_MANDATORY_CODE = "wcms.0037";
     public static final String SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE = "Supply Type is required";
-
+    
     public static final String CATEGORY_INVALID_CODE = "wcms.0038";
     public static final String CATEGORY_INVALID_FIELD_NAME = "CategoryType";
     public static final String CATEGORY_INVALID_ERROR_MESSAGE = "CategoryType name doesn't Exist";
@@ -288,5 +295,43 @@ public class WcmsConnectionConstants {
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }
+    
+    public static Map<String, String> getChargeReasonToDisplay() {
+    	reasonMap.clear();
+    	reasonMap.put(SPECIALDEPOSITECHARGEDEMANDREASON, "Special Deposit Charge and Reason"); 
+    	reasonMap.put(SPECIALSECURITYCHARGEDEMANDREASON, "Security Deposit Charge and Reason");
+    	reasonMap.put(ROADCUTCHARGEDEMANDREASON,"Road Cut Charge and Reason");
+    	reasonMap.put(ESIMATIONCHARGEDEMANDREASON,"Estimation Charges");
+    	reasonMap.put(SUPERVISIONCHARGEREASON,"Supervision Charges");
+    	reasonMap.put(DONATIONCHARGEANDREASON, "Donation Charges");
+    	return reasonMap;
+    	
+    	
+    }
+
+    public static final String ESTIMATION_NOTICE_HTML_CODE = "<p class=\"western\" lang=\"en-IN\"><br />"+
+    		"</p><dl><dd><table width=\"620\" cellspacing=\"0\" cellpadding=\"7\" border=2><tbody><tr valign=\"top\"><td width=\"81\"><p lang=\"en-IN\" align=\"center\">"+
+    		"<strong>[ulbLogo]</strong></p></td><td width=\"420\"><p lang=\"en-IN\" align=\"center\"><strong>[ulbName]</strong></p>"+
+    		"<p lang=\"en-IN\" align=\"center\"><span style=\"font-family: 'Courier New', serif;\"><strong>Water Department /</strong> "+
+    		"</span><span style=\"font-family: 'Courier New';\"><span style=\"font-size: small;\"><span lang=\"ar-SA\"><span style=\"color: #212121;\">"+
+    		"<span style=\"font-family: Mangal;\"><span lang=\"mr-IN\">???? ?????</span></span></span></span></span></span></p></td><td width=\"75\">"+
+    		"<p lang=\"en-IN\" align=\"center\"><strong>[mahLogo]</strong></p></td></tr><tr><td colspan=\"3\" valign=\"top\" width=\"604\">"+
+    		"<p lang=\"en-IN\" align=\"center\"><span style=\"font-family: 'Courier New', serif;\"><span style=\"font-size: small;\">"+
+    		"<span lang=\"en-US\"><strong>Letter of Intimation/ </strong></span></span></span><span style=\"font-family: 'Courier New';\">"+
+    		"<span style=\"font-size: small;\"><span lang=\"ar-SA\"><span style=\"color: #212121;\"><span style=\"font-family: Mangal;\">"+
+    		"<span lang=\"mr-IN\">????? ????</span></span></span></span></span></span></p><p lang=\"en-IN\" align=\"right\"><span style=\"font-size: small;\">"+
+    		"<span lang=\"en-US\"><strong>Date / </strong></span></span><span style=\"font-size: small;\"><span lang=\"ar-SA\"><span style=\"font-family: Kokila;\"><span style=\"font-size: small;\"><span lang=\"mr-IN\">??????</span></span></span></span></span><span style=\"font-size: small;\">"+
+    		"<span lang=\"en-US\"><strong>:  [dateOfLetter]</strong></span></span></p><p lang=\"en-IN\" align=\"right\"><span style=\"font-size: small;\"><span lang=\"en-US\"><strong>No./ </strong></span></span><span style=\"font-size: small;\"><span lang=\"ar-SA\"><span style=\"font-family: Kokila;\"><span style=\"font-size: small;\"><span lang=\"mr-IN\">???????</span></span></span></span></span><span style=\"font-size: small;\"><span lang=\"en-US\"><strong>:  [letterNumber]</strong></span></span></p><p lang=\"en-IN\"><span style=\"font-size: small;\"><span lang=\"en-US\"><strong>To,[letterTo]</strong></span></span></p><p lang=\"en-IN\"><span style=\"font-size: small;\"><span lang=\"en-US\"><strong>Applicant</strong></span></span></p><p> </p><p lang=\"en-IN\"><span style=\"font-size: small;\"><span lang=\"en-US\">"+
+    		"Subject : Letter of Intimation for [letterIntimationSubject]</span></span></p><p lang=\"en-IN\"><span style=\"font-size: small;\"><span lang=\"en-US\">Reference : Application No:  [applicationNumber] and Application Date  [applicationDate]"+
+    		"</span></span></p><p lang=\"en-IN\"><span style=\"font-size: small;\"><span lang=\"en-US\">Sir/Madam</span></span><span lang=\"en-US\"><strong>[applicantName] has applied for </strong></span><span style=\"font-size: small;\"><span lang=\"en-US\">[serviceName]</span></span><span lang=\"en-US\"><strong> for Water No [waterNo]. Requested to </strong></span><span style=\"font-size: small;\"><span lang=\"en-US\">[serviceName]</span></span><span lang=\"en-US\"><strong>has been approved. Kindly pay the charges which are mentioned below within [slaDays] days.</strong></span></p><p lang=\"en-IN\"><span lang=\"en-US\"><strong>If not paid Application will be rejected or Penalty will be levied.</strong></span></p><p lang=\"en-IN\"><span lang=\"en-US\"><strong>[penaltyChargeDescription1]</strong></span></p><p lang=\"en-IN\">"+
+    		"<span lang=\"en-US\"><strong>[penaltyChargeDescription2]</strong></span></p><p lang=\"en-IN\" align=\"right\">"+
+    		"<span style=\"font-size: medium;\"><span lang=\"en-US\"><strong>Signing Authority </strong></span></span></p><p lang=\"en-IN\" align=\"right\"><span style=\"font-size: small;\"><span lang=\"ar-SA\"><span style=\"font-size: medium;\"><span lang=\"mr-IN\">???????</span></span></span></span>"+
+    		"<span style=\"font-size: medium;\"><span lang=\"en-US\"><strong>,</strong></span></span></p><p lang=\"en-IN\" align=\"right\">"+
+    		"<span style=\"font-size: medium;\"><span lang=\"en-US\"><strong>[ulbName]</strong></span></span></p></td></tr></tbody></table>"+
+    		"</dd></dl><p class=\"western\" lang=\"en-IN\"><br /></p>";
+	
+	
+	
+
 
 }

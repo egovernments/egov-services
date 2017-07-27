@@ -38,52 +38,60 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.egf.instrument.web.contract;
+package org.egov.pgr.web.contract;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.egov.common.web.contract.AuditableContract;
+import org.egov.common.contract.request.RequestInfo;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class SevaConfigurationGetRequest {
 
-@JsonPropertyOrder({ "id", "moduleType", "name", "description" })
-public class InstrumentStatusContract extends AuditableContract {
+	@JsonProperty("RequestInfo")
+	RequestInfo requestInfo;
 
-	/**
-	 * Unique Identifier of the status
-	 */
-	@NotNull
-	private String id;
+	private List<Long> id;
 
-	@NotNull
 	@Size(min = 3, max = 50)
-	private String moduleType;
-
-	/**
-	 * name is the status name
-	 */
-	@NotNull
-	@Size(min = 3, max = 20)
 	private String name;
 
-	/**
-	 * description is the detailed description of the status
-	 */
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Date effectiveFrom;
+
+	private String sortBy;
+
+	private String sortOrder;
+
 	@NotNull
-	@Size(min = 3, max = 250)
-	private String description;
+	private String tenantId;
+
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
 
 }

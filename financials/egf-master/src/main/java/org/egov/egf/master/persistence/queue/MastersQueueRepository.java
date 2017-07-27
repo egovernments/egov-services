@@ -19,6 +19,7 @@ public class MastersQueueRepository {
 	private String validatedKey;
 
 	public void add(Map<String, Object> topicMap) {
+		
 		financialProducer.sendMessage(validatedTopic, validatedKey, topicMap);
 	}
 }

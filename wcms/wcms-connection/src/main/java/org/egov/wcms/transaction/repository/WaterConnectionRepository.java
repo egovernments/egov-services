@@ -47,6 +47,7 @@ import java.util.List;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationCharge;
+import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.Material;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.enums.BillingType;
@@ -291,18 +292,23 @@ public class WaterConnectionRepository {
         
             final List<Object[]> values = new ArrayList<>();
             final String insertMaterialQuery = WaterConnectionQueryBuilder.insertMaterial();
-            for(Material matObj:estmaCharge.getMaterials()){
-                final Object[] objct = new Object[] {estmId,matObj.getName(),matObj.getQuantity(),matObj.getSize(),
-                        matObj.getAmountDetails(),waterConnectionReq.getConnection().getTenantId(),
-                        waterConnectionReq.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
-                        waterConnectionReq.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
-                values.add(objct);
-                try {
-                    jdbcTemplate.batchUpdate(insertMaterialQuery, values);
-                } catch (final Exception e) {
-                    LOGGER.error("Inserting material failed!", e);
-                }
-            }
+				if (null != estmaCharge.getMaterials()) {
+					for (Material matObj : estmaCharge.getMaterials()) {
+						final Object[] objct = new Object[] { estmId, matObj.getName(), matObj.getQuantity(),
+								matObj.getSize(), matObj.getAmountDetails(),
+								waterConnectionReq.getConnection().getTenantId(),
+								waterConnectionReq.getRequestInfo().getUserInfo().getId(),
+								new Date(new java.util.Date().getTime()),
+								waterConnectionReq.getRequestInfo().getUserInfo().getId(),
+								new Date(new java.util.Date().getTime()) };
+						values.add(objct);
+						try {
+							jdbcTemplate.batchUpdate(insertMaterialQuery, values);
+						} catch (final Exception e) {
+							LOGGER.error("Inserting material failed!", e);
+						}
+					}
+				}
         }
         }
        
@@ -340,5 +346,25 @@ public class WaterConnectionRepository {
         final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
                 new WaterConnectionRowMapper());
         return connectionList;
+    }
+    
+    public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 
+    	String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();
+        int insertStatus = jdbcTemplate.update(persistsEstimationNoticeQuery, getObjectForInsertEstimationNotice(estimationNotice, connectionId, tenantId));
+        if(insertStatus > 0) { 
+        	return true;
+        }
+        return false;
+    }
+    
+    public Object[] getObjectForInsertEstimationNotice(EstimationNotice estimationNotice, long connectionId, String tenantId) {
+    	Long createdBy = 1L; 
+        final Object[] obj = new Object[] { connectionId, tenantId, estimationNotice.getDateOfLetter(), estimationNotice.getLetterNumber(),
+        		estimationNotice.getLetterTo(), estimationNotice.getLetterIntimationSubject(), estimationNotice.getApplicationNumber(), estimationNotice.getApplicationDate(),
+        		estimationNotice.getApplicantName(), estimationNotice.getServiceName(), estimationNotice.getWaterNo(), estimationNotice.getSlaDays(), estimationNotice.getChargeDescription1(),
+        		estimationNotice.getChargeDescription2(), createdBy, new Date(new java.util.Date().getTime()) };
+        return obj;
+    	
+    	
     }
 }

@@ -9,7 +9,7 @@ import {translate} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
-import {fileUpload} from './utility/utility';
+import {fileUpload, getInitiatorPosition} from './utility/utility';
 var specifications={};
 try {
   var hash = window.location.hash.split("/");
@@ -18,7 +18,9 @@ try {
   } else {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
   }
-} catch(e) {}
+} catch(e) {
+  
+}
 let reqRequired = [];
 class Report extends Component {
   constructor(props) {
@@ -42,8 +44,24 @@ class Report extends Component {
     }
   }
 
+  setDefaultValues (groups, dat) {
+    for(var i=0; i<groups.length; i++) {
+      for(var j=0; j<groups[i].fields.length; j++) {
+        if(groups[i].fields[j].defaultValue) {
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+        }
+
+        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for(var k=0; k<groups[i].fields[j].children.length; k++) {
+            this.setDefaultValues(groups[i].fields[j].children[k].groups);
+          }
+        }
+      }
+    }
+  }
+
   initData() {
-    let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let self = this;
     let hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
@@ -65,11 +83,35 @@ class Report extends Component {
       }, function(err){
 
       })
+    } else {
+      var formData = {};
+      self.setDefaultValues(obj.groups, formData);
+      setFormData(formData);
     }
   }
 
   componentDidMount() {
       this.initData();
+  }
+
+  autoComHandler = (autoObject, path) => {
+    let self = this;
+    var value = this.getVal(path);
+    if(!value) return;
+    var url = autoObject.autoCompleteUrl.split("?")[0];
+    var hashLocation = window.location.hash;
+    var query = {
+        [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
+    };
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+        var formData = {...this.props.formData};
+        for(var key in autoObject.autoFillFields) {
+          _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
+        }
+        self.props.setFormData(formData);
+    }, function(err){
+      console.log(err);
+    })
   }
 
   makeAjaxCall = (formData) => {
@@ -82,6 +124,24 @@ class Report extends Component {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
     })
+  }
+
+  //Needs to be changed later for more customfields
+  checkCustomFields = (formData, cb) => {
+    var self = this;
+    if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition) {
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
+      getInitiatorPosition(function(err, pos) {
+        if(err) {
+          self.toggleSnackbarAndSetText(true, err.message);
+        } else {
+          _.set(formData, jPath, pos);
+          cb(formData);
+        }
+      })
+    } else {
+      cb(formData);
+    }
   }
 
   create=(e) => {
@@ -116,13 +176,17 @@ class Report extends Component {
             counter--;
             if(counter == 0 && breakOut == 0) {
               formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.makeAjaxCall(formData);
+              self.checkCustomFields(formData, function(fd) {
+                self.makeAjaxCall(fd);
+              })
             }
           }
         })
       }
     } else {
-      self.makeAjaxCall(formData);
+      self.checkCustomFields(formData, function(fd) {
+        self.makeAjaxCall(fd);
+      })
     }
   }
 
@@ -250,13 +314,23 @@ class Report extends Component {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {create, handleChange, getVal, addNewCard, removeCard} = this;
+    let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={addNewCard} removeCard={removeCard}/>}
+        {!_.isEmpty(mockData) && <ShowFields 
+                                    groups={mockData[`${moduleName}.${actionName}`].groups} 
+                                    noCols={mockData[`${moduleName}.${actionName}`].numCols} 
+                                    ui="google" 
+                                    handler={handleChange} 
+                                    getVal={getVal} 
+                                    fieldErrors={fieldErrors} 
+                                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} 
+                                    addNewCard={addNewCard} 
+                                    removeCard={removeCard}
+                                    autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}
@@ -299,6 +373,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setMockData: (mockData) => {
     dispatch({type: "SET_MOCK_DATA", mockData});
+  },
+  setFormData: (data) => {
+    dispatch({type: "SET_FORM_DATA", data});
   },
   setModuleName: (moduleName) => {
     dispatch({type:"SET_MODULE_NAME", moduleName})

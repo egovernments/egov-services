@@ -15,16 +15,22 @@ var requestInfo = {
     "authToken": authToken
 };
 
-var tenantId = "";
-if(window.location.origin.split("-").length>1)
-{
-  tenantId+=window.location.origin.split("-")[0].split("//")[1]
-}
-else {
-  tenantId+=window.location.origin.split(".")[0].split("//")[1]
-}
+var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
 
-tenantId = tenantIds[tenantId] || "ap." + tenantId;
+if (tenantId) {
+  tenantId=tenantId.tenantId;
+} else {
+  if(window.location.origin.split("-").length>1)
+  {
+    tenantId+=window.location.origin.split("-")[0].split("//")[1]
+  }
+  else {
+    tenantId+=window.location.origin.split(".")[0].split("//")[1]
+  }
+
+  tenantId = tenantIds[tenantId] || "ap." + tenantId;
+
+}
 
 function titleCase(field) {
     if (field) {

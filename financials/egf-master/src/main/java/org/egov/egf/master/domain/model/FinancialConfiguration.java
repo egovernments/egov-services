@@ -66,7 +66,7 @@ public class FinancialConfiguration extends Auditable {
 	@NotNull
 	private String id;
 
-	@NotBlank
+	
 	@Size(min = 3, max = 50)
 	private String name;
 

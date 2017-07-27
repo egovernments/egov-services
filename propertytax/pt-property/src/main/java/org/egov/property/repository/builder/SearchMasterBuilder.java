@@ -9,17 +9,21 @@ import org.springframework.core.env.Environment;
  * 
  * @author Prasad
  * 
- * This Class will from the search query for all the master services ,based on the given parameters
+ *         This Class will from the search query for all the master services
+ *         ,based on the given parameters
  *
  */
 
 public class SearchMasterBuilder {
-	
+
 	@Autowired
 	Environment environment;
 
 	/**
-	 * <p>This method will form the search query based on the given parameters</p>
+	 * <p>
+	 * This method will form the search query based on the given parameters
+	 * </p>
+	 * 
 	 * @param tableName
 	 * @param tenantId
 	 * @param ids
@@ -37,100 +41,94 @@ public class SearchMasterBuilder {
 	 * @param toYear
 	 * @return {@link String} search query
 	 */
-	 @SuppressWarnings("unchecked")
-	    public static String buildSearchQuery(String tableName,
-	            String tenantId,
-	            Integer[] ids,
-	            String name,
-	            String nameLocal,
-	            String code,
-	            Boolean active,
-	            Boolean isResidential,
-	            Integer orderNumber, String category,
-	            Integer pageSize,
-	            Integer offSet,List<Object> preparedStatementValues,
-	            Integer fromYear,
-	            Integer toYear) {
+	@SuppressWarnings("unchecked")
+	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
+			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
+			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
+			Integer year) {
 
-	        StringBuffer searchSql = new StringBuffer();
+		StringBuffer searchSql = new StringBuffer();
 
-	        searchSql.append("select * from "+tableName+" where ");
-	    
-	        
-	        searchSql.append(" tenantId = ? ");
-	        preparedStatementValues.add(tenantId);
-	       
+		searchSql.append("select * from " + tableName + " where ");
 
-	        if (ids != null && ids.length > 0) {
+		searchSql.append(" tenantId = ? ");
+		preparedStatementValues.add(tenantId);
 
-	            String searchIds = "";
-	            int count = 1;
-	            for (Integer id : ids) {
+		if (ids != null && ids.length > 0) {
 
-	                if (count < ids.length)
-	                    searchIds = searchIds + id + ",";
-	                else
-	                    searchIds = searchIds + id;
+			String searchIds = "";
+			int count = 1;
+			for (Integer id : ids) {
 
-	                count++;
-	            }
-	            searchSql.append(" AND id IN (" + searchIds + ") ");
-	        }
+				if (count < ids.length)
+					searchIds = searchIds + id + ",";
+				else
+					searchIds = searchIds + id;
 
-	        if (code != null && !code.isEmpty()){
-	            searchSql.append(" AND code =? ");
-	            preparedStatementValues.add(code);
-	        }
+				count++;
+			}
+			searchSql.append(" AND id IN (" + searchIds + ") ");
+		}
 
-	        JSONObject dataSearch = new JSONObject();
+		if (code != null && !code.isEmpty()) {
+			searchSql.append(" AND code =? ");
+			preparedStatementValues.add(code);
+		}
 
-	        if (name != null || nameLocal != null || active != null || isResidential != null || orderNumber != null
-	                || category != null || fromYear!=null || toYear!=null)
-	            searchSql.append(" AND data @> ?::jsonb");
+		JSONObject dataSearch = new JSONObject();
 
-	        if (name != null && !name.isEmpty())
-	            dataSearch.put("name", name);
+		if (name != null || nameLocal != null || active != null || isResidential != null || orderNumber != null
+				|| category != null || fromYear != null || toYear != null)
+			searchSql.append(" AND data @> ?::jsonb");
 
-	        if (nameLocal != null && !nameLocal.isEmpty())
-	            dataSearch.put("nameLocal", nameLocal);
+		if (name != null && !name.isEmpty())
+			dataSearch.put("name", name);
 
-	        if (active != null)
-	            dataSearch.put("active", active);
+		if (nameLocal != null && !nameLocal.isEmpty())
+			dataSearch.put("nameLocal", nameLocal);
 
-	        if (isResidential != null)
-	            dataSearch.put("isResidential", isResidential);
+		if (active != null)
+			dataSearch.put("active", active);
 
-	        if (orderNumber != null)
-	            dataSearch.put("orderNumber", orderNumber);
+		if (isResidential != null)
+			dataSearch.put("isResidential", isResidential);
 
-	        if (category != null && !category.isEmpty())
-	            dataSearch.put("category", category);
-	        
-	        if (fromYear != null)
+		if (orderNumber != null)
+			dataSearch.put("orderNumber", orderNumber);
+
+		if (category != null && !category.isEmpty())
+			dataSearch.put("category", category);
+
+		if (year != null) {
+
+			preparedStatementValues.add(year);
+			searchSql.append(" AND ?  BETWEEN (data::json->>'fromYear')::int AND (data::json->>'toyear')::int");
+		} else {
+			if (fromYear != null)
 				dataSearch.put("fromYear", fromYear);
 
 			if (toYear != null)
 				dataSearch.put("toyear", toYear);
+		}
 
-	        if (name != null || nameLocal != null || active != null || isResidential != null || orderNumber != null
-	                || category != null || fromYear!=null || toYear!=null)
-	        	preparedStatementValues.add(dataSearch.toJSONString());
+		if (name != null || nameLocal != null || active != null || isResidential != null || orderNumber != null
+				|| category != null || fromYear != null || toYear != null)
+			preparedStatementValues.add(dataSearch.toJSONString());
 
-	        if (pageSize == null)
-	            pageSize = 30;
-	       
-	        	searchSql.append(" limit ? ");
-	            preparedStatementValues.add(pageSize);
-	        
-	        if (offSet == null)
-	            offSet = 0;
-	        
-	        searchSql.append(" offset ? ");
-	        preparedStatementValues.add(offSet);
+		if (pageSize == null)
+			pageSize = 30;
 
-	        return searchSql.toString();
+		searchSql.append(" limit ? ");
+		preparedStatementValues.add(pageSize);
 
-	    }
+		if (offSet == null)
+			offSet = 0;
 
+		searchSql.append(" offset ? ");
+		preparedStatementValues.add(offSet);
+
+		return searchSql.toString();
+
+	}
 
 }

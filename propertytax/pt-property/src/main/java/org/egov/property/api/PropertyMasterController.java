@@ -573,6 +573,7 @@ public class PropertyMasterController {
 	 * @param nameLocal
 	 * @param pageSize
 	 * @param offset
+	 * @param year
 	 * @return {@link DepreciationResponse}
 	 * @throws Exception
 	 */
@@ -581,10 +582,11 @@ public class PropertyMasterController {
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
 			@RequestParam(required = false) Integer fromYear, @RequestParam(required = false) Integer toYear,
 			@RequestParam(required = false) String code, @RequestParam(required = false) String nameLocal,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offset)
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offset,
+			@RequestParam(required = false) Integer year)
 			throws Exception {
 		return masterService.searchDepreciation(requestInfoWrapper.getRequestInfo(), tenantId, ids, fromYear, toYear,
-				code, nameLocal, pageSize, offset);
+				code, nameLocal, pageSize, offset, year);
 	}
 
 	/**

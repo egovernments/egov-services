@@ -25,6 +25,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Consumer class will use for listing property object from kafka server to
  * update the property data &send it back to kafka topic
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author: Prasad Khandagale
  */
 @Service
+@Slf4j
 public class TaxCalculatorConsumer {
 
 	@Autowired
@@ -94,7 +97,7 @@ public class TaxCalculatorConsumer {
 	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.tax.calculaion')}",
 			"#{environment.getProperty('egov.propertytax.property.update.tax.calculaion')}" })
 	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
-
+	    log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
 		ObjectMapper objectMapper = new ObjectMapper();
 		Property property = consumerRecord.value().getProperties().get(0);
 		CalculationRequest calculationRequest = new CalculationRequest();

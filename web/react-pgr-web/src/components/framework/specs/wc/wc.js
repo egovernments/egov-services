@@ -63,7 +63,9 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": true,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"isHidden": false,
+							"defaultValue": ""
 						},
 						{
 							"name": "AadharNumber",

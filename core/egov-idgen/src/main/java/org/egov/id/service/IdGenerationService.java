@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
+import org.egov.id.config.PropertiesManager;
 import org.egov.id.model.IDSeqNotFoundException;
 import org.egov.id.model.IDSeqOverflowException;
 import org.egov.id.model.IdGenerationRequest;
@@ -24,7 +25,6 @@ import org.egov.id.model.InvalidIDFormatException;
 import org.egov.id.model.RequestInfo;
 import org.egov.id.model.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +38,10 @@ public class IdGenerationService {
 
 	@Autowired
 	DataSource dataSource;
-
+	
 	@Autowired
-	Environment environment;
-
+	PropertiesManager propertiesManager;
+	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
@@ -239,7 +239,7 @@ public class IdGenerationService {
 
 		} catch (Exception e) {
 
-			throw new InvalidIDFormatException(environment.getProperty("id.invalid.format"), requestInfo);
+			throw new InvalidIDFormatException(propertiesManager.getInvalidIdFormat(), requestInfo);
 
 		}
 	}
@@ -264,7 +264,7 @@ public class IdGenerationService {
 
 		} catch (Exception e) {
 
-			throw new InvalidIDFormatException(environment.getProperty("id.invalid.format"), requestInfo);
+			throw new InvalidIDFormatException(propertiesManager.getInvalidIdFormat(), requestInfo);
 
 		}
 	}
@@ -283,7 +283,7 @@ public class IdGenerationService {
 		try {
 			Pattern.compile(regex);
 		} catch (Exception e) {
-			throw new InvalidIDFormatException(environment.getProperty("id.invalid.format"), requestInfo);
+			throw new InvalidIDFormatException(propertiesManager.getInvalidIdFormat(), requestInfo);
 		}
 		Matcher matcher = Pattern.compile("\\{(.*?)\\}").matcher(regex);
 		while (matcher.find()) {
@@ -328,9 +328,9 @@ public class IdGenerationService {
 			conn.setAutoCommit(true);
 		} catch (Exception e) {
 			if (rs == null) {
-				throw new IDSeqNotFoundException(environment.getProperty("id.sequence.notfound"), requestInfo);
+				throw new IDSeqNotFoundException(propertiesManager.getIdSequenceNotFound(), requestInfo);
 			} else {
-				throw new IDSeqOverflowException(environment.getProperty("id.sequence.overflow"), requestInfo);
+				throw new IDSeqOverflowException(propertiesManager.getIdSequenceOverflow(), requestInfo);
 			}
 		} finally {
 			conn.close();

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.instrument.domain.model.InstrumentType;
@@ -15,9 +14,9 @@ import org.egov.egf.instrument.domain.service.InstrumentTypeService;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
+import org.egov.egf.instrument.web.mapper.InstrumentTypeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentTypeResponse;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -51,7 +50,7 @@ public class InstrumentTypeController {
 	public InstrumentTypeResponse create(@RequestBody InstrumentTypeRequest instrumentTypeRequest,
 			BindingResult errors) {
 
-		ModelMapper model = new ModelMapper();
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
 		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();
 		instrumentTypeResponse.setResponseInfo(getResponseInfo(instrumentTypeRequest.getRequestInfo()));
 		List<InstrumentType> instrumenttypes = new ArrayList<>();
@@ -62,8 +61,7 @@ public class InstrumentTypeController {
 		instrumentTypeRequest.getRequestInfo().setAction(ACTION_CREATE);
 
 		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeRequest.getInstrumentTypes()) {
-			instrumentType = new InstrumentType();
-			model.map(instrumentTypeContract, instrumentType);
+			instrumentType = mapper.toDomain(instrumentTypeContract);
 			instrumentType.setCreatedDate(new Date());
 			instrumentType.setCreatedBy(instrumentTypeRequest.getRequestInfo().getUserInfo());
 			instrumentType.setLastModifiedBy(instrumentTypeRequest.getRequestInfo().getUserInfo());
@@ -76,9 +74,8 @@ public class InstrumentTypeController {
 			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_CREATE);
 
 			for (InstrumentType it : instrumenttypes) {
-				contract = new InstrumentTypeContract();
+				contract = mapper.toContract(it);
 				contract.setCreatedDate(new Date());
-				model.map(it, contract);
 				instrumentTypeContracts.add(contract);
 			}
 
@@ -90,9 +87,8 @@ public class InstrumentTypeController {
 			instrumenttypes = instrumentTypeService.save(instrumenttypes, errors);
 
 			for (InstrumentType it : instrumenttypes) {
-				contract = new InstrumentTypeContract();
+				contract = mapper.toContract(it);
 				contract.setCreatedDate(new Date());
-				model.map(it, contract);
 				instrumentTypeContracts.add(contract);
 			}
 
@@ -111,8 +107,8 @@ public class InstrumentTypeController {
 	public InstrumentTypeResponse update(@RequestBody InstrumentTypeRequest instrumentTypeRequest,
 			BindingResult errors) {
 
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
 		instrumentTypeRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		ModelMapper model = new ModelMapper();
 		InstrumentTypeResponse instrumentTypeResponse = new InstrumentTypeResponse();
 		List<InstrumentType> instrumenttypes = new ArrayList<>();
 		instrumentTypeResponse.setResponseInfo(getResponseInfo(instrumentTypeRequest.getRequestInfo()));
@@ -121,8 +117,7 @@ public class InstrumentTypeController {
 		List<InstrumentTypeContract> instrumentTypeContracts = new ArrayList<>();
 
 		for (InstrumentTypeContract instrumentTypeContract : instrumentTypeRequest.getInstrumentTypes()) {
-			instrumentType = new InstrumentType();
-			model.map(instrumentTypeContract, instrumentType);
+			instrumentType = mapper.toDomain(instrumentTypeContract);
 			instrumentType.setLastModifiedBy(instrumentTypeRequest.getRequestInfo().getUserInfo());
 			instrumentType.setLastModifiedDate(new Date());
 			instrumenttypes.add(instrumentType);
@@ -134,8 +129,7 @@ public class InstrumentTypeController {
 			instrumenttypes = instrumentTypeService.fetchAndValidate(instrumenttypes, errors, ACTION_UPDATE);
 
 			for (InstrumentType it : instrumenttypes) {
-				contract = new InstrumentTypeContract();
-				model.map(it, contract);
+				contract = mapper.toContract(it);
 				instrumentTypeContracts.add(contract);
 			}
 
@@ -147,8 +141,7 @@ public class InstrumentTypeController {
 			instrumenttypes = instrumentTypeService.update(instrumenttypes, errors);
 
 			for (InstrumentType it : instrumenttypes) {
-				contract = new InstrumentTypeContract();
-				model.map(it, contract);
+				contract = mapper.toContract(it);
 				instrumentTypeContracts.add(contract);
 			}
 
@@ -168,18 +161,15 @@ public class InstrumentTypeController {
 	public InstrumentTypeResponse search(@ModelAttribute InstrumentTypeSearchContract instrumentTypeSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		InstrumentTypeSearch domain = new InstrumentTypeSearch();
-		mapper.map(instrumentTypeSearchContract, domain);
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+		InstrumentTypeSearch domain = mapper.toSearchDomain(instrumentTypeSearchContract);
 		InstrumentTypeContract contract;
-		ModelMapper model = new ModelMapper();
 		List<InstrumentTypeContract> instrumentTypeContracts = new ArrayList<>();
 		Pagination<InstrumentType> instrumenttypes = instrumentTypeService.search(domain);
 
 		if (instrumenttypes.getPagedData() != null) {
 			for (InstrumentType instrumentType : instrumenttypes.getPagedData()) {
-				contract = new InstrumentTypeContract();
-				model.map(instrumentType, contract);
+				contract = mapper.toContract(instrumentType);
 				instrumentTypeContracts.add(contract);
 			}
 		}

@@ -8,6 +8,8 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.property.services.PropertyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/properties/")
 public class PropertyController {
 
+	private static final Logger logger = LoggerFactory.getLogger(PropertyController.class);
+
 	@Autowired
 	PropertyService propertyService;
 
@@ -36,7 +40,7 @@ public class PropertyController {
 
 	@RequestMapping(method = RequestMethod.POST, path = "_create")
 	public PropertyResponse createProperty(@Valid @RequestBody PropertyRequest propertyRequest) {
-
+		logger.info("PropertyController    PropertyRequest ---->> "+propertyRequest);
 		return propertyService.createProperty(propertyRequest);
 
 	}

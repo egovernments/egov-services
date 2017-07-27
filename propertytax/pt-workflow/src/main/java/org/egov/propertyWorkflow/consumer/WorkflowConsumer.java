@@ -23,6 +23,8 @@ import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.SearchTenantResponse;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -46,6 +48,8 @@ import com.google.gson.GsonBuilder;
 
 @Service
 public class WorkflowConsumer {
+
+	private static final Logger logger = LoggerFactory.getLogger(WorkflowConsumer.class);
 
 	@Autowired
 	private WorkFlowUtil workflowUtil;
@@ -107,12 +111,14 @@ public class WorkflowConsumer {
 	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
 
 		PropertyRequest propertyRequest = record.value();
+		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  "+propertyRequest);
 
 		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.create.demand"))) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
+				logger.info("WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
 				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
 						environment.getProperty("businessKey"), environment.getProperty("type"),
 						environment.getProperty("create.property.comments"));
@@ -126,6 +132,7 @@ public class WorkflowConsumer {
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
+
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
 						property.getPropertyDetail().getStateId());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
@@ -187,6 +194,7 @@ public class WorkflowConsumer {
 		// requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
 		requestInfo.setVer(propertyRequest.getRequestInfo().getVer());
 		requestInfo.setTenantId(tenantId);
+		requestInfo.setUserInfo(propertyRequest.getRequestInfo().getUserInfo());
 
 		return requestInfo;
 	}

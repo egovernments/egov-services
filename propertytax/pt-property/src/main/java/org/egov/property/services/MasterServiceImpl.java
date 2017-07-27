@@ -913,11 +913,11 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Override
 	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset)
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset, Integer year)
 			throws Exception {
 
 		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(tenantId, ids, fromYear, toYear,
-				code, nameLocal, pageSize, offset);
+				code, nameLocal, pageSize, offset, year);
 		DepreciationResponse depreciationResponse = new DepreciationResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		depreciationResponse.setResponseInfo(responseInfo);

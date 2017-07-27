@@ -58,6 +58,7 @@ import java.util.Map;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.AuditDetails;
+import org.egov.collection.model.Instrument;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
@@ -181,7 +182,7 @@ public class ReceiptServiceTest {
 				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenReturn(1l);
 
 		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId()));
+				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId())));
 		
 	}
 	
@@ -220,7 +221,7 @@ public class ReceiptServiceTest {
 				receiptReq.getReceipt().get(0).getBill().get(0).getPaidBy(), receiptReq.getReceipt().get(0).getAuditDetails())).thenThrow(Exception.class);
 
 		receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0), receiptReq.getRequestInfo(),
-				receiptReq.getTenantId());
+				receiptReq.getTenantId(), Long.valueOf(receiptReq.getReceipt().get(0).getInstrument().getId()));
 		
 	}
 	
@@ -419,8 +420,10 @@ public class ReceiptServiceTest {
 		
 		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
+		
+		Instrument instrument = Instrument.builder().id("10").build();
 		Receipt receipt = Receipt.builder().tenantId("default").bill(Arrays.asList(billInfo))
-				.bankAccount(bankAccount).auditDetails(auditDetails).build();
+				.bankAccount(bankAccount).instrument(instrument).auditDetails(auditDetails).build();
 		
 		return ReceiptReq.builder().requestInfo(requestInfo).receipt(Arrays.asList(receipt)).build();
 	}

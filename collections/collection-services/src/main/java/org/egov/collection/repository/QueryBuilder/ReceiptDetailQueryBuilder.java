@@ -248,6 +248,10 @@ public class ReceiptDetailQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
+	
+	public static String getNextSeqForRcptHeader(){
+		return "select NEXTVAL('SEQ_EGCL_RECEIPTHEADER')";
+	}
 
 	public static String insertReceiptHeader() {
 		logger.info("Returning insertReceiptHeaderQuery query to the repository");
@@ -301,5 +305,9 @@ public class ReceiptDetailQueryBuilder {
 
     public String searchChartOfAccountsQuery() {
         return "select distinct chartofaccount from egcl_receiptdetails where tenantId = ? and purpose != 'OTHERS' and description != '' ";
+    }
+    
+    public String insertInstrumentId(){
+    	return "update set instrumentheader = ? where receiptheader = ?";
     }
 }

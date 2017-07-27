@@ -336,7 +336,7 @@ handleAge = (year) => {
 }	
 	
 calcArea = (e, type) => {
-		let {floorDetails, handleChangeNextOne} = this.props;
+		let {floorDetails, handleChangeNextOne, handleChangeFloor} = this.props;
 		
 		let f = {
 			target:{
@@ -358,7 +358,7 @@ calcArea = (e, type) => {
 				}
 				
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
-				handleChangeNextOne(f, "floor","builtupArea", true, "");
+				handleChangeFloor(f, "floor","builtupArea", true, "");
 				
 			} else if(type == 'width' 	&& floorDetails.floor.hasOwnProperty('length')){
 			
@@ -371,7 +371,7 @@ calcArea = (e, type) => {
 				}
 				
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
-				handleChangeNextOne(f, "floor","builtupArea", true, "");
+				handleChangeFloor(f, "floor","builtupArea", true, "");
 				
 			} 			
 		}

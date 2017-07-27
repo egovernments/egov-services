@@ -180,6 +180,7 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+          <Route exact path= {base + '/:actionName/:moduleName/:master?/:id?'} component={Create}/>
     </Switch>
   </main>
 )}

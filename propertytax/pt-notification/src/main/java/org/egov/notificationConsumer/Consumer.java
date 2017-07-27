@@ -7,10 +7,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.PropertyRequest;
+import org.egov.notification.config.PropertiesManager;
 import org.egov.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Consumer {
     @Autowired
-    Environment environment;
+    PropertiesManager propertiesManager;
 
     @Autowired
     NotificationService notificationService;
@@ -49,12 +49,12 @@ public class Consumer {
     public Map<String, Object> consumerConfig() {
         Map<String, Object> consumerProperties = new HashMap<String, Object>();
         consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-                environment.getProperty("pt-notification.auto.offset.reset.config"));
+        		propertiesManager.getAutoOffsetReset());
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                environment.getProperty("kafka.config.bootstrap_server_config"));
+        		propertiesManager.getBootstrapServer());
         consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("pt-notification.groupName"));
+        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, propertiesManager.getGroupName());
         return consumerProperties;
     }
 
@@ -82,61 +82,73 @@ public class Consumer {
      * 
      * @param consumerRecord
      */
-    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.pt-notification.demand.acknowledgement')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.demand.approve')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.demand.transferfee')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.demand.reject')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.property.acknowledgement')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.property.approve')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.property.reject')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.revision.petition.acknowledgement')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.revision.petition.hearing')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.revision.petition.endorsement')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.property.alteration.acknowledgement')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.property.alteration.approve')}",
-            "#{environment.getProperty('egov.propertytax.pt-notification.property.alteration.reject')}" })
+    @KafkaListener(topics = { "#{propertiesManager.getDemandAcknowledgement()}",
+            "#{propertiesManager.getDemandApprove()}",
+            "#{propertiesManager.getDemandTransferfee()}",
+            "#{propertiesManager.getDemandReject()}",
+            "#{propertiesManager.getPropertyAcknowledgement()}",
+            "#{propertiesManager.getApproveProperty()}",
+            "#{propertiesManager.getRejectProperty()}",
+            "#{propertiesManager.getRevisionPetitionAcknowledgement()}",
+            "#{propertiesManager.getRevisionPetitionHearing()}",
+            "#{propertiesManager.getRevisionPetitionEndorsement()}",
+            "#{propertiesManager.getPropertyAlterationAcknowledgement()}",
+            "#{propertiesManager.getApprovePropertyAlteration()}",
+            "#{propertiesManager.getRejectPropertyAlteration()}" })
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) {
         log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
         if (consumerRecord.topic()
-                .equalsIgnoreCase(environment.getProperty("egov.propertytax.pt-notification.demand.acknowledgement"))) {
+                .equalsIgnoreCase(propertiesManager.getDemandAcknowledgement())) {
 
             notificationService.demandAcknowledgement(consumerRecord.value());
         } else if (consumerRecord.topic()
-                .equalsIgnoreCase(environment.getProperty("egov.propertytax.pt-notification.demand.approve"))) {
+                .equalsIgnoreCase(propertiesManager.getDemandApprove())) {
 
             notificationService.demandApprove(consumerRecord.value());
         } else if (consumerRecord.topic()
-                .equalsIgnoreCase(environment.getProperty("egov.propertytax.pt-notification.demand.transferfee"))) {
+                .equalsIgnoreCase(propertiesManager.getDemandTransferfee())) {
 
             notificationService.demandTransferFee(consumerRecord.value());
         } else if (consumerRecord.topic()
-                .equalsIgnoreCase(environment.getProperty("egov.propertytax.pt-notification.demand.reject"))) {
+                .equalsIgnoreCase(propertiesManager.getDemandReject())) {
 
             notificationService.demandReject(consumerRecord.value());
         } else if (consumerRecord.topic().equalsIgnoreCase(
-                environment.getProperty("egov.propertytax.pt-notification.property.acknowledgement"))) {
+        		propertiesManager.getPropertyAcknowledgement())) {
 
             notificationService.propertyAcknowledgement(consumerRecord.value().getProperties());
         } else if (consumerRecord.topic()
-                .equalsIgnoreCase(environment.getProperty("egov.propertytax.pt-notification.property.approve"))) {
+                .equalsIgnoreCase(propertiesManager.getApproveProperty())) {
 
             notificationService.propertyApprove(consumerRecord.value().getProperties());
         } else if (consumerRecord.topic()
-                .equalsIgnoreCase(environment.getProperty("egov.propertytax.pt-notification.property.reject"))) {
+                .equalsIgnoreCase(propertiesManager.getRejectProperty())) {
 
             notificationService.propertyReject(consumerRecord.value().getProperties());
         } else if (consumerRecord.topic().equalsIgnoreCase(
-                environment.getProperty("egov.propertytax.pt-notification.revision.petition.acknowledgement"))) {
+        		propertiesManager.getRevisionPetitionAcknowledgement())) {
 
             notificationService.revisionPetitionAcknowldgement(consumerRecord.value().getProperties());
         } else if (consumerRecord.topic().equalsIgnoreCase(
-                environment.getProperty("egov.propertytax.pt-notification.revision.petition.hearing"))) {
+        		propertiesManager.getRevisionPetitionHearing())) {
 
             notificationService.revisionPetitionHearing(consumerRecord.value().getProperties());
         } else if (consumerRecord.topic().equalsIgnoreCase(
-                environment.getProperty("egov.propertytax.pt-notification.revision.petition.endorsement"))) {
+        		propertiesManager.getRevisionPetitionEndorsement())) {
 
             notificationService.revisionPetitionEndorsement(consumerRecord.value().getProperties());
-        }
+        }  else if (consumerRecord.topic().equalsIgnoreCase(
+        		propertiesManager.getPropertyAlterationAcknowledgement())) {
+			
+			notificationService.alterationAcknowledgement(consumerRecord.value().getProperties());
+		} else if (consumerRecord.topic().equalsIgnoreCase(
+				propertiesManager.getApprovePropertyAlteration())) {
+			
+			notificationService.approvePropertyAlteration(consumerRecord.value().getProperties());
+		} else if (consumerRecord.topic().equalsIgnoreCase(
+				propertiesManager.getRejectPropertyAlteration())) {
+			
+			notificationService.rejectPropertyAlteration(consumerRecord.value().getProperties());
+		}
     }
 }

@@ -8,6 +8,7 @@ import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.TaxCalculation;
 import org.egov.models.User;
+import org.egov.notification.config.PropertiesManager;
 import org.egov.notification.model.EmailMessage;
 import org.egov.notification.model.EmailMessageContext;
 import org.egov.notification.model.EmailRequest;
@@ -15,7 +16,6 @@ import org.egov.notification.model.SmsMessage;
 import org.egov.notification.model.TaxCalculationResponse;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ import com.google.gson.GsonBuilder;
 public class NotificationService {
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	KafkaTemplate<String, Object> kafkaTemplate;
@@ -60,20 +60,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil.buildSmsMessage(environment.getProperty("demand.sms.acknowledgement"),
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getDemandAcknowledgementSms(),
 						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext
-						.setBodyTemplateName(environment.getProperty("demand.acknowledgement.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getDemandAcknowledgementEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext
-						.setSubjectTemplateName(environment.getProperty("demand.acknowledgement.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getDemandAcknowledgementEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -100,19 +98,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil.buildSmsMessage(environment.getProperty("demand.sms.approve"),
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getDemandApproveSms(),
 						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext.setBodyTemplateName(environment.getProperty("demand.approve.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getDemandApproveEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext
-						.setSubjectTemplateName(environment.getProperty("demand.approve.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getDemandApproveEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -141,19 +138,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil.buildSmsMessage(environment.getProperty("demand.sms.transferfee"),
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getDemandTransferfeeSms(),
 						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext.setBodyTemplateName(environment.getProperty("demand.transferfee.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getDemandTransferfeeEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext
-						.setSubjectTemplateName(environment.getProperty("demand.transferfee.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getDemandTransferfeeEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -182,19 +178,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil.buildSmsMessage(environment.getProperty("demand.sms.reject"),
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getDemandRejectSms(),
 						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext.setBodyTemplateName(environment.getProperty("demand.reject.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getDemandRejectEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext
-						.setSubjectTemplateName(environment.getProperty("demand.reject.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getDemandRejectEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -220,20 +215,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil
-						.buildSmsMessage(environment.getProperty("property.sms.acknowledgement"), propertyMessage);
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getPropertyAcknowledgementSms(),
+						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext
-						.setBodyTemplateName(environment.getProperty("property.acknowledgement.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyAcknowledgementEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext.setSubjectTemplateName(
-						environment.getProperty("property.acknowledgement.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getPropertyAcknowledgementEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -255,7 +248,8 @@ public class NotificationService {
 			// total Propertytax calculation logic
 			String taxCalculations = property.getPropertyDetail().getTaxCalculations();
 			Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-			TaxCalculationResponse taxCalculationResponse = gson.fromJson(taxCalculations, TaxCalculationResponse.class);
+			TaxCalculationResponse taxCalculationResponse = gson.fromJson(taxCalculations,
+					TaxCalculationResponse.class);
 			Double propertyTax = 0.0;
 			for (TaxCalculation taxcalculation : taxCalculationResponse.getTaxCalculationList()) {
 				propertyTax = propertyTax + taxcalculation.getPropertyTaxes().getTotalTax();
@@ -269,20 +263,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil
-						.buildSmsMessage(environment.getProperty("property.sms.acknowledgement"), propertyMessage);
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getPropertyApproveSms(),
+						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext
-						.setBodyTemplateName(environment.getProperty("property.acknowledgement.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyApproveEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext.setSubjectTemplateName(
-						environment.getProperty("property.acknowledgement.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getPropertyApproveEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -308,20 +300,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil
-						.buildSmsMessage(environment.getProperty("property.sms.acknowledgement"), propertyMessage);
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getPropertyRejectSms(),
+						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext
-						.setBodyTemplateName(environment.getProperty("property.acknowledgement.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext.setSubjectTemplateName(
-						environment.getProperty("property.acknowledgement.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getPropertyRejectEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -348,20 +338,20 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil.buildSmsMessage(
-						environment.getProperty("revision.petition.acknowledgement.sms"), propertyMessage);
+				String message = notificationUtil
+						.buildSmsMessage(propertiesManager.getRevisionPetitionAcknowledgementSms(), propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext.setBodyTemplateName(
-						environment.getProperty("revision.petition.acknowledgement.bodyTemplateName"));
+				emailMessageContext
+						.setBodyTemplateName(propertiesManager.getRevisionPetitionAcknowledgementEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext.setSubjectTemplateName(
-						environment.getProperty("revision.petition.acknowledgement.subjectTemplateName"));
+				emailMessageContext
+						.setSubjectTemplateName(propertiesManager.getRevisionPetitionAcknowledgementEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -388,20 +378,18 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil
-						.buildSmsMessage(environment.getProperty("revision.petition.hearing.sms"), propertyMessage);
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getRevisionPetitionHearingSms(),
+						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext
-						.setBodyTemplateName(environment.getProperty("revision.petition.hearing.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getRevisionPetitionHearingEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext.setSubjectTemplateName(
-						environment.getProperty("revision.petition.hearing.subjectTemplateName"));
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getRevisionPetitionHearingEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}
@@ -428,20 +416,132 @@ public class NotificationService {
 				propertyMessage.put("tenantId", user.getTenantId());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
-				String message = notificationUtil
-						.buildSmsMessage(environment.getProperty("revision.petition.endorsement.sms"), propertyMessage);
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getRevisionPetitionEndorsementSms(),
+						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext
-						.setBodyTemplateName(environment.getProperty("revision.petition.endorsement.bodyTemplateName"));
+				emailMessageContext.setBodyTemplateName(propertiesManager.getRevisionPetitionEndorsementEmailBody());
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
-				emailMessageContext.setSubjectTemplateName(
-						environment.getProperty("revision.petition.endorsement.subjectTemplateName"));
+				emailMessageContext
+						.setSubjectTemplateName(propertiesManager.getRevisionPetitionEndorsementEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
 				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.sms"), smsMessage);
-				kafkaTemplate.send(environment.getProperty("egov.propertytax.pt-notification.email"), emailMessage);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+			}
+		}
+	}
+
+	/**
+	 * This method is for sending email and sms for property alteration
+	 * acknowledgement
+	 * 
+	 * @param properties
+	 */
+	public void alterationAcknowledgement(List<Property> properties) {
+
+		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+		for (Property property : properties) {
+
+			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
+			propertyMessage.put("upicNo", property.getUpicNumber());
+			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			propertyMessage.put("tenantId", property.getTenantId());
+
+			for (User user : property.getOwners()) {
+
+				propertyMessage.put("name", user.getName());
+				propertyMessage.put("tenantId", user.getTenantId());
+				String emailAddress = user.getEmailId();
+				String mobileNumber = user.getMobileNumber();
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getAlterationAcknowledgementSms(),
+						propertyMessage);
+				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+				EmailMessageContext emailMessageContext = new EmailMessageContext();
+				emailMessageContext.setBodyTemplateName(propertiesManager.getAlterationAcknowledgementEmailBody());
+				emailMessageContext.setBodyTemplateValues(propertyMessage);
+				emailMessageContext
+						.setSubjectTemplateName(propertiesManager.getAlterationAcknowledgementEmailSubject());
+				emailMessageContext.setSubjectTemplateValues(propertyMessage);
+				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+			}
+		}
+	}
+
+	/**
+	 * This method is for sending email and sms for approve property alteration
+	 * 
+	 * @param properties
+	 */
+	public void approvePropertyAlteration(List<Property> properties) {
+
+		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+		for (Property property : properties) {
+
+			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
+			propertyMessage.put("upicNo", property.getUpicNumber());
+			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			propertyMessage.put("tenantId", property.getTenantId());
+
+			for (User user : property.getOwners()) {
+
+				propertyMessage.put("name", user.getName());
+				propertyMessage.put("tenantId", user.getTenantId());
+				String emailAddress = user.getEmailId();
+				String mobileNumber = user.getMobileNumber();
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getAlterationApproveSms(),
+						propertyMessage);
+				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+				EmailMessageContext emailMessageContext = new EmailMessageContext();
+				emailMessageContext.setBodyTemplateName(propertiesManager.getAlterationApproveEmailBody());
+				emailMessageContext.setBodyTemplateValues(propertyMessage);
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getAlterationApproveEmailSubject());
+				emailMessageContext.setSubjectTemplateValues(propertyMessage);
+				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+			}
+		}
+	}
+
+	/**
+	 * This method is for sending email and sms for reject property alteration
+	 * 
+	 * @param properties
+	 */
+	public void rejectPropertyAlteration(List<Property> properties) {
+
+		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+		for (Property property : properties) {
+
+			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
+			propertyMessage.put("upicNo", property.getUpicNumber());
+			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			propertyMessage.put("tenantId", property.getTenantId());
+
+			for (User user : property.getOwners()) {
+
+				propertyMessage.put("name", user.getName());
+				propertyMessage.put("tenantId", user.getTenantId());
+				String emailAddress = user.getEmailId();
+				String mobileNumber = user.getMobileNumber();
+				String message = notificationUtil.buildSmsMessage(propertiesManager.getAlterationRejectSms(),
+						propertyMessage);
+				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+				EmailMessageContext emailMessageContext = new EmailMessageContext();
+				emailMessageContext.setBodyTemplateName(propertiesManager.getAlterationRejectEmailBody());
+				emailMessageContext.setBodyTemplateValues(propertyMessage);
+				emailMessageContext.setSubjectTemplateName(propertiesManager.getAlterationRejectEmailSubject());
+				emailMessageContext.setSubjectTemplateValues(propertyMessage);
+				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
 	}

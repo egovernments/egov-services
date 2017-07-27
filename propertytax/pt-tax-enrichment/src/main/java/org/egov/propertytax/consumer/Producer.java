@@ -12,11 +12,14 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 @Service
+@Slf4j
 public class Producer {
 
 	@Autowired
@@ -62,6 +65,7 @@ public class Producer {
 	 */
 
 	public void send(String topic, Object producerRecord) {
+	    log.info("topic name is : "+topic+"  producer record is: "+producerRecord);
 		kafkaTemplate.send(topic, producerRecord);
 	}
 }

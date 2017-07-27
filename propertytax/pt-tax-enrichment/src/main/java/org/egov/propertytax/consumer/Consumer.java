@@ -1,13 +1,13 @@
 package org.egov.propertytax.consumer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.PropertyRequest;
-import org.egov.propertytax.repository.BillingServiceRepository;
 import org.egov.propertytax.service.DemandService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -17,18 +17,12 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class Consumer {
-
-    private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Autowired
     private Environment environment;
@@ -56,8 +50,7 @@ public class Consumer {
     }
 
     /**
-     * This method will return the consumer factory bean based on consumer
-     * configuration
+     * This method will return the consumer factory bean based on consumer configuration
      */
     @Bean
     public ConsumerFactory<String, PropertyRequest> consumerFactory() {
@@ -80,15 +73,14 @@ public class Consumer {
     /**
      * receive method
      *
-     * @param PropertyRequest
-     * This method is listened whenever property is created and
-     *                        updated
+     * @param PropertyRequest This method is listened whenever property is created and updated
      */
-    @KafkaListener(topics = {"#{environment.getProperty('egov.propertytax.create.tax.calculated')}"})
+    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.create.tax.calculated')}" })
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
-
+        log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
         demandService.createDemand(consumerRecord.value());
-        logger.info("demand generated >>>> \n next topic ----->> "+environment.getProperty("egov.propertytax.create.demand")+" \n Property >>>>> "+consumerRecord.value());
+        log.info("demand generated >>>> \n next topic ----->> " + environment.getProperty("egov.propertytax.create.demand")
+                + " \n Property >>>>> " + consumerRecord.value());
         producer.send(environment.getProperty("egov.propertytax.create.demand"), consumerRecord.value());
 
     }

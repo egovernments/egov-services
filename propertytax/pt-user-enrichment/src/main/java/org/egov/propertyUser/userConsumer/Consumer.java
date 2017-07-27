@@ -21,102 +21,102 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * Consumer class will use for listing property object from kafka server.
- * Authenticate the user Search the user Create the user If user exist update
- * the user id otherwise create the user
+ * Consumer class will use for listing property object from kafka server. Authenticate the user Search the user Create the user If
+ * user exist update the user id otherwise create the user
  * 
  * @author: S Anilkumar
  */
 
 @Service
+@Slf4j
 public class Consumer {
 
-	@Autowired
-	Environment environment;
+    @Autowired
+    Environment environment;
 
-	@Autowired
-	private Producer producer;
+    @Autowired
+    private Producer producer;
 
-	@Autowired
-	private UserUtil userUtil;
+    @Autowired
+    private UserUtil userUtil;
 
-	/*
-	 * This method for creating rest template
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    /*
+     * This method for creating rest template
+     */
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
-	/**
-	 * This method for getting consumer configuration bean
-	 */
-	@Bean
-	public Map<String, Object> consumerConfig() {
-		Map<String, Object> consumerProperties = new HashMap<String, Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-				environment.getProperty("auto.offset.reset.config"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				environment.getProperty("kafka.config.bootstrap_server_config"));
-		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "user");
-		return consumerProperties;
-	}
+    /**
+     * This method for getting consumer configuration bean
+     */
+    @Bean
+    public Map<String, Object> consumerConfig() {
+        Map<String, Object> consumerProperties = new HashMap<String, Object>();
+        consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
+                environment.getProperty("auto.offset.reset.config"));
+        consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                environment.getProperty("kafka.config.bootstrap_server_config"));
+        consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "user");
+        return consumerProperties;
+    }
 
-	/**
-	 * This method will return the consumer factory bean based on consumer
-	 * configuration
-	 */
-	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
-		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(PropertyRequest.class));
+    /**
+     * This method will return the consumer factory bean based on consumer configuration
+     */
+    @Bean
+    public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
+                new JsonDeserializer<>(PropertyRequest.class));
 
-	}
+    }
 
-	/**
-	 * This bean will return kafka listner object based on consumer factory
-	 */
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
-		factory.setConsumerFactory(consumerFactory());
-		return factory;
-	}
+    /**
+     * This bean will return kafka listner object based on consumer factory
+     */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
+        factory.setConsumerFactory(consumerFactory());
+        return factory;
+    }
 
-	/**
-	 * This method will listen property object from producer and check user
-	 * authentication Updating auth token in UserAuthResponseInfo Search user
-	 * Create user
-	 */
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.validate.user')}",
-			"#{environment.getProperty('egov.propertytax.property.update.validate.user')}" })
-	public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
-		PropertyRequest propertyRequest = consumerRecord.value();
+    /**
+     * This method will listen property object from producer and check user authentication Updating auth token in
+     * UserAuthResponseInfo Search user Create user
+     */
+    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.validate.user')}",
+            "#{environment.getProperty('egov.propertytax.property.update.validate.user')}" })
+    public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws Exception {
+        log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord);
+        PropertyRequest propertyRequest = consumerRecord.value();
+        for (Property property : propertyRequest.getProperties()) {
+            for (User user : property.getOwners()) {
+                user.setUserName(user.getMobileNumber());
 
-		for (Property property : propertyRequest.getProperties()) {
-			for (User user : property.getOwners()) {
-				user.setUserName(user.getMobileNumber());
+                user = userUtil.getUserId(user, propertyRequest.getRequestInfo());
 
-				user = userUtil.getUserId(user, propertyRequest.getRequestInfo());
+            }
+            if (consumerRecord.topic()
+                    .equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.validate.user"))) {
 
-			}
-			if (consumerRecord.topic()
-					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.create.validate.user"))) {
+                producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.create.tax.calculaion"),
+                        propertyRequest);
 
-				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.create.tax.calculaion"),
-						propertyRequest);
+            } else if (consumerRecord.topic()
+                    .equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.validate.user"))) {
 
-			} else if (consumerRecord.topic()
-					.equalsIgnoreCase(environment.getProperty("egov.propertytax.property.update.validate.user"))) {
+                producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax.calculaion"),
+                        propertyRequest);
 
-				producer.kafkaTemplate.send(environment.getProperty("egov.propertytax.property.update.tax.calculaion"),
-						propertyRequest);
-
-			}
-		}
-	}
+            }
+        }
+    }
 
 }

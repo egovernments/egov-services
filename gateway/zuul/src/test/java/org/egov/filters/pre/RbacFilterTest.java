@@ -40,15 +40,6 @@ public class RbacFilterTest {
     }
 
     @Test
-    public void testThatFilterShouldNotRunWhenRequestUriIsNotInRBACWhitelist() throws Exception {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        ctx.set("shouldDoRbac", true);
-        request.setRequestURI("/hr-masters/do/something");
-        ctx.setRequest(request);
-        assertFalse(rbacFilter.shouldFilter());
-    }
-
-    @Test
     public void shouldAbortWhenUserIsRequestingUnauthorizedURI() throws Exception {
         User user = new User();
         Action action1  = new Action();

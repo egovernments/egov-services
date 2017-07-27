@@ -23,19 +23,25 @@ public class RbacFilter extends ZuulFilter{
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        return ctx.getBoolean("shoulDoRbac");
+        return ctx.getBoolean(RBAC_BOOLEAN_FLAG_NAME);
     }
 
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String requestUri = ctx.getRequest().getRequestURI();
-        User user = (User) ctx.get(USER_INFO_KEY);
-        if(user.getActions().stream().anyMatch(action -> isActionMatchingIncomingURI(requestUri, action)))
+        final boolean isIncomingURIInAuthorizedActionList = isIncomingURIInAuthorizedActionList(ctx);
+        if(isIncomingURIInAuthorizedActionList)
             return null;
 
         abortWithStatus(ctx,HttpStatus.NOT_FOUND,"The resource you are trying to find is not available");
         return null;
+    }
+
+    private boolean isIncomingURIInAuthorizedActionList(RequestContext ctx) {
+        String requestUri = ctx.getRequest().getRequestURI();
+        User user = (User) ctx.get(USER_INFO_KEY);
+        return user.getActions().stream()
+            .anyMatch(action -> isActionMatchingIncomingURI(requestUri, action));
     }
 
     private boolean isActionMatchingIncomingURI(String requestUri, Action action) {

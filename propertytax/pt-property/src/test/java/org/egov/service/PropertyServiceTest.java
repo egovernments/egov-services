@@ -1524,9 +1524,9 @@ public class PropertyServiceTest {
 		List<Depreciation> depreciations = new ArrayList<>();
 		depreciation.setTenantId("123");
 		depreciation.setNameLocal("prasad");
-		depreciation.setFromYear(2017);
+		depreciation.setFromYear(2015);
 		depreciation.setCode("456");
-		depreciation.setToyear(2016);
+		depreciation.setToyear(2017);
 		depreciation.setDescription("Intial loading");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -1567,9 +1567,9 @@ public class PropertyServiceTest {
 		depreciation.setId(1l);
 		depreciation.setTenantId("12345");
 		depreciation.setNameLocal("prasad");
-		depreciation.setFromYear(2017);
+		depreciation.setFromYear(2015);
 		depreciation.setCode("4567");
-		depreciation.setToyear(2016);
+		depreciation.setToyear(2017);
 		depreciation.setDescription("Intial loading");
 
 		AuditDetails auditDetails = new AuditDetails();
@@ -1606,18 +1606,19 @@ public class PropertyServiceTest {
 		String tenantId = "12345";
 		Integer[] ids = new Integer[] { 1, 2, 7 };
 
-		Integer fromYear = 2017;
-		Integer toYear = 2016;
+		Integer fromYear = 2015;
+		Integer toYear = 2017;
 		String code = "4567";
 		String nameLocal = "prasad";
 		Integer pageSize = 20;
 		Integer offset = 0;
+		Integer year = null;
 
 		DepreciationResponse depreciationResponse = null;
 
 		try {
 			depreciationResponse = masterService.searchDepreciation(getRequestInfoObject(), tenantId, ids, fromYear,
-					toYear, code, nameLocal, pageSize, offset);
+					toYear, code, nameLocal, pageSize, offset, year);
 		} catch (Exception e) {
 			assertTrue(false);
 		}

@@ -406,7 +406,7 @@ public interface Masterservice {
 	 * @throws Exception
 	 */
 	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset)
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset, Integer year)
 			throws Exception;
 
 	/**

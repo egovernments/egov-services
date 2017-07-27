@@ -1187,7 +1187,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.searchDepreciation(any(RequestInfo.class), anyString(), any(Integer[].class),
 					any(Integer.class), any(Integer.class), anyString(), anyString(), any(Integer.class),
-					any(Integer.class))).thenReturn(depreciationResponse);
+					any(Integer.class), any(Integer.class))).thenReturn(depreciationResponse);
 			mockMvc.perform(post("/property/depreciations/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("searchDepreciationRequest.json")))
 					.andExpect(status().isOk())

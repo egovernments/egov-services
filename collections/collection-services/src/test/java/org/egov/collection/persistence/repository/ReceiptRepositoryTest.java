@@ -140,7 +140,8 @@ public class ReceiptRepositoryTest {
 					new Object[] { receiptInfo.getBill().get(0).getPayeeName(),
 							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class)).thenReturn(1L);
-		long result = receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
+		long result = receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo.getBill().get(0).getPayeeName(),
+				receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails());
 		assertEquals(1L, result);	
 		
 	}

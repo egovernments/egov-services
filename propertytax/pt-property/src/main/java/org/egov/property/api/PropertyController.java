@@ -99,7 +99,7 @@ public class PropertyController {
 			@RequestParam(value = "ownerName", required = false) String ownerName,
 			@RequestParam(value = "demandFrom", required = false) Integer demandFrom,
 			@RequestParam(value = "demandTo", required = false) Integer demandTo,
-			@RequestParam(value= "propertyId",required=false ) String propertyId) {
+			@RequestParam(value= "propertyId",required=false ) String propertyId) throws Exception {
 		if (pageSize == null)
 			pageSize = -1;
 

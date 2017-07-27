@@ -593,7 +593,9 @@ public class PropertyRepository {
 			document.setDocumentType(documentdata.get("documenttype").toString());
 			
 			document.setFileStore(documentdata.get("filestore").toString());
+			if ( documentdata.get("id")!=null)
 			document.setId(Long.valueOf(documentdata.get("id").toString()));
+			
 			documents.add(document);
 
 		}

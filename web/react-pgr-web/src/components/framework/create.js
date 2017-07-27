@@ -94,6 +94,26 @@ class Report extends Component {
       this.initData();
   }
 
+  autoComHandler = (autoObject, path) => {
+    let self = this;
+    var value = this.getVal(path);
+    if(!value) return;
+    var url = autoObject.autoCompleteUrl.split("?")[0];
+    var hashLocation = window.location.hash;
+    var query = {
+        [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
+    };
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+        var formData = {...this.props.formData};
+        for(var key in autoObject.autoFillFields) {
+          _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
+        }
+        self.props.setFormData(formData);
+    }, function(err){
+      
+    })
+  }
+
   makeAjaxCall = (formData) => {
     let self = this;
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, "", formData, "", true).then(function(response){
@@ -294,13 +314,23 @@ class Report extends Component {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {create, handleChange, getVal, addNewCard, removeCard} = this;
+    let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={addNewCard} removeCard={removeCard}/>}
+        {!_.isEmpty(mockData) && <ShowFields 
+                                    groups={mockData[`${moduleName}.${actionName}`].groups} 
+                                    noCols={mockData[`${moduleName}.${actionName}`].numCols} 
+                                    ui="google" 
+                                    handler={handleChange} 
+                                    getVal={getVal} 
+                                    fieldErrors={fieldErrors} 
+                                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} 
+                                    addNewCard={addNewCard} 
+                                    removeCard={removeCard}
+                                    autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}

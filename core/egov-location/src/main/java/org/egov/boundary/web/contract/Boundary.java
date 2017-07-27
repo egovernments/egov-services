@@ -1,5 +1,7 @@
 package org.egov.boundary.web.contract;
 
+import java.util.List;
+
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -21,6 +23,9 @@ public class Boundary {
 	@NotEmpty
 	@JsonProperty("id")
 	private String id;
+	
+	@JsonProperty("boundaryIds")
+	private List<Long> boundaryIds;
 
 	@JsonProperty("name")
 	private String name;

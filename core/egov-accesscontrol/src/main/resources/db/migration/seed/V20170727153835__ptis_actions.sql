@@ -98,7 +98,7 @@ insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (
 insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='CreateWoodType' and url='/pt-property/property/woodtypes/_create'), 'default');
 insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='UpdatePropertyType' and url='/pt-property/property/propertytypes/_update'), 'default');
 insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='SearchPropertyType' and url='/pt-property/property/propertytypes/_search'), 'default');
-insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='UpdateFloorType' and url='/pt-property/property/rooftypes/_update'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='UpdateRoofType' and url='/pt-property/property/rooftypes/_update'), 'default');
 insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='CreatePropertyDepartment' and url='/pt-property/property/departments/_create'), 'default');
 insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='SearchPropertyDepartment' and url='/pt-property/property/departments/_search'), 'default');
 insert into eg_roleaction(roleCode, actionid, tenantId) values ('PTIS_MASTER', (select id from eg_action where name='CreateRoofType' and url='/pt-property/property/rooftypes/_create'), 'default');

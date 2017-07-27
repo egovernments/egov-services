@@ -19,7 +19,7 @@ try {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
   }
 } catch(e) {
-  console.log(e);
+  
 }
 let reqRequired = [];
 class Report extends Component {

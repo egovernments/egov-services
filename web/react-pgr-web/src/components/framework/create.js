@@ -18,7 +18,9 @@ try {
   } else {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
   }
-} catch(e) {}
+} catch(e) {
+  
+}
 let reqRequired = [];
 class Report extends Component {
   constructor(props) {
@@ -42,8 +44,24 @@ class Report extends Component {
     }
   }
 
+  setDefaultValues (groups, dat) {
+    for(var i=0; i<groups.length; i++) {
+      for(var j=0; j<groups[i].fields.length; j++) {
+        if(groups[i].fields[j].defaultValue) {
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+        }
+
+        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for(var k=0; k<groups[i].fields[j].children.length; k++) {
+            this.setDefaultValues(groups[i].fields[j].children[k].groups);
+          }
+        }
+      }
+    }
+  }
+
   initData() {
-    let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let self = this;
     let hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
@@ -65,6 +83,10 @@ class Report extends Component {
       }, function(err){
 
       })
+    } else {
+      var formData = {};
+      self.setDefaultValues(obj.groups, formData);
+      setFormData(formData);
     }
   }
 
@@ -299,6 +321,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setMockData: (mockData) => {
     dispatch({type: "SET_MOCK_DATA", mockData});
+  },
+  setFormData: (data) => {
+    dispatch({type: "SET_FORM_DATA", data});
   },
   setModuleName: (moduleName) => {
     dispatch({type:"SET_MODULE_NAME", moduleName})

@@ -46,11 +46,13 @@ export default class ShowFields extends Component {
                     <Grid>
                       <Row>
                         {group.fields.map((field, fieldIndex)=>{
-                            return (
+                            if(!field.isHidden) {
+                              return (
                                 <Col key={fieldIndex} xs={12} md={noCols}>
                                     {renderField(field, self.props.screen)}
                                 </Col>
-                            )
+                              )
+                            }
                         })}
                       </Row>
                       {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>

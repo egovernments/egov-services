@@ -98,7 +98,8 @@ public class PropertyController {
 			@RequestParam(value = "locality", required = false) Integer locality,
 			@RequestParam(value = "ownerName", required = false) String ownerName,
 			@RequestParam(value = "demandFrom", required = false) Integer demandFrom,
-			@RequestParam(value = "demandTo", required = false) Integer demandTo) {
+			@RequestParam(value = "demandTo", required = false) Integer demandTo,
+			@RequestParam(value= "propertyId",required=false ) String propertyId) {
 		if (pageSize == null)
 			pageSize = -1;
 
@@ -122,7 +123,7 @@ public class PropertyController {
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNo, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo);
+				locality, ownerName, demandFrom, demandTo, propertyId);
 
 	}
 

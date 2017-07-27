@@ -36,7 +36,7 @@ public class SearchPropertyBuilder {
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, int pageSize, int pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, int revenueZone, int revenueWard, int locality,
-			String ownerName, int demandFrom, int demandTo, List<Object> preparedStatementValues) {
+			String ownerName, int demandFrom, int demandTo, String propertyId, List<Object> preparedStatementValues) {
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
@@ -121,6 +121,11 @@ public class SearchPropertyBuilder {
 			searchPropertySql.append(" AND Addr.addressnumber=?");
 			preparedStatementValues.add(houseNoBldgApt.trim());
 
+		}
+
+		if (propertyId != null && !propertyId.isEmpty()) {
+			searchPropertySql.append(" AND prop.id =?");
+			preparedStatementValues.add(propertyId);
 		}
 
 		if (sort != null && sort.length > 0) {

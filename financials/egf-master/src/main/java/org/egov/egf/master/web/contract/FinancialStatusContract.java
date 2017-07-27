@@ -39,6 +39,7 @@
  */
 
 package org.egov.egf.master.web.contract;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -52,30 +53,36 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","moduleType","code","description"})
+@JsonPropertyOrder({ "id", "moduleType", "code", "description" })
 public class FinancialStatusContract extends AuditableContract {
 
 	@NotNull
 	private String id;
 
 	@NotNull
-	@NotBlank
+
 	@Size(min = 3, max = 50)
 	private String moduleType;
 
 	@NotNull
-	@NotBlank
+
 	@Size(min = 3, max = 20)
 	private String code;
 
 	@NotNull
-	@NotBlank
+
+	@Size(min = 3, max = 20)
+	private String name;
+
+	@NotNull
+
 	@Size(min = 3, max = 250)
 	private String description;
 

@@ -15,9 +15,9 @@ import org.egov.egf.instrument.domain.service.InstrumentAccountCodeService;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentAccountCodeQueueRepository;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
+import org.egov.egf.instrument.web.mapper.InstrumentAccountCodeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeResponse;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -51,7 +51,7 @@ public class InstrumentAccountCodeController {
 	public InstrumentAccountCodeResponse create(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
 			BindingResult errors) {
 
-		ModelMapper model = new ModelMapper();
+		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
 		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
 		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
 		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
@@ -63,8 +63,7 @@ public class InstrumentAccountCodeController {
 
 		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
 				.getInstrumentAccountCodes()) {
-			instrumentAccountCode = new InstrumentAccountCode();
-			model.map(instrumentAccountCodeContract, instrumentAccountCode);
+			instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
 			instrumentAccountCode.setCreatedDate(new Date());
 			instrumentAccountCode.setCreatedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
 			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
@@ -78,9 +77,8 @@ public class InstrumentAccountCodeController {
 					ACTION_CREATE);
 
 			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = new InstrumentAccountCodeContract();
+				contract = mapper.toContract(iac);
 				contract.setCreatedDate(new Date());
-				model.map(iac, contract);
 				instrumentAccountCodeContracts.add(contract);
 			}
 
@@ -93,8 +91,7 @@ public class InstrumentAccountCodeController {
 			instrumentaccountcodes = instrumentAccountCodeService.save(instrumentaccountcodes, errors);
 
 			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = new InstrumentAccountCodeContract();
-				model.map(iac, contract);
+				contract = mapper.toContract(iac);
 				instrumentAccountCodeContracts.add(contract);
 			}
 
@@ -114,8 +111,8 @@ public class InstrumentAccountCodeController {
 	public InstrumentAccountCodeResponse update(@RequestBody InstrumentAccountCodeRequest instrumentAccountCodeRequest,
 			BindingResult errors) {
 
+		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
 		instrumentAccountCodeRequest.getRequestInfo().setAction(ACTION_UPDATE);
-		ModelMapper model = new ModelMapper();
 		InstrumentAccountCodeResponse instrumentAccountCodeResponse = new InstrumentAccountCodeResponse();
 		List<InstrumentAccountCode> instrumentaccountcodes = new ArrayList<>();
 		instrumentAccountCodeResponse.setResponseInfo(getResponseInfo(instrumentAccountCodeRequest.getRequestInfo()));
@@ -125,8 +122,7 @@ public class InstrumentAccountCodeController {
 
 		for (InstrumentAccountCodeContract instrumentAccountCodeContract : instrumentAccountCodeRequest
 				.getInstrumentAccountCodes()) {
-			instrumentAccountCode = new InstrumentAccountCode();
-			model.map(instrumentAccountCodeContract, instrumentAccountCode);
+			instrumentAccountCode = mapper.toDomain(instrumentAccountCodeContract);
 			instrumentAccountCode.setLastModifiedBy(instrumentAccountCodeRequest.getRequestInfo().getUserInfo());
 			instrumentAccountCode.setLastModifiedDate(new Date());
 			instrumentaccountcodes.add(instrumentAccountCode);
@@ -139,9 +135,8 @@ public class InstrumentAccountCodeController {
 					ACTION_UPDATE);
 
 			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = new InstrumentAccountCodeContract();
+				contract = mapper.toContract(iac);
 				contract.setCreatedDate(new Date());
-				model.map(iac, contract);
 				instrumentAccountCodeContracts.add(contract);
 			}
 
@@ -154,8 +149,7 @@ public class InstrumentAccountCodeController {
 			instrumentaccountcodes = instrumentAccountCodeService.update(instrumentaccountcodes, errors);
 
 			for (InstrumentAccountCode iac : instrumentaccountcodes) {
-				contract = new InstrumentAccountCodeContract();
-				model.map(iac, contract);
+				contract = mapper.toContract(iac);
 				instrumentAccountCodeContracts.add(contract);
 			}
 
@@ -177,18 +171,15 @@ public class InstrumentAccountCodeController {
 			@ModelAttribute InstrumentAccountCodeSearchContract instrumentAccountCodeSearchContract,
 			RequestInfo requestInfo, BindingResult errors) {
 
-		ModelMapper mapper = new ModelMapper();
-		InstrumentAccountCodeSearch domain = new InstrumentAccountCodeSearch();
-		mapper.map(instrumentAccountCodeSearchContract, domain);
+		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+		InstrumentAccountCodeSearch domain = mapper.toSearchDomain(instrumentAccountCodeSearchContract);
 		InstrumentAccountCodeContract contract;
-		ModelMapper model = new ModelMapper();
 		List<InstrumentAccountCodeContract> instrumentAccountCodeContracts = new ArrayList<>();
 		Pagination<InstrumentAccountCode> instrumentaccountcodes = instrumentAccountCodeService.search(domain);
 
 		if (instrumentaccountcodes.getPagedData() != null) {
 			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes.getPagedData()) {
-				contract = new InstrumentAccountCodeContract();
-				model.map(instrumentAccountCode, contract);
+				contract = mapper.toContract(instrumentAccountCode);
 				instrumentAccountCodeContracts.add(contract);
 			}
 		}

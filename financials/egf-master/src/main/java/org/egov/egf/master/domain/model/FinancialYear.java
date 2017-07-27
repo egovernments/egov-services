@@ -63,7 +63,7 @@ public class FinancialYear extends Auditable {
 	private String id;
 
 	@Length(min = 1, max = 25)
-	@NotBlank
+	
 	private String finYearRange;
 
 	@NotNull

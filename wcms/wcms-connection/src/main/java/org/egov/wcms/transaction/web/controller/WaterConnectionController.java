@@ -49,8 +49,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
+import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -196,6 +198,32 @@ public class WaterConnectionController {
         }
         return getSuccessResponse(connectionList, requestInfo);
     }
+    
+    @PostMapping("/_getEstimationNotice")
+    @ResponseBody
+    public ResponseEntity<?> getEstimationNotice(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,
+            final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+
+        // Call service
+        EstimationNotice estimationNotice = new EstimationNotice(); 
+        try {
+        	estimationNotice =   waterConnectionService.getEstimationNotice(waterConnectionGetReq);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + waterConnectionGetReq, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getSuccessResponseForEstimationNotice(estimationNotice, requestInfo);
+    }
 
     private ResponseEntity<?> getSuccessResponse(final List<Connection> connectionList,
             final RequestInfo requestInfo) {
@@ -206,6 +234,18 @@ public class WaterConnectionController {
         waterConnectionRes.setResponseInfo(responseInfo);
         waterConnectionRes.setConnections(connectionList);
         return new ResponseEntity<>(waterConnectionRes, HttpStatus.OK);
+
+    }
+    
+    private ResponseEntity<?> getSuccessResponseForEstimationNotice(final EstimationNotice estimationNotice,
+            final RequestInfo requestInfo) {
+        final EstimationNoticeRes estimationNoticeRes = new EstimationNoticeRes();
+        ;
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        estimationNoticeRes.setResponseInfo(responseInfo);
+        estimationNoticeRes.setEstimationNotice(estimationNotice);
+        return new ResponseEntity<>(estimationNoticeRes, HttpStatus.OK);
 
     }
 

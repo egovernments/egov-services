@@ -41,6 +41,8 @@ package org.egov.egf.instrument.web.contract;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -136,6 +138,7 @@ public class InstrumentContract extends AuditableContract {
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
 	 * instrument it is Debit and in case of payment instrument its credit.
 	 */
+	@NotNull
 	private TransactionTypeContract transactionType;
 
 	/*
@@ -170,7 +173,6 @@ public class InstrumentContract extends AuditableContract {
 	 * instrumentVouchers is the reference to the payment vouchers for which the
 	 * instrument is attached.
 	 */
-	// private Set<InstrumentContractVoucher> instrumentVouchers = new
-	// HashSet<InstrumentContractVoucher>(0);
+	private Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<InstrumentVoucherContract>(0);
 
 }

@@ -97,10 +97,23 @@ class Report extends Component {
 							"type": "dynamictable",
 							"header": [{
 									"label": "wc.table.view"
-							}],
+							},{
+                "label": "wc.table.view"
+              }],
 							"values":[{
 
 		  						cols:[{
+                    "name": "billerService",
+  		  						"jsonPath": "search.billerService",
+  		  						"label": "Billing service name",
+  		  						"pattern": "",
+  		  						"type": "singleValueList",
+  		  						"isRequired": false,
+  		  						"isDisabled": false,
+  		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+  		  						"requiredErrMsg": "",
+  		  						"patternErrMsg": ""
+                  },{
                     "name": "billerService",
   		  						"jsonPath": "search.billerService",
   		  						"label": "Billing service name",

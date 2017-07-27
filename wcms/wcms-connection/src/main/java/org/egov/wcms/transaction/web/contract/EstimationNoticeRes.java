@@ -39,28 +39,30 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
-import java.util.List;
-
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.model.EstimationNotice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class WaterSourceResponseInfo {
 
-    @JsonProperty("ResponseInfo")
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EstimationNoticeRes {
+
+    @JsonProperty("responseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("SourceTypes")
-    private List<CommonResponseInfo> waterSourceType;
-    
-    
-    
-    
+
+    @JsonProperty("estimationNotice")
+    private EstimationNotice estimationNotice; 
+
 }

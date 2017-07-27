@@ -38,52 +38,12 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.egf.instrument.web.contract;
+package org.egov.wcms.transaction.repository.rowmapper;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.springframework.stereotype.Component;
 
-import org.egov.common.web.contract.AuditableContract;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-
-@JsonPropertyOrder({ "id", "moduleType", "name", "description" })
-public class InstrumentStatusContract extends AuditableContract {
-
-	/**
-	 * Unique Identifier of the status
-	 */
-	@NotNull
-	private String id;
-
-	@NotNull
-	@Size(min = 3, max = 50)
-	private String moduleType;
-
-	/**
-	 * name is the status name
-	 */
-	@NotNull
-	@Size(min = 3, max = 20)
-	private String name;
-
-	/**
-	 * description is the detailed description of the status
-	 */
-	@NotNull
-	@Size(min = 3, max = 250)
-	private String description;
+@Component
+public class EstimationNoticeRowMapper {
 
 }
+

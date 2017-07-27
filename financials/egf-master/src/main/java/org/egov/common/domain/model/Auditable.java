@@ -24,7 +24,7 @@ public class Auditable {
 	 * represents the client for which the transaction is created.
 	 * 
 	 */
-	@NotBlank
+	
 	@Size(max = 50, min = 5)
 	protected String tenantId;
 	/**

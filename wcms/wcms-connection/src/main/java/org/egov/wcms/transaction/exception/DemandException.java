@@ -37,30 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.web.contract;
+package org.egov.wcms.transaction.exception;
 
-import java.util.List;
-
-import org.egov.common.contract.response.ResponseInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class WaterSourceResponseInfo {
+import lombok.Getter;
+import lombok.Setter;
 
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
-    @JsonProperty("SourceTypes")
-    private List<CommonResponseInfo> waterSourceType;
-    
-    
-    
-    
+
+@AllArgsConstructor
+@Getter
+@Setter
+public class DemandException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	private String customMsg;
+
+	private String msgDetails;
+
+	private RequestInfo requestInfo;
+
 }

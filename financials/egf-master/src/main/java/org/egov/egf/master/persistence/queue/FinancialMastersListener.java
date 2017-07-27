@@ -103,41 +103,61 @@ public class FinancialMastersListener {
 
 	@Value("${kafka.topics.egf.masters.bank.completed.key}")
 	private String bankCompletedKey;
+	
+	@Value("${kafka.topics.egf.masters.bankbranch.completed.key}")
+	private String bankBranchCompletedKey;
 
 	@Value("${kafka.topics.egf.masters.financialyear.completed.key}")
 	private String financialYearCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.fiscalperiod.completed.key}")
 	private String fiscalPeriodCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.function.completed.key}")
 	private String functionCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.functionary.completed.key}")
 	private String functionaryCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.fundsource.completed.key}")
 	private String fundsourceCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.scheme.completed.key}")
 	private String schemeCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.bankaccount.completed.key}")
 	private String bankAccountCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.subscheme.completed.key}")
 	private String subSchemeCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.supplier.completed.key}")
 	private String supplierCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.accountdetailtype.completed.key}")
 	private String accountDetailTypeCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.accountdetailkey.completed.key}")
 	private String accountDetailKeyCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.accountentity.completed.key}")
 	private String accountEntityCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.accountcodepurpose.completed.key}")
 	private String accountCodePurposeCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.chartofaccount.completed.key}")
 	private String chartOfAccountCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.chartofaccountdetail.completed.key}")
 	private String chartOfAccountDetailCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.budgetgroup.completed.key}")
 	private String budgetGroupCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.financialstatus.completed.key}")
 	private String financialStatusCompletedKey;
+	
 	@Value("${kafka.topics.egf.masters.financialconfiguration.completed.key}")
 	private String financialConfigurationCompletedKey;
 

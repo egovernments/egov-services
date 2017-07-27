@@ -8,6 +8,7 @@ import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.budget.web.contract.BudgetContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
+import org.egov.egf.budget.web.contract.EstimationTypeContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.junit.Before;
@@ -125,7 +126,7 @@ public class BudgetMapperTest {
 		contract.setId("id");
 		contract.setName("name");
 		contract.setFinancialYear(FinancialYearContract.builder().id("id").build());
-		contract.setEstimationType(EstimationType.BE);
+		contract.setEstimationType(EstimationTypeContract.BE);
 		contract.setParent(BudgetContract.builder().id("parent").build());
 		contract.setDescription("description");
 		contract.setActive(true);
@@ -174,7 +175,7 @@ public class BudgetMapperTest {
 		contract.setId("id");
 		contract.setName("name");
 		contract.setFinancialYear(FinancialYearContract.builder().id("id").build());
-		contract.setEstimationType(EstimationType.BE);
+		contract.setEstimationType(EstimationTypeContract.BE);
 		contract.setParent(BudgetContract.builder().id("parent").build());
 		contract.setDescription("description");
 		contract.setActive(true);

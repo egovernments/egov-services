@@ -1,11 +1,11 @@
 package org.egov.propertyIndexer.indexerConsumer;
 
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
@@ -27,7 +27,7 @@ import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Index;
-
+import lombok.extern.slf4j.Slf4j;
 
 /*
  * Consumer class will use for listing  property object from kafka server to insert data in elastic server
@@ -37,91 +37,90 @@ import io.searchbox.core.Index;
 @Configuration
 @EnableKafka
 @Service
+@Slf4j
 public class Consumer {
 
-	// TODO Hey there need to read topic name from application properties via environment
-	@Autowired
-	private  Environment environment;
+    // TODO Hey there need to read topic name from application properties via environment
+    @Autowired
+    private Environment environment;
 
-	@Autowired
-	JestClient client=null;
+    @Autowired
+    JestClient client = null;
 
-	//public static final String topic=getTopic();
+    // public static final String topic=getTopic();
 
-	/*
-	 * This method for getting consumer configuration bean
-	 */
-	@Bean
-	public Map<String,Object> consumerConfig(){
-		Map<String,Object> consumerProperties=new HashMap<String,Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("consumer.offset"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("bootstrap.servers"));
-		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.group"));
-		return consumerProperties;
-	}
+    /*
+     * This method for getting consumer configuration bean
+     */
+    @Bean
+    public Map<String, Object> consumerConfig() {
+        Map<String, Object> consumerProperties = new HashMap<String, Object>();
+        consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("consumer.offset"));
+        consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("bootstrap.servers"));
+        consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.group"));
+        return consumerProperties;
+    }
 
+    /*
+     * This method will return the consumer factory bean based on consumer configuration
+     */
+    @Bean
+    public ConsumerFactory<String, PropertyRequest> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
+                new JsonDeserializer<>(PropertyRequest.class));
 
-	/*
-	 * This method will return the consumer factory bean based on consumer configuration
-	 */
-	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory(){
-		return new DefaultKafkaConsumerFactory<>(consumerConfig(),new StringDeserializer(),
-				new JsonDeserializer<>(PropertyRequest.class));
+    }
 
-	}
+    /*
+     * This bean will return kafka listner object based on consumer factory
+     */
 
-	/*
-	 * This bean will return kafka listner object based on consumer factory
-	 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
+        factory.setConsumerFactory(consumerFactory());
+        return factory;
+    }
 
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory(){
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory=new ConcurrentKafkaListenerContainerFactory<String,PropertyRequest>();
-		factory.setConsumerFactory(consumerFactory());
-		return factory;
-	}
+    /*
+     * This method will build and return jest client bean
+     */
 
-	/*
-	 * This method will build and return jest client bean
-	 */
+    @Bean
+    public JestClient getClient() {
+        String url = "http://" + environment.getProperty("es.host") + ":" + environment.getProperty("es.port");
+        if (this.client == null) {
+            JestClientFactory factory = new JestClientFactory();
+            factory.setHttpClientConfig(new HttpClientConfig.Builder(url)
+                    .multiThreaded(Boolean.valueOf(environment.getProperty("multiThread")))
+                    .readTimeout(Integer.valueOf(environment.getProperty("timeout")))
+                    .build());
+            this.client = factory.getObject();
+        }
 
-	@Bean
-	public JestClient getClient() {
-		String url=	"http://"+environment.getProperty("es.host")+":"+environment.getProperty("es.port");
-		if (this.client==null){
-			JestClientFactory factory = new JestClientFactory();
-			factory.setHttpClientConfig(new HttpClientConfig
-					.Builder(url)
-					.multiThreaded(Boolean.valueOf(environment.getProperty("multiThread")))
-					.readTimeout(Integer.valueOf(environment.getProperty("timeout")))
-					.build());
-			this.client = factory.getObject();
-		}
+        return this.client;
+    }
 
-		return this.client;
-	}
+    /*
+     * This method will listen when ever data pushed to indexer topic and insert data in elastic search
+     */
 
-	/*
-	 * This method will listen when ever data pushed to indexer topic and insert data in elastic search
-	 */
+    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow.started')}",
+            "#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
+            "#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
+    public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws IOException {
+        log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord.value());
+        for (Property property : consumerRecord.value().getProperties()) {
+            String propertyData = new ObjectMapper().writeValueAsString(property);
+            client.execute(
+                    new Index.Builder(propertyData)
+                            .index(environment.getProperty("property.index"))
+                            .type(environment.getProperty("property.index.type"))
+                            .build());
+        }
+        client.shutdownClient();
 
-	@KafkaListener(topics= { "#{environment.getProperty('egov.propertytax.property.create.workflow.started')}",
-			"#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
-			"#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
-	public void receive(PropertyRequest propertyRequest) throws IOException{
-		for(Property property : propertyRequest.getProperties()){
-			String propertyData=	new ObjectMapper().writeValueAsString(property);
-			client.execute(
-					new Index.Builder(propertyData)
-					.index(environment.getProperty("property.index"))
-					.type(environment.getProperty("property.index.type"))
-					.build()
-					);
-		}
-		client.shutdownClient();
-
-	}
+    }
 }

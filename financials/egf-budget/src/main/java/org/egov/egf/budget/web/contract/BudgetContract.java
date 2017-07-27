@@ -43,7 +43,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.budget.domain.model.EstimationType;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 
@@ -98,7 +97,7 @@ public class BudgetContract extends AuditableContract {
 	 * type i.e New budget (BE) or the Revised budget (RE)
 	 */
 	@NotNull
-	private EstimationType estimationType;
+	private EstimationTypeContract estimationType;
 
 	/**
 	 * parent is the node used to define in the budget hierarchy tree structure

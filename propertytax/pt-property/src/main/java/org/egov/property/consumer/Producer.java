@@ -15,6 +15,8 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * This class will use for sending property object to kafka server
  * 
@@ -22,8 +24,10 @@ import org.springframework.stereotype.Service;
  */
 @Configuration
 @Service
+@Slf4j
 public class Producer {
 
+    
 	@Autowired
 	private Environment environment;
 
@@ -68,6 +72,7 @@ public class Producer {
 	 */
 
 	public void send(String topic, Object producerRecord) {
+	    log.info("topic name is : "+topic+"  producer record is: "+producerRecord);
 		kafkaTemplate.send(topic, producerRecord);
 	}
 }

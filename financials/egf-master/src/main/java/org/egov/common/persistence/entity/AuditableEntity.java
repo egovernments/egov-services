@@ -23,10 +23,12 @@ public class AuditableEntity {
 
 	protected void toDomain(Auditable domain) {
 		if (createdBy != null) {
-			domain.setCreatedBy(User.builder().id(Long.valueOf(this.getCreatedBy())).build());
+			if(!createdBy.isEmpty())
+			domain.setCreatedBy(User.builder().id(Long.parseLong(this.getCreatedBy())).build());
 		}
 		if (lastModifiedBy != null) {
-			domain.setLastModifiedBy(User.builder().id(Long.valueOf(this.getLastModifiedBy())).build());
+			if(!lastModifiedBy.isEmpty())
+			domain.setLastModifiedBy(User.builder().id(Long.parseLong(this.getLastModifiedBy())).build());
 		}
 		domain.setCreatedDate(this.getCreatedDate());
 		domain.setLastModifiedDate(this.getLastModifiedDate());

@@ -194,6 +194,7 @@ public class WorkflowConsumer {
 		// requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
 		requestInfo.setVer(propertyRequest.getRequestInfo().getVer());
 		requestInfo.setTenantId(tenantId);
+		requestInfo.setUserInfo(propertyRequest.getRequestInfo().getUserInfo());
 
 		return requestInfo;
 	}

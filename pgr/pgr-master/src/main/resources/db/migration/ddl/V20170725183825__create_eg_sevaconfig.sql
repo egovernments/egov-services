@@ -8,7 +8,7 @@ lastModifiedBy BIGINT,
 lastModifiedDate DATE,
 tenantId CHARACTER VARYING(250) NOT NULL,
 
-CONSTRAINT pk_egeis_hrConfiguration PRIMARY KEY (Id)
+CONSTRAINT pk_eg_sevaConfiguration PRIMARY KEY (Id)
 );
 
 CREATE SEQUENCE seq_eg_sevaconfig
@@ -29,8 +29,7 @@ lastModifiedBy BIGINT,
 lastModifiedDate DATE,
 tenantId CHARACTER VARYING(250) NOT NULL,
 
-CONSTRAINT pk_egeis_hrConfigurationValues PRIMARY KEY (Id)
---CONSTRAINT uk_egeis_hrConfigurationValues_keyId UNIQUE (keyId)
+CONSTRAINT pk_eg_sevaConfigurationValues PRIMARY KEY (Id)
 );
 
 CREATE SEQUENCE seq_eg_sevaconfigvalues

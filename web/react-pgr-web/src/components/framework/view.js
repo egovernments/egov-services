@@ -82,40 +82,6 @@ class Report extends Component {
     return  val && (typeof val == "string" || typeof val == "number") ? val : "";
   } 
 
-  incrementIndexValue = (group, jsonPath) => {
-    let {formData} = this.props;
-    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
-    var _group = JSON.stringify(group);
-    var regexp = new RegExp(jsonPath + "\\[\\d{1}\\]", "g");
-    _group = _group.replace(regexp, jsonPath + "[" + (length+1) + "]");
-    return JSON.parse(_group);
-  }
-
-  getNewSpecs = (group, updatedSpecs, path) => {
-    let {moduleName, actionName} = this.props;
-    let groupsArray = _.get(updatedSpecs[moduleName + "." + actionName], path);
-    groupsArray.push(group);
-    _.set(updatedSpecs[moduleName + "." + actionName], path, groupsArray);
-    return updatedSpecs;
-  }
-
-  getPath = (value) => {
-    let {mockData, moduleName, actionName} = this.props;
-    const getFromGroup = function(groups) {
-      for(var i=0; i<groups.length; i++) {
-        for(var j=0; j<groups[i].children.length; i++) {
-          if(groups[i].children[j].jsonPath == value) {
-            return "groups[" + i + "].children[" + j + "].groups";
-          } else {
-            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
-          }
-        }
-      }
-    }
-
-    return getFromGroup(mockData[moduleName + "." + actionName].groups);
-  }
-
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard} = this;

@@ -52,8 +52,7 @@ public class RbacFilterTest {
         ctx.setRequest(request);
         rbacFilter.run();
 
-        assertEquals(404, ctx.get(ERROR_CODE_KEY));
-        assertFalse(ctx.sendZuulResponse());
+        assertForbiddenResponse(ctx);
     }
 
     @Test
@@ -83,9 +82,7 @@ public class RbacFilterTest {
 
         rbacFilter.run();
 
-
-        assertEquals(404, ctx.get(ERROR_CODE_KEY));
-        assertFalse(ctx.sendZuulResponse());
+        assertForbiddenResponse(ctx);
     }
 
     @Test
@@ -133,7 +130,11 @@ public class RbacFilterTest {
         ctx.setRequest(request);
         rbacFilter.run();
 
-        assertEquals(404, ctx.get(ERROR_CODE_KEY));
+        assertForbiddenResponse(ctx);
+    }
+
+    private void assertForbiddenResponse(RequestContext ctx) {
+        assertEquals(403, ctx.get(ERROR_CODE_KEY));
         assertFalse(ctx.sendZuulResponse());
     }
 

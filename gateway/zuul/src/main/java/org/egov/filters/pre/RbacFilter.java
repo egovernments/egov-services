@@ -14,6 +14,8 @@ import static org.egov.constants.RequestContextConstants.*;
  */
 public class RbacFilter extends ZuulFilter{
 
+    private static final String FORBIDDEN_MESSAGE = "Not authorized to access this resource";
+
     @Override
     public String filterType() {return "pre";}
 
@@ -33,7 +35,7 @@ public class RbacFilter extends ZuulFilter{
         if(isIncomingURIInAuthorizedActionList)
             return null;
 
-        abortWithStatus(ctx,HttpStatus.NOT_FOUND,"The resource you are trying to find is not available");
+        abortWithStatus(ctx,HttpStatus.FORBIDDEN, FORBIDDEN_MESSAGE);
         return null;
     }
 

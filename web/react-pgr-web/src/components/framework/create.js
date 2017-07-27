@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import _ from "lodash";
 import ShowFields from "./showFields";
 
-import {translate} from '../common/common';
+import {translate, getInitiatorPosition} from '../common/common';
 import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
@@ -106,6 +106,24 @@ class Report extends Component {
     })
   }
 
+  //Needs to be changed later for more customfields
+  checkCustomFields = (formData, cb) => {
+    var self = this;
+    if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition) {
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
+      getInitiatorPosition(function(err, pos) {
+        if(err) {
+          self.toggleSnackbarAndSetText(true, err.message);
+        } else {
+          _.set(formData, jPath, pos);
+          cb(formData);
+        }
+      })
+    } else {
+      cb(formData);
+    }
+  }
+
   create=(e) => {
     let self = this;
     e.preventDefault();
@@ -138,13 +156,17 @@ class Report extends Component {
             counter--;
             if(counter == 0 && breakOut == 0) {
               formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.makeAjaxCall(formData);
+              self.checkCustomFields(formData, function(fd) {
+                self.makeAjaxCall(fd);
+              })
             }
           }
         })
       }
     } else {
-      self.makeAjaxCall(formData);
+      self.checkCustomFields(formData, function(fd) {
+        self.makeAjaxCall(fd);
+      })
     }
   }
 

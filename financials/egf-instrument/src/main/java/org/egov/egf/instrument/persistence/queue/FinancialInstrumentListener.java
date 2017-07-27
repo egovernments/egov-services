@@ -14,11 +14,14 @@ import org.egov.egf.instrument.web.contract.InstrumentAccountCodeContract;
 import org.egov.egf.instrument.web.contract.InstrumentContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeContract;
 import org.egov.egf.instrument.web.contract.SurrenderReasonContract;
+import org.egov.egf.instrument.web.mapper.InstrumentAccountCodeMapper;
+import org.egov.egf.instrument.web.mapper.InstrumentMapper;
+import org.egov.egf.instrument.web.mapper.InstrumentTypeMapper;
+import org.egov.egf.instrument.web.mapper.SurrenderReasonMapper;
 import org.egov.egf.instrument.web.requests.InstrumentAccountCodeRequest;
 import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.egov.egf.instrument.web.requests.SurrenderReasonRequest;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -65,7 +68,10 @@ public class FinancialInstrumentListener {
 	@KafkaListener(id = "${kafka.topics.egf.instrument.validated.id}", topics = "${kafka.topics.egf.instrument.validated.topic}", group = "${kafka.topics.egf.instrument.validated.group}")
 	public void process(HashMap<String, Object> mastersMap) {
 
-		ModelMapper mapper = new ModelMapper();
+		InstrumentAccountCodeMapper accountCodeMapper = new InstrumentAccountCodeMapper();
+		InstrumentMapper instrumentMapper = new InstrumentMapper();
+		InstrumentTypeMapper typeMapper = new InstrumentTypeMapper();
+		SurrenderReasonMapper srMapper = new SurrenderReasonMapper();
 
 		if (mastersMap.get("instrumentaccountcode_create") != null) {
 
@@ -73,7 +79,7 @@ public class FinancialInstrumentListener {
 					.convertValue(mastersMap.get("instrumentaccountcode_create"), InstrumentAccountCodeRequest.class);
 
 			for (InstrumentAccountCodeContract instrumentAccountCodeContract : request.getInstrumentAccountCodes()) {
-				InstrumentAccountCode domain = mapper.map(instrumentAccountCodeContract, InstrumentAccountCode.class);
+				InstrumentAccountCode domain = accountCodeMapper.toDomain(instrumentAccountCodeContract);
 				instrumentAccountCodeService.save(domain);
 			}
 
@@ -90,7 +96,7 @@ public class FinancialInstrumentListener {
 					.convertValue(mastersMap.get("instrumentaccountcode_update"), InstrumentAccountCodeRequest.class);
 
 			for (InstrumentAccountCodeContract instrumentAccountCodeContract : request.getInstrumentAccountCodes()) {
-				InstrumentAccountCode domain = mapper.map(instrumentAccountCodeContract, InstrumentAccountCode.class);
+				InstrumentAccountCode domain = accountCodeMapper.toDomain(instrumentAccountCodeContract);
 				instrumentAccountCodeService.update(domain);
 			}
 
@@ -105,7 +111,7 @@ public class FinancialInstrumentListener {
 					InstrumentRequest.class);
 
 			for (InstrumentContract instrumentContract : request.getInstruments()) {
-				Instrument domain = mapper.map(instrumentContract, Instrument.class);
+				Instrument domain = instrumentMapper.toDomain(instrumentContract);
 				instrumentService.save(domain);
 			}
 
@@ -122,7 +128,7 @@ public class FinancialInstrumentListener {
 					InstrumentRequest.class);
 
 			for (InstrumentContract instrumentContract : request.getInstruments()) {
-				Instrument domain = mapper.map(instrumentContract, Instrument.class);
+				Instrument domain = instrumentMapper.toDomain(instrumentContract);
 				instrumentService.update(domain);
 			}
 
@@ -137,7 +143,7 @@ public class FinancialInstrumentListener {
 					InstrumentTypeRequest.class);
 
 			for (InstrumentTypeContract instrumentTypeContract : request.getInstrumentTypes()) {
-				InstrumentType domain = mapper.map(instrumentTypeContract, InstrumentType.class);
+				InstrumentType domain = typeMapper.toDomain(instrumentTypeContract);
 				instrumentTypeService.save(domain);
 			}
 
@@ -154,7 +160,7 @@ public class FinancialInstrumentListener {
 					InstrumentTypeRequest.class);
 
 			for (InstrumentTypeContract instrumentTypeContract : request.getInstrumentTypes()) {
-				InstrumentType domain = mapper.map(instrumentTypeContract, InstrumentType.class);
+				InstrumentType domain = typeMapper.toDomain(instrumentTypeContract);
 				instrumentTypeService.update(domain);
 			}
 
@@ -169,7 +175,7 @@ public class FinancialInstrumentListener {
 					SurrenderReasonRequest.class);
 
 			for (SurrenderReasonContract surrenderReasonContract : request.getSurrenderReasons()) {
-				SurrenderReason domain = mapper.map(surrenderReasonContract, SurrenderReason.class);
+				SurrenderReason domain = srMapper.toDomain(surrenderReasonContract);
 				surrenderReasonService.save(domain);
 			}
 
@@ -186,7 +192,7 @@ public class FinancialInstrumentListener {
 					SurrenderReasonRequest.class);
 
 			for (SurrenderReasonContract surrenderReasonContract : request.getSurrenderReasons()) {
-				SurrenderReason domain = mapper.map(surrenderReasonContract, SurrenderReason.class);
+				SurrenderReason domain = srMapper.toDomain(surrenderReasonContract);
 				surrenderReasonService.update(domain);
 			}
 

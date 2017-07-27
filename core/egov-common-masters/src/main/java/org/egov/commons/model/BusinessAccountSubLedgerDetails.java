@@ -1,5 +1,8 @@
 package org.egov.commons.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.commons.web.contract.BusinessAccountSubLedger;
@@ -36,7 +39,8 @@ public class BusinessAccountSubLedgerDetails {
 	@NotNull
 	private String tenantId;
 
-	public BusinessAccountSubLedgerDetails(BusinessAccountSubLedger subledger, BusinessDetails modelDetails,
+	public BusinessAccountSubLedgerDetails(BusinessAccountSubLedger subledger,List<BusinessAccountDetails>listModelAccountDetails ,
+			BusinessDetails modelDetails,
 			boolean isUpdate) {
 		id = subledger.getId();
 		amount = subledger.getAmount();
@@ -44,7 +48,7 @@ public class BusinessAccountSubLedgerDetails {
 		accountDetailType = subledger.getDetailType();
 		tenantId = modelDetails.getTenantId();
 		if (!isUpdate)
-			businessAccountDetail = getModelAccountDetail(subledger.getBusinessAccountDetails(), modelDetails);
+			businessAccountDetail = getModelAccountDetail(subledger.getBusinessAccountDetails(),listModelAccountDetails);
 		else
 			businessAccountDetail = getBusinessAccountDetailForUpdate(subledger);
 	}
@@ -60,15 +64,17 @@ public class BusinessAccountSubLedgerDetails {
 
 	private BusinessAccountDetails getBusinessAccountDetailForUpdate(BusinessAccountSubLedger subledger) {
 
-		return BusinessAccountDetails.builder().id(subledger.getBusinessAccountDetails().getId()).build();
+		return BusinessAccountDetails.builder().id(subledger.getBusinessAccountDetails()).build();
 	}
 
 	private BusinessAccountDetails getModelAccountDetail(
-			org.egov.commons.web.contract.BusinessAccountDetails serviceAccountDetails, BusinessDetails modelDetails) {
-		return BusinessAccountDetails.builder().id(serviceAccountDetails.getId())
-				.amount(serviceAccountDetails.getAmount()).chartOfAccount(serviceAccountDetails.getChartOfAccounts())
-				.businessDetails(modelDetails).tenantId(modelDetails.getTenantId()).build();
-
+			Long serviceAccountDetails,List<BusinessAccountDetails>listModelAccountDetails) {
+		BusinessAccountDetails modelBusinessAccountDetail = new BusinessAccountDetails();
+		for(BusinessAccountDetails accountDetail:listModelAccountDetails){
+			if(accountDetail.getId() ==serviceAccountDetails)
+				modelBusinessAccountDetail=accountDetail;
+		}
+		return modelBusinessAccountDetail;
 	}
 
 	@Override

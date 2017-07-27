@@ -90,7 +90,6 @@ const Main = () => {
     <main style={{"marginBottom": "50px"}}>
     <Switch>
         <Route exact path= {base + '/'} component={Login}/>
-        <Route exact path= {base + '/:actionName/:moduleName/:master?/:id?'} component={Create}/>
 	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
         <Route exact path= {base + '/search/:moduleName/:master?'} component={Search}/>
         <Route exact path={base + '/profileEdit'} component={ProfileEdit}/>
@@ -181,6 +180,7 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
 		  <Route exact path={base+'/propertyTax/view-property'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+          <Route exact path= {base + '/:actionName/:moduleName/:master?/:id?'} component={Create}/>
     </Switch>
   </main>
 )}

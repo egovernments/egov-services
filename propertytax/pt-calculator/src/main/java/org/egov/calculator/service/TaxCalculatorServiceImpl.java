@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 
+import org.egov.calculator.config.PropertiesManager;
 import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.models.TaxCalculationWrapper;
 import org.egov.calculator.models.TaxperiodWrapper;
@@ -44,7 +45,6 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /**
@@ -71,9 +71,9 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     @Autowired
     TaxPeriodRespository taxPeriodRespository;
-
+    
     @Autowired
-    Environment environment;
+	PropertiesManager propertiesManager;
 
     @Autowired
     ServletContext context;
@@ -127,7 +127,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         List<UnitWrapper> roomsList = new ArrayList<UnitWrapper>();
         for (Floor floor : calculationRequest.getProperty().getPropertyDetail().getFloors()) {
             for (Unit unit : floor.getUnits()) {
-                if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+                if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
                         && unit.getUnits() != null) {
                     for (Unit room : unit.getUnits()) {
                         UnitWrapper unitWrapper = new UnitWrapper();
@@ -168,9 +168,9 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         for (TaxperiodWrapper taxWrapper : taxperiods) {
             for (UnitWrapper wrapper : taxWrapper.getUnits()) {
                 Unit unit = wrapper.getUnit();
-                DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
+                DateFormat dateFormat = new SimpleDateFormat(propertiesManager.getDateFormat());
                 Date fromDate = dateFormat.parse(taxWrapper.getTaxPeriod().getFromDate());
-                String date = new SimpleDateFormat(environment.getProperty("date.input.format")).format(fromDate);
+                String date = new SimpleDateFormat(propertiesManager.getInputDateFormat()).format(fromDate);
                 List<CalculationFactor> factorsList = getFactorsByTenantIdAndValidDate(tenantId, date);
                 Map<String, Double> factors = factorsList.stream()
                         .collect(Collectors.toMap(factor -> factor.getFactorType().toString() + factor.getFactorCode(),
@@ -305,10 +305,10 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 
     public List<TaxPeriod> getTaxPeriodListForUnit(Unit unit, String tenantId) throws ParseException {
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(environment.getProperty("date.input.format"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(propertiesManager.getInputDateFormat());
         Date todayDate = new Date();
         String currentDate = simpleDateFormat.format(todayDate);
-        DateFormat dateFormat = new SimpleDateFormat(environment.getProperty("date.format"));
+        DateFormat dateFormat = new SimpleDateFormat(propertiesManager.getDateFormat());
         TaxPeriod taxperiod = taxPeriodRespository.getToDateForTaxCalculation(tenantId, currentDate);
         Date toDate = dateFormat.parse(taxperiod.getToDate());
         String currentFinincialYear = simpleDateFormat.format(toDate);

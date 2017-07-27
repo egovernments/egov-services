@@ -10,6 +10,8 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
+import UiTable from './components/UiTable';
+
 var specifications={};
 try {
   var hash = window.location.hash.split("/");
@@ -85,14 +87,33 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard} = this;
+
+    const renderTable = function() {
+      var objectName = mockData[`${moduleName}.${actionName}`].objectName;
+      if(formData[objectName].documents && formData[objectName].documents.length) {
+        /*var dataList = {
+          resultHeader: ["#", "Name", "File"],
+          resultValues: []
+        };
+
+        for(var i=0; i<formData[objectName].documents.length; i++) {
+          dataList.resultValues.push([i+1, formData[objectName].documents].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=" + formData[objectName].documents].fileStoreId + ">Download</a>");
+        }
+
+        return (
+          <UiTable resultList={dataList}/>
+        );*/
+      }
+    }
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-          <div style={{"textAlign": "center"}}>
-          </div>
+          <br/>
+          {renderTable()}
         </form>
       </div>
     );

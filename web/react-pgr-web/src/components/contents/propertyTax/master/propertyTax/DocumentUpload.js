@@ -99,13 +99,24 @@ class ConstructionTypes extends Component {
     super(props);
     this.state= {
           files:[],
+		  documentType: []
     }
   } 
 
 
   componentDidMount() {
-    //call boundary service fetch wards,location,zone data
+
     var currentThis = this;
+	
+    Api.commonApiPost( 'pt-property/property/documenttypes/_search').then((res)=>{
+      console.log(res);
+      currentThis.setState({documentType: res.documentType})
+    }).catch((err)=> {
+      currentThis.setState({
+        documentType:[]
+      }) 
+      console.log(err)
+    })
 
   }  
 
@@ -160,7 +171,7 @@ class ConstructionTypes extends Component {
     let cThis = this;
 
     return ( <Card>
-				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Document Upload</div>} />
+				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Documents</div>} />
 				<CardText style={styles.reducePadding}>
 					<Card className="darkShadow">
 						<CardText style={styles.reducePadding}>

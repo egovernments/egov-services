@@ -132,6 +132,7 @@ class AssessmentDetails extends Component {
     var currentThis = this;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+		  res.propertyTypes.unshift({id:-1, name:'None'});
         console.log(res);
         currentThis.setState({propertytypes:res.propertyTypes})
       }).catch((err)=> {
@@ -156,18 +157,18 @@ handleDepartment = (e) => {
 		category : e.target.value
 	}
 	
-      Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
-          console.log(res);
-          currentThis.setState({
-            departments:res.departments
-          })
-        }).catch((err)=> {
-          console.log(err)
-        })
+	  Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
+		   res.departments.unshift({id:-1, name:'None'});
+		  console.log(res);
+		  currentThis.setState({
+			departments:res.departments
+		  })
+		}).catch((err)=> {
+		  console.log(err)
+		})
 
-}   
-
-
+} 
+  
   render() {
 
     const renderOption = function(list,listName="") {
@@ -181,7 +182,6 @@ handleDepartment = (e) => {
     }
 
     let {
-      owners,
       assessmentDetails,
       fieldErrors,
       isFormValid,
@@ -193,7 +193,9 @@ handleDepartment = (e) => {
       editObject,
       editIndex,
       isEditIndex,
-      isAddRoom
+      isAddRoom,
+	  addDepandencyFields,
+	  removeDepandencyFields
     } = this.props;
 
     let {search, handleDepartment} = this;
@@ -213,6 +215,12 @@ handleDepartment = (e) => {
                                                   errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
+														if(value == 'SUBDIVISION') {
+															addDepandencyFields('parentUpicNo');
+														} else {
+															removeDepandencyFields('parentUpicNo');
+														}
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -226,12 +234,13 @@ handleDepartment = (e) => {
                                                   id="creationReason"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
+												  <MenuItem value={-1} primaryText="None"/>
                                                   <MenuItem value="NEWPROPERTY" primaryText="New Property"/>
                                                   <MenuItem value="SUBDIVISION" primaryText="Bifurcation"/>
                                               </SelectField>
                                           </Col>
 
-                                          {(assessmentDetails.reasonForCreation == 2) && <Col xs={12} md={3} sm={6}>
+                                          {(assessmentDetails.reasonForCreation == 'SUBDIVISION') && <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText="Parent UPIC No. *"
                                                   errorText={fieldErrors.parentUpicNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.parentUpicNo}</span> : ""}
@@ -251,6 +260,28 @@ handleDepartment = (e) => {
                                                   errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyType}</span> : ""}
                                                   value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
+														if(value == 'VACANT_LAND') {
+															addDepandencyFields('survayNumber');
+															addDepandencyFields('pattaNumber');
+															addDepandencyFields('vacantLandArea');
+															addDepandencyFields('marketValue');
+															addDepandencyFields('capitalValue');
+															addDepandencyFields('effectiveDate');
+															addDepandencyFields('vacantLandPlotArea');
+															addDepandencyFields('layoutApprovalAuthority');
+															addDepandencyFields('layoutPermitNumber');
+														} else {
+															removeDepandencyFields('survayNumber');
+															removeDepandencyFields('pattaNumber');
+															removeDepandencyFields('vacantLandArea');
+															removeDepandencyFields('marketValue');
+															removeDepandencyFields('capitalValue');
+															removeDepandencyFields('effectiveDate');
+															removeDepandencyFields('vacantLandPlotArea');
+															removeDepandencyFields('layoutApprovalAuthority');
+															removeDepandencyFields('layoutPermitNumber');
+														}
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -273,6 +304,7 @@ handleDepartment = (e) => {
                                                   errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertySubType}</span> : ""}
                                                   value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -284,7 +316,8 @@ handleDepartment = (e) => {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              >   
+											      <MenuItem value={-1} primaryText="None"/>
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
                                           </Col>
@@ -296,6 +329,7 @@ handleDepartment = (e) => {
                                                   errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.department}</span> : ""}
                                                   value={assessmentDetails.department ? assessmentDetails.department : ""}
                                                   onChange={(event, index, value) => {
+													    (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -351,7 +385,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: []
+          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite' ]
         },
         pattern: {
           current: [],
@@ -447,6 +481,20 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
+  
+  addDepandencyFields: (property) => {
+		dispatch({
+			type: 'ADD_REQUIRED',
+			property
+		})
+	},
+
+	removeDepandencyFields: (property) => {
+		dispatch({
+			type: 'REMOVE_REQUIRED',
+			property
+		})
+	},
 
   isAddRoom: (room) => {
     dispatch({

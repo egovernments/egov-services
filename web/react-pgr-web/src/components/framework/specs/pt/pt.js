@@ -1,56 +1,18 @@
 var dat = {
 	"pt.create": {
-		"numCols": 2,
-		"url": "/connections/v1/_create",
+		"numCols": 12/3,
+		"version": "v1",
+		"url": "pt-property/properties/_create",
+		"useTimestamp": true,
+		"objectName": "properties",
+		"level": 0,
 		"groups": [
-			{
-				"label": "pt.create.groups.createNewProperty.title",
-				"name": "createNewProperty",
-				"fields": [
-					{
-						"name": "propertyType",
-						"jsonPath": "propertyDetail.propertyType",
-						"label": "Category of ownership",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "apartment",
-						"jsonPath": "propertyDetail.apartment",
-						"label": "Apartment/ Complex name",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "department",
-						"jsonPath": "propertyDetail.department",
-						"label": "Department",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "/pt-property/property/departments/_search?tenantId=default|$..id|$..name",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					}
-				]
-			},
 			{
 				"label": "Property Address",
 				"name": "propertyAddress",
 				"fields": [
 						{
-							"name": "",
+							"name": "ReferencePropertyNumber",
 							"jsonPath": "",
 							"label": "Reference property number",
 							"pattern": "",
@@ -291,8 +253,8 @@ var dat = {
 							"jsonPath": "",
 							"label": "Reason for Creation *",
 							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
+							"type": "singleValueList",
+							"isRequired": true,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
@@ -303,8 +265,8 @@ var dat = {
 							"jsonPath": "",
 							"label": "Property Type *",
 							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
+							"type": "singleValueList",
+							"isRequired": true,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
@@ -315,18 +277,31 @@ var dat = {
 							"jsonPath": "",
 							"label": "Property Sub-type *",
 							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
+							"type": "singleValueList",
+							"isRequired": true,
 							"isDisabled": false,
 							"url": "",
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
-						},{
+						},
+						{
+							"name": "",
+							"jsonPath": "",
+							"label": "Department *",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": true,
+							"isDisabled": false,
+							"url": "",
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
 							"name": "",
 							"jsonPath": "",
 							"label": "Extent of Site (Sq. Mtrs) *",
 							"pattern": "",
-							"type": "checkbox",
+							"type": "singleValueList",
 							"isRequired": false,
 							"isDisabled": false,
 							"url": "",

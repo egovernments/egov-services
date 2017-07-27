@@ -353,15 +353,15 @@ class CustomMenu extends Component {
                     )
               } else {
                 let base="";
-                if (item.path.search("EIS")>-1) {
+                if (item.path.search("EIS.")>-1 || item.path.search("ess.")>-1) {
                   base=window.location.origin+"/hr-web";
                   // console.log(base);
                 }
-                else if (item.path.search("Leases And Agreements")>-1) {
+                else if (item.path.search("Leases And Agreements.")>-1) {
                   base=window.location.origin+"/lams-web";
 
                 }
-                else if (item.path.search("Asset Management")>-1) {
+                else if (item.path.search("Asset Management.")>-1) {
                     base=window.location.origin+"/asset-web";
                 }
                 return (
@@ -398,15 +398,15 @@ class CustomMenu extends Component {
                   )
             } else {
               let base="";
-              if (item.path.search("EIS")>-1) {
+              if (item.path.search("EIS.")>-1 || item.path.search("ess.")>-1) {
                 base=window.location.origin+"/hr-web";
                 // console.log(base);
               }
-              else if (item.path.search("Leases And Agreements")>-1) {
+              else if (item.path.search("Leases And Agreements.")>-1) {
                 base=window.location.origin+"/lams-web";
 
               }
-              else if (item.path.search("Asset Management")>-1) {
+              else if (item.path.search("Asset Management.")>-1) {
                   base=window.location.origin+"/asset-web";
               }
               return (

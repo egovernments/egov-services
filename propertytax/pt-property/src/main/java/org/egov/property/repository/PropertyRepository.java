@@ -589,7 +589,9 @@ public class PropertyRepository {
 
 		for (Map<String, Object> documentdata : documentList) {
 			Document document = new Document();
+			if ( documentdata.get("documenttype")!=null) 
 			document.setDocumentType(documentdata.get("documenttype").toString());
+			
 			document.setFileStore(documentdata.get("filestore").toString());
 			document.setId(Long.valueOf(documentdata.get("id").toString()));
 			documents.add(document);

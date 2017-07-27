@@ -9,10 +9,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.propertyIndexer.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -41,8 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 public class Consumer {
 
     // TODO Hey there need to read topic name from application properties via environment
-    @Autowired
-    private Environment environment;
+	@Autowired
+	PropertiesManager propertiesManager;
 
     @Autowired
     JestClient client = null;
@@ -55,11 +55,11 @@ public class Consumer {
     @Bean
     public Map<String, Object> consumerConfig() {
         Map<String, Object> consumerProperties = new HashMap<String, Object>();
-        consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("consumer.offset"));
-        consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("bootstrap.servers"));
+        consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, propertiesManager.getConsumerOffset());
+        consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, propertiesManager.getBootstrapServer());
         consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.group"));
+        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, propertiesManager.getConsumerGroup());
         return consumerProperties;
     }
 
@@ -90,12 +90,12 @@ public class Consumer {
 
     @Bean
     public JestClient getClient() {
-        String url = "http://" + environment.getProperty("es.host") + ":" + environment.getProperty("es.port");
+        String url = "http://" + propertiesManager.getEsHost() + ":" + propertiesManager.getEsPort();
         if (this.client == null) {
             JestClientFactory factory = new JestClientFactory();
             factory.setHttpClientConfig(new HttpClientConfig.Builder(url)
-                    .multiThreaded(Boolean.valueOf(environment.getProperty("multiThread")))
-                    .readTimeout(Integer.valueOf(environment.getProperty("timeout")))
+                    .multiThreaded(Boolean.valueOf(propertiesManager.getIsMultiThread()))
+                    .readTimeout(Integer.valueOf(propertiesManager.getTimeout()))
                     .build());
             this.client = factory.getObject();
         }
@@ -107,17 +107,17 @@ public class Consumer {
      * This method will listen when ever data pushed to indexer topic and insert data in elastic search
      */
 
-    @KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.property.create.workflow.started')}",
-            "#{environment.getProperty('egov.propertytax.property.update.workflow.started')}",
-            "#{environment.getProperty('egov.propertytax.property.update.workflow.approved')}" })
+    @KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}",
+            "#{propertiesManager.getUpdateWorkflow()}",
+            "#{propertiesManager.getApproveWorkflow()}" })
     public void receive(ConsumerRecord<String, PropertyRequest> consumerRecord) throws IOException {
         log.info("consumer topic value is: " + consumerRecord.topic() + " consumer value is" + consumerRecord.value());
         for (Property property : consumerRecord.value().getProperties()) {
             String propertyData = new ObjectMapper().writeValueAsString(property);
             client.execute(
                     new Index.Builder(propertyData)
-                            .index(environment.getProperty("property.index"))
-                            .type(environment.getProperty("property.index.type"))
+                            .index(propertiesManager.getPropertyIndex())
+                            .type(propertiesManager.getPropertyIndexType())
                             .build());
         }
         client.shutdownClient();

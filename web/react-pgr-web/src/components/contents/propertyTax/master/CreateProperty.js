@@ -439,14 +439,7 @@ createPropertyTax = () => {
 				Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response){
 					var documentArray = {
 						"documentType": {						
-							"name": "",
-							"application": "CREATE",
-							"auditDetails": {
-								"createdBy": userRequest.userName,
-								"lastModifiedBy":userRequest.userName,
-								"createdTime": date,
-								"lastModifiedTime": date
-							}
+							"code": ""
 						},
 						"fileStore": "",
 						"auditDetails": {
@@ -484,11 +477,36 @@ setLoadingStatus('hide');
  toggleSnackbarAndSetText(true, err.message);
       })
     }
+	
+createActivate = () => {
+	
+	let {isFormValid, createProperty} = this.props;
+	
+	console.log(createProperty)
+	
+	let notValidated = true;
+	
+	if(createProperty.hasOwnProperty('propertyType') && createProperty.propertyType == "VACANT_LAND") {
+		if(isFormValid && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
+			notValidated = false;
+		} else {
+			notValidated = true;
+		}
+	} else {
+		if(isFormValid && (createProperty.floors ? (createProperty.floors.length == 0 ? false : true) : false ) && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
+			notValidated = false;
+		} else {
+			notValidated = true;
+		}
+	}
+	
+	return notValidated;
+	
+}	
   
   render() {
 	  	  
     let {
-      owners,
       createProperty,
       fieldErrors,
       isFormValid,
@@ -501,7 +519,8 @@ setLoadingStatus('hide');
       editIndex,
       isEditIndex,
       isAddRoom,
-	  files
+	  files,
+	  handleChangeOwner
     } = this.props;
 
     let {search, createPropertyTax, cThis} = this;
@@ -510,6 +529,7 @@ setLoadingStatus('hide');
 		console.log(this.props.files[0].length);
 	}
 
+	console.log(isFormValid);
     
 
     const renderOption = function(list,listName="") {
@@ -553,9 +573,9 @@ setLoadingStatus('hide');
 									
 			   
 				  <Card>
-					<CardText style={styles.reducePadding}>
+					<CardText style={{textAlign:'center'}}>
 						<br/>
-						<RaisedButton type="button" label="Create Property" className="pull-right" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						<RaisedButton type="button" label="Create Property" disabled={(this.createActivate())} backgroundColor="#0b272e" labelColor={white} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
@@ -573,7 +593,8 @@ const mapStateToProps = state => ({
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
-  files: state.form.files
+  files: state.form.files,
+  isFormValid: state.form.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -583,7 +604,27 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
+          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType']
+        },
+        pattern: {
+          current: [],
           required: []
+        }
+      },
+	   validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'usageSubType', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
         },
         pattern: {
           current: [],
@@ -670,6 +711,28 @@ const mapDispatchToProps = dispatch => ({
       objectName,
       objectArray,
       object
+    })
+  },
+  
+  handleChangeOwner: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_OWNER",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
+    })
+  },
+  
+  handleChangeFloor: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_FLOOR",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
     })
   },
 

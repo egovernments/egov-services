@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,17 +77,17 @@ public class AssetCategoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("{code}/_update")
-    public ResponseEntity<?> update(@PathVariable("code") final String code,
-            @RequestBody @Valid final AssetCategoryRequest assetCategoryRequest, final BindingResult bindingResult) {
+    @PostMapping("/_update")
+    public ResponseEntity<?> update(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
+            final BindingResult bindingResult) {
 
-        logger.info("AssetCategory update::" + assetCategoryRequest + "," + "code:" + code);
+        logger.info("AssetCategory update::" + assetCategoryRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-        if (!code.equals(assetCategoryRequest.getAssetCategory().getCode()))
-            throw new RuntimeException("Invalid asset code");
+
+        assetCategoryValidator.validateAssetCategoryForUpdate(assetCategoryRequest);
         final AssetCategoryResponse assetCategoryResponse = assetCategoryService.updateAsync(assetCategoryRequest);
 
         return new ResponseEntity<>(assetCategoryResponse, HttpStatus.OK);

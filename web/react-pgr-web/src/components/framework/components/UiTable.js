@@ -54,7 +54,7 @@ export default class UiTable extends Component {
 		          <Table id="searchTable" bordered responsive>
 		          <thead>
 		            <tr>
-		              {resultList.resultHeader && resultList.resultHeader.length && reportResult.resultHeader.map((item, i) => {
+		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
 		                return (
 		                  <th key={i}>{translate(item.label)}</th>
 		                )

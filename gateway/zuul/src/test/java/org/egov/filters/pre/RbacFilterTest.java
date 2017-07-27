@@ -16,13 +16,15 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class RbacFilterTest {
-    private MockHttpServletRequest request = new MockHttpServletRequest();
 
+    private MockHttpServletRequest request;
     private RbacFilter rbacFilter;
 
     @Before
     public void init(){
+        request = new MockHttpServletRequest();
         rbacFilter = new RbacFilter();
+        RequestContext.getCurrentContext().clear();
     }
 
     @Test
@@ -84,11 +86,61 @@ public class RbacFilterTest {
         RequestContext ctx = RequestContext.getCurrentContext();
         request.setRequestURI("/hr-masters/do/something");
         ctx.setRequest(request);
-        rbacFilter.run();
         User user = new User();
-
         user.setActions(new ArrayList<>());
         ctx.set(USER_INFO_KEY, user);
+
+        rbacFilter.run();
+
+
+        assertEquals(404, ctx.get(ERROR_CODE_KEY));
+        assertFalse(ctx.sendZuulResponse());
+    }
+
+    @Test
+    public void shouldNotAbortWhenUserIsRequestingURIAndAuthorizedURIHasDynamicPlaceHolders() throws Exception {
+        User user = new User();
+        Action action1  = new Action();
+        action1.setUrl("/pgr/seva/{id}/_update");
+        user.setActions(new ArrayList<>(Arrays.asList(action1)));
+        RequestContext ctx = RequestContext.getCurrentContext();
+        ctx.set(USER_INFO_KEY, user);
+        request.setRequestURI("/pgr/seva/123/_update");
+        ctx.setRequest(request);
+
+        rbacFilter.run();
+
+        assertEquals(null, ctx.get(ERROR_CODE_KEY));
+    }
+
+    @Test
+    public void shouldNotAbortWhenUserIsRequestingURIAndAuthorizedURIHasMultipleDynamicPlaceHolders() throws Exception {
+        User user = new User();
+        Action action1  = new Action();
+        action1.setUrl("/pgr/seva/{tenantCode}/{id}/_update");
+        user.setActions(new ArrayList<>(Arrays.asList(action1)));
+        RequestContext ctx = RequestContext.getCurrentContext();
+        ctx.set(USER_INFO_KEY, user);
+        request.setRequestURI("/pgr/seva/default/123/_update");
+        ctx.setRequest(request);
+
+        rbacFilter.run();
+
+        assertEquals(null, ctx.get(ERROR_CODE_KEY));
+    }
+
+    @Test
+    public void shouldAbortWhenUserIsRequestingURIAndAuthorizedURIWithDynamicPlaceHoldersDoesNotMatch() throws Exception {
+        User user = new User();
+        Action action1  = new Action();
+        action1.setUrl("/pgr/seva/{id}/_create");
+        user.setActions(new ArrayList<>(Arrays.asList(action1)));
+        RequestContext ctx = RequestContext.getCurrentContext();
+        ctx.set(USER_INFO_KEY, user);
+
+        request.setRequestURI("/pgr/seva/123/_update");
+        ctx.setRequest(request);
+        rbacFilter.run();
 
         assertEquals(404, ctx.get(ERROR_CODE_KEY));
         assertFalse(ctx.sendZuulResponse());

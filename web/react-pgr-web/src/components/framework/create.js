@@ -110,7 +110,7 @@ class Report extends Component {
         }
         self.props.setFormData(formData);
     }, function(err){
-      
+      console.log(err);
     })
   }
 

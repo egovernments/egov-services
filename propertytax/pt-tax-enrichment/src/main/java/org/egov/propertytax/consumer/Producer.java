@@ -1,11 +1,14 @@
 package org.egov.propertytax.consumer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.egov.propertytax.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -14,16 +17,13 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Configuration
 @Service
 @Slf4j
 public class Producer {
 
 	@Autowired
-	private Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	KafkaTemplate<String, Object> kafkaTemplate;
@@ -34,7 +34,7 @@ public class Producer {
 	@Bean
 	public Map<String, Object> producerConfig() {
 		Map<String, Object> producerProperties = new HashMap<String, Object>();
-		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("spring.kafka.bootstrap.servers"));
+		producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, propertiesManager.getBootstrapServer());
 		producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		return producerProperties;

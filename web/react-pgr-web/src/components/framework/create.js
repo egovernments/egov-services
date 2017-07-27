@@ -13,7 +13,7 @@ import {fileUpload} from './utility/utility';
 var specifications={};
 try {
   var hash = window.location.hash.split("/");
-  if(hash.length == 3) {
+  if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
     specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
   } else {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
@@ -44,6 +44,7 @@ class Report extends Component {
 
   initData() {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
+    let self = this;
     let hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
     this.setLabelAndReturnRequired(obj);
@@ -52,6 +53,19 @@ class Report extends Component {
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
+
+    if(hashLocation.split("/").indexOf("update") > -1) {
+      var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
+      var id = this.props.match.params.id || this.props.match.params.master;
+      var query = {
+        [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
+      };
+      Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+        self.props.setFormData(res);
+      }, function(err){
+
+      })
+    }
   }
 
   componentDidMount() {

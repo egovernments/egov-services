@@ -210,6 +210,7 @@ public class FinancialMastersListener {
 	@Autowired
 	private FinancialStatusService financialStatusService;
 
+	@Autowired
 	private FinancialConfigurationService financialConfigurationService;
 
 	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
@@ -217,7 +218,8 @@ public class FinancialMastersListener {
 		// implement the details here
 
 		if (mastersMap.get("bank_create") != null) {
-			BankRequest request = objectMapper.convertValue(mastersMap.get("bank_create"), BankRequest.class);
+			BankRequest request = objectMapper.convertValue(
+					mastersMap.get("bank_create"), BankRequest.class);
 			ModelMapper mapper = new ModelMapper();
 			for (BankContract bankContract : request.getBanks()) {
 				Bank domain = mapper.map(bankContract, Bank.class);
@@ -226,11 +228,13 @@ public class FinancialMastersListener {
 
 			mastersMap.clear();
 			mastersMap.put("bank_persisted", request);
-			financialProducer.sendMessage(completedTopic, bankCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, bankCompletedKey,
+					mastersMap);
 		}
 		if (mastersMap.get("bank_update") != null) {
 
-			BankRequest request = objectMapper.convertValue(mastersMap.get("bank_update"), BankRequest.class);
+			BankRequest request = objectMapper.convertValue(
+					mastersMap.get("bank_update"), BankRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (BankContract bankContract : request.getBanks()) {
@@ -239,11 +243,13 @@ public class FinancialMastersListener {
 			}
 			mastersMap.clear();
 			mastersMap.put("bank_persisted", request);
-			financialProducer.sendMessage(completedTopic, bankCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, bankCompletedKey,
+					mastersMap);
 		}
 
 		if (mastersMap.get("fund_create") != null) {
-			FundRequest request = objectMapper.convertValue(mastersMap.get("fund_create"), FundRequest.class);
+			FundRequest request = objectMapper.convertValue(
+					mastersMap.get("fund_create"), FundRequest.class);
 			ModelMapper mapper = new ModelMapper();
 			for (FundContract fundContract : request.getFunds()) {
 				Fund domain = mapper.map(fundContract, Fund.class);
@@ -252,11 +258,13 @@ public class FinancialMastersListener {
 
 			mastersMap.clear();
 			mastersMap.put("fund_persisted", request);
-			financialProducer.sendMessage(completedTopic, fundCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, fundCompletedKey,
+					mastersMap);
 		}
 		if (mastersMap.get("fund_update") != null) {
 
-			FundRequest request = objectMapper.convertValue(mastersMap.get("fund_update"), FundRequest.class);
+			FundRequest request = objectMapper.convertValue(
+					mastersMap.get("fund_update"), FundRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (FundContract fundContract : request.getFunds()) {
@@ -265,68 +273,85 @@ public class FinancialMastersListener {
 			}
 			mastersMap.clear();
 			mastersMap.put("fund_persisted", request);
-			financialProducer.sendMessage(completedTopic, fundCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, fundCompletedKey,
+					mastersMap);
 		}
 
 		if (mastersMap.get("financialyear_create") != null) {
-			FinancialYearRequest request = objectMapper.convertValue(mastersMap.get("financialyear_create"),
+			FinancialYearRequest request = objectMapper.convertValue(
+					mastersMap.get("financialyear_create"),
 					FinancialYearRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (FinancialYearContract financialYearContract : request.getFinancialYears()) {
-				FinancialYear domain = mapper.map(financialYearContract, FinancialYear.class);
+			for (FinancialYearContract financialYearContract : request
+					.getFinancialYears()) {
+				FinancialYear domain = mapper.map(financialYearContract,
+						FinancialYear.class);
 				financialYearService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("financialyear_persisted", request);
-			financialProducer.sendMessage(completedTopic, financialYearCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					financialYearCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("financialyear_update") != null) {
 
-			FinancialYearRequest request = objectMapper.convertValue(mastersMap.get("financialyear_update"),
+			FinancialYearRequest request = objectMapper.convertValue(
+					mastersMap.get("financialyear_update"),
 					FinancialYearRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (FinancialYearContract financialYearContract : request.getFinancialYears()) {
-				FinancialYear domain = mapper.map(financialYearContract, FinancialYear.class);
+			for (FinancialYearContract financialYearContract : request
+					.getFinancialYears()) {
+				FinancialYear domain = mapper.map(financialYearContract,
+						FinancialYear.class);
 				financialYearService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("financialyear_persisted", request);
-			financialProducer.sendMessage(completedTopic, financialYearCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					financialYearCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("fiscalperiod_create") != null) {
-			FiscalPeriodRequest request = objectMapper.convertValue(mastersMap.get("fiscalperiod_create"),
+			FiscalPeriodRequest request = objectMapper.convertValue(
+					mastersMap.get("fiscalperiod_create"),
 					FiscalPeriodRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (FiscalPeriodContract fiscalPeriodContract : request.getFiscalPeriods()) {
-				FiscalPeriod domain = mapper.map(fiscalPeriodContract, FiscalPeriod.class);
+			for (FiscalPeriodContract fiscalPeriodContract : request
+					.getFiscalPeriods()) {
+				FiscalPeriod domain = mapper.map(fiscalPeriodContract,
+						FiscalPeriod.class);
 				fiscalPeriodService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("fiscalperiod_persisted", request);
-			financialProducer.sendMessage(completedTopic, fiscalPeriodCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					fiscalPeriodCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("fiscalperiod_update") != null) {
 
-			FiscalPeriodRequest request = objectMapper.convertValue(mastersMap.get("fiscalperiod_update"),
+			FiscalPeriodRequest request = objectMapper.convertValue(
+					mastersMap.get("fiscalperiod_update"),
 					FiscalPeriodRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (FiscalPeriodContract fiscalPeriodContract : request.getFiscalPeriods()) {
-				FiscalPeriod domain = mapper.map(fiscalPeriodContract, FiscalPeriod.class);
+			for (FiscalPeriodContract fiscalPeriodContract : request
+					.getFiscalPeriods()) {
+				FiscalPeriod domain = mapper.map(fiscalPeriodContract,
+						FiscalPeriod.class);
 				fiscalPeriodService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("fiscalperiod_persisted", request);
-			financialProducer.sendMessage(completedTopic, fiscalPeriodCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					fiscalPeriodCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("function_create") != null) {
-			FunctionRequest request = objectMapper.convertValue(mastersMap.get("function_create"),
-					FunctionRequest.class);
+			FunctionRequest request = objectMapper.convertValue(
+					mastersMap.get("function_create"), FunctionRequest.class);
 			ModelMapper mapper = new ModelMapper();
 			for (FunctionContract functionContract : request.getFunctions()) {
 				Function domain = mapper.map(functionContract, Function.class);
@@ -335,12 +360,13 @@ public class FinancialMastersListener {
 
 			mastersMap.clear();
 			mastersMap.put("function_persisted", request);
-			financialProducer.sendMessage(completedTopic, functionCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, functionCompletedKey,
+					mastersMap);
 		}
 		if (mastersMap.get("function_update") != null) {
 
-			FunctionRequest request = objectMapper.convertValue(mastersMap.get("function_update"),
-					FunctionRequest.class);
+			FunctionRequest request = objectMapper.convertValue(
+					mastersMap.get("function_update"), FunctionRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (FunctionContract functionContract : request.getFunctions()) {
@@ -349,67 +375,85 @@ public class FinancialMastersListener {
 			}
 			mastersMap.clear();
 			mastersMap.put("function_persisted", request);
-			financialProducer.sendMessage(completedTopic, functionCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, functionCompletedKey,
+					mastersMap);
 		}
 
 		if (mastersMap.get("functionary_create") != null) {
-			FunctionaryRequest request = objectMapper.convertValue(mastersMap.get("functionary_create"),
+			FunctionaryRequest request = objectMapper.convertValue(
+					mastersMap.get("functionary_create"),
 					FunctionaryRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (FunctionaryContract functionaryContract : request.getFunctionaries()) {
-				Functionary domain = mapper.map(functionaryContract, Functionary.class);
+			for (FunctionaryContract functionaryContract : request
+					.getFunctionaries()) {
+				Functionary domain = mapper.map(functionaryContract,
+						Functionary.class);
 				functionaryService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("functionary_persisted", request);
-			financialProducer.sendMessage(completedTopic, functionaryCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					functionaryCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("functionary_update") != null) {
 
-			FunctionaryRequest request = objectMapper.convertValue(mastersMap.get("functionary_update"),
+			FunctionaryRequest request = objectMapper.convertValue(
+					mastersMap.get("functionary_update"),
 					FunctionaryRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (FunctionaryContract functionaryContract : request.getFunctionaries()) {
-				Functionary domain = mapper.map(functionaryContract, Functionary.class);
+			for (FunctionaryContract functionaryContract : request
+					.getFunctionaries()) {
+				Functionary domain = mapper.map(functionaryContract,
+						Functionary.class);
 				functionaryService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("functionary_persisted", request);
-			financialProducer.sendMessage(completedTopic, functionaryCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					functionaryCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("fundsource_create") != null) {
-			FundsourceRequest request = objectMapper.convertValue(mastersMap.get("fundsource_create"),
+			FundsourceRequest request = objectMapper.convertValue(
+					mastersMap.get("fundsource_create"),
 					FundsourceRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (FundsourceContract fundsourceContract : request.getFundsources()) {
-				Fundsource domain = mapper.map(fundsourceContract, Fundsource.class);
+			for (FundsourceContract fundsourceContract : request
+					.getFundsources()) {
+				Fundsource domain = mapper.map(fundsourceContract,
+						Fundsource.class);
 				fundsourceService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("fundsource_persisted", request);
-			financialProducer.sendMessage(completedTopic, fundsourceCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					fundsourceCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("fundsource_update") != null) {
 
-			FundsourceRequest request = objectMapper.convertValue(mastersMap.get("fundsource_update"),
+			FundsourceRequest request = objectMapper.convertValue(
+					mastersMap.get("fundsource_update"),
 					FundsourceRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (FundsourceContract fundsourceContract : request.getFundsources()) {
-				Fundsource domain = mapper.map(fundsourceContract, Fundsource.class);
+			for (FundsourceContract fundsourceContract : request
+					.getFundsources()) {
+				Fundsource domain = mapper.map(fundsourceContract,
+						Fundsource.class);
 				fundsourceService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("fundsource_persisted", request);
-			financialProducer.sendMessage(completedTopic, fundsourceCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					fundsourceCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("scheme_create") != null) {
-			SchemeRequest request = objectMapper.convertValue(mastersMap.get("scheme_create"), SchemeRequest.class);
+			SchemeRequest request = objectMapper.convertValue(
+					mastersMap.get("scheme_create"), SchemeRequest.class);
 			ModelMapper mapper = new ModelMapper();
 			for (SchemeContract schemeContract : request.getSchemes()) {
 				Scheme domain = mapper.map(schemeContract, Scheme.class);
@@ -418,11 +462,13 @@ public class FinancialMastersListener {
 
 			mastersMap.clear();
 			mastersMap.put("scheme_persisted", request);
-			financialProducer.sendMessage(completedTopic, schemeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, schemeCompletedKey,
+					mastersMap);
 		}
 		if (mastersMap.get("scheme_update") != null) {
 
-			SchemeRequest request = objectMapper.convertValue(mastersMap.get("scheme_update"), SchemeRequest.class);
+			SchemeRequest request = objectMapper.convertValue(
+					mastersMap.get("scheme_update"), SchemeRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (SchemeContract schemeContract : request.getSchemes()) {
@@ -431,68 +477,81 @@ public class FinancialMastersListener {
 			}
 			mastersMap.clear();
 			mastersMap.put("scheme_persisted", request);
-			financialProducer.sendMessage(completedTopic, schemeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, schemeCompletedKey,
+					mastersMap);
 		}
 
 		if (mastersMap.get("bankaccount_create") != null) {
-			BankAccountRequest request = objectMapper.convertValue(mastersMap.get("bankaccount_create"),
+			BankAccountRequest request = objectMapper.convertValue(
+					mastersMap.get("bankaccount_create"),
 					BankAccountRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (BankAccountContract bankAccountContract : request.getBankAccounts()) {
-				BankAccount domain = mapper.map(bankAccountContract, BankAccount.class);
+			for (BankAccountContract bankAccountContract : request
+					.getBankAccounts()) {
+				BankAccount domain = mapper.map(bankAccountContract,
+						BankAccount.class);
 				bankAccountService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("bankaccount_persisted", request);
-			financialProducer.sendMessage(completedTopic, bankAccountCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					bankAccountCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("bankaccount_update") != null) {
 
-			BankAccountRequest request = objectMapper.convertValue(mastersMap.get("bankaccount_update"),
+			BankAccountRequest request = objectMapper.convertValue(
+					mastersMap.get("bankaccount_update"),
 					BankAccountRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (BankAccountContract bankAccountContract : request.getBankAccounts()) {
-				BankAccount domain = mapper.map(bankAccountContract, BankAccount.class);
+			for (BankAccountContract bankAccountContract : request
+					.getBankAccounts()) {
+				BankAccount domain = mapper.map(bankAccountContract,
+						BankAccount.class);
 				bankAccountService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("bankaccount_persisted", request);
-			financialProducer.sendMessage(completedTopic, bankAccountCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					bankAccountCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("subscheme_create") != null) {
-			SubSchemeRequest request = objectMapper.convertValue(mastersMap.get("subscheme_create"),
-					SubSchemeRequest.class);
+			SubSchemeRequest request = objectMapper.convertValue(
+					mastersMap.get("subscheme_create"), SubSchemeRequest.class);
 			ModelMapper mapper = new ModelMapper();
 			for (SubSchemeContract subSchemeContract : request.getSubSchemes()) {
-				SubScheme domain = mapper.map(subSchemeContract, SubScheme.class);
+				SubScheme domain = mapper.map(subSchemeContract,
+						SubScheme.class);
 				subSchemeService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("subscheme_persisted", request);
-			financialProducer.sendMessage(completedTopic, subSchemeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					subSchemeCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("subscheme_update") != null) {
 
-			SubSchemeRequest request = objectMapper.convertValue(mastersMap.get("subscheme_update"),
-					SubSchemeRequest.class);
+			SubSchemeRequest request = objectMapper.convertValue(
+					mastersMap.get("subscheme_update"), SubSchemeRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (SubSchemeContract subSchemeContract : request.getSubSchemes()) {
-				SubScheme domain = mapper.map(subSchemeContract, SubScheme.class);
+				SubScheme domain = mapper.map(subSchemeContract,
+						SubScheme.class);
 				subSchemeService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("subscheme_persisted", request);
-			financialProducer.sendMessage(completedTopic, subSchemeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					subSchemeCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("supplier_create") != null) {
-			SupplierRequest request = objectMapper.convertValue(mastersMap.get("supplier_create"),
-					SupplierRequest.class);
+			SupplierRequest request = objectMapper.convertValue(
+					mastersMap.get("supplier_create"), SupplierRequest.class);
 			ModelMapper mapper = new ModelMapper();
 			for (SupplierContract supplierContract : request.getSuppliers()) {
 				Supplier domain = mapper.map(supplierContract, Supplier.class);
@@ -501,12 +560,13 @@ public class FinancialMastersListener {
 
 			mastersMap.clear();
 			mastersMap.put("supplier_persisted", request);
-			financialProducer.sendMessage(completedTopic, supplierCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, supplierCompletedKey,
+					mastersMap);
 		}
 		if (mastersMap.get("supplier_update") != null) {
 
-			SupplierRequest request = objectMapper.convertValue(mastersMap.get("supplier_update"),
-					SupplierRequest.class);
+			SupplierRequest request = objectMapper.convertValue(
+					mastersMap.get("supplier_update"), SupplierRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (SupplierContract supplierContract : request.getSuppliers()) {
@@ -515,261 +575,336 @@ public class FinancialMastersListener {
 			}
 			mastersMap.clear();
 			mastersMap.put("supplier_persisted", request);
-			financialProducer.sendMessage(completedTopic, supplierCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic, supplierCompletedKey,
+					mastersMap);
 		}
 
 		if (mastersMap.get("accountdetailtype_create") != null) {
-			AccountDetailTypeRequest request = objectMapper.convertValue(mastersMap.get("accountdetailtype_create"),
+			AccountDetailTypeRequest request = objectMapper.convertValue(
+					mastersMap.get("accountdetailtype_create"),
 					AccountDetailTypeRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (AccountDetailTypeContract accountDetailTypeContract : request.getAccountDetailTypes()) {
-				AccountDetailType domain = mapper.map(accountDetailTypeContract, AccountDetailType.class);
+			for (AccountDetailTypeContract accountDetailTypeContract : request
+					.getAccountDetailTypes()) {
+				AccountDetailType domain = mapper.map(
+						accountDetailTypeContract, AccountDetailType.class);
 				accountDetailTypeService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("accountdetailtype_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountDetailTypeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountDetailTypeCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("accountdetailtype_update") != null) {
 
-			AccountDetailTypeRequest request = objectMapper.convertValue(mastersMap.get("accountdetailtype_update"),
+			AccountDetailTypeRequest request = objectMapper.convertValue(
+					mastersMap.get("accountdetailtype_update"),
 					AccountDetailTypeRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (AccountDetailTypeContract accountDetailTypeContract : request.getAccountDetailTypes()) {
-				AccountDetailType domain = mapper.map(accountDetailTypeContract, AccountDetailType.class);
+			for (AccountDetailTypeContract accountDetailTypeContract : request
+					.getAccountDetailTypes()) {
+				AccountDetailType domain = mapper.map(
+						accountDetailTypeContract, AccountDetailType.class);
 				accountDetailTypeService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("accountdetailtype_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountDetailTypeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountDetailTypeCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("accountdetailkey_create") != null) {
-			AccountDetailKeyRequest request = objectMapper.convertValue(mastersMap.get("accountdetailkey_create"),
+			AccountDetailKeyRequest request = objectMapper.convertValue(
+					mastersMap.get("accountdetailkey_create"),
 					AccountDetailKeyRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (AccountDetailKeyContract accountDetailKeyContract : request.getAccountDetailKeys()) {
-				AccountDetailKey domain = mapper.map(accountDetailKeyContract, AccountDetailKey.class);
+			for (AccountDetailKeyContract accountDetailKeyContract : request
+					.getAccountDetailKeys()) {
+				AccountDetailKey domain = mapper.map(accountDetailKeyContract,
+						AccountDetailKey.class);
 				accountDetailKeyService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("accountdetailkey_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountDetailKeyCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountDetailKeyCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("accountdetailkey_update") != null) {
 
-			AccountDetailKeyRequest request = objectMapper.convertValue(mastersMap.get("accountdetailkey_update"),
+			AccountDetailKeyRequest request = objectMapper.convertValue(
+					mastersMap.get("accountdetailkey_update"),
 					AccountDetailKeyRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (AccountDetailKeyContract accountDetailKeyContract : request.getAccountDetailKeys()) {
-				AccountDetailKey domain = mapper.map(accountDetailKeyContract, AccountDetailKey.class);
+			for (AccountDetailKeyContract accountDetailKeyContract : request
+					.getAccountDetailKeys()) {
+				AccountDetailKey domain = mapper.map(accountDetailKeyContract,
+						AccountDetailKey.class);
 				accountDetailKeyService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("accountdetailkey_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountDetailKeyCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountDetailKeyCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("accountentity_create") != null) {
-			AccountEntityRequest request = objectMapper.convertValue(mastersMap.get("accountentity_create"),
+			AccountEntityRequest request = objectMapper.convertValue(
+					mastersMap.get("accountentity_create"),
 					AccountEntityRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (AccountEntityContract accountEntityContract : request.getAccountEntities()) {
-				AccountEntity domain = mapper.map(accountEntityContract, AccountEntity.class);
+			for (AccountEntityContract accountEntityContract : request
+					.getAccountEntities()) {
+				AccountEntity domain = mapper.map(accountEntityContract,
+						AccountEntity.class);
 				accountEntityService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("accountentity_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountEntityCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountEntityCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("accountentity_update") != null) {
 
-			AccountEntityRequest request = objectMapper.convertValue(mastersMap.get("accountentity_update"),
+			AccountEntityRequest request = objectMapper.convertValue(
+					mastersMap.get("accountentity_update"),
 					AccountEntityRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (AccountEntityContract accountEntityContract : request.getAccountEntities()) {
-				AccountEntity domain = mapper.map(accountEntityContract, AccountEntity.class);
+			for (AccountEntityContract accountEntityContract : request
+					.getAccountEntities()) {
+				AccountEntity domain = mapper.map(accountEntityContract,
+						AccountEntity.class);
 				accountEntityService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("accountentity_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountEntityCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountEntityCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("accountcodepurpose_create") != null) {
-			AccountCodePurposeRequest request = objectMapper.convertValue(mastersMap.get("accountcodepurpose_create"),
+			AccountCodePurposeRequest request = objectMapper.convertValue(
+					mastersMap.get("accountcodepurpose_create"),
 					AccountCodePurposeRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (AccountCodePurposeContract accountCodePurposeContract : request.getAccountCodePurposes()) {
-				AccountCodePurpose domain = mapper.map(accountCodePurposeContract, AccountCodePurpose.class);
+			for (AccountCodePurposeContract accountCodePurposeContract : request
+					.getAccountCodePurposes()) {
+				AccountCodePurpose domain = mapper.map(
+						accountCodePurposeContract, AccountCodePurpose.class);
 				accountCodePurposeService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("accountcodepurpose_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountCodePurposeCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("accountcodepurpose_update") != null) {
 
-			AccountCodePurposeRequest request = objectMapper.convertValue(mastersMap.get("accountcodepurpose_update"),
+			AccountCodePurposeRequest request = objectMapper.convertValue(
+					mastersMap.get("accountcodepurpose_update"),
 					AccountCodePurposeRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (AccountCodePurposeContract accountCodePurposeContract : request.getAccountCodePurposes()) {
-				AccountCodePurpose domain = mapper.map(accountCodePurposeContract, AccountCodePurpose.class);
+			for (AccountCodePurposeContract accountCodePurposeContract : request
+					.getAccountCodePurposes()) {
+				AccountCodePurpose domain = mapper.map(
+						accountCodePurposeContract, AccountCodePurpose.class);
 				accountCodePurposeService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("accountcodepurpose_persisted", request);
-			financialProducer.sendMessage(completedTopic, accountCodePurposeCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					accountCodePurposeCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("chartofaccount_create") != null) {
-			ChartOfAccountRequest request = objectMapper.convertValue(mastersMap.get("chartofaccount_create"),
+			ChartOfAccountRequest request = objectMapper.convertValue(
+					mastersMap.get("chartofaccount_create"),
 					ChartOfAccountRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (ChartOfAccountContract chartOfAccountContract : request.getChartOfAccounts()) {
-				ChartOfAccount domain = mapper.map(chartOfAccountContract, ChartOfAccount.class);
+			for (ChartOfAccountContract chartOfAccountContract : request
+					.getChartOfAccounts()) {
+				ChartOfAccount domain = mapper.map(chartOfAccountContract,
+						ChartOfAccount.class);
 				chartOfAccountService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("chartofaccount_persisted", request);
-			financialProducer.sendMessage(completedTopic, chartOfAccountCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					chartOfAccountCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("chartofaccount_update") != null) {
 
-			ChartOfAccountRequest request = objectMapper.convertValue(mastersMap.get("chartofaccount_update"),
+			ChartOfAccountRequest request = objectMapper.convertValue(
+					mastersMap.get("chartofaccount_update"),
 					ChartOfAccountRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (ChartOfAccountContract chartOfAccountContract : request.getChartOfAccounts()) {
-				ChartOfAccount domain = mapper.map(chartOfAccountContract, ChartOfAccount.class);
+			for (ChartOfAccountContract chartOfAccountContract : request
+					.getChartOfAccounts()) {
+				ChartOfAccount domain = mapper.map(chartOfAccountContract,
+						ChartOfAccount.class);
 				chartOfAccountService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("chartofaccount_persisted", request);
-			financialProducer.sendMessage(completedTopic, chartOfAccountCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					chartOfAccountCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("chartofaccountdetail_create") != null) {
-			ChartOfAccountDetailRequest request = objectMapper
-					.convertValue(mastersMap.get("chartofaccountdetail_create"), ChartOfAccountDetailRequest.class);
+			ChartOfAccountDetailRequest request = objectMapper.convertValue(
+					mastersMap.get("chartofaccountdetail_create"),
+					ChartOfAccountDetailRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (ChartOfAccountDetailContract chartOfAccountDetailContract : request.getChartOfAccountDetails()) {
-				ChartOfAccountDetail domain = mapper.map(chartOfAccountDetailContract, ChartOfAccountDetail.class);
+			for (ChartOfAccountDetailContract chartOfAccountDetailContract : request
+					.getChartOfAccountDetails()) {
+				ChartOfAccountDetail domain = mapper.map(
+						chartOfAccountDetailContract,
+						ChartOfAccountDetail.class);
 				chartOfAccountDetailService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("chartofaccountdetail_persisted", request);
-			financialProducer.sendMessage(completedTopic, chartOfAccountDetailCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					chartOfAccountDetailCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("chartofaccountdetail_update") != null) {
 
-			ChartOfAccountDetailRequest request = objectMapper
-					.convertValue(mastersMap.get("chartofaccountdetail_update"), ChartOfAccountDetailRequest.class);
+			ChartOfAccountDetailRequest request = objectMapper.convertValue(
+					mastersMap.get("chartofaccountdetail_update"),
+					ChartOfAccountDetailRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (ChartOfAccountDetailContract chartOfAccountDetailContract : request.getChartOfAccountDetails()) {
-				ChartOfAccountDetail domain = mapper.map(chartOfAccountDetailContract, ChartOfAccountDetail.class);
+			for (ChartOfAccountDetailContract chartOfAccountDetailContract : request
+					.getChartOfAccountDetails()) {
+				ChartOfAccountDetail domain = mapper.map(
+						chartOfAccountDetailContract,
+						ChartOfAccountDetail.class);
 				chartOfAccountDetailService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("chartofaccountdetail_persisted", request);
-			financialProducer.sendMessage(completedTopic, chartOfAccountDetailCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					chartOfAccountDetailCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("budgetgroup_create") != null) {
-			BudgetGroupRequest request = objectMapper.convertValue(mastersMap.get("budgetgroup_create"),
+			BudgetGroupRequest request = objectMapper.convertValue(
+					mastersMap.get("budgetgroup_create"),
 					BudgetGroupRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (BudgetGroupContract budgetGroupContract : request.getBudgetGroups()) {
-				BudgetGroup domain = mapper.map(budgetGroupContract, BudgetGroup.class);
+			for (BudgetGroupContract budgetGroupContract : request
+					.getBudgetGroups()) {
+				BudgetGroup domain = mapper.map(budgetGroupContract,
+						BudgetGroup.class);
 				budgetGroupService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("budgetgroup_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetGroupCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					budgetGroupCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("budgetgroup_update") != null) {
 
-			BudgetGroupRequest request = objectMapper.convertValue(mastersMap.get("budgetgroup_update"),
+			BudgetGroupRequest request = objectMapper.convertValue(
+					mastersMap.get("budgetgroup_update"),
 					BudgetGroupRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (BudgetGroupContract budgetGroupContract : request.getBudgetGroups()) {
-				BudgetGroup domain = mapper.map(budgetGroupContract, BudgetGroup.class);
+			for (BudgetGroupContract budgetGroupContract : request
+					.getBudgetGroups()) {
+				BudgetGroup domain = mapper.map(budgetGroupContract,
+						BudgetGroup.class);
 				budgetGroupService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("budgetgroup_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetGroupCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					budgetGroupCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("financialstatus_create") != null) {
-			FinancialStatusRequest request = objectMapper.convertValue(mastersMap.get("financialstatus_create"),
+			FinancialStatusRequest request = objectMapper.convertValue(
+					mastersMap.get("financialstatus_create"),
 					FinancialStatusRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (FinancialStatusContract financialStatusContract : request.getFinancialStatuses()) {
-				FinancialStatus domain = mapper.map(financialStatusContract, FinancialStatus.class);
+			for (FinancialStatusContract financialStatusContract : request
+					.getFinancialStatuses()) {
+				FinancialStatus domain = mapper.map(financialStatusContract,
+						FinancialStatus.class);
 				financialStatusService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("financialstatus_persisted", request);
-			financialProducer.sendMessage(completedTopic, financialStatusCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					financialStatusCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("financialstatus_update") != null) {
 
-			FinancialStatusRequest request = objectMapper.convertValue(mastersMap.get("financialstatus_update"),
+			FinancialStatusRequest request = objectMapper.convertValue(
+					mastersMap.get("financialstatus_update"),
 					FinancialStatusRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (FinancialStatusContract financialStatusContract : request.getFinancialStatuses()) {
-				FinancialStatus domain = mapper.map(financialStatusContract, FinancialStatus.class);
+			for (FinancialStatusContract financialStatusContract : request
+					.getFinancialStatuses()) {
+				FinancialStatus domain = mapper.map(financialStatusContract,
+						FinancialStatus.class);
 				financialStatusService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("financialstatus_persisted", request);
-			financialProducer.sendMessage(completedTopic, financialStatusCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					financialStatusCompletedKey, mastersMap);
 		}
 
 		if (mastersMap.get("financialconfiguration_create") != null) {
-			FinancialConfigurationRequest request = objectMapper
-					.convertValue(mastersMap.get("financialconfiguration_create"), FinancialConfigurationRequest.class);
+			FinancialConfigurationRequest request = objectMapper.convertValue(
+					mastersMap.get("financialconfiguration_create"),
+					FinancialConfigurationRequest.class);
 			ModelMapper mapper = new ModelMapper();
-			for (FinancialConfigurationContract financialConfigurationContract : request.getFinancialConfigurations()) {
-				FinancialConfiguration domain = mapper.map(financialConfigurationContract,
+			for (FinancialConfigurationContract financialConfigurationContract : request
+					.getFinancialConfigurations()) {
+				FinancialConfiguration domain = mapper.map(
+						financialConfigurationContract,
 						FinancialConfiguration.class);
 				financialConfigurationService.save(domain);
 			}
 
 			mastersMap.clear();
 			mastersMap.put("financialconfiguration_persisted", request);
-			financialProducer.sendMessage(completedTopic, financialConfigurationCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					financialConfigurationCompletedKey, mastersMap);
 		}
 		if (mastersMap.get("financialconfiguration_update") != null) {
 
-			FinancialConfigurationRequest request = objectMapper
-					.convertValue(mastersMap.get("financialconfiguration_update"), FinancialConfigurationRequest.class);
+			FinancialConfigurationRequest request = objectMapper.convertValue(
+					mastersMap.get("financialconfiguration_update"),
+					FinancialConfigurationRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
-			for (FinancialConfigurationContract financialConfigurationContract : request.getFinancialConfigurations()) {
-				FinancialConfiguration domain = mapper.map(financialConfigurationContract,
+			for (FinancialConfigurationContract financialConfigurationContract : request
+					.getFinancialConfigurations()) {
+				FinancialConfiguration domain = mapper.map(
+						financialConfigurationContract,
 						FinancialConfiguration.class);
 				financialConfigurationService.update(domain);
 			}
 			mastersMap.clear();
 			mastersMap.put("financialconfiguration_persisted", request);
-			financialProducer.sendMessage(completedTopic, financialConfigurationCompletedKey, mastersMap);
+			financialProducer.sendMessage(completedTopic,
+					financialConfigurationCompletedKey, mastersMap);
 		}
 
 	}

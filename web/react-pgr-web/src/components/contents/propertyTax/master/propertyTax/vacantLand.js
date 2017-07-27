@@ -245,7 +245,7 @@ class VacantLand extends Component {
 									<DatePicker  className="fullWidth datepicker"
 									  floatingLabelText="Effective Date *"
 									  errorText={fieldErrors.effectiveDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.effectiveDate}</span> : ""}
-									  defaultDate={ vacantLand.effectiveDate ? vacantLand.effectiveDate :  new Date()}
+									 
 									  onChange={(event,date) => {
 										  var e = {
 											target:{
@@ -283,7 +283,7 @@ class VacantLand extends Component {
 											floatingLabelText="Layout Approval Authority *"
 											errorText={fieldErrors.layoutApprovalAuthority ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutApprovalAuthority}</span> : ""}
 											value={vacantLand.layoutApprovalAuthority ? vacantLand.layoutApprovalAuthority : ""}
-											onChange={(e, value) => {
+											onChange={(event, index, value) => {
 												var e = {
 													target: {
 														value: value
@@ -298,7 +298,7 @@ class VacantLand extends Component {
 											className="fullWidth"
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 											>
-												<MenuItem value="1" primaryText="Options"/>
+												<MenuItem value={1} primaryText="Options"/>
 										  </SelectField>
 								  </Col>
 								  <Col xs={12} md={3} sm={6}>
@@ -324,7 +324,6 @@ class VacantLand extends Component {
 									<DatePicker  className="fullWidth datepicker"
 									  floatingLabelText="Layout Permit Date *"
 									  errorText={fieldErrors.layoutPermitDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitDate}</span> : ""}
-									  defaultDate={ vacantLand.layoutPermitDate ? vacantLand.layoutPermitDate :  new Date()}
 									  onChange={(event,date) => {
 										  var e = {
 											target:{

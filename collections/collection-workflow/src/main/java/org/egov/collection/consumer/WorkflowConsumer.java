@@ -45,6 +45,7 @@ public class WorkflowConsumer {
 				 }
 			
 		} catch (final Exception e) {
+			e.printStackTrace();
 			logger.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
 		}
 	}

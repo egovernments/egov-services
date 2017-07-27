@@ -292,7 +292,7 @@ public class ConnectionValidator {
             LOGGER.info("ConnectionType is INVALID");
             return isRequestValid;
         } else if (!(waterConnectionRequest.getConnection().getBillingType().equals("METERED") ||
-                waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED"))) {
+                waterConnectionRequest.getConnection().getBillingType().equals("NONMETERED"))) {
             LOGGER.info("BillingType is INVALID");
             return isRequestValid;
         }

@@ -82,7 +82,7 @@ public class CollectionApportionerService {
 
 			if (balance.isLessThanOrEqualTo(crAmountToBePaid)) {
 				// partial or exact payment
-				billAcctDetail.setCreditAmount(balance.amount);
+				billAcctDetail.setCreditAmount(balance.crAmount);
 				balance = Amount.ZERO;
 			} else { // excess payment
 				billAcctDetail.setCreditAmount(crAmountToBePaid);
@@ -100,19 +100,19 @@ public class CollectionApportionerService {
 	}
 
 	private static class Amount {
-		BigDecimal amount;
+		BigDecimal crAmount;
 		static Amount ZERO = new Amount(BigDecimal.ZERO);
 
 		Amount(BigDecimal amount) {
-			this.amount = amount;
+			this.crAmount = amount;
 		}
 
 		boolean isZero() {
-			return amount.compareTo(BigDecimal.ZERO) == 0;
+			return crAmount.compareTo(BigDecimal.ZERO) == 0;
 		}
 
 		private boolean isGreaterThan(BigDecimal bd) {
-			return amount.compareTo(bd) > 0;
+			return crAmount.compareTo(bd) > 0;
 		}
 
 		private boolean isGreaterThanZero() {
@@ -120,11 +120,11 @@ public class CollectionApportionerService {
 		}
 
 		boolean isLessThanOrEqualTo(BigDecimal bd) {
-			return amount.compareTo(bd) <= 0;
+			return crAmount.compareTo(bd) <= 0;
 		}
 
 		Amount minus(BigDecimal bd) {
-			return new Amount(amount.subtract(bd));
+			return new Amount(crAmount.subtract(bd));
 		}
 	}
 }

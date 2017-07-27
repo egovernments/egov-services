@@ -74,7 +74,7 @@ public class BillDetail {
 
 	private BigDecimal totalAmount;
 
-	private List<String> collectionModesNotAllowed = new ArrayList<String>();
+	private List<String> collectionModesNotAllowed = new ArrayList<>();
 
 	private String tenantId;
 
@@ -107,7 +107,6 @@ public class BillDetail {
 	private String status;
 
 	@JsonProperty("BillAccountDetail")
-	private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();// for
-																							// billing-service
+	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
 }

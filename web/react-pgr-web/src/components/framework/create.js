@@ -259,7 +259,8 @@ class Report extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={addNewCard} removeCard={removeCard}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>
+            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}
+            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit"}} ui="google"/>}
             <br/>
           </div>
         </form>

@@ -11,6 +11,7 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.repository.builder.AssetCategoryQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetCategoryRowMapper;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,12 @@ public class AssetCategoryRepository {
 
     @Autowired
     private AssetCategoryQueryBuilder assetCategoryQueryBuilder;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Autowired
+    private AssetCommonService assetCommonService;
 
     public List<AssetCategory> search(final AssetCategoryCriteria assetCategoryCriteria) {
 
@@ -64,19 +71,12 @@ public class AssetCategoryRepository {
         return code.toString();
     }
 
-    private Double getDepreciationRate(final Double depreciationRate) {
-        final Double deprRate = Math.round(depreciationRate * 100.0) / 100.0;
-        logger.debug("Depreciation Rate ::" + deprRate);
-        return deprRate;
-    }
-
     public AssetCategory create(final AssetCategoryRequest assetCategoryRequest) {
 
         final RequestInfo requestInfo = assetCategoryRequest.getRequestInfo();
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         final String queryStr = assetCategoryQueryBuilder.getInsertQuery();
 
-        final ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(Include.NON_NULL);
 
         final AssetCategory assetCategory2 = new AssetCategory();
@@ -100,12 +100,13 @@ public class AssetCategoryRepository {
         }
 
         final Object[] obj = new Object[] { assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
-                assetCategoryType, depreciationMethod, getDepreciationRate(assetCategory.getDepreciationRate()),
+                assetCategoryType, depreciationMethod,
+                assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()),
                 assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
                 assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
                 assetCategory.getUnitOfMeasurement(), customFields, assetCategory.getTenantId(),
-                requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
-                assetCategory.getIsAssetAllow(), assetCategory.getVersion() };
+                requestInfo.getUserInfo().getId(), new Date().getTime(), requestInfo.getUserInfo().getId(),
+                new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion() };
 
         try {
             jdbcTemplate.update(queryStr, obj);
@@ -122,7 +123,6 @@ public class AssetCategoryRepository {
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         final String queryStr = assetCategoryQueryBuilder.getUpdateQuery();
 
-        final ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(Include.NON_NULL);
 
         final AssetCategory assetCategory2 = new AssetCategory();
@@ -146,11 +146,12 @@ public class AssetCategoryRepository {
         }
 
         final Object[] obj = new Object[] { assetCategory.getParent(), assetCategoryType, depreciationMethod,
-                getDepreciationRate(assetCategory.getDepreciationRate()), assetCategory.getAssetAccount(),
-                assetCategory.getAccumulatedDepreciationAccount(), assetCategory.getRevaluationReserveAccount(),
-                assetCategory.getDepreciationExpenseAccount(), assetCategory.getUnitOfMeasurement(), customFields,
-                requestInfo.getUserInfo().getId(), new Date(), assetCategory.getIsAssetAllow(),
-                assetCategory.getVersion(), assetCategory.getCode(), assetCategory.getTenantId() };
+                assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()),
+                assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
+                assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
+                assetCategory.getUnitOfMeasurement(), customFields, requestInfo.getUserInfo().getId(),
+                new Date().getTime(), assetCategory.getIsAssetAllow(), assetCategory.getVersion(),
+                assetCategory.getCode(), assetCategory.getTenantId() };
 
         try {
             logger.info("asset category update query::" + queryStr + "," + Arrays.toString(obj));

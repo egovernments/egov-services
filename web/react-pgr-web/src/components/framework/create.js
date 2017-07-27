@@ -85,7 +85,7 @@ class Report extends Component {
       })
     } else {
       var formData = {};
-      self.setDefaultValues(obj.groups, formData);
+      if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
     }
   }

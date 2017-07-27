@@ -771,7 +771,7 @@ definitions:
       factorCode:
         type: string
         description: code for the respctive type of the factor from property master.
-        maxLength: 16
+        maxLength: 64
         minLength: 4
       factorType:
         type: string
@@ -850,27 +850,27 @@ definitions:
       boundary:
         type: string
         description: The boundary for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       structure:
         type: string
         description: The Structure for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       usage:
         type: string
         description: The usage for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       subUsage:
         type: string
         description: The subUsage for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1
       occupancy:
         type: string
         description: The occupancy for which this Guidance value is.
-        maxLength: 16
+        maxLength: 64
         minLength: 1        
       value:
         type: number

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.calculator.config.PropertiesManager;
 import org.egov.calculator.exception.InvalidInputException;
 import org.egov.calculator.repository.FactorRepository;
 import org.egov.calculator.repository.GuidanceValueRepostory;
@@ -32,7 +33,6 @@ import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.UsageMasterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -62,7 +62,7 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	private TaxPeriodRespository taxPeriodRespository;
 
 	@Autowired
-	private Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Override
 	@Transactional
@@ -112,9 +112,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			RestTemplate restTemplate = new RestTemplate();
 			StringBuilder uri = new StringBuilder();
 			Map<String, String> params = new HashMap<String, String>();
-			uri.append(environment.getProperty("egov.services.pt_property.hostname"));
-			uri.append(environment.getProperty("egov.services.pt_property.basepath"));
-			uri.append(environment.getProperty("egov.services.pt_property.search"));
+			uri.append(propertiesManager.getPropertyHostName());
+			uri.append(propertiesManager.getPropertyBasepath());
+			uri.append(propertiesManager.getPropertySearch());
 			params.put("tenantId", calculationFactor.getTenantId());
 			params.put("code", calculationFactor.getFactorCode());
 

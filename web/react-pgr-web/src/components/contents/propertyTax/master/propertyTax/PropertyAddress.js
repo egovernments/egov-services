@@ -188,7 +188,7 @@ class PropertyAddress extends Component {
 
     const renderOption = function(list,listName="") {
         if(list)
-        {
+        {	list.unshift({id:-1, name:'None'})
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
@@ -197,7 +197,6 @@ class PropertyAddress extends Component {
     }
 
     let {
-      owners,
       propertyAddress,
       fieldErrors,
       isFormValid,
@@ -209,7 +208,9 @@ class PropertyAddress extends Component {
       editObject,
       editIndex,
       isEditIndex,
-      isAddRoom
+      isAddRoom,
+	  addDepandencyFields,
+	  removeDepandencyFields
     } = this.props;
 
     let {search} = this;
@@ -240,15 +241,16 @@ class PropertyAddress extends Component {
 										  <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Appartment/Complex name"
-                                                  errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.appComplexName}</span>: ""}
+                                                  errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.appComplexName}</span>: ""}
                                                   value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "appComplexName", true, "")}
+                                                      handleChange(e, "appComplexName", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -275,9 +277,10 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Locality *"
-                                                  errorText={fieldErrors.locality ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.locality}</span>: ""}
+                                                  errorText={fieldErrors.locality ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.locality}</span>: ""}
                                                   value={propertyAddress.locality ? propertyAddress.locality:""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -296,9 +299,10 @@ class PropertyAddress extends Component {
 										   <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Election ward *"
-                                                  errorText={fieldErrors.electionWard ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.electionWard}</span> : ""}
+                                                  errorText={fieldErrors.electionWard ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.electionWard}</span> : ""}
                                                   value={propertyAddress.electionWard ? propertyAddress.electionWard : ""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -317,9 +321,10 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Zone No. *"
-                                                  errorText={fieldErrors.zoneNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.zoneNo}</span>: ""}
+                                                  errorText={fieldErrors.zoneNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.zoneNo}</span>: ""}
                                                   value={propertyAddress.zoneNo ? propertyAddress.zoneNo:""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -338,9 +343,10 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Ward No. *"
-                                                  errorText={fieldErrors.wardNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.wardNo}</span> : ""}
+                                                  errorText={fieldErrors.wardNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.wardNo}</span> : ""}
                                                   value={propertyAddress.wardNo ? propertyAddress.wardNo : ""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -359,9 +365,10 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Block No."
-                                                  errorText={fieldErrors.blockNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.blockNo}</span> : ""}
+                                                  errorText={fieldErrors.blockNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.blockNo}</span> : ""}
                                                   value={propertyAddress.blockNo ? propertyAddress.blockNo : ""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -380,9 +387,10 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Street"
-                                                  errorText={fieldErrors.street ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.street}</span> : ""}
+                                                  errorText={fieldErrors.street ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.street}</span> : ""}
                                                   value={propertyAddress.street ? propertyAddress.street : ""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -400,10 +408,11 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Revenue circle *"
-                                                  errorText={fieldErrors.revenueCircle ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.revenueCircle}</span> : ""}
+                                                  floatingLabelText="Revenue circle "
+                                                  errorText={fieldErrors.revenueCircle ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.revenueCircle}</span> : ""}
                                                   value={propertyAddress.revenueCircle ? propertyAddress.revenueCircle : ""}
                                                   onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -425,11 +434,12 @@ class PropertyAddress extends Component {
 												  hintText="201301"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
-                                                  onChange={(e) => handleChange(e, "pin", false, '')}
+                                                  onChange={(e) => handleChange(e, "pin", false, /^\d{6}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  maxLength={6}
                                               />
                                           </Col>
                                           <Col xs={12} md={12}>
@@ -438,6 +448,13 @@ class PropertyAddress extends Component {
                                                 style={styles.checkbox}
                                                 defaultChecked ={propertyAddress.cAddressDiffPAddress}
                                                 onCheck = {(e, i, v) => {
+													if(i) {
+														addDepandencyFields('cDoorno');
+														addDepandencyFields('addressTwo');
+													} else {	
+														removeDepandencyFields('cDoorno');
+														removeDepandencyFields('addressTwo');
+													}
                                                   var e = {
                                                     target: {
                                                       value:i
@@ -491,11 +508,12 @@ class PropertyAddress extends Component {
 														hintText="302301"
                                                         errorText={fieldErrors.pinTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pinTwo}</span> : ""}
                                                         value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
-                                                        onChange={(e) => handleChange(e, "pinTwo", true, '')}
+                                                        onChange={(e) => handleChange(e, "pinTwo", false, /^\d{6}$/g)}
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={6}
+
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                     />
                                                 </Col>
@@ -628,6 +646,20 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
+  
+  addDepandencyFields: (property) => {
+		dispatch({
+			type: 'ADD_REQUIRED',
+			property
+		})
+	},
+
+	removeDepandencyFields: (property) => {
+		dispatch({
+			type: 'REMOVE_REQUIRED',
+			property
+		})
+	}
 
 });
 

@@ -157,7 +157,7 @@ class VacantLand extends Component {
 											errorText={fieldErrors.survayNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.survayNumber}</span> : ""}
 											value={vacantLand.survayNumber ? vacantLand.survayNumber:""}
 											onChange={(e) => {
-												handleChange(e,"survayNumber", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"survayNumber", true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -165,6 +165,7 @@ class VacantLand extends Component {
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
+										
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										  />
 								  </Col>
@@ -175,7 +176,7 @@ class VacantLand extends Component {
 											errorText={fieldErrors.pattaNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pattaNumber}</span> : ""}
 											value={vacantLand.pattaNumber ? vacantLand.pattaNumber:""}
 											onChange={(e) => {
-												handleChange(e,"pattaNumber", true,  /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"pattaNumber", true,  /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -193,7 +194,7 @@ class VacantLand extends Component {
 											errorText={fieldErrors.vacantLandArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.vacantLandArea}</span> : ""}
 											value={vacantLand.vacantLandArea ? vacantLand.vacantLandArea:""}
 											onChange={(e) => {
-												handleChange(e,"vacantLandArea", true, /^\d{64}$/g);
+												handleChange(e,"vacantLandArea", true, /^\d{3,64}$/g);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -211,7 +212,7 @@ class VacantLand extends Component {
 											errorText={fieldErrors.marketValue ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.marketValue}</span> : ""}
 											value={vacantLand.marketValue ? vacantLand.marketValue:""}
 											onChange={(e) => {
-												handleChange(e,"marketValue", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"marketValue", true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -229,7 +230,7 @@ class VacantLand extends Component {
 											errorText={fieldErrors.capitalValue ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.capitalValue}</span> : ""}
 											value={vacantLand.capitalValue ? vacantLand.capitalValue:""}
 											onChange={(e) => {
-												handleChange(e,"marketValue", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"capitalValue", true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -282,7 +283,12 @@ class VacantLand extends Component {
 											floatingLabelText="Layout Approval Authority *"
 											errorText={fieldErrors.layoutApprovalAuthority ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutApprovalAuthority}</span> : ""}
 											value={vacantLand.layoutApprovalAuthority ? vacantLand.layoutApprovalAuthority : ""}
-											onChange={(e) => {
+											onChange={(e, value) => {
+												var e = {
+													target: {
+														value: value
+													}
+												}
 												handleChange(e,"layoutApprovalAuthority", true, '');
 											  }
 											}
@@ -302,7 +308,7 @@ class VacantLand extends Component {
 											errorText={fieldErrors.layoutPermitNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitNumber}</span> : ""}
 											value={vacantLand.layoutPermitNumber ? vacantLand.layoutPermitNumber : ""}
 											onChange={(e) => {
-												handleChange(e,"layoutPermitNumber", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"layoutPermitNumber", true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

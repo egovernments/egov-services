@@ -1,0 +1,11 @@
+update eg_action set enabled=true where id in(select id from eg_action where name in('createAccountDetailKey','updateAccountDetailKey',
+'searchAccountDetailKey','createBank','updateBank','searchBank','createBankAccount','updateBankAccount','searchBankAccount',
+'createAccountCodePurpose','updateAccountCodePurpose','searchAccountCodePurpose','createSupplier','updateSupplier','searchSupplier',
+'createFund','updateFund','searchFund','createSubScheme','updateSubScheme','searchSubScheme','createFunction',
+'updateFunction','searchFunction','createBudgetGroup','updateBudgetGroup','searchBudgetGroup','createScheme',
+'updateScheme','searchScheme','createBankBranch','updateBankBranch','searchBankBranch','createFundSource',
+'updateFundSource','searchFundSource','createFunctionary','updateFunctionary','searchFunctionary','createChartOfAccount',
+'updateChartOfAccount','searchChartOfAccount','createChartOfAccountDetail','updateChartOfAccountDetail',
+'searchChartOfAccountDetail','createAccountEntiy','updateAccountEntiy','searchAccountEntiy','createFinancialYear','updateFinancialYear',
+'searchFinancialYear','createFiscalPeriod','updateFiscalPeriod','searchFiscalPeriod','createAccountDetailType','updateAccountDetailType',
+'searchAccountDetailType'));

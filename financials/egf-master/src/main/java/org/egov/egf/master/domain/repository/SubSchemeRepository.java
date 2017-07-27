@@ -44,9 +44,9 @@ public class SubSchemeRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("subScheme_create", request);
+			message.put("subscheme_create", request);
 		} else {
-			message.put("subScheme_update", request);
+			message.put("subscheme_update", request);
 		}
 		subSchemeQueueRepository.add(message);
 	}

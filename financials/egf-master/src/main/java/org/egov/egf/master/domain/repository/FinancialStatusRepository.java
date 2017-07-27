@@ -47,9 +47,9 @@ public class FinancialStatusRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("financialStatus_create", request);
+			message.put("financialstatus_create", request);
 		} else {
-			message.put("financialStatus_update", request);
+			message.put("financialstatus_update", request);
 		}
 		financialStatusQueueRepository.add(message);
 	}

@@ -44,9 +44,9 @@ public class BankAccountRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("bankAccount_create", request);
+			message.put("bankaccount_create", request);
 		} else {
-			message.put("bankAccount_update", request);
+			message.put("bankaccount_update", request);
 		}
 		bankAccountQueueRepository.add(message);
 	}

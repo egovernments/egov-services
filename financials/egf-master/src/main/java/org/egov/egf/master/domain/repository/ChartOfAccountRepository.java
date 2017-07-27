@@ -47,9 +47,9 @@ public class ChartOfAccountRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("chartOfAccount_create", request);
+			message.put("chartofaccount_create", request);
 		} else {
-			message.put("chartOfAccount_update", request);
+			message.put("chartofaccount_update", request);
 		}
 		chartOfAccountQueueRepository.add(message);
 	}

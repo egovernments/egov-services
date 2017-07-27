@@ -52,7 +52,7 @@ const RightIcon = (props) => {
       <div>
       <i onClick={()=>{
         if(localStorage.getItem("token"))
-          props.setRoute("/dashboard");
+          props.setRoute("/prd/dashboard");
         else
           props.setRoute("/");
       }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

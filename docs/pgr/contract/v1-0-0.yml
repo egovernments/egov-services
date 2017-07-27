@@ -1158,6 +1158,11 @@ definitions:
         items:
          type: string
         description: roles associated to this attribute.
+      constraints:
+        type: array
+        items:
+            $ref: '#/definitions/Constraint'
+        description: roles associated to this attribute.        
       actions:
         type: array
         items:
@@ -1183,6 +1188,17 @@ definitions:
         type: array
         items:
             $ref: '#/definitions/GroupConstraint'
+
+###########################################################################          
+  Constraint:
+    type: object
+    properties:
+      rule:
+        type: string
+        description: Valid JS code
+      value:
+        type: string
+        description: Value to be set if the rule evaluates to truthy
       
 ###########################################################################       
   GroupConstraint:

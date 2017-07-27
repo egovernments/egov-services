@@ -140,7 +140,6 @@ public class ReceiptRepository {
 			logger.error("Persisting to DB FAILED! ", e.getCause());
 			return id;
 		}
-
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
 		try {
 			id = jdbcTemplate.queryForObject(receiptHeaderIdQuery,
@@ -297,7 +296,7 @@ public class ReceiptRepository {
 				if (receiptRequest.getRequestInfo().getUserInfo().getId() != null)
 					ps.setLong(i++, receiptRequest.getRequestInfo().getUserInfo().getId());
 
-				ps.setDate(i++, new java.sql.Date(new Date().getTime()));
+				ps.setLong(i++, new Date().getTime());
 
 				if (billDetail.getId() != null)
 					ps.setLong(i++, new Long(billDetail.getId()));
@@ -309,6 +308,7 @@ public class ReceiptRepository {
 		try {
 			jdbcTemplate.update(updateQuery, pss);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("could not update status and stateId in db for ReceiptRequest:", receiptRequest);
 			return false;
 		}

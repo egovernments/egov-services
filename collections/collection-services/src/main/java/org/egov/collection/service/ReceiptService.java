@@ -137,6 +137,8 @@ public class ReceiptService {
 									.apportionPaidAmount(
 											billdetail.getAmountPaid(),
 											billdetail.getBillAccountDetails()));
+					
+					logger.info("apportioned accountdetails: "+billdetail.getBillAccountDetails());
 				}
 			}else{
 				return null;

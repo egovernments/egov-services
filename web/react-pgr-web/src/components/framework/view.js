@@ -91,7 +91,7 @@ class Report extends Component {
     const renderTable = function() {
       var objectName = mockData[`${moduleName}.${actionName}`].objectName;
       if(formData[objectName].documents && formData[objectName].documents.length) {
-        var dataList = {
+        /*var dataList = {
           resultHeader: ["#", "Name", "File"],
           resultValues: []
         };
@@ -102,7 +102,7 @@ class Report extends Component {
 
         return (
           <UiTable resultList={dataList}/>
-        );
+        );*/
       }
     }
 

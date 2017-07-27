@@ -338,8 +338,7 @@ public class ConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        if(waterConnectionRequest.getConnection().getBillingType()!=null && 
-                waterConnectionRequest.getConnection().getBillingType().equalsIgnoreCase(BillingType.METERED.name())){
+       
         if (restConnectionService.getSupplyTypeByName(waterConnectionRequest) .getSupplytypes().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConnectionConstants.SUPPLYTYPE_INVALID_CODE)
@@ -348,7 +347,7 @@ public class ConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
-        }
+        
         return errorFields;
     }
     public String generateAcknowledgementNumber(final WaterConnectionReq waterConnectionRequest)

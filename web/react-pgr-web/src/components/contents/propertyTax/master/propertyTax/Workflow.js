@@ -239,7 +239,7 @@ class Workflow extends Component {
                                     <Row>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Department Name"
+                                                  floatingLabelText="Department Name *"
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
@@ -250,7 +250,7 @@ class Workflow extends Component {
                                                       }
                                                     };
                                                     handleWorkFlowChange(e, 'department');
-                                                    handleChange(e, "workflowDepartment", false, "")}}
+                                                    handleChange(e, "workflowDepartment", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
@@ -261,7 +261,7 @@ class Workflow extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Designation Name"
+                                                  floatingLabelText="Designation Name *"
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
@@ -272,7 +272,7 @@ class Workflow extends Component {
                                                       }
                                                     };
                                                     handleWorkFlowChange(e, 'designation');
-                                                    handleChange(e, "workflowDesignation", false, "")}}
+                                                    handleChange(e, "workflowDesignation", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}

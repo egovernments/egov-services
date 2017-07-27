@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.asset.contract.AssetCategoryRequest;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
@@ -14,6 +15,7 @@ import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.repository.builder.AssetCategoryQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetCategoryRowMapper;
+import org.egov.asset.service.AssetCommonService;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.Test;
@@ -40,6 +42,10 @@ public class AssetCategoryRepositoryTest {
     @Mock
     private ObjectMapper objectMapper;
 
+    @Mock
+    private AssetCommonService assetCommonService;
+
+    @SuppressWarnings("unchecked")
     @Test
     public void testSearch() {
 
@@ -47,7 +53,7 @@ public class AssetCategoryRepositoryTest {
         final AssetCategory assetCategory = getAssetCategory();
         assetCategories.add(assetCategory);
 
-        when(assetCategoryQueryBuilder.getQuery(any(AssetCategoryCriteria.class), any(List.class))).thenReturn("");
+        when(assetCategoryQueryBuilder.getQuery(any(AssetCategoryCriteria.class), any(List.class))).thenReturn(StringUtils.EMPTY);
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(AssetCategoryRowMapper.class)))
                 .thenReturn(assetCategories);
 
@@ -66,7 +72,7 @@ public class AssetCategoryRepositoryTest {
         final AssetCategory assetCategory = getAssetCategory();
         assetCategoryRequest.setAssetCategory(assetCategory);
 
-        when(assetCategoryQueryBuilder.getInsertQuery()).thenReturn("");
+        when(assetCategoryQueryBuilder.getInsertQuery()).thenReturn(StringUtils.EMPTY);
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 
         assertTrue(assetCategory.equals(assetCategoryRepository.create(assetCategoryRequest)));

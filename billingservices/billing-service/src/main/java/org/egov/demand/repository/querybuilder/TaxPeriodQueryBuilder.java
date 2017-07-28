@@ -111,6 +111,12 @@ public class TaxPeriodQueryBuilder {
         Set<String> ids = taxPeriodCriteria.getId();
         if (ids != null && !ids.isEmpty())
             selectQuery.append(" and taxperiod.id IN "+getQueryForCollection(ids));
+        
+        if(taxPeriodCriteria.getDate()!=null){
+        	selectQuery.append(" and taxperiod.fromdate <= ? and taxperiod.todate >= ? ");
+        	preparedStatementValues.add(taxPeriodCriteria.getDate());
+        	preparedStatementValues.add(taxPeriodCriteria.getDate());
+        }
     }
 
     public String prepareQueryForValidation(List<TaxPeriod> taxPeriodList, String mode){

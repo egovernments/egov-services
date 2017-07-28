@@ -102,6 +102,7 @@ public class Instrument extends Auditable {
 	 * the different types Cash,Cheque,DD,POC
 	 *
 	 */
+	@NotNull	
 	private InstrumentType instrumentType;
 
 	/*
@@ -131,6 +132,7 @@ public class Instrument extends Auditable {
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
 	 * instrument it is Debit and in case of payment instrument its credit.
 	 */
+	@NotNull
 	private TransactionType transactionType;
 
 	/*
@@ -157,7 +159,7 @@ public class Instrument extends Auditable {
 	 * assigned from. The cheque numbers in an account is defined based on Year,
 	 * Bank account and tagged to a department.
 	 */
-	@NotBlank
+	//@NotBlank
 	@Size(max = 50, min = 2)
 	private String serialNo;
 

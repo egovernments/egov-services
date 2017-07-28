@@ -314,7 +314,7 @@ public class DemandService {
 
 		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
 				.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
-				.mobileNumber(demandCriteria.getMobileNumber()).build();
+				.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).build();
 		List<Owner> owners = ownerRepository.getOwners(userSearchRequest);
 		Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 		List<Demand> demands = demandRepository.getDemands(demandCriteria, ownerIds);

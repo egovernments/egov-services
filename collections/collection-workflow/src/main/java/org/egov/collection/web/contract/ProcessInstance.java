@@ -41,9 +41,7 @@ package org.egov.collection.web.contract;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -73,5 +71,4 @@ public class ProcessInstance {
     List<Task> tasks = new ArrayList<>();
     private String tenantId;
     private Long initiatorPosition;
-    private Map<String, Attribute> attributes = new HashMap<>();
 }

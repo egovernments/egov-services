@@ -38,7 +38,8 @@ module.exports = {
         else
             url += "?"
         for (var variable in queryObject) {
-            if (typeof(queryObject[variable]) != "undefined" && (queryObject[variable] != "" ) ) {
+              // if (typeof(queryObject[variable]) != "undefined" && (queryObject[variable] != "" ) ) {
+            if (typeof(queryObject[variable]) != "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];
             }
         }
@@ -49,10 +50,10 @@ module.exports = {
 
         requestInfo.authToken = localStorage.getItem("token");
         if(isTimeLong){
-            requestInfo.ts = new Date().getTime();	
+            requestInfo.ts = new Date().getTime();
         }
-		
-		
+
+
         body["RequestInfo"] = requestInfo;
 
         return instance.post(url, body).then(function(response) {

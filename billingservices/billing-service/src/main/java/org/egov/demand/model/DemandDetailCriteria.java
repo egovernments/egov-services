@@ -55,7 +55,7 @@ public class DemandDetailCriteria {
 	@NotNull
 	private String tenantId;
 	
-	private Long demandId;
+	private String demandId;
 	
 	private String taxHeadCode;
 

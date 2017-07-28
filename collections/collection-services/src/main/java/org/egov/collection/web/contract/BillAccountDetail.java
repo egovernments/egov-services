@@ -36,11 +36,11 @@ public class BillAccountDetail   {
 
 	private String billDetail;
 	
-	private BigDecimal crAmountToBePaid;
+	private BigDecimal crAmountToBePaid = BigDecimal.ZERO;
 	
-	private BigDecimal creditAmount;
+	private BigDecimal creditAmount = BigDecimal.ZERO;
 
-	private BigDecimal debitAmount;
+	private BigDecimal debitAmount = BigDecimal.ZERO;
 	
 	private Purpose purpose;
 	  

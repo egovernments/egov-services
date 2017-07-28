@@ -32,8 +32,14 @@ document.title="Egovernments";
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: "#51bad9",
-    primary2Color: "#51bad9",
+    primary2Color: "#f58720",
     textColor:"#5f5c62"
+  },
+  raisedButton: {
+    primaryColor: "#f58720"
+  },
+  floatingActionButton: {
+    color: "#f58720"
   }
 });
 

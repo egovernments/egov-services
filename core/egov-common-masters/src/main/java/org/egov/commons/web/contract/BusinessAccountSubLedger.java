@@ -19,6 +19,6 @@ public class BusinessAccountSubLedger {
 
 	private Double amount;
 
-	private BusinessAccountDetails businessAccountDetails;
+	private Long businessAccountDetails;
 
 }

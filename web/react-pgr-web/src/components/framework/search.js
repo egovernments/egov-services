@@ -8,6 +8,7 @@ import ShowFields from "./showFields";
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import UiButton from './components/UiButton';
+import UiDynamicTable from './components/UiDynamicTable';
 import {fileUpload} from './utility/utility';
 var specifications={};
 try {
@@ -41,6 +42,10 @@ class Report extends Component {
     }
   }
 
+  getVal = (path) => {
+    return _.get(this.props.formData, path) || "";
+  }
+
   initData() {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
     let hashLocation = window.location.hash;
@@ -58,7 +63,8 @@ class Report extends Component {
   }
 
   search = (e) => {
-    
+
+
   }
 
   getVal = (path) => {
@@ -83,6 +89,49 @@ class Report extends Component {
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit"}} ui="google"/>
+            <UiDynamicTable getVal={getVal} fieldErrors={fieldErrors} handler={handleChange} item={{
+							"name": "consumerCode",
+							"jsonPath": "search.consumerCode",
+							"label": "Consumer Code",
+							"pattern": "",
+							"type": "dynamictable",
+							"header": [{
+									"label": "wc.table.view"
+							},{
+                "label": "wc.table.view"
+              }],
+							"values":[{
+
+		  						cols:[{
+                    "name": "billerService",
+  		  						"jsonPath": "search.billerService",
+  		  						"label": "Billing service name",
+  		  						"pattern": "",
+  		  						"type": "singleValueList",
+  		  						"isRequired": false,
+  		  						"isDisabled": false,
+  		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+  		  						"requiredErrMsg": "",
+  		  						"patternErrMsg": ""
+                  },{
+                    "name": "billerService",
+  		  						"jsonPath": "search.billerService",
+  		  						"label": "Billing service name",
+  		  						"pattern": "",
+  		  						"type": "singleValueList",
+  		  						"isRequired": false,
+  		  						"isDisabled": false,
+  		  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+  		  						"requiredErrMsg": "",
+  		  						"patternErrMsg": ""
+                  }]
+
+							}],
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}}/>
             <br/>
           </div>
         </form>

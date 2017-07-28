@@ -1,7 +1,7 @@
 var dat = {
-	"wc.create": {
+	"wc.search": {
 		"numCols": 12/2,
-		"url":  "/wcms/masters/documenttype/_create",
+		"url":  "/billing-service/bill/_generate?tenantId=default&consumerCode=consumerCode&businessService=businessService",
 		"tenantIdRequired": true,
 		"objectName": "search",
 		"groups": [
@@ -32,14 +32,14 @@ var dat = {
 							"patternErrMsg": ""
 						},
             {
-  						"name": "department",
-  						"jsonPath": "connection.workflowDetails.department",
-  						"label": "wc.create.groups.approvalDetails.fields.department",
+  						"name": "billerService",
+  						"jsonPath": "search.billerService",
+  						"label": "Billing service name",
   						"pattern": "",
   						"type": "singleValueList",
   						"isRequired": false,
   						"isDisabled": false,
-  						"url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+  						"url": "/egov-common-masters/departments/_search?|$..id|$..name",
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   						},

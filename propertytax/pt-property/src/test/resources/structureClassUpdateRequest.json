@@ -15,7 +15,7 @@
             "id":1,
             "tenantId":"default",
             "name":"structuremodified",
-            "code":"123",
+            "code":"1234",
             "nameLocal":"structure",
             "description":"structure create",
             "active":true,

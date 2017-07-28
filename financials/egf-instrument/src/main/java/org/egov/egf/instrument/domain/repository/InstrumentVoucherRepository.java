@@ -2,9 +2,7 @@ package org.egov.egf.instrument.domain.repository;
 
 import org.egov.egf.instrument.domain.model.InstrumentVoucher;
 import org.egov.egf.instrument.persistence.entity.InstrumentVoucherEntity;
-import org.egov.egf.instrument.persistence.queue.InstrumentQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentVoucherJdbcRepository;
-import org.egov.egf.instrument.web.contract.InstrumentVoucherContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +12,15 @@ public class InstrumentVoucherRepository {
 
 	@Autowired
 	private InstrumentVoucherJdbcRepository instrumentVoucherJdbcRepository;
-	@Autowired
-	private InstrumentQueueRepository instrumentVoucherQueueRepository;
 
 	public InstrumentVoucher findById(InstrumentVoucher instrumentVoucher) {
 		InstrumentVoucherEntity entity = instrumentVoucherJdbcRepository
 				.findById(new InstrumentVoucherEntity().toEntity(instrumentVoucher));
-		return entity.toDomain();
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
+
 
 	}
 
@@ -38,9 +38,10 @@ public class InstrumentVoucherRepository {
 		return entity.toDomain();
 	}
 
-	/*public void add(CommonRequest<InstrumentVoucherContract> request) {
-		instrumentVoucherQueueRepository.add(request);
-	}*/
+	/*
+	 * public void add(CommonRequest<InstrumentVoucherContract> request) {
+	 * instrumentVoucherQueueRepository.add(request); }
+	 */
 
 	/*
 	 * public Pagination<InstrumentVoucher> search(InstrumentVoucherSearch

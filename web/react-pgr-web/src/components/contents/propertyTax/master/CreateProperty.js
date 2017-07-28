@@ -295,6 +295,36 @@ createPropertyTax = () => {
 		}
 	}
 	
+	var vacantLand = null;
+	
+	if(createProperty.propertyType =='VACANT_LAND') {
+			vacantLand =  {		
+							"surveyNumber": createProperty.survayNumber || null,
+							"pattaNumber": createProperty.pattaNumber || null,
+							"marketValue": createProperty.marketValue || null,
+							"capitalValue": createProperty.capitalValue || null,
+							"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
+							"layoutPermissionNo": createProperty.layoutPermitNumber || null,
+							"layoutPermissionDate":createProperty.layoutPermitDate || null,
+							"resdPlotArea": null,
+							"nonResdPlotArea": null,
+							"auditDetails": {
+								"createdBy": userRequest.userName,
+								"lastModifiedBy":userRequest.userName,
+								"createdTime": date,
+								"lastModifiedTime": date
+							}																					
+						}
+						
+			createProperty.floorsArr = null;
+			createProperty.floors = null;	
+			createProperty.floor = null;	
+	} else {
+		vacantLand = null;
+	}
+	
+
+	
 	var date = new Date().getTime();
 	
 	var currentThis = this;
@@ -367,23 +397,7 @@ createPropertyTax = () => {
 						"lastModifiedTime": date
 					}
 				},
-				"vacantLand": null ,/*{
-					"surveyNumber": createProperty.survayNumber || ,
-					"pattaNumber": createProperty.pattaNumber || null,
-					"marketValue": createProperty.marketValue || null,
-					"capitalValue": createProperty.capitalValue || null,
-					"layoutApprovedAuth": createProperty.layoutApprovalAuthority || null,
-					"layoutPermissionNo": createProperty.layoutPermitNumber || null,
-					"layoutPermissionDate":createProperty.layoutPermitDate || null,
-					"resdPlotArea": null,
-					"nonResdPlotArea": null,
-					"auditDetails": {
-						"createdBy": userRequest.userName,
-						"lastModifiedBy":userRequest.userName,
-						"createdTime": date,
-						"lastModifiedTime": date
-					}
-				},*/
+				"vacantLand": vacantLand,
 
 				"gisRefNo": null,
 				"isAuthorised": null,
@@ -422,31 +436,31 @@ createPropertyTax = () => {
       }
 	  
 	  var fileStoreArray = [];
+	  
+	  var hasFiles = true;
 	  			
 	   if(currentThis.props.files.length !=0){
-			if(currentThis.props.files[0].length === 0){
+			hasFiles = false;
+			if(currentThis.props.files.length === 0){
 				console.log('No file uploads');
+				hasFiles = true;
+				
 			}else{
+				hasFiles = false;
+				console.log('still file upload pending', currentThis.props.files.length);
 				
-				console.log('still file upload pending', currentThis.props.files[0].length);
-				
-			  for(let i=0;i<currentThis.props.files[0].length;i++){
+			  for(let i=0;i<currentThis.props.files.length;i++){
+				  
+				  console.log(currentThis.props.files);
 				  
 				let formData = new FormData();
 				formData.append("tenantId", localStorage.getItem('tenantId'));
 				formData.append("module", "PT");
-				formData.append("file", currentThis.props.files[0][i]);
+				formData.append("file", currentThis.props.files[i][0]);
 				Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response){
 					var documentArray = {
 						"documentType": {						
-							"name": "",
-							"application": "CREATE",
-							"auditDetails": {
-								"createdBy": userRequest.userName,
-								"lastModifiedBy":userRequest.userName,
-								"createdTime": date,
-								"lastModifiedTime": date
-							}
+							"code": currentThis.props.files[i].createCode
 						},
 						"fileStore": "",
 						"auditDetails": {
@@ -464,31 +478,68 @@ createPropertyTax = () => {
 					documentArray.fileStore = response.files[0].fileStoreId;
 					body.properties[0].propertyDetail.documents.push(documentArray);
 					console.log(body);
+					  if(i === (currentThis.props.files.length - 1)){
+						console.log('All files succesfully uploaded');
+						hasFiles = true;
+					  }
+					
 				},function(err) {
 				  console.log(err);
 				});
 			  }
 			}
+		  } else {
+			  hasFiles = true;
 		  }
 		  
-     Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
-		currentThis.setState({
-			ack: res.properties.applicationNo
-		});
-		localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-		this.props.history.push('acknowledgement');
-setLoadingStatus('hide');
-      }).catch((err)=> {
-        console.log(err)
-		setLoadingStatus('hide');
- toggleSnackbarAndSetText(true, err.message);
-      })
-    }
+	if(hasFiles) {
+			  
+		 Api.commonApiPost('pt-property/properties/_create', {},body, false, true).then((res)=>{
+			currentThis.setState({
+				ack: res.properties.applicationNo
+			});
+			localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
+			this.props.history.push('acknowledgement');
+			setLoadingStatus('hide');
+		  }).catch((err)=> {
+			console.log(err)
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		}
+	}	  
+		  
+	
+	
+createActivate = () => {
+	
+	let {isFormValid, createProperty} = this.props;
+	
+	console.log(createProperty)
+	
+	let notValidated = true;
+	
+	if(createProperty.hasOwnProperty('propertyType') && createProperty.propertyType == "VACANT_LAND") {
+		if(isFormValid && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
+			notValidated = false;
+		} else {
+			notValidated = true;
+		}
+	} else {
+		if(isFormValid && (createProperty.floors ? (createProperty.floors.length == 0 ? false : true) : false ) && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
+			notValidated = false;
+		} else {
+			notValidated = true;
+		}
+	}
+	
+	return notValidated;
+	
+}	
   
   render() {
 	  	  
     let {
-      owners,
       createProperty,
       fieldErrors,
       isFormValid,
@@ -501,7 +552,8 @@ setLoadingStatus('hide');
       editIndex,
       isEditIndex,
       isAddRoom,
-	  files
+	  files,
+	  handleChangeOwner
     } = this.props;
 
     let {search, createPropertyTax, cThis} = this;
@@ -510,6 +562,7 @@ setLoadingStatus('hide');
 		console.log(this.props.files[0].length);
 	}
 
+	console.log(isFormValid);
     
 
     const renderOption = function(list,listName="") {
@@ -531,10 +584,11 @@ setLoadingStatus('hide');
 				  <AssessmentDetails />				  
 				  <Amenities />                  
 				  <ConstructionTypes/>
+				  <VacantLand/>
 				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ? <VacantLand/> : 
-					 <div> {!this.state.addFloor && <Card>
+					 <div> {!this.state.addFloor && <div><Card className="uiCard">
 						<CardText>
-							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:21}}  backgroundColor="#0b272e" labelColor={white} 
+							 <RaisedButton type="button" className="pull-right" label="Add Floor" style={{marginTop:10}}  primary={true}
 								  onClick={()=>{
 									this.setState({
 									  addFloor: true
@@ -543,25 +597,30 @@ setLoadingStatus('hide');
 							  />
 							  <div className="clearfix"></div>                    
 						</CardText>
-					  </Card>}
+					  </Card>
+	
+					   </div>
+					  }
+					  	 
 					  </div>
 				  }
-				  {this.state.addFloor && <FloorDetails/>}
+				  {(this.state.addFloor && (getNameByCode(this.state.propertytypes, createProperty.propertyType) != "Vacant Land")) && <FloorDetails/>}
 				  <DocumentUpload />
 				  <Workflow />
 				  
 									
 			   
-				  <Card>
-					<CardText style={styles.reducePadding}>
+				  <Card className="uiCard">
+					<CardText style={{textAlign:'center'}}>
 						<br/>
-						<RaisedButton type="button" label="Create Property" className="pull-right" backgroundColor="#0b272e" labelColor={white} onClick={()=> {
+						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  backgroundColor="#0b272e" labelColor={white} onClick={()=> {
 							createPropertyTax();
 							}
 						}/>
 						<div className="clearfix"></div>
 					</CardText>
 				  </Card>
+			
 			  </form>
 		  </div>
       )
@@ -573,7 +632,8 @@ const mapStateToProps = state => ({
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
-  files: state.form.files
+  files: state.form.files,
+  isFormValid: state.form.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -583,7 +643,27 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
+          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+        },
+        pattern: {
+          current: [],
           required: []
+        }
+      },
+	   validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'usageSubType', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
         },
         pattern: {
           current: [],
@@ -670,6 +750,28 @@ const mapDispatchToProps = dispatch => ({
       objectName,
       objectArray,
       object
+    })
+  },
+  
+  handleChangeOwner: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_OWNER",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
+    })
+  },
+  
+  handleChangeFloor: (e, property, propertyOne, isRequired, pattern) => {
+    dispatch({
+      type: "HANDLE_CHANGE_FLOOR",
+      property,
+      propertyOne,
+      value: e.target.value,
+      isRequired,
+      pattern
     })
   },
 

@@ -1,5 +1,6 @@
 package org.egov.egf.instrument.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.domain.exception.CustomBindException;
@@ -7,7 +8,6 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.InstrumentType;
 import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
-import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +26,61 @@ public class InstrumentTypeService {
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
 
-	@Autowired
 	private InstrumentTypeRepository instrumentTypeRepository;
 
-	@Autowired
 	private SmartValidator validator;
+
+	@Autowired
+	public InstrumentTypeService(SmartValidator validator, InstrumentTypeRepository instrumentTypeRepository) {
+		this.validator = validator;
+		this.instrumentTypeRepository = instrumentTypeRepository;
+	}
+
+	@Transactional
+	public List<InstrumentType> save(List<InstrumentType> instrumentTypes, BindingResult errors) {
+
+		List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+
+		try {
+
+			instrumentTypes = fetchAndValidate(instrumentTypes, errors, ACTION_CREATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (InstrumentType it : instrumentTypes) {
+
+			resultList.add(save(it));
+
+		}
+
+		return resultList;
+	}
+
+	@Transactional
+	public List<InstrumentType> update(List<InstrumentType> instrumentTypes, BindingResult errors) {
+
+		List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+
+		try {
+
+			instrumentTypes = fetchAndValidate(instrumentTypes, errors, ACTION_UPDATE);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		for (InstrumentType it : instrumentTypes) {
+
+			resultList.add(update(it));
+
+		}
+
+		return resultList;
+	}
 
 	private BindingResult validate(List<InstrumentType> instrumenttypes, String method, BindingResult errors) {
 
@@ -64,7 +114,7 @@ public class InstrumentTypeService {
 
 	public List<InstrumentType> fetchRelated(List<InstrumentType> instrumenttypes) {
 		for (InstrumentType instrumentType : instrumenttypes) {
-			// fetch related items
+			
 
 		}
 
@@ -72,29 +122,15 @@ public class InstrumentTypeService {
 	}
 
 	@Transactional
-	public List<InstrumentType> add(List<InstrumentType> instrumenttypes, BindingResult errors) {
+	public List<InstrumentType> fetchAndValidate(List<InstrumentType> instrumenttypes, BindingResult errors,
+			String action) {
 		instrumenttypes = fetchRelated(instrumenttypes);
-		validate(instrumenttypes, ACTION_CREATE, errors);
+		validate(instrumenttypes, action, errors);
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
 		return instrumenttypes;
 
-	}
-
-	@Transactional
-	public List<InstrumentType> update(List<InstrumentType> instrumenttypes, BindingResult errors) {
-		instrumenttypes = fetchRelated(instrumenttypes);
-		validate(instrumenttypes, ACTION_UPDATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		return instrumenttypes;
-
-	}
-
-	public void addToQue(InstrumentTypeRequest request) {
-		instrumentTypeRepository.add(request);
 	}
 
 	public Pagination<InstrumentType> search(InstrumentTypeSearch instrumentTypeSearch) {

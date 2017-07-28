@@ -111,12 +111,12 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 			params.append("isActiveForPosting =:isActiveForPosting");
 			paramValues.put("isActiveForPosting", chartOfAccountSearchEntity.getIsActiveForPosting());
 		}
-		if (chartOfAccountSearchEntity.getParentIdId() != null) {
+		if (chartOfAccountSearchEntity.getParentId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("parentId =:parentId");
-			paramValues.put("parentId", chartOfAccountSearchEntity.getParentIdId());
+			paramValues.put("parentId", chartOfAccountSearchEntity.getParentId());
 		}
 		if (chartOfAccountSearchEntity.getType() != null) {
 			if (params.length() > 0) {

@@ -55,9 +55,9 @@ import lombok.ToString;
 @ToString
 public class PropertyUsageTypeResponseInfo {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("propertyTypeUsageTypes")
+    @JsonProperty("PropertyTypeUsageTypes")
     private List<UsageTypeResponseInfo> propCategory;
     
     

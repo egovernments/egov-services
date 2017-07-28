@@ -11,8 +11,10 @@
       "authToken": "a7b9a4fe-431b-4517-a38e-8ac3436fb880"
   },
   "documentType":[{
-  "tenantId":"tenantid",
-  "name": "username",
+  "tenantId":"tenantid1",
+  "name": "username1",
+   "code":"1234",
+   "application": "BIFURCATION",
    "auditDetails":{
     "createdBy":null,
     "lastModifiedBy":null

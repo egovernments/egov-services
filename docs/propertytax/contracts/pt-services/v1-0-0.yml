@@ -47,6 +47,12 @@ paths:
           type: boolean
           format: varchar
           allowEmptyValue: true
+        - name: propertyId
+          in: query
+          description: Primary key of Property object.
+          required: false
+          type: string
+          format: varchar
         - name: upicNumber
           in: query
           required: false

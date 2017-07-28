@@ -37,15 +37,7 @@ public class BusinessDetailsCommonModel {
 					.isVoucherApproved(details.getIsVoucherApproved()).ordernumber(details.getOrdernumber())
 					.tenantId(details.getTenantId()).voucherCreation(details.getVoucherCreation())
 					.voucherCutoffDate(details.getVoucherCutoffDate()).callBackForApportioning(details.getCallBackForApportioning()).build();
-			org.egov.commons.web.contract.BusinessDetails detail = org.egov.commons.web.contract.BusinessDetails
-					.builder().id(details.getId()).active(details.getIsEnabled()).name(details.getName())
-					.businessCategory(details.getBusinessCategory().getId()).businessType(details.getBusinessType())
-					.businessUrl(details.getBusinessUrl()).department(details.getDepartment())
-					.fundSource(details.getFundSource()).function(details.getFunction())
-					.functionary(details.getFunctionary()).fund(details.getFund())
-					.isVoucherApproved(details.getIsVoucherApproved()).ordernumber(details.getOrdernumber())
-					.tenantId(details.getTenantId()).voucherCreation(details.getVoucherCreation())
-					.voucherCutoffDate(details.getVoucherCutoffDate()).code(details.getCode()).build();
+			
 			List<BusinessAccountDetails> requiredBusinessAccountDetails = new ArrayList<>();
 			List<org.egov.commons.web.contract.BusinessAccountDetails> contractAccountDetails = new ArrayList<>();
 			for (BusinessAccountDetails accountDetails : businessAccountDetails) {
@@ -55,7 +47,7 @@ public class BusinessDetailsCommonModel {
 			for (BusinessAccountDetails requiredAccount : requiredBusinessAccountDetails) {
 				contractAccountDetails.add(org.egov.commons.web.contract.BusinessAccountDetails.builder()
 						.id(requiredAccount.getId()).amount(requiredAccount.getAmount())
-						.chartOfAccounts(requiredAccount.getChartOfAccount()).businessDetails(detail).build());
+						.chartOfAccounts(requiredAccount.getChartOfAccount()).businessDetails(requiredAccount.getBusinessDetails().getId()).build());
 
 			}
 			detailsRequestInfo.setAccountDetails(contractAccountDetails);
@@ -65,7 +57,7 @@ public class BusinessDetailsCommonModel {
 					if (subledgerDetails.getBusinessAccountDetail().getId().equals(account.getId())) {
 						contractAccountSubledger.add(BusinessAccountSubLedger.builder().id(subledgerDetails.getId())
 								.amount(subledgerDetails.getAmount()).detailKey(subledgerDetails.getAccountDetailKey())
-								.detailType(subledgerDetails.getAccountDetailType()).businessAccountDetails(account)
+								.detailType(subledgerDetails.getAccountDetailType()).businessAccountDetails(account.getId())
 								.build());
 					}
 				}

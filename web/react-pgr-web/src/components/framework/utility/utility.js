@@ -17,3 +17,20 @@ export function fileUpload(file, module, cb) {
     }]});
   }
 }
+
+export function getInitiatorPosition(cb) {
+  if(localStorage.userRequest) {
+    var employeeId = JSON.parse(localStorage.userRequest).id;
+    Api.commonApiPost("/hr-employee/employees/_search", { id: employeeId }, {}).then(function(res) {
+      if(res && res.Employee && res.Employee[0] && res.Employee[0].assignments && res.Employee[0].assignments[0] && res.Employee[0].assignments[0].position) {
+        cb(null, res.Employee[0].assignments[0].position);
+      } else {
+        cb(null, "");
+      }
+    }, function(err) {
+      cb(err);
+    })
+  } else {
+    cb(null, "");
+  }
+}

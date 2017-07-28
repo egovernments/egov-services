@@ -15,14 +15,14 @@ import lombok.Setter;
 @Builder
 public class YearWiseDepreciation {
 
-	@NotNull
-	private Double depreciationRate;
-	@NotNull
-	private String financialYear;
-	
-	private Long assetId;
-	
-	private Long usefulLifeInYears;
-	
-	private String tenantId;
+    private Double depreciationRate;
+    
+    @NotNull
+    private String financialYear;
+
+    private Long assetId;
+
+    private Long usefulLifeInYears;
+    
+    private String tenantId;
 }

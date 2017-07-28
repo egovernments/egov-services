@@ -47,9 +47,9 @@ public class AccountCodePurposeRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase("create")) {
-			message.put("accountCodePurpose_create", request);
+			message.put("accountcodepurpose_create", request);
 		} else {
-			message.put("accountCodePurpose_update", request);
+			message.put("accountcodepurpose_update", request);
 		}
 		accountCodePurposeQueueRepository.add(message);
 	}

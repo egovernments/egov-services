@@ -5,8 +5,8 @@
     "usageMasters": [
         {
             "tenantId": "default",
-            "name": null,
-            "code": null,
+            "name": "Yoyo",
+            "code": "1234",
             "nameLocal": null,
             "description": null,
             "active": null,

@@ -7,7 +7,7 @@ import org.egov.property.utility.ConstantUtility;
 public class DocumentTypeBuilder {
 	public static final String INSERT_DOCUMENTTYPE_MASTER_QUERY = "insert into "
 			+ ConstantUtility.DOCUMENT_TYPE_TABLE_NAME
-			+ " (tenantId,code,name,application,createdby,lastmodifiedby,createdtime,"
+			+ " (tenantId,name,code,application,createdby,lastmodifiedby,createdtime,"
 			+ "lastmodifiedtime) VALUES (?,?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_DOCUMENTTYPE_MASTER_QUERY = "UPDATE " + ConstantUtility.DOCUMENT_TYPE_TABLE_NAME

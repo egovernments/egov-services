@@ -1,0 +1,58 @@
+{
+	"variables": [],
+	"info": {
+		"name": "sevaconfig_search",
+		"_postman_id": "87865f72-6c5e-726f-3aa3-f750c7b957fa",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8093/pgr-master/sevaconfigurations/_search?tenantId=default&id=1",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8093/pgr-master/sevaconfigurations/_search?tenantId=default&id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8093",
+					"path": [
+						"pgr-master",
+						"sevaconfigurations",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n    \"RequestInfo\" : {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n        \"ts\" : \"10-03-2017 00:00:00\",\n        \"action\" : \"search\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"1\",\n        \"authToken\" : \"\"\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

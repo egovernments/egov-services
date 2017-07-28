@@ -58,30 +58,35 @@ public class AssetValidator {
                 && AssetCategoryType.LAND.compareTo(assetCategory.getAssetCategoryType()) == 0)
             assetRequest.getAsset().setDepreciationRate(Double.valueOf("0.0"));
         else
-            validateYearWiseDepreciationRate(assetRequest);
+            validateYearWiseDepreciationRate(assetRequest.getAsset());
         // findAsset(assetRequest); FIXME not need as per elzan remove the full
         // code later
     }
 
-    public void validateYearWiseDepreciationRate(final AssetRequest assetRequest) {
-        final Asset asset = assetRequest.getAsset();
-        if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation()) {
+    public void validateYearWiseDepreciationRate(final Asset asset) {
+        if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation()) {
             final List<String> finacialYears = new ArrayList<String>();
             for (final YearWiseDepreciation ywd : asset.getYearWiseDepreciation()) {
                 finacialYears.add(ywd.getFinancialYear());
-                validateDepreciationRateValue(ywd.getDepreciationRate());
+                final Double depreciationRate = ywd.getDepreciationRate();
+                if (depreciationRate == null)
+                    ywd.setDepreciationRate(Double.valueOf("0.0"));
+                else
+                    validateDepreciationRateValue(depreciationRate);
             }
             checkDuplicateFinancialYear(finacialYears);
-        } else if (assetRequest.getAsset().getEnableYearWiseDepreciation() != null
-                && !asset.getEnableYearWiseDepreciation())
-            validateDepreciationRateValue(asset.getDepreciationRate());
+        } else if (asset.getEnableYearWiseDepreciation() != null && !asset.getEnableYearWiseDepreciation()) {
+            final Double depreciationRate = asset.getDepreciationRate();
+            if (depreciationRate == null)
+                asset.setDepreciationRate(Double.valueOf("0.0"));
+            else
+                validateDepreciationRateValue(asset.getDepreciationRate());
+        }
 
     }
 
     private void validateDepreciationRateValue(final Double depreciationRate) {
-        if (depreciationRate == null)
-            throw new RuntimeException("Asset Depreciation Rate is mandatory.");
-        else if (Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
+        if (Double.compare(depreciationRate, Double.valueOf("0.0")) < 0)
             throw new RuntimeException("Depreciation rate can not be negative.");
     }
 
@@ -299,6 +304,16 @@ public class AssetValidator {
         if (asset.getAssetCategory() == null)
             throw new RuntimeException(
                     "Asset Category should be present for asset " + asset.getName() + " for voucher generation");
+    }
+
+    public void validateAssetForUpdate(final AssetRequest assetRequest) {
+        final Asset assetFromReq = assetRequest.getAsset();
+        final Asset asset = assetCurrentAmountService.getAsset(assetFromReq.getId(), assetFromReq.getTenantId(),
+                assetRequest.getRequestInfo());
+        if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
+            throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
+        else
+            validateYearWiseDepreciationRate(assetRequest.getAsset());
     }
 
 }

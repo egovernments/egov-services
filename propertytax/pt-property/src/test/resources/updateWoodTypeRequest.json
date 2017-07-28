@@ -14,8 +14,8 @@
     {
       "tenantId": "1237",
       "name": "Walnut Wood Type",
-      "code": "WWT",
-      "nameLocal": "Walnut",
+      "code": "WWTT",
+      "nameLocal": "Walnut Type",
       "description": "Imported from USA",
       "auditDetails": {
         "createdBy": null,

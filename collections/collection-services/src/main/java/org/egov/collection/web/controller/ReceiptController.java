@@ -70,7 +70,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/receipts/v1")
+@RequestMapping("/receipts")
 public class ReceiptController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
 
@@ -184,24 +184,7 @@ public class ReceiptController {
 		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
 	}
 	
-	@PostMapping("/_update")
-	@ResponseBody
-	public void update(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
 
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			 new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		
-		LOGGER.info("Request: "+ receiptRequest.toString());
-		receiptService.pushUpdateReceiptDetailsToQueque(new Long(receiptRequest.getReceipt().get(0).getBill().get(0)
-				.getBillDetails().get(0).getId()),
-				receiptRequest.getReceipt().get(0).getStateId(),
-				receiptRequest.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getStatus()
-				, receiptRequest.getReceipt().get(0).getTenantId(), 
-				receiptRequest.getRequestInfo());
-		
-	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

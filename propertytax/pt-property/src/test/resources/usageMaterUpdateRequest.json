@@ -16,7 +16,7 @@
     	"tenantId":"default",
     	"name":"Jungle book",
     	"code":"1234",
-    	"nameLocal":"12212",
+    	"nameLocal":null,
     	"description":"Jungle book",
     	"active":true,
     	"isResidential":true,

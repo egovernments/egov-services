@@ -412,7 +412,7 @@ class grievanceCreate extends Component {
     //console.log(JSON.stringify(request));
     var currentThis = this;
 
-    if(localStorage.getItem('type') === null){
+    if(localStorage.getItem('type') === null && this.state.otpEnabled){
 
       let mob = this.props.grievanceCreate.phone;
       let tenant =  localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
@@ -754,7 +754,7 @@ class grievanceCreate extends Component {
               </CardText>
           </Card>
           <div style={{textAlign: 'center'}}>
-            <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Create" backgroundColor={"#5a3e1b"} labelColor={white}/>
+            <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Create" primary={true}/>
           </div>
         </form>
         <div>

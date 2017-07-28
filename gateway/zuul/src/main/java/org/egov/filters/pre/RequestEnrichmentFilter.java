@@ -20,6 +20,10 @@ import java.util.Optional;
 
 import static org.egov.constants.RequestContextConstants.*;
 
+/**
+ *  6th pre filter to get executed.
+ *  Enriches the request body and header with 1) correlation id 2) user info
+ */
 @Component
 public class RequestEnrichmentFilter extends ZuulFilter {
 

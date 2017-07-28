@@ -57,6 +57,6 @@ public class FinYearException extends RuntimeException {
 
 	private String msgDetails;
 
-	private RequestInfo requestInfo;
+	private RequestInfo RequestInfo;
 
 }

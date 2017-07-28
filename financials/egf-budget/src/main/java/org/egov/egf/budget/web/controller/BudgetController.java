@@ -7,10 +7,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.domain.model.Pagination;
+import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.budget.domain.model.Budget;
 import org.egov.egf.budget.domain.model.BudgetSearch;
 import org.egov.egf.budget.domain.service.BudgetService;
@@ -46,7 +46,6 @@ public class BudgetController {
 	@Autowired
 	private BudgetQueueRepository budgetQueueRepository;
 
-	@Value("${persist.through.kafka}")
 	private static String persistThroughKafka;
 
 	@PostMapping("/_create")
@@ -188,6 +187,11 @@ public class BudgetController {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
 				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

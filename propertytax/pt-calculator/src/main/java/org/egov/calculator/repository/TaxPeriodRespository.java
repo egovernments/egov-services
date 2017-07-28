@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +46,6 @@ public class TaxPeriodRespository {
 	 */
 	public Long saveTaxPeriod(TaxPeriod taxperiod, String tenantId) {
 
-		Long createdTime = new Date().getTime();
-
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
@@ -62,8 +59,8 @@ public class TaxPeriodRespository {
 				ps.setString(6, taxperiod.getFinancialYear());
 				ps.setString(7, taxperiod.getAuditDetails().getCreatedBy());
 				ps.setString(8, taxperiod.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, createdTime);
-				ps.setLong(10, createdTime);
+				ps.setLong(9, taxperiod.getAuditDetails().getCreatedTime());
+				ps.setLong(10, taxperiod.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 
@@ -75,9 +72,6 @@ public class TaxPeriodRespository {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		taxperiod.getAuditDetails().setCreatedTime(createdTime);
-		;
-		taxperiod.getAuditDetails().setLastModifiedTime(createdTime);
 		return Long.valueOf(holder.getKey().intValue());
 	}
 

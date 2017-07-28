@@ -20,7 +20,7 @@ public class FactorQueryBuilder {
 
 	public static final String FACTOR_UPDATE_QUERY = "UPDATE egpt_mstr_factor"
 			+ " SET tenantId = ?, factorCode = ?, factorType = ?, factorValue = ?, fromdate = ?, todate = ?,"
-			+ " lastModifiedtime = ? WHERE id = ?";
+			+ " lastModifiedBy = ?, lastModifiedtime = ? WHERE id = ?";
 
 	public static final String BASE_SEARCH_QUERY = "select * from " + ConstantUtility.FACTOR_TABLE_NAME
 			+ " WHERE tenantId=?";

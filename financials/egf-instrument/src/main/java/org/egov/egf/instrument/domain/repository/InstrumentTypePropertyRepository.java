@@ -2,9 +2,7 @@ package org.egov.egf.instrument.domain.repository;
 
 import org.egov.egf.instrument.domain.model.InstrumentTypeProperty;
 import org.egov.egf.instrument.persistence.entity.InstrumentTypePropertyEntity;
-import org.egov.egf.instrument.persistence.queue.InstrumentQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentTypePropertyJdbcRepository;
-import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +12,15 @@ public class InstrumentTypePropertyRepository {
 
 	@Autowired
 	private InstrumentTypePropertyJdbcRepository instrumentTypePropertyJdbcRepository;
-	@Autowired
-	private InstrumentQueueRepository instrumentTypePropertyQueueRepository;
 
 	public InstrumentTypeProperty findById(InstrumentTypeProperty instrumentTypeProperty) {
 		InstrumentTypePropertyEntity entity = instrumentTypePropertyJdbcRepository
 				.findById(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
-		return entity.toDomain();
+		if (entity != null)
+			return entity.toDomain();
+
+		return null;
+
 
 	}
 
@@ -37,10 +37,6 @@ public class InstrumentTypePropertyRepository {
 				.update(new InstrumentTypePropertyEntity().toEntity(instrumentTypeProperty));
 		return entity.toDomain();
 	}
-
-	/*public void add(InstrumentTypePropertyRequest request) {
-		instrumentTypePropertyQueueRepository.add(request);
-	}*/
 
 	/*
 	 * public Pagination<InstrumentTypeProperty>

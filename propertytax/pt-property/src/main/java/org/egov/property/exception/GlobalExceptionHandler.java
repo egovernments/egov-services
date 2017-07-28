@@ -32,6 +32,27 @@ public class GlobalExceptionHandler {
     private Environment environment;
 
     /**
+     * Description : Null pointer exception handler
+     * 
+     * @param ex
+     * @return
+     */
+
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes nullPointerException(NullPointerException ex) {
+        ex.printStackTrace();
+        Map<String, String> errors = new HashMap<String, String>();
+        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
+                errors);
+        List<Error> errorList = new ArrayList<Error>();
+        errorList.add(error);
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(environment.getProperty("failed"));
+        return new ErrorRes(responseInfo, errorList);
+    }
+
+    /**
      * Description : MethodArgumentNotValidException type exception handler
      * 
      * @param ex

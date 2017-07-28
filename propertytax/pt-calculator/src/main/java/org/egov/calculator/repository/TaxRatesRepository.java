@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +40,6 @@ public class TaxRatesRepository {
 	 */
 	public Long createTaxRates(String tenantId, TaxRates taxRates) {
 
-		Long createdTime = new Date().getTime();
 		String taxRatesInsert = TaxRatesBuilder.INSERT_TAXRATES_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -59,15 +57,13 @@ public class TaxRatesRepository {
 				ps.setDouble(9, taxRates.getTaxFlatValue());
 				ps.setString(10, taxRates.getAuditDetails().getCreatedBy());
 				ps.setString(11, taxRates.getAuditDetails().getLastModifiedBy());
-				ps.setLong(12, createdTime);
-				ps.setLong(13, createdTime);
+				ps.setLong(12, taxRates.getAuditDetails().getCreatedTime());
+				ps.setLong(13, taxRates.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
 		final KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(psc, holder);
-		taxRates.getAuditDetails().setCreatedTime(createdTime);
-		taxRates.getAuditDetails().setLastModifiedTime(createdTime);
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
@@ -81,7 +77,6 @@ public class TaxRatesRepository {
 	 */
 	public void updateTaxRates(String tenantId, TaxRates taxRates) {
 
-		Long updatedTime = new Date().getTime();
 		String taxRatesUpdate = TaxRatesBuilder.UPDATE_TAXRATES_QUERY;
 
 		final PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -98,7 +93,7 @@ public class TaxRatesRepository {
 				ps.setDouble(8, taxRates.getRatePercentage());
 				ps.setDouble(9, taxRates.getTaxFlatValue());
 				ps.setString(10, taxRates.getAuditDetails().getLastModifiedBy());
-				ps.setLong(11, updatedTime);
+				ps.setLong(11, taxRates.getAuditDetails().getLastModifiedTime());
 				ps.setLong(12, taxRates.getId());
 				return ps;
 			}

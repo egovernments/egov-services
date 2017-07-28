@@ -55,9 +55,9 @@ import lombok.ToString;
 @ToString
 public class WaterSourceResponseInfo {
 
-    @JsonProperty("responseInfo")
+    @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("sourceTypes")
+    @JsonProperty("SourceTypes")
     private List<CommonResponseInfo> waterSourceType;
     
     

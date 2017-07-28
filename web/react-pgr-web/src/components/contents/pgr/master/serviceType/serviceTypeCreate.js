@@ -213,7 +213,7 @@ class ServiceTypeCreate extends Component {
 
       current.props.setLoadingStatus('loading');
       if(this.props.match.params.id){
-          Api.commonApiPost("/pgr-master/service/v1/"+body.Service.serviceCode+"/_update",{},body).then(function(response){
+          Api.commonApiPost("/pgr-master/service/v1/_update",{},body).then(function(response){
               current.setState({
                 open: true
               });
@@ -707,7 +707,7 @@ class ServiceTypeCreate extends Component {
                                     id="hasFinancialImpact"
                                   />
                               </Col>
-                               {/*<Col xs={12} md={3} sm={6}>
+                              <Col xs={12} md={3} sm={6}>
 
                                                                  <Checkbox
                                                                    label="Attributes"
@@ -724,7 +724,7 @@ class ServiceTypeCreate extends Component {
                                                                    }}
                                                                    id="metadata"
                                                                  />
-                                                             </Col>*/}
+                                                             </Col>
                               <div className="clearfix"></div>
                                 {promotionFunc()}
 

@@ -68,15 +68,6 @@ public class BankService {
 
 	public List<Bank> fetchRelated(List<Bank> banks) {
 		for (Bank bank : banks) {
-			// fetch related items
-			if (bank.getFund() != null) {
-				Fund fund = fundRepository.findById(bank.getFund());
-				if (fund == null) {
-					throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
-				}
-				bank.setFund(fund);
-			}
-
 		}
 
 		return banks;

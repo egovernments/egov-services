@@ -24,9 +24,9 @@ public class BudgetReAppropriationQueueRepository {
 	@Autowired
 	public BudgetReAppropriationQueueRepository(FinancialProducer financialProducer,
 			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.masters.budgetreapp.validated.key}") String budgetReAppValidatedKey,
+			@Value("${kafka.topics.egf.budget.budgetreapp.validated.key}") String budgetReAppValidatedKey,
 			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.masters.budgetreapp.completed.key}") String budgetReAppCompletedKey) {
+			@Value("${kafka.topics.egf.budget.budgetreapp.completed.key}") String budgetReAppCompletedKey) {
 
 		this.financialProducer = financialProducer;
 		this.validatedTopic = validatedTopic;

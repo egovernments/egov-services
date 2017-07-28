@@ -19,7 +19,24 @@ let menuConvention={
   "Grievance Redressal.Masters.Router.SEARCH COMPLAINT ROUTER":"/pgr/searchRouter/view",
 
   "Grievance Redressal.Masters.Grievance Category.Update Service Group":"/pgr/serviceGroup/edit",
-  "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view"
+  "Grievance Redressal.Masters.Grievance Category.Search a Service Group":"/pgr/serviceGroup/view",
+
+  "Grievance Redressal.Reports.Ageing Report":"/report/AgeingByBoundary",
+  "Grievance Redressal.Reports.Drill Down Report":"/report/DrillDownByBoundary",
+  "Grievance Redressal.Reports.Grievance Type Wise Report":"/report/GrievanceByType",
+  "Grievance Redressal.Reports.Functionary Wise Report":"/report/GrievanceByFunctionary",
+  "Grievance Redressal.Reports.Router Escalation Report":"/report/RouterEscalation",
+
+  "Grievance Redressal.Masters.Escalation Time.Create Escalation Time Type":"/pgr/defineEscalationTime",
+  "Grievance Redressal.Masters.Escalation Time.Search Escalation Time":"/pgr/searchEscalationTime",
+
+  "Grievance Redressal.Masters.Escalation.Create Escalation":"/pgr/defineEscalation",
+  // "Grievance Redressal.Masters.Escalation.Update Escalation":"",
+  "Grievance Redressal.Masters.Escalation.Search Escalation":"/pgr/bulkEscalationGeneration",
+
+
+
+
 }
 
 const defaultState = {
@@ -51,14 +68,14 @@ export default (state = defaultState, action) => {
     case 'SETTINGS_SAVED':
       return {
         ...state,
-        redirectTo: action.error ? null : '/dashboard',
+        redirectTo: action.error ? null : '/prd/dashboard',
         currentUser: action.error ? null : action.payload.UserRequest
       };
     case 'LOGIN':
     case 'REGISTER':
       return {
         ...state,
-        redirectTo: action.error ? null : '/dashboard',
+        redirectTo: action.error ? null : '/prd/dashboard',
         token: action.error ? null : action.payload.access_token,
         currentUser: action.error ? null : action.payload.UserRequest
       };

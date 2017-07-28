@@ -46,7 +46,6 @@ public class BudgetReAppropriationController {
 	@Autowired
 	private BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository;
 
-	@Value("${persist.through.kafka}")
 	private static String persistThroughKafka;
 
 	@PostMapping("/_create")
@@ -191,6 +190,11 @@ public class BudgetReAppropriationController {
 		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
 				.ts(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())).resMsgId(requestInfo.getMsgId())
 				.resMsgId(PLACEHOLDER).status(PLACEHOLDER).build();
+	}
+
+	@Value("${persist.through.kafka}")
+	public void setPersistThroughKafka(String persistThroughKafka) {
+		this.persistThroughKafka = persistThroughKafka;
 	}
 
 }

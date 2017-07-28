@@ -58,6 +58,5 @@ public class AckNoGenerationResponse {
 
     private ResponseInfo responseInfo;
 
-    private List<AckIdResponse> idResponses;
-
+private List<AckIdResponse> idResponses;
 }

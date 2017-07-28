@@ -45,6 +45,7 @@ import java.util.List;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.DocumentOwner;
+import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
@@ -291,7 +292,7 @@ public class ConnectionValidator {
             LOGGER.info("ConnectionType is INVALID");
             return isRequestValid;
         } else if (!(waterConnectionRequest.getConnection().getBillingType().equals("METERED") ||
-                waterConnectionRequest.getConnection().getBillingType().equals("NON-METERED"))) {
+                waterConnectionRequest.getConnection().getBillingType().equals("NONMETERED"))) {
             LOGGER.info("BillingType is INVALID");
             return isRequestValid;
         }
@@ -337,6 +338,7 @@ public class ConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
+       
         if (restConnectionService.getSupplyTypeByName(waterConnectionRequest) .getSupplytypes().isEmpty()) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConnectionConstants.SUPPLYTYPE_INVALID_CODE)
@@ -345,15 +347,17 @@ public class ConnectionValidator {
                     .build();
             errorFields.add(errorField);
         }
+        
         return errorFields;
     }
     public String generateAcknowledgementNumber(final WaterConnectionReq waterConnectionRequest)
     {
         return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(),
-                configurationManager.getIdGenNameServiceTopic(),configurationManager.getIdGenFormatServiceTopic());
+                configurationManager.getIdGenNameServiceTopic(),configurationManager.getIdGenFormatServiceTopic(),waterConnectionRequest.getRequestInfo());
     }
     public String generateConsumerNumber(final WaterConnectionReq waterConnectionRequest)
     {
-        return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(), configurationManager.getHscGenNameServiceTopic(), configurationManager.getHscGenFormatServiceTopic());
+        return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(), configurationManager.getHscGenNameServiceTopic(),
+                configurationManager.getHscGenFormatServiceTopic(),waterConnectionRequest.getRequestInfo());
     }
 }

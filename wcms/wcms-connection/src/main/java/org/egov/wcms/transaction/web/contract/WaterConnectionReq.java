@@ -62,11 +62,11 @@ import lombok.ToString;
 public class WaterConnectionReq {
 
     @NotNull
-    @JsonProperty("requestInfo")
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
     @NotNull
-    @JsonProperty("connection")
+    @JsonProperty("Connection")
     private Connection connection;
 
 }

@@ -24,7 +24,6 @@ private String name;
 private String description;
 private Boolean active;
 private String type;
-private String fundId;
 public Bank toDomain(){ 
 Bank bank = new Bank (); 
 super.toDomain( bank);bank.setId(this.id);
@@ -33,7 +32,6 @@ bank.setName(this.name);
 bank.setDescription(this.description);
 bank.setActive(this.active);
 bank.setType(this.type);
-bank.setFund(Fund.builder().id(fundId).build());
 return bank ;}
 
 public BankEntity toEntity( Bank bank ){
@@ -44,7 +42,6 @@ this.name=bank.getName();
 this.description=bank.getDescription();
 this.active=bank.getActive();
 this.type=bank.getType();
-this.fundId=bank.getFund()!=null?bank.getFund().getId():null;
 return this;} 
 
 }

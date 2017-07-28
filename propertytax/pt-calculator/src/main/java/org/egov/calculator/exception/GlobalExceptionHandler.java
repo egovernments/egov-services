@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.calculator.config.PropertiesManager;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,90 +28,105 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-        @Autowired
-        private Environment environment;
+    @Autowired
+    PropertiesManager propertiesManager;
 
-        /**
-         * Description : MethodArgumentNotValidException type exception handler
-         * 
-         * @param ex
-         * @return
-         */
-        @ExceptionHandler(MethodArgumentNotValidException.class)
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
-                Map<String, String> errors = new HashMap<String, String>();
-                for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
-                        errors.put(error.getField(), error.getDefaultMessage());
-                }
+    /**
+     * Description : Null pointer exception handler
+     * 
+     * @param ex
+     * @return
+     */
 
-                Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
-                                errors);
-                List<Error> errorList = new ArrayList<Error>();
-                errorList.add(error);
-                ResponseInfo responseInfo = new ResponseInfo();
-                responseInfo.setStatus(environment.getProperty("failed"));
-                return new ErrorRes(responseInfo, errorList);
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes nullPointerException(NullPointerException ex) {
+        ex.printStackTrace();
+        Map<String, String> errors = new HashMap<String, String>();
+        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
+                errors);
+        List<Error> errorList = new ArrayList<Error>();
+        errorList.add(error);
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(propertiesManager.getFailed());
+        return new ErrorRes(responseInfo, errorList);
+    }
+
+    /**
+     * Description : MethodArgumentNotValidException type exception handler
+     * 
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<String, String>();
+        for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
         }
 
-        /**
-         * Description : General exception handler method
-         * 
-         * @param ex
-         * @param req
-         * @return
-         */
-        @ExceptionHandler(value = { Exception.class })
-        public ErrorRes unknownException(Exception ex, WebRequest req) {
-                if (ex instanceof InvalidInputException) {
-                        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.input"), null,
-                                        null);
-                        ResponseInfo responseInfo = new ResponseInfo();
-                        responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
-                        responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
-                        responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
-                        responseInfo.setTs(new Date().getTime());
-                        responseInfo.setStatus(environment.getProperty("failed"));
-                        List<Error> errorList = new ArrayList<Error>();
-                        errorList.add(error);
-                        return new ErrorRes(responseInfo, errorList);
-                }
-                
-                
-                
-                
-                else {
-                        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
-                                        new HashMap<String, String>());
-                        ResponseInfo responseInfo = new ResponseInfo();
-                        responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
-                        responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
-                        responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
-                        responseInfo.setTs(new Date().getTime());
-                        responseInfo.setStatus(environment.getProperty("failed"));
-                        List<Error> errorList = new ArrayList<Error>();
-                        errorList.add(error);
-                        return new ErrorRes(responseInfo, errorList);
-                }
-        }
-        
-        @ExceptionHandler(InvalidTaxCalculationDataException.class)
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public ErrorRes processValidationError(InvalidTaxCalculationDataException  exception) {
-               
+        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, errors);
+        List<Error> errorList = new ArrayList<Error>();
+        errorList.add(error);
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setStatus(propertiesManager.getFailed());
+        return new ErrorRes(responseInfo, errorList);
+    }
 
-                Error error = new Error(HttpStatus.BAD_REQUEST.toString(), environment.getProperty("invalid.taxcalculation.details"), exception.getMessage(),
-                                null);
-                List<Error> errorList = new ArrayList<Error>();
-                errorList.add(error);
-                ResponseInfo responseInfo = new ResponseInfo();
-                responseInfo.setApiId( exception.getRequestInfo().getApiId());
-                responseInfo.setVer(exception.getRequestInfo().getVer());
-                responseInfo.setMsgId(exception.getRequestInfo().getMsgId());
-                responseInfo.setTs(new Date().getTime());
-               
-                responseInfo.setStatus(environment.getProperty("failed"));
-                return new ErrorRes(responseInfo, errorList);
+    /**
+     * Description : General exception handler method
+     * 
+     * @param ex
+     * @param req
+     * @return
+     */
+    @ExceptionHandler(value = { Exception.class })
+    public ErrorRes unknownException(Exception ex, WebRequest req) {
+        if (ex instanceof InvalidInputException) {
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);
+            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
+            responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
+            responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
+            responseInfo.setTs(new Date().getTime());
+            responseInfo.setStatus(propertiesManager.getFailed());
+            List<Error> errorList = new ArrayList<Error>();
+            errorList.add(error);
+            return new ErrorRes(responseInfo, errorList);
         }
+
+        else {
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
+                    new HashMap<String, String>());
+            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
+            responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
+            responseInfo.setMsgId(((InvalidInputException) ex).getRequestInfo().getMsgId());
+            responseInfo.setTs(new Date().getTime());
+            responseInfo.setStatus(propertiesManager.getFailed());
+            List<Error> errorList = new ArrayList<Error>();
+            errorList.add(error);
+            return new ErrorRes(responseInfo, errorList);
+        }
+    }
+
+    @ExceptionHandler(InvalidTaxCalculationDataException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes processValidationError(InvalidTaxCalculationDataException exception) {
+
+        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidTaxcalculation(),
+                exception.getMessage(), null);
+        List<Error> errorList = new ArrayList<Error>();
+        errorList.add(error);
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setApiId(exception.getRequestInfo().getApiId());
+        responseInfo.setVer(exception.getRequestInfo().getVer());
+        responseInfo.setMsgId(exception.getRequestInfo().getMsgId());
+        responseInfo.setTs(new Date().getTime());
+
+        responseInfo.setStatus(propertiesManager.getFailed());
+        return new ErrorRes(responseInfo, errorList);
+    }
 
 }

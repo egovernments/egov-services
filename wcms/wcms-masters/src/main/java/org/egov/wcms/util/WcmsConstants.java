@@ -67,6 +67,7 @@ public class WcmsConstants {
     public static final String INVALID_PROPERTY_CATEGORY_REQUEST_MESSAGE = "PropertyCategory is invalid";
     public static final String INVALID_STORAGE_RESERVOIR_REQUEST_MESSAGE = "Storage Reservoir is invalid";
     public static final String INVALID_TREATMENT_PLANT_REQUEST_MESSAGE = "Treatment Plant is invalid";
+    public static final String INVALID_METER_WATER_RATES_REQUEST_MESSAGE = "Meter Water Rates is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -280,57 +281,77 @@ public class WcmsConstants {
     public static final String STORAGE_RESERVOIR_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String STORAGE_RESERVOIR_MANADATORY_ERROR_MESSAGE = "Storage Reservoir Name is required";
 
-    public static final String STORAGE_RESERVOIR_RESERVOIR_TYPE_MANDATORY_CODE = "wcms.0047";
+    public static final String STORAGE_RESERVOIR_RESERVOIR_TYPE_MANDATORY_CODE = "wcms.0048";
     public static final String STORAGE_RESERVOIR_RESERVOIR_TYPE_MANADATORY_FIELD_NAME = "reservoirType";
     public static final String STORAGE_RESERVOIR_RESERVOIR_TYPE_MANADATORY_ERROR_MESSAGE = " Reservoir Type is required";
 
-    public static final String CAPACITY_MANDATORY_CODE = "wcms.0047";
+    public static final String CAPACITY_MANDATORY_CODE = "wcms.0049";
     public static final String CAPACITY_MANADATORY_FIELD_NAME = "Capacity";
     public static final String CAPACITY_MANADATORY_ERROR_MESSAGE = "Capacity is required";
 
-    public static final String BOUNDARY_ZONE_INVALID_CODE = "wcms.0048";
+    public static final String BOUNDARY_ZONE_INVALID_CODE = "wcms.0050";
     public static final String BOUNDARY_ZONE_INVALID_ERROR_MESSAGE = "Please provide valid Zone";
     public static final String BOUNDARY_ZONE_INVALID_FIELD_NAME = "zone";
 
-    public static final String RESERVOIR_TYPE_INVALID_CODE = "wcms.0049";
+    public static final String RESERVOIR_TYPE_INVALID_CODE = "wcms.0051";
     public static final String RESERVOIR_TYPE_INVALID_FIELD_NAME = "reservoirType";
     public static final String RESERVOIR_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Reservoir type";
 
-    public static final String BOUNDARY_WARD_INVALID_CODE = "wcms.0050";
+    public static final String BOUNDARY_WARD_INVALID_CODE = "wcms.0052";
     public static final String BOUNDARY_WARD_INVALID_ERROR_MESSAGE = "Please provide valid Ward";
     public static final String BOUNDARY_WARD_INVALID_FIELD_NAME = "ward";
 
-    public static final String BOUNDARY_LOCATION_INVALID_CODE = "wcms.0051";
+    public static final String BOUNDARY_LOCATION_INVALID_CODE = "wcms.0053";
     public static final String BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE = "Please provide valid Location";
     public static final String BOUNDARY_LOCATION_INVALID_FIELD_NAME = "location";
 
-    public static final String STORAGERESERVOIR_NAME_UNIQUE_CODE = "wcms.0052";
+    public static final String STORAGERESERVOIR_NAME_UNIQUE_CODE = "wcms.0054";
     public static final String STORAGERESERVOIR_NAME_UNQ_FIELD_NAME = "name";
     public static final String STORAGERESERVOIR_UNQ_ERROR_MESSAGE = "Entered Storage Reservoir Name already exist";
     
-    public static final String TREATMENT_PLANT_NAME_MANDATORY_CODE = "wcms.0053";
+    public static final String TREATMENT_PLANT_NAME_MANDATORY_CODE = "wcms.0055";
     public static final String TREATMENT_PLANT_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String TREATMENT_PLANT_MANADATORY_ERROR_MESSAGE = "Treatment Plant Name is required";
 
-    public static final String TREATMENT_PLANT_TYPE_MANDATORY_CODE = "wcms.0054";
+    public static final String TREATMENT_PLANT_TYPE_MANDATORY_CODE = "wcms.0056";
     public static final String TREATMENT_PLANT_TYPE_MANADATORY_FIELD_NAME = "plantType";
     public static final String TREATMENT_PLANT_TYPE_MANADATORY_ERROR_MESSAGE = " Plant Type is required";
     
-    public static final String TREATMENT_PLANT_NAME_UNIQUE_CODE = "wcms.0055";
+    public static final String TREATMENT_PLANT_NAME_UNIQUE_CODE = "wcms.0057";
     public static final String TREATMENT_PLANT_NAME_UNQ_FIELD_NAME = "name";
     public static final String TREATMENTPLANT_UNQ_ERROR_MESSAGE = "Entered Treatment Plant Name already exist";
     
-    public static final String STORAGE_RESERVOIR_NAME_INVALID_CODE = "wcms.0056";
+    public static final String STORAGE_RESERVOIR_NAME_INVALID_CODE = "wcms.0058";
     public static final String STORAGE_RESERVOIR_NAME_INVALID_FIELD_NAME = "storageReservoirName";
     public static final String STORAGE_RESERVOIR_NAME_INVALID_ERROR_MESSAGE = "Please provide valid Storage Reservoir Name";
     
-    public static final String TREATMENT_STORAGERESERVOIR_NAME_MANDATORY_CODE = "wcms.0057";
+    public static final String TREATMENT_STORAGERESERVOIR_NAME_MANDATORY_CODE = "wcms.0059";
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_FIELD_NAME = "storageReservoirName";
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_ERROR_MESSAGE = " Storage Reservoir Name is required";
     
-    public static final String PLANT_TYPE_INVALID_CODE = "wcms.0058";
+    public static final String PLANT_TYPE_INVALID_CODE = "wcms.0060";
     public static final String PLANT_TYPE_INVALID_FIELD_NAME = "plantType";
     public static final String PLANT_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Plant type";
+    
+    public static final String CONNECTION_TYPE_MANDATORY_CODE = "wcms.0061";
+    public static final String CONNECTION_TYPE_MANADATORY_FIELD_NAME = "connectionType";
+    public static final String CONNECTION_TYPE_MANADATORY_ERROR_MESSAGE = "connectionType is required";
+    
+    public static final String SOURCETYPE_NAME_MANDATORY_CODE = "wcms.0062";
+    public static final String SOURCETYPE_NAME_MANADATORY_FIELD_NAME = "sourceTypeName";
+    public static final String SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "SourceTypeName is required";
+    
+    public static final String SOURCE_TYPE_NAME_INVALID_CODE = "wcms.0063";
+    public static final String SOURCE_TYPE_NAME_INVALID_ERROR_MESSAGE = "Please provide valid Source Type";
+    public static final String SOURCE_TYPE_NAME_INVALID_FIELD_NAME = "source Type";
+    
+    public static final String METER_WATER_RATES_UNIQUE_CODE = "wcms.0064";
+    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName ,sourceTypeName and pipeSize";
+    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SourceType and PipeSize Inmm has already been mapped";
+    
+    public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0045";
+    public static final String PIPESIZE_INMM_FIELD_NAME = "pipeSize";
+    public static final String PIPESIZE_INMM_INVALID_ERROR_MESSAGE = "Please provide valid Pipe Size(mm)";
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";

@@ -10,6 +10,8 @@ import Api from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
+import UiTable from './components/UiTable';
+
 var specifications={};
 try {
   var hash = window.location.hash.split("/");
@@ -19,7 +21,7 @@ try {
     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
   }
 } catch(e) {
-  console.log(e);
+  
 }
 let reqRequired = [];
 class Report extends Component {
@@ -57,7 +59,6 @@ class Report extends Component {
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
-
     //Get view form data
     var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[0];
     var hash = window.location.hash.split("/");
@@ -82,51 +83,38 @@ class Report extends Component {
     return  val && (typeof val == "string" || typeof val == "number") ? val : "";
   } 
 
-  incrementIndexValue = (group, jsonPath) => {
-    let {formData} = this.props;
-    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
-    var _group = JSON.stringify(group);
-    var regexp = new RegExp(jsonPath + "\\[\\d{1}\\]", "g");
-    _group = _group.replace(regexp, jsonPath + "[" + (length+1) + "]");
-    return JSON.parse(_group);
-  }
+  render() {
+    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {create, handleChange, getVal, addNewCard, removeCard} = this;
 
-  getNewSpecs = (group, updatedSpecs, path) => {
-    let {moduleName, actionName} = this.props;
-    let groupsArray = _.get(updatedSpecs[moduleName + "." + actionName], path);
-    groupsArray.push(group);
-    _.set(updatedSpecs[moduleName + "." + actionName], path, groupsArray);
-    return updatedSpecs;
-  }
+    const renderTable = function() {
+      if(moduleName && actionName && formData && formData[objectName]) {
+        var objectName = mockData[`${moduleName}.${actionName}`].objectName;
+        if(formData[objectName].documents && formData[objectName].documents.length) {
+          var dataList = {
+            resultHeader: ["#", "Name", "File"],
+            resultValues: []
+          };
 
-  getPath = (value) => {
-    let {mockData, moduleName, actionName} = this.props;
-    const getFromGroup = function(groups) {
-      for(var i=0; i<groups.length; i++) {
-        for(var j=0; j<groups[i].children.length; i++) {
-          if(groups[i].children[j].jsonPath == value) {
-            return "groups[" + i + "].children[" + j + "].groups";
-          } else {
-            return "groups[" + i + "].children[" + j + "][" + getFromGroup(groups[i].children[j].groups) + "]";
+          for(var i=0; i<formData[objectName].documents.length; i++) {
+            dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
           }
+
+          return (
+            <UiTable resultList={dataList}/>
+          );
         }
       }
     }
 
-    return getFromGroup(mockData[moduleName + "." + actionName].groups);
-  }
-
-  render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {create, handleChange, getVal, addNewCard, removeCard} = this;
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-          <div style={{"textAlign": "center"}}>
-          </div>
+          <br/>
+          {renderTable()}
         </form>
       </div>
     );

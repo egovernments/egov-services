@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
+//@Import({TracerConfiguration.class})
 public class PtIdGenerationApplication {
 
 	public static void main(String[] args) {

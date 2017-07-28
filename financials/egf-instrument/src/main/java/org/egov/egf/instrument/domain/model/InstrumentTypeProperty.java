@@ -17,6 +17,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class InstrumentTypeProperty extends Auditable {
+	
 	private String id;
 	@NotNull
 	private TransactionType transactionType;

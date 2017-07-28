@@ -46,7 +46,7 @@ public class BusinessAccountDetails {
 		if (!isUpdate)
 			businessDetails = modelDetails;
 		else
-			businessDetails = getBusinessDetailsForUpdate(details);
+			businessDetails = getBusinessDetailsForUpdate(modelDetails);
 	}
 
 	public BusinessAccountDetails toDomainModel() {
@@ -55,9 +55,9 @@ public class BusinessAccountDetails {
 				.businessDetails(details).build();
 	}
 
-	private BusinessDetails getBusinessDetailsForUpdate(org.egov.commons.web.contract.BusinessAccountDetails details) {
+	private BusinessDetails getBusinessDetailsForUpdate(BusinessDetails modelDetails) {
 
-		return BusinessDetails.builder().id(details.getBusinessDetails().getId()).build();
+		return BusinessDetails.builder().id(modelDetails.getId()).build();
 	}
 
 	@Override

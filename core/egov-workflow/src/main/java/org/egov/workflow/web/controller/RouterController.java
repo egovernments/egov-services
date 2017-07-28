@@ -235,7 +235,7 @@ public class RouterController{
 	
 	private void checkCombinationExists(final RouterTypeReq routerTypeReq,
 			final List<ErrorField> errorFields) {
-		if (!routerService.checkCombinationExists(routerTypeReq)) {
+		if (routerService.checkCombinationExists(routerTypeReq)) {
 			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_CODE)
 					.message(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_ERROR_MESSAGE)
 					.field(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_FIELD_NAME).build();

@@ -82,7 +82,7 @@ class Report extends Component {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
-          if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isObjectArray) {
+          if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
             self.props.setFormData({[specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName]: jp.query(res, "$..[0]")[0]});
           } else {
             self.props.setFormData(res);

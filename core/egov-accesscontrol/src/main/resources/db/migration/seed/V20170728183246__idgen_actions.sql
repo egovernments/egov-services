@@ -1,0 +1,2 @@
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'GenerateNumber', '/egov-idgen/id/_generate', 'ADMIN', null, 1, 'Generate Number', false, 1, now(), 1, now());
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name='GenerateNumber' and url='/egov-idgen/id/_generate'), 'default');

@@ -60,9 +60,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyResponse {
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo = null;
+	   @JsonProperty("responseInfo")
+	    private ResponseInfo responseInfo = null;
 
-	@JsonProperty("Properties")
-	private List<PropertyInfo> properties = new ArrayList<PropertyInfo>();
+	    @JsonProperty("properties")
+	    private List<PropertyInfo> properties = new ArrayList<>();
 }

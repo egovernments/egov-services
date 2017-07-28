@@ -118,7 +118,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn} 
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -176,7 +176,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -237,7 +237,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -402,7 +402,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn} 
+      linkedColumn: _url?/pgr/viewGrievance/:srn 
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -461,7 +461,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -523,7 +523,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -585,7 +585,7 @@ ReportDefinitions:
     source: eg_department
     linkedReport:
       reportName: DrillDownDepartmentGetGrievanceType
-      linkedColumn: _parent?reportName={reportName}&=deptname={name}
+      linkedColumn: _parent?reportName={reportName}&deptname={name}
   - name: registered
     label: reports.pgr.status.registered
     type: number
@@ -855,7 +855,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string
@@ -918,7 +918,7 @@ ReportDefinitions:
     source: egpgr_complainttype
     linkedReport:
       reportName: DrillDownByBoundaryGetLocality
-      linkedColumn: _parent?reportName={reportName}&=parentboundary={name}
+      linkedColumn: _parent?reportName={reportName}&parentboundary={name}
   - name: registered
     label: reports.pgr.status.registered
     type: number
@@ -1004,7 +1004,7 @@ ReportDefinitions:
   - name: registered
     linkedReport:
       reportName: DrillDownByBoundaryLocalityGetDepartment
-      linkedColumn: _parent?reportName={reportName}&=locality={name}
+      linkedColumn: _parent?reportName={reportName}&locality={name}
     label: reports.pgr.status.registered
     type: number
     source: seva
@@ -1093,7 +1093,7 @@ ReportDefinitions:
     source: eg_department
     linkedReport:
       reportName: DrillDownByBoundaryLocalityDepartmentGetComplaintType
-      linkedColumn: _parent?reportName={reportName}&=deptname={name}
+      linkedColumn: _parent?reportName={reportName}&deptname={name}
   - name: registered
     label: reports.pgr.status.registered
     type: number
@@ -1187,7 +1187,7 @@ ReportDefinitions:
     source: egpgr_complainttype
     linkedReport:
       reportName: DrillDownByBoundaryLocalityDepartmentGetUserNamePosition
-      linkedColumn: _parent?reportName={reportName}&=complainttypecode={name}
+      linkedColumn: _parent?reportName={reportName}&complainttypecode={name}
   - name: registered
     label: reports.pgr.status.registered
     type: number
@@ -1284,7 +1284,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: DrillDownByBoundaryLocalityDepartmentUserNamePositionGetComplaints
-      linkedColumn: _parent?reportName={reportName}&=username={userposition}
+      linkedColumn: _parent?reportName={reportName}&username={userposition}
   - name: registered
     label: reports.pgr.status.registered
     type: number
@@ -1388,7 +1388,7 @@ ReportDefinitions:
     source: submission
     linkedReport:
       reportName: ComplaintDetail
-      linkedColumn: _url?http://egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=default&serviceRequestId={crn}
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   - name: createddate
     label: reports.pgr.complaint.createddate
     type: string

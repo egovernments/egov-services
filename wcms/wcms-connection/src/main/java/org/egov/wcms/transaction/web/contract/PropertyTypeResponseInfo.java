@@ -50,7 +50,7 @@ public class PropertyTypeResponseInfo {
 
     @JsonProperty("id")
     private String id;
-    @JsonProperty("PropertyTypeId")
+    @JsonProperty("propertyTypeId")
     private String propertyTypeId;
 
 }

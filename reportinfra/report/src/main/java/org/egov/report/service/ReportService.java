@@ -154,7 +154,7 @@ public class ReportService {
 					}
 				}
 				List<ColumnDetail> columnDetails = columns.stream()
-						.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getDefaultValue(),p.getName()))
+						.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName()))
 						.collect(Collectors.toList());
 				
 

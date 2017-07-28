@@ -43,7 +43,6 @@ package org.egov.collection.repository;
 import lombok.AllArgsConstructor;
 
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptDetail;
 import org.egov.collection.model.ReceiptHeader;
@@ -138,52 +137,34 @@ public class ReceiptRepository {
 		return receiptReq.getReceipt().get(0);
 	}
 
-	public long persistToReceiptHeader(Map<String, Object> parametersMap,
-			String payeeName, String paidBy, AuditDetails auditDetail) {
-		long id = 0L;
+	public void persistToReceiptHeader(Map<String, Object> parametersMap) {
+		logger.info("Inserting into receipt header");
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
-		try {
-			logger.info("Inserting into receipt header");
-			namedParameterJdbcTemplate.update(query, parametersMap);
-		} catch (Exception e) {
-			logger.error("Persisting to DB FAILED! ", e.getCause());
-			return id;
-		}
-		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder
-				.getreceiptHeaderId();
-		// TODO: Vishal: Before persisting the object itself first get the next
-		// sequence number for receipt header and use the same for inserting
-		// receipt header and receipt details object
-		try {
-			id = jdbcTemplate.queryForObject(
-					receiptHeaderIdQuery,
-					new Object[] { payeeName, paidBy,
-							auditDetail.getCreatedDate() }, Long.class);
-		} catch (Exception e) {
-			logger.error("Couldn't fetch receiptheader entry id ", e.getCause());
-			return id;
-		}
-		logger.info("receiptheader entry id: " + id);
-		return id;
+		namedParameterJdbcTemplate.update(query, parametersMap);
 	}
 
-	public boolean persistToReceiptDetails(
-			Map<String, Object>[] parametersReceiptDetails, long receiptHeader) {
-		boolean isInsertionSuccessful = false;
+	public void persistToReceiptDetails(Map<String, Object>[] parametersReceiptDetails, long receiptHeader) {
 		String queryReceiptDetails = ReceiptDetailQueryBuilder
 				.insertReceiptDetails();
-		try {
-			logger.info("Inserting into receipt details for receipt header record: "
-					+ receiptHeader);
 			namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails,
 					parametersReceiptDetails);
+	}
+	
+	public boolean persistReceipt(Map<String, Object> parametersMap, 
+			     Map<String, Object>[] parametersReceiptDetails, long receiptHeader, long instrumentId){
+		boolean isInsertionSuccessful = false;
+		try{
+			persistToReceiptHeader(parametersMap);
+			persistToReceiptDetails(parametersReceiptDetails, receiptHeader);
+		//	persistIntoReceiptInstrument(instrumentId, receiptHeader);
 		} catch (Exception e) {
-			logger.error("Persisting to receiptdetails table FAILED! ",
-					e.getCause());
+			e.printStackTrace();
+			logger.error("Persistingreceipt FAILED! ",e.getCause());
 			return isInsertionSuccessful;
 		}
-		isInsertionSuccessful = true;
 		return isInsertionSuccessful;
+
+
 	}
 
 	public ReceiptCommonModel findAllReceiptsByCriteria(
@@ -310,12 +291,11 @@ public class ReceiptRepository {
 		return statusList;
 	}
 
-	public boolean persistIntoReceiptInstrument(Long instrumentId,
+	public void persistIntoReceiptInstrument(Long instrumentId,
 			Long receiptHeaderId) {
 		logger.info("Persisting into receipt Instrument");
-		boolean isInsertionSuccessful = false;
-
-		return isInsertionSuccessful;
+		String queryString = receiptDetailQueryBuilder.insertInstrumentId();
+		jdbcTemplate.update(queryString, new Object[] {instrumentId, receiptHeaderId});
 	}
 
 	public Boolean updateReceipt(ReceiptReq receiptRequest) {
@@ -393,6 +373,17 @@ public class ReceiptRepository {
 				queryString, String.class, new Object[] { tenantId });
 		return chartOfAccountsRepository.getChartOfAccounts(
 				chartOfAccountsList, tenantId, requestInfo);
+	}
+	
+	public Long getNextSeqForRcptHeader(){
+		Long sequence = null;
+		String queryString = receiptDetailQueryBuilder.getNextSeqForRcptHeader();
+		try{
+			sequence = jdbcTemplate.queryForObject(queryString, Long.class);
+		}catch(Exception e){
+			logger.error("Next sequence number for receiptheader couldn't be fetched", e.getCause());
+		}
+		return sequence;
 	}
 
 }

@@ -38,65 +38,78 @@ public class UserUtil {
 		searchUrl.append(propertiesManager.getUserBasepath());
 		searchUrl.append(propertiesManager.getUserSearchpath());
 
-		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
-		userSearchRequestInfo.put("name", user.getName());
-		userSearchRequestInfo.put("mobileNumber", user.getMobileNumber());
-		userSearchRequestInfo.put("type", user.getType());
-		userSearchRequestInfo.put("active", user.getActive());
-		userSearchRequestInfo.put("tenantId", user.getTenantId());
-		userSearchRequestInfo.put("RequestInfo", requestInfo);
-
-		if (user.getAadhaarNumber() != null && !user.getAadhaarNumber().isEmpty()) {
-			userSearchRequestInfo.put("aadharNumber", user.getAadhaarNumber());
-		}
-
-		if (user.getEmailId() != null && !user.getEmailId().isEmpty()) {
-			userSearchRequestInfo.put("emailId", user.getEmailId());
-		}
-
-		// search user
 		UserResponseInfo userResponse = null;
-		logger.info("UserUtil searchUrl ---->> "+searchUrl.toString()+" \n userSearchRequestInfo ---->> "+userSearchRequestInfo);
-		userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
-		logger.info("UserUtil userResponse ---->> "+userResponse);
-		if (userResponse.getUser().size() == 0) {
-			UserRequestInfo userRequestInfo = new UserRequestInfo();
-			userRequestInfo.setRequestInfo(requestInfo);
-			user.setPassword(propertiesManager.getDefaultPassword());
-			userRequestInfo.setUser(user);
-			logger.info("UserUtil createUrl ---->> "+createUrl.toString()+" \n userRequestInfo ---->> "+userRequestInfo);
-			UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(), userRequestInfo,
-					UserResponseInfo.class);
-			logger.info("UserUtil userCreateResponse ---->> "+userCreateResponse);
-			user.setId(userCreateResponse.getUser().get(0).getId());
-		} else {
-			if (userResponse.getUser().size() > 1) {
+        Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
+        userSearchRequestInfo.put("userName", user.getMobileNumber());
+        userSearchRequestInfo.put("type", user.getType());
+        userSearchRequestInfo.put("tenantId", user.getTenantId());
+        userSearchRequestInfo.put("RequestInfo", requestInfo);
+		  // search user
+        
+        logger.info("UserUtil searchUrl ---->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+                + userSearchRequestInfo);
+        userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
+        logger.info("UserUtil userResponse ---->> " + userResponse);
 
-				List<User> userFromReponse = userResponse.getUser();
+        if (userResponse == null || userResponse.getUser().size() == 0) {
+            userSearchRequestInfo.put("name", user.getName());
+            userSearchRequestInfo.put("mobileNumber", user.getMobileNumber());
 
-				List<User> result = userFromReponse.stream()
-						.filter(value -> value.getGender().equalsIgnoreCase(user.getGender())
-								&& value.getAltContactNumber().equalsIgnoreCase(user.getAltContactNumber())
-								&& value.getPan().equalsIgnoreCase(user.getPan())
-								&& value.getPermanentAddress().equalsIgnoreCase(user.getPermanentAddress())
-								&& value.getPermanentCity().equalsIgnoreCase(user.getPermanentCity())
-								&& value.getPermanentPincode().equalsIgnoreCase(user.getPermanentPincode())
-								&& value.getCorrespondenceAddress().equalsIgnoreCase(user.getCorrespondenceAddress())
-								&& value.getCorrespondenceCity().equalsIgnoreCase(user.getCorrespondenceCity())
-								&& value.getCorrespondencePincode().equalsIgnoreCase(user.getCorrespondencePincode())
-								&& value.getLocale().equalsIgnoreCase(user.getLocale())
-								&& value.getFatherOrHusbandName().equalsIgnoreCase(user.getFatherOrHusbandName())
-								&& value.getBloodGroup().equalsIgnoreCase(user.getBloodGroup())
-								&& value.getIdentificationMark().equalsIgnoreCase(user.getIdentificationMark()))
-						.collect(Collectors.toList());
+            if (user.getAadhaarNumber() != null && !user.getAadhaarNumber().isEmpty()) {
+                userSearchRequestInfo.put("aadharNumber", user.getAadhaarNumber());
+            }
 
-				user.setId(result.get(0).getId());
-			} else {
-				user.setId(userResponse.getUser().get(0).getId());
-			}
-		}
+            if (user.getEmailId() != null && !user.getEmailId().isEmpty()) {
+                userSearchRequestInfo.put("emailId", user.getEmailId());
+            }
 
-		return user;
+            // search user
+            logger.info("UserUtil searchUrl ---->> " + searchUrl.toString() + " \n userSearchRequestInfo ---->> "
+                    + userSearchRequestInfo);
+            userResponse = restTemplate.postForObject(searchUrl.toString(), userSearchRequestInfo,
+                    UserResponseInfo.class);
+            logger.info("UserUtil userResponse ---->> " + userResponse);
+            if (userResponse == null || userResponse.getUser().size() == 0) {
+                UserRequestInfo userRequestInfo = new UserRequestInfo();
+                userRequestInfo.setRequestInfo(requestInfo);
+                user.setPassword(propertiesManager.getDefaultPassword());
+                userRequestInfo.setUser(user);
+                logger.info("UserUtil createUrl ---->> " + createUrl.toString() + " \n userRequestInfo ---->> "
+                        + userRequestInfo);
+                UserResponseInfo userCreateResponse = restTemplate.postForObject(createUrl.toString(), userRequestInfo,
+                        UserResponseInfo.class);
+                logger.info("UserUtil userCreateResponse ---->> " + userCreateResponse);
+                user.setId(userCreateResponse.getUser().get(0).getId());
+            }
 
-	}
+        }
+
+        if (userResponse.getUser().size() > 1) {
+
+            List<User> userFromReponse = userResponse.getUser();
+
+            List<User> result = userFromReponse.stream()
+                    .filter(value -> value.getGender().equalsIgnoreCase(user.getGender())
+                            && value.getAltContactNumber().equalsIgnoreCase(user.getAltContactNumber())
+                            && value.getPan().equalsIgnoreCase(user.getPan())
+                            && value.getPermanentAddress().equalsIgnoreCase(user.getPermanentAddress())
+                            && value.getPermanentCity().equalsIgnoreCase(user.getPermanentCity())
+                            && value.getPermanentPincode().equalsIgnoreCase(user.getPermanentPincode())
+                            && value.getCorrespondenceAddress().equalsIgnoreCase(user.getCorrespondenceAddress())
+                            && value.getCorrespondenceCity().equalsIgnoreCase(user.getCorrespondenceCity())
+                            && value.getCorrespondencePincode().equalsIgnoreCase(user.getCorrespondencePincode())
+                            && value.getLocale().equalsIgnoreCase(user.getLocale())
+                            && value.getFatherOrHusbandName().equalsIgnoreCase(user.getFatherOrHusbandName())
+                            && value.getBloodGroup().equalsIgnoreCase(user.getBloodGroup())
+                            && value.getIdentificationMark().equalsIgnoreCase(user.getIdentificationMark()))
+                    .collect(Collectors.toList());
+
+            user.setId(result.get(0).getId());
+        } else {
+            user.setId(userResponse.getUser().get(0).getId());
+        }
+
+        return user;
+
+    }
 }

@@ -77,7 +77,7 @@ class ShowField extends Component {
   }
 
   drillDown=(e,i,i2,item,item1)=>{
-     let { reportResult ,searchForm ,setReportResult,setFlag} = this.props;
+     let { reportResult ,searchForm ,setReportResult,setFlag,toggleSnackbarAndSetText} = this.props;
      let object=reportResult.reportHeader[i2];
 
     //  console.log(object);
@@ -143,6 +143,10 @@ class ShowField extends Component {
         },function(err) {
             console.log(err);
         });
+    }
+    else {
+      alert("No drilldown reports.")
+        // toggleSnackbarAndSetText(true, "No drilldown reports.");
     }
 
 
@@ -229,6 +233,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setFlag:(flag)=>{
       dispatch({type:"SET_FLAG",flag})
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
   }
 });
 

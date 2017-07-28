@@ -98,24 +98,36 @@ public class ReceiptService {
 
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
 		Bill bill = receiptReq.getReceipt().get(0).getBill().get(0);
-		bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
+		try{
+			bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
 				bill, receiptReq.getTenantId()));
+		}catch(Exception e){
+			LOGGER.info("Receipt persist failed due to internal server error");
+			Receipt receipt = new Receipt();
+			return receipt;
+		}
 		// return receiptRepository.pushToQueue(receiptReq); //async call
 
-		/*
-		 * Long instrumentid = getInstrumentId(receiptReq.getReceipt().get(0));
-		 * if(null == instrumentid || 0L == Long.valueOf(instrumentid)){ return
-		 * null; }else{ receipt = create(receiptReq); //sync call }
-		 */// uncomment while enabling instrument integration
+	    Receipt receipt = null;
 
-		Receipt receipt = create(bill, receiptReq.getRequestInfo(),
-				receiptReq.getTenantId()); // sync call
-		receiptReq.setReceipt(Arrays.asList(receipt));
-		LOGGER.info("Pushing receipt to kafka queue");
-
-		if (null != receipt)
+/*	    Long instrumentid = getInstrumentId(receiptReq);
+		 if(null == instrumentid || 0L == Long.valueOf(instrumentid)){ 
+			 return null; 
+		 }else{ 
+			receipt = create(bill, receiptReq.getRequestInfo(),
+						receiptReq.getTenantId(), instrumentid); // sync call
+		} */
+		 
+		receipt = create(bill, receiptReq.getRequestInfo(),
+				receiptReq.getTenantId(), 1L); // sync call
+		if (null != receipt){
+			LOGGER.info("Pushing receipt to kafka queue");
+			receiptReq.setReceipt(Arrays.asList(receipt));
 			receipt = receiptRepository.pushToQueue(receiptReq);
-
+		}else{
+			LOGGER.error("Receipt creation failed!");
+			return null;
+		}
 		return receipt;
 	}
 
@@ -174,8 +186,6 @@ public class ReceiptService {
 
 	public Boolean validateFundAndDept(
 			BusinessDetailsResponse businessDetailsRes) {
-		// TODO: Vishal: After validation prepare the Response with Error Codes
-		// and Error Fields
 		if (null == businessDetailsRes) {
 			LOGGER.error("All business details fields are not available");
 			return false;
@@ -213,11 +223,14 @@ public class ReceiptService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Receipt create(Bill bill, RequestInfo requestInfo, String tenantId) {
+	public Receipt create(Bill bill, RequestInfo requestInfo, String tenantId, long instrumentId) {
 		LOGGER.info("Persisting recieptdetail");
-		long receiptHeaderId = 0L;
 		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
 		for (BillDetail billDetail : bill.getBillDetails()) {
+			
+			Long receiptHeaderId = receiptRepository.getNextSeqForRcptHeader();
+			LOGGER.info("ReceiptHeaderId: "+receiptHeaderId);
+			
 			billDetail.setCollectionType(CollectionType.COUNTER);
 			billDetail.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
 			billDetail.setReceiptDate(new Date().getTime());
@@ -231,6 +244,7 @@ public class ReceiptService {
 					&& validateGLCode(requestInfo, tenantId, billDetail)) {
 				BusinessDetailsRequestInfo businessDetails = businessDetailsRes
 						.getBusinessDetails().get(0);
+				parametersMap.put("id", receiptHeaderId);
 				parametersMap.put("payeename", bill.getPayeeName());
 				parametersMap.put("payeeaddress", bill.getPayeeAddress());
 				parametersMap.put("payeeemail", bill.getPayeeEmail());
@@ -264,9 +278,7 @@ public class ReceiptService {
 				parametersMap.put("boundary", billDetail.getBoundary());
 				parametersMap.put("voucherheader",
 						billDetail.getVoucherHeader());
-				// TODO: Vishal: Deposited bank need not be persisted for every
-				// receipt it exists only in few use cases
-				parametersMap.put("depositedbranch", "");
+				parametersMap.put("depositedbranch", "depositedbranch");//Deposited bank need not be persisted for every receipt it exists only in few use cases
 
 				parametersMap.put("createdby", auditDetail.getCreatedBy());
 				parametersMap.put("createddate", auditDetail.getCreatedDate());
@@ -285,26 +297,10 @@ public class ReceiptService {
 				parametersMap.put("location", null);
 				parametersMap.put("isreconciled", false);
 				parametersMap.put("status", billDetail.getStatus());
-
-				try {
-					receiptHeaderId = receiptRepository.persistToReceiptHeader(
-							parametersMap, bill.getPayeeName(),
-							bill.getPaidBy(), auditDetail);
-				} catch (Exception e) {
-					LOGGER.info("Persisting into receiptheader failed for rcpt: "
-							+ billDetail.getReceiptNumber());
-				}
-				if (receiptHeaderId == 0L) {
-					break;
-				}
-
-				/*
-				 * receiptRepository.persistIntoReceiptInstrument(Long.valueOf(
-				 * receiptReq.getReceipt().get(0).getInstrument().getId()),
-				 * receiptHeaderId);
-				 */// should be uncommented while enabling instrument
-					// integration
-
+	
+				/*LOGGER.info("InstrumentId: "+instrumentId+" ReceiptHeaderId: "+receiptHeaderId);
+				receiptRepository.persistIntoReceiptInstrument(instrumentId, receiptHeaderId); */
+				 
 				Map<String, Object>[] parametersReceiptDetails = new Map[billDetail
 						.getBillAccountDetails().size()];
 				int parametersReceiptDetailsCount = 0;
@@ -335,6 +331,7 @@ public class ReceiptService {
 						parameterMap.put("purpose", billAccountDetails
 								.getPurpose().toString());
 						parameterMap.put("tenantid", tenantId);
+						parameterMap.put("receiptheader", receiptHeaderId);
 
 						parametersReceiptDetails[parametersReceiptDetailsCount] = parameterMap;
 						parametersReceiptDetailsCount++;
@@ -343,14 +340,14 @@ public class ReceiptService {
 								+ billAccountDetails.getGlcode());
 						break;
 					}
+				}				
+				if(!receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, receiptHeaderId, instrumentId)){
+					Receipt receipt = new Receipt();
+					return receipt;
 				}
-				try {
-					receiptRepository.persistToReceiptDetails(
-							parametersReceiptDetails, receiptHeaderId);
-				} catch (Exception e) {
-					LOGGER.info("Persisting into receiptdetails failed for rcpt: "
-							+ billDetail.getReceiptNumber());
-				}
+				
+			}else{
+				return null;
 			}
 		}
 		Receipt receipt = new Receipt();
@@ -368,6 +365,7 @@ public class ReceiptService {
 					.getBusinessDetails(Arrays.asList(businessDetailsCode),
 							tenantId, requestInfo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.error("Error while fetching buisnessDetails from coll-master service. "
 					+ e);
 			return null;
@@ -382,7 +380,7 @@ public class ReceiptService {
 		LOGGER.info("Generating receipt number for the receipt.");
 
 		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getEgovServiceHost();
+		String hostname = applicationProperties.getIdGenServiceHost();
 		String baseUri = applicationProperties.getIdGeneration();
 		builder.append(hostname).append(baseUri);
 
@@ -480,17 +478,23 @@ public class ReceiptService {
 		return receiptRepository.getReceiptStatus(tenantId);
 	}
 
-	public Long getInstrumentId(Receipt receipt) {
+	public Long getInstrumentId(ReceiptReq receiptReq) {
 		Long instrumentId = null;
 		StringBuilder builder = new StringBuilder();
-		String hostname = applicationProperties.getEgovServiceHost();
+		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();
 		builder.append(hostname).append(baseUri);
+		Receipt receipt = receiptReq.getReceipt().get(0);
 		Instrument instrument = receipt.getInstrument();
+		List<Instrument> instruments = new ArrayList<>();
+		instruments.add(instrument);
+		InstrumentRequest instrumentRequest = new InstrumentRequest();
+		instrumentRequest.setRequestInfo(receiptReq.getRequestInfo());
+		instrumentRequest.setInstruments(instruments);
 		Object response = null;
 		try {
 			response = restTemplate.postForObject(builder.toString(),
-					instrument, Object.class);
+					instrumentRequest, Object.class);
 		} catch (Exception e) {
 			LOGGER.error(
 					"Couldn't create instrument in the instrument service.",
@@ -499,7 +503,7 @@ public class ReceiptService {
 		}
 		LOGGER.info("Response from instrument service: " + response.toString());
 
-		try {
+	/*	try {
 			// To do add proper code
 			LOGGER.error("Empty try block");
 		} catch (Exception e) {
@@ -507,7 +511,7 @@ public class ReceiptService {
 					"Couldn't fetch instrument id from instrument service.",
 					e.getCause());
 			return instrumentId;
-		}
+		} */
 		return instrumentId;
 	}
 

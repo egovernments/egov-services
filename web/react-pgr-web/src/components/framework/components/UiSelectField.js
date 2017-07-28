@@ -27,8 +27,13 @@ class UiSelectField extends Component {
 			let id={};
 			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
 			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-				context+=splitArray[0].split("/")[j]+"/";
+				if(j==(splitArray[0].split("/").length-1)){
+						context+=splitArray[0].split("/")[j];
+				}else{
+					context+=splitArray[0].split("/")[j]+"/";
+				}
 			}
+
 
 			let queryStringObject=splitArray[1].split("|")[0].split("&");
 			for (var i = 0; i < queryStringObject.length; i++) {

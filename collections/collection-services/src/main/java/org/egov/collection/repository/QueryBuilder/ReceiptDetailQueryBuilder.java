@@ -248,6 +248,10 @@ public class ReceiptDetailQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
+	
+	public static String getNextSeqForRcptHeader(){
+		return "select NEXTVAL('SEQ_EGCL_RECEIPTHEADER')";
+	}
 
 	public static String insertReceiptHeader() {
 		logger.info("Returning insertReceiptHeaderQuery query to the repository");
@@ -258,7 +262,7 @@ public class ReceiptDetailQueryBuilder {
 				+ "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
 				+ "manualreceiptnumber, manualreceiptdate, reference_ch_id, stateid, location, isreconciled, "
 				+ "status) "
-				+ "VALUES (NEXTVAL('SEQ_EGCL_RECEIPTHEADER'), :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
+				+ "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
 				+ ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
 				+ ":collmodesnotallwd, :consumercode, :channel, :fund, :fundsource, :function, :boundary, :department, :voucherheader, "
 				+ ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
@@ -301,5 +305,9 @@ public class ReceiptDetailQueryBuilder {
 
     public String searchChartOfAccountsQuery() {
         return "select distinct chartofaccount from egcl_receiptdetails where tenantId = ? and purpose != 'OTHERS' and description != '' ";
+    }
+    
+    public String insertInstrumentId(){
+    	return "update set instrumentheader = ? where receiptheader = ?";
     }
 }

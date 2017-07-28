@@ -131,6 +131,8 @@ public class ReceiptRepositoryTest {
 	@Test
 	public void test_should_persist_to_receiptheader(){
 		Map<String, Object> parametersMap = new HashMap<>();
+		Map<String, Object>[] parametersReceiptDetails = new Map[100];
+
 		ReceiptReq receiptReq = getReceiptRequest();
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
@@ -140,9 +142,8 @@ public class ReceiptRepositoryTest {
 					new Object[] { receiptInfo.getBill().get(0).getPayeeName(),
 							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class)).thenReturn(1L);
-		long result = receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo.getBill().get(0).getPayeeName(),
-				receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails());
-		assertEquals(1L, result);	
+		boolean result = receiptRepository.persistReceipt(parametersMap, parametersReceiptDetails, 1L, 1L);
+		assertEquals(false, result);	
 		
 	}
 	
@@ -174,8 +175,8 @@ public class ReceiptRepositoryTest {
 		String queryReceiptDetails = ReceiptDetailQueryBuilder.insertReceiptDetails();
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
 		
-		isInsertionSuccessful = receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
-		assertEquals(true, isInsertionSuccessful);		
+		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
+		assertNotNull(parametersReceiptDetails);		
 		
 	}
 	
